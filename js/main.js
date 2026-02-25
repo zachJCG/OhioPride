@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
       links.classList.toggle('open');
       toggle.classList.toggle('active');
     });
-    // Close on link click
     links.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', () => {
         links.classList.remove('open');

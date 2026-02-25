@@ -579,6 +579,163 @@ a:hover { color: var(--accent-gold-hover); }
   color: var(--text-secondary);
 }
 
+/* --- Gala Support Section --- */
+.section-gala-support {
+  background: var(--bg-dark);
+}
+
+.gala-intro {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 720px;
+  margin-top: -28px;
+  margin-bottom: 36px;
+}
+
+/* Goal Bar */
+.gala-goal {
+  background: var(--bg-card);
+  border: 1px solid rgba(212,168,67,0.2);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 48px;
+  max-width: 640px;
+}
+
+.gala-goal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.gala-goal-label {
+  font-family: 'Oswald', var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.gala-goal-amt {
+  font-family: 'Oswald', var(--font-body);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.gala-goal-track {
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.gala-goal-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-gold), #e8c55a);
+  border-radius: 4px;
+  transition: width 1.5s ease;
+}
+
+.gala-goal-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Columns */
+.gala-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  margin-bottom: 36px;
+}
+
+.gala-col-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.gala-col-sub {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* Tiers */
+.gala-tier {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+.gala-tier:hover {
+  border-color: rgba(245, 183, 49, 0.15);
+}
+
+.gala-tier-highlight {
+  border-color: rgba(245, 183, 49, 0.25);
+  background: rgba(245, 183, 49, 0.04);
+}
+
+.gala-tier-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.gala-tier-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.gala-tier-price {
+  font-family: 'Oswald', var(--font-body);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--accent-gold);
+}
+
+.gala-tier-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.gala-custom {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 12px 0;
+  font-style: italic;
+}
+
+.gala-cta {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.gala-legal-note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
 /* --- Donate --- */
 .section-donate {
   background: var(--bg-dark);
@@ -903,6 +1060,7 @@ a.contact-info-value:hover { color: var(--accent-gold); }
   .event-visual { min-height: 280px; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
+  .gala-columns { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
