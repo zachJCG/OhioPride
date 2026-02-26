@@ -1,110 +1,128 @@
-// Ohio Pride PAC — Main JS (v3)
+/* ============================================================
+   Ohio Pride PAC — Main JavaScript
+   Navigation, Donations, Forms, Progress Bar
+   ============================================================ */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
 
-  // --- Mobile Nav Toggle ---
-  const toggle = document.getElementById('navToggle');
-  const links = document.getElementById('navLinks');
-  if (toggle && links) {
-    toggle.addEventListener('click', () => {
-      links.classList.toggle('open');
-      toggle.classList.toggle('active');
+  /* --- Mobile Navigation Toggle --- */
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function () {
+      navLinks.classList.toggle('open');
+      // Update aria state
+      const isOpen = navLinks.classList.contains('open');
+      navToggle.setAttribute('aria-expanded', isOpen);
     });
-    links.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        links.classList.remove('open');
-        toggle.classList.remove('active');
+
+    // Close nav when clicking a link (mobile)
+    navLinks.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
       });
     });
   }
 
-  // --- Scroll: Nav Background ---
+  /* --- Scroll-based Nav Background (homepage only) --- */
   const nav = document.getElementById('nav');
   if (nav && !nav.classList.contains('nav-solid')) {
-    const onScroll = () => {
-      if (window.scrollY > 40) {
-        nav.classList.add('scrolled');
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 80) {
+        nav.classList.add('nav-solid');
       } else {
-        nav.classList.remove('scrolled');
+        nav.classList.remove('nav-solid');
       }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+    }, { passive: true });
   }
 
-  // --- Donate Amount Buttons ---
-  const amounts = document.querySelectorAll('.donate-amount');
-  amounts.forEach(btn => {
-    btn.addEventListener('click', () => {
-      amounts.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+  /* --- Smooth Scrolling for Anchor Links --- */
+  document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    anchor.addEventListener('click', function (e) {
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      const target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        const navHeight = document.querySelector('.nav') ? document.querySelector('.nav').offsetHeight : 0;
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 20;
+        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+      }
     });
   });
 
-  // --- Contact Form Submission (Netlify Forms) ---
-  const form = document.getElementById('contactForm');
-  const success = document.getElementById('formSuccess');
-  if (form && success) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      try {
-        const response = await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(formData).toString()
-        });
-        if (response.ok) {
-          form.style.display = 'none';
-          success.style.display = 'block';
+  /* --- Donate Amount Buttons --- */
+  const donateAmounts = document.querySelectorAll('.donate-amount');
+  const actblueBtn = document.getElementById('actblueBtn');
+  let selectedAmount = 100; // default
+
+  donateAmounts.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      donateAmounts.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      selectedAmount = btn.getAttribute('data-amount');
+
+      // Update ActBlue link when available
+      if (actblueBtn) {
+        if (selectedAmount === 'other') {
+          actblueBtn.href = 'https://secure.actblue.com/donate/ohiopridepac';
         } else {
-          alert('Something went wrong. Please try again or email us directly at info@ohiopride.org.');
+          actblueBtn.href = 'https://secure.actblue.com/donate/ohiopridepac?amount=' + selectedAmount;
         }
-      } catch (err) {
-        alert('Something went wrong. Please try again or email us directly at info@ohiopride.org.');
       }
+    });
+  });
+
+  /* --- Contact Form Submission (Netlify) --- */
+  const contactForm = document.getElementById('contactForm');
+  const formSuccess = document.getElementById('formSuccess');
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(contactForm);
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString()
+      })
+        .then(function (response) {
+          if (response.ok) {
+            contactForm.style.display = 'none';
+            if (formSuccess) formSuccess.style.display = 'block';
+          } else {
+            alert('Something went wrong. Please try again or email us directly.');
+          }
+        })
+        .catch(function () {
+          alert('Something went wrong. Please try again or email us directly.');
+        });
     });
   }
 
-  // --- Goal Progress Bar Animation ---
+  /* --- Founding Member Progress Bar Animation --- */
   const goalFill = document.getElementById('goalFill');
   if (goalFill) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+    // Current amount raised — update this value manually or via API
+    const raised = 0;
+    const goal = 35000;
+    const pct = Math.min((raised / goal) * 100, 100);
+
+    // Animate on scroll into view
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          // Start at 0% — will be updated as contributions come in
-          goalFill.style.width = '0%';
+          goalFill.style.width = pct + '%';
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.5 });
-    observer.observe(goalFill.closest('.goal-block'));
-  }
+    }, { threshold: 0.3 });
 
-  // --- Scroll Reveal Animation ---
-  const reveals = document.querySelectorAll('.section');
-  if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-        }
-      });
-    }, { threshold: 0.08 });
-    reveals.forEach(el => revealObserver.observe(el));
+    observer.observe(goalFill.parentElement);
   }
-
-  // --- Smooth Scroll for Anchor Links ---
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        const offset = 80;
-        const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
-    });
-  });
 
 });
