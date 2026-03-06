@@ -2,6 +2,14 @@
   publish = "."
   functions = "netlify/functions"
 
+# Enable branch deploys for staging/QA
+# Dev branch will be available at: dev--[site-name].netlify.app
+[context.branch-deploy]
+  publish = "."
+
+[context.deploy-preview]
+  publish = "."
+
 [[headers]]
   for = "/*"
   [headers.values]
