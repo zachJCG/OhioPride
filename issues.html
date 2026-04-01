@@ -302,6 +302,14 @@
         font-weight: 600;
       }
 
+      /* Hide mobile-only elements on desktop */
+      .bill-expand-btn {
+        display: none;
+      }
+      .bill-view-link {
+        display: none;
+      }
+
       .contact-note {
         max-width: 1200px;
         margin: 0 auto 3rem;
@@ -388,6 +396,77 @@
         }
         .contact-note {
           padding: 0 1rem;
+        }
+
+        /* Collapsible cards on mobile */
+        .bill-card .bill-card-inner {
+          position: relative;
+        }
+        .bill-card .bill-expandable {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.4s ease, opacity 0.3s ease;
+          opacity: 0;
+        }
+        .bill-card.expanded .bill-expandable {
+          max-height: 600px;
+          opacity: 1;
+        }
+        .bill-expand-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.4rem;
+          padding: 0.6rem;
+          margin-top: 0.5rem;
+          border-top: 1px solid var(--card-border);
+          font-family: "Montserrat", sans-serif;
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: var(--text-dim);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          transition: color 0.2s;
+          background: none;
+          border-left: none;
+          border-right: none;
+          border-bottom: none;
+          width: 100%;
+        }
+        .bill-expand-btn:hover {
+          color: var(--text-white);
+        }
+        .bill-expand-btn .expand-icon {
+          display: inline-block;
+          transition: transform 0.3s ease;
+        }
+        .bill-card.expanded .bill-expand-btn .expand-icon {
+          transform: rotate(180deg);
+        }
+        .bill-card.expanded .bill-expand-btn .expand-text {
+          display: none;
+        }
+        .bill-card .expand-collapse-text {
+          display: none;
+        }
+        .bill-card.expanded .expand-collapse-text {
+          display: inline;
+        }
+        .bill-card .bill-view-link {
+          display: block;
+          text-align: center;
+          padding: 0.6rem;
+          margin-top: 0.5rem;
+          font-family: "Montserrat", sans-serif;
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: var(--color-blue);
+          text-decoration: none;
+          border-top: 1px solid var(--card-border);
+        }
+        .bill-card .bill-view-link:hover {
+          color: var(--color-light-blue);
         }
       }
 
@@ -641,43 +720,99 @@
         Healthcare: "#34d399",
       };
 
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
       function renderBills(list) {
         const c = document.getElementById("billsContainer");
-        c.innerHTML = list
-          .map(
-            (b) => `
-            <a href="${b.url}" class="bill-card" data-status="${b.status}" data-categories="${b.categories.join(",")}">
-                <div class="bill-card-inner">
-                    <div class="bill-status-bar" style="background:${b.statusColor}"></div>
-                    <div class="bill-content">
-                        <div class="bill-header">
-                            <span class="bill-id">${b.bill}</span>
-                            <div class="bill-badges">
-                                <span class="status-badge" style="background:${b.statusColor}22;color:${b.statusColor};border:1px solid ${b.statusColor}44">${b.statusLabel}</span>
-                                ${b.categoryLabels.map((cl) => `<span class="cat-badge" style="color:${catColors[cl] || "#999"};border-color:${catColors[cl] || "#333"}33">${cl}</span>`).join("")}
-                            </div>
-                        </div>
-                        <div class="bill-title">${b.title}</div>
-                        <div class="bill-subtitle">${b.nickname}</div>
-                        <div id="pipeline-${b.id}"></div>
-                        <div class="bill-desc">${b.description}</div>
-                        <div class="bill-meta">
-                            <span><strong>Sponsors:</strong> ${b.sponsors}</span>
-                            <span><strong>Last Action:</strong> ${b.lastAction}</span>
-                            ${b.nextDate ? `<span class="bill-next-date">${b.nextDate}</span>` : ""}
-                            ${b.houseVote ? `<span><strong>House Vote:</strong> ${b.houseVote}</span>` : ""}
-                        </div>
-                    </div>
-                </div>
-            </a>
-        `,
-          )
-          .join("");
+        if (isMobile) {
+          // Mobile: collapsible cards with tap to expand
+          c.innerHTML = list
+            .map(
+              (b) => `
+              <div class="bill-card" data-status="${b.status}" data-categories="${b.categories.join(",")}">
+                  <div class="bill-card-inner">
+                      <div class="bill-status-bar" style="background:${b.statusColor}"></div>
+                      <div class="bill-content">
+                          <div class="bill-header">
+                              <span class="bill-id">${b.bill}</span>
+                              <div class="bill-badges">
+                                  <span class="status-badge" style="background:${b.statusColor}22;color:${b.statusColor};border:1px solid ${b.statusColor}44">${b.statusLabel}</span>
+                                  ${b.categoryLabels.map((cl) => `<span class="cat-badge" style="color:${catColors[cl] || "#999"};border-color:${catColors[cl] || "#333"}33">${cl}</span>`).join("")}
+                              </div>
+                          </div>
+                          <div class="bill-title">${b.title}</div>
+                          <div class="bill-subtitle">${b.nickname}</div>
+                          <div class="bill-expandable">
+                              <div id="pipeline-${b.id}"></div>
+                              <div class="bill-desc">${b.description}</div>
+                              <div class="bill-meta">
+                                  <span><strong>Sponsors:</strong> ${b.sponsors}</span>
+                                  <span><strong>Last Action:</strong> ${b.lastAction}</span>
+                                  ${b.nextDate ? `<span class="bill-next-date">${b.nextDate}</span>` : ""}
+                                  ${b.houseVote ? `<span><strong>House Vote:</strong> ${b.houseVote}</span>` : ""}
+                              </div>
+                              <a href="${b.url}" class="bill-view-link">View Full Details &rarr;</a>
+                          </div>
+                          <button class="bill-expand-btn" aria-label="Expand card">
+                              <span class="expand-text">Tap to read more</span>
+                              <span class="expand-collapse-text">Show less</span>
+                              <span class="expand-icon">&#9660;</span>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          `,
+            )
+            .join("");
+        } else {
+          // Desktop: clickable card links
+          c.innerHTML = list
+            .map(
+              (b) => `
+              <a href="${b.url}" class="bill-card" data-status="${b.status}" data-categories="${b.categories.join(",")}">
+                  <div class="bill-card-inner">
+                      <div class="bill-status-bar" style="background:${b.statusColor}"></div>
+                      <div class="bill-content">
+                          <div class="bill-header">
+                              <span class="bill-id">${b.bill}</span>
+                              <div class="bill-badges">
+                                  <span class="status-badge" style="background:${b.statusColor}22;color:${b.statusColor};border:1px solid ${b.statusColor}44">${b.statusLabel}</span>
+                                  ${b.categoryLabels.map((cl) => `<span class="cat-badge" style="color:${catColors[cl] || "#999"};border-color:${catColors[cl] || "#333"}33">${cl}</span>`).join("")}
+                              </div>
+                          </div>
+                          <div class="bill-title">${b.title}</div>
+                          <div class="bill-subtitle">${b.nickname}</div>
+                          <div id="pipeline-${b.id}"></div>
+                          <div class="bill-desc">${b.description}</div>
+                          <div class="bill-meta">
+                              <span><strong>Sponsors:</strong> ${b.sponsors}</span>
+                              <span><strong>Last Action:</strong> ${b.lastAction}</span>
+                              ${b.nextDate ? `<span class="bill-next-date">${b.nextDate}</span>` : ""}
+                              ${b.houseVote ? `<span><strong>House Vote:</strong> ${b.houseVote}</span>` : ""}
+                          </div>
+                      </div>
+                  </div>
+              </a>
+          `,
+            )
+            .join("");
+        }
         // Render pipelines
         list.forEach((b) => {
           const el = document.getElementById("pipeline-" + b.id);
           if (el) renderPipeline(el, b.chamber || "house", b.currentStep);
         });
+
+        // Mobile: attach expand/collapse handlers
+        if (isMobile) {
+          c.querySelectorAll(".bill-expand-btn").forEach((btn) => {
+            btn.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              this.closest(".bill-card").classList.toggle("expanded");
+            });
+          });
+        }
       }
 
       let activeStatus = "all",
