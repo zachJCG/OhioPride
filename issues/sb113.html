@@ -4,45 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading... | Ohio Pride PAC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/bill-pipeline.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --dark-bg: #0a0a0a; --card-bg: #141414; --card-border: #1e1e1e; --text-white: #fff; --text-gray: #a0a0a0; --text-dim: #666; --rainbow: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #01be01, #0000f9, #4b369d, #3f0080); }
-        html { scroll-behavior: smooth; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--dark-bg); color: var(--text-white); line-height: 1.6; }
-        a { color: inherit; text-decoration: none; }
-        nav { position: sticky; top: 0; z-index: 1000; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--card-border); padding: 0 2rem; }
-        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 64px; }
-        .nav-brand { font-weight: 700; font-size: 1.1rem; }
-        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
-        .nav-links a { font-size: 0.9rem; color: var(--text-gray); transition: color 0.2s; }
-        .nav-links a:hover, .nav-links a.active { color: var(--text-white); }
-        .hamburger { display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
-        @media (max-width: 768px) { .hamburger { display: block; } .nav-links { display: none; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: var(--dark-bg); border-bottom: 1px solid var(--card-border); padding: 1rem 2rem; gap: 1rem; } .nav-links.open { display: flex; } }
+        body { background: var(--dark-bg); }
+
+        :root {
+            --card-bg: #132d44;
+            --card-border: #1a3a52;
+            --text-gray: #a0b4c8;
+            --text-dim: #6889a6;
+        }
 
         .breadcrumb { max-width: 900px; margin: 1.5rem auto 0; padding: 0 2rem; font-size: 0.85rem; color: var(--text-dim); }
-        .breadcrumb a { color: var(--text-gray); }
-        .breadcrumb a:hover { color: white; }
+        .breadcrumb a { color: var(--text-gray); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--text-white); }
 
-        .bill-hero { max-width: 900px; margin: 1rem auto 0; padding: 0 2rem 2rem; border-bottom: 3px solid; border-image: var(--rainbow) 1; }
-        .bill-hero .bill-number { font-size: 0.9rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
-        .bill-hero h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.25rem; }
+        .bill-hero { max-width: 900px; margin: 1rem auto 0; padding: 0 2rem 2rem; position: relative; }
+        .bill-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: var(--pride-gradient); }
+        .bill-hero .bill-number { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+        .bill-hero h1 { font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; margin-bottom: 0.25rem; color: var(--text-white); }
         .bill-hero .nickname { font-size: 1.1rem; color: var(--text-gray); margin-bottom: 0.5rem; }
         .bill-hero .official-title { font-size: 0.85rem; color: var(--text-dim); font-style: italic; margin-bottom: 1rem; }
         .bill-hero .badge-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
-        .status-badge { padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+        .status-badge { padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; font-family: 'Montserrat', sans-serif; }
         @media (max-width: 768px) { .bill-hero h1 { font-size: 1.6rem; } }
 
         .detail-section { max-width: 900px; margin: 0 auto; padding: 2rem; }
-        .detail-section h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--card-border); }
+        .detail-section h2 { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--card-border); color: var(--text-white); }
         .detail-section p { color: var(--text-gray); margin-bottom: 1rem; line-height: 1.7; }
         .detail-section ul { color: var(--text-gray); margin: 0 0 1rem 1.5rem; }
         .detail-section li { margin-bottom: 0.5rem; line-height: 1.6; }
 
         .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
         .meta-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; }
-        .meta-card .meta-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
-        .meta-card .meta-value { font-size: 0.95rem; }
+        .meta-card .meta-label { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+        .meta-card .meta-value { font-size: 0.95rem; color: var(--text-white); }
         @media (max-width: 768px) { .meta-grid { grid-template-columns: 1fr; } }
 
         .timeline-list { position: relative; padding-left: 1.5rem; border-left: 2px solid var(--card-border); }
@@ -50,12 +50,12 @@
         .timeline-item::before { content: ''; position: absolute; left: -1.75rem; top: 0.5rem; width: 10px; height: 10px; border-radius: 50%; background: var(--card-border); }
         .timeline-item.completed::before { background: #22c55e; }
         .timeline-item.current::before { background: #f59e0b; box-shadow: 0 0 8px rgba(245,158,11,0.5); }
-        .timeline-item .tl-date { font-size: 0.8rem; color: var(--text-dim); font-weight: 600; }
+        .timeline-item .tl-date { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; color: var(--text-dim); font-weight: 600; }
         .timeline-item .tl-event { font-size: 0.95rem; color: var(--text-gray); }
 
         .ext-links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
-        .ext-link { display: none; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px; font-size: 0.85rem; color: var(--text-gray); transition: all 0.2s; }
-        .ext-link:hover { border-color: #444; color: white; }
+        .ext-link { display: none; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px; font-size: 0.85rem; color: var(--text-gray); transition: all 0.2s; text-decoration: none; }
+        .ext-link:hover { border-color: var(--dark-bg-lighter); color: var(--text-white); }
 
         .risk-card { background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02)); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; }
         .risk-card ul { margin-left: 1.25rem; }
@@ -63,28 +63,26 @@
         .cta-bar { max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem; }
         .cta-inner { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 1.5rem; text-align: center; }
         .cta-inner p { color: var(--text-gray); margin-bottom: 1rem; }
-        .cta-inner a { display: inline-block; padding: 0.6rem 1.5rem; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border-radius: 6px; font-weight: 600; font-size: 0.9rem; transition: transform 0.2s; }
-        .cta-inner a:hover { transform: translateY(-1px); }
-
-        footer { border-top: 3px solid; border-image: var(--rainbow) 1; padding: 2rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
-        footer .footer-links { margin: 0.5rem 0; }
-        footer .footer-links a { color: var(--text-gray); margin: 0 0.5rem; }
-        footer .disclaimer { font-size: 0.75rem; margin-top: 0.75rem; font-style: italic; }
+        .cta-inner a { display: inline-block; padding: 0.6rem 1.5rem; background: var(--color-blue); color: white; border-radius: 6px; font-weight: 600; font-size: 0.9rem; font-family: 'Montserrat', sans-serif; transition: all 0.2s; text-decoration: none; }
+        .cta-inner a:hover { background: #0039cc; transform: translateY(-1px); }
     </style>
 </head>
 <body>
-    <nav>
+    <!-- Navigation -->
+    <nav class="nav nav-solid" id="nav">
         <div class="nav-inner">
-            <a href="/" class="nav-brand">Ohio Pride PAC</a>
-            <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
-            <ul class="nav-links">
-                
-                
-                <li><a href="/issues" class="active">Issues</a></li>
-                <li><a href="/founding-members">Founding Members</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/donate">Donate</a></li>
-            </ul>
+            <a href="/" class="nav-logo">
+                <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="/issues" class="active">Issues</a>
+                <a href="/founding-members">Founding Members</a>
+                <a href="/contact">Contact</a>
+                <a href="/donate" class="btn btn-nav">Donate</a>
+            </div>
         </div>
     </nav>
 
@@ -169,6 +167,7 @@
         </div>
     </div>
 
+
     <div class="cta-bar">
         <div class="cta-inner">
             <p>Help us fight back against anti-LGBTQIA+ legislation in Ohio.</p>
@@ -176,14 +175,47 @@
         </div>
     </div>
 
-    <footer>
-        <div>&copy; 2026 Ohio Pride PAC. All rights reserved.</div>
-        <div style="margin-top:0.25rem;">Zachary R. Joseph, Director &middot; David Donofrio, Treasurer</div>
-        <div class="footer-links"><a href="#">Privacy Policy</a> &middot; <a href="#">Terms of Use</a></div>
-        <div class="disclaimer">Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.</div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/" class="nav-logo footer-logo">
+                        <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
+                    </a>
+                    <p class="footer-tagline">Ohio's Political Action Committee for LGBTQ+ Equality.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Organization</h4>
+                    <a href="/issues">Issues</a>
+                    <a href="/founding-members">Founding Members</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Get Involved</h4>
+                    <a href="/donate">Donate</a>
+                    <a href="/contact">Contact Us</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="/privacy">Privacy Policy</a>
+                    <a href="/terms">Terms of Use</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
 
+    <div class="compliance-footer">
+        <div class="container">
+            <p>Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David Donofrio, Treasurer.</p>
+            <p class="irs-line">Contributions are not tax-deductible for federal income tax purposes.</p>
+        </div>
+    </div>
+
     <script>const BILL_ID = 'sb113';</script>
+    <script src="/js/main.js"></script>
     <script src="/js/bill-data.js"></script>
     <script src="/js/bill-pipeline.js"></script>
     <script src="/js/bill-detail.js"></script>
