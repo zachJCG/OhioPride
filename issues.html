@@ -319,6 +319,93 @@
       .contact-note a {
         color: var(--color-light-blue);
       }
+
+      /* Mobile responsiveness for issue tracker */
+      @media (max-width: 768px) {
+        .tracker-hero {
+          padding-top: calc(var(--nav-height) + 24px);
+          padding-bottom: 24px;
+        }
+        .tracker-hero h1 {
+          font-size: 1.6rem;
+        }
+        .tracker-hero p {
+          font-size: 0.95rem;
+          padding: 0 1rem;
+        }
+        .alert-banner {
+          padding: 0 1rem;
+        }
+        .alert-inner {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 1rem;
+          gap: 0.75rem;
+        }
+        .alert-link {
+          width: 100%;
+          text-align: center;
+        }
+        .stats-bar {
+          padding: 0 1rem;
+        }
+        .filters {
+          padding: 0 1rem;
+        }
+        .filter-row {
+          gap: 0.4rem;
+        }
+        .filter-btn {
+          padding: 0.4rem 0.7rem;
+          font-size: 0.75rem;
+        }
+        .bills-container {
+          padding: 0 1rem;
+        }
+        .bill-content {
+          padding: 1rem;
+        }
+        .bill-header {
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+        .bill-badges {
+          flex-wrap: wrap;
+        }
+        .bill-title {
+          font-size: 1rem;
+        }
+        .bill-desc {
+          font-size: 0.85rem;
+        }
+        .bill-meta {
+          flex-direction: column;
+          gap: 0.5rem;
+          font-size: 0.75rem;
+        }
+        .bill-meta span {
+          word-break: break-word;
+        }
+        .contact-note {
+          padding: 0 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stats-bar {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.5rem;
+        }
+        .stat-card {
+          padding: 0.75rem;
+        }
+        .stat-card .stat-num {
+          font-size: 1.5rem;
+        }
+        .stat-card .stat-label {
+          font-size: 0.7rem;
+        }
+      }
     </style>
     <link rel="stylesheet" href="/css/bill-pipeline.css" />
   </head>
@@ -373,21 +460,21 @@
         </div>
       </div>
 
-      <div class="stats-bar">
+      <div class="stats-bar reveal-stagger">
         <div class="stat-card">
-          <div class="stat-num">10</div>
+          <div class="stat-num" data-count="10">0</div>
           <div class="stat-label">Active Bills</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num">1</div>
+          <div class="stat-num" data-count="1">0</div>
           <div class="stat-label">Passed a Chamber</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num">6</div>
+          <div class="stat-num" data-count="6">0</div>
           <div class="stat-label">In Committee</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num">5</div>
+          <div class="stat-num" data-count="5">0</div>
           <div class="stat-label">Bills by Rep. Williams</div>
         </div>
       </div>
@@ -535,6 +622,8 @@
         </p>
       </div>
     </div>
+
+    <a href="/donate" class="mobile-donate-fab">Donate</a>
 
     <!-- Shared bill data & pipeline component -->
     <script src="/js/main.js"></script>

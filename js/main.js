@@ -92,6 +92,90 @@ document.addEventListener("DOMContentLoaded", function () {
     memberCount.textContent = FOUNDING_MEMBER_COUNT;
   }
 
+  /* --- Scroll Reveal Animations --- */
+  var revealEls = document.querySelectorAll(
+    ".reveal, .reveal-left, .reveal-stagger",
+  );
+  if (revealEls.length) {
+    var revealObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+    );
+    revealEls.forEach(function (el) {
+      revealObserver.observe(el);
+    });
+  }
+
+  /* --- Animated Number Counter --- */
+  function animateCounter(el, target, duration) {
+    var start = 0;
+    var startTime = null;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      var current = Math.floor(eased * target);
+      el.textContent = current.toLocaleString();
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = target.toLocaleString();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  var statNums = document.querySelectorAll(".stat-num[data-count]");
+  if (statNums.length) {
+    var counterObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var target = parseInt(entry.target.dataset.count, 10);
+            animateCounter(entry.target, target, 1200);
+            entry.target.classList.add("animate");
+            counterObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.5 },
+    );
+    statNums.forEach(function (el) {
+      counterObserver.observe(el);
+    });
+  }
+
+  /* --- Floating Mobile Donate Button --- */
+  var fab = document.querySelector(".mobile-donate-fab");
+  if (fab) {
+    var fabThreshold = 400;
+    var lastScrollY = 0;
+    var fabVisible = false;
+
+    window.addEventListener(
+      "scroll",
+      function () {
+        var scrollY = window.scrollY;
+        if (scrollY > fabThreshold && !fabVisible) {
+          fab.classList.add("show");
+          fabVisible = true;
+        } else if (scrollY <= fabThreshold && fabVisible) {
+          fab.classList.remove("show");
+          fabVisible = false;
+        }
+        lastScrollY = scrollY;
+      },
+      { passive: true },
+    );
+  }
+
   /* --- Contact Form Submission (Netlify) --- */
   var contactForm = document.getElementById("contactForm");
   var formSuccess = document.getElementById("formSuccess");

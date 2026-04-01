@@ -171,7 +171,7 @@ const BILLS = [
     categoryLabels: ["Education / DEI"],
     description:
       "Senate companion to HB 155. Requires school boards to prohibit DEI structures, trainings, offices, and contracting. Suppresses LGBTQIA+-inclusive initiatives.",
-    sponsors: "Sen. Andrew Brenner (R-Delaware)",
+    sponsors: "Sen. Andrew Brenner (R-19)",
     lastAction: "Senate Education committee activity — May 2025",
     nextDate: "Additional hearings expected",
     chamber: "senate",

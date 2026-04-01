@@ -899,8 +899,8 @@ img {
 }
 
 .tier-card {
-  background: var(--bg-white);
-  border: 1px solid var(--border-light);
+  background: rgba(19, 45, 68, 0.5);
+  border: 1px solid var(--dark-bg-light);
   border-radius: 12px;
   overflow: hidden;
   transition:
@@ -908,14 +908,15 @@ img {
     transform 0.3s;
 }
 .tier-card:hover {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 77, 255, 0.08);
   transform: translateY(-2px);
+  border-color: var(--color-blue);
 }
 
 .tier-card-header {
   padding: 24px 24px 20px;
-  border-bottom: 1px solid var(--border-light);
-  background: var(--bg-light);
+  border-bottom: 1px solid var(--dark-bg-light);
+  background: rgba(15, 34, 51, 0.6);
 }
 
 .tier-card-name {
@@ -932,7 +933,7 @@ img {
   font-family: "Montserrat", sans-serif;
   font-size: 32px;
   font-weight: 700;
-  color: var(--dark-bg);
+  color: var(--text-white);
 }
 
 .tier-card-benefits {
@@ -941,7 +942,7 @@ img {
 }
 .tier-card-benefits li {
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--text-light);
   padding: 6px 0 6px 20px;
   position: relative;
   line-height: 1.5;
@@ -1044,10 +1045,10 @@ img {
 .goal-block {
   max-width: 600px;
   margin: 0 auto 48px;
-  background: var(--bg-light);
+  background: rgba(19, 45, 68, 0.5);
   border-radius: 12px;
   padding: 24px 28px;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--dark-bg-light);
 }
 
 .goal-top {
@@ -1061,19 +1062,19 @@ img {
   font-family: "Montserrat", sans-serif;
   font-weight: 600;
   font-size: 14px;
-  color: var(--text-primary);
+  color: var(--text-light);
 }
 
 .goal-amt {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 18px;
-  color: var(--color-blue);
+  color: var(--color-light-blue);
 }
 
 .goal-track {
   height: 12px;
-  background: var(--border-light);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -1088,7 +1089,7 @@ img {
 
 .goal-note {
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-light);
   margin-top: 10px;
   text-align: center;
 }
@@ -1820,12 +1821,12 @@ img {
 }
 
 .donate-disclaimer-box {
-  background: var(--bg-light);
-  border: 1px solid var(--border-light);
+  background: rgba(19, 45, 68, 0.3);
+  border: 1px solid var(--dark-bg-light);
   border-radius: 10px;
   padding: 24px;
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--text-light);
   line-height: 1.6;
 }
 
@@ -1861,8 +1862,8 @@ img {
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--text-muted);
-  background: var(--bg-light);
+  color: var(--color-light-blue);
+  background: rgba(115, 215, 238, 0.1);
   padding: 4px 10px;
   border-radius: 4px;
   margin-bottom: 16px;
@@ -1870,7 +1871,7 @@ img {
 
 .founding-tier-desc {
   font-size: 15px;
-  color: var(--text-secondary);
+  color: var(--text-light);
   margin-bottom: 12px;
   line-height: 1.65;
 }
@@ -1886,6 +1887,9 @@ img {
   margin: 48px 0;
   text-align: center;
 }
+.benefits-section .section-title {
+  color: var(--text-white);
+}
 
 .benefits-grid {
   display: grid;
@@ -1896,13 +1900,13 @@ img {
 }
 
 .benefit-item {
-  background: var(--bg-light);
+  background: rgba(19, 45, 68, 0.5);
   border-left: 3px solid var(--color-blue);
   border-radius: 6px;
   padding: 16px 20px;
   text-align: left;
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--text-light);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1917,12 +1921,12 @@ img {
 }
 
 .member-note {
-  background: var(--bg-light);
-  border: 1px solid var(--border-light);
+  background: rgba(19, 45, 68, 0.3);
+  border: 1px solid var(--dark-bg-light);
   border-radius: 10px;
   padding: 20px 24px;
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--text-light);
   text-align: center;
   margin: 32px 0;
 }
@@ -2061,4 +2065,240 @@ img {
   .gala-card-subtitle {
     font-size: 32px;
   }
+}
+
+/* ==========================================================================
+   ANIMATIONS & INTERACTIVE EFFECTS
+   ========================================================================== */
+
+/* --- Pride Gradient Shimmer on Primary Buttons --- */
+@keyframes prideShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 77, 255, 0.35);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 77, 255, 0.25);
+}
+
+/* Pride shimmer on CTA buttons */
+.btn-pride-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-red),
+    var(--color-orange),
+    var(--color-yellow),
+    var(--color-green),
+    var(--color-blue),
+    var(--color-violet),
+    var(--color-red)
+  );
+  background-size: 300% 100%;
+  animation: prideShimmer 4s ease infinite;
+  color: var(--text-white);
+  border-color: transparent;
+  font-weight: 700;
+}
+.btn-pride-shimmer:hover {
+  animation-duration: 1.5s;
+  box-shadow: 0 6px 24px rgba(0, 77, 255, 0.4);
+  color: var(--text-white);
+}
+
+/* --- Outline Button Glow --- */
+.btn-outline-light {
+  transition: all 0.3s ease, transform 0.2s ease;
+}
+.btn-outline-light:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+}
+
+/* --- Card Hover Lift & Glow --- */
+.wwd-card,
+.tier-card,
+.tier-legend-card,
+.donate-card,
+.stat-card,
+.bill-card {
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* --- Scroll Reveal Animation --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Stagger children animations */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal-stagger.visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.1s; }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.2s; }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.3s; }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.4s; }
+.reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.5s; }
+
+/* --- Animated Counter Pulse --- */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.stat-num.animate {
+  animation: pulse 0.6s ease;
+}
+
+/* --- Pride Stripe Animated Bar --- */
+@keyframes stripeScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 200% 0; }
+}
+
+.pride-stripe {
+  height: 4px;
+  background: var(--pride-gradient);
+  background-size: 200% 100%;
+  animation: stripeScroll 8s linear infinite;
+}
+
+/* --- Goal Fill Animated Glow --- */
+.goal-fill {
+  position: relative;
+}
+.goal-fill::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
+  border-radius: 0 6px 6px 0;
+  animation: pulse 2s ease infinite;
+}
+
+/* --- Floating Donate Button (Mobile) --- */
+.mobile-donate-fab {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  padding: 14px 24px;
+  background: var(--color-blue);
+  color: var(--text-white);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0, 77, 255, 0.4);
+  text-decoration: none;
+  transition: all 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.mobile-donate-fab.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.mobile-donate-fab:hover {
+  background: #0039cc;
+  box-shadow: 0 6px 28px rgba(0, 77, 255, 0.5);
+  transform: translateY(-2px);
+  color: var(--text-white);
+}
+
+@media (max-width: 768px) {
+  .mobile-donate-fab {
+    display: block;
+  }
+}
+
+/* --- Interactive Nav Link Underline --- */
+.nav-links a:not(.btn)::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 2px;
+  background: var(--pride-gradient);
+  transition: width 0.3s ease;
+}
+.nav-links a:not(.btn):hover::after,
+.nav-links a:not(.btn).active::after {
+  width: 100%;
+}
+
+/* --- Focus / Accessibility --- */
+.btn:focus-visible,
+.filter-btn:focus-visible,
+.amount-btn:focus-visible {
+  outline: 2px solid var(--color-light-blue);
+  outline-offset: 2px;
 }
