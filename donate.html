@@ -1,198 +1,261 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Donate — Ohio Pride PAC</title>
-  <meta name="description" content="Support Ohio Pride PAC with a contribution. Become a founding member or make a one-time donation.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
-  <style>
-    body { background: var(--dark-bg); }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donate — Ohio Pride PAC</title>
+    <meta
+      name="description"
+      content="Support Ohio Pride PAC with a contribution. Become a founding member or make a one-time donation."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      body {
+        background: var(--dark-bg);
+      }
 
-    .donate-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-    .donate-card {
-      padding: 2.5rem;
-      border-radius: 8px;
-      background: rgba(19, 45, 68, 0.5);
-      border: 1px solid var(--dark-bg-light);
-      transition: all 0.3s;
-    }
-    .donate-card.prominent {
-      border: 2px solid var(--color-blue);
-      position: relative;
-    }
-    .donate-card.prominent::before {
-      content: 'Featured';
-      position: absolute;
-      top: -12px;
-      left: 24px;
-      background: var(--color-blue);
-      color: var(--text-white);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 4px 12px;
-      border-radius: 4px;
-    }
-    .donate-card h2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: var(--text-white);
-    }
-    .donate-card p {
-      font-family: 'Roboto Slab', serif;
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-      color: var(--text-light);
-      line-height: 1.7;
-    }
+      .donate-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+      .donate-card {
+        padding: 2.5rem;
+        border-radius: 8px;
+        background: rgba(19, 45, 68, 0.5);
+        border: 1px solid var(--dark-bg-light);
+        transition: all 0.3s;
+      }
+      .donate-card.prominent {
+        border: 2px solid var(--color-blue);
+        position: relative;
+      }
+      .donate-card.prominent::before {
+        content: "Featured";
+        position: absolute;
+        top: -12px;
+        left: 24px;
+        background: var(--color-blue);
+        color: var(--text-white);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 4px 12px;
+        border-radius: 4px;
+      }
+      .donate-card h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-white);
+      }
+      .donate-card p {
+        font-family: "Roboto Slab", serif;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        color: var(--text-light);
+        line-height: 1.7;
+      }
 
-    .amount-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-    .amount-btn {
-      padding: 0.5rem 1rem;
-      background-color: var(--dark-bg-lighter);
-      color: var(--text-white);
-      border: 1px solid var(--dark-bg-light);
-      border-radius: 6px;
-      text-decoration: none;
-      transition: all 0.2s;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-    .amount-btn:hover {
-      background-color: var(--color-blue);
-      border-color: var(--color-blue);
-    }
+      .amount-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      .amount-btn {
+        padding: 0.5rem 1rem;
+        background-color: var(--dark-bg-lighter);
+        color: var(--text-white);
+        border: 1px solid var(--dark-bg-light);
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      .amount-btn:hover {
+        background-color: var(--color-blue);
+        border-color: var(--color-blue);
+      }
 
-    @media (max-width: 768px) {
-      .donate-grid { grid-template-columns: 1fr; }
-      .donate-card { padding: 1.5rem; }
-      .amount-buttons { flex-direction: column; }
-      .amount-btn { width: 100%; text-align: center; }
-    }
-  </style>
-</head>
-<body>
+      @media (max-width: 768px) {
+        .donate-grid {
+          grid-template-columns: 1fr;
+        }
+        .donate-card {
+          padding: 1.5rem;
+        }
+        .amount-buttons {
+          flex-direction: column;
+        }
+        .amount-btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pride-stripe"></div>
 
-  <div class="pride-stripe"></div>
-
-  <!-- Navigation -->
-  <nav class="nav nav-solid" id="nav">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo">
-        <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
-      </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-      <div class="nav-links" id="navLinks">
-        <a href="/issues.html">Issues</a>
-        <a href="/founding-members.html">Founding Members</a>
-        <a href="/contact.html">Contact</a>
-        <a href="/donate.html" class="btn btn-nav">Donate</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <header class="subpage-hero">
-    <div class="container">
-      <h1 class="section-title">Support Ohio Pride PAC</h1>
-      <p class="subpage-hero-sub">Your contribution fuels the fight for LGBTQ+ equality in Ohio.</p>
-    </div>
-  </header>
-
-  <!-- Donate Cards -->
-  <section class="section">
-    <div class="container">
-      <div class="donate-grid">
-
-        <!-- Founding Members Card -->
-        <div class="donate-card prominent">
-          <h2>Become a Founding Member</h2>
-          <p>Join the first 1,969 founding members building LGBTQ+ political power in Ohio. Starting at $19.69/month.</p>
-          <a href="/donate/founding-member" class="btn btn-primary btn-block">Join the Founding Members</a>
-        </div>
-
-        <!-- One-Time Contribution Card -->
-        <div class="donate-card">
-          <h2>Make a One-Time Contribution</h2>
-          <p>Support Ohio Pride PAC with a direct contribution.</p>
-          <div class="amount-buttons">
-            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=25" class="amount-btn">$25</a>
-            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=50" class="amount-btn">$50</a>
-            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=100" class="amount-btn">$100</a>
-            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=250" class="amount-btn">$250</a>
-            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=500" class="amount-btn">$500</a>
-          </div>
-          <a href="https://secure.actblue.com/donate/ohio-pride-pac" class="btn btn-outline btn-block">Other Amount</a>
-        </div>
-
-      </div>
-
-      <!-- Legal Disclaimer -->
-      <div class="donate-disclaimer-box">
-        <strong>Legal Notice:</strong> Contributions to Ohio Pride PAC are not tax-deductible for federal income tax purposes. Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="/" class="nav-logo footer-logo">
-            <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
-          </a>
-          <p class="footer-tagline">Ohio's Political Action Committee for LGBTQ+ Equality.</p>
-        </div>
-        <div class="footer-links">
-          <h4>Organization</h4>
+    <!-- Navigation -->
+    <nav class="nav nav-solid" id="nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <span class="logo-ohio">Ohio</span
+          ><span class="logo-pride">Pride</span>
+          <span class="logo-pac">PAC</span>
+        </a>
+        <button
+          class="nav-toggle"
+          id="navToggle"
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="navLinks">
           <a href="/issues.html">Issues</a>
           <a href="/founding-members.html">Founding Members</a>
-        </div>
-        <div class="footer-links">
-          <h4>Get Involved</h4>
-          <a href="/donate.html">Donate</a>
-          <a href="/contact.html">Contact Us</a>
-        </div>
-        <div class="footer-links">
-          <h4>Legal</h4>
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/terms">Terms of Use</a>
+          <a href="/contact.html">Contact</a>
+          <a href="/donate.html" class="btn btn-nav">Donate</a>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+    </nav>
+
+    <!-- Hero -->
+    <header class="subpage-hero">
+      <div class="container">
+        <h1 class="section-title">Support Ohio Pride PAC</h1>
+        <p class="subpage-hero-sub">
+          Your contribution fuels the fight for LGBTQ+ equality in Ohio.
+        </p>
+      </div>
+    </header>
+
+    <!-- Donate Cards -->
+    <section class="section">
+      <div class="container">
+        <div class="donate-grid">
+          <!-- Founding Members Card -->
+          <div class="donate-card prominent">
+            <h2>Become a Founding Member</h2>
+            <p>
+              Join the first 1,969 founding members building LGBTQ+ political
+              power in Ohio. Starting at $19.69/month.
+            </p>
+            <a href="/donate/founding-member" class="btn btn-primary btn-block"
+              >Join the Founding Members</a
+            >
+          </div>
+
+          <!-- One-Time Contribution Card -->
+          <div class="donate-card">
+            <h2>Make a One-Time Contribution</h2>
+            <p>Support Ohio Pride PAC with a direct contribution.</p>
+            <div class="amount-buttons">
+              <a
+                href="https://secure.actblue.com/donate/ohio-pride-pac?amount=25"
+                class="amount-btn"
+                >$25</a
+              >
+              <a
+                href="https://secure.actblue.com/donate/ohio-pride-pac?amount=50"
+                class="amount-btn"
+                >$50</a
+              >
+              <a
+                href="https://secure.actblue.com/donate/ohio-pride-pac?amount=100"
+                class="amount-btn"
+                >$100</a
+              >
+              <a
+                href="https://secure.actblue.com/donate/ohio-pride-pac?amount=250"
+                class="amount-btn"
+                >$250</a
+              >
+              <a
+                href="https://secure.actblue.com/donate/ohio-pride-pac?amount=500"
+                class="amount-btn"
+                >$500</a
+              >
+            </div>
+            <a
+              href="https://secure.actblue.com/donate/ohio-pride-pac"
+              class="btn btn-outline btn-block"
+              >Other Amount</a
+            >
+          </div>
+        </div>
+
+        <!-- Legal Disclaimer -->
+        <div class="donate-disclaimer-box">
+          <strong>Legal Notice:</strong> Contributions to Ohio Pride PAC are not
+          tax-deductible for federal income tax purposes. Paid for by Ohio Pride
+          PAC. Not authorized by any candidate or candidate's committee.
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="nav-logo footer-logo">
+              <span class="logo-ohio">Ohio</span
+              ><span class="logo-pride">Pride</span>
+              <span class="logo-pac">PAC</span>
+            </a>
+            <p class="footer-tagline">
+              Ohio's Political Action Committee for LGBTQ+ Equality.
+            </p>
+          </div>
+          <div class="footer-links">
+            <h4>Organization</h4>
+            <a href="/issues.html">Issues</a>
+            <a href="/founding-members.html">Founding Members</a>
+          </div>
+          <div class="footer-links">
+            <h4>Get Involved</h4>
+            <a href="/donate.html">Donate</a>
+            <a href="/contact.html">Contact Us</a>
+          </div>
+          <div class="footer-links">
+            <h4>Legal</h4>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="compliance-footer">
+      <div class="container">
+        <p>
+          Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David
+          Donofrio, Treasurer.
+        </p>
+        <p class="irs-line">
+          Contributions are not tax-deductible for federal income tax purposes.
+        </p>
       </div>
     </div>
-  </footer>
 
-  <div class="compliance-footer">
-    <div class="container">
-      <p>Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David Donofrio, Treasurer.</p>
-      <p class="irs-line">Contributions are not tax-deductible for federal income tax purposes.</p>
-    </div>
-  </div>
-
-  <script src="/js/main.js"></script>
-</body>
+    <script src="/js/main.js"></script>
+  </body>
 </html>

@@ -62,7 +62,8 @@ exports.handler = async function (event) {
   const badge = subjectBadgeColors[subject] || subjectBadgeColors["Other"];
 
   // Use verified domain or Resend onboarding domain as fallback
-  const fromAddress = process.env.RESEND_FROM_EMAIL || "Ohio Pride PAC <onboarding@resend.dev>";
+  const fromAddress =
+    process.env.RESEND_FROM_EMAIL || "Ohio Pride PAC <onboarding@resend.dev>";
 
   const htmlEmail = `
 <!DOCTYPE html>
@@ -202,7 +203,10 @@ exports.handler = async function (event) {
     }
 
     console.log("Email sent successfully:", result.id);
-    return { statusCode: 200, body: JSON.stringify({ success: true, id: result.id }) };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true, id: result.id }),
+    };
   } catch (error) {
     console.error("Failed to send email:", error);
     return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
