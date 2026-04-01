@@ -23,7 +23,7 @@
       }
 
       .home-hero {
-        padding: 5rem 2rem 4rem;
+        padding: calc(var(--nav-height) + 2rem) 2rem 4rem;
         text-align: center;
         max-width: 900px;
         margin: 0 auto;
@@ -181,7 +181,7 @@
 
       @media (max-width: 768px) {
         .home-hero {
-          padding: 3.5rem 1.5rem 3rem;
+          padding: calc(var(--nav-height) + 1rem) 1.5rem 3rem;
         }
         .home-hero .hero-buttons {
           flex-direction: column;
@@ -230,15 +230,15 @@
       <div class="hero-divider"></div>
       <div class="hero-buttons">
         <a href="/issues" class="btn btn-primary">Track Legislation</a>
-        <a href="/donate/founding-member" class="btn btn-outline"
-          >Become a Founding Member</a
+        <a href="/donate/founding-member" class="btn btn-outline-light"
+          >Become a Founding Member</
         >
       </div>
     </section>
 
     <section class="section">
       <div class="container">
-        <h2 class="section-title" style="text-align: center">What We Do</h2>
+        <h2 class="section-title section-title-light" style="text-align: center">What We Do</h2>
         <div class="cards-grid">
           <div class="wwd-card">
             <div class="card-icon">&#127919;</div>
@@ -274,8 +274,8 @@
 
     <section class="section founding-section">
       <div class="founding-inner">
-        <div class="section-label">Join Us</div>
-        <h2 class="section-title">Be One of the First 1,969</h2>
+        <div class="section-label section-label-light">Join Us</div>
+        <h2 class="section-title section-title-light">Be One of the First 1,969</h2>
         <p class="founding-desc">
           Join our founding membership and help launch Ohio Pride PAC at this
           critical moment. Your support as a founding member will power our work
