@@ -1,658 +1,777 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Legislative Issue Tracker | Ohio Pride PAC</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        :root {
-            --dark-bg: #0a0a0a;
-            --text-white: #ffffff;
-            --accent-blue: #3b82f6;
-            --accent-amber: #f59e0b;
-            --accent-orange: #f97316;
-            --accent-red: #dc2626;
-            --accent-gray: #6b7280;
-            --card-bg: #1a1a1a;
-            --border-subtle: #2a2a2a;
-        }
+      :root {
+        --dark-bg: #0a0a0a;
+        --text-white: #ffffff;
+        --accent-blue: #3b82f6;
+        --accent-amber: #f59e0b;
+        --accent-orange: #f97316;
+        --accent-red: #dc2626;
+        --accent-gray: #6b7280;
+        --card-bg: #1a1a1a;
+        --border-subtle: #2a2a2a;
+      }
 
-        html {
-            scroll-behavior: smooth;
-        }
+      html {
+        scroll-behavior: smooth;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--text-white);
-            line-height: 1.6;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--text-white);
+        line-height: 1.6;
+      }
 
-        /* Navigation */
-        nav {
-            position: sticky;
-            top: 0;
-            background-color: var(--dark-bg);
-            border-bottom: 1px solid var(--border-subtle);
-            z-index: 100;
-            padding: 0 2rem;
-        }
+      /* Navigation */
+      nav {
+        position: sticky;
+        top: 0;
+        background-color: var(--dark-bg);
+        border-bottom: 1px solid var(--border-subtle);
+        z-index: 100;
+        padding: 0 2rem;
+      }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+      }
 
-        .logo {
-            font-weight: 700;
-            font-size: 1.25rem;
-            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
+      .logo {
+        font-weight: 700;
+        font-size: 1.25rem;
+        background: linear-gradient(
+          90deg,
+          #ff0000,
+          #ff7f00,
+          #ffff00,
+          #00ff00,
+          #0000ff,
+          #4b0082,
+          #9400d3
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: var(--text-white);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--accent-blue);
+      }
+
+      .nav-links a.active {
+        color: var(--accent-blue);
+        border-bottom: 2px solid var(--accent-blue);
+        padding-bottom: 0.25rem;
+      }
+
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 6px;
+      }
+
+      .hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: var(--text-white);
+        transition: all 0.3s ease;
+      }
+
+      .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(10px, 10px);
+      }
+
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+      }
+
+      /* Mobile Navigation */
+      @media (max-width: 768px) {
+        .hamburger {
+          display: flex;
         }
 
         .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
+          display: none;
+          position: absolute;
+          top: 70px;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          background-color: var(--card-bg);
+          padding: 2rem 1rem;
+          gap: 1rem;
+          border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-links.active {
+          display: flex;
         }
 
         .nav-links a {
-            color: var(--text-white);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
+          display: block;
         }
+      }
 
-        .nav-links a:hover {
-            color: var(--accent-blue);
-        }
+      /* Hero Section */
+      .hero {
+        background-color: var(--card-bg);
+        padding: 4rem 2rem;
+        text-align: center;
+        border-bottom: 1px solid var(--border-subtle);
+      }
 
-        .nav-links a.active {
-            color: var(--accent-blue);
-            border-bottom: 2px solid var(--accent-blue);
-            padding-bottom: 0.25rem;
-        }
+      .hero-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
 
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 6px;
-        }
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(
+          90deg,
+          #ff0000,
+          #ff7f00,
+          #ffff00,
+          #00ff00,
+          #0000ff,
+          #4b0082,
+          #9400d3
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
 
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background-color: var(--text-white);
-            transition: all 0.3s ease;
-        }
+      .hero p {
+        font-size: 1.2rem;
+        color: #b0b0b0;
+        max-width: 600px;
+        margin: 0 auto;
+      }
 
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(10px, 10px);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
-
-        /* Mobile Navigation */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                right: 0;
-                flex-direction: column;
-                background-color: var(--card-bg);
-                padding: 2rem 1rem;
-                gap: 1rem;
-                border-bottom: 1px solid var(--border-subtle);
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .nav-links a {
-                display: block;
-            }
-        }
-
-        /* Hero Section */
-        .hero {
-            background-color: var(--card-bg);
-            padding: 4rem 2rem;
-            text-align: center;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .hero-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
+      @media (max-width: 768px) {
         .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+          font-size: 2rem;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            color: #b0b0b0;
-            max-width: 600px;
-            margin: 0 auto;
+          font-size: 1rem;
         }
+      }
 
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
+      /* Main Content */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
 
-            .hero p {
-                font-size: 1rem;
-            }
-        }
+      /* Filter Bar */
+      .filter-section {
+        margin-bottom: 3rem;
+      }
 
-        /* Main Content */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-        }
+      .filter-group {
+        margin-bottom: 1.5rem;
+      }
 
-        /* Filter Bar */
-        .filter-section {
-            margin-bottom: 3rem;
-        }
+      .filter-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #e0e0e0;
+        font-size: 0.95rem;
+      }
 
-        .filter-group {
-            margin-bottom: 1.5rem;
-        }
+      .filter-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
 
-        .filter-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: #e0e0e0;
-            font-size: 0.95rem;
-        }
+      .filter-btn {
+        padding: 0.5rem 1.25rem;
+        background-color: var(--card-bg);
+        color: var(--text-white);
+        border: 1px solid var(--border-subtle);
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
 
-        .filter-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
+      .filter-btn:hover {
+        background-color: var(--border-subtle);
+        border-color: var(--accent-blue);
+      }
 
-        .filter-btn {
-            padding: 0.5rem 1.25rem;
-            background-color: var(--card-bg);
-            color: var(--text-white);
-            border: 1px solid var(--border-subtle);
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
+      .filter-btn.active {
+        background: linear-gradient(
+          90deg,
+          #ff0000,
+          #ff7f00,
+          #ffff00,
+          #00ff00,
+          #0000ff,
+          #4b0082,
+          #9400d3
+        );
+        border-color: transparent;
+        color: var(--text-white);
+      }
 
-        .filter-btn:hover {
-            background-color: var(--border-subtle);
-            border-color: var(--accent-blue);
-        }
+      /* Bills Grid */
+      .bills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+      }
 
-        .filter-btn.active {
-            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-            border-color: transparent;
-            color: var(--text-white);
-        }
-
-        /* Bills Grid */
+      @media (max-width: 768px) {
         .bills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
+          grid-template-columns: 1fr;
         }
+      }
 
-        @media (max-width: 768px) {
-            .bills-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+      /* Bill Card */
+      .bill-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-subtle);
+        border-left: 4px solid var(--accent-gray);
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        opacity: 1;
+        transform: translateY(0);
+      }
 
-        /* Bill Card */
-        .bill-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-subtle);
-            border-left: 4px solid var(--accent-gray);
-            border-radius: 8px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            opacity: 1;
-            transform: translateY(0);
-        }
+      .bill-card.hidden {
+        display: none;
+        opacity: 0;
+        transform: translateY(10px);
+      }
 
-        .bill-card.hidden {
-            display: none;
-            opacity: 0;
-            transform: translateY(10px);
-        }
+      .bill-card:hover {
+        border-color: var(--accent-blue);
+        background-color: #232323;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+      }
 
-        .bill-card:hover {
-            border-color: var(--accent-blue);
-            background-color: #232323;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
-        }
+      .bill-card.status-introduced {
+        border-left-color: var(--accent-blue);
+      }
 
-        .bill-card.status-introduced {
-            border-left-color: var(--accent-blue);
-        }
+      .bill-card.status-in-committee {
+        border-left-color: var(--accent-amber);
+      }
 
-        .bill-card.status-in-committee {
-            border-left-color: var(--accent-amber);
-        }
+      .bill-card.status-passed-committee {
+        border-left-color: var(--accent-orange);
+      }
 
-        .bill-card.status-passed-committee {
-            border-left-color: var(--accent-orange);
-        }
+      .bill-card.status-signed-into-law {
+        border-left-color: var(--accent-red);
+      }
 
-        .bill-card.status-signed-into-law {
-            border-left-color: var(--accent-red);
-        }
+      .bill-card.status-dead-tabled {
+        border-left-color: var(--accent-gray);
+      }
 
-        .bill-card.status-dead-tabled {
-            border-left-color: var(--accent-gray);
-        }
+      .bill-number {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--accent-blue);
+        margin-bottom: 0.5rem;
+      }
 
-        .bill-number {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--accent-blue);
-            margin-bottom: 0.5rem;
-        }
+      .bill-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-white);
+      }
 
-        .bill-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-white);
-        }
+      .bill-meta {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
 
-        .bill-meta {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
+      .status-badge {
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
 
-        .status-badge {
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+      .badge-introduced {
+        background-color: rgba(59, 130, 246, 0.2);
+        color: var(--accent-blue);
+        border: 1px solid var(--accent-blue);
+      }
 
-        .badge-introduced {
-            background-color: rgba(59, 130, 246, 0.2);
-            color: var(--accent-blue);
-            border: 1px solid var(--accent-blue);
-        }
+      .badge-in-committee {
+        background-color: rgba(245, 158, 11, 0.2);
+        color: var(--accent-amber);
+        border: 1px solid var(--accent-amber);
+      }
 
-        .badge-in-committee {
-            background-color: rgba(245, 158, 11, 0.2);
-            color: var(--accent-amber);
-            border: 1px solid var(--accent-amber);
-        }
+      .badge-passed-committee {
+        background-color: rgba(249, 115, 22, 0.2);
+        color: var(--accent-orange);
+        border: 1px solid var(--accent-orange);
+      }
 
-        .badge-passed-committee {
-            background-color: rgba(249, 115, 22, 0.2);
-            color: var(--accent-orange);
-            border: 1px solid var(--accent-orange);
-        }
+      .badge-signed-into-law {
+        background-color: rgba(220, 38, 38, 0.2);
+        color: var(--accent-red);
+        border: 1px solid var(--accent-red);
+        font-weight: 700;
+      }
 
-        .badge-signed-into-law {
-            background-color: rgba(220, 38, 38, 0.2);
-            color: var(--accent-red);
-            border: 1px solid var(--accent-red);
-            font-weight: 700;
-        }
+      .badge-dead-tabled {
+        background-color: rgba(107, 114, 128, 0.2);
+        color: var(--accent-gray);
+        border: 1px solid var(--accent-gray);
+      }
 
-        .badge-dead-tabled {
-            background-color: rgba(107, 114, 128, 0.2);
-            color: var(--accent-gray);
-            border: 1px solid var(--accent-gray);
-        }
+      .category-tag {
+        padding: 0.25rem 0.65rem;
+        background-color: rgba(59, 130, 246, 0.1);
+        color: var(--accent-blue);
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
 
-        .category-tag {
-            padding: 0.25rem 0.65rem;
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--accent-blue);
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
+      .bill-description {
+        color: #b0b0b0;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
 
-        .bill-description {
-            color: #b0b0b0;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
+      .bill-updated {
+        font-size: 0.8rem;
+        color: #808080;
+        border-top: 1px solid var(--border-subtle);
+        padding-top: 1rem;
+        margin-top: 1rem;
+      }
 
-        .bill-updated {
-            font-size: 0.8rem;
-            color: #808080;
-            border-top: 1px solid var(--border-subtle);
-            padding-top: 1rem;
-            margin-top: 1rem;
-        }
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #808080;
+      }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: #808080;
-        }
+      .empty-state p {
+        font-size: 1.1rem;
+      }
 
-        .empty-state p {
-            font-size: 1.1rem;
-        }
+      /* Info Section */
+      .info-section {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-subtle);
+        border-radius: 8px;
+        padding: 2rem;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+        text-align: center;
+      }
 
-        /* Info Section */
-        .info-section {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-top: 3rem;
-            margin-bottom: 3rem;
-            text-align: center;
-        }
+      .info-section p {
+        color: #b0b0b0;
+        margin-bottom: 0.5rem;
+      }
 
-        .info-section p {
-            color: #b0b0b0;
-            margin-bottom: 0.5rem;
-        }
+      .info-section a {
+        color: var(--accent-blue);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
 
-        .info-section a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
+      .info-section a:hover {
+        color: var(--accent-orange);
+      }
 
-        .info-section a:hover {
-            color: var(--accent-orange);
-        }
+      /* Footer */
+      footer {
+        background-color: var(--card-bg);
+        border-top: 1px solid var(--border-subtle);
+        padding: 2rem;
+        margin-top: 4rem;
+      }
 
-        /* Footer */
-        footer {
-            background-color: var(--card-bg);
-            border-top: 1px solid var(--border-subtle);
-            padding: 2rem;
-            margin-top: 4rem;
-        }
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+        color: #808080;
+        font-size: 0.9rem;
+      }
 
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-            color: #808080;
-            font-size: 0.9rem;
-        }
+      .footer-links {
+        margin-bottom: 1rem;
+      }
 
+      .footer-links a {
+        color: var(--accent-blue);
+        text-decoration: none;
+        margin: 0 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--accent-orange);
+      }
+
+      @media (max-width: 768px) {
         .footer-links {
-            margin-bottom: 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
         }
 
         .footer-links a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            margin: 0 1rem;
-            transition: color 0.3s ease;
+          margin: 0;
         }
+      }
 
-        .footer-links a:hover {
-            color: var(--accent-orange);
-        }
-
-        @media (max-width: 768px) {
-            .footer-links {
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .footer-links a {
-                margin: 0;
-            }
-        }
-
-        /* Results Count */
-        .results-info {
-            margin-bottom: 2rem;
-            color: #b0b0b0;
-            font-size: 0.95rem;
-        }
+      /* Results Count */
+      .results-info {
+        margin-bottom: 2rem;
+        color: #b0b0b0;
+        font-size: 0.95rem;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navigation -->
     <nav>
-        <div class="nav-container">
-            <a href="/" class="logo">Ohio Pride PAC</a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="/">Home</a></li>
-                <li><a href="/priorities">Priorities</a></li>
-                <li><a href="/issues" class="active">Issues</a></li>
-                <li><a href="/founding-members">Founding Members</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/donate">Donate</a></li>
-            </ul>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+      <div class="nav-container">
+        <a href="/" class="logo">Ohio Pride PAC</a>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="/">Home</a></li>
+          <li><a href="/priorities">Priorities</a></li>
+          <li><a href="/issues" class="active">Issues</a></li>
+          <li><a href="/founding-members">Founding Members</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/donate">Donate</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-container">
-            <h1>Legislative Issue Tracker</h1>
-            <p>Tracking anti-LGBTQ+ legislation in the Ohio Statehouse</p>
-        </div>
+      <div class="hero-container">
+        <h1>Legislative Issue Tracker</h1>
+        <p>Tracking anti-LGBTQ+ legislation in the Ohio Statehouse</p>
+      </div>
     </section>
 
     <!-- Main Content -->
     <div class="container">
-        <!-- Filter Section -->
-        <section class="filter-section">
-            <div class="filter-group">
-                <label class="filter-label">Status</label>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="status" data-value="all">All</button>
-                    <button class="filter-btn" data-filter="status" data-value="introduced">Introduced</button>
-                    <button class="filter-btn" data-filter="status" data-value="in-committee">In Committee</button>
-                    <button class="filter-btn" data-filter="status" data-value="passed-committee">Passed Committee</button>
-                    <button class="filter-btn" data-filter="status" data-value="signed-into-law">Signed Into Law</button>
-                    <button class="filter-btn" data-filter="status" data-value="dead-tabled">Dead/Tabled</button>
-                </div>
-            </div>
-
-            <div class="filter-group">
-                <label class="filter-label">Category</label>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="category" data-value="all">All</button>
-                    <button class="filter-btn" data-filter="category" data-value="anti-trans">Anti-Trans</button>
-                    <button class="filter-btn" data-filter="category" data-value="religious-exemption">Religious Exemption</button>
-                    <button class="filter-btn" data-filter="category" data-value="education">Education</button>
-                    <button class="filter-btn" data-filter="category" data-value="healthcare">Healthcare</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Results Info -->
-        <div class="results-info">
-            Showing <span id="resultsCount">6</span> bill(s)
+      <!-- Filter Section -->
+      <section class="filter-section">
+        <div class="filter-group">
+          <label class="filter-label">Status</label>
+          <div class="filter-buttons">
+            <button
+              class="filter-btn active"
+              data-filter="status"
+              data-value="all"
+            >
+              All
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="status"
+              data-value="introduced"
+            >
+              Introduced
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="status"
+              data-value="in-committee"
+            >
+              In Committee
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="status"
+              data-value="passed-committee"
+            >
+              Passed Committee
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="status"
+              data-value="signed-into-law"
+            >
+              Signed Into Law
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="status"
+              data-value="dead-tabled"
+            >
+              Dead/Tabled
+            </button>
+          </div>
         </div>
 
-        <!-- Bills Grid -->
-        <section class="bills-grid" id="billsGrid">
-            <!-- Bills will be inserted here by JavaScript -->
-        </section>
-
-        <!-- Empty State -->
-        <div class="empty-state" id="emptyState" style="display: none;">
-            <p>No bills match the selected filters.</p>
+        <div class="filter-group">
+          <label class="filter-label">Category</label>
+          <div class="filter-buttons">
+            <button
+              class="filter-btn active"
+              data-filter="category"
+              data-value="all"
+            >
+              All
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="category"
+              data-value="anti-trans"
+            >
+              Anti-Trans
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="category"
+              data-value="religious-exemption"
+            >
+              Religious Exemption
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="category"
+              data-value="education"
+            >
+              Education
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="category"
+              data-value="healthcare"
+            >
+              Healthcare
+            </button>
+          </div>
         </div>
+      </section>
 
-        <!-- Info Section -->
-        <section class="info-section">
-            <p>This tracker is updated regularly.</p>
-            <p>Know of new legislation? <strong>Contact us at <a href="mailto:info@ohiopridepac.org">info@ohiopridepac.org</a></strong></p>
-        </section>
+      <!-- Results Info -->
+      <div class="results-info">
+        Showing <span id="resultsCount">6</span> bill(s)
+      </div>
+
+      <!-- Bills Grid -->
+      <section class="bills-grid" id="billsGrid">
+        <!-- Bills will be inserted here by JavaScript -->
+      </section>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display: none">
+        <p>No bills match the selected filters.</p>
+      </div>
+
+      <!-- Info Section -->
+      <section class="info-section">
+        <p>This tracker is updated regularly.</p>
+        <p>
+          Know of new legislation?
+          <strong
+            >Contact us at
+            <a href="mailto:info@ohiopridepac.org"
+              >info@ohiopridepac.org</a
+            ></strong
+          >
+        </p>
+      </section>
     </div>
 
     <!-- Footer -->
     <footer>
-        <div class="footer-container">
-            <div class="footer-links">
-                <a href="/">Home</a>
-                <a href="/priorities">Priorities</a>
-                <a href="/issues">Issues</a>
-                <a href="/founding-members">Founding Members</a>
-                <a href="/contact">Contact</a>
-                <a href="/donate">Donate</a>
-            </div>
-            <p>&copy; 2025 Ohio Pride PAC. All rights reserved. Paid for by Ohio Pride PAC.</p>
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="/">Home</a>
+          <a href="/priorities">Priorities</a>
+          <a href="/issues">Issues</a>
+          <a href="/founding-members">Founding Members</a>
+          <a href="/contact">Contact</a>
+          <a href="/donate">Donate</a>
         </div>
+        <p>
+          &copy; 2025 Ohio Pride PAC. All rights reserved. Paid for by Ohio
+          Pride PAC.
+        </p>
+      </div>
     </footer>
 
     <script>
-        // Bills Data
-        const bills = [
-            {
-                bill: "HB 68",
-                title: "SAFE Act",
-                description: "Bans gender-affirming care for minors and bars transgender athletes from competing consistent with their gender identity. Governor's veto was overridden.",
-                status: "signed-into-law",
-                categories: ["anti-trans", "healthcare"],
-                updated: "January 2024"
-            },
-            {
-                bill: "HB 8",
-                title: "Save Women's Sports Act",
-                description: "Bars transgender girls and women from female sports teams in K-12 schools and colleges.",
-                status: "introduced",
-                categories: ["anti-trans"],
-                updated: "2025"
-            },
-            {
-                bill: "HB 183",
-                title: "Religious Exemption Expansion",
-                description: "Broad religious exemption that could permit discrimination in services, employment, and housing based on sincerely held beliefs.",
-                status: "in-committee",
-                categories: ["religious-exemption"],
-                updated: "2025"
-            },
-            {
-                bill: "SB 104",
-                title: "Parents' Bill of Rights",
-                description: "Includes provisions restricting discussion of sexual orientation and gender identity in public schools.",
-                status: "in-committee",
-                categories: ["education"],
-                updated: "2025"
-            },
-            {
-                bill: "HB 245",
-                title: "Bathroom Bill",
-                description: "Requires use of restrooms and facilities based on sex assigned at birth in schools and government buildings.",
-                status: "in-committee",
-                categories: ["anti-trans"],
-                updated: "2025"
-            },
-            {
-                bill: "HB 61",
-                title: "Born Alive Infant Protection Act",
-                description: "While primarily framed around abortion, includes provisions that affect broader reproductive and transgender healthcare policy discussions.",
-                status: "passed-committee",
-                categories: ["healthcare"],
-                updated: "2025"
-            }
-        ];
+      // Bills Data
+      const bills = [
+        {
+          bill: "HB 68",
+          title: "SAFE Act",
+          description:
+            "Bans gender-affirming care for minors and bars transgender athletes from competing consistent with their gender identity. Governor's veto was overridden.",
+          status: "signed-into-law",
+          categories: ["anti-trans", "healthcare"],
+          updated: "January 2024",
+        },
+        {
+          bill: "HB 8",
+          title: "Save Women's Sports Act",
+          description:
+            "Bars transgender girls and women from female sports teams in K-12 schools and colleges.",
+          status: "introduced",
+          categories: ["anti-trans"],
+          updated: "2025",
+        },
+        {
+          bill: "HB 183",
+          title: "Religious Exemption Expansion",
+          description:
+            "Broad religious exemption that could permit discrimination in services, employment, and housing based on sincerely held beliefs.",
+          status: "in-committee",
+          categories: ["religious-exemption"],
+          updated: "2025",
+        },
+        {
+          bill: "SB 104",
+          title: "Parents' Bill of Rights",
+          description:
+            "Includes provisions restricting discussion of sexual orientation and gender identity in public schools.",
+          status: "in-committee",
+          categories: ["education"],
+          updated: "2025",
+        },
+        {
+          bill: "HB 245",
+          title: "Bathroom Bill",
+          description:
+            "Requires use of restrooms and facilities based on sex assigned at birth in schools and government buildings.",
+          status: "in-committee",
+          categories: ["anti-trans"],
+          updated: "2025",
+        },
+        {
+          bill: "HB 61",
+          title: "Born Alive Infant Protection Act",
+          description:
+            "While primarily framed around abortion, includes provisions that affect broader reproductive and transgender healthcare policy discussions.",
+          status: "passed-committee",
+          categories: ["healthcare"],
+          updated: "2025",
+        },
+      ];
 
-        // State Management
-        let activeFilters = {
-            status: 'all',
-            category: 'all'
-        };
+      // State Management
+      let activeFilters = {
+        status: "all",
+        category: "all",
+      };
 
-        // Render Bills
-        function renderBills() {
-            const billsGrid = document.getElementById('billsGrid');
-            const emptyState = document.getElementById('emptyState');
-            const resultsCount = document.getElementById('resultsCount');
+      // Render Bills
+      function renderBills() {
+        const billsGrid = document.getElementById("billsGrid");
+        const emptyState = document.getElementById("emptyState");
+        const resultsCount = document.getElementById("resultsCount");
 
-            billsGrid.innerHTML = '';
-            let visibleCount = 0;
+        billsGrid.innerHTML = "";
+        let visibleCount = 0;
 
-            bills.forEach(bill => {
-                const matchesStatus = activeFilters.status === 'all' || bill.status === activeFilters.status;
-                const matchesCategory = activeFilters.category === 'all' || bill.categories.some(cat => cat === activeFilters.category);
+        bills.forEach((bill) => {
+          const matchesStatus =
+            activeFilters.status === "all" ||
+            bill.status === activeFilters.status;
+          const matchesCategory =
+            activeFilters.category === "all" ||
+            bill.categories.some((cat) => cat === activeFilters.category);
 
-                if (matchesStatus && matchesCategory) {
-                    visibleCount++;
-                    const card = createBillCard(bill);
-                    billsGrid.appendChild(card);
-                }
-            });
+          if (matchesStatus && matchesCategory) {
+            visibleCount++;
+            const card = createBillCard(bill);
+            billsGrid.appendChild(card);
+          }
+        });
 
-            resultsCount.textContent = visibleCount;
-            emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
-        }
+        resultsCount.textContent = visibleCount;
+        emptyState.style.display = visibleCount === 0 ? "block" : "none";
+      }
 
-        // Create Bill Card
-        function createBillCard(bill) {
-            const card = document.createElement('div');
-            card.className = `bill-card status-${bill.status}`;
+      // Create Bill Card
+      function createBillCard(bill) {
+        const card = document.createElement("div");
+        card.className = `bill-card status-${bill.status}`;
 
-            const statusLabel = formatStatusLabel(bill.status);
-            const categoryTags = bill.categories
-                .map(cat => `<span class="category-tag">${formatCategoryLabel(cat)}</span>`)
-                .join('');
+        const statusLabel = formatStatusLabel(bill.status);
+        const categoryTags = bill.categories
+          .map(
+            (cat) =>
+              `<span class="category-tag">${formatCategoryLabel(cat)}</span>`,
+          )
+          .join("");
 
-            card.innerHTML = `
+        card.innerHTML = `
                 <div class="bill-number">${bill.bill}</div>
                 <div class="bill-title">${bill.title}</div>
                 <div class="bill-meta">
@@ -663,71 +782,73 @@
                 <div class="bill-updated">Last Updated: ${bill.updated}</div>
             `;
 
-            return card;
-        }
+        return card;
+      }
 
-        // Format Status Label
-        function formatStatusLabel(status) {
-            const labels = {
-                'introduced': 'Introduced',
-                'in-committee': 'In Committee',
-                'passed-committee': 'Passed Committee',
-                'signed-into-law': 'Signed Into Law',
-                'dead-tabled': 'Dead/Tabled'
-            };
-            return labels[status] || status;
-        }
+      // Format Status Label
+      function formatStatusLabel(status) {
+        const labels = {
+          introduced: "Introduced",
+          "in-committee": "In Committee",
+          "passed-committee": "Passed Committee",
+          "signed-into-law": "Signed Into Law",
+          "dead-tabled": "Dead/Tabled",
+        };
+        return labels[status] || status;
+      }
 
-        // Format Category Label
-        function formatCategoryLabel(category) {
-            const labels = {
-                'anti-trans': 'Anti-Trans',
-                'religious-exemption': 'Religious Exemption',
-                'education': 'Education',
-                'healthcare': 'Healthcare'
-            };
-            return labels[category] || category;
-        }
+      // Format Category Label
+      function formatCategoryLabel(category) {
+        const labels = {
+          "anti-trans": "Anti-Trans",
+          "religious-exemption": "Religious Exemption",
+          education: "Education",
+          healthcare: "Healthcare",
+        };
+        return labels[category] || category;
+      }
 
-        // Filter Button Handler
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const filterType = this.dataset.filter;
-                const filterValue = this.dataset.value;
+      // Filter Button Handler
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const filterType = this.dataset.filter;
+          const filterValue = this.dataset.value;
 
-                // Update active state within the same filter group
-                document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => {
-                    b.classList.remove('active');
-                });
-                this.classList.add('active');
-
-                // Update filter state
-                activeFilters[filterType] = filterValue;
-
-                // Re-render bills
-                renderBills();
+          // Update active state within the same filter group
+          document
+            .querySelectorAll(`[data-filter="${filterType}"]`)
+            .forEach((b) => {
+              b.classList.remove("active");
             });
+          this.classList.add("active");
+
+          // Update filter state
+          activeFilters[filterType] = filterValue;
+
+          // Re-render bills
+          renderBills();
         });
+      });
 
-        // Mobile Menu Toggle
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
+      // Mobile Menu Toggle
+      const hamburger = document.getElementById("hamburger");
+      const navLinks = document.getElementById("navLinks");
 
-        hamburger.addEventListener('click', function() {
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
+      hamburger.addEventListener("click", function () {
+        hamburger.classList.toggle("active");
+        navLinks.classList.toggle("active");
+      });
+
+      // Close mobile menu when a link is clicked
+      document.querySelectorAll(".nav-links a").forEach((link) => {
+        link.addEventListener("click", function () {
+          hamburger.classList.remove("active");
+          navLinks.classList.remove("active");
         });
+      });
 
-        // Close mobile menu when a link is clicked
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', function() {
-                hamburger.classList.remove('active');
-                navLinks.classList.remove('active');
-            });
-        });
-
-        // Initial render
-        renderBills();
+      // Initial render
+      renderBills();
     </script>
-</body>
+  </body>
 </html>

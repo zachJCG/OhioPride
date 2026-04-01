@@ -1,229 +1,278 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Founding Members | Ohio Pride PAC</title>
-  <meta name="description" content="Join the first 1,969 founding members building LGBTQ+ political power in Ohio.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
-  <style>
-    body { background: var(--dark-bg); }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Founding Members | Ohio Pride PAC</title>
+    <meta
+      name="description"
+      content="Join the first 1,969 founding members building LGBTQ+ political power in Ohio."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      body {
+        background: var(--dark-bg);
+      }
 
-    /* Tier cards specific to this page */
-    .tier-legend { padding: 3rem 0; }
-    .tier-legend h3 {
-      font-family: 'Montserrat', sans-serif;
-      text-align: center;
-      margin-bottom: 2rem;
-      font-size: 1.5rem;
-      color: var(--text-white);
-    }
-    .tier-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .tier-legend-card {
-      padding: 1.5rem;
-      border: 1px solid var(--dark-bg-light);
-      border-radius: 8px;
-      text-align: center;
-      background: rgba(19, 45, 68, 0.5);
-      transition: border-color 0.3s ease, background-color 0.3s ease;
-    }
-    .tier-legend-card:hover {
-      background-color: rgba(0, 77, 255, 0.05);
-      border-color: var(--color-blue);
-    }
-    .tier-legend-card .tier-name {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-      color: var(--text-white);
-    }
-    .tier-legend-card .tier-price {
-      font-family: 'Roboto Slab', serif;
-      color: var(--text-light);
-      font-size: 0.95rem;
-    }
+      /* Tier cards specific to this page */
+      .tier-legend {
+        padding: 3rem 0;
+      }
+      .tier-legend h3 {
+        font-family: "Montserrat", sans-serif;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+        color: var(--text-white);
+      }
+      .tier-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .tier-legend-card {
+        padding: 1.5rem;
+        border: 1px solid var(--dark-bg-light);
+        border-radius: 8px;
+        text-align: center;
+        background: rgba(19, 45, 68, 0.5);
+        transition:
+          border-color 0.3s ease,
+          background-color 0.3s ease;
+      }
+      .tier-legend-card:hover {
+        background-color: rgba(0, 77, 255, 0.05);
+        border-color: var(--color-blue);
+      }
+      .tier-legend-card .tier-name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-white);
+      }
+      .tier-legend-card .tier-price {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        font-size: 0.95rem;
+      }
 
-    /* Member empty state */
-    .member-empty-state {
-      padding: 4rem 2rem;
-      border: 2px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      text-align: center;
-      background: rgba(19, 45, 68, 0.3);
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .member-empty-state h3 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: var(--text-white);
-    }
-    .member-empty-state p {
-      font-family: 'Roboto Slab', serif;
-      color: var(--text-light);
-      font-size: 1rem;
-      line-height: 1.8;
-    }
+      /* Member empty state */
+      .member-empty-state {
+        padding: 4rem 2rem;
+        border: 2px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        text-align: center;
+        background: rgba(19, 45, 68, 0.3);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .member-empty-state h3 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-white);
+      }
+      .member-empty-state p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        font-size: 1rem;
+        line-height: 1.8;
+      }
 
-    @media (max-width: 768px) {
-      .tier-grid { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
+      @media (max-width: 768px) {
+        .tier-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pride-stripe"></div>
 
-  <div class="pride-stripe"></div>
-
-  <!-- Navigation -->
-  <nav class="nav nav-solid" id="nav">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo">
-        <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
-      </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-      <div class="nav-links" id="navLinks">
-        <a href="/issues.html">Issues</a>
-        <a href="/founding-members.html">Founding Members</a>
-        <a href="/contact.html">Contact</a>
-        <a href="/donate.html" class="btn btn-nav">Donate</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <header class="subpage-hero">
-    <div class="container">
-      <div class="section-label">Founding Members</div>
-      <h1 class="section-title">Our Founding Members</h1>
-      <p class="subpage-hero-sub">The first 1,969 people building LGBTQ+ political power in Ohio</p>
-    </div>
-  </header>
-
-  <!-- Progress + Tiers -->
-  <section class="section">
-    <div class="container">
-
-      <!-- Progress Bar -->
-      <div class="goal-block" style="max-width:640px; margin: 0 auto 48px;">
-        <div class="goal-top">
-          <span class="goal-text">Founding Members</span>
-          <span class="goal-amt">1,969</span>
-        </div>
-        <div class="goal-track"><div class="goal-fill" id="goalFill"></div></div>
-        <div class="goal-note" id="progressText">0 of 1,969 Founding Members</div>
-      </div>
-
-      <p style="font-family:'Roboto Slab',serif; color:var(--text-light); text-align:center; max-width:700px; margin:0 auto 2rem; line-height:1.8;">
-        In 1969, the Stonewall uprising ignited a movement. We're honoring that legacy by building a founding base of 1,969 members.
-      </p>
-
-      <div style="text-align:center; margin-bottom: 3rem;">
-        <a href="/donate/founding-member" class="btn btn-primary">Become a Founding Member</a>
-      </div>
-
-      <!-- Tier Legend -->
-      <div class="tier-legend">
-        <h3>Founding Member Tiers</h3>
-        <div class="tier-grid">
-          <div class="tier-legend-card">
-            <div class="tier-name">Stonewall Sustainer</div>
-            <div class="tier-price">$19.69/month</div>
-          </div>
-          <div class="tier-legend-card">
-            <div class="tier-name">Founding Member</div>
-            <div class="tier-price">$25 one-time</div>
-          </div>
-          <div class="tier-legend-card">
-            <div class="tier-name">Pride Builder</div>
-            <div class="tier-price">$50/month</div>
-          </div>
-          <div class="tier-legend-card">
-            <div class="tier-name">Founding Circle</div>
-            <div class="tier-price">$100/month</div>
-          </div>
-          <div class="tier-legend-card">
-            <div class="tier-name">Founding Patron</div>
-            <div class="tier-price">$250+ one-time</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Member List -->
-  <section class="section">
-    <div class="container">
-      <div class="member-empty-state">
-        <h3>Founding member names will appear here as our community grows.</h3>
-        <p>Members are listed with their consent.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="/" class="nav-logo footer-logo">
-            <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
-          </a>
-          <p class="footer-tagline">Ohio's Political Action Committee for LGBTQ+ Equality.</p>
-        </div>
-        <div class="footer-links">
-          <h4>Organization</h4>
+    <!-- Navigation -->
+    <nav class="nav nav-solid" id="nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <span class="logo-ohio">Ohio</span
+          ><span class="logo-pride">Pride</span>
+          <span class="logo-pac">PAC</span>
+        </a>
+        <button
+          class="nav-toggle"
+          id="navToggle"
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="navLinks">
           <a href="/issues.html">Issues</a>
           <a href="/founding-members.html">Founding Members</a>
-        </div>
-        <div class="footer-links">
-          <h4>Get Involved</h4>
-          <a href="/donate.html">Donate</a>
-          <a href="/contact.html">Contact Us</a>
-        </div>
-        <div class="footer-links">
-          <h4>Legal</h4>
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/terms">Terms of Use</a>
+          <a href="/contact.html">Contact</a>
+          <a href="/donate.html" class="btn btn-nav">Donate</a>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+    </nav>
+
+    <!-- Hero -->
+    <header class="subpage-hero">
+      <div class="container">
+        <div class="section-label">Founding Members</div>
+        <h1 class="section-title">Our Founding Members</h1>
+        <p class="subpage-hero-sub">
+          The first 1,969 people building LGBTQ+ political power in Ohio
+        </p>
+      </div>
+    </header>
+
+    <!-- Progress + Tiers -->
+    <section class="section">
+      <div class="container">
+        <!-- Progress Bar -->
+        <div class="goal-block" style="max-width: 640px; margin: 0 auto 48px">
+          <div class="goal-top">
+            <span class="goal-text">Founding Members</span>
+            <span class="goal-amt">1,969</span>
+          </div>
+          <div class="goal-track">
+            <div class="goal-fill" id="goalFill"></div>
+          </div>
+          <div class="goal-note" id="progressText">
+            0 of 1,969 Founding Members
+          </div>
+        </div>
+
+        <p
+          style="
+            font-family: &quot;Roboto Slab&quot;, serif;
+            color: var(--text-light);
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+          "
+        >
+          In 1969, the Stonewall uprising ignited a movement. We're honoring
+          that legacy by building a founding base of 1,969 members.
+        </p>
+
+        <div style="text-align: center; margin-bottom: 3rem">
+          <a href="/donate/founding-member" class="btn btn-primary"
+            >Become a Founding Member</a
+          >
+        </div>
+
+        <!-- Tier Legend -->
+        <div class="tier-legend">
+          <h3>Founding Member Tiers</h3>
+          <div class="tier-grid">
+            <div class="tier-legend-card">
+              <div class="tier-name">Stonewall Sustainer</div>
+              <div class="tier-price">$19.69/month</div>
+            </div>
+            <div class="tier-legend-card">
+              <div class="tier-name">Founding Member</div>
+              <div class="tier-price">$25 one-time</div>
+            </div>
+            <div class="tier-legend-card">
+              <div class="tier-name">Pride Builder</div>
+              <div class="tier-price">$50/month</div>
+            </div>
+            <div class="tier-legend-card">
+              <div class="tier-name">Founding Circle</div>
+              <div class="tier-price">$100/month</div>
+            </div>
+            <div class="tier-legend-card">
+              <div class="tier-name">Founding Patron</div>
+              <div class="tier-price">$250+ one-time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Member List -->
+    <section class="section">
+      <div class="container">
+        <div class="member-empty-state">
+          <h3>
+            Founding member names will appear here as our community grows.
+          </h3>
+          <p>Members are listed with their consent.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="nav-logo footer-logo">
+              <span class="logo-ohio">Ohio</span
+              ><span class="logo-pride">Pride</span>
+              <span class="logo-pac">PAC</span>
+            </a>
+            <p class="footer-tagline">
+              Ohio's Political Action Committee for LGBTQ+ Equality.
+            </p>
+          </div>
+          <div class="footer-links">
+            <h4>Organization</h4>
+            <a href="/issues.html">Issues</a>
+            <a href="/founding-members.html">Founding Members</a>
+          </div>
+          <div class="footer-links">
+            <h4>Get Involved</h4>
+            <a href="/donate.html">Donate</a>
+            <a href="/contact.html">Contact Us</a>
+          </div>
+          <div class="footer-links">
+            <h4>Legal</h4>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="compliance-footer">
+      <div class="container">
+        <p>
+          Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David
+          Donofrio, Treasurer.
+        </p>
+        <p class="irs-line">
+          Contributions are not tax-deductible for federal income tax purposes.
+        </p>
       </div>
     </div>
-  </footer>
 
-  <div class="compliance-footer">
-    <div class="container">
-      <p>Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David Donofrio, Treasurer.</p>
-      <p class="irs-line">Contributions are not tax-deductible for federal income tax purposes.</p>
-    </div>
-  </div>
-
-  <script src="/js/main.js"></script>
-  <script>
-    (function () {
-      var FOUNDING_MEMBER_COUNT = 0;
-      var FOUNDING_MEMBER_GOAL = 1969;
-      var pct = (FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100;
-      var bar = document.getElementById('goalFill');
-      var text = document.getElementById('progressText');
-      if (bar) bar.style.width = pct + '%';
-      if (text) text.textContent = FOUNDING_MEMBER_COUNT + ' of 1,969 Founding Members';
-    })();
-  </script>
-</body>
+    <script src="/js/main.js"></script>
+    <script>
+      (function () {
+        var FOUNDING_MEMBER_COUNT = 0;
+        var FOUNDING_MEMBER_GOAL = 1969;
+        var pct = (FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100;
+        var bar = document.getElementById("goalFill");
+        var text = document.getElementById("progressText");
+        if (bar) bar.style.width = pct + "%";
+        if (text)
+          text.textContent =
+            FOUNDING_MEMBER_COUNT + " of 1,969 Founding Members";
+      })();
+    </script>
+  </body>
 </html>

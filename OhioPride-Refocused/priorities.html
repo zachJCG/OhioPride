@@ -1,560 +1,645 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Our Priorities — Ohio Pride PAC</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        html, body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #0a0a0a;
-            color: #ffffff;
-            line-height: 1.6;
-        }
+      html,
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: #0a0a0a;
+        color: #ffffff;
+        line-height: 1.6;
+      }
 
-        a {
-            color: #ffffff;
-            text-decoration: none;
-            transition: opacity 0.2s ease;
-        }
+      a {
+        color: #ffffff;
+        text-decoration: none;
+        transition: opacity 0.2s ease;
+      }
 
-        a:hover {
-            opacity: 0.8;
-        }
+      a:hover {
+        opacity: 0.8;
+      }
 
-        /* Navigation */
-        nav {
-            position: sticky;
-            top: 0;
-            background-color: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 1000;
-            padding: 1rem 2rem;
-        }
+      /* Navigation */
+      nav {
+        position: sticky;
+        top: 0;
+        background-color: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 1000;
+        padding: 1rem 2rem;
+      }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .nav-logo {
-            font-size: 1.25rem;
-            font-weight: 600;
-            background: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #008026, #4b369d, #750787);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+      .nav-logo {
+        font-size: 1.25rem;
+        font-weight: 600;
+        background: linear-gradient(
+          90deg,
+          #e40303,
+          #ff8c00,
+          #ffff41,
+          #008026,
+          #4b369d,
+          #750787
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
 
-        .nav-links a {
-            font-size: 0.95rem;
-            transition: color 0.2s ease;
-        }
+      .nav-links a {
+        font-size: 0.95rem;
+        transition: color 0.2s ease;
+      }
 
-        .nav-links a:hover {
-            color: #ff8c00;
-        }
+      .nav-links a:hover {
+        color: #ff8c00;
+      }
 
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 5px;
-        }
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 5px;
+      }
 
-        .hamburger span {
-            width: 25px;
-            height: 2px;
-            background-color: #ffffff;
-            transition: all 0.3s ease;
-        }
+      .hamburger span {
+        width: 25px;
+        height: 2px;
+        background-color: #ffffff;
+        transition: all 0.3s ease;
+      }
 
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(8px, 8px);
-        }
+      .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(8px, 8px);
+      }
 
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
 
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(8px, -8px);
-        }
+      .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(8px, -8px);
+      }
 
-        /* Hero Section */
-        .hero {
-            padding: 4rem 2rem;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(228, 3, 3, 0.05) 0%, rgba(75, 54, 157, 0.05) 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+      /* Hero Section */
+      .hero {
+        padding: 4rem 2rem;
+        text-align: center;
+        background: linear-gradient(
+          135deg,
+          rgba(228, 3, 3, 0.05) 0%,
+          rgba(75, 54, 157, 0.05) 100%
+        );
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-        .hero-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+      .hero-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
 
+      .hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        background: linear-gradient(
+          90deg,
+          #e40303,
+          #ff8c00,
+          #ffff41,
+          #008026,
+          #4b369d,
+          #750787
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        color: #cccccc;
+        line-height: 1.6;
+      }
+
+      /* Main Content */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+      }
+
+      section {
+        margin-bottom: 4rem;
+      }
+
+      section h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid;
+        border-image: linear-gradient(
+            90deg,
+            #e40303,
+            #ff8c00,
+            #ffff41,
+            #008026,
+            #4b369d,
+            #750787
+          )
+          1;
+      }
+
+      /* Section 1: Endorsements */
+      .endorsements-intro {
+        font-size: 1.1rem;
+        color: #e0e0e0;
+        margin-bottom: 2rem;
+        line-height: 1.8;
+      }
+
+      .endorsements-intro strong {
+        color: #ffff41;
+      }
+
+      .endorsements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .endorsement-card {
+        background: linear-gradient(
+          135deg,
+          rgba(228, 3, 3, 0.1) 0%,
+          rgba(75, 54, 157, 0.1) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .endorsement-card:hover {
+        border-color: rgba(255, 140, 0, 0.3);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 140, 0, 0.05) 0%,
+          rgba(75, 54, 157, 0.1) 100%
+        );
+      }
+
+      .coming-soon-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: linear-gradient(90deg, #e40303, #ff8c00);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .card-placeholder {
+        font-size: 1.1rem;
+        color: #b0b0b0;
+      }
+
+      /* Section 2: Issue Advocacy */
+      .advocacy-intro {
+        font-size: 1.1rem;
+        color: #e0e0e0;
+        margin-bottom: 2rem;
+        line-height: 1.8;
+      }
+
+      .advocacy-intro strong {
+        color: #ffff41;
+      }
+
+      .policy-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .policy-tag {
+        background: linear-gradient(
+          90deg,
+          #e40303,
+          #ff8c00,
+          #ffff41,
+          #008026,
+          #4b369d,
+          #750787
+        );
+        padding: 0.75rem 1.5rem;
+        border-radius: 20px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .cta-tracker {
+        background: linear-gradient(
+          135deg,
+          rgba(228, 3, 3, 0.1) 0%,
+          rgba(75, 54, 157, 0.1) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .cta-tracker a {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(90deg, #e40303, #ff8c00);
+        border-radius: 4px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+
+      .cta-tracker a:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+
+      .tracker-note {
+        font-size: 1rem;
+        color: #cccccc;
+        margin-top: 1.5rem;
+        font-style: italic;
+        line-height: 1.6;
+      }
+
+      /* Footer */
+      footer {
+        background: rgba(0, 0, 0, 0.5);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 3rem 2rem;
+        margin-top: 4rem;
+      }
+
+      footer .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .footer-section h3 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #ffff41;
+      }
+
+      .footer-section ul {
+        list-style: none;
+      }
+
+      .footer-section ul li {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-section a {
+        color: #cccccc;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+      }
+
+      .footer-section a:hover {
+        color: #ffffff;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 2rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #888888;
+      }
+
+      .footer-bottom p {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        color: #888888;
+        font-size: 0.85rem;
+      }
+
+      .footer-links a:hover {
+        color: #cccccc;
+      }
+
+      .paid-for-disclaimer {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: rgba(255, 140, 0, 0.05);
+        border-left: 2px solid #ff8c00;
+        font-size: 0.8rem;
+        color: #aaaaaa;
+        line-height: 1.6;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
         .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #008026, #4b369d, #750787);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+          font-size: 2rem;
         }
 
         .hero p {
-            font-size: 1.25rem;
-            color: #cccccc;
-            line-height: 1.6;
-        }
-
-        /* Main Content */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-
-        section {
-            margin-bottom: 4rem;
+          font-size: 1.1rem;
         }
 
         section h2 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid;
-            border-image: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #008026, #4b369d, #750787) 1;
+          font-size: 1.5rem;
         }
 
-        /* Section 1: Endorsements */
-        .endorsements-intro {
-            font-size: 1.1rem;
-            color: #e0e0e0;
-            margin-bottom: 2rem;
-            line-height: 1.8;
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          background-color: rgba(10, 10, 10, 0.98);
+          padding: 1rem 2rem;
+          gap: 1rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          width: 100%;
         }
 
-        .endorsements-intro strong {
-            color: #ffff41;
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: flex;
         }
 
         .endorsements-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .endorsement-card {
-            background: linear-gradient(135deg, rgba(228, 3, 3, 0.1) 0%, rgba(75, 54, 157, 0.1) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .endorsement-card:hover {
-            border-color: rgba(255, 140, 0, 0.3);
-            background: linear-gradient(135deg, rgba(255, 140, 0, 0.05) 0%, rgba(75, 54, 157, 0.1) 100%);
-        }
-
-        .coming-soon-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: linear-gradient(90deg, #e40303, #ff8c00);
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .card-placeholder {
-            font-size: 1.1rem;
-            color: #b0b0b0;
-        }
-
-        /* Section 2: Issue Advocacy */
-        .advocacy-intro {
-            font-size: 1.1rem;
-            color: #e0e0e0;
-            margin-bottom: 2rem;
-            line-height: 1.8;
-        }
-
-        .advocacy-intro strong {
-            color: #ffff41;
+          grid-template-columns: 1fr;
         }
 
         .policy-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 2rem;
+          flex-direction: column;
+          gap: 0.5rem;
         }
 
         .policy-tag {
-            background: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #008026, #4b369d, #750787);
-            padding: 0.75rem 1.5rem;
-            border-radius: 20px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .cta-tracker {
-            background: linear-gradient(135deg, rgba(228, 3, 3, 0.1) 0%, rgba(75, 54, 157, 0.1) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .cta-tracker a {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(90deg, #e40303, #ff8c00);
-            border-radius: 4px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .cta-tracker a:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-        .tracker-note {
-            font-size: 1rem;
-            color: #cccccc;
-            margin-top: 1.5rem;
-            font-style: italic;
-            line-height: 1.6;
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(0, 0, 0, 0.5);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 3rem 2rem;
-            margin-top: 4rem;
-        }
-
-        footer .container {
-            max-width: 1200px;
-            margin: 0 auto;
+          width: 100%;
+          text-align: center;
         }
 
         .footer-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h3 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #ffff41;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section a {
-            color: #cccccc;
-            font-size: 0.9rem;
-            transition: color 0.2s ease;
-        }
-
-        .footer-section a:hover {
-            color: #ffffff;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #888888;
-        }
-
-        .footer-bottom p {
-            margin-bottom: 0.5rem;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
         }
 
         .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
+          flex-direction: column;
+          gap: 1rem;
         }
 
-        .footer-links a {
-            color: #888888;
-            font-size: 0.85rem;
+        .container {
+          padding: 2rem 1rem;
         }
 
-        .footer-links a:hover {
-            color: #cccccc;
+        nav {
+          padding: 1rem;
         }
-
-        .paid-for-disclaimer {
-            margin-top: 2rem;
-            padding: 1rem;
-            background: rgba(255, 140, 0, 0.05);
-            border-left: 2px solid #ff8c00;
-            font-size: 0.8rem;
-            color: #aaaaaa;
-            line-height: 1.6;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            section h2 {
-                font-size: 1.5rem;
-            }
-
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                flex-direction: column;
-                background-color: rgba(10, 10, 10, 0.98);
-                padding: 1rem 2rem;
-                gap: 1rem;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                width: 100%;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .endorsements-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .policy-tags {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .policy-tag {
-                width: 100%;
-                text-align: center;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .footer-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .container {
-                padding: 2rem 1rem;
-            }
-
-            nav {
-                padding: 1rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navigation -->
     <nav>
-        <div class="nav-container">
-            <div class="nav-logo">Ohio Pride PAC</div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="/">Home</a></li>
-                <li><a href="/priorities">Priorities</a></li>
-                <li><a href="/issues">Issues</a></li>
-                <li><a href="/founding-members">Founding Members</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/donate">Donate</a></li>
-            </ul>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+      <div class="nav-container">
+        <div class="nav-logo">Ohio Pride PAC</div>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="/">Home</a></li>
+          <li><a href="/priorities">Priorities</a></li>
+          <li><a href="/issues">Issues</a></li>
+          <li><a href="/founding-members">Founding Members</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/donate">Donate</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-container">
-            <h1>Our Priorities</h1>
-            <p>Endorsing candidates. Opposing discrimination. Building political power.</p>
-        </div>
+      <div class="hero-container">
+        <h1>Our Priorities</h1>
+        <p>
+          Endorsing candidates. Opposing discrimination. Building political
+          power.
+        </p>
+      </div>
     </section>
 
     <!-- Main Content -->
     <div class="container">
-        <!-- Section 1: Candidate Endorsements -->
-        <section>
-            <h2>Candidate Endorsements & Contributions</h2>
-            <p class="endorsements-intro">
-                <strong>Ohio Pride PAC endorses and contributes to pro-equality candidates</strong> at every level — state legislature, statewide offices, county, and municipal. We invest in candidates who will fight for the rights, safety, and dignity of the LGBTQ+ community.
+      <!-- Section 1: Candidate Endorsements -->
+      <section>
+        <h2>Candidate Endorsements & Contributions</h2>
+        <p class="endorsements-intro">
+          <strong
+            >Ohio Pride PAC endorses and contributes to pro-equality
+            candidates</strong
+          >
+          at every level — state legislature, statewide offices, county, and
+          municipal. We invest in candidates who will fight for the rights,
+          safety, and dignity of the LGBTQ+ community.
+        </p>
+        <p class="endorsements-intro">
+          <strong>2026 is a critical cycle</strong> with all statewide offices
+          on the ballot. This is our moment to elect champions who will defend
+          Ohio's LGBTQ+ community.
+        </p>
+        <div class="endorsements-grid">
+          <div class="endorsement-card">
+            <div class="coming-soon-badge">Coming Soon</div>
+            <p class="card-placeholder">
+              Endorsements launching soon — stay tuned
             </p>
-            <p class="endorsements-intro">
-                <strong>2026 is a critical cycle</strong> with all statewide offices on the ballot. This is our moment to elect champions who will defend Ohio's LGBTQ+ community.
+          </div>
+          <div class="endorsement-card">
+            <div class="coming-soon-badge">Coming Soon</div>
+            <p class="card-placeholder">
+              Endorsements launching soon — stay tuned
             </p>
-            <div class="endorsements-grid">
-                <div class="endorsement-card">
-                    <div class="coming-soon-badge">Coming Soon</div>
-                    <p class="card-placeholder">Endorsements launching soon — stay tuned</p>
-                </div>
-                <div class="endorsement-card">
-                    <div class="coming-soon-badge">Coming Soon</div>
-                    <p class="card-placeholder">Endorsements launching soon — stay tuned</p>
-                </div>
-                <div class="endorsement-card">
-                    <div class="coming-soon-badge">Coming Soon</div>
-                    <p class="card-placeholder">Endorsements launching soon — stay tuned</p>
-                </div>
-                <div class="endorsement-card">
-                    <div class="coming-soon-badge">Coming Soon</div>
-                    <p class="card-placeholder">Endorsements launching soon — stay tuned</p>
-                </div>
-            </div>
-        </section>
+          </div>
+          <div class="endorsement-card">
+            <div class="coming-soon-badge">Coming Soon</div>
+            <p class="card-placeholder">
+              Endorsements launching soon — stay tuned
+            </p>
+          </div>
+          <div class="endorsement-card">
+            <div class="coming-soon-badge">Coming Soon</div>
+            <p class="card-placeholder">
+              Endorsements launching soon — stay tuned
+            </p>
+          </div>
+        </div>
+      </section>
 
-        <!-- Section 2: Issue Advocacy -->
-        <section>
-            <h2>Issue Advocacy</h2>
-            <p class="advocacy-intro">
-                <strong>Ohio Pride PAC actively opposes anti-LGBTQ+ legislation</strong> and champions pro-equality policy. We refuse to let discrimination become law in Ohio.
-            </p>
-            <div class="policy-tags">
-                <div class="policy-tag">Anti-Trans Legislation</div>
-                <div class="policy-tag">Religious Exemption Bills</div>
-                <div class="policy-tag">Healthcare Access Restrictions</div>
-                <div class="policy-tag">Education Censorship</div>
-            </div>
-            <div class="cta-tracker">
-                <p>We track every anti-LGBTQ+ bill in the Ohio Statehouse so our community knows exactly where the threats are — and how to fight back.</p>
-                <a href="/issues">View the Legislative Tracker →</a>
-            </div>
-        </section>
+      <!-- Section 2: Issue Advocacy -->
+      <section>
+        <h2>Issue Advocacy</h2>
+        <p class="advocacy-intro">
+          <strong
+            >Ohio Pride PAC actively opposes anti-LGBTQ+ legislation</strong
+          >
+          and champions pro-equality policy. We refuse to let discrimination
+          become law in Ohio.
+        </p>
+        <div class="policy-tags">
+          <div class="policy-tag">Anti-Trans Legislation</div>
+          <div class="policy-tag">Religious Exemption Bills</div>
+          <div class="policy-tag">Healthcare Access Restrictions</div>
+          <div class="policy-tag">Education Censorship</div>
+        </div>
+        <div class="cta-tracker">
+          <p>
+            We track every anti-LGBTQ+ bill in the Ohio Statehouse so our
+            community knows exactly where the threats are — and how to fight
+            back.
+          </p>
+          <a href="/issues">View the Legislative Tracker →</a>
+        </div>
+      </section>
     </div>
 
     <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Organization</h3>
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/priorities">Priorities</a></li>
-                        <li><a href="/issues">Issues</a></li>
-                        <li><a href="/founding-members">Founding Members</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Get Involved</h3>
-                    <ul>
-                        <li><a href="/contact">Contact Us</a></li>
-                        <li><a href="/donate">Donate</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Legal</h3>
-                    <ul>
-                        <li><a href="/privacy">Privacy Policy</a></li>
-                        <li><a href="/terms">Terms of Use</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Ohio Pride PAC</p>
-                <p><strong>Directors:</strong> Zachary R. Joseph — Director | <strong>Treasurer:</strong> David Donofrio</p>
-                <div class="footer-links">
-                    <a href="/privacy">Privacy Policy</a>
-                    <a href="/terms">Terms of Use</a>
-                </div>
-                <div class="paid-for-disclaimer">
-                    <strong>Paid for disclaimer:</strong> This website is paid for by Ohio Pride PAC, a federal Super PAC not authorized by any candidate or candidate's committee. Contributions to Ohio Pride PAC are not tax-deductible for federal income tax purposes.
-                </div>
-            </div>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3>Organization</h3>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/priorities">Priorities</a></li>
+              <li><a href="/issues">Issues</a></li>
+              <li><a href="/founding-members">Founding Members</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Get Involved</h3>
+            <ul>
+              <li><a href="/contact">Contact Us</a></li>
+              <li><a href="/donate">Donate</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Legal</h3>
+            <ul>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Use</a></li>
+            </ul>
+          </div>
         </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Ohio Pride PAC</p>
+          <p>
+            <strong>Directors:</strong> Zachary R. Joseph — Director |
+            <strong>Treasurer:</strong> David Donofrio
+          </p>
+          <div class="footer-links">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+          </div>
+          <div class="paid-for-disclaimer">
+            <strong>Paid for disclaimer:</strong> This website is paid for by
+            Ohio Pride PAC, a federal Super PAC not authorized by any candidate
+            or candidate's committee. Contributions to Ohio Pride PAC are not
+            tax-deductible for federal income tax purposes.
+          </div>
+        </div>
+      </div>
     </footer>
 
     <!-- Mobile Menu Toggle -->
     <script>
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
+      const hamburger = document.getElementById("hamburger");
+      const navLinks = document.getElementById("navLinks");
 
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
+      hamburger.addEventListener("click", () => {
+        hamburger.classList.toggle("active");
+        navLinks.classList.toggle("active");
+      });
 
-        // Close menu when a link is clicked
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navLinks.classList.remove('active');
-            });
+      // Close menu when a link is clicked
+      document.querySelectorAll(".nav-links a").forEach((link) => {
+        link.addEventListener("click", () => {
+          hamburger.classList.remove("active");
+          navLinks.classList.remove("active");
         });
+      });
     </script>
-</body>
+  </body>
 </html>

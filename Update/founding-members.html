@@ -1,520 +1,573 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Founding Members | Ohio Pride PAC</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #0a0a0a;
-            color: #ffffff;
-            line-height: 1.6;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: #0a0a0a;
+        color: #ffffff;
+        line-height: 1.6;
+      }
 
-        /* Navigation */
-        nav {
-            position: sticky;
-            top: 0;
-            background-color: #0a0a0a;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 0;
-            z-index: 1000;
-        }
+      /* Navigation */
+      nav {
+        position: sticky;
+        top: 0;
+        background-color: #0a0a0a;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem 0;
+        z-index: 1000;
+      }
 
-        nav .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      nav .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        nav .logo {
-            font-weight: 700;
-            font-size: 1.5rem;
-            text-decoration: none;
-            color: #ffffff;
-        }
+      nav .logo {
+        font-weight: 700;
+        font-size: 1.5rem;
+        text-decoration: none;
+        color: #ffffff;
+      }
 
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+      }
+
+      nav a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+      }
+
+      nav a:hover {
+        background: linear-gradient(
+          90deg,
+          #e40303,
+          #ff8c00,
+          #ffff41,
+          #008026,
+          #24408e,
+          #732982
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 0.4rem;
+        cursor: pointer;
+      }
+
+      .hamburger span {
+        width: 25px;
+        height: 2px;
+        background-color: #ffffff;
+        transition: 0.3s;
+      }
+
+      /* Mobile Navigation */
+      @media (max-width: 768px) {
         nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          gap: 0;
+          background-color: #0a0a0a;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav ul.active {
+          display: flex;
         }
 
         nav a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
-
-        nav a:hover {
-            background: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #008026, #24408e, #732982);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+          display: block;
+          padding: 1rem 2rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 0.4rem;
-            cursor: pointer;
+          display: flex;
         }
+      }
 
-        .hamburger span {
-            width: 25px;
-            height: 2px;
-            background-color: #ffffff;
-            transition: 0.3s;
-        }
+      /* Hero Section */
+      .hero {
+        padding: 4rem 2rem;
+        text-align: center;
+        background: linear-gradient(
+          135deg,
+          rgba(228, 3, 3, 0.05),
+          rgba(255, 140, 0, 0.05),
+          rgba(0, 128, 38, 0.05)
+        );
+      }
 
-        /* Mobile Navigation */
-        @media (max-width: 768px) {
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                flex-direction: column;
-                gap: 0;
-                background-color: #0a0a0a;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
 
-            nav ul.active {
-                display: flex;
-            }
+      .hero p {
+        font-size: 1.25rem;
+        color: rgba(255, 255, 255, 0.8);
+        max-width: 600px;
+        margin: 0 auto;
+      }
 
-            nav a {
-                display: block;
-                padding: 1rem 2rem;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .hamburger {
-                display: flex;
-            }
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 4rem 2rem;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(228, 3, 3, 0.05), rgba(255, 140, 0, 0.05), rgba(0, 128, 38, 0.05));
-        }
-
+      @media (max-width: 768px) {
         .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
+          font-size: 2rem;
         }
 
         .hero p {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.8);
-            max-width: 600px;
-            margin: 0 auto;
+          font-size: 1rem;
         }
+      }
 
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
+      /* Container */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
 
-            .hero p {
-                font-size: 1rem;
-            }
-        }
+      /* Progress Section */
+      .progress-section {
+        padding: 4rem 2rem;
+        text-align: center;
+      }
 
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
+      .progress-stats {
+        margin-bottom: 2rem;
+      }
 
-        /* Progress Section */
+      .progress-count {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(
+          90deg,
+          #e40303,
+          #ff8c00,
+          #ffff41,
+          #008026,
+          #24408e,
+          #732982
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+      }
+
+      .progress-bar-container {
+        width: 100%;
+        max-width: 600px;
+        height: 40px;
+        background-color: #1a1a1a;
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 2rem auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          #e40303,
+          #ff8c00,
+          #ffff41,
+          #008026,
+          #24408e,
+          #732982
+        );
+        width: 0%;
+        transition: width 0.5s ease;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 1rem;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .progress-text {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+        line-height: 1.8;
+        max-width: 700px;
+        margin: 2rem auto 0;
+      }
+
+      @media (max-width: 768px) {
         .progress-section {
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .progress-stats {
-            margin-bottom: 2rem;
+          padding: 2rem 1rem;
         }
 
         .progress-count {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #008026, #24408e, #732982);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
+          font-size: 1.75rem;
         }
 
         .progress-bar-container {
-            width: 100%;
-            max-width: 600px;
-            height: 40px;
-            background-color: #1a1a1a;
-            border-radius: 20px;
-            overflow: hidden;
-            margin: 2rem auto;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+          height: 32px;
         }
+      }
 
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #008026, #24408e, #732982);
-            width: 0%;
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 1rem;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
+      /* CTA Button */
+      .cta-button {
+        display: inline-block;
+        padding: 1rem 2.5rem;
+        background: linear-gradient(
+          90deg,
+          #e40303,
+          #ff8c00,
+          #ffff41,
+          #008026,
+          #24408e,
+          #732982
+        );
+        color: #0a0a0a;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        margin: 2rem 0;
+        border: none;
+        cursor: pointer;
+      }
 
-        .progress-text {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
-            line-height: 1.8;
-            max-width: 700px;
-            margin: 2rem auto 0;
-        }
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(228, 3, 3, 0.3);
+      }
 
-        @media (max-width: 768px) {
-            .progress-section {
-                padding: 2rem 1rem;
-            }
+      /* Tier Legend */
+      .tier-legend {
+        padding: 3rem 2rem;
+        background-color: #0f0f0f;
+      }
 
-            .progress-count {
-                font-size: 1.75rem;
-            }
+      .tier-legend h3 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+      }
 
-            .progress-bar-container {
-                height: 32px;
-            }
-        }
+      .tier-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
 
-        /* CTA Button */
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #008026, #24408e, #732982);
-            color: #0a0a0a;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin: 2rem 0;
-            border: none;
-            cursor: pointer;
-        }
+      .tier-card {
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        text-align: center;
+        transition:
+          border-color 0.3s ease,
+          background-color 0.3s ease;
+      }
 
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(228, 3, 3, 0.3);
-        }
+      .tier-card:hover {
+        background-color: rgba(228, 3, 3, 0.05);
+        border-color: rgba(228, 3, 3, 0.3);
+      }
 
-        /* Tier Legend */
-        .tier-legend {
-            padding: 3rem 2rem;
-            background-color: #0f0f0f;
-        }
+      .tier-name {
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
 
-        .tier-legend h3 {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 1.5rem;
-        }
+      .tier-price {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+      }
 
+      @media (max-width: 768px) {
         .tier-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            max-width: 1000px;
-            margin: 0 auto;
+          grid-template-columns: 1fr;
         }
+      }
 
-        .tier-card {
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            text-align: center;
-            transition: border-color 0.3s ease, background-color 0.3s ease;
-        }
+      /* Member List Area */
+      .member-section {
+        padding: 4rem 2rem;
+      }
 
-        .tier-card:hover {
-            background-color: rgba(228, 3, 3, 0.05);
-            border-color: rgba(228, 3, 3, 0.3);
-        }
+      .member-empty-state {
+        padding: 4rem 2rem;
+        border: 2px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        text-align: center;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(228, 3, 3, 0.02)
+        );
+        max-width: 800px;
+        margin: 0 auto;
+      }
 
-        .tier-name {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
+      .member-empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
 
-        .tier-price {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.95rem;
-        }
+      .member-empty-state p {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1rem;
+        line-height: 1.8;
+      }
 
-        @media (max-width: 768px) {
-            .tier-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+      /* Footer */
+      footer {
+        background-color: #0f0f0f;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 3rem 2rem;
+        margin-top: 4rem;
+      }
 
-        /* Member List Area */
-        .member-section {
-            padding: 4rem 2rem;
-        }
+      footer .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
 
-        .member-empty-state {
-            padding: 4rem 2rem;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(228, 3, 3, 0.02));
-            max-width: 800px;
-            margin: 0 auto;
-        }
+      .footer-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
 
-        .member-empty-state h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
+      .footer-section h4 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
 
-        .member-empty-state p {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 1rem;
-            line-height: 1.8;
-        }
+      .footer-section a {
+        display: block;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease;
+      }
 
-        /* Footer */
-        footer {
-            background-color: #0f0f0f;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 3rem 2rem;
-            margin-top: 4rem;
+      .footer-section a:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 2rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.85rem;
+        line-height: 1.8;
+      }
+
+      @media (max-width: 768px) {
+        .footer-content {
+          grid-template-columns: 1fr;
         }
 
         footer .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+          padding: 0 1rem;
         }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .footer-section a {
-            display: block;
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.85rem;
-            line-height: 1.8;
-        }
-
-        @media (max-width: 768px) {
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-
-            footer .container {
-                padding: 0 1rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navigation -->
     <nav>
-        <div class="container">
-            <a href="/" class="logo">Ohio Pride PAC</a>
-            <ul id="nav-menu">
-                
-                
-                <li><a href="/issues">Issues</a></li>
-                <li><a href="/founding-members">Founding Members</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/donate">Donate</a></li>
-            </ul>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+      <div class="container">
+        <a href="/" class="logo">Ohio Pride PAC</a>
+        <ul id="nav-menu">
+          <li><a href="/issues">Issues</a></li>
+          <li><a href="/founding-members">Founding Members</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/donate">Donate</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container">
-            <h1>Our Founding Members</h1>
-            <p>The first 1,969 people building LGBTQ+ political power in Ohio</p>
-        </div>
+      <div class="container">
+        <h1>Our Founding Members</h1>
+        <p>The first 1,969 people building LGBTQ+ political power in Ohio</p>
+      </div>
     </section>
 
     <!-- Progress Section -->
     <section class="progress-section">
-        <div class="container">
-            <div class="progress-stats">
-                <div class="progress-count" id="progress-count">0 of 1,969</div>
-            </div>
-            <div class="progress-bar-container">
-                <div class="progress-bar-fill" id="progress-bar-fill"></div>
-            </div>
-            <p class="progress-text">
-                In 1969, the Stonewall uprising ignited a movement. We're honoring that legacy by building a founding base of 1,969 members.
-            </p>
+      <div class="container">
+        <div class="progress-stats">
+          <div class="progress-count" id="progress-count">0 of 1,969</div>
         </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
+        <p class="progress-text">
+          In 1969, the Stonewall uprising ignited a movement. We're honoring
+          that legacy by building a founding base of 1,969 members.
+        </p>
+      </div>
     </section>
 
     <!-- CTA Button -->
-    <div style="text-align: center;">
-        <a href="/donate/founding-member" class="cta-button">Become a Founding Member</a>
+    <div style="text-align: center">
+      <a href="/donate/founding-member" class="cta-button"
+        >Become a Founding Member</a
+      >
     </div>
 
     <!-- Tier Legend -->
     <section class="tier-legend">
-        <div class="container">
-            <h3>Founding Member Tiers</h3>
-            <div class="tier-grid">
-                <div class="tier-card">
-                    <div class="tier-name">Stonewall Sustainer</div>
-                    <div class="tier-price">$19.69/month</div>
-                </div>
-                <div class="tier-card">
-                    <div class="tier-name">Founding Member</div>
-                    <div class="tier-price">$25 one-time</div>
-                </div>
-                <div class="tier-card">
-                    <div class="tier-name">Pride Builder</div>
-                    <div class="tier-price">$50/month</div>
-                </div>
-                <div class="tier-card">
-                    <div class="tier-name">Founding Circle</div>
-                    <div class="tier-price">$100/month</div>
-                </div>
-                <div class="tier-card">
-                    <div class="tier-name">Founding Patron</div>
-                    <div class="tier-price">$250+ one-time</div>
-                </div>
-            </div>
+      <div class="container">
+        <h3>Founding Member Tiers</h3>
+        <div class="tier-grid">
+          <div class="tier-card">
+            <div class="tier-name">Stonewall Sustainer</div>
+            <div class="tier-price">$19.69/month</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-name">Founding Member</div>
+            <div class="tier-price">$25 one-time</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-name">Pride Builder</div>
+            <div class="tier-price">$50/month</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-name">Founding Circle</div>
+            <div class="tier-price">$100/month</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-name">Founding Patron</div>
+            <div class="tier-price">$250+ one-time</div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Member List Area -->
     <section class="member-section">
-        <div class="container">
-            <div class="member-empty-state">
-                <h3>Founding member names will appear here as our community grows.</h3>
-                <p>Members are listed with their consent.</p>
-            </div>
+      <div class="container">
+        <div class="member-empty-state">
+          <h3>
+            Founding member names will appear here as our community grows.
+          </h3>
+          <p>Members are listed with their consent.</p>
         </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Leadership</h4>
-                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
-                        <strong>Zachary R. Joseph</strong> — Director<br>
-                        <strong>David Donofrio</strong> — Treasurer
-                    </p>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <a href="/privacy">Privacy Policy</a>
-                    <a href="/terms">Terms of Use</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Ohio Pride PAC.</p>
-                <p>Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.</p>
-            </div>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>Leadership</h4>
+            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem">
+              <strong>Zachary R. Joseph</strong> — Director<br />
+              <strong>David Donofrio</strong> — Treasurer
+            </p>
+          </div>
+          <div class="footer-section">
+            <h4>Legal</h4>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+          </div>
         </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Ohio Pride PAC.</p>
+          <p>
+            Paid for by Ohio Pride PAC. Not authorized by any candidate or
+            candidate's committee.
+          </p>
+        </div>
+      </div>
     </footer>
 
     <script>
-        // Founding member count configuration
-        const FOUNDING_MEMBER_COUNT = 0;
+      // Founding member count configuration
+      const FOUNDING_MEMBER_COUNT = 0;
 
-        // Update progress bar on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            const percentage = (FOUNDING_MEMBER_COUNT / 1969) * 100;
-            const progressBar = document.getElementById('progress-bar-fill');
-            const progressCount = document.getElementById('progress-count');
+      // Update progress bar on page load
+      window.addEventListener("DOMContentLoaded", function () {
+        const percentage = (FOUNDING_MEMBER_COUNT / 1969) * 100;
+        const progressBar = document.getElementById("progress-bar-fill");
+        const progressCount = document.getElementById("progress-count");
 
-            progressBar.style.width = percentage + '%';
-            progressCount.textContent = FOUNDING_MEMBER_COUNT + ' of 1,969';
+        progressBar.style.width = percentage + "%";
+        progressCount.textContent = FOUNDING_MEMBER_COUNT + " of 1,969";
 
-            // Show percentage text in progress bar if there's content
-            if (FOUNDING_MEMBER_COUNT > 0) {
-                progressBar.textContent = Math.round(percentage) + '%';
-            }
+        // Show percentage text in progress bar if there's content
+        if (FOUNDING_MEMBER_COUNT > 0) {
+          progressBar.textContent = Math.round(percentage) + "%";
+        }
+      });
+
+      // Mobile hamburger menu toggle
+      const hamburger = document.getElementById("hamburger");
+      const navMenu = document.getElementById("nav-menu");
+
+      hamburger.addEventListener("click", function () {
+        navMenu.classList.toggle("active");
+      });
+
+      // Close mobile menu when a link is clicked
+      const navLinks = navMenu.querySelectorAll("a");
+      navLinks.forEach((link) => {
+        link.addEventListener("click", function () {
+          navMenu.classList.remove("active");
         });
-
-        // Mobile hamburger menu toggle
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('nav-menu');
-
-        hamburger.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-        });
-
-        // Close mobile menu when a link is clicked
-        const navLinks = navMenu.querySelectorAll('a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                navMenu.classList.remove('active');
-            });
-        });
+      });
     </script>
-</body>
+  </body>
 </html>

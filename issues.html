@@ -1,193 +1,539 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Legislative Issue Tracker | Ohio Pride PAC</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
     <style>
-        /* Issue-tracker-specific overrides */
-        body { background: var(--dark-bg); }
+      /* Issue-tracker-specific overrides */
+      body {
+        background: var(--dark-bg);
+      }
 
-        :root {
-            --card-bg: #132d44;
-            --card-border: #1a3a52;
-            --text-gray: #a0b4c8;
-            --text-dim: #6889a6;
-            --status-introduced: #3b82f6;
-            --status-committee: #f59e0b;
-            --status-passed-committee: #f97316;
-            --status-passed-chamber: #ef4444;
-            --status-senate: #dc2626;
-            --status-law: #991b1b;
-            --status-dead: #6b7280;
+      :root {
+        --card-bg: #132d44;
+        --card-border: #1a3a52;
+        --text-gray: #a0b4c8;
+        --text-dim: #6889a6;
+        --status-introduced: #3b82f6;
+        --status-committee: #f59e0b;
+        --status-passed-committee: #f97316;
+        --status-passed-chamber: #ef4444;
+        --status-senate: #dc2626;
+        --status-law: #991b1b;
+        --status-dead: #6b7280;
+      }
+
+      .tracker-hero {
+        padding-top: calc(var(--nav-height) + 48px);
+        padding-bottom: 48px;
+        text-align: center;
+        background: var(--dark-bg);
+      }
+      .tracker-hero h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-white);
+        margin-bottom: 0.5rem;
+      }
+      .tracker-hero p {
+        color: var(--text-light);
+        font-size: 1.1rem;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      @media (max-width: 768px) {
+        .tracker-hero h1 {
+          font-size: 1.8rem;
         }
+      }
 
-        .tracker-hero { padding-top: calc(var(--nav-height) + 48px); padding-bottom: 48px; text-align: center; background: var(--dark-bg); }
-        .tracker-hero h1 { font-family: 'Montserrat', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--text-white); margin-bottom: 0.5rem; }
-        .tracker-hero p { color: var(--text-light); font-size: 1.1rem; max-width: 700px; margin: 0 auto; }
-        @media (max-width: 768px) { .tracker-hero h1 { font-size: 1.8rem; } }
+      .tracker-body {
+        background: var(--dark-bg);
+        padding-bottom: 4rem;
+      }
 
-        .tracker-body { background: var(--dark-bg); padding-bottom: 4rem; }
+      .alert-banner {
+        max-width: 1200px;
+        margin: 2rem auto 0;
+        padding: 0 2rem;
+      }
+      .alert-inner {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: linear-gradient(
+          135deg,
+          rgba(220, 38, 38, 0.15),
+          rgba(239, 68, 68, 0.05)
+        );
+        border: 1px solid rgba(220, 38, 38, 0.3);
+        border-left: 4px solid var(--status-senate);
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        flex-wrap: wrap;
+      }
+      .alert-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+      .alert-text {
+        flex: 1;
+        min-width: 200px;
+      }
+      .alert-text strong {
+        display: block;
+        margin-bottom: 0.15rem;
+        color: var(--text-white);
+      }
+      .alert-text span {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+      }
+      .alert-link {
+        padding: 0.5rem 1rem;
+        background: var(--status-senate);
+        color: white;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: background 0.2s;
+        text-decoration: none;
+      }
+      .alert-link:hover {
+        background: #b91c1c;
+        color: white;
+      }
 
-        .alert-banner { max-width: 1200px; margin: 2rem auto 0; padding: 0 2rem; }
-        .alert-inner { display: flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, rgba(220,38,38,0.15), rgba(239,68,68,0.05)); border: 1px solid rgba(220,38,38,0.3); border-left: 4px solid var(--status-senate); border-radius: 8px; padding: 1rem 1.5rem; flex-wrap: wrap; }
-        .alert-icon { font-size: 1.5rem; flex-shrink: 0; }
-        .alert-text { flex: 1; min-width: 200px; }
-        .alert-text strong { display: block; margin-bottom: 0.15rem; color: var(--text-white); }
-        .alert-text span { color: var(--text-gray); font-size: 0.9rem; }
-        .alert-link { padding: 0.5rem 1rem; background: var(--status-senate); color: white; border-radius: 6px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; transition: background 0.2s; text-decoration: none; }
-        .alert-link:hover { background: #b91c1c; color: white; }
+      .stats-bar {
+        max-width: 1200px;
+        margin: 2rem auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        padding: 0 2rem;
+      }
+      .stat-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 1.25rem;
+        text-align: center;
+      }
+      .stat-card .stat-num {
+        font-family: "Montserrat", sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-white);
+      }
+      .stat-card .stat-label {
+        color: var(--text-gray);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 0.25rem;
+        font-family: "Montserrat", sans-serif;
+      }
+      @media (max-width: 768px) {
+        .stats-bar {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
 
-        .stats-bar { max-width: 1200px; margin: 2rem auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 0 2rem; }
-        .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 1.25rem; text-align: center; }
-        .stat-card .stat-num { font-family: 'Montserrat', sans-serif; font-size: 2rem; font-weight: 800; color: var(--text-white); }
-        .stat-card .stat-label { color: var(--text-gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.25rem; font-family: 'Montserrat', sans-serif; }
-        @media (max-width: 768px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } }
+      .filters {
+        max-width: 1200px;
+        margin: 0 auto 1.5rem;
+        padding: 0 2rem;
+      }
+      .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        align-items: center;
+      }
+      .filter-label {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-right: 0.5rem;
+        min-width: 70px;
+      }
+      .filter-btn {
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+        border: 1px solid var(--card-border);
+        background: transparent;
+        color: var(--text-gray);
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: "Montserrat", sans-serif;
+      }
+      .filter-btn:hover {
+        border-color: var(--text-gray);
+        color: var(--text-white);
+      }
+      .filter-btn.active {
+        background: var(--color-blue);
+        color: var(--text-white);
+        border-color: var(--color-blue);
+      }
 
-        .filters { max-width: 1200px; margin: 0 auto 1.5rem; padding: 0 2rem; }
-        .filter-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; align-items: center; }
-        .filter-label { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.5rem; min-width: 70px; }
-        .filter-btn { padding: 0.35rem 0.9rem; border-radius: 20px; border: 1px solid var(--card-border); background: transparent; color: var(--text-gray); font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-family: 'Montserrat', sans-serif; }
-        .filter-btn:hover { border-color: var(--text-gray); color: var(--text-white); }
-        .filter-btn.active { background: var(--color-blue); color: var(--text-white); border-color: var(--color-blue); }
+      .bills-container {
+        max-width: 1200px;
+        margin: 0 auto 4rem;
+        padding: 0 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .bill-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s;
+        display: block;
+        text-decoration: none;
+      }
+      .bill-card:hover {
+        border-color: var(--dark-bg-lighter);
+        transform: translateY(-1px);
+      }
+      .bill-card-inner {
+        display: flex;
+      }
+      .bill-status-bar {
+        width: 5px;
+        flex-shrink: 0;
+      }
+      .bill-content {
+        flex: 1;
+        padding: 1.25rem 1.5rem;
+      }
+      .bill-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.6rem;
+      }
+      .bill-id {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-gray);
+      }
+      .bill-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .status-badge {
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-family: "Montserrat", sans-serif;
+      }
+      .cat-badge {
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.65rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        border: 1px solid;
+        font-family: "Montserrat", sans-serif;
+      }
+      .bill-title {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+        color: var(--text-white);
+      }
+      .bill-subtitle {
+        font-size: 0.85rem;
+        color: var(--text-gray);
+        margin-bottom: 0.5rem;
+      }
+      .bill-desc {
+        font-size: 0.9rem;
+        color: var(--text-gray);
+        line-height: 1.5;
+        margin-bottom: 0.75rem;
+      }
+      .bill-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        border-top: 1px solid var(--card-border);
+        padding-top: 0.75rem;
+      }
+      .bill-meta strong {
+        color: var(--text-gray);
+      }
+      .bill-next-date {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        color: #fca5a5;
+        font-weight: 600;
+      }
 
-        .bills-container { max-width: 1200px; margin: 0 auto 4rem; padding: 0 2rem; display: flex; flex-direction: column; gap: 1rem; }
-        .bill-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s; display: block; text-decoration: none; }
-        .bill-card:hover { border-color: var(--dark-bg-lighter); transform: translateY(-1px); }
-        .bill-card-inner { display: flex; }
-        .bill-status-bar { width: 5px; flex-shrink: 0; }
-        .bill-content { flex: 1; padding: 1.25rem 1.5rem; }
-        .bill-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem; }
-        .bill-id { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); }
-        .bill-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-        .status-badge { padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; font-family: 'Montserrat', sans-serif; }
-        .cat-badge { padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.03em; border: 1px solid; font-family: 'Montserrat', sans-serif; }
-        .bill-title { font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-white); }
-        .bill-subtitle { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 0.5rem; }
-        .bill-desc { font-size: 0.9rem; color: var(--text-gray); line-height: 1.5; margin-bottom: 0.75rem; }
-        .bill-meta { display: flex; flex-wrap: wrap; gap: 1.5rem; font-size: 0.8rem; color: var(--text-dim); border-top: 1px solid var(--card-border); padding-top: 0.75rem; }
-        .bill-meta strong { color: var(--text-gray); }
-        .bill-next-date { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); padding: 0.2rem 0.6rem; border-radius: 4px; color: #fca5a5; font-weight: 600; }
-
-        .contact-note { max-width: 1200px; margin: 0 auto 3rem; padding: 0 2rem; text-align: center; }
-        .contact-note p { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 1.25rem; color: var(--text-gray); font-size: 0.9rem; }
-        .contact-note a { color: var(--color-light-blue); }
+      .contact-note {
+        max-width: 1200px;
+        margin: 0 auto 3rem;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      .contact-note p {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 1.25rem;
+        color: var(--text-gray);
+        font-size: 0.9rem;
+      }
+      .contact-note a {
+        color: var(--color-light-blue);
+      }
     </style>
-    <link rel="stylesheet" href="/css/bill-pipeline.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/css/bill-pipeline.css" />
+  </head>
+  <body>
     <!-- Navigation -->
     <nav class="nav nav-solid" id="nav">
-        <div class="nav-inner">
-            <a href="/" class="nav-logo">
-                <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
-            </a>
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="nav-links" id="navLinks">
-                <a href="/issues" class="active">Issues</a>
-                <a href="/founding-members">Founding Members</a>
-                <a href="/contact">Contact</a>
-                <a href="/donate" class="btn btn-nav">Donate</a>
-            </div>
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <span class="logo-ohio">Ohio</span
+          ><span class="logo-pride">Pride</span>
+          <span class="logo-pac">PAC</span>
+        </a>
+        <button
+          class="nav-toggle"
+          id="navToggle"
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="navLinks">
+          <a href="/issues" class="active">Issues</a>
+          <a href="/founding-members">Founding Members</a>
+          <a href="/contact">Contact</a>
+          <a href="/donate" class="btn btn-nav">Donate</a>
         </div>
+      </div>
     </nav>
 
     <section class="tracker-hero">
-        <h1>Legislative Issue Tracker</h1>
-        <p>Tracking anti-LGBTQIA+ legislation in the Ohio Statehouse — 136th General Assembly (2025–2026)</p>
+      <h1>Legislative Issue Tracker</h1>
+      <p>
+        Tracking anti-LGBTQIA+ legislation in the Ohio Statehouse — 136th
+        General Assembly (2025–2026)
+      </p>
     </section>
 
     <div class="tracker-body">
-
-    <div class="alert-banner">
+      <div class="alert-banner">
         <div class="alert-inner">
-            <span class="alert-icon">&#9888;&#65039;</span>
-            <div class="alert-text">
-                <strong>HB 249 has passed the Ohio House and is now in the Senate</strong>
-                <span>The "Indecent Exposure Modernization Act" — widely described as a drag ban — passed 63–32 on March 25, 2026.</span>
-            </div>
-            <a href="/issues/hb249" class="alert-link">Track HB 249 →</a>
+          <span class="alert-icon">&#9888;&#65039;</span>
+          <div class="alert-text">
+            <strong
+              >HB 249 has passed the Ohio House and is now in the Senate</strong
+            >
+            <span
+              >The "Indecent Exposure Modernization Act" — widely described as a
+              drag ban — passed 63–32 on March 25, 2026.</span
+            >
+          </div>
+          <a href="/issues/hb249" class="alert-link">Track HB 249 →</a>
         </div>
-    </div>
+      </div>
 
-    <div class="stats-bar">
-        <div class="stat-card"><div class="stat-num">10</div><div class="stat-label">Active Bills</div></div>
-        <div class="stat-card"><div class="stat-num">1</div><div class="stat-label">Passed a Chamber</div></div>
-        <div class="stat-card"><div class="stat-num">6</div><div class="stat-label">In Committee</div></div>
-        <div class="stat-card"><div class="stat-num">5</div><div class="stat-label">Bills by Rep. Williams</div></div>
-    </div>
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-num">10</div>
+          <div class="stat-label">Active Bills</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">1</div>
+          <div class="stat-label">Passed a Chamber</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">6</div>
+          <div class="stat-label">In Committee</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">5</div>
+          <div class="stat-label">Bills by Rep. Williams</div>
+        </div>
+      </div>
 
-    <div class="filters">
+      <div class="filters">
         <div class="filter-row">
-            <span class="filter-label">Status</span>
-            <button class="filter-btn active" data-filter="status" data-value="all">All</button>
-            <button class="filter-btn" data-filter="status" data-value="introduced">Introduced</button>
-            <button class="filter-btn" data-filter="status" data-value="in-committee">In Committee</button>
-            <button class="filter-btn" data-filter="status" data-value="passed-house">Passed House</button>
+          <span class="filter-label">Status</span>
+          <button
+            class="filter-btn active"
+            data-filter="status"
+            data-value="all"
+          >
+            All
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="status"
+            data-value="introduced"
+          >
+            Introduced
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="status"
+            data-value="in-committee"
+          >
+            In Committee
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="status"
+            data-value="passed-house"
+          >
+            Passed House
+          </button>
         </div>
         <div class="filter-row">
-            <span class="filter-label">Category</span>
-            <button class="filter-btn active" data-filter="category" data-value="all">All</button>
-            <button class="filter-btn" data-filter="category" data-value="anti-trans">Anti-Trans</button>
-            <button class="filter-btn" data-filter="category" data-value="education">Education / DEI</button>
-            <button class="filter-btn" data-filter="category" data-value="expression">Expression</button>
-            <button class="filter-btn" data-filter="category" data-value="youth">Youth / Family</button>
-            <button class="filter-btn" data-filter="category" data-value="elections">Elections</button>
-            <button class="filter-btn" data-filter="category" data-value="corrections">Corrections</button>
+          <span class="filter-label">Category</span>
+          <button
+            class="filter-btn active"
+            data-filter="category"
+            data-value="all"
+          >
+            All
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="category"
+            data-value="anti-trans"
+          >
+            Anti-Trans
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="category"
+            data-value="education"
+          >
+            Education / DEI
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="category"
+            data-value="expression"
+          >
+            Expression
+          </button>
+          <button class="filter-btn" data-filter="category" data-value="youth">
+            Youth / Family
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="category"
+            data-value="elections"
+          >
+            Elections
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="category"
+            data-value="corrections"
+          >
+            Corrections
+          </button>
         </div>
+      </div>
+
+      <div class="bills-container" id="billsContainer"></div>
+
+      <div class="contact-note">
+        <p>
+          This tracker is updated regularly based on official Ohio Legislature
+          records. Know about new legislation or have a correction?
+          <a href="mailto:info@ohiopridepac.org"
+            >Contact us at info@ohiopridepac.org</a
+          >
+        </p>
+      </div>
     </div>
-
-    <div class="bills-container" id="billsContainer"></div>
-
-    <div class="contact-note">
-        <p>This tracker is updated regularly based on official Ohio Legislature records. Know about new legislation or have a correction? <a href="mailto:info@ohiopridepac.org">Contact us at info@ohiopridepac.org</a></p>
-    </div>
-
-    </div><!-- end .tracker-body -->
+    <!-- end .tracker-body -->
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="/" class="nav-logo footer-logo">
-                        <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
-                    </a>
-                    <p class="footer-tagline">Ohio's Political Action Committee for LGBTQ+ Equality.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Organization</h4>
-                    <a href="/issues">Issues</a>
-                    <a href="/founding-members">Founding Members</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Get Involved</h4>
-                    <a href="/donate">Donate</a>
-                    <a href="/contact">Contact Us</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Legal</h4>
-                    <a href="/privacy">Privacy Policy</a>
-                    <a href="/terms">Terms of Use</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
-            </div>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="nav-logo footer-logo">
+              <span class="logo-ohio">Ohio</span
+              ><span class="logo-pride">Pride</span>
+              <span class="logo-pac">PAC</span>
+            </a>
+            <p class="footer-tagline">
+              Ohio's Political Action Committee for LGBTQ+ Equality.
+            </p>
+          </div>
+          <div class="footer-links">
+            <h4>Organization</h4>
+            <a href="/issues">Issues</a>
+            <a href="/founding-members">Founding Members</a>
+          </div>
+          <div class="footer-links">
+            <h4>Get Involved</h4>
+            <a href="/donate">Donate</a>
+            <a href="/contact">Contact Us</a>
+          </div>
+          <div class="footer-links">
+            <h4>Legal</h4>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+          </div>
         </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+        </div>
+      </div>
     </footer>
 
     <div class="compliance-footer">
-        <div class="container">
-            <p>Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David Donofrio, Treasurer.</p>
-            <p class="irs-line">Contributions are not tax-deductible for federal income tax purposes.</p>
-        </div>
+      <div class="container">
+        <p>
+          Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David
+          Donofrio, Treasurer.
+        </p>
+        <p class="irs-line">
+          Contributions are not tax-deductible for federal income tax purposes.
+        </p>
+      </div>
     </div>
 
     <!-- Shared bill data & pipeline component -->
@@ -195,16 +541,23 @@
     <script src="/js/bill-data.js"></script>
     <script src="/js/bill-pipeline.js"></script>
     <script>
-    const catColors = {
-        "Anti-Trans": "#e879f9", "Education / DEI": "#60a5fa", "Education": "#60a5fa",
-        "Expression": "#fb923c", "Youth / Family": "#2dd4bf", "Elections / Privacy": "#a78bfa",
-        "Corrections": "#94a3b8", "Healthcare": "#34d399"
-    };
+      const catColors = {
+        "Anti-Trans": "#e879f9",
+        "Education / DEI": "#60a5fa",
+        Education: "#60a5fa",
+        Expression: "#fb923c",
+        "Youth / Family": "#2dd4bf",
+        "Elections / Privacy": "#a78bfa",
+        Corrections: "#94a3b8",
+        Healthcare: "#34d399",
+      };
 
-    function renderBills(list) {
-        const c = document.getElementById('billsContainer');
-        c.innerHTML = list.map(b => `
-            <a href="${b.url}" class="bill-card" data-status="${b.status}" data-categories="${b.categories.join(',')}">
+      function renderBills(list) {
+        const c = document.getElementById("billsContainer");
+        c.innerHTML = list
+          .map(
+            (b) => `
+            <a href="${b.url}" class="bill-card" data-status="${b.status}" data-categories="${b.categories.join(",")}">
                 <div class="bill-card-inner">
                     <div class="bill-status-bar" style="background:${b.statusColor}"></div>
                     <div class="bill-content">
@@ -212,7 +565,7 @@
                             <span class="bill-id">${b.bill}</span>
                             <div class="bill-badges">
                                 <span class="status-badge" style="background:${b.statusColor}22;color:${b.statusColor};border:1px solid ${b.statusColor}44">${b.statusLabel}</span>
-                                ${b.categoryLabels.map(cl => `<span class="cat-badge" style="color:${catColors[cl]||'#999'};border-color:${(catColors[cl]||'#333')}33">${cl}</span>`).join('')}
+                                ${b.categoryLabels.map((cl) => `<span class="cat-badge" style="color:${catColors[cl] || "#999"};border-color:${catColors[cl] || "#333"}33">${cl}</span>`).join("")}
                             </div>
                         </div>
                         <div class="bill-title">${b.title}</div>
@@ -222,38 +575,54 @@
                         <div class="bill-meta">
                             <span><strong>Sponsors:</strong> ${b.sponsors}</span>
                             <span><strong>Last Action:</strong> ${b.lastAction}</span>
-                            ${b.nextDate ? `<span class="bill-next-date">${b.nextDate}</span>` : ''}
-                            ${b.houseVote ? `<span><strong>House Vote:</strong> ${b.houseVote}</span>` : ''}
+                            ${b.nextDate ? `<span class="bill-next-date">${b.nextDate}</span>` : ""}
+                            ${b.houseVote ? `<span><strong>House Vote:</strong> ${b.houseVote}</span>` : ""}
                         </div>
                     </div>
                 </div>
             </a>
-        `).join('');
+        `,
+          )
+          .join("");
         // Render pipelines
-        list.forEach(b => {
-            const el = document.getElementById('pipeline-' + b.id);
-            if (el) renderPipeline(el, b.chamber || 'house', b.currentStep);
+        list.forEach((b) => {
+          const el = document.getElementById("pipeline-" + b.id);
+          if (el) renderPipeline(el, b.chamber || "house", b.currentStep);
         });
-    }
+      }
 
-    let activeStatus = 'all', activeCategory = 'all';
-    function applyFilters() {
-        renderBills(BILLS.filter(b => {
-            const sm = activeStatus === 'all' || b.status === activeStatus;
-            const cm = activeCategory === 'all' || b.categories.includes(activeCategory);
+      let activeStatus = "all",
+        activeCategory = "all";
+      function applyFilters() {
+        renderBills(
+          BILLS.filter((b) => {
+            const sm = activeStatus === "all" || b.status === activeStatus;
+            const cm =
+              activeCategory === "all" || b.categories.includes(activeCategory);
             return sm && cm;
-        }));
-    }
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const ft = btn.dataset.filter, v = btn.dataset.value;
-            if (ft === 'status') { activeStatus = v; document.querySelectorAll('[data-filter="status"]').forEach(b => b.classList.remove('active')); }
-            else { activeCategory = v; document.querySelectorAll('[data-filter="category"]').forEach(b => b.classList.remove('active')); }
-            btn.classList.add('active');
-            applyFilters();
+          }),
+        );
+      }
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const ft = btn.dataset.filter,
+            v = btn.dataset.value;
+          if (ft === "status") {
+            activeStatus = v;
+            document
+              .querySelectorAll('[data-filter="status"]')
+              .forEach((b) => b.classList.remove("active"));
+          } else {
+            activeCategory = v;
+            document
+              .querySelectorAll('[data-filter="category"]')
+              .forEach((b) => b.classList.remove("active"));
+          }
+          btn.classList.add("active");
+          applyFilters();
         });
-    });
-    renderBills(BILLS);
+      });
+      renderBills(BILLS);
     </script>
-</body>
+  </body>
 </html>

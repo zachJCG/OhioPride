@@ -1,514 +1,555 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact — Ohio Pride PAC</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        html, body {
-            height: 100%;
-        }
+      html,
+      body {
+        height: 100%;
+      }
 
-        body {
-            background-color: #0a0a0a;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-        }
+      body {
+        background-color: #0a0a0a;
+        color: #ffffff;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+      }
 
-        /* Navigation */
-        nav {
-            position: sticky;
-            top: 0;
-            background-color: #0a0a0a;
-            border-bottom: 1px solid #222;
-            z-index: 1000;
-            padding: 1rem;
-        }
+      /* Navigation */
+      nav {
+        position: sticky;
+        top: 0;
+        background-color: #0a0a0a;
+        border-bottom: 1px solid #222;
+        z-index: 1000;
+        padding: 1rem;
+      }
 
-        nav .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      nav .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        nav .logo {
-            font-weight: 700;
-            font-size: 1.25rem;
-            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+      nav .logo {
+        font-weight: 700;
+        font-size: 1.25rem;
+        background: linear-gradient(
+          90deg,
+          #ff0000,
+          #ff7f00,
+          #ffff00,
+          #00ff00,
+          #0000ff,
+          #4b0082,
+          #9400d3
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
 
+      nav .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      nav .nav-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: opacity 0.2s;
+      }
+
+      nav .nav-links a:hover {
+        opacity: 0.7;
+      }
+
+      nav .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 0.5rem;
+      }
+
+      nav .hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: #ffffff;
+        border-radius: 2px;
+        transition: all 0.3s;
+      }
+
+      nav .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(10px, 10px);
+      }
+
+      nav .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      nav .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+      }
+
+      /* Main content */
+      main {
+        flex: 1;
+        padding: 4rem 1rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Hero section */
+      .hero {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        color: #cccccc;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* Two-column layout */
+      .contact-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 4rem;
+      }
+
+      /* Form styles */
+      .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        padding: 0.75rem;
+        background-color: #1a1a1a;
+        border: 1px solid #333;
+        color: #ffffff;
+        font-family: inherit;
+        font-size: 1rem;
+        border-radius: 4px;
+        transition: border-color 0.2s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #ff0000;
+      }
+
+      .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+
+      .submit-btn {
+        padding: 0.875rem 2rem;
+        background: linear-gradient(
+          90deg,
+          #ff0000,
+          #ff7f00,
+          #ffff00,
+          #00ff00,
+          #0000ff,
+          #4b0082,
+          #9400d3
+        );
+        color: #ffffff;
+        border: none;
+        font-weight: 600;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .submit-btn:hover {
+        opacity: 0.9;
+      }
+
+      .submit-btn:active {
+        opacity: 0.8;
+      }
+
+      /* Contact info card */
+      .contact-info {
+        background-color: #1a1a1a;
+        border: 1px solid #333;
+        padding: 2rem;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        height: fit-content;
+      }
+
+      .info-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .info-section h3 {
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        color: #cccccc;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      .info-section p,
+      .info-section a {
+        color: #ffffff;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+
+      .info-section a:hover {
+        opacity: 0.7;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .social-links a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: #2a2a2a;
+        border-radius: 4px;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: background-color 0.2s;
+      }
+
+      .social-links a:hover {
+        background-color: #333;
+      }
+
+      /* Footer */
+      footer {
+        background-color: #000000;
+        border-top: 1px solid #222;
+        padding: 2rem 1rem;
+        margin-top: auto;
+      }
+
+      footer .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      footer .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      footer .footer-links {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      footer .footer-links a {
+        color: #cccccc;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.2s;
+      }
+
+      footer .footer-links a:hover {
+        color: #ffffff;
+      }
+
+      footer .footer-disclaimer {
+        color: #888;
+        font-size: 0.85rem;
+        margin-top: 1rem;
+        line-height: 1.5;
+      }
+
+      footer .directors {
+        color: #888;
+        font-size: 0.9rem;
+      }
+
+      /* Mobile responsive */
+      @media (max-width: 768px) {
         nav .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
+          display: none;
+          position: absolute;
+          top: 60px;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          background-color: #0a0a0a;
+          border-bottom: 1px solid #222;
+          padding: 1rem;
+          gap: 1rem;
         }
 
-        nav .nav-links a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: opacity 0.2s;
-        }
-
-        nav .nav-links a:hover {
-            opacity: 0.7;
+        nav .nav-links.active {
+          display: flex;
         }
 
         nav .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 0.5rem;
-        }
-
-        nav .hamburger span {
-            width: 25px;
-            height: 3px;
-            background-color: #ffffff;
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-
-        nav .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(10px, 10px);
-        }
-
-        nav .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        nav .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
-
-        /* Main content */
-        main {
-            flex: 1;
-            padding: 4rem 1rem;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Hero section */
-        .hero {
-            text-align: center;
-            margin-bottom: 4rem;
+          display: flex;
         }
 
         .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
+          font-size: 2rem;
         }
 
         .hero p {
-            font-size: 1.25rem;
-            color: #cccccc;
-            max-width: 600px;
-            margin: 0 auto;
+          font-size: 1rem;
         }
 
-        /* Two-column layout */
         .contact-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            margin-bottom: 4rem;
+          grid-template-columns: 1fr;
+          gap: 2rem;
         }
 
-        /* Form styles */
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 0.75rem;
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-            color: #ffffff;
-            font-family: inherit;
-            font-size: 1rem;
-            border-radius: 4px;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #ff0000;
-        }
-
-        .form-group textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        .submit-btn {
-            padding: 0.875rem 2rem;
-            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-            color: #ffffff;
-            border: none;
-            font-weight: 600;
-            font-size: 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .submit-btn:hover {
-            opacity: 0.9;
-        }
-
-        .submit-btn:active {
-            opacity: 0.8;
-        }
-
-        /* Contact info card */
         .contact-info {
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-            padding: 2rem;
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            height: fit-content;
-        }
-
-        .info-section {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .info-section h3 {
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            color: #cccccc;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .info-section p,
-        .info-section a {
-            color: #ffffff;
-            font-size: 1rem;
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-        .info-section a:hover {
-            opacity: 0.7;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: #2a2a2a;
-            border-radius: 4px;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: background-color 0.2s;
-        }
-
-        .social-links a:hover {
-            background-color: #333;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #000000;
-            border-top: 1px solid #222;
-            padding: 2rem 1rem;
-            margin-top: auto;
-        }
-
-        footer .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
+          height: auto;
         }
 
         footer .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1rem;
+          flex-direction: column;
+          gap: 1.5rem;
         }
 
         footer .footer-links {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
+          flex-direction: column;
+          gap: 1rem;
         }
-
-        footer .footer-links a {
-            color: #cccccc;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-        }
-
-        footer .footer-links a:hover {
-            color: #ffffff;
-        }
-
-        footer .footer-disclaimer {
-            color: #888;
-            font-size: 0.85rem;
-            margin-top: 1rem;
-            line-height: 1.5;
-        }
-
-        footer .directors {
-            color: #888;
-            font-size: 0.9rem;
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            nav .nav-links {
-                display: none;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                right: 0;
-                flex-direction: column;
-                background-color: #0a0a0a;
-                border-bottom: 1px solid #222;
-                padding: 1rem;
-                gap: 1rem;
-            }
-
-            nav .nav-links.active {
-                display: flex;
-            }
-
-            nav .hamburger {
-                display: flex;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .contact-wrapper {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .contact-info {
-                height: auto;
-            }
-
-            footer .footer-content {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            footer .footer-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navigation -->
     <nav>
-        <div class="container">
-            <div class="logo">Ohio Pride PAC</div>
-            <ul class="nav-links" id="navLinks">
-                
-                
-                <li><a href="/issues">Issues</a></li>
-                <li><a href="/founding-members">Founding Members</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/donate">Donate</a></li>
-            </ul>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+      <div class="container">
+        <div class="logo">Ohio Pride PAC</div>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="/issues">Issues</a></li>
+          <li><a href="/founding-members">Founding Members</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/donate">Donate</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
+      </div>
     </nav>
 
     <!-- Main content -->
     <main>
-        <div class="container">
-            <!-- Hero section -->
-            <section class="hero">
-                <h1>Get in Touch</h1>
-                <p>Have questions? Want to volunteer? We'd love to hear from you.</p>
-            </section>
+      <div class="container">
+        <!-- Hero section -->
+        <section class="hero">
+          <h1>Get in Touch</h1>
+          <p>Have questions? Want to volunteer? We'd love to hear from you.</p>
+        </section>
 
-            <!-- Contact wrapper -->
-            <div class="contact-wrapper">
-                <!-- Contact form -->
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
-                        <label for="fullName">Full Name</label>
-                        <input type="text" id="fullName" name="fullName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Phone (Optional)</label>
-                        <input type="tel" id="phone" name="phone">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="subject">Subject</label>
-                        <select id="subject" name="subject" required>
-                            <option value="">Select a subject</option>
-                            <option value="general">General Inquiry</option>
-                            <option value="volunteering">Volunteering</option>
-                            <option value="founding-membership">Founding Membership</option>
-                            <option value="legislative">Legislative Issues</option>
-                            <option value="endorsements">Endorsements</option>
-                            <option value="media">Media/Press</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" required></textarea>
-                    </div>
-
-                    <button type="submit" class="submit-btn">Send Message</button>
-                </form>
-
-                <!-- Contact info card -->
-                <aside class="contact-info">
-                    <div class="info-section">
-                        <h3>Email</h3>
-                        <a href="mailto:info@ohiopridepac.org">info@ohiopridepac.org</a>
-                    </div>
-
-                    <div class="info-section">
-                        <h3>Location</h3>
-                        <p>Columbus, Ohio</p>
-                    </div>
-
-                    <div class="info-section">
-                        <h3>Follow Us</h3>
-                        <div class="social-links">
-                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" title="Twitter/X">X</a>
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram">IG</a>
-                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">FB</a>
-                        </div>
-                    </div>
-                </aside>
+        <!-- Contact wrapper -->
+        <div class="contact-wrapper">
+          <!-- Contact form -->
+          <form class="contact-form" id="contactForm">
+            <div class="form-group">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="fullName" required />
             </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone (Optional)</label>
+              <input type="tel" id="phone" name="phone" />
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <select id="subject" name="subject" required>
+                <option value="">Select a subject</option>
+                <option value="general">General Inquiry</option>
+                <option value="volunteering">Volunteering</option>
+                <option value="founding-membership">Founding Membership</option>
+                <option value="legislative">Legislative Issues</option>
+                <option value="endorsements">Endorsements</option>
+                <option value="media">Media/Press</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+          </form>
+
+          <!-- Contact info card -->
+          <aside class="contact-info">
+            <div class="info-section">
+              <h3>Email</h3>
+              <a href="mailto:info@ohiopridepac.org">info@ohiopridepac.org</a>
+            </div>
+
+            <div class="info-section">
+              <h3>Location</h3>
+              <p>Columbus, Ohio</p>
+            </div>
+
+            <div class="info-section">
+              <h3>Follow Us</h3>
+              <div class="social-links">
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Twitter/X"
+                  >X</a
+                >
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Instagram"
+                  >IG</a
+                >
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Facebook"
+                  >FB</a
+                >
+              </div>
+            </div>
+          </aside>
         </div>
+      </div>
     </main>
 
     <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="directors">© 2026 Ohio Pride PAC | Directors: Zachary R. Joseph (Director), David Donofrio (Treasurer)</div>
-                <div class="footer-links">
-                    <a href="/privacy">Privacy Policy</a>
-                    <a href="/terms">Terms of Use</a>
-                </div>
-            </div>
-            <div class="footer-disclaimer">
-                Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.
-            </div>
+      <div class="container">
+        <div class="footer-content">
+          <div class="directors">
+            © 2026 Ohio Pride PAC | Directors: Zachary R. Joseph (Director),
+            David Donofrio (Treasurer)
+          </div>
+          <div class="footer-links">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+          </div>
         </div>
+        <div class="footer-disclaimer">
+          Paid for by Ohio Pride PAC. Not authorized by any candidate or
+          candidate's committee.
+        </div>
+      </div>
     </footer>
 
     <script>
-        // Mobile menu toggle
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
+      // Mobile menu toggle
+      const hamburger = document.getElementById("hamburger");
+      const navLinks = document.getElementById("navLinks");
 
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
+      hamburger.addEventListener("click", () => {
+        hamburger.classList.toggle("active");
+        navLinks.classList.toggle("active");
+      });
 
-        // Close menu when a link is clicked
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navLinks.classList.remove('active');
-            });
+      // Close menu when a link is clicked
+      navLinks.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          hamburger.classList.remove("active");
+          navLinks.classList.remove("active");
         });
+      });
 
-        // Form submission (currently logs to console; integrate backend as needed)
-        const contactForm = document.getElementById('contactForm');
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            console.log('Form submitted:', {
-                fullName: document.getElementById('fullName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value
-            });
-            alert('Thank you for reaching out. We will be in touch shortly.');
-            contactForm.reset();
+      // Form submission (currently logs to console; integrate backend as needed)
+      const contactForm = document.getElementById("contactForm");
+      contactForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        console.log("Form submitted:", {
+          fullName: document.getElementById("fullName").value,
+          email: document.getElementById("email").value,
+          phone: document.getElementById("phone").value,
+          subject: document.getElementById("subject").value,
+          message: document.getElementById("message").value,
         });
+        alert("Thank you for reaching out. We will be in touch shortly.");
+        contactForm.reset();
+      });
     </script>
-</body>
+  </body>
 </html>
