@@ -110,10 +110,3 @@
   to = "/"
   status = 301
   force = true
-  force = true
-
-[[redirects]]
-  from = "/sponsorship.html"
-  to = "/"
-  status = 301
-  force = true
