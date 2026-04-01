@@ -93,6 +93,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* --- Scroll Reveal Animations --- */
+  // Only hide elements when JS is confirmed working
+  document.documentElement.classList.add("reveal-ready");
+
   var revealEls = document.querySelectorAll(
     ".reveal, .reveal-left, .reveal-stagger",
   );
