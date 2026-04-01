@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legislative Issue Tracker — Ohio Pride PAC</title>
+  <meta name="description" content="Tracking anti-LGBTQ+ legislation in the Ohio Statehouse. Stay informed about bills affecting the LGBTQ+ community.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav nav-solid" id="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links" id="navLinks">
+        <a href="/priorities.html">Priorities</a>
+        <a href="/issues.html">Issues</a>
+        <a href="/founding-members.html">Founding Members</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/donate.html" class="btn btn-nav">Donate</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="subpage-hero">
+    <div class="container">
+      <div class="section-label">Issue Tracker</div>
+      <h1 class="section-title">Legislative Issue Tracker</h1>
+      <p class="subpage-hero-sub">Tracking anti-LGBTQ+ legislation in the Ohio Statehouse.</p>
+    </div>
+  </header>
+
+  <!-- Issues Content -->
+  <section class="section">
+    <div class="container">
+
+      <!-- Filters -->
+      <div class="filter-section">
+        <div class="filter-group">
+          <label class="filter-label">Status</label>
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="status" data-value="all">All</button>
+            <button class="filter-btn" data-filter="status" data-value="introduced">Introduced</button>
+            <button class="filter-btn" data-filter="status" data-value="in-committee">In Committee</button>
+            <button class="filter-btn" data-filter="status" data-value="passed-committee">Passed Committee</button>
+            <button class="filter-btn" data-filter="status" data-value="signed-into-law">Signed Into Law</button>
+            <button class="filter-btn" data-filter="status" data-value="dead-tabled">Dead/Tabled</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Category</label>
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+            <button class="filter-btn" data-filter="category" data-value="anti-trans">Anti-Trans</button>
+            <button class="filter-btn" data-filter="category" data-value="religious-exemption">Religious Exemption</button>
+            <button class="filter-btn" data-filter="category" data-value="education">Education</button>
+            <button class="filter-btn" data-filter="category" data-value="healthcare">Healthcare</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="results-info">Showing <span id="resultsCount">6</span> bill(s)</div>
+
+      <!-- Bills Grid -->
+      <div class="bills-grid" id="billsGrid"></div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <p>No bills match the selected filters.</p>
+      </div>
+
+      <!-- Info Box -->
+      <div class="issues-info-box">
+        <p>This tracker is updated regularly.</p>
+        <p>Know of new legislation? <strong>Contact us at <a href="mailto:info@ohiopridepac.org">info@ohiopridepac.org</a></strong></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo footer-logo">
+            <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span> <span class="logo-pac">PAC</span>
+          </a>
+          <p class="footer-tagline">Ohio's Political Action Committee for LGBTQ+ Equality.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Organization</h4>
+          <a href="/priorities.html">Priorities</a>
+          <a href="/issues.html">Issues</a>
+          <a href="/founding-members.html">Founding Members</a>
+        </div>
+        <div class="footer-links">
+          <h4>Get Involved</h4>
+          <a href="/donate.html">Donate</a>
+          <a href="/contact.html">Contact Us</a>
+        </div>
+        <div class="footer-links">
+          <h4>Legal</h4>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Use</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="compliance-footer">
+    <div class="container">
+      <p>Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David Donofrio, Treasurer.</p>
+      <p class="irs-line">Contributions are not tax-deductible for federal income tax purposes.</p>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script>
+    // Bills Data
+    var bills = [
+      {
+        bill: "HB 68",
+        title: "SAFE Act",
+        description: "Bans gender-affirming care for minors and bars transgender athletes from competing consistent with their gender identity. Governor's veto was overridden.",
+        status: "signed-into-law",
+        categories: ["anti-trans", "healthcare"],
+        updated: "January 2024"
+      },
+      {
+        bill: "HB 8",
+        title: "Save Women's Sports Act",
+        description: "Bars transgender girls and women from female sports teams in K-12 schools and colleges.",
+        status: "introduced",
+        categories: ["anti-trans"],
+        updated: "2025"
+      },
+      {
+        bill: "HB 183",
+        title: "Religious Exemption Expansion",
+        description: "Broad religious exemption that could permit discrimination in services, employment, and housing based on sincerely held beliefs.",
+        status: "in-committee",
+        categories: ["religious-exemption"],
+        updated: "2025"
+      },
+      {
+        bill: "SB 104",
+        title: "Parents' Bill of Rights",
+        description: "Includes provisions restricting discussion of sexual orientation and gender identity in public schools.",
+        status: "in-committee",
+        categories: ["education"],
+        updated: "2025"
+      },
+      {
+        bill: "HB 245",
+        title: "Bathroom Bill",
+        description: "Requires use of restrooms and facilities based on sex assigned at birth in schools and government buildings.",
+        status: "in-committee",
+        categories: ["anti-trans"],
+        updated: "2025"
+      },
+      {
+        bill: "HB 61",
+        title: "Born Alive Infant Protection Act",
+        description: "While primarily framed around abortion, includes provisions that affect broader reproductive and transgender healthcare policy discussions.",
+        status: "passed-committee",
+        categories: ["healthcare"],
+        updated: "2025"
+      }
+    ];
+
+    // Filter state
+    var activeFilters = { status: 'all', category: 'all' };
+
+    function renderBills() {
+      var grid = document.getElementById('billsGrid');
+      var empty = document.getElementById('emptyState');
+      var count = document.getElementById('resultsCount');
+      grid.innerHTML = '';
+      var visible = 0;
+
+      bills.forEach(function (bill) {
+        var matchStatus = activeFilters.status === 'all' || bill.status === activeFilters.status;
+        var matchCat = activeFilters.category === 'all' || bill.categories.indexOf(activeFilters.category) !== -1;
+
+        if (matchStatus && matchCat) {
+          visible++;
+          grid.appendChild(createBillCard(bill));
+        }
+      });
+
+      count.textContent = visible;
+      empty.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    function createBillCard(bill) {
+      var card = document.createElement('div');
+      card.className = 'bill-card status-' + bill.status;
+
+      var tags = bill.categories.map(function (cat) {
+        return '<span class="category-tag">' + formatCategory(cat) + '</span>';
+      }).join('');
+
+      card.innerHTML =
+        '<div class="bill-number">' + bill.bill + '</div>' +
+        '<div class="bill-title">' + bill.title + '</div>' +
+        '<div class="bill-meta">' +
+          '<span class="status-badge badge-' + bill.status + '">' + formatStatus(bill.status) + '</span>' +
+          tags +
+        '</div>' +
+        '<div class="bill-description">' + bill.description + '</div>' +
+        '<div class="bill-updated">Last Updated: ' + bill.updated + '</div>';
+
+      return card;
+    }
+
+    function formatStatus(s) {
+      var m = { 'introduced': 'Introduced', 'in-committee': 'In Committee', 'passed-committee': 'Passed Committee', 'signed-into-law': 'Signed Into Law', 'dead-tabled': 'Dead/Tabled' };
+      return m[s] || s;
+    }
+
+    function formatCategory(c) {
+      var m = { 'anti-trans': 'Anti-Trans', 'religious-exemption': 'Religious Exemption', 'education': 'Education', 'healthcare': 'Healthcare' };
+      return m[c] || c;
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var type = this.dataset.filter;
+        var value = this.dataset.value;
+        document.querySelectorAll('[data-filter="' + type + '"]').forEach(function (b) {
+          b.classList.remove('active');
+        });
+        this.classList.add('active');
+        activeFilters[type] = value;
+        renderBills();
+      });
+    });
+
+    // Initial render
+    renderBills();
+  </script>
+</body>
+</html>

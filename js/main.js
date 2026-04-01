@@ -1,6 +1,6 @@
 /* ============================================================
    Ohio Pride PAC — Main JavaScript
-   Navigation, Donations, Forms, Progress Bar
+   Navigation, Forms, Progress Bar
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -12,12 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
   if (navToggle && navLinks) {
     navToggle.addEventListener('click', function () {
       navLinks.classList.toggle('open');
-      // Update aria state
       const isOpen = navLinks.classList.contains('open');
       navToggle.setAttribute('aria-expanded', isOpen);
     });
 
-    // Close nav when clicking a link (mobile)
     navLinks.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
         navLinks.classList.remove('open');
@@ -53,37 +51,41 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* --- Donate Amount Buttons --- */
-  const donateAmounts = document.querySelectorAll('.donate-amount');
-  const actblueBtn = document.getElementById('actblueBtn');
-  let selectedAmount = 100; // default
+  /* --- Founding Member Progress Bar --- */
+  var FOUNDING_MEMBER_COUNT = 0;
+  var FOUNDING_MEMBER_GOAL = 1969;
 
-  donateAmounts.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      donateAmounts.forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      selectedAmount = btn.getAttribute('data-amount');
+  var goalFill = document.getElementById('goalFill');
+  var memberCount = document.getElementById('memberCount');
 
-      // Update ActBlue link when available
-      if (actblueBtn) {
-        if (selectedAmount === 'other') {
-          actblueBtn.href = 'https://secure.actblue.com/donate/ohiopridepac';
-        } else {
-          actblueBtn.href = 'https://secure.actblue.com/donate/ohiopridepac?amount=' + selectedAmount;
+  if (goalFill) {
+    var pct = Math.min((FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100, 100);
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          goalFill.style.width = pct + '%';
+          observer.unobserve(entry.target);
         }
-      }
-    });
-  });
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(goalFill.parentElement);
+  }
+
+  if (memberCount) {
+    memberCount.textContent = FOUNDING_MEMBER_COUNT;
+  }
 
   /* --- Contact Form Submission (Netlify) --- */
-  const contactForm = document.getElementById('contactForm');
-  const formSuccess = document.getElementById('formSuccess');
+  var contactForm = document.getElementById('contactForm');
+  var formSuccess = document.getElementById('formSuccess');
 
   if (contactForm) {
     contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      const formData = new FormData(contactForm);
+      var formData = new FormData(contactForm);
 
       fetch('/', {
         method: 'POST',
@@ -102,27 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
           alert('Something went wrong. Please try again or email us directly.');
         });
     });
-  }
-
-  /* --- Founding Member Progress Bar Animation --- */
-  const goalFill = document.getElementById('goalFill');
-  if (goalFill) {
-    // Current amount raised — update this value manually or via API
-    const raised = 0;
-    const goal = 35000;
-    const pct = Math.min((raised / goal) * 100, 100);
-
-    // Animate on scroll into view
-    const observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          goalFill.style.width = pct + '%';
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.3 });
-
-    observer.observe(goalFill.parentElement);
   }
 
 });

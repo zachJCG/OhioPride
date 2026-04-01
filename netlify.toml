@@ -9,14 +9,10 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
+# Clean URL redirects
 [[redirects]]
   from = "/contact"
   to = "/contact.html"
-  status = 200
-
-[[redirects]]
-  from = "/gala"
-  to = "/gala.html"
   status = 200
 
 [[redirects]]
@@ -25,6 +21,46 @@
   status = 200
 
 [[redirects]]
-  from = "/sponsorship"
-  to = "/sponsorship.html"
+  from = "/priorities"
+  to = "/priorities.html"
   status = 200
+
+[[redirects]]
+  from = "/issues"
+  to = "/issues.html"
+  status = 200
+
+[[redirects]]
+  from = "/donate"
+  to = "/donate.html"
+  status = 200
+
+[[redirects]]
+  from = "/donate/founding-member"
+  to = "/donate/founding-member.html"
+  status = 200
+
+# Legacy redirects (gala/sponsorship removed)
+[[redirects]]
+  from = "/gala"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/gala.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/sponsorship"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/sponsorship.html"
+  to = "/"
+  status = 301
+  force = true

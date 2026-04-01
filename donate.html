@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Founding Members — Ohio Pride PAC</title>
-  <meta name="description" content="The first 1,969 people building LGBTQ+ political power in Ohio. Join our founding membership and help launch Ohio Pride PAC.">
+  <title>Donate — Ohio Pride PAC</title>
+  <meta name="description" content="Support Ohio Pride PAC with a founding membership or one-time contribution. Your donation builds LGBTQ+ political power in Ohio.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet">
@@ -34,68 +34,42 @@
   <!-- Hero -->
   <header class="subpage-hero">
     <div class="container">
-      <div class="section-label">Founding Members</div>
-      <h1 class="section-title">Our Founding Members</h1>
-      <p class="subpage-hero-sub">The first 1,969 people building LGBTQ+ political power in Ohio.</p>
+      <div class="section-label">Take Action</div>
+      <h1 class="section-title">Support Ohio Pride PAC</h1>
     </div>
   </header>
 
-  <!-- Progress Section -->
+  <!-- Donate Options -->
   <section class="section">
     <div class="container">
-      <div class="founding-progress">
-        <div class="founding-progress-count" id="progressCount">0 of 1,969</div>
-        <div class="goal-block">
-          <div class="goal-track"><div class="goal-fill" id="goalFill"></div></div>
-        </div>
-        <p class="founding-progress-text">
-          In 1969, the Stonewall uprising ignited a movement. We're honoring that legacy by building a founding base of 1,969 members.
-        </p>
-        <div style="text-align:center; margin-top: 24px;">
-          <a href="/donate/founding-member" class="btn btn-primary btn-large">Become a Founding Member</a>
-        </div>
-      </div>
-    </div>
-  </section>
+      <div class="cta-grid">
 
-  <!-- Tier Legend -->
-  <section class="tier-legend">
-    <div class="container">
-      <div style="text-align:center; margin-bottom: 8px;">
-        <div class="section-label">Membership Tiers</div>
-        <h2 class="section-title">Founding Member Tiers</h2>
-      </div>
-      <div class="tier-legend-grid">
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Stonewall Sustainer</div>
-          <div class="tier-legend-price">$19.69/month</div>
+        <!-- Founding Members -->
+        <div class="cta-card prominent">
+          <h2>Become a Founding Member</h2>
+          <p>Join the first 1,969 founding members building LGBTQ+ political power in Ohio. Starting at $19.69/month.</p>
+          <a href="/donate/founding-member" class="btn btn-primary">Join the Founding Members</a>
         </div>
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Founding Member</div>
-          <div class="tier-legend-price">$25 one-time</div>
-        </div>
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Pride Builder</div>
-          <div class="tier-legend-price">$50/month</div>
-        </div>
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Founding Circle</div>
-          <div class="tier-legend-price">$100/month</div>
-        </div>
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Founding Patron</div>
-          <div class="tier-legend-price">$250+ one-time</div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Member List -->
-  <section class="section">
-    <div class="container">
-      <div class="member-empty-state">
-        <h3>Founding member names will appear here as our community grows.</h3>
-        <p>Members are listed with their consent.</p>
+        <!-- One-Time Contribution -->
+        <div class="cta-card">
+          <h2>Make a One-Time Contribution</h2>
+          <p>Support Ohio Pride PAC with a direct contribution.</p>
+          <div class="amount-buttons">
+            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=25" class="amount-btn">$25</a>
+            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=50" class="amount-btn">$50</a>
+            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=100" class="amount-btn">$100</a>
+            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=250" class="amount-btn">$250</a>
+            <a href="https://secure.actblue.com/donate/ohio-pride-pac?amount=500" class="amount-btn">$500</a>
+          </div>
+          <a href="https://secure.actblue.com/donate/ohio-pride-pac" class="btn btn-outline">Other Amount</a>
+        </div>
+
+      </div>
+
+      <!-- Legal Disclaimer -->
+      <div class="donate-disclaimer-box">
+        <strong>Legal Notice:</strong> Contributions to Ohio Pride PAC are not tax-deductible for federal income tax purposes. Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.
       </div>
     </div>
   </section>
@@ -141,15 +115,5 @@
   </div>
 
   <script src="/js/main.js"></script>
-  <script>
-    (function () {
-      var FOUNDING_MEMBER_COUNT = 0;
-      var pct = (FOUNDING_MEMBER_COUNT / 1969) * 100;
-      var bar = document.getElementById('goalFill');
-      var count = document.getElementById('progressCount');
-      if (bar) bar.style.width = pct + '%';
-      if (count) count.textContent = FOUNDING_MEMBER_COUNT + ' of 1,969';
-    })();
-  </script>
 </body>
 </html>

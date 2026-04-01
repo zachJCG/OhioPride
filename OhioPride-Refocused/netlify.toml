@@ -1,0 +1,26 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/gala"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/sponsorship"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/donate/founding-member"
+  to = "/donate/founding-member.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

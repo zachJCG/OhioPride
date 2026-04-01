@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Founding Members — Ohio Pride PAC</title>
-  <meta name="description" content="The first 1,969 people building LGBTQ+ political power in Ohio. Join our founding membership and help launch Ohio Pride PAC.">
+  <title>Our Priorities — Ohio Pride PAC</title>
+  <meta name="description" content="Ohio Pride PAC endorses pro-equality candidates and opposes anti-LGBTQ+ legislation across Ohio.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet">
@@ -34,68 +34,61 @@
   <!-- Hero -->
   <header class="subpage-hero">
     <div class="container">
-      <div class="section-label">Founding Members</div>
-      <h1 class="section-title">Our Founding Members</h1>
-      <p class="subpage-hero-sub">The first 1,969 people building LGBTQ+ political power in Ohio.</p>
+      <div class="section-label">Our Work</div>
+      <h1 class="section-title">Our Priorities</h1>
+      <p class="subpage-hero-sub">Endorsing candidates. Opposing discrimination. Building political power.</p>
     </div>
   </header>
 
-  <!-- Progress Section -->
+  <!-- Candidate Endorsements -->
   <section class="section">
     <div class="container">
-      <div class="founding-progress">
-        <div class="founding-progress-count" id="progressCount">0 of 1,969</div>
-        <div class="goal-block">
-          <div class="goal-track"><div class="goal-fill" id="goalFill"></div></div>
+      <div class="section-label">Pillar One</div>
+      <h2 class="section-title">Candidate Endorsements &amp; Contributions</h2>
+      <p class="priorities-intro">
+        <strong>Ohio Pride PAC endorses and contributes to pro-equality candidates</strong> at every level — state legislature, statewide offices, county, and municipal. We invest in candidates who will fight for the rights, safety, and dignity of the LGBTQ+ community.
+      </p>
+      <p class="priorities-intro">
+        <strong>2026 is a critical cycle</strong> with all statewide offices on the ballot. This is our moment to elect champions who will defend Ohio's LGBTQ+ community.
+      </p>
+      <div class="endorsement-grid">
+        <div class="endorsement-card">
+          <div class="coming-soon-badge">Coming Soon</div>
+          <p class="card-placeholder">Endorsements launching soon — stay tuned</p>
         </div>
-        <p class="founding-progress-text">
-          In 1969, the Stonewall uprising ignited a movement. We're honoring that legacy by building a founding base of 1,969 members.
-        </p>
-        <div style="text-align:center; margin-top: 24px;">
-          <a href="/donate/founding-member" class="btn btn-primary btn-large">Become a Founding Member</a>
+        <div class="endorsement-card">
+          <div class="coming-soon-badge">Coming Soon</div>
+          <p class="card-placeholder">Endorsements launching soon — stay tuned</p>
+        </div>
+        <div class="endorsement-card">
+          <div class="coming-soon-badge">Coming Soon</div>
+          <p class="card-placeholder">Endorsements launching soon — stay tuned</p>
+        </div>
+        <div class="endorsement-card">
+          <div class="coming-soon-badge">Coming Soon</div>
+          <p class="card-placeholder">Endorsements launching soon — stay tuned</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Tier Legend -->
-  <section class="tier-legend">
+  <!-- Issue Advocacy -->
+  <section class="section" style="background: var(--bg-light);">
     <div class="container">
-      <div style="text-align:center; margin-bottom: 8px;">
-        <div class="section-label">Membership Tiers</div>
-        <h2 class="section-title">Founding Member Tiers</h2>
+      <div class="section-label">Pillar Two</div>
+      <h2 class="section-title">Issue Advocacy</h2>
+      <p class="priorities-intro">
+        <strong>Ohio Pride PAC actively opposes anti-LGBTQ+ legislation</strong> and champions pro-equality policy. We refuse to let discrimination become law in Ohio.
+      </p>
+      <div class="policy-tags">
+        <div class="policy-tag">Anti-Trans Legislation</div>
+        <div class="policy-tag">Religious Exemption Bills</div>
+        <div class="policy-tag">Healthcare Access Restrictions</div>
+        <div class="policy-tag">Education Censorship</div>
       </div>
-      <div class="tier-legend-grid">
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Stonewall Sustainer</div>
-          <div class="tier-legend-price">$19.69/month</div>
-        </div>
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Founding Member</div>
-          <div class="tier-legend-price">$25 one-time</div>
-        </div>
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Pride Builder</div>
-          <div class="tier-legend-price">$50/month</div>
-        </div>
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Founding Circle</div>
-          <div class="tier-legend-price">$100/month</div>
-        </div>
-        <div class="tier-legend-card">
-          <div class="tier-legend-name">Founding Patron</div>
-          <div class="tier-legend-price">$250+ one-time</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Member List -->
-  <section class="section">
-    <div class="container">
-      <div class="member-empty-state">
-        <h3>Founding member names will appear here as our community grows.</h3>
-        <p>Members are listed with their consent.</p>
+      <div class="cta-tracker">
+        <p>We track every anti-LGBTQ+ bill in the Ohio Statehouse so our community knows exactly where the threats are — and how to fight back.</p>
+        <a href="/issues.html" class="btn btn-primary">View the Legislative Tracker</a>
       </div>
     </div>
   </section>
@@ -141,15 +134,5 @@
   </div>
 
   <script src="/js/main.js"></script>
-  <script>
-    (function () {
-      var FOUNDING_MEMBER_COUNT = 0;
-      var pct = (FOUNDING_MEMBER_COUNT / 1969) * 100;
-      var bar = document.getElementById('goalFill');
-      var count = document.getElementById('progressCount');
-      if (bar) bar.style.width = pct + '%';
-      if (count) count.textContent = FOUNDING_MEMBER_COUNT + ' of 1,969';
-    })();
-  </script>
 </body>
 </html>

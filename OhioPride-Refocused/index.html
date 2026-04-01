@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ohio Pride PAC | Political Action Committee for LGBTQ+ Equality</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-bg: #0a0a0a;
+            --text-white: #ffffff;
+            --text-gray: #e0e0e0;
+            --border-gray: #2a2a2a;
+            --rainbow: linear-gradient(90deg, #e40303 0%, #ff8c00 17%, #ffff41 33%, #01be01 50%, #0000f9 67%, #4b369d 84%, #3f0080 100%);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --transition: all 0.3s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-white);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--dark-bg);
+            border-bottom: 1px solid var(--border-gray);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--rainbow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--rainbow);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Mobile menu */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background-color: var(--dark-bg);
+                border-bottom: 1px solid var(--border-gray);
+                padding: 1rem 2rem;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-logo {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 2rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-divider {
+            width: 80px;
+            height: 4px;
+            background: var(--rainbow);
+            margin: 2rem auto;
+            border-radius: 2px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.875rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--rainbow);
+            color: var(--dark-bg);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-white);
+            border: 2px solid var(--text-white);
+        }
+
+        .btn-secondary:hover {
+            border-color: #ff8c00;
+            color: #ff8c00;
+            transform: translateY(-2px);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Mission Section */
+        .mission-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1.5rem;
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .stat:hover {
+            border-color: #ff8c00;
+            background-color: rgba(255, 140, 0, 0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--rainbow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            margin-top: 0.5rem;
+        }
+
+        /* What We Do Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            padding: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--rainbow);
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:hover {
+            border-color: #ff8c00;
+            background-color: rgba(255, 140, 0, 0.03);
+            transform: translateY(-4px);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-white);
+        }
+
+        .card p {
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+
+        /* Founding Members Section */
+        .founding-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .founding-description {
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .stonewall-reference {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background-color: var(--border-gray);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--rainbow);
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .founding-cta {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        /* Donate Section */
+        .donate-section {
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(76, 54, 157, 0.08) 100%);
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            padding: 3rem 2rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .donate-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .donate-description {
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #050505;
+            border-top: 1px solid var(--border-gray);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: #ff8c00;
+        }
+
+        .footer-directors {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .footer-directors strong {
+            color: var(--text-white);
+        }
+
+        .footer-disclaimer {
+            grid-column: 1 / -1;
+            border-top: 1px solid var(--border-gray);
+            padding-top: 2rem;
+            font-size: 0.85rem;
+            color: #808080;
+            text-align: center;
+        }
+
+        .footer-copyright {
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            section {
+                padding: 3rem 1.5rem;
+            }
+
+            .hero {
+                padding: 4rem 1.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .cards-grid,
+            .mission-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-disclaimer {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-logo">Ohio Pride PAC</div>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="/">Home</a></li>
+            <li><a href="/priorities">Priorities</a></li>
+            <li><a href="/issues">Issues</a></li>
+            <li><a href="/founding-members">Founding Members</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/donate">Donate</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Ohio's Political Action Committee for LGBTQ+ Equality</h1>
+        <p class="hero-subtitle">
+            Ohio Pride PAC mobilizes voters, endorses pro-equality candidates, and advocates for the rights of LGBTQ+ Ohioans at every level of government.
+        </p>
+        <div class="hero-divider"></div>
+        <div class="hero-buttons">
+            <a href="/priorities" class="btn btn-primary">Our Priorities</a>
+            <a href="/donate/founding-member" class="btn btn-secondary">Become a Founding Member</a>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section>
+        <h2>Our Mission</h2>
+        <p style="text-align: center; color: var(--text-gray); max-width: 700px; margin: 0 auto 2rem;">
+            Ohio Pride PAC fills a critical gap in Ohio's advocacy landscape by mobilizing political power to protect and advance equality for LGBTQ+ communities.
+        </p>
+        <div class="mission-content">
+            <div class="stat">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Active Anti-LGBTQ+ Bills</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">88</div>
+                <div class="stat-label">Ohio Counties</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">2026</div>
+                <div class="stat-label">Election Cycle</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Do Section -->
+    <section>
+        <h2>What We Do</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Candidate Endorsements & Contributions</h3>
+                <p>We identify, support, and fund candidates who champion LGBTQ+ equality and will fight for our rights in the statehouse, Congress, and beyond.</p>
+            </div>
+            <div class="card">
+                <h3>Voter Mobilization</h3>
+                <p>We organize LGBTQ+ voters and allies to turn out to the polls and make our voices heard on the issues that matter most to our community.</p>
+            </div>
+            <div class="card">
+                <h3>Issue Advocacy</h3>
+                <p>We lead public campaigns against harmful legislation and for pro-equality policies that protect LGBTQ+ Ohioans from discrimination.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founding Members Section -->
+    <section>
+        <h2>Be One of the First 1,969</h2>
+        <div class="founding-content">
+            <p class="founding-description">
+                Join our founding membership and help launch Ohio Pride PAC at this critical moment. Your support as a founding member will power our work to elect pro-equality candidates and protect LGBTQ+ rights across Ohio.
+            </p>
+            <p class="stonewall-reference">
+                The number 1,969 honors the Stonewall uprising of 1969, the watershed moment that sparked the modern LGBTQ+ rights movement.
+            </p>
+
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span id="memberCount">0</span> of 1,969 Founding Members
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="founding-cta">
+                <a href="/donate/founding-member" class="btn btn-primary">Become a Founding Member</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donate Section -->
+    <section>
+        <div class="donate-section">
+            <h2>Support the Movement</h2>
+            <p class="donate-description">
+                Every contribution fuels our work to build political power for LGBTQ+ equality in Ohio.
+            </p>
+            <a href="/donate" class="btn btn-primary">Make a Donation</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Organization</h4>
+                <ul class="footer-links">
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/board">Board & Leadership</a></li>
+                    <li><a href="/priorities">Priorities</a></li>
+                    <li><a href="/issues">Issues</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Get Involved</h4>
+                <ul class="footer-links">
+                    <li><a href="/donate">Donate</a></li>
+                    <li><a href="/volunteer">Volunteer</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/founding-members">Founding Members</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Use</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Leadership</h4>
+                <div class="footer-directors">
+                    <strong>Director:</strong> Zachary R. Joseph<br>
+                    <strong>Treasurer:</strong> David Donofrio
+                </div>
+            </div>
+
+            <div class="footer-disclaimer">
+                <div class="footer-copyright">&copy; 2026 Ohio Pride PAC. All rights reserved.</div>
+                <div>Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Founding member progress bar
+        const FOUNDING_MEMBER_COUNT = 0;
+        const FOUNDING_MEMBER_GOAL = 1969;
+
+        const memberCountEl = document.getElementById('memberCount');
+        const progressFillEl = document.getElementById('progressFill');
+
+        memberCountEl.textContent = FOUNDING_MEMBER_COUNT;
+        const progressPercentage = (FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100;
+        progressFillEl.style.width = progressPercentage + '%';
+    </script>
+</body>
+</html>
