@@ -1,41 +1,32 @@
 [build]
   publish = "."
-  functions = "netlify/functions"
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-
-# Clean URL redirects
+# Legacy redirects
 [[redirects]]
-  from = "/contact"
-  to = "/contact.html"
-  status = 200
+  from = "/gala"
+  to = "/"
+  status = 301
+  force = true
 
 [[redirects]]
-  from = "/founding-members"
-  to = "/founding-members.html"
-  status = 200
+  from = "/sponsorship"
+  to = "/"
+  status = 301
+  force = true
 
 [[redirects]]
-  from = "/issues"
-  to = "/issues.html"
-  status = 200
+  from = "/priorities"
+  to = "/"
+  status = 301
+  force = true
 
-[[redirects]]
-  from = "/donate"
-  to = "/donate.html"
-  status = 200
-
+# Clean URLs for donate subpages
 [[redirects]]
   from = "/donate/founding-member"
   to = "/donate/founding-member.html"
   status = 200
 
-# Individual bill tracker pages
+# Clean URLs for individual bill tracker pages
 [[redirects]]
   from = "/issues/hb249"
   to = "/issues/hb249.html"
@@ -86,34 +77,9 @@
   to = "/issues/hb262.html"
   status = 200
 
-# Legacy redirects
-[[redirects]]
-  from = "/gala"
-  to = "/"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/gala.html"
-  to = "/"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/sponsorship"
-  to = "/"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/priorities"
-  to = "/"
-  status = 301
-  force = true
-  force = true
-
-[[redirects]]
-  from = "/sponsorship.html"
-  to = "/"
-  status = 301
-  force = true
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

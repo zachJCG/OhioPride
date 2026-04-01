@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading... | Ohio Pride PAC</title>
+    <link rel="stylesheet" href="/css/bill-pipeline.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --dark-bg: #0a0a0a; --card-bg: #141414; --card-border: #1e1e1e; --text-white: #fff; --text-gray: #a0a0a0; --text-dim: #666; --rainbow: linear-gradient(90deg, #e40303, #ff8c00, #ffff41, #01be01, #0000f9, #4b369d, #3f0080); }
+        html { scroll-behavior: smooth; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--dark-bg); color: var(--text-white); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+        nav { position: sticky; top: 0; z-index: 1000; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--card-border); padding: 0 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 64px; }
+        .nav-brand { font-weight: 700; font-size: 1.1rem; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a { font-size: 0.9rem; color: var(--text-gray); transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-white); }
+        .hamburger { display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+        @media (max-width: 768px) { .hamburger { display: block; } .nav-links { display: none; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: var(--dark-bg); border-bottom: 1px solid var(--card-border); padding: 1rem 2rem; gap: 1rem; } .nav-links.open { display: flex; } }
+
+        .breadcrumb { max-width: 900px; margin: 1.5rem auto 0; padding: 0 2rem; font-size: 0.85rem; color: var(--text-dim); }
+        .breadcrumb a { color: var(--text-gray); }
+        .breadcrumb a:hover { color: white; }
+
+        .bill-hero { max-width: 900px; margin: 1rem auto 0; padding: 0 2rem 2rem; border-bottom: 3px solid; border-image: var(--rainbow) 1; }
+        .bill-hero .bill-number { font-size: 0.9rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+        .bill-hero h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.25rem; }
+        .bill-hero .nickname { font-size: 1.1rem; color: var(--text-gray); margin-bottom: 0.5rem; }
+        .bill-hero .official-title { font-size: 0.85rem; color: var(--text-dim); font-style: italic; margin-bottom: 1rem; }
+        .bill-hero .badge-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
+        .status-badge { padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+        @media (max-width: 768px) { .bill-hero h1 { font-size: 1.6rem; } }
+
+        .detail-section { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        .detail-section h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--card-border); }
+        .detail-section p { color: var(--text-gray); margin-bottom: 1rem; line-height: 1.7; }
+        .detail-section ul { color: var(--text-gray); margin: 0 0 1rem 1.5rem; }
+        .detail-section li { margin-bottom: 0.5rem; line-height: 1.6; }
+
+        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+        .meta-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; }
+        .meta-card .meta-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+        .meta-card .meta-value { font-size: 0.95rem; }
+        @media (max-width: 768px) { .meta-grid { grid-template-columns: 1fr; } }
+
+        .timeline-list { position: relative; padding-left: 1.5rem; border-left: 2px solid var(--card-border); }
+        .timeline-item { position: relative; margin-bottom: 1.25rem; padding-left: 1rem; }
+        .timeline-item::before { content: ''; position: absolute; left: -1.75rem; top: 0.5rem; width: 10px; height: 10px; border-radius: 50%; background: var(--card-border); }
+        .timeline-item.completed::before { background: #22c55e; }
+        .timeline-item.current::before { background: #f59e0b; box-shadow: 0 0 8px rgba(245,158,11,0.5); }
+        .timeline-item .tl-date { font-size: 0.8rem; color: var(--text-dim); font-weight: 600; }
+        .timeline-item .tl-event { font-size: 0.95rem; color: var(--text-gray); }
+
+        .ext-links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+        .ext-link { display: none; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px; font-size: 0.85rem; color: var(--text-gray); transition: all 0.2s; }
+        .ext-link:hover { border-color: #444; color: white; }
+
+        .risk-card { background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02)); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; }
+        .risk-card ul { margin-left: 1.25rem; }
+
+        .cta-bar { max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem; }
+        .cta-inner { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 1.5rem; text-align: center; }
+        .cta-inner p { color: var(--text-gray); margin-bottom: 1rem; }
+        .cta-inner a { display: inline-block; padding: 0.6rem 1.5rem; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border-radius: 6px; font-weight: 600; font-size: 0.9rem; transition: transform 0.2s; }
+        .cta-inner a:hover { transform: translateY(-1px); }
+
+        footer { border-top: 3px solid; border-image: var(--rainbow) 1; padding: 2rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
+        footer .footer-links { margin: 0.5rem 0; }
+        footer .footer-links a { color: var(--text-gray); margin: 0 0.5rem; }
+        footer .disclaimer { font-size: 0.75rem; margin-top: 0.75rem; font-style: italic; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="nav-brand">Ohio Pride PAC</a>
+            <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+            <ul class="nav-links">
+                
+                
+                <li><a href="/issues" class="active">Issues</a></li>
+                <li><a href="/founding-members">Founding Members</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/donate">Donate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="breadcrumb">
+        <a href="/issues">← Back to Issue Tracker</a>
+    </div>
+
+    <div class="bill-hero">
+        <div class="bill-number" id="billNumber"></div>
+        <h1 id="billTitle"></h1>
+        <div class="nickname" id="billNickname"></div>
+        <div class="official-title">Official title: "<span id="billOfficialTitle"></span>"</div>
+        <div class="badge-row">
+            <span class="status-badge" id="statusBadge"></span>
+            <span id="billCategories" style="display:flex;gap:0.4rem;flex-wrap:wrap;"></span>
+        </div>
+        <div id="detailPipeline"></div>
+    </div>
+
+    <div class="detail-section">
+        <div class="meta-grid">
+            <div class="meta-card">
+                <div class="meta-label">Sponsors</div>
+                <div class="meta-value" id="billSponsors"></div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">Last Action</div>
+                <div class="meta-value" id="billLastAction"></div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">Next Expected Action</div>
+                <div class="meta-value" id="billNextDate"></div>
+            </div>
+            <div class="meta-card" style="display:none;">
+                <div class="meta-label">House Vote</div>
+                <div class="meta-value" id="billHouseVote"></div>
+            </div>
+        </div>
+
+        <div class="ext-links">
+            <a href="#" id="legislatureLink" class="ext-link" target="_blank" rel="noopener">&#128279; Ohio Legislature Bill Page</a>
+            <a href="#" id="textLink" class="ext-link" target="_blank" rel="noopener">&#128196; Read Full Bill Text (PDF)</a>
+        </div>
+    </div>
+
+    <div class="detail-section">
+        <h2>What This Bill Does</h2>
+        <p>HB 155 would prohibit "DEI" programs and structures in Ohio public schools. While branded as a general DEI ban, the bill's restrictions <strong>explicitly reach contractors</strong> whose work would "promote admissions, hiring, or promotion" based on "race, ethnicity, religion, sex, <strong>sexual orientation, gender identity, or gender expression</strong>."</p>
+    </div>
+
+    <div class="detail-section">
+        <h2>Impact on LGBTQIA+ Ohioans</h2>
+        <p>The explicit listing of sexual orientation, gender identity, and gender expression in the contracting restriction is a clear signal that LGBTQIA+-related equity work is within its intended scope. In practice, this can discourage or prohibit school systems from using external expertise for <strong>LGBTQIA+-inclusive policies, climate work, staff trainings, or student-support programming</strong>.</p>
+    </div>
+
+    <div class="detail-section">
+        <h2>Legal &amp; Constitutional Risks</h2>
+        <div class="risk-card">
+            <ul>
+                <li><strong>Vagueness</strong> — "DEI" is not defined, creating chilling effects and uneven enforcement</li>
+                <li><strong>Viewpoint Discrimination</strong> — Targeting specific identity categories in contracting restrictions</li>
+                <li><strong>Federal Conflict</strong> — State restrictions may conflict with schools' obligations under federal civil rights frameworks</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="detail-section">
+        <h2>Timeline</h2>
+        <div class="timeline-list">
+            <div class="timeline-item completed">
+                <div class="tl-date">March 6, 2025</div>
+                <div class="tl-event">Introduced in the House</div>
+            </div>
+            <div class="timeline-item completed">
+                <div class="tl-date">March 19, 2025</div>
+                <div class="tl-event">Referred to House Education Committee</div>
+            </div>
+            <div class="timeline-item completed">
+                <div class="tl-date">May 6, 2025</div>
+                <div class="tl-event">1st hearing</div>
+            </div>
+            <div class="timeline-item current">
+                <div class="tl-date">May 20, 2025</div>
+                <div class="tl-event">2nd hearing</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-bar">
+        <div class="cta-inner">
+            <p>Help us fight back against anti-LGBTQIA+ legislation in Ohio.</p>
+            <a href="/donate/founding-member">Become a Founding Member →</a>
+        </div>
+    </div>
+
+    <footer>
+        <div>&copy; 2026 Ohio Pride PAC. All rights reserved.</div>
+        <div style="margin-top:0.25rem;">Zachary R. Joseph, Director &middot; David Donofrio, Treasurer</div>
+        <div class="footer-links"><a href="#">Privacy Policy</a> &middot; <a href="#">Terms of Use</a></div>
+        <div class="disclaimer">Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.</div>
+    </footer>
+
+    <script>const BILL_ID = 'hb155';</script>
+    <script src="/js/bill-data.js"></script>
+    <script src="/js/bill-pipeline.js"></script>
+    <script src="/js/bill-detail.js"></script>
+</body>
+</html>
