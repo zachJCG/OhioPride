@@ -1833,6 +1833,8 @@ img {
 .founding-tier-featured {
   border: 2px solid var(--color-blue);
   box-shadow: 0 4px 20px rgba(0, 77, 255, 0.1);
+  overflow: visible;
+  margin-top: 12px;
 }
 
 .featured-badge {
