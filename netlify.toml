@@ -86,6 +86,16 @@
   to = "/issues/hb262.html"
   status = 200
 
+[[redirects]]
+  from = "/privacy"
+  to = "/privacy.html"
+  status = 200
+
+[[redirects]]
+  from = "/terms"
+  to = "/terms.html"
+  status = 200
+
 # Legacy redirects
 [[redirects]]
   from = "/gala"
