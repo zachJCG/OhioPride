@@ -33,7 +33,7 @@ const BILLS = [
     url: "/issues/hb249",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb249",
     textUrl:
-      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb249/",
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb249/00_IN/pdf/",
   },
   {
     id: "hb693",
