@@ -3,6 +3,9 @@
    Update this file when bills progress. All pages pull from here.
    ========================================================================== */
 
+// Update this constant whenever bill data changes
+const LAST_UPDATED = { date: "04/04/26", time: "15:30" };
+
 const BILLS = [
   {
     id: "hb249",
@@ -18,7 +21,7 @@ const BILLS = [
     description:
       "Creates 'unlawful adult cabaret performance' with a definition reaching gender expression differing from 'biological sex.' Penalties escalate from misdemeanors to felonies when minors are present.",
     sponsors: "Rep. Angela N. King (R-84), Rep. Josh Williams (R-44)",
-    lastAction: "Introduced in Senate — March 26, 2026",
+    lastAction: "In Senate — awaiting committee assignment (as of April 4, 2026)",
     nextDate: "Awaiting Senate committee assignment",
     houseVote: "Passed 63–32 on March 25, 2026",
     chamber: "house",
@@ -49,15 +52,15 @@ const BILLS = [
     description:
       "Shields parents who reject a child's trans identity from abuse/neglect charges. Redefines 'affirmation' as acknowledging sex at birth only. Includes right to seek conversion-style therapy.",
     sponsors: "Rep. Gary Click (R-88), Rep. Josh Williams (R-44)",
-    lastAction: "2nd hearing in House Judiciary — March 25, 2026",
-    nextDate: "Possible 3rd hearing / committee vote upcoming",
+    lastAction: "2nd hearing (proponent testimony) in House Judiciary — March 25, 2026",
+    nextDate: "Opponent testimony expected next",
     chamber: "house",
     currentStep: 2,
     pipelineDates: { 0: "Feb 10, 2026", 1: "Feb 18, 2026", 2: "Mar 25, 2026" },
     url: "/issues/hb693",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb693",
     textUrl:
-      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb693/",
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb693/00_IN/pdf/",
   },
   {
     id: "hb798",
@@ -73,11 +76,11 @@ const BILLS = [
     description:
       "Unusually broad: sex-segregated facilities, school name/pronoun mandates, government document restrictions, and private right of action for facility violations.",
     sponsors: "Rep. Josh Williams (R-44)",
-    lastAction: "Introduced — bill text posted",
+    lastAction: "Introduced — March 31, 2026",
     nextDate: "Awaiting committee assignment",
     chamber: "house",
     currentStep: 0,
-    pipelineDates: {},
+    pipelineDates: { 0: "Mar 31, 2026" },
     url: "/issues/hb798",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb798",
     textUrl:
@@ -172,11 +175,11 @@ const BILLS = [
     description:
       "Senate companion to HB 155. Requires school boards to prohibit DEI structures, trainings, offices, and contracting. Suppresses LGBTQIA+-inclusive initiatives.",
     sponsors: "Sen. Andrew Brenner (R-19)",
-    lastAction: "Senate Education committee activity — May 2025",
+    lastAction: "2nd hearing in Senate Education — March 25, 2026",
     nextDate: "Additional hearings expected",
     chamber: "senate",
     currentStep: 2,
-    pipelineDates: {},
+    pipelineDates: { 2: "Mar 25, 2026" },
     url: "/issues/sb113",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/sb113",
     textUrl:
@@ -229,6 +232,8 @@ const BILLS = [
     pipelineDates: { 0: "Mar 24, 2025", 1: "Mar 26, 2025", 2: "Apr 29, 2025" },
     url: "/issues/hb196",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb196",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb196/00_IN/pdf/",
   },
   {
     id: "hb262",
@@ -251,6 +256,8 @@ const BILLS = [
     pipelineDates: { 0: "May 13, 2025", 1: "May 14, 2025", 2: "Sep 30, 2025" },
     url: "/issues/hb262",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb262",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb262/00_IN/pdf/",
   },
 ];
 

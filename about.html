@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About — Ohio Pride PAC</title>
+    <meta
+      name="description"
+      content="Learn about Ohio Pride PAC's mission and meet our Board of Directors."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      body {
+        background: var(--dark-bg);
+      }
+
+      .about-hero {
+        padding: calc(var(--nav-height) + 3rem) 2rem 2rem;
+        text-align: center;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .about-hero h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 700;
+        color: var(--text-white);
+        margin-bottom: 1rem;
+      }
+      .about-hero p.lead {
+        font-family: "Roboto Slab", serif;
+        font-size: 1.1rem;
+        color: var(--text-light);
+        line-height: 1.7;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .mission-section {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .mission-card {
+        background: rgba(19, 45, 68, 0.5);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 10px;
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .mission-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--pride-gradient);
+      }
+      .mission-card h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.5rem;
+        color: var(--text-white);
+        margin-bottom: 1rem;
+      }
+      .mission-card p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        line-height: 1.8;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+      .mission-card p:last-child {
+        margin-bottom: 0;
+      }
+
+      .board-section {
+        max-width: 1100px;
+        margin: 2rem auto 0;
+        padding: 2rem;
+      }
+      .board-heading {
+        text-align: center;
+        margin-bottom: 2.5rem;
+      }
+      .board-heading h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin-bottom: 0.5rem;
+      }
+      .board-heading p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        font-size: 1rem;
+      }
+      .board-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+      }
+      .board-card {
+        background: rgba(19, 45, 68, 0.5);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 10px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+      .board-card:hover {
+        border-color: var(--color-light-blue);
+        transform: translateY(-3px);
+      }
+      .avatar-ring {
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 1rem;
+        border-radius: 50%;
+        padding: 3px;
+        background: var(--pride-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .avatar-inner {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--dark-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-white);
+      }
+      .board-name {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin-bottom: 0.25rem;
+      }
+      .board-role {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.85rem;
+        color: var(--text-light);
+      }
+      .board-card.seat-open {
+        border-style: dashed;
+        opacity: 0.85;
+      }
+      .board-card.seat-open .avatar-inner {
+        color: var(--text-light);
+        font-size: 2rem;
+      }
+      .board-card.seat-open .board-name {
+        color: var(--text-light);
+      }
+
+      .board-cta {
+        text-align: center;
+        margin-top: 3rem;
+        padding: 2rem;
+        background: rgba(19, 45, 68, 0.5);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 10px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .board-cta h3 {
+        font-family: "Montserrat", sans-serif;
+        color: var(--text-white);
+        margin-bottom: 0.75rem;
+        font-size: 1.25rem;
+      }
+      .board-cta p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+      }
+
+      @media (max-width: 768px) {
+        .about-hero {
+          padding: calc(var(--nav-height) + 1.5rem) 1rem 1.5rem;
+        }
+        .mission-section,
+        .board-section {
+          padding: 1rem;
+        }
+        .mission-card {
+          padding: 1.5rem;
+        }
+        .board-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+        }
+        .board-card {
+          padding: 1rem 0.5rem;
+        }
+        .avatar-ring {
+          width: 72px;
+          height: 72px;
+        }
+        .avatar-inner {
+          font-size: 1.15rem;
+        }
+        .board-name {
+          font-size: 0.9rem;
+        }
+        .board-role {
+          font-size: 0.75rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pride-stripe"></div>
+
+    <!-- Navigation -->
+    <nav class="nav nav-solid" id="nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <span class="logo-ohio">Ohio</span
+          ><span class="logo-pride">Pride</span>
+          <span class="logo-pac">PAC</span>
+        </a>
+        <button
+          class="nav-toggle"
+          id="navToggle"
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="navLinks">
+          <a href="/issues">Issues</a>
+          <a href="/founding-members">Founding Members</a>
+          <a href="/about" class="active">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/donate" class="btn btn-nav">Donate</a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="about-hero">
+      <h1>About Ohio Pride PAC</h1>
+      <p class="lead">
+        Building political power for LGBTQ+ Ohioans at every level of
+        government.
+      </p>
+    </section>
+
+    <section class="mission-section">
+      <div class="mission-card">
+        <h2>Our Mission</h2>
+        <p>
+          Ohio Pride PAC is Ohio's Political Action Committee for LGBTQ+
+          Equality. We mobilize voters, endorse pro-equality candidates, and
+          advocate for the rights of LGBTQ+ Ohioans at every level of
+          government.
+        </p>
+        <p>
+          We exist to build durable political power for the LGBTQ+ community in
+          Ohio — electing leaders who will defend our rights, tracking and
+          fighting anti-LGBTQ+ legislation in the Statehouse, and educating
+          voters about what's at stake in every election.
+        </p>
+      </div>
+    </section>
+
+    <section class="board-section">
+      <div class="board-heading">
+        <h2>Board of Directors</h2>
+        <p>Ten seats. Seven filled. Three open for leaders ready to serve.</p>
+      </div>
+      <div class="board-grid">
+        <div class="board-card">
+          <div class="avatar-ring">
+            <div class="avatar-inner">ZJ</div>
+          </div>
+          <div class="board-name">Zachary R. Joseph</div>
+          <div class="board-role">Director</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <div class="avatar-inner">DD</div>
+          </div>
+          <div class="board-name">David Donofrio</div>
+          <div class="board-role">Treasurer</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <div class="avatar-inner">BM</div>
+          </div>
+          <div class="board-name">Board Member</div>
+          <div class="board-role">Secretary</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <div class="avatar-inner">BM</div>
+          </div>
+          <div class="board-name">Board Member</div>
+          <div class="board-role">At-Large</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <div class="avatar-inner">BM</div>
+          </div>
+          <div class="board-name">Board Member</div>
+          <div class="board-role">At-Large</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <div class="avatar-inner">BM</div>
+          </div>
+          <div class="board-name">Board Member</div>
+          <div class="board-role">At-Large</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <div class="avatar-inner">BM</div>
+          </div>
+          <div class="board-name">Board Member</div>
+          <div class="board-role">At-Large</div>
+        </div>
+        <div class="board-card seat-open">
+          <div class="avatar-ring">
+            <div class="avatar-inner">+</div>
+          </div>
+          <div class="board-name">Seat Open</div>
+          <div class="board-role">At-Large</div>
+        </div>
+        <div class="board-card seat-open">
+          <div class="avatar-ring">
+            <div class="avatar-inner">+</div>
+          </div>
+          <div class="board-name">Seat Open</div>
+          <div class="board-role">At-Large</div>
+        </div>
+        <div class="board-card seat-open">
+          <div class="avatar-ring">
+            <div class="avatar-inner">+</div>
+          </div>
+          <div class="board-name">Seat Open</div>
+          <div class="board-role">At-Large</div>
+        </div>
+      </div>
+
+      <div class="board-cta">
+        <h3>Interested in a Board Seat?</h3>
+        <p>
+          We're seeking passionate LGBTQ+ Ohioans and allies to help guide Ohio
+          Pride PAC. If you're ready to help build political power for
+          equality, we want to hear from you.
+        </p>
+        <a href="/contact" class="btn btn-primary">Contact Us</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="nav-logo footer-logo">
+              <span class="logo-ohio">Ohio</span
+              ><span class="logo-pride">Pride</span>
+              <span class="logo-pac">PAC</span>
+            </a>
+            <p class="footer-tagline">
+              Ohio's Political Action Committee for LGBTQ+ Equality.
+            </p>
+          </div>
+          <div class="footer-links">
+            <h4>Organization</h4>
+            <a href="/issues">Issues</a>
+            <a href="/founding-members">Founding Members</a>
+            <a href="/about">About</a>
+          </div>
+          <div class="footer-links">
+            <h4>Get Involved</h4>
+            <a href="/donate">Donate</a>
+            <a href="/contact">Contact Us</a>
+          </div>
+          <div class="footer-links">
+            <h4>Legal</h4>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="compliance-footer">
+      <div class="container">
+        <p>
+          Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David
+          Donofrio, Treasurer.
+        </p>
+        <p class="irs-line">
+          Contributions are not tax-deductible for federal income tax purposes.
+        </p>
+      </div>
+    </div>
+
+    <a href="/donate" class="mobile-donate-fab">Donate</a>
+
+    <script src="/js/main.js"></script>
+  </body>
+</html>

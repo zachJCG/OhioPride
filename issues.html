@@ -143,6 +143,41 @@
         margin-top: 0.25rem;
         font-family: "Montserrat", sans-serif;
       }
+      .stat-card-updated {
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.18),
+          rgba(168, 85, 247, 0.12) 50%,
+          rgba(236, 72, 153, 0.15)
+        );
+        border-color: rgba(168, 85, 247, 0.35);
+      }
+      .stat-card-updated .stat-updated-date {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--text-white);
+        line-height: 1.1;
+      }
+      .stat-card-updated .stat-updated-time {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-light);
+        margin-top: 0.15rem;
+      }
+      .stat-card-updated .stat-label {
+        background: linear-gradient(
+          90deg,
+          #60a5fa,
+          #a855f7,
+          #ec4899
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+      }
       @media (max-width: 768px) {
         .stats-bar {
           grid-template-columns: repeat(2, 1fr);
@@ -462,7 +497,13 @@
           font-size: 1.5rem;
         }
         .stat-card .stat-label {
-          font-size: 0.7rem;
+          font-size: 0.65rem;
+        }
+        .stat-card-updated .stat-updated-date {
+          font-size: 1.15rem;
+        }
+        .stat-card-updated .stat-updated-time {
+          font-size: 0.8rem;
         }
       }
     </style>
@@ -488,6 +529,7 @@
         <div class="nav-links" id="navLinks">
           <a href="/issues" class="active">Issues</a>
           <a href="/founding-members">Founding Members</a>
+          <a href="/about">About</a>
           <a href="/contact">Contact</a>
           <a href="/donate" class="btn btn-nav">Donate</a>
         </div>
@@ -532,9 +574,10 @@
           <div class="stat-num" data-count="6">0</div>
           <div class="stat-label">In Committee</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-num" data-count="5">0</div>
-          <div class="stat-label">Bills by Rep. Williams</div>
+        <div class="stat-card stat-card-updated">
+          <div class="stat-updated-date" id="lastUpdatedDate">—</div>
+          <div class="stat-updated-time" id="lastUpdatedTime">—</div>
+          <div class="stat-label">Last Updated</div>
         </div>
       </div>
 
@@ -652,6 +695,7 @@
             <h4>Organization</h4>
             <a href="/issues">Issues</a>
             <a href="/founding-members">Founding Members</a>
+            <a href="/about">About</a>
           </div>
           <div class="footer-links">
             <h4>Get Involved</h4>
@@ -787,6 +831,14 @@
         });
       });
       renderBills(BILLS);
+
+      // Populate the Last Updated card from LAST_UPDATED in bill-data.js
+      if (typeof LAST_UPDATED !== "undefined") {
+        const dateEl = document.getElementById("lastUpdatedDate");
+        const timeEl = document.getElementById("lastUpdatedTime");
+        if (dateEl) dateEl.textContent = LAST_UPDATED.date;
+        if (timeEl) timeEl.textContent = LAST_UPDATED.time;
+      }
     </script>
   </body>
 </html>
