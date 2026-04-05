@@ -4,7 +4,7 @@
    ========================================================================== */
 
 // Update this constant whenever bill data changes
-const LAST_UPDATED = { date: "04/04/26", time: "15:30" };
+const LAST_UPDATED = { date: "04/04/26", time: "08:03 PM EDT" };
 
 const BILLS = [
   {
