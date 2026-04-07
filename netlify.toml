@@ -91,6 +91,43 @@
   to = "/issues/hb262.html"
   status = 200
 
+# Pro-LGBTQ+ bill pages
+[[redirects]]
+  from = "/issues/sb70"
+  to = "/issues/sb70.html"
+  status = 200
+
+[[redirects]]
+  from = "/issues/hb136"
+  to = "/issues/hb136.html"
+  status = 200
+
+[[redirects]]
+  from = "/issues/sb71"
+  to = "/issues/sb71.html"
+  status = 200
+
+[[redirects]]
+  from = "/issues/hb300"
+  to = "/issues/hb300.html"
+  status = 200
+
+[[redirects]]
+  from = "/issues/sb211"
+  to = "/issues/sb211.html"
+  status = 200
+
+[[redirects]]
+  from = "/issues/hb327"
+  to = "/issues/hb327.html"
+  status = 200
+
+# Mixed bill pages
+[[redirects]]
+  from = "/issues/hb306"
+  to = "/issues/hb306.html"
+  status = 200
+
 [[redirects]]
   from = "/privacy"
   to = "/privacy.html"

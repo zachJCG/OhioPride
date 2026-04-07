@@ -345,6 +345,96 @@
         /* visible by default on desktop */
       }
 
+      /* Stance filter button colors */
+      .filter-btn.stance-anti.active {
+        background: #dc2626;
+        border-color: #dc2626;
+      }
+      .filter-btn.stance-pro.active {
+        background: #16a34a;
+        border-color: #16a34a;
+      }
+      .filter-btn.stance-mixed.active {
+        background: #ca8a04;
+        border-color: #ca8a04;
+      }
+
+      /* Section headers for bill groups */
+      .stance-section-header {
+        max-width: 1200px;
+        margin: 0 auto 1rem;
+        padding: 0 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .stance-indicator {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .stance-indicator.anti { background: #dc2626; }
+      .stance-indicator.pro { background: #22c55e; }
+      .stance-indicator.mixed { background: #eab308; }
+      .stance-section-header h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin: 0;
+      }
+      .stance-section-header .stance-count {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        font-weight: 500;
+      }
+
+      /* Bill title as hyperlink */
+      .bill-title-link {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-color: rgba(255,255,255,0.3);
+      }
+
+      /* Mobile swipe hint */
+      .swipe-hint {
+        display: none;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        margin-bottom: 0.75rem;
+        padding: 0 2rem;
+        letter-spacing: 0.03em;
+      }
+
+      /* Buckeye Flame credit */
+      .source-credit {
+        max-width: 1200px;
+        margin: 2rem auto 0;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      .source-credit-inner {
+        background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(59,130,246,0.08));
+        border: 1px solid rgba(34,197,94,0.2);
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        color: var(--text-gray);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      .source-credit-inner a {
+        color: var(--color-light-blue);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      .source-credit-inner strong {
+        color: var(--text-white);
+      }
+
       .contact-note {
         max-width: 1200px;
         margin: 0 auto 3rem;
@@ -431,6 +521,33 @@
         }
         .contact-note {
           padding: 0 1rem;
+        }
+        .stance-section-header {
+          padding: 0 1rem;
+        }
+        .source-credit {
+          padding: 0 1rem;
+        }
+
+        /* Mobile swipe hint */
+        .swipe-hint {
+          display: block;
+        }
+
+        /* Horizontal scroll for bill cards on mobile */
+        .bills-container.mobile-scroll {
+          flex-direction: row;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scroll-snap-type: x mandatory;
+          gap: 0.75rem;
+          padding-bottom: 0.5rem;
+        }
+        .bills-container.mobile-scroll .bill-card {
+          min-width: 85vw;
+          max-width: 85vw;
+          flex-shrink: 0;
+          scroll-snap-align: start;
         }
 
         /* Collapsible card details on mobile */
@@ -563,7 +680,7 @@
 
       <div class="stats-bar reveal-stagger">
         <div class="stat-card">
-          <div class="stat-num" data-count="10">0</div>
+          <div class="stat-num" data-count="17">0</div>
           <div class="stat-label">Active Bills</div>
         </div>
         <div class="stat-card">
@@ -571,7 +688,7 @@
           <div class="stat-label">Passed a Chamber</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num" data-count="6">0</div>
+          <div class="stat-num" data-count="12">0</div>
           <div class="stat-label">In Committee</div>
         </div>
         <div class="stat-card stat-card-updated">
@@ -583,87 +700,43 @@
 
       <div class="filters">
         <div class="filter-row">
+          <span class="filter-label">Stance</span>
+          <button class="filter-btn active" data-filter="stance" data-value="all">All</button>
+          <button class="filter-btn stance-anti" data-filter="stance" data-value="anti">Anti-LGBTQ+</button>
+          <button class="filter-btn stance-pro" data-filter="stance" data-value="pro">Pro-LGBTQ+</button>
+          <button class="filter-btn stance-mixed" data-filter="stance" data-value="mixed">Mixed</button>
+        </div>
+        <div class="filter-row">
           <span class="filter-label">Status</span>
-          <button
-            class="filter-btn active"
-            data-filter="status"
-            data-value="all"
-          >
-            All
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="status"
-            data-value="introduced"
-          >
-            Introduced
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="status"
-            data-value="in-committee"
-          >
-            In Committee
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="status"
-            data-value="passed-house"
-          >
-            Passed House
-          </button>
+          <button class="filter-btn active" data-filter="status" data-value="all">All</button>
+          <button class="filter-btn" data-filter="status" data-value="introduced">Introduced</button>
+          <button class="filter-btn" data-filter="status" data-value="in-committee">In Committee</button>
+          <button class="filter-btn" data-filter="status" data-value="passed-house">Passed House</button>
         </div>
         <div class="filter-row">
           <span class="filter-label">Category</span>
-          <button
-            class="filter-btn active"
-            data-filter="category"
-            data-value="all"
-          >
-            All
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="category"
-            data-value="anti-trans"
-          >
-            Anti-Trans
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="category"
-            data-value="education"
-          >
-            Education / DEI
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="category"
-            data-value="expression"
-          >
-            Expression
-          </button>
-          <button class="filter-btn" data-filter="category" data-value="youth">
-            Youth / Family
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="category"
-            data-value="elections"
-          >
-            Elections
-          </button>
-          <button
-            class="filter-btn"
-            data-filter="category"
-            data-value="corrections"
-          >
-            Corrections
-          </button>
+          <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+          <button class="filter-btn" data-filter="category" data-value="anti-trans">Anti-Trans</button>
+          <button class="filter-btn" data-filter="category" data-value="civil-rights">Civil Rights</button>
+          <button class="filter-btn" data-filter="category" data-value="healthcare">Healthcare</button>
+          <button class="filter-btn" data-filter="category" data-value="education">Education / DEI</button>
+          <button class="filter-btn" data-filter="category" data-value="expression">Expression</button>
+          <button class="filter-btn" data-filter="category" data-value="youth">Youth / Family</button>
+          <button class="filter-btn" data-filter="category" data-value="elections">Elections</button>
+          <button class="filter-btn" data-filter="category" data-value="corrections">Corrections</button>
         </div>
       </div>
 
-      <div class="bills-container" id="billsContainer"></div>
+      <div id="billsContainer"></div>
+
+      <div class="source-credit">
+        <div class="source-credit-inner">
+          Pro-LGBTQ+ bill data sourced from <strong>The Buckeye Flame</strong> &mdash;
+          Ohio's LGBTQ+ news source. See Ken Schneck's
+          <a href="https://thebuckeyeflame.com/pro-lgbtq-bills-ohio/" target="_blank" rel="noopener">guide to pro-LGBTQ+ legislation</a>
+          and visit <a href="https://thebuckeyeflame.com/" target="_blank" rel="noopener">TheBuckeyeFlame.com</a>.
+        </div>
+      </div>
 
       <div class="contact-note">
         <p>
@@ -742,55 +815,104 @@
         "Elections / Privacy": "#a78bfa",
         Corrections: "#94a3b8",
         Healthcare: "#34d399",
+        "Civil Rights": "#38bdf8",
       };
 
+      const stanceConfig = {
+        anti: { label: "Anti-LGBTQ+ Legislation", color: "anti", icon: "#dc2626" },
+        mixed: { label: "Mixed Legislation", color: "mixed", icon: "#eab308" },
+        pro: { label: "Pro-LGBTQ+ Legislation", color: "pro", icon: "#22c55e" },
+      };
+
+      function billCardHTML(b) {
+        return `
+          <a href="${b.url}" class="bill-card" data-status="${b.status}" data-categories="${b.categories.join(",")}" data-stance="${b.stance || 'anti'}">
+              <div class="bill-card-inner">
+                  <div class="bill-status-bar" style="background:${b.statusColor}"></div>
+                  <div class="bill-content">
+                      <div class="bill-header">
+                          <span class="bill-id">${b.bill}</span>
+                          <div class="bill-badges">
+                              <span class="status-badge" style="background:${b.statusColor}22;color:${b.statusColor};border:1px solid ${b.statusColor}44">${b.statusLabel}</span>
+                              ${b.categoryLabels.map((cl) => `<span class="cat-badge" style="color:${catColors[cl] || "#999"};border-color:${catColors[cl] || "#333"}33">${cl}</span>`).join("")}
+                          </div>
+                      </div>
+                      <div class="bill-title bill-title-link">${b.title}</div>
+                      <div class="bill-subtitle">${b.nickname}</div>
+                      <div id="pipeline-${b.id}"></div>
+                      <div class="bill-desc">${b.description}</div>
+                      <div class="bill-expandable">
+                          <div class="bill-meta">
+                              <span><strong>Sponsors:</strong> ${b.sponsors}</span>
+                              <span><strong>Last Action:</strong> ${b.lastAction}</span>
+                              ${b.nextDate ? `<span class="bill-next-date">${b.nextDate}</span>` : ""}
+                              ${b.houseVote ? `<span><strong>House Vote:</strong> ${b.houseVote}</span>` : ""}
+                          </div>
+                      </div>
+                      <button class="bill-expand-btn" aria-label="Toggle details">
+                          <span class="expand-text">See more</span>
+                          <span class="expand-collapse-text">Show less</span>
+                          <span class="expand-icon">&#9660;</span>
+                      </button>
+                  </div>
+              </div>
+          </a>`;
+      }
+
       function renderBills(list) {
-        const c = document.getElementById("billsContainer");
-        c.innerHTML = list
-          .map(
-            (b) => `
-            <a href="${b.url}" class="bill-card" data-status="${b.status}" data-categories="${b.categories.join(",")}">
-                <div class="bill-card-inner">
-                    <div class="bill-status-bar" style="background:${b.statusColor}"></div>
-                    <div class="bill-content">
-                        <div class="bill-header">
-                            <span class="bill-id">${b.bill}</span>
-                            <div class="bill-badges">
-                                <span class="status-badge" style="background:${b.statusColor}22;color:${b.statusColor};border:1px solid ${b.statusColor}44">${b.statusLabel}</span>
-                                ${b.categoryLabels.map((cl) => `<span class="cat-badge" style="color:${catColors[cl] || "#999"};border-color:${catColors[cl] || "#333"}33">${cl}</span>`).join("")}
-                            </div>
-                        </div>
-                        <div class="bill-title">${b.title}</div>
-                        <div class="bill-subtitle">${b.nickname}</div>
-                        <div id="pipeline-${b.id}"></div>
-                        <div class="bill-desc">${b.description}</div>
-                        <div class="bill-expandable">
-                            <div class="bill-meta">
-                                <span><strong>Sponsors:</strong> ${b.sponsors}</span>
-                                <span><strong>Last Action:</strong> ${b.lastAction}</span>
-                                ${b.nextDate ? `<span class="bill-next-date">${b.nextDate}</span>` : ""}
-                                ${b.houseVote ? `<span><strong>House Vote:</strong> ${b.houseVote}</span>` : ""}
-                            </div>
-                        </div>
-                        <button class="bill-expand-btn" aria-label="Toggle details">
-                            <span class="expand-text">View more</span>
-                            <span class="expand-collapse-text">Show less</span>
-                            <span class="expand-icon">&#9660;</span>
-                        </button>
-                    </div>
-                </div>
-            </a>
-        `,
-          )
-          .join("");
+        const wrapper = document.getElementById("billsContainer");
+        wrapper.innerHTML = "";
+
+        // Group bills by stance
+        const groups = { anti: [], mixed: [], pro: [] };
+        list.forEach((b) => {
+          const s = b.stance || "anti";
+          if (groups[s]) groups[s].push(b);
+        });
+
+        const isMobile = window.innerWidth <= 768;
+        const stanceOrder = ["anti", "mixed", "pro"];
+
+        stanceOrder.forEach((stance) => {
+          const bills = groups[stance];
+          if (!bills.length) return;
+
+          const cfg = stanceConfig[stance];
+
+          // Section header
+          const header = document.createElement("div");
+          header.className = "stance-section-header";
+          header.innerHTML = `
+            <span class="stance-indicator ${cfg.color}"></span>
+            <h2>${cfg.label}</h2>
+            <span class="stance-count">(${bills.length} bill${bills.length > 1 ? "s" : ""})</span>
+          `;
+          wrapper.appendChild(header);
+
+          // Swipe hint on mobile
+          if (isMobile && bills.length > 1) {
+            const hint = document.createElement("div");
+            hint.className = "swipe-hint";
+            hint.textContent = "\u2190 Swipe to see more bills \u2192";
+            wrapper.appendChild(hint);
+          }
+
+          // Bills container for this group
+          const container = document.createElement("div");
+          container.className = "bills-container" + (isMobile ? " mobile-scroll" : "");
+          container.style.marginBottom = "2rem";
+          container.innerHTML = bills.map(billCardHTML).join("");
+          wrapper.appendChild(container);
+        });
+
         // Render pipelines
         list.forEach((b) => {
           const el = document.getElementById("pipeline-" + b.id);
           if (el) renderPipeline(el, b.chamber || "house", b.currentStep);
         });
 
-        // Mobile: attach expand/collapse handlers (button stops link navigation)
-        c.querySelectorAll(".bill-expand-btn").forEach((btn) => {
+        // Mobile: attach expand/collapse handlers
+        wrapper.querySelectorAll(".bill-expand-btn").forEach((btn) => {
           btn.addEventListener("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -799,37 +921,50 @@
         });
       }
 
-      let activeStatus = "all",
+      let activeStance = "all",
+        activeStatus = "all",
         activeCategory = "all";
+
       function applyFilters() {
         renderBills(
           BILLS.filter((b) => {
+            const stm = activeStance === "all" || (b.stance || "anti") === activeStance;
             const sm = activeStatus === "all" || b.status === activeStatus;
-            const cm =
-              activeCategory === "all" || b.categories.includes(activeCategory);
-            return sm && cm;
+            const cm = activeCategory === "all" || b.categories.includes(activeCategory);
+            return stm && sm && cm;
           }),
         );
       }
+
       document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
-          const ft = btn.dataset.filter,
-            v = btn.dataset.value;
-          if (ft === "status") {
+          const ft = btn.dataset.filter, v = btn.dataset.value;
+          if (ft === "stance") {
+            activeStance = v;
+            document.querySelectorAll('[data-filter="stance"]').forEach((b) => b.classList.remove("active"));
+          } else if (ft === "status") {
             activeStatus = v;
-            document
-              .querySelectorAll('[data-filter="status"]')
-              .forEach((b) => b.classList.remove("active"));
+            document.querySelectorAll('[data-filter="status"]').forEach((b) => b.classList.remove("active"));
           } else {
             activeCategory = v;
-            document
-              .querySelectorAll('[data-filter="category"]')
-              .forEach((b) => b.classList.remove("active"));
+            document.querySelectorAll('[data-filter="category"]').forEach((b) => b.classList.remove("active"));
           }
           btn.classList.add("active");
           applyFilters();
         });
       });
+
+      // Re-render on resize to toggle mobile scroll
+      let lastWidth = window.innerWidth;
+      window.addEventListener("resize", () => {
+        const w = window.innerWidth;
+        if ((lastWidth <= 768) !== (w <= 768)) {
+          lastWidth = w;
+          applyFilters();
+        }
+        lastWidth = w;
+      });
+
       renderBills(BILLS);
 
       // Populate the Last Updated card from LAST_UPDATED in bill-data.js

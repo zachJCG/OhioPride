@@ -261,6 +261,112 @@
         margin-left: 1.25rem;
       }
 
+      /* Vote Breakdown */
+      .vote-summary {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .vote-summary-card {
+        flex: 1;
+        text-align: center;
+        padding: 1.25rem;
+        border-radius: 8px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+      }
+      .vote-summary-card.yea {
+        border-color: rgba(239,68,68,0.4);
+        background: rgba(239,68,68,0.08);
+      }
+      .vote-summary-card.nay {
+        border-color: rgba(34,197,94,0.4);
+        background: rgba(34,197,94,0.08);
+      }
+      .vote-summary-card.absent {
+        border-color: rgba(148,163,184,0.3);
+      }
+      .vote-count {
+        font-family: "Montserrat", sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-white);
+      }
+      .vote-summary-card.yea .vote-count { color: #fca5a5; }
+      .vote-summary-card.nay .vote-count { color: #86efac; }
+      .vote-label {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 0.25rem;
+      }
+
+      .vote-list {
+        list-style: none;
+        margin: 1rem 0 0;
+        padding: 0;
+      }
+      .vote-member {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.6rem 0.75rem;
+        border-bottom: 1px solid var(--card-border);
+        gap: 0.75rem;
+      }
+      .vote-member:last-child {
+        border-bottom: none;
+      }
+      .member-name {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+      }
+      .contact-member-btn {
+        display: inline-block;
+        padding: 0.3rem 0.75rem;
+        background: var(--color-blue);
+        color: white;
+        border-radius: 4px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: all 0.2s;
+      }
+      .contact-member-btn:hover {
+        background: #0039cc;
+        transform: translateY(-1px);
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .vote-summary {
+          flex-direction: row;
+          gap: 0.5rem;
+        }
+        .vote-summary-card {
+          padding: 0.75rem;
+        }
+        .vote-count {
+          font-size: 1.5rem;
+        }
+        .vote-member {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.4rem;
+          padding: 0.75rem 0.5rem;
+        }
+        .contact-member-btn {
+          width: 100%;
+          text-align: center;
+          padding: 0.5rem;
+        }
+      }
+
       .cta-bar {
         max-width: 900px;
         margin: 0 auto 3rem;
@@ -315,6 +421,7 @@
         <div class="nav-links" id="navLinks">
           <a href="/issues" class="active">Issues</a>
           <a href="/founding-members">Founding Members</a>
+          <a href="/about">About</a>
           <a href="/contact">Contact</a>
           <a href="/donate" class="btn btn-nav">Donate</a>
         </div>
@@ -457,6 +564,90 @@
           <div class="tl-event">Introduced in the Ohio Senate</div>
         </div>
       </div>
+    </div>
+
+    <div class="detail-section">
+      <h2>House Floor Vote Breakdown</h2>
+      <div class="vote-summary">
+        <div class="vote-summary-card yea">
+          <div class="vote-count">63</div>
+          <div class="vote-label">Yeas</div>
+        </div>
+        <div class="vote-summary-card nay">
+          <div class="vote-count">32</div>
+          <div class="vote-label">Nays</div>
+        </div>
+        <div class="vote-summary-card absent">
+          <div class="vote-count">4</div>
+          <div class="vote-label">Not Voting</div>
+        </div>
+      </div>
+      <p style="margin-top:1rem;">The following representatives voted <strong>Yea</strong> on HB 249. Contact them to share your perspective.</p>
+      <ul class="vote-list">
+        <li class="vote-member"><span class="member-name">Rep. Abrams, Casey (R-29)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Casey%20Abrams" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Barhorst, Brian (R-85)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Brian%20Barhorst" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Bird, Ty (R-41)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Ty%20Bird" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Brennan, Kevin (R-57)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Kevin%20Brennan" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Callender, Jamie (R-64)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Jamie%20Callender" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Carruthers, Sara (R-51)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Sara%20Carruthers" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Claggett, Roy (R-87)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Roy%20Claggett" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Click, Gary (R-88)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Gary%20Click" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Creech, Rodney (R-40)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Rodney%20Creech" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Cross, Jeff (R-83)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Jeff%20Cross" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Cutrona, Al (R-59)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Al%20Cutrona" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Davis, Brian (R-75)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Brian%20Davis" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Dean, Bob (R-22)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Bob%20Dean" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Demetriou, Theresa (R-35)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Theresa%20Demetriou" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Dobos, Dave (R-74)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Dave%20Dobos" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Edwards, Jay (R-94)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Jay%20Edwards" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Ferguson, Bob (R-96)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Bob%20Ferguson" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Fowler Arthur, Sarah (R-99)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Sarah%20Fowler%20Arthur" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Ghanbari, Haraz (R-3)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Haraz%20Ghanbari" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Gross, Kevin (R-46)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Kevin%20Gross" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Hall, Thomas (R-53)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Thomas%20Hall" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Hillyer, Brett (R-37)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Brett%20Hillyer" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Holmes, Adam (R-97)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Adam%20Holmes" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Hoops, Jim (R-81)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Jim%20Hoops" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. John, Marilyn (R-76)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Marilyn%20John" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Johnson, Mark (R-86)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Mark%20Johnson" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Jones, Don (R-95)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Don%20Jones" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Jordan, Kris (R-67)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Kris%20Jordan" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Kick, Steve (R-70)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Steve%20Kick" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. King, Angela N. (R-84)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Angela%20King" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Klopfenstein, Tim (R-82)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Tim%20Klopfenstein" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Lampton, Brian (R-73)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Brian%20Lampton" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. LaRe, Jeff (R-77)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Jeff%20LaRe" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Lear, Beth (R-61)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Beth%20Lear" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Lipps, Scott (R-62)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Scott%20Lipps" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Loychik, Mike (R-63)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Mike%20Loychik" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Manchester, Scott (R-54)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Scott%20Manchester" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Manning, Phil (R-36)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Phil%20Manning" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Mathews, Adam (R-56)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Adam%20Mathews" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. McClain, Robert (R-79)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Robert%20McClain" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Merrin, Derek (R-47)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Derek%20Merrin" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Miller, Kevin (R-69)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Kevin%20Miller" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Newman, Johnathan (R-80)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Johnathan%20Newman" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Oelslager, Scott (R-48)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Scott%20Oelslager" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Pavliga, Gail (R-72)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Gail%20Pavliga" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Plummer, Phil (R-39)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Phil%20Plummer" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Powell, Jena (R-52)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Jena%20Powell" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Ray, Sharon (R-66)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Sharon%20Ray" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Riedel, Craig (R-31)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Craig%20Riedel" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Robinson, Brian (R-60)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Brian%20Robinson" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Roemer, Bill (R-38)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Bill%20Roemer" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Santucci, Al (R-34)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Al%20Santucci" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Seitz, Bill (R-30)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Bill%20Seitz" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Stein, Brian (R-93)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Brian%20Stein" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Stephens, Brian (R-91)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Brian%20Stephens" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Stewart, Brian (R-71)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Brian%20Stewart" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Stoltzfus, Reggie (R-50)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Reggie%20Stoltzfus" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Swearingen, D.J. (R-2)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20D.J.%20Swearingen" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. White, Andrea (R-43)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Andrea%20White" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Wiggam, Scott (R-1)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Scott%20Wiggam" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Williams, Josh (R-44)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Josh%20Williams" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Young, Ron (R-45)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Ron%20Young" class="contact-member-btn">Contact Me</a></li>
+        <li class="vote-member"><span class="member-name">Rep. Baldridge, Brian (R-90)</span><a href="/contact?subject=HB%20249%20-%20Rep.%20Brian%20Baldridge" class="contact-member-btn">Contact Me</a></li>
+      </ul>
     </div>
 
     <div class="cta-bar">
