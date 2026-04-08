@@ -693,15 +693,15 @@
 
       <div class="stats-bar reveal-stagger">
         <div class="stat-card">
-          <div class="stat-num" data-count="17">0</div>
+          <div class="stat-num" id="statActive" data-count="17">0</div>
           <div class="stat-label">Active Bills</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num" data-count="1">0</div>
+          <div class="stat-num" id="statPassed" data-count="1">0</div>
           <div class="stat-label">Passed a Chamber</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num" data-count="12">0</div>
+          <div class="stat-num" id="statCommittee" data-count="12">0</div>
           <div class="stat-label">In Committee</div>
         </div>
         <div class="stat-card stat-card-updated">
@@ -935,19 +935,31 @@
         });
       }
 
+      function updateStats(filtered) {
+        var elActive = document.getElementById("statActive");
+        var elPassed = document.getElementById("statPassed");
+        var elCommittee = document.getElementById("statCommittee");
+        var total = filtered.length;
+        var passed = filtered.filter(function(b) { return b.status === "passed-house" || b.status === "passed-senate" || b.status === "passed-committee" || b.status === "law"; }).length;
+        var committee = filtered.filter(function(b) { return b.status === "in-committee"; }).length;
+        if (elActive) elActive.textContent = total;
+        if (elPassed) elPassed.textContent = passed;
+        if (elCommittee) elCommittee.textContent = committee;
+      }
+
       let activeStance = "all",
         activeStatus = "all",
         activeCategory = "all";
 
       function applyFilters() {
-        renderBills(
-          BILLS.filter((b) => {
-            const stm = activeStance === "all" || (b.stance || "anti") === activeStance;
-            const sm = activeStatus === "all" || b.status === activeStatus;
-            const cm = activeCategory === "all" || b.categories.includes(activeCategory);
-            return stm && sm && cm;
-          }),
-        );
+        var filtered = BILLS.filter((b) => {
+          const stm = activeStance === "all" || (b.stance || "anti") === activeStance;
+          const sm = activeStatus === "all" || b.status === activeStatus;
+          const cm = activeCategory === "all" || b.categories.includes(activeCategory);
+          return stm && sm && cm;
+        });
+        renderBills(filtered);
+        updateStats(filtered);
       }
 
       document.querySelectorAll(".filter-btn").forEach((btn) => {
@@ -980,6 +992,7 @@
       });
 
       renderBills(BILLS);
+      updateStats(BILLS);
 
       // Populate the Last Updated card from LAST_UPDATED in bill-data.js
       if (typeof LAST_UPDATED !== "undefined") {
