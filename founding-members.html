@@ -97,6 +97,47 @@
         line-height: 1.8;
       }
 
+      /* Founding member list */
+      .member-list {
+        max-width: 800px;
+        margin: 0 auto;
+        display: grid;
+        gap: 1rem;
+      }
+      .member-row {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 1.25rem 1.5rem;
+        background: rgba(19, 45, 68, 0.5);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+      .member-row::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--pride-gradient);
+      }
+      .member-number {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-white);
+        min-width: 3rem;
+      }
+      .member-name {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-white);
+      }
+
       @media (max-width: 768px) {
         .tier-grid {
           grid-template-columns: 1fr;
@@ -213,11 +254,11 @@
     <!-- Member List -->
     <section class="section">
       <div class="container">
-        <div class="member-empty-state reveal">
-          <h3>
-            Founding member names will appear here as our community grows.
-          </h3>
-          <p>Members are listed with their consent.</p>
+        <div class="member-list reveal">
+          <div class="member-row">
+            <div class="member-number">#1</div>
+            <div class="member-name">Zachary Smith</div>
+          </div>
         </div>
       </div>
     </section>
@@ -277,7 +318,7 @@
     <script src="/js/enhancements.js" defer></script>
     <script>
       (function () {
-        var FOUNDING_MEMBER_COUNT = 0;
+        var FOUNDING_MEMBER_COUNT = 1;
         var FOUNDING_MEMBER_GOAL = 1969;
         var pct = (FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100;
         var bar = document.getElementById("goalFill");
