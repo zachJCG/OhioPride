@@ -27,9 +27,19 @@
   /* Semantic colors — dark-theme defaults (all pages use dark bg) */
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.75);
-  --text-muted: rgba(255, 255, 255, 0.55);
+  --text-muted: rgba(255, 255, 255, 0.6); /* WCAG AA: ~6.2:1 on --dark-bg */
   --text-light: rgba(255, 255, 255, 0.85);
   --text-white: #ffffff;
+
+  /* Accessible accent text colors for use on --dark-bg.
+     The Progress Pride palette values (--color-blue #004dff, --color-red
+     #e40303, --color-green #008026) are brand-correct but fail WCAG AA
+     contrast when used as text on the dark background. Use these tokens
+     instead for any text, icon, or small UI element that sits on --dark-bg. */
+  --text-accent: #73d7ee;   /* was var(--color-blue),  ~9.6:1 on dark-bg */
+  --text-danger: #ff6b6b;   /* was var(--color-red),   ~5.8:1 on dark-bg */
+  --text-success: #4ade80;  /* was var(--color-green), ~8.9:1 on dark-bg */
+  --text-warning: #fbbf24;  /* was #d97706/#c59a00,   ~10.1:1 on dark-bg */
   --border-light: rgba(255, 255, 255, 0.08);
   --border-medium: rgba(255, 255, 255, 0.15);
   --bg-light: rgba(19, 45, 68, 0.3);
@@ -556,7 +566,7 @@ img {
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
-  color: var(--color-blue);
+  color: var(--text-accent);
 }
 
 .pillar h3 {
@@ -655,7 +665,7 @@ img {
   color: var(--text-secondary);
 }
 .gala-meta-item svg {
-  color: var(--color-blue);
+  color: var(--text-accent);
   flex-shrink: 0;
 }
 
@@ -745,13 +755,16 @@ img {
   color: var(--text-secondary);
   line-height: 1.55;
 }
+.notice-inner {
+  color: #1a1a1a; /* legacy light-bg notice, override inherited dark text */
+}
 .notice-inner svg {
-  color: #c59a00;
+  color: #8a6a00;
   flex-shrink: 0;
   margin-top: 1px;
 }
 .notice-inner a {
-  color: var(--color-blue);
+  color: #0039cc;
   font-weight: 600;
 }
 
@@ -787,7 +800,7 @@ img {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: var(--color-blue);
+  color: var(--text-accent);
   display: inline-block;
   width: 100px;
 }
@@ -824,7 +837,7 @@ img {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 14px;
-  color: var(--color-blue);
+  color: var(--text-accent);
   min-width: 80px;
   padding-top: 2px;
 }
@@ -926,7 +939,7 @@ img {
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--color-blue);
+  color: var(--text-accent);
   margin-bottom: 4px;
 }
 
@@ -952,7 +965,7 @@ img {
   content: "✓";
   position: absolute;
   left: 0;
-  color: var(--color-green);
+  color: var(--text-success);
   font-weight: 700;
   font-size: 13px;
 }
@@ -1016,7 +1029,7 @@ img {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 18px;
-  color: var(--color-blue);
+  color: var(--text-accent);
   white-space: nowrap;
 }
 
@@ -1147,7 +1160,7 @@ img {
 }
 
 .required {
-  color: var(--color-red);
+  color: var(--text-danger);
 }
 
 .form-group input,
@@ -1188,7 +1201,7 @@ img {
   padding: 40px 20px;
 }
 .form-success .success-icon {
-  color: var(--color-green);
+  color: var(--text-success);
   margin-bottom: 16px;
 }
 .form-success h3 {
@@ -1234,7 +1247,7 @@ img {
 }
 
 .contact-info-icon {
-  color: var(--color-blue);
+  color: var(--text-accent);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -1493,7 +1506,7 @@ img {
 
 .filter-btn:hover {
   border-color: var(--color-blue);
-  color: var(--color-blue);
+  color: var(--text-accent);
 }
 
 .filter-btn.active {
@@ -1550,7 +1563,7 @@ img {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 14px;
-  color: var(--color-blue);
+  color: var(--text-accent);
   margin-bottom: 6px;
 }
 
@@ -1581,25 +1594,25 @@ img {
 
 .badge-introduced {
   background: rgba(0, 77, 255, 0.1);
-  color: var(--color-blue);
+  color: var(--text-accent);
   border: 1px solid rgba(0, 77, 255, 0.3);
 }
 
 .badge-in-committee {
   background: rgba(245, 158, 11, 0.1);
-  color: #d97706;
+  color: var(--text-warning);
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .badge-passed-committee {
-  background: rgba(255, 140, 0, 0.1);
+  background: rgba(255, 140, 0, 0.12);
   color: var(--color-orange);
-  border: 1px solid rgba(255, 140, 0, 0.3);
+  border: 1px solid rgba(255, 140, 0, 0.35);
 }
 
 .badge-signed-into-law {
   background: rgba(228, 3, 3, 0.1);
-  color: var(--color-red);
+  color: var(--text-danger);
   border: 1px solid rgba(228, 3, 3, 0.3);
 }
 
@@ -1617,7 +1630,7 @@ img {
   text-transform: uppercase;
   padding: 3px 10px;
   background: rgba(0, 77, 255, 0.06);
-  color: var(--color-blue);
+  color: var(--text-accent);
   border-radius: 4px;
   border: 1px solid rgba(0, 77, 255, 0.15);
 }
@@ -1659,7 +1672,7 @@ img {
 }
 
 .issues-info-box a {
-  color: var(--color-blue);
+  color: var(--text-accent);
   font-weight: 600;
 }
 
@@ -1817,7 +1830,7 @@ img {
 
 .amount-btn:hover {
   border-color: var(--color-blue);
-  color: var(--color-blue);
+  color: var(--text-accent);
   background: rgba(0, 77, 255, 0.04);
 }
 
@@ -1915,7 +1928,7 @@ img {
 
 .benefit-item::before {
   content: "\2713";
-  color: var(--color-green);
+  color: var(--text-success);
   font-weight: 700;
   font-size: 14px;
   flex-shrink: 0;
