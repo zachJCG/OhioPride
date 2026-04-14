@@ -83,6 +83,26 @@ body {
   color: var(--text-primary);
   background: var(--dark-bg);
   -webkit-font-smoothing: antialiased;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Site-wide diagonal stripe pattern — matches the subpage hero look.
+   Rendered via a fixed pseudo-element so per-page inline body background
+   overrides (background: var(--dark-bg)) don't clear it. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(255, 255, 255, 0.015) 40px,
+    rgba(255, 255, 255, 0.015) 80px
+  );
 }
 
 h1,
