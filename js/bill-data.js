@@ -4,7 +4,7 @@
    ========================================================================== */
 
 // Update this constant whenever bill data changes
-const LAST_UPDATED = { date: "04/07/26", time: "06:03 PM EDT" };
+const LAST_UPDATED = { date: "04/14/26", time: "06:21 PM EDT" };
 
 const BILLS = [
   /* ===== ANTI-LGBTQ+ BILLS ===== */
