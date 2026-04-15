@@ -52,6 +52,42 @@
         max-width: 900px;
         margin: 0 auto;
       }
+
+      .home-hero {
+        position: relative;
+        overflow: hidden;
+      }
+      .home-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 35%),
+          radial-gradient(circle at 80% 15%, rgba(163, 97, 255, 0.2), transparent 30%);
+        pointer-events: none;
+      }
+      .home-hero > * {
+        position: relative;
+        z-index: 1;
+      }
+      .hero-badge {
+        display: inline-block;
+        margin-bottom: 1rem;
+        padding: 0.35rem 0.8rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-white);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 999px;
+        background: rgba(8, 21, 33, 0.55);
+        box-shadow: 0 0 16px rgba(255, 255, 255, 0.15);
+      }
+      .nonpartisan-highlight {
+        color: #b68cff;
+        text-shadow: 0 0 12px rgba(182, 140, 255, 0.45);
+      }
+
       .home-hero h1 {
         font-family: "Montserrat", sans-serif;
         font-size: clamp(2rem, 5vw, 3.5rem);
@@ -247,7 +283,12 @@
     </nav>
 
     <section class="home-hero">
-      <h1>Ohio's Political Action Committee for LGBTQ+ Equality</h1>
+      <div class="hero-badge">People Powered, Equality Focused</div>
+      <h1>
+        Ohio's
+        <span class="nonpartisan-highlight">Non-Partisan</span>
+        Political Action Committee for LGBTQ+ Equality
+      </h1>
       <p class="hero-subtitle">
         Ohio Pride PAC mobilizes voters, endorses pro-equality candidates, and
         advocates for the rights of LGBTQ+ Ohioans at every level of government.
@@ -270,7 +311,7 @@
             <h3>Endorse Candidates</h3>
             <p>
               We identify, endorse, and contribute to pro-equality candidates at
-              every level — from statehouse races to statewide offices. 2026
+              every level, from statehouse races to statewide offices. 2026
               is a historic election year.
             </p>
           </div>
@@ -287,8 +328,8 @@
             <div class="card-icon">⚖️</div>
             <h3>Advocate on LGBTQ+ Issues</h3>
             <p>
-              We track and fight anti-LGBTQ+ legislation in the Ohio Statehouse
-              — from forced outing bills to drag bans — and push for
+              We track and fight anti-LGBTQ+ legislation in the Ohio Statehouse,
+              from forced outing bills to drag bans, and push for
               pro-equality policy.
             </p>
             <a href="/issues" class="card-link">View the Issue Tracker →</a>
@@ -308,7 +349,7 @@
           Ohio.
         </p>
         <p class="stonewall-ref">
-          The number 1,969 honors the Stonewall uprising of 1969 — the watershed
+          The number 1,969 honors the Stonewall uprising of 1969, the watershed
           moment that sparked the modern LGBTQ+ rights movement.
         </p>
 
