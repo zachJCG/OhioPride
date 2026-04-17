@@ -121,6 +121,56 @@
         margin-top: 2rem;
       }
 
+      .launch-day-callout {
+        max-width: 900px;
+        margin: 0 auto 1rem;
+        padding: 0 2rem;
+      }
+      .launch-day-card {
+        border: 1px solid rgba(182, 140, 255, 0.45);
+        background: linear-gradient(135deg, rgba(19, 45, 68, 0.92), rgba(40, 18, 75, 0.82));
+        border-radius: 14px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 0 24px rgba(118, 80, 180, 0.18);
+      }
+      .launch-day-card .section-label {
+        margin-bottom: 0.75rem;
+      }
+      .launch-day-card h2 {
+        font-family: "Montserrat", sans-serif;
+        color: var(--text-white);
+        margin-bottom: 0.75rem;
+      }
+      .launch-day-card p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        max-width: 640px;
+        margin: 0 auto 1.5rem;
+        line-height: 1.7;
+      }
+      .launch-day-meta {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+      }
+      .launch-day-meta span {
+        padding: 0.45rem 0.8rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.08);
+        color: var(--text-white);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.85rem;
+      }
+      .launch-day-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
       .cards-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -247,9 +297,13 @@
           flex-direction: column;
           align-items: center;
         }
-        .home-hero .hero-buttons .btn {
+        .home-hero .hero-buttons .btn,
+        .launch-day-actions .btn {
           width: 100%;
           max-width: 320px;
+        }
+        .launch-day-callout {
+          padding: 0 1.5rem;
         }
       }
     </style>
@@ -296,9 +350,31 @@
       <div class="hero-divider"></div>
       <div class="hero-buttons">
         <a href="/issues" class="btn btn-primary">Track Legislation</a>
+        <a href="/launch-day" class="btn btn-outline">Launch Day RSVP</a>
         <a href="/donate/founding-member" class="btn btn-pride-shimmer"
           >Become a Founding Member</a
         >
+      </div>
+    </section>
+
+    <section class="launch-day-callout">
+      <div class="launch-day-card reveal">
+        <div class="section-label section-label-light">Save the Date</div>
+        <h2>Join Ohio Pride PAC on Launch Day</h2>
+        <div class="launch-day-meta">
+          <span>May 22, 2026</span>
+          <span>Ohio Statehouse</span>
+          <span>Columbus, Ohio</span>
+        </div>
+        <p>
+          We’re officially launching Ohio Pride PAC in public with our founding
+          board, members, and allies from across the state. RSVP now and stand
+          with us from day one.
+        </p>
+        <div class="launch-day-actions">
+          <a href="/launch-day" class="btn btn-primary">View Event Details</a>
+          <a href="/launch-day" class="btn btn-outline">RSVP Today</a>
+        </div>
       </div>
     </section>
 

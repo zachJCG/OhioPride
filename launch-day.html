@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch Day — May 22, 2026 | Ohio Pride PAC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --navy: #0f2233;
+            --navy-light: #132d44;
+            --navy-card: rgba(19,45,68,0.5);
+            --text-white: #ffffff;
+            --text-soft: rgba(255,255,255,0.85);
+            --text-dim: rgba(255,255,255,0.6);
+            --text-faint: rgba(255,255,255,0.4);
+            --accent: #73d7ee;
+            --action-blue: #004dff;
+            --purple: #750787;
+            --border: rgba(255,255,255,0.08);
+            --rainbow: linear-gradient(90deg, #e40303 0%, #ff8c00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%, #e40303 100%);
+            --pride-stripe: linear-gradient(90deg,#000000,#613915,#73d7ee,#ffafc8,#e40303,#ff8c00,#ffed00,#008026,#004dff,#750787,#000000,#613915,#73d7ee,#ffafc8,#e40303,#ff8c00,#ffed00,#008026,#004dff,#750787);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+            --transition: all 0.3s ease;
+        }
+
+        @keyframes prideShimmer {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Roboto Slab', Georgia, serif; background-color: var(--navy); color: var(--text-white); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Pride Banner */
+        .pride-banner { height: 5px; background: var(--pride-stripe); background-size: 200% 100%; animation: prideShimmer 8s linear infinite; }
+
+        /* Navigation */
+        nav { position: sticky; top: 0; z-index: 1000; background: rgba(15,34,51,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 64px; }
+        .nav-logo { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.25rem; }
+        .nav-logo .ohio { font-weight: 400; color: var(--text-dim); }
+        .nav-logo .pride { font-weight: 700; color: var(--text-white); }
+        .nav-logo .pac { font-size: 0.65rem; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-left: 4px; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-soft); font-family: 'Montserrat', Arial, sans-serif; font-size: 0.9rem; transition: var(--transition); }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-white); }
+        .menu-toggle { display: none; background: none; border: none; color: var(--text-white); font-size: 1.5rem; cursor: pointer; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; background: var(--navy); border-bottom: 1px solid var(--border); padding: 1rem 2rem; gap: 1rem; }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        /* Hero */
+        .hero { padding: 5rem 2rem 3rem; text-align: center; max-width: 800px; margin: 0 auto; }
+        .hero-label { font-family: 'Montserrat', Arial, sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--accent); font-weight: 700; margin-bottom: 1rem; }
+        .hero h1 { font-family: 'Montserrat', Arial, sans-serif; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin-bottom: 1.25rem; font-weight: 700; letter-spacing: -0.4px; }
+        .hero-divider { width: 80px; height: 4px; background: var(--rainbow); background-size: 200% 100%; animation: prideShimmer 4s linear infinite; margin: 1.5rem auto; border-radius: 2px; }
+
+        /* Event details */
+        .event-details { max-width: 700px; margin: 0 auto; padding: 0 2rem 3rem; }
+        .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .detail-card { border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; background: var(--navy-card); position: relative; overflow: hidden; }
+        .detail-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rainbow); background-size: 200% 100%; animation: prideShimmer 4s linear infinite; }
+        .detail-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .detail-card .label { font-family: 'Montserrat', Arial, sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 0.25rem; font-weight: 700; }
+        .detail-card .value { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.1rem; font-weight: 700; }
+        @media (max-width: 600px) { .detail-grid { grid-template-columns: 1fr; } }
+
+        .event-description { color: var(--text-soft); font-size: 1.05rem; line-height: 1.8; text-align: center; margin-bottom: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        /* RSVP Form */
+        .rsvp-section { max-width: 560px; margin: 0 auto; padding: 0 2rem 4rem; }
+        .rsvp-card { border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; background: var(--navy-card); position: relative; overflow: hidden; }
+        .rsvp-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rainbow); background-size: 200% 100%; animation: prideShimmer 4s linear infinite; }
+        .rsvp-card h2 { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; font-weight: 700; }
+        .rsvp-subtitle { color: var(--text-dim); font-family: 'Montserrat', Arial, sans-serif; font-size: 0.9rem; text-align: center; margin-bottom: 2rem; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-row.full { grid-template-columns: 1fr; }
+        @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-family: 'Montserrat', Arial, sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 0.4rem; font-weight: 700; }
+        .form-group input { background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; color: var(--text-white); font-size: 1rem; font-family: 'Roboto Slab', Georgia, serif; transition: var(--transition); }
+        .form-group input:focus { outline: none; border-color: var(--accent); background: rgba(115,215,238,0.05); }
+        .form-group input::placeholder { color: rgba(255,255,255,0.25); }
+
+        .btn { font-family: 'Montserrat', Arial, sans-serif; padding: 0.875rem 2rem; border-radius: 6px; font-weight: 700; font-size: 0.95rem; transition: var(--transition); border: none; cursor: pointer; display: inline-block; text-align: center; letter-spacing: 0.3px; }
+        .btn-submit { background: var(--action-blue); color: #ffffff; width: 100%; margin-top: 0.5rem; font-size: 1rem; padding: 1rem; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,77,255,0.35); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Success */
+        .success-message { display: none; text-align: center; padding: 2rem 0; }
+        .success-message .check { font-size: 3rem; margin-bottom: 1rem; color: var(--accent); }
+        .success-message h3 { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.3rem; margin-bottom: 0.75rem; }
+        .success-message p { color: var(--text-soft); line-height: 1.7; }
+
+        /* Founding nudge */
+        .founding-nudge { max-width: 560px; margin: 0 auto; padding: 0 2rem 4rem; text-align: center; }
+        .nudge-card { border: 1px solid var(--border); border-radius: 12px; padding: 2rem; background: var(--navy-card); position: relative; overflow: hidden; }
+        .nudge-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rainbow); background-size: 200% 100%; animation: prideShimmer 4s linear infinite; }
+        .nudge-card h3 { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.2rem; margin-bottom: 0.75rem; }
+        .nudge-card p { color: var(--text-soft); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.7; }
+        .btn-outline { font-family: 'Montserrat', Arial, sans-serif; background: transparent; color: var(--text-white); border: 2px solid var(--accent); padding: 0.75rem 2rem; border-radius: 6px; font-weight: 700; font-size: 0.95rem; transition: var(--transition); display: inline-block; letter-spacing: 0.3px; }
+        .btn-outline:hover { border-color: var(--text-white); transform: translateY(-2px); }
+
+        /* Footer */
+        footer { background: #0a1929; border-top: 3px solid; border-image: var(--rainbow) 1; padding: 2.5rem 2rem; margin-top: 2rem; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; }
+        .footer-col h4 { font-family: 'Montserrat', Arial, sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 0.75rem; font-weight: 700; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 0.4rem; }
+        .footer-col a { color: var(--text-soft); font-size: 0.9rem; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--accent); }
+        .footer-col .directors { color: var(--text-soft); font-size: 0.9rem; line-height: 1.6; }
+        .footer-col .directors strong { color: var(--text-white); }
+        .footer-bottom { max-width: 1200px; margin: 1.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center; font-family: 'Montserrat', Arial, sans-serif; font-size: 0.8rem; color: var(--text-dim); }
+        .footer-bottom .disclaimer { font-style: italic; margin-top: 0.5rem; color: var(--text-faint); }
+        @media (max-width: 768px) {
+            .footer-inner { flex-direction: column; gap: 1.5rem; }
+            .hero { padding: 3.5rem 1.5rem 2rem; }
+            .event-details, .rsvp-section, .founding-nudge { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .rsvp-card { padding: 1.5rem; }
+        }
+    </style>
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <meta name="theme-color" content="#0F2233">
+    <meta property="og:title" content="Launch Day — May 22, 2026 | Ohio Pride PAC">
+    <meta property="og:description" content="Join us on the steps of the Ohio Statehouse as we publicly launch Ohio's Political Action Committee for LGBTQ+ Equality.">
+    <meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png">
+    <meta property="og:url" content="https://ohiopride.org/launch-day">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+    <div class="pride-banner"></div>
+
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="nav-logo"><span class="ohio">Ohio</span> <span class="pride">Pride</span><span class="pac">PAC</span></a>
+            <button class="menu-toggle" id="menuToggle">&#9776;</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="/issues">Issues</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/founding-members">Founding Members</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/donate">Donate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <p class="hero-label">You're Invited</p>
+        <h1>Ohio Pride PAC Launch Day</h1>
+        <div class="hero-divider"></div>
+    </section>
+
+    <div class="event-details">
+        <div class="detail-grid">
+            <div class="detail-card">
+                <div class="icon">&#128197;</div>
+                <div class="label">Date</div>
+                <div class="value">May 22, 2026</div>
+            </div>
+            <div class="detail-card">
+                <div class="icon">&#127963;&#65039;</div>
+                <div class="label">Location</div>
+                <div class="value">Ohio Statehouse</div>
+            </div>
+            <div class="detail-card">
+                <div class="icon">&#128205;</div>
+                <div class="label">City</div>
+                <div class="value">Columbus, OH</div>
+            </div>
+        </div>
+
+        <p class="event-description">
+            Join us on the steps of the Ohio Statehouse as we publicly announce Ohio Pride PAC — Ohio's Political Action Committee for LGBTQ+ Equality. We'll be joined by our founding board, founding members, and allies from across the state.
+        </p>
+    </div>
+
+    <div class="rsvp-section">
+        <div class="rsvp-card">
+            <h2>RSVP</h2>
+            <p class="rsvp-subtitle">Reserve your spot for Launch Day.</p>
+
+            <form id="rsvpForm" name="launch-day-rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+                <input type="hidden" name="form-name" value="launch-day-rsvp">
+
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="you@example.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" required placeholder="First">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" required placeholder="Last">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="organization">Organization</label>
+                        <input type="text" id="organization" name="organization" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" placeholder="Optional">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-submit" id="submitBtn">RSVP for Launch Day</button>
+            </form>
+
+            <div class="success-message" id="successMessage">
+                <div class="check">&#10003;</div>
+                <h3>You're on the list.</h3>
+                <p>We'll send event details to your inbox as May 22 approaches. See you at the Statehouse.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="founding-nudge">
+        <div class="nudge-card">
+            <h3>Become a Founding Member</h3>
+            <p>Stand behind this work from day one. A $25 contribution puts your name on ohiopride.org among the first 1,969 founding members — a nod to the year of the Stonewall uprising.</p>
+            <a href="/donate/founding-member" class="btn-outline">Join the Founding Roster &rarr;</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-col">
+                <h4>Organization</h4>
+                <ul>
+                    <li><a href="/issues">Issues</a></li>
+                    <li><a href="/about">About & Board</a></li>
+                    <li><a href="/founding-members">Founding Members</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Get Involved</h4>
+                <ul>
+                    <li><a href="/donate">Donate</a></li>
+                    <li><a href="/donate/founding-member">Founding Membership</a></li>
+                    <li><a href="/launch-day">Launch Day RSVP</a></li>
+                    <li><a href="/contact">Volunteer</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Leadership</h4>
+                <div class="directors">
+                    <strong>Director:</strong> Zachary R. Joseph<br>
+                    <strong>Treasurer:</strong> David Donofrio
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>&copy; 2026 Ohio Pride PAC. All rights reserved.</div>
+            <div class="disclaimer">Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.</div>
+        </div>
+    </footer>
+
+    <script src="/js/enhancements.js"></script>
+    <script>
+        // Mobile nav
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => document.getElementById('navLinks').classList.remove('active'));
+        });
+
+        // Google Sheets Apps Script endpoint
+        // ──────────────────────────────────────────────────────────
+        // SETUP: Deploy a Google Apps Script web app on your Sheet
+        // (spreadsheet ID: 1M-AMQBYNdaQJK2zX5ubL4R_qpsSfk60fH8Pau54I6zo)
+        //
+        // 1. Open the Sheet → Extensions → Apps Script
+        // 2. Paste this code:
+        //
+        //    function doPost(e) {
+        //      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+        //      var data = JSON.parse(e.postData.contents);
+        //      sheet.appendRow([
+        //        new Date(),
+        //        data.email,
+        //        data.first_name,
+        //        data.last_name,
+        //        data.organization || '',
+        //        data.title || ''
+        //      ]);
+        //      return ContentService
+        //        .createTextOutput(JSON.stringify({ result: 'ok' }))
+        //        .setMimeType(ContentService.MimeType.JSON);
+        //    }
+        //
+        // 3. Deploy → New deployment → Web app → Execute as: Me → Who has access: Anyone
+        // 4. Copy the URL and paste it below
+        // ──────────────────────────────────────────────────────────
+        const GOOGLE_SCRIPT_URL = '';
+
+        const form = document.getElementById('rsvpForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMsg = document.getElementById('successMessage');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting\u2026';
+
+            const formData = new FormData(form);
+            const payload = {
+                email: formData.get('email'),
+                first_name: formData.get('first_name'),
+                last_name: formData.get('last_name'),
+                organization: formData.get('organization'),
+                title: formData.get('title')
+            };
+
+            try {
+                // 1. Netlify Forms (email notification)
+                await fetch('/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(formData).toString()
+                });
+
+                // 2. Google Sheets (if configured)
+                if (GOOGLE_SCRIPT_URL) {
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                form.style.display = 'none';
+                successMsg.style.display = 'block';
+            } catch (err) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'RSVP for Launch Day';
+                alert('Something went wrong \u2014 please try again or email zach@ohiopride.org directly.');
+            }
+        });
+    </script>
+</body>
+</html>
