@@ -94,6 +94,13 @@
             color: var(--text-white);
             letter-spacing: 0.5px;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .nav-logo img {
+            height: 40px;
+            width: auto;
+            display: block;
         }
         .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
         .nav-links a {
@@ -226,7 +233,9 @@
             margin: 0 auto 0.9rem;
         }
         .avatar-wrap .avatar { margin: 0; border: 2px solid var(--dark-bg); }
-        .avatar-wrap .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .avatar-wrap .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 50%; }
+        .avatar-wrap .avatar img.headshot-ari { object-position: center 22%; transform: scale(1.08); }
+        .avatar-wrap .avatar img.headshot-eli { object-position: center 18%; transform: scale(1.08); }
 
         .member-name {
             font-family: 'Montserrat', sans-serif;
@@ -336,6 +345,21 @@
         .footer-col a:hover { color: var(--color-light-blue); }
         .footer-col .directors { color: var(--text-light); font-size: 0.9rem; line-height: 1.6; }
         .footer-col .directors strong { color: var(--text-white); }
+        .footer-brand-logo {
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+        .footer-brand-logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+        .footer-brand-copy {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
         .footer-bottom {
             max-width: var(--container-max);
             margin: 0 auto;
@@ -383,7 +407,7 @@
 <body>
     <div class="nav">
         <div class="nav-inner">
-            <a href="/" class="nav-logo">Ohio Pride PAC</a>
+            <a href="/" class="nav-logo" aria-label="Ohio Pride PAC home"><img src="/assets/logo/wordmark-mono-white-transparent.png" alt="Ohio Pride PAC"></a>
             <button class="menu-toggle" id="menuToggle">&#9776;</button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="/issues">Issues</a></li>
@@ -446,7 +470,7 @@
 
             <!-- 3. Ari Childrey -->
             <div class="member-card">
-                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/ari-childrey.png" alt="Ari Childrey"></div></div>
+                <div class="avatar-wrap"><div class="avatar"><img class="headshot-ari" src="/assets/board/ari-childrey.png" alt="Ari Childrey"></div></div>
                 <div class="member-name">Ari Childrey</div>
                 <div class="member-role">Communications Director</div>
                 <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
@@ -498,7 +522,7 @@
 
             <!-- 7. Eli Bohnert -->
             <div class="member-card">
-                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/eli-bohnert.png" alt="Eli Bohnert"></div></div>
+                <div class="avatar-wrap"><div class="avatar"><img class="headshot-eli" src="/assets/board/eli-bohnert.png" alt="Eli Bohnert"></div></div>
                 <div class="member-name">Eli Bohnert</div>
                 <div class="member-role">Board Member</div>
                 <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
@@ -560,6 +584,8 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-col">
+                <a href="/" class="footer-brand-logo" aria-label="Ohio Pride PAC home"><img src="/assets/logo/wordmark-mono-white-transparent.png" alt="Ohio Pride PAC"></a>
+                <p class="footer-brand-copy">Ohio's PAC for LGBTQ+ equality.</p>
                 <h4>Organization</h4>
                 <ul>
                     <li><a href="/issues">Issues</a></li>
