@@ -239,26 +239,104 @@
         border-color: var(--color-blue);
       }
 
+      /* Horizontal scroll group wrapper */
+      .scroll-group {
+        max-width: 1200px;
+        margin: 0 auto 2rem;
+      }
+      .scroll-nav {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        padding: 0 2rem 0.5rem;
+      }
+      .scroll-arrow-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--card-border);
+        background: var(--card-bg);
+        color: var(--text-gray);
+        font-size: 1.3rem;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+      .scroll-arrow-btn:hover:not(:disabled) {
+        border-color: var(--color-light-blue);
+        color: var(--color-light-blue);
+        background: rgba(115, 215, 238, 0.1);
+      }
+      .scroll-arrow-btn:disabled {
+        opacity: 0.25;
+        cursor: not-allowed;
+      }
+      /* Scroll progress dots */
+      .scroll-dots {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        padding: 0.5rem 2rem 0;
+      }
+      .scroll-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--card-border);
+        transition: background 0.25s, transform 0.25s;
+        flex-shrink: 0;
+      }
+      .scroll-dot.active {
+        background: var(--color-light-blue);
+        transform: scale(1.35);
+      }
+
       .bills-container {
         max-width: 1200px;
-        margin: 0 auto 4rem;
-        padding: 0 2rem;
+        margin: 0 auto;
+        padding: 0 2rem 1rem;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 1rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        /* Thin pride-coloured scrollbar */
+        scrollbar-width: thin;
+        scrollbar-color: var(--dark-bg-lighter) transparent;
       }
+      .bills-container::-webkit-scrollbar { height: 5px; }
+      .bills-container::-webkit-scrollbar-track { background: transparent; }
+      .bills-container::-webkit-scrollbar-thumb {
+        background: var(--dark-bg-lighter);
+        border-radius: 3px;
+      }
+
       .bill-card {
         background: var(--card-bg);
         border: 1px solid var(--card-border);
         border-radius: 10px;
         overflow: hidden;
-        transition: all 0.3s;
+        transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
         display: block;
         text-decoration: none;
+        /* Fixed card width for horizontal layout */
+        min-width: 400px;
+        max-width: 400px;
+        flex-shrink: 0;
+        scroll-snap-align: start;
       }
       .bill-card:hover {
         border-color: var(--dark-bg-lighter);
-        transform: translateY(-1px);
+        transform: scale(1.015);
+        box-shadow: 0 4px 24px rgba(115, 215, 238, 0.08);
       }
       .bill-card-inner {
         display: flex;
@@ -350,12 +428,54 @@
         font-weight: 600;
       }
 
-      /* Hide mobile-only elements on desktop */
+      /* Read More / Less button — visible on ALL screen sizes */
       .bill-expand-btn {
-        display: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.6rem;
+        margin-top: 0.5rem;
+        border-top: 1px solid var(--card-border);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--color-light-blue);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        transition: color 0.2s;
+        background: none;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        width: 100%;
       }
+      .bill-expand-btn:hover {
+        color: var(--text-white);
+      }
+      .bill-expand-btn .expand-icon {
+        display: inline-block;
+        transition: transform 0.3s ease;
+        font-size: 0.6rem;
+      }
+      .bill-card.expanded .bill-expand-btn .expand-icon {
+        transform: rotate(180deg);
+      }
+      .bill-card.expanded .bill-expand-btn .expand-text { display: none; }
+      .bill-card .expand-collapse-text { display: none; }
+      .bill-card.expanded .expand-collapse-text { display: inline; }
+
+      /* Expandable details — hidden by default on ALL screen sizes */
       .bill-expandable {
-        /* visible by default on desktop */
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, opacity 0.3s ease;
+        opacity: 0;
+      }
+      .bill-card.expanded .bill-expandable {
+        max-height: 600px;
+        opacity: 1;
       }
 
       /* Stance filter button colors */
@@ -409,6 +529,20 @@
         text-decoration: underline;
         text-underline-offset: 3px;
         text-decoration-color: rgba(255,255,255,0.3);
+      }
+
+      /* Pride rainbow bar below hero */
+      .hero-rainbow-bar {
+        height: 4px;
+        background: var(--pride-gradient);
+        background-size: 200% 200%;
+        animation: rainbowShift 5s ease infinite;
+        margin: 0;
+      }
+      @keyframes rainbowShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
       }
 
       /* Mobile swipe hint */
@@ -493,20 +627,39 @@
           text-align: center;
         }
         .stats-bar {
+          grid-template-columns: repeat(2, 1fr);
           padding: 0 1rem;
         }
         .filters {
           padding: 0 1rem;
         }
+        /* Make filter rows horizontally scrollable on mobile */
         .filter-row {
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 4px;
           gap: 0.4rem;
+          scrollbar-width: none;
+        }
+        .filter-row::-webkit-scrollbar { display: none; }
+        .filter-label {
+          flex-shrink: 0;
         }
         .filter-btn {
           padding: 0.4rem 0.7rem;
           font-size: 0.75rem;
+          flex-shrink: 0;
+          white-space: nowrap;
         }
         .bills-container {
-          padding: 0 1rem;
+          padding: 0 1rem 0.75rem;
+          gap: 0.75rem;
+        }
+        /* Mobile card width — nearly full viewport */
+        .bill-card {
+          min-width: 85vw;
+          max-width: 85vw;
         }
         .bill-content {
           padding: 1rem;
@@ -541,77 +694,16 @@
         .source-credit {
           padding: 0 1rem;
         }
-
-        /* Mobile swipe hint */
+        /* Show swipe hint on mobile */
         .swipe-hint {
           display: block;
         }
-
-        /* Horizontal scroll for bill cards on mobile */
-        .bills-container.mobile-scroll {
-          flex-direction: row;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          scroll-snap-type: x mandatory;
-          gap: 0.75rem;
-          padding-bottom: 0.5rem;
-        }
-        .bills-container.mobile-scroll .bill-card {
-          min-width: 85vw;
-          max-width: 85vw;
-          flex-shrink: 0;
-          scroll-snap-align: start;
-        }
-
-        /* Collapsible card details on mobile */
-        .bill-card .bill-expandable {
-          max-height: 0;
-          overflow: hidden;
-          transition: max-height 0.4s ease, opacity 0.3s ease;
-          opacity: 0;
-        }
-        .bill-card.expanded .bill-expandable {
-          max-height: 500px;
-          opacity: 1;
-        }
-        .bill-expand-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.4rem;
-          padding: 0.6rem;
-          margin-top: 0.5rem;
-          border-top: 1px solid var(--card-border);
-          font-family: "Montserrat", sans-serif;
-          font-size: 0.75rem;
-          font-weight: 600;
-          color: var(--color-light-blue);
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          cursor: pointer;
-          transition: color 0.2s;
-          background: none;
-          border-left: none;
-          border-right: none;
-          border-bottom: none;
-          width: 100%;
-        }
-        .bill-expand-btn .expand-icon {
-          display: inline-block;
-          transition: transform 0.3s ease;
-          font-size: 0.6rem;
-        }
-        .bill-card.expanded .bill-expand-btn .expand-icon {
-          transform: rotate(180deg);
-        }
-        .bill-card.expanded .bill-expand-btn .expand-text {
+        /* Hide desktop scroll arrows on mobile */
+        .scroll-nav {
           display: none;
         }
-        .bill-card .expand-collapse-text {
-          display: none;
-        }
-        .bill-card.expanded .expand-collapse-text {
-          display: inline;
+        .scroll-dots {
+          padding: 0.5rem 1rem 0;
         }
       }
 
@@ -673,6 +765,7 @@
         General Assembly (2025–2026)
       </p>
     </section>
+    <div class="hero-rainbow-bar"></div>
 
     <div class="tracker-body">
       <div class="alert-banner">
@@ -903,20 +996,86 @@
           `;
           wrapper.appendChild(header);
 
-          // Swipe hint on mobile
+          // Swipe hint on mobile only
           if (isMobile && bills.length > 1) {
             const hint = document.createElement("div");
             hint.className = "swipe-hint";
-            hint.textContent = "\u2190 Swipe to see more bills \u2192";
+            hint.textContent = "\u2190 Swipe to browse bills \u2192";
             wrapper.appendChild(hint);
           }
 
-          // Bills container for this group
+          // Desktop scroll arrows
+          if (!isMobile && bills.length > 1) {
+            const nav = document.createElement("div");
+            nav.className = "scroll-nav";
+            nav.innerHTML = `
+              <button class="scroll-arrow-btn" id="prev-${stance}" aria-label="Scroll left" disabled>&#8249;</button>
+              <button class="scroll-arrow-btn" id="next-${stance}" aria-label="Scroll right">&#8250;</button>
+            `;
+            wrapper.appendChild(nav);
+          }
+
+          // Bills container — always horizontal scroll
           const container = document.createElement("div");
-          container.className = "bills-container" + (isMobile ? " mobile-scroll" : "");
-          container.style.marginBottom = "2rem";
+          container.className = "bills-container";
+          container.id = "scroll-" + stance;
           container.innerHTML = bills.map(billCardHTML).join("");
           wrapper.appendChild(container);
+
+          // Scroll progress dots
+          if (bills.length > 1) {
+            const dotsEl = document.createElement("div");
+            dotsEl.className = "scroll-dots";
+            dotsEl.id = "dots-" + stance;
+            for (let i = 0; i < bills.length; i++) {
+              const dot = document.createElement("span");
+              dot.className = "scroll-dot" + (i === 0 ? " active" : "");
+              dotsEl.appendChild(dot);
+            }
+            wrapper.appendChild(dotsEl);
+
+            // Update dots + arrow button states on scroll
+            container.addEventListener("scroll", function () {
+              const CARD_GAP = 16;
+              const SCROLL_THRESHOLD = 4;
+              const cardWidth = container.querySelector(".bill-card")
+                ? container.querySelector(".bill-card").offsetWidth + CARD_GAP
+                : 420;
+              const idx = Math.round(container.scrollLeft / cardWidth);
+              dotsEl.querySelectorAll(".scroll-dot").forEach((d, i) => {
+                d.classList.toggle("active", i === idx);
+              });
+              if (!isMobile) {
+                const prevBtn = document.getElementById("prev-" + stance);
+                const nextBtn = document.getElementById("next-" + stance);
+                if (prevBtn) prevBtn.disabled = container.scrollLeft <= SCROLL_THRESHOLD;
+                if (nextBtn)
+                  nextBtn.disabled =
+                    container.scrollLeft + container.offsetWidth >=
+                    container.scrollWidth - SCROLL_THRESHOLD;
+              }
+            });
+          }
+
+          // Wire up desktop scroll arrows
+          if (!isMobile && bills.length > 1) {
+            const CARD_GAP = 16;
+            const SCROLL_THRESHOLD = 4;
+            const prevBtn = document.getElementById("prev-" + stance);
+            const nextBtn = document.getElementById("next-" + stance);
+            const getScrollAmt = () => {
+              const card = container.querySelector(".bill-card");
+              return card ? card.offsetWidth + CARD_GAP : 420;
+            };
+            if (prevBtn)
+              prevBtn.addEventListener("click", () => {
+                container.scrollBy({ left: -getScrollAmt(), behavior: "smooth" });
+              });
+            if (nextBtn)
+              nextBtn.addEventListener("click", () => {
+                container.scrollBy({ left: getScrollAmt(), behavior: "smooth" });
+              });
+          }
         });
 
         // Render pipelines
@@ -925,7 +1084,7 @@
           if (el) renderPipeline(el, b.chamber || "house", b.currentStep);
         });
 
-        // Mobile: attach expand/collapse handlers
+        // Attach expand/collapse handlers on all screens
         wrapper.querySelectorAll(".bill-expand-btn").forEach((btn) => {
           btn.addEventListener("click", function (e) {
             e.preventDefault();
@@ -935,6 +1094,18 @@
         });
       }
 
+      function animateCount(el, target) {
+        const duration = 1200;
+        const startTime = performance.now();
+        function tick(now) {
+          const progress = Math.min((now - startTime) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.round(eased * target);
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
       function updateStats(filtered) {
         var elActive = document.getElementById("statActive");
         var elPassed = document.getElementById("statPassed");
@@ -942,9 +1113,9 @@
         var total = filtered.length;
         var passed = filtered.filter(function(b) { return b.status === "passed-house" || b.status === "passed-senate" || b.status === "passed-committee" || b.status === "law"; }).length;
         var committee = filtered.filter(function(b) { return b.status === "in-committee"; }).length;
-        if (elActive) elActive.textContent = total;
-        if (elPassed) elPassed.textContent = passed;
-        if (elCommittee) elCommittee.textContent = committee;
+        if (elActive) animateCount(elActive, total);
+        if (elPassed) animateCount(elPassed, passed);
+        if (elCommittee) animateCount(elCommittee, committee);
       }
 
       let activeStance = "all",
@@ -980,7 +1151,7 @@
         });
       });
 
-      // Re-render on resize to toggle mobile scroll
+      // Re-render on resize crossing the 768 px breakpoint
       let lastWidth = window.innerWidth;
       window.addEventListener("resize", () => {
         const w = window.innerWidth;
