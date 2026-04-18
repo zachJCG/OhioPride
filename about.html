@@ -25,6 +25,33 @@
         text-align: center;
         max-width: 900px;
         margin: 0 auto;
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+      }
+      .about-hero::before {
+        content: "";
+        position: absolute;
+        inset: calc(var(--nav-height) * -1) -100vw 0;
+        z-index: -1;
+        background-image: repeating-linear-gradient(
+          -45deg,
+          transparent,
+          transparent 40px,
+          rgba(255, 255, 255, 0.035) 40px,
+          rgba(255, 255, 255, 0.035) 80px
+        );
+        background-size: 160px 160px;
+        animation: boardStripeDrift 18s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes boardStripeDrift {
+        from {
+          background-position: 0 0;
+        }
+        to {
+          background-position: 160px 160px;
+        }
       }
       .about-hero h1 {
         font-family: "Montserrat", sans-serif;
@@ -126,14 +153,30 @@
         border-radius: 50%;
         padding: 3px;
         background: var(--pride-gradient);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .avatar-photo,
+      .avatar-inner {
+        position: absolute;
+        inset: 3px;
+        width: calc(100% - 6px);
+        height: calc(100% - 6px);
+        border-radius: 50%;
+      }
+      .avatar-photo {
+        object-fit: cover;
+        display: block;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+      .avatar-photo.is-loaded {
+        opacity: 1;
+      }
+      .avatar-photo.is-loaded + .avatar-inner {
+        opacity: 0;
       }
       .avatar-inner {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
         background: var(--dark-bg);
         display: flex;
         align-items: center;
@@ -142,6 +185,7 @@
         font-size: 1.5rem;
         font-weight: 700;
         color: var(--text-white);
+        transition: opacity 0.2s ease;
       }
       .board-name {
         font-family: "Montserrat", sans-serif;
@@ -153,6 +197,12 @@
       .board-role {
         font-family: "Roboto Slab", serif;
         font-size: 0.85rem;
+        color: var(--text-light);
+      }
+      .board-bio {
+        margin-top: 0.65rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
         color: var(--text-light);
       }
       @media (max-width: 768px) {
@@ -251,48 +301,29 @@
       <div class="board-grid">
         <div class="board-card">
           <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/zach-joseph.jpg"
+              alt="Zachary R. Joseph, MBA"
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
             <div class="avatar-inner">ZJ</div>
           </div>
-          <div class="board-name">Zachary R. Joseph</div>
+          <div class="board-name">Zachary R. Joseph, MBA</div>
           <div class="board-role">Director</div>
         </div>
         <div class="board-card">
           <div class="avatar-ring">
-            <div class="avatar-inner">DD</div>
-          </div>
-          <div class="board-name">David Donofrio</div>
-          <div class="board-role">Treasurer</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <div class="avatar-inner">EB</div>
-          </div>
-          <div class="board-name">Eli Bohnert</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <div class="avatar-inner">KD</div>
-          </div>
-          <div class="board-name">Keara Dever</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <div class="avatar-inner">RW</div>
-          </div>
-          <div class="board-name">Ross Widenor</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <div class="avatar-inner">AC</div>
-          </div>
-          <div class="board-name">Arienne Childrey</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/brian-sharp.jpg"
+              alt="Brian Sharp"
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
             <div class="avatar-inner">BS</div>
           </div>
           <div class="board-name">Brian Sharp</div>
@@ -300,24 +331,126 @@
         </div>
         <div class="board-card">
           <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/ari-childrey.jpg"
+              alt="Ari Childrey"
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
+            <div class="avatar-inner">AC</div>
+          </div>
+          <div class="board-name">Ari Childrey</div>
+          <div class="board-role">Board Member</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/chrisondra-goodwine.jpg"
+              alt="Chrisondra Goodwine, J.D."
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
             <div class="avatar-inner">CG</div>
           </div>
-          <div class="board-name">Dr. Casandra Goodwine</div>
+          <div class="board-name">Chrisondra Goodwine, J.D.</div>
           <div class="board-role">Board Member</div>
         </div>
         <div class="board-card">
           <div class="avatar-ring">
-            <div class="avatar-inner">DG</div>
-          </div>
-          <div class="board-name">Dalma Grangeen</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/ariel-mary-ann.jpg"
+              alt="Ariel Mary Ann"
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
             <div class="avatar-inner">AM</div>
           </div>
-          <div class="board-name">Ariel Marry Ann</div>
+          <div class="board-name">Ariel Mary Ann</div>
           <div class="board-role">Board Member</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/keara-dever.jpg"
+              alt="Keara Dever, J.D."
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
+            <div class="avatar-inner">KD</div>
+          </div>
+          <div class="board-name">Keara Dever, J.D.</div>
+          <div class="board-role">Board Member</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/eli-bohnert.jpg"
+              alt="Eli Bohnert"
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
+            <div class="avatar-inner">EB</div>
+          </div>
+          <div class="board-name">Eli Bohnert</div>
+          <div class="board-role">Board Member</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/ross-widenor.jpg"
+              alt="Ross Widenor"
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
+            <div class="avatar-inner">RW</div>
+          </div>
+          <div class="board-name">Ross Widenor</div>
+          <div class="board-role">Board Member</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/david-donofrio.jpg"
+              alt="David Donofrio"
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
+            <div class="avatar-inner">DD</div>
+          </div>
+          <div class="board-name">David Donofrio</div>
+          <div class="board-role">Treasurer</div>
+        </div>
+        <div class="board-card">
+          <div class="avatar-ring">
+            <img
+              class="avatar-photo"
+              src="/assets/board/dalma-grandjean.jpg"
+              alt="Dalma Grandjean, J.D."
+              loading="lazy"
+              onload="this.classList.add('is-loaded')"
+              onerror="this.remove()"
+            />
+            <div class="avatar-inner">DG</div>
+          </div>
+          <div class="board-name">Dalma Grandjean, J.D.</div>
+          <div class="board-role">Board Member</div>
+          <p class="board-bio">
+            Former Law Director for the City of Riverside, bringing municipal legal experience to the board.
+          </p>
         </div>
       </div>
 
