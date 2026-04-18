@@ -189,6 +189,17 @@
             position: relative;
             overflow: hidden;
         }
+        .board-card {
+            appearance: none;
+            width: 100%;
+            font: inherit;
+            color: inherit;
+            cursor: pointer;
+        }
+        .board-card:focus-visible {
+            outline: 2px solid var(--color-light-blue);
+            outline-offset: 3px;
+        }
         .member-card::before {
             content: '';
             position: absolute;
@@ -283,11 +294,65 @@
         .read-more-btn:hover { color: #ffb84d; }
         .member-card.bio-open .read-more-btn .btn-text::after { content: 'Read less'; }
         .member-card:not(.bio-open) .read-more-btn .btn-text::after { content: 'Read more'; }
+        .read-bio-indicator {
+            display: inline-block;
+            margin-top: 0.85rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-light-blue);
+            font-weight: 700;
+        }
 
         .member-card.bio-open {
             grid-column: 1 / -1;
             max-width: 620px;
             justify-self: center;
+        }
+
+        .bio-modal[hidden] { display: none; }
+        .bio-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+        }
+        .bio-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 15, 25, 0.72);
+        }
+        .bio-modal-content {
+            position: relative;
+            z-index: 1;
+            width: min(680px, 100%);
+            background: #10283b;
+            border: 1px solid var(--border-medium);
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            padding: 1.5rem 1.25rem;
+            text-align: left;
+        }
+        .bio-modal-content h3 {
+            margin-bottom: 0.9rem;
+            font-size: 1.35rem;
+        }
+        .bio-modal-content p {
+            color: var(--text-light);
+            margin-bottom: 0.9rem;
+        }
+        .bio-modal-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            border: none;
+            background: none;
+            color: var(--text-white);
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         /* ── Join CTA ── */
@@ -470,17 +535,12 @@
             </div>
 
             <!-- 3. Ross Widenor -->
-            <div class="member-card">
-                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/ross-widenor.png" alt="Ross Widenor"></div></div>
-                <div class="member-name">Ross Widenor</div>
-                <div class="member-role">Secretary</div>
-                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
-                <div class="member-bio">
-                    <p>Ross Widenor serves as Council President on the Munroe Falls City Council, first elected in 2021 with endorsement from the LGBTQ+ Victory Fund. Originally from southwest Pennsylvania, Ross studied chemical engineering at Case Western Reserve University and earned a Master of Science degree before building a career in sustainability and strategic planning at Bridgestone Americas.</p>
-                    <p>A certified Project Management Professional (PMP), Ross founded Widenor Consulting and was named a Summit County "30 for the Future" honoree for his impact on the region. He chairs the Finance and Audit Committee in Munroe Falls and has been a consistent voice for transparency and fiscal responsibility in local government.</p>
-                    <p>Ross brings experience in elected governance, sustainability strategy, and nonprofit operations to his role as Secretary of Ohio Pride PAC.</p>
-                </div>
-            </div>
+            <button type="button" class="member-card board-card" data-bio-target="bio-ross-widenor" aria-haspopup="dialog">
+                <div class="avatar-wrap"><div class="avatar" aria-hidden="true">RW</div></div>
+                <div class="member-name">Ross Widenor, PMP</div>
+                <div class="member-role">Board Member</div>
+                <span class="read-bio-indicator">Read Bio</span>
+            </button>
 
             <!-- 4. Ari Childrey -->
             <div class="member-card">
@@ -490,7 +550,7 @@
                 <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
                 <div class="member-bio">
                     <p>Ari Childrey is a community advocate and trailblazing leader in Ohio's LGBTQ+ movement. She made history as the first openly transgender woman to serve on a city council in Ohio, representing the 4th Ward on the St. Marys City Council. In 2025, Ari received the Equality Ohio Emerging Leader Award in recognition of her organizing and advocacy work.</p>
-                    <p>Ari founded Northwest Ohio Trans Advocacy, an organization dedicated to supporting transgender Ohioans in rural and underserved communities. She serves as Vice Chair of the Ohio Democratic Party's Pride Caucus and has been a candidate for the Ohio House of Representatives in District 84 in both 2024 and 2026.</p>
+                    <p>Ari helped build Northwest Ohio Trans Advocacy as a grassroots network of local advocates supporting transgender Ohioans in rural and underserved communities. She serves as Vice Chair of the Ohio Democratic Party's Pride Caucus and has been a candidate for the Ohio House of Representatives in District 84 in both 2024 and 2026.</p>
                     <p>Across western Ohio, Ari organizes Pride events, mentors emerging LGBTQ+ leaders, and advocates for accessible political processes for all candidates. She brings grassroots communications expertise and a statewide network to Ohio Pride PAC.</p>
                 </div>
             </div>
@@ -515,9 +575,21 @@
                 <div class="member-role">Board Member</div>
                 <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
                 <div class="member-bio">
-                    <p>Brian Sharp is the Director of Business and Market Development at Berkshire Hathaway HomeServices Professional Realty, where he leads growth strategy across the Dayton region. He studied at Sinclair Community College, Wright State University, and Hondros College, building expertise in real estate, business development, and community investment.</p>
+                    <p>Brian Sharp is the Director of Business and Market Development at Berkshire Hathaway HomeServices Professional Realty, where he leads growth strategy across the State of Ohio. He studied at Sinclair Community College, Wright State University, and Hondros College, building expertise in real estate, business development, and community investment.</p>
                     <p>Brian serves on the Montgomery County Land Bank Board of Directors, working to revitalize neighborhoods and strengthen local economies. He was named 2025 Dayton Heart Ball Chair by the American Heart Association and is a member of the LGBTQ+ Real Estate Alliance.</p>
                     <p>His career spans real estate, civic engagement, and nonprofit leadership in the Miami Valley. Brian brings that broad coalition-building experience and professional network to the Ohio Pride PAC board.</p>
+                </div>
+            </div>
+
+            <div class="bio-modal" id="bio-ross-widenor" role="dialog" aria-modal="true" aria-labelledby="bio-ross-widenor-title" hidden>
+                <div class="bio-modal-backdrop" data-modal-close></div>
+                <div class="bio-modal-content">
+                    <button type="button" class="bio-modal-close" data-modal-close aria-label="Close bio">&times;</button>
+                    <div class="section-label">Board Bio</div>
+                    <h3 id="bio-ross-widenor-title">Ross Widenor, PMP</h3>
+                    <p>Ross Widenor, PMP, serves as Council President of the Munroe Falls City Council, first elected in 2021 with endorsement from the LGBTQ+ Victory Fund. Originally from southwest Pennsylvania, Ross earned a BS and MS in Chemical Engineering from Case Western Reserve University before building a career in sustainability and strategic planning at Bridgestone Americas. He lives in Munroe Falls with his husband, Anthony, and their terrier, Mileena.</p>
+                    <p>A certified Project Management Professional, Ross founded Widenor Consulting LLC and was named a Summit County "30 for the Future" honoree for his regional impact. He currently chairs the Finance and Audit Committee in Munroe Falls and leads the Core Team of the Summit of Sustainability Alliance, a county-wide consortium advancing shared environmental goals. His prior service includes Chair of the city's Parks and Recreation Board and a seat on the Board of Akron Metro RTA.</p>
+                    <p>Ross brings a rare combination to Ohio Pride — elected governance experience, disciplined project and financial management, and a proven record of building coalitions across organizations and sectors. That blend directly strengthens the PAC's work by sharpening strategic planning, reinforcing fiscal transparency, and extending our reach into Northeast Ohio's political and civic networks.</p>
                 </div>
             </div>
 
@@ -639,6 +711,28 @@
             const card = btn.closest('.member-card');
             card.classList.toggle('bio-open');
         }
+
+        document.querySelectorAll('.board-card[data-bio-target]').forEach(card => {
+            card.addEventListener('click', () => {
+                const modal = document.getElementById(card.dataset.bioTarget);
+                if (modal) modal.hidden = false;
+            });
+        });
+
+        document.querySelectorAll('[data-modal-close]').forEach(el => {
+            el.addEventListener('click', () => {
+                const modal = el.closest('.bio-modal');
+                if (modal) modal.hidden = true;
+            });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.bio-modal').forEach(modal => {
+                    modal.hidden = true;
+                });
+            }
+        });
     </script>
 </body>
 </html>
