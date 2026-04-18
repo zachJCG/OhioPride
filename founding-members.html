@@ -102,7 +102,32 @@
         max-width: 800px;
         margin: 0 auto;
         display: grid;
+        gap: 2.5rem;
+      }
+      .tier-group {
+        display: grid;
         gap: 1rem;
+      }
+      .tier-group-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--dark-bg-light, #1a3a52);
+      }
+      .tier-group-title {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-white);
+      }
+      .tier-group-price {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.9rem;
+        color: var(--text-light);
       }
       .member-row {
         display: flex;
@@ -123,13 +148,6 @@
         bottom: 0;
         width: 3px;
         background: var(--pride-gradient);
-      }
-      .member-number {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--text-white);
-        min-width: 3rem;
       }
       .member-name {
         font-family: "Montserrat", sans-serif;
@@ -255,9 +273,27 @@
     <section class="section">
       <div class="container">
         <div class="member-list reveal">
-          <div class="member-row">
-            <div class="member-number">#1</div>
-            <div class="member-name">Zachary Smith</div>
+          <div class="tier-group">
+            <div class="tier-group-header">
+              <div class="tier-group-title">Stonewall Sustainer</div>
+              <div class="tier-group-price">$19.69/month</div>
+            </div>
+            <div class="member-row">
+              <div class="member-name">Nicole Green</div>
+            </div>
+          </div>
+
+          <div class="tier-group">
+            <div class="tier-group-header">
+              <div class="tier-group-title">Founding Member</div>
+              <div class="tier-group-price">$25 one-time</div>
+            </div>
+            <div class="member-row">
+              <div class="member-name">Zachary Smith</div>
+            </div>
+            <div class="member-row">
+              <div class="member-name">Jesse Shepherd</div>
+            </div>
           </div>
         </div>
       </div>
@@ -318,7 +354,7 @@
     <script src="/js/enhancements.js" defer></script>
     <script>
       (function () {
-        var FOUNDING_MEMBER_COUNT = 1;
+        var FOUNDING_MEMBER_COUNT = 3;
         var FOUNDING_MEMBER_GOAL = 1969;
         var pct = (FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100;
         var bar = document.getElementById("goalFill");
