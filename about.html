@@ -1,516 +1,616 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About — Ohio Pride PAC</title>
-    <meta
-      name="description"
-      content="Learn about Ohio Pride PAC's mission and meet our Board of Directors."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About & Board | Ohio Pride PAC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet">
     <style>
-      body {
-        background: var(--dark-bg);
-      }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            /* Progress Pride palette */
+            --color-red: #e40303;
+            --color-orange: #ff8c00;
+            --color-yellow: #ffed00;
+            --color-green: #008026;
+            --color-blue: #004dff;
+            --color-violet: #750787;
+            --color-black: #000000;
+            --color-brown: #613915;
+            --color-light-blue: #73d7ee;
+            --color-pink: #ffafc8;
+            --color-white: #ffffff;
 
-      .about-hero {
-        padding: calc(var(--nav-height) + 3rem) 2rem 2rem;
-        text-align: center;
-        max-width: 900px;
-        margin: 0 auto;
-        position: relative;
-        isolation: isolate;
-        overflow: hidden;
-      }
-      .about-hero::before {
-        content: "";
-        position: absolute;
-        inset: calc(var(--nav-height) * -1) -100vw 0;
-        z-index: -1;
-        background-image: repeating-linear-gradient(
-          -45deg,
-          transparent,
-          transparent 40px,
-          rgba(255, 255, 255, 0.035) 40px,
-          rgba(255, 255, 255, 0.035) 80px
-        );
-        background-size: 160px 160px;
-        animation: boardStripeDrift 18s linear infinite;
-        pointer-events: none;
-      }
-      @keyframes boardStripeDrift {
-        from {
-          background-position: 0 0;
-        }
-        to {
-          background-position: 160px 160px;
-        }
-      }
-      .about-hero h1 {
-        font-family: "Montserrat", sans-serif;
-        font-size: clamp(2rem, 5vw, 3rem);
-        font-weight: 700;
-        color: var(--text-white);
-        margin-bottom: 1rem;
-      }
-      .about-hero p.lead {
-        font-family: "Roboto Slab", serif;
-        font-size: 1.1rem;
-        color: var(--text-light);
-        line-height: 1.7;
-        max-width: 700px;
-        margin: 0 auto;
-      }
+            /* Dark theme tokens (matches live site) */
+            --dark-bg: #0f2233;
+            --dark-bg-light: #1a3a52;
+            --dark-bg-lighter: #234a66;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-light: rgba(255, 255, 255, 0.85);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --text-white: #ffffff;
+            --text-accent: #73d7ee;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-medium: rgba(255, 255, 255, 0.15);
+            --bg-card: rgba(19, 45, 68, 0.5);
 
-      .mission-section {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 2rem;
-      }
-      .mission-card {
-        background: rgba(19, 45, 68, 0.5);
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 10px;
-        padding: 2.5rem;
-        position: relative;
-        overflow: hidden;
-      }
-      .mission-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--pride-gradient);
-      }
-      .mission-card h2 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.5rem;
-        color: var(--text-white);
-        margin-bottom: 1rem;
-      }
-      .mission-card p {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        line-height: 1.8;
-        font-size: 1rem;
-        margin-bottom: 1rem;
-      }
-      .mission-card p:last-child {
-        margin-bottom: 0;
-      }
+            /* Gradients */
+            --pride-gradient: linear-gradient(135deg, #e40303 0%, #ff8c00 18%, #ffed00 34%, #008026 50%, #004dff 66%, #750787 82%);
+            --rainbow: linear-gradient(90deg, #e40303 0%, #ff8c00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%);
 
-      .board-section {
-        max-width: 1100px;
-        margin: 2rem auto 0;
-        padding: 2rem;
-      }
-      .board-heading {
-        text-align: center;
-        margin-bottom: 2.5rem;
-      }
-      .board-heading h2 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--text-white);
-        margin-bottom: 0.5rem;
-      }
-      .board-heading p {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        font-size: 1rem;
-      }
-      .board-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-      }
-      .board-card {
-        background: rgba(19, 45, 68, 0.5);
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 10px;
-        padding: 1.5rem 1rem;
-        text-align: center;
-        transition: all 0.3s ease;
-      }
-      .board-card:hover {
-        border-color: var(--color-light-blue);
-        transform: translateY(-3px);
-      }
-      .avatar-ring {
-        width: 96px;
-        height: 96px;
-        margin: 0 auto 1rem;
-        border-radius: 50%;
-        padding: 3px;
-        background: var(--pride-gradient);
-        position: relative;
-        overflow: hidden;
-      }
-      .avatar-photo,
-      .avatar-inner {
-        position: absolute;
-        inset: 3px;
-        width: calc(100% - 6px);
-        height: calc(100% - 6px);
-        border-radius: 50%;
-      }
-      .avatar-photo {
-        object-fit: cover;
-        display: block;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-      }
-      .avatar-photo.is-loaded {
-        opacity: 1;
-      }
-      .avatar-photo.is-loaded + .avatar-inner {
-        opacity: 0;
-      }
-      .avatar-inner {
-        background: var(--dark-bg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--text-white);
-        transition: opacity 0.2s ease;
-      }
-      .board-name {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--text-white);
-        margin-bottom: 0.25rem;
-      }
-      .board-role {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.85rem;
-        color: var(--text-light);
-      }
-      .board-bio {
-        margin-top: 0.65rem;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        color: var(--text-light);
-      }
-      @media (max-width: 768px) {
-        .about-hero {
-          padding: calc(var(--nav-height) + 1.5rem) 1rem 1.5rem;
+            /* Spacing */
+            --nav-height: 72px;
+            --container-max: 1140px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
+            --transition: all 0.3s ease;
         }
-        .mission-section,
-        .board-section {
-          padding: 1rem;
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        body {
+            font-family: 'Roboto Slab', Georgia, serif;
+            font-size: 16px;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
         }
-        .mission-card {
-          padding: 1.5rem;
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text-white);
         }
+        a { color: var(--color-light-blue); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--color-white); }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* ── Navigation ── */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            height: var(--nav-height);
+            background: rgba(15, 34, 51, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+        }
+        .nav-inner {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-white);
+            letter-spacing: 0.5px;
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+        .nav-links a {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: 0.3px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text-white); }
+        .nav-links a.active { color: var(--text-white); font-weight: 600; }
+        .menu-toggle { display: none; background: none; border: none; color: var(--text-white); font-size: 1.5rem; cursor: pointer; }
+        @media (max-width: 768px) {
+            .nav-inner { padding: 0 16px; }
+            .nav-links { display: none; position: absolute; top: var(--nav-height); left: 0; right: 0; flex-direction: column; background: var(--dark-bg); border-bottom: 1px solid var(--border-light); padding: 1rem 24px; gap: 1rem; }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: block; }
+        }
+
+        /* ── Hero ── */
+        .hero {
+            padding: 5rem 2rem 3.5rem;
+            text-align: center;
+            margin-top: var(--nav-height);
+            border-bottom: 3px solid;
+            border-image: var(--pride-gradient) 1;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 0.75rem;
+        }
+        .hero p {
+            font-family: 'Roboto Slab', serif;
+            font-size: 1.05rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        @media (max-width: 768px) { .hero { padding: 3rem 1rem 2.5rem; } .hero p { font-size: 0.95rem; } }
+
+        /* ── Sections ── */
+        section { padding: 4rem 2rem; max-width: var(--container-max); margin: 0 auto; }
+        @media (max-width: 768px) { section { padding: 2.5rem 1rem; } }
+
+        .section-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-light-blue);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ── Mission ── */
+        .mission { max-width: 760px; margin: 0 auto; text-align: center; }
+        .mission h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); margin-bottom: 1.25rem; }
+        .mission p { color: var(--text-light); font-size: 1rem; margin-bottom: 1rem; line-height: 1.7; }
+
+        /* ── Board ── */
+        .board-section { border-top: 1px solid var(--border-light); }
+        .board-header { text-align: center; margin-bottom: 2.5rem; }
+        .board-header h2 { font-size: clamp(1.75rem, 4vw, 2.25rem); margin-bottom: 0.75rem; }
+        .board-header p { color: var(--text-muted); max-width: 620px; margin: 0 auto; font-size: 0.95rem; }
+
         .board-grid {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
         }
-        .board-card {
-          padding: 1rem 0.5rem;
+        @media (min-width: 900px) { .board-grid { grid-template-columns: repeat(5, 1fr); } }
+
+        /* ── Member cards ── */
+        .member-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
-        .avatar-ring {
-          width: 72px;
-          height: 72px;
+        .member-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--pride-gradient);
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
         }
-        .avatar-inner {
-          font-size: 1.15rem;
+        .member-card:hover::before { transform: scaleX(1); }
+        .member-card:hover { border-color: var(--color-light-blue); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
+        .avatar {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            margin: 0 auto 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem; font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, var(--dark-bg-light), var(--dark-bg-lighter));
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            overflow: hidden;
         }
-        .board-name {
-          font-size: 0.9rem;
+        .avatar::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: var(--pride-gradient);
+            z-index: -1;
         }
-        .board-role {
-          font-size: 0.75rem;
+        .avatar-wrap {
+            position: relative;
+            display: inline-block;
+            padding: 2px;
+            border-radius: 50%;
+            background: var(--pride-gradient);
+            margin: 0 auto 0.9rem;
         }
-      }
+        .avatar-wrap .avatar { margin: 0; border: 2px solid var(--dark-bg); }
+        .avatar-wrap .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+        .member-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        .member-role {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--color-light-blue);
+            font-weight: 600;
+        }
+
+        /* ── Bio / Read More ── */
+        .member-bio {
+            display: none;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.65;
+            text-align: left;
+        }
+        .member-bio p { margin-bottom: 0.6rem; }
+        .member-bio p:last-child { margin-bottom: 0; }
+        .member-card.bio-open .member-bio { display: block; }
+
+        .read-more-btn {
+            display: inline-block;
+            margin-top: 0.6rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: var(--color-orange);
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            transition: color 0.2s;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+        .read-more-btn:hover { color: #ffb84d; }
+        .member-card.bio-open .read-more-btn .btn-text::after { content: 'Read less'; }
+        .member-card:not(.bio-open) .read-more-btn .btn-text::after { content: 'Read more'; }
+
+        .member-card.bio-open {
+            grid-column: 1 / -1;
+            max-width: 620px;
+            justify-self: center;
+        }
+
+        /* ── Join CTA ── */
+        .join-cta {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(19, 45, 68, 0.3);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .join-cta h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .join-cta p { color: var(--text-light); font-size: 0.95rem; margin-bottom: 1.25rem; }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.75rem;
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            background: var(--pride-gradient);
+            color: var(--text-white);
+            text-decoration: none;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); color: var(--text-white); }
+
+        /* ── Footer ── */
+        .footer { background: var(--dark-bg); padding: 60px 2rem 0; color: var(--text-light); }
+        .footer-inner {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .footer-col h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 0.4rem; }
+        .footer-col a { color: rgba(255,255,255,0.65); font-size: 0.9rem; transition: color 0.2s; text-decoration: none; }
+        .footer-col a:hover { color: var(--color-light-blue); }
+        .footer-col .directors { color: var(--text-light); font-size: 0.9rem; line-height: 1.6; }
+        .footer-col .directors strong { color: var(--text-white); }
+        .footer-bottom {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+        }
+        .compliance-footer {
+            background: var(--color-black);
+            padding: 16px 2rem;
+            border-top: 3px solid var(--color-blue);
+            text-align: center;
+            font-size: 0.8rem;
+            font-style: italic;
+            color: rgba(255,255,255,0.5);
+        }
+        @media (max-width: 768px) {
+            .footer-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+            .footer { padding: 2rem 1rem 0; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+        }
     </style>
-  </head>
-  <body>
-    <div class="pride-stripe"></div>
-
-    <!-- Navigation -->
-    <nav class="nav nav-solid" id="nav">
-      <div class="nav-inner">
-        <a href="/" class="nav-logo">
-          <span class="logo-ohio">Ohio</span
-          ><span class="logo-pride">Pride</span>
-          <span class="logo-pac">PAC</span>
-        </a>
-        <button
-          class="nav-toggle"
-          id="navToggle"
-          aria-label="Toggle navigation"
-          aria-expanded="false"
-        >
-          <span></span><span></span><span></span>
-        </button>
-        <div class="nav-links" id="navLinks">
-          <a href="/issues">Issues</a>
-          <a href="/founding-members">Founding Members</a>
-          <a href="/about" class="active">About</a>
-          <a href="/contact">Contact</a>
-          <a href="/donate" class="btn btn-nav">Donate</a>
+    <!-- Ohio Pride PAC: Favicons & Social Share -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon/android-chrome-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon/android-chrome-512.png">
+    <meta name="theme-color" content="#0F2233">
+    <meta property="og:title" content="Ohio Pride PAC: Ohio's PAC for LGBTQ+ Equality">
+    <meta property="og:description" content="Nonpartisan, state-level PAC endorsing pro-equality candidates across Ohio.">
+    <meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png">
+    <meta property="og:url" content="https://ohiopride.org/about">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ohio Pride PAC: Ohio's PAC for LGBTQ+ Equality">
+    <meta name="twitter:description" content="Nonpartisan, state-level PAC endorsing pro-equality candidates across Ohio.">
+    <meta name="twitter:image" content="https://ohiopride.org/assets/social/og-image.png">
+</head>
+<body>
+    <div class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">Ohio Pride PAC</a>
+            <button class="menu-toggle" id="menuToggle">&#9776;</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="/issues">Issues</a></li>
+                <li><a href="/about" class="active">About</a></li>
+                <li><a href="/founding-members">Founding Members</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/donate">Donate</a></li>
+            </ul>
         </div>
-      </div>
-    </nav>
+    </div>
 
-    <section class="about-hero">
-      <h1>About Ohio Pride PAC</h1>
-      <p class="lead">
-        Building political power for LGBTQ+ Ohioans at every level of
-        government.
-      </p>
+    <section class="hero">
+        <h1>About Ohio Pride PAC</h1>
+        <p>A political action committee built to elect pro-equality leaders and defend LGBTQ+ Ohioans at every level of government.</p>
     </section>
 
-    <section class="mission-section">
-      <div class="mission-card">
-        <h2>Our Mission</h2>
-        <p>
-          Ohio Pride PAC is Ohio's Political Action Committee for LGBTQ+
-          Equality. We mobilize voters, endorse pro-equality candidates, and
-          advocate for the rights of LGBTQ+ Ohioans at every level of
-          government.
-        </p>
-        <p>
-          We exist to build durable political power for the LGBTQ+ community in
-          Ohio — electing leaders who will defend our rights, tracking and
-          fighting anti-LGBTQ+ legislation in the Statehouse, and educating
-          voters about what's at stake in every election.
-        </p>
-      </div>
+    <section>
+        <div class="mission">
+            <div class="section-label">Our Mission</div>
+            <h2>Building Political Power for LGBTQ+ Ohio</h2>
+            <p>Ohio Pride PAC mobilizes voters, endorses pro-equality candidates, and advocates for the rights of LGBTQ+ Ohioans. We track anti-equality legislation in the Statehouse, hold elected officials accountable, and invest in the candidates who will fight for our community.</p>
+            <p>We believe political power, built one seat, one voter, and one member at a time, is how our community protects itself and moves Ohio forward.</p>
+        </div>
     </section>
 
     <section class="board-section">
-      <div class="board-heading">
-        <h2>Board of Directors</h2>
-      </div>
-      <div class="board-grid">
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/zach-joseph.jpg"
-              alt="Zachary R. Joseph, MBA"
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">ZJ</div>
-          </div>
-          <div class="board-name">Zachary R. Joseph, MBA</div>
-          <div class="board-role">Director</div>
+        <div class="board-header">
+            <div class="section-label">Leadership</div>
+            <h2>Board of Directors</h2>
+            <p>Our founding board of ten is assembled: leaders committed to LGBTQ+ equality in Ohio.</p>
         </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/brian-sharp.jpg"
-              alt="Brian Sharp"
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">BS</div>
-          </div>
-          <div class="board-name">Brian Sharp</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/ari-childrey.jpg"
-              alt="Ari Childrey"
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">AC</div>
-          </div>
-          <div class="board-name">Ari Childrey</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/chrisondra-goodwine.jpg"
-              alt="Chrisondra Goodwine, J.D."
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">CG</div>
-          </div>
-          <div class="board-name">Chrisondra Goodwine, J.D.</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/ariel-mary-ann.jpg"
-              alt="Ariel Mary Ann"
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">AM</div>
-          </div>
-          <div class="board-name">Ariel Mary Ann</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/keara-dever.jpg"
-              alt="Keara Dever, J.D."
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">KD</div>
-          </div>
-          <div class="board-name">Keara Dever, J.D.</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/eli-bohnert.jpg"
-              alt="Eli Bohnert"
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">EB</div>
-          </div>
-          <div class="board-name">Eli Bohnert</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/ross-widenor.jpg"
-              alt="Ross Widenor"
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">RW</div>
-          </div>
-          <div class="board-name">Ross Widenor</div>
-          <div class="board-role">Board Member</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/david-donofrio.jpg"
-              alt="David Donofrio"
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">DD</div>
-          </div>
-          <div class="board-name">David Donofrio</div>
-          <div class="board-role">Treasurer</div>
-        </div>
-        <div class="board-card">
-          <div class="avatar-ring">
-            <img
-              class="avatar-photo"
-              src="/assets/board/dalma-grandjean.jpg"
-              alt="Dalma Grandjean, J.D."
-              loading="lazy"
-              onload="this.classList.add('is-loaded')"
-              onerror="this.remove()"
-            />
-            <div class="avatar-inner">DG</div>
-          </div>
-          <div class="board-name">Dalma Grandjean, J.D.</div>
-          <div class="board-role">Board Member</div>
-          <p class="board-bio">
-            Former Law Director for the City of Riverside, bringing municipal legal experience to the board.
-          </p>
-        </div>
-      </div>
 
-      <div style="text-align: center; margin-top: 3rem;">
-        <a href="/donate/founding-member" class="btn btn-primary">Become a Founding Member</a>
-      </div>
+        <div class="board-grid">
+
+            <!-- 1. Zachary R. Joseph, MBA -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/zach-joseph.jpg" alt="Zachary R. Joseph"></div></div>
+                <div class="member-name">Zachary R. Joseph, MBA</div>
+                <div class="member-role">Director</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>Zachary R. Joseph is a U.S. Navy veteran, former elected official, and political strategist based in Cincinnati. He served five and a half years in the Navy Reserve, rising to a junior leadership role as a non-commissioned officer. At 26, Zach became the youngest and first openly LGBTQ+ member elected to Riverside City Council, where he gained direct experience in municipal governance and constituent services.</p>
+                    <p>Zach holds an MBA from Antioch University and spent a decade in the HR technology industry with companies including Tyler Technologies, Paychex, UKG, and HiBob. He was named to the Dayton Business Journal's 40 Under 40 for his professional and civic contributions to the region.</p>
+                    <p>He launched Ohio Pride PAC to give pro-equality candidates the institutional support the community has lacked at the state level, bringing both public service and private-sector leadership to the organization's endorsement strategy, fundraising, and statewide outreach.</p>
+                </div>
+            </div>
+
+            <!-- 2. Brian Sharp -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/brian-sharp.jpg" alt="Brian Sharp"></div></div>
+                <div class="member-name">Brian Sharp</div>
+                <div class="member-role">Board Member</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>Brian Sharp is the Director of Business and Market Development at Berkshire Hathaway HomeServices Professional Realty, where he leads growth strategy across the Dayton region. He studied at Sinclair Community College, Wright State University, and Hondros College, building expertise in real estate, business development, and community investment.</p>
+                    <p>Brian serves on the Montgomery County Land Bank Board of Directors, working to revitalize neighborhoods and strengthen local economies. He was named 2025 Dayton Heart Ball Chair by the American Heart Association and is a member of the LGBTQ+ Real Estate Alliance.</p>
+                    <p>His career spans real estate, civic engagement, and nonprofit leadership in the Miami Valley. Brian brings that broad coalition-building experience and professional network to the Ohio Pride PAC board.</p>
+                </div>
+            </div>
+
+            <!-- 3. Ari Childrey -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/ari-childrey.jpg" alt="Ari Childrey"></div></div>
+                <div class="member-name">Ari Childrey</div>
+                <div class="member-role">Communications Director</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>Ari Childrey is a community advocate and trailblazing leader in Ohio's LGBTQ+ movement. She made history as the first openly transgender woman to serve on a city council in Ohio, representing the 4th Ward on the St. Marys City Council. In 2025, Ari received the Equality Ohio Emerging Leader Award in recognition of her organizing and advocacy work.</p>
+                    <p>Ari founded Northwest Ohio Trans Advocacy, an organization dedicated to supporting transgender Ohioans in rural and underserved communities. She serves as Vice Chair of the Ohio Democratic Party's Pride Caucus and has been a candidate for the Ohio House of Representatives in District 84 in both 2024 and 2026.</p>
+                    <p>Across western Ohio, Ari organizes Pride events, mentors emerging LGBTQ+ leaders, and advocates for accessible political processes for all candidates. She brings grassroots communications expertise and a statewide network to Ohio Pride PAC.</p>
+                </div>
+            </div>
+
+            <!-- 4. Chrisondra Goodwine, J.D. -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/chrisondra-goodwine.jpg" alt="Chrisondra Goodwine"></div></div>
+                <div class="member-name">Chrisondra Goodwine, J.D.</div>
+                <div class="member-role">Board Member</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>Chrisondra Goodwine is an attorney, educator, and public administrator with deep roots in West Dayton. She attended Dayton Public Schools at every level and went on to earn a Bachelor of Arts from the University of Akron, a Juris Doctor from the University of Dayton School of Law, an MBA from Capella University, and a Master of Public Administration from Capella.</p>
+                    <p>Chrisondra serves as Township Administrator of Jefferson Township and as President of the Dayton Public Schools Board of Education, where she has been a vocal champion of equity and community investment. She co-founded Dayton Black Pride and made history as one of the first openly LGBTQ+ Black women elected to public office in the Dayton area.</p>
+                    <p>Her decades of experience in education policy, municipal governance, and civil rights advocacy make her a cornerstone of the Ohio Pride PAC board.</p>
+                </div>
+            </div>
+
+            <!-- 5. Ariel Marry Ann -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/ariel-marry-ann.jpg" alt="Ariel Marry Ann"></div></div>
+                <div class="member-name">Ariel Marry Ann</div>
+                <div class="member-role">Board Member</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>Ariel Marry Ann is a Black trans woman, theatre artist, and advocate based in Cincinnati. She studied Women's and Gender Studies at the University of Cincinnati and works in public health, bringing an intersectional lens to both her professional and creative life.</p>
+                    <p>Ariel is the Producing Artistic Director of InBocca Performance and serves as co-Vice President of the League of Cincinnati Theatres. Her creative work centers the visibility and celebration of trans people of color through storytelling, original performance, and community organizing. She has reached audiences across Ohio and beyond with her writing, speaking, and stage productions.</p>
+                    <p>Ariel brings lived experience, creative vision, and arts leadership to the Ohio Pride PAC board, strengthening the organization's connection to Cincinnati and the broader cultural community.</p>
+                </div>
+            </div>
+
+            <!-- 6. Keara Dever, J.D. -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/keara-dever.jpg" alt="Keara Dever"></div></div>
+                <div class="member-name">Keara Dever, J.D.</div>
+                <div class="member-role">Board Member</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>Keara Dever was born and raised in Buffalo, New York. She earned her undergraduate degree from Duquesne University and her Juris Doctor from the University of Dayton School of Law. While in law school, she found her calling through the immigration clinic, fostering a deep commitment to serving society's most vulnerable populations.</p>
+                    <p>Keara opened her own practice in 2023, focusing on immigration, criminal defense, and family law. She serves as an Acting Judge in Kettering Municipal Court and co-founded the Dayton Bar Association's LGBTQ+ affinity group, creating a professional community for queer attorneys in the Miami Valley.</p>
+                    <p>Active in local politics throughout the Dayton region, Keara brings legal expertise, judicial experience, and a passion for equal justice to the Ohio Pride PAC board.</p>
+                </div>
+            </div>
+
+            <!-- 7. Eli Bohnert -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/eli-bohnert.jpg" alt="Eli Bohnert"></div></div>
+                <div class="member-name">Eli Bohnert</div>
+                <div class="member-role">Board Member</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>Eli Bohnert is a public health professional and political strategist based in Columbus. He holds a Master of Public Health from The Ohio State University and serves as the Healthy Food Access Coordinator at Franklin County Public Health, where he works to expand equitable access to nutrition across central Ohio.</p>
+                    <p>Eli was a candidate for the Ohio House of Representatives in 2024 and previously served as President of the Stonewall Democrats of Central Ohio. He remains active as a Franklin County Democratic Party Central Committee member, Vice Chair of Political Affairs for the Hilliard Democrats, and treasurer of the West Scioto Area Commission.</p>
+                    <p>His combination of public health expertise, campaign experience, and deep ties to progressive organizing in Franklin County strengthens Ohio Pride PAC's reach in the Columbus metro area.</p>
+                </div>
+            </div>
+
+            <!-- 8. Ross Widenor -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/ross-widenor.jpg" alt="Ross Widenor"></div></div>
+                <div class="member-name">Ross Widenor</div>
+                <div class="member-role">Secretary</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>Ross Widenor serves as Council President on the Munroe Falls City Council, first elected in 2021 with endorsement from the LGBTQ+ Victory Fund. Originally from southwest Pennsylvania, Ross studied chemical engineering at Case Western Reserve University and earned a Master of Science degree before building a career in sustainability and strategic planning at Bridgestone Americas.</p>
+                    <p>A certified Project Management Professional (PMP), Ross founded Widenor Consulting and was named a Summit County "30 for the Future" honoree for his impact on the region. He chairs the Finance and Audit Committee in Munroe Falls and has been a consistent voice for transparency and fiscal responsibility in local government.</p>
+                    <p>Ross brings experience in elected governance, sustainability strategy, and nonprofit operations to his role as Secretary of Ohio Pride PAC.</p>
+                </div>
+            </div>
+
+            <!-- 9. David Donofrio -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/david-donofrio.jpg" alt="David Donofrio"></div></div>
+                <div class="member-name">David Donofrio</div>
+                <div class="member-role">Treasurer</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>David Donofrio is a lifelong central Ohioan with deep roots in political organizing and public service. A former Ohio Legislative Service Commission Fellow, David went on to make history as the first openly gay member elected to the South-Western City School District Board of Education, where he advocated for inclusive policies and equitable resource allocation.</p>
+                    <p>David has held leadership roles with the Stonewall Democrats of Central Ohio and currently serves as Secretary of the Ohio Democratic Party's Pride Caucus. He is active with Pride in Grove City and the Columbus Gay Men's Chorus, contributing to LGBTQ+ visibility and community building across the metro area.</p>
+                    <p>He brings years of organizational governance, financial stewardship, and grassroots political experience to his role as Treasurer of Ohio Pride PAC.</p>
+                </div>
+            </div>
+
+            <!-- 10. Dalma Grandjean, J.D. -->
+            <div class="member-card">
+                <div class="avatar-wrap"><div class="avatar"><img src="/assets/board/dalma-grandjean.jpg" alt="Dalma Grandjean"></div></div>
+                <div class="member-name">Dalma Grandjean, J.D.</div>
+                <div class="member-role">Board Member</div>
+                <button class="read-more-btn" onclick="toggleBio(this)"><span class="btn-text"></span></button>
+                <div class="member-bio">
+                    <p>Dalma Grandjean is a retired attorney and former Law Director for the City of Riverside. Born in Germany to Hungarian parents, she grew up in the Dayton area and earned her Juris Doctor summa cum laude from the University of Dayton School of Law.</p>
+                    <p>Over her career, Dalma built a distinguished practice in family law, military divorce, and international domestic relations as a shareholder at Altick &amp; Corwin Co., LPA. She also served as a linguist at Wright-Patterson Air Force Base, leveraging her multilingual background in service to the military community. She was named Barrister of the Month by the Dayton Bar Association for her contributions to the profession.</p>
+                    <p>Dalma brings decades of legal expertise, municipal government experience, and a steadfast commitment to justice and equality to the Ohio Pride PAC board.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="join-cta">
+            <h3>Want to get involved?</h3>
+            <p>We are always looking for allies with backgrounds in political strategy, legal advocacy, fundraising, and community organizing to support our mission.</p>
+            <a href="/contact" class="btn">Get in Touch</a>
+        </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-brand">
-            <a href="/" class="nav-logo footer-logo">
-              <span class="logo-ohio">Ohio</span
-              ><span class="logo-pride">Pride</span>
-              <span class="logo-pac">PAC</span>
-            </a>
-            <p class="footer-tagline">
-              Ohio's Political Action Committee for LGBTQ+ Equality.
-            </p>
-          </div>
-          <div class="footer-links">
-            <h4>Organization</h4>
-            <a href="/issues">Issues</a>
-            <a href="/founding-members">Founding Members</a>
-            <a href="/about">About</a>
-          </div>
-          <div class="footer-links">
-            <h4>Get Involved</h4>
-            <a href="/donate">Donate</a>
-            <a href="/contact">Contact Us</a>
-          </div>
-          <div class="footer-links">
-            <h4>Legal</h4>
-            <a href="/privacy">Privacy Policy</a>
-            <a href="/terms">Terms of Use</a>
-          </div>
+        <div class="footer-inner">
+            <div class="footer-col">
+                <h4>Organization</h4>
+                <ul>
+                    <li><a href="/issues">Issues</a></li>
+                    <li><a href="/about">About &amp; Board</a></li>
+                    <li><a href="/founding-members">Founding Members</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Get Involved</h4>
+                <ul>
+                    <li><a href="/donate">Donate</a></li>
+                    <li><a href="/donate/founding-member">Founding Membership</a></li>
+                    <li><a href="/contact">Volunteer</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Leadership</h4>
+                <div class="directors">
+                    <strong>Director:</strong> Zachary R. Joseph<br>
+                    <strong>Treasurer:</strong> David Donofrio
+                </div>
+            </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+            <div>&copy; 2026 Ohio Pride PAC. All rights reserved.</div>
         </div>
-      </div>
     </footer>
-
     <div class="compliance-footer">
-      <div class="container">
-        <p>
-          Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David
-          Donofrio, Treasurer.
-        </p>
-        <p class="irs-line">
-          Contributions are not tax-deductible for federal income tax purposes.
-        </p>
-      </div>
+        Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.
     </div>
 
-    <a href="/donate" class="mobile-donate-fab">Donate</a>
+    <script>
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => document.getElementById('navLinks').classList.remove('active'));
+        });
 
-    <script src="/js/main.js"></script>
-    <script src="/js/enhancements.js" defer></script>
-  </body>
+        function toggleBio(btn) {
+            const card = btn.closest('.member-card');
+            card.classList.toggle('bio-open');
+        }
+    </script>
+</body>
 </html>
