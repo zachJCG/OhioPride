@@ -65,6 +65,26 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.ohiopride.org/issues/sb34</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.ohiopride.org/issues/hb602</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.ohiopride.org/issues/sb274</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.ohiopride.org/issues/hb457</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.ohiopride.org/issues/hjr4</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.ohiopride.org/privacy</loc>
     <priority>0.3</priority>
   </url>
