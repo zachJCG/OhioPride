@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading... | Ohio Pride PAC</title>
+    <meta name="description" content="Track this Ohio bill's progress through the legislature. Ohio Pride PAC monitors legislation affecting LGBTQ+ rights." />
+    <link rel="canonical" href="https://www.ohiopride.org/issues/hb457" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bill Tracker | Ohio Pride PAC" />
+    <meta property="og:description" content="Track this Ohio bill's progress through the legislature. Ohio Pride PAC monitors legislation affecting LGBTQ+ rights." />
+    <meta property="og:url" content="https://www.ohiopride.org/issues/hb457" />
+    <meta property="og:site_name" content="Ohio Pride PAC" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Bill Tracker | Ohio Pride PAC" />
+    <meta name="twitter:description" content="Track this Ohio bill's progress through the legislature. Ohio Pride PAC monitors legislation affecting LGBTQ+ rights." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/bill-pipeline.css" />
+    <style>
+      body {
+        background: var(--dark-bg);
+      }
+
+      :root {
+        --card-bg: #132d44;
+        --card-border: #1a3a52;
+        --text-gray: #a0b4c8;
+        --text-dim: #6889a6;
+      }
+
+      .breadcrumb {
+        max-width: 900px;
+        margin: 1.5rem auto 0;
+        padding: 0 2rem;
+        font-size: 0.85rem;
+        color: var(--text-dim);
+      }
+      .breadcrumb a {
+        color: var(--text-gray);
+        text-decoration: none;
+      }
+      .breadcrumb a:hover {
+        color: var(--text-white);
+      }
+
+      .bill-hero {
+        max-width: 900px;
+        margin: 1rem auto 0;
+        padding: 0 2rem 2rem;
+        position: relative;
+      }
+      .bill-hero::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: var(--pride-gradient);
+      }
+      .bill-hero .bill-number {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+      }
+      .bill-hero h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 0.25rem;
+        color: var(--text-white);
+      }
+      .bill-hero .nickname {
+        font-size: 1.1rem;
+        color: var(--text-gray);
+        margin-bottom: 0.5rem;
+      }
+      .bill-hero .official-title {
+        font-size: 0.85rem;
+        color: var(--text-dim);
+        font-style: italic;
+        margin-bottom: 1rem;
+      }
+      .bill-hero .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .status-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-family: "Montserrat", sans-serif;
+      }
+      @media (max-width: 768px) {
+        .bill-hero h1 {
+          font-size: 1.6rem;
+        }
+      }
+
+      .detail-section {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .detail-section h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--card-border);
+        color: var(--text-white);
+      }
+      .detail-section p {
+        color: var(--text-gray);
+        margin-bottom: 1rem;
+        line-height: 1.7;
+      }
+      .detail-section ul {
+        color: var(--text-gray);
+        margin: 0 0 1rem 1.5rem;
+      }
+      .detail-section li {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .meta-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 1rem;
+      }
+      .meta-card .meta-label {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+      }
+      .meta-card .meta-value {
+        font-size: 0.95rem;
+        color: var(--text-white);
+      }
+      @media (max-width: 768px) {
+        .meta-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .breadcrumb {
+          padding: 0 1rem;
+          margin-top: 1rem;
+        }
+        .bill-hero {
+          padding: 0 1rem 1.5rem;
+        }
+        .detail-section {
+          padding: 1.5rem 1rem;
+        }
+        .ext-links {
+          flex-direction: column;
+        }
+        .ext-link {
+          width: 100%;
+          justify-content: center;
+        }
+        .cta-bar {
+          padding: 0 1rem;
+        }
+      }
+
+      .timeline-list {
+        position: relative;
+        padding-left: 1.5rem;
+        border-left: 2px solid var(--card-border);
+      }
+      .timeline-item {
+        position: relative;
+        margin-bottom: 1.25rem;
+        padding-left: 1rem;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -1.75rem;
+        top: 0.5rem;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--card-border);
+      }
+      .timeline-item.completed::before {
+        background: #22c55e;
+      }
+      .timeline-item.current::before {
+        background: #f59e0b;
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+      }
+      .timeline-item .tl-date {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        font-weight: 600;
+      }
+      .timeline-item .tl-event {
+        font-size: 0.95rem;
+        color: var(--text-gray);
+      }
+
+      .ext-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+      .ext-link {
+        display: none;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem 1rem;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: var(--text-gray);
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .ext-link:hover {
+        border-color: var(--dark-bg-lighter);
+        color: var(--text-white);
+      }
+
+      .risk-card {
+        background: linear-gradient(
+          135deg,
+          rgba(239, 68, 68, 0.08),
+          rgba(239, 68, 68, 0.02)
+        );
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      .risk-card ul {
+        margin-left: 1.25rem;
+      }
+
+      .cta-bar {
+        max-width: 900px;
+        margin: 0 auto 3rem;
+        padding: 0 2rem;
+      }
+      .cta-inner {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+      }
+      .cta-inner p {
+        color: var(--text-gray);
+        margin-bottom: 1rem;
+      }
+      .cta-inner a {
+        display: inline-block;
+        padding: 0.6rem 1.5rem;
+        background: var(--color-blue);
+        color: white;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        font-family: "Montserrat", sans-serif;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .cta-inner a:hover {
+        background: #0039cc;
+        transform: translateY(-1px);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav nav-solid" id="nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <span class="logo-ohio">Ohio</span
+          ><span class="logo-pride">Pride</span>
+          <span class="logo-pac">PAC</span>
+        </a>
+        <button
+          class="nav-toggle"
+          id="navToggle"
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="navLinks">
+          <a href="/issues" class="active">Issues</a>
+          <a href="/founding-members">Founding Members</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/donate" class="btn btn-nav">Donate</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="breadcrumb">
+      <a href="/issues">← Back to Issue Tracker</a>
+    </div>
+
+    <div class="bill-hero">
+      <div class="bill-number" id="billNumber"></div>
+      <h1 id="billTitle"></h1>
+      <div class="nickname" id="billNickname"></div>
+      <div class="official-title">
+        Official title: "<span id="billOfficialTitle"></span>"
+      </div>
+      <div class="badge-row">
+        <span class="status-badge" id="statusBadge"></span>
+        <span
+          id="billCategories"
+          style="display: flex; gap: 0.4rem; flex-wrap: wrap"
+        ></span>
+      </div>
+      <div id="detailPipeline"></div>
+    </div>
+
+    <div class="detail-section">
+      <div class="meta-grid">
+        <div class="meta-card">
+          <div class="meta-label">Sponsors</div>
+          <div class="meta-value" id="billSponsors"></div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Last Action</div>
+          <div class="meta-value" id="billLastAction"></div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Next Expected Action</div>
+          <div class="meta-value" id="billNextDate"></div>
+        </div>
+        <div class="meta-card" style="display: none">
+          <div class="meta-label">House Vote</div>
+          <div class="meta-value" id="billHouseVote"></div>
+        </div>
+      </div>
+
+      <div class="ext-links">
+        <a
+          href="#"
+          id="legislatureLink"
+          class="ext-link"
+          target="_blank"
+          rel="noopener"
+          >&#128279; Ohio Legislature Bill Page</a
+        >
+        <a
+          href="#"
+          id="textLink"
+          class="ext-link"
+          target="_blank"
+          rel="noopener"
+          >&#128196; Read Full Bill Text (PDF)</a
+        >
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h2>What This Bill Does</h2>
+      <p>
+        HB 457 creates new aggravated-murder offenses for politically
+        motivated violence and establishes mandatory prison terms for
+        politically motivated offenses of violence. It also modifies Ohio's
+        sentencing-aggravator framework for both felonies and misdemeanors.
+      </p>
+      <p>
+        Introduced in the wake of the Charlie Kirk and Melissa Hortman
+        homicides, the legislation would add
+        <strong>"biological sex"</strong> as an aggravating factor for
+        politically targeted violence — while
+        <strong>removing "sexual orientation"</strong> from the existing
+        aggravating-factor list.
+      </p>
+    </div>
+
+    <div class="detail-section">
+      <h2>Impact on LGBTQIA+ Ohioans</h2>
+      <p>
+        Stripping "sexual orientation" from Ohio's aggravating-factor list
+        removes a sentencing tool that prosecutors have relied on when
+        pursuing hate-motivated attacks against gay, lesbian, and bisexual
+        Ohioans. Substituting "biological sex" narrows the scope to
+        cisgender-coded framings and excludes transgender Ohioans from the
+        class of protected victims.
+      </p>
+      <p>
+        The net effect of HB 457 is a
+        <strong>loss of enhanced-sentencing protection</strong> for LGBTQ+
+        victims of violence — even as the bill's proponents position it as a
+        response to politically motivated attacks.
+      </p>
+    </div>
+
+    <div class="detail-section">
+      <h2>Legal &amp; Constitutional Risks</h2>
+      <div class="risk-card">
+        <ul>
+          <li>
+            <strong>Equal Protection</strong> — Selectively removing sexual
+            orientation while adding biological sex could draw equal-protection
+            scrutiny under either state or federal constitutional grounds.
+          </li>
+          <li>
+            <strong>Overlap with HB 306</strong> — Ohio currently lacks a
+            dedicated hate-crime statute. HB 457 and the bipartisan HB 306
+            create competing framings; the final text will determine whether
+            LGBTQ+ Ohioans gain or lose coverage.
+          </li>
+          <li>
+            <strong>Death-Penalty Expansion</strong> — The aggravated-murder
+            classification opens the door to capital prosecution in a category
+            of cases currently charged as murder; Ohio capital cases face
+            ongoing federal habeas scrutiny.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h2>Timeline</h2>
+      <div class="timeline-list">
+        <div class="timeline-item completed">
+          <div class="tl-date">Introduced 2025</div>
+          <div class="tl-event">Introduced in the House</div>
+        </div>
+        <div class="timeline-item current">
+          <div class="tl-date">Pending</div>
+          <div class="tl-event">Referred to House Criminal Justice Committee</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <div class="cta-inner">
+        <p>Help us fight back against anti-LGBTQIA+ legislation in Ohio.</p>
+        <a href="/donate/founding-member">Become a Founding Member →</a>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="nav-logo footer-logo">
+              <span class="logo-ohio">Ohio</span
+              ><span class="logo-pride">Pride</span>
+              <span class="logo-pac">PAC</span>
+            </a>
+            <p class="footer-tagline">
+              Ohio's Political Action Committee for LGBTQ+ Equality.
+            </p>
+          </div>
+          <div class="footer-links">
+            <h4>Organization</h4>
+            <a href="/issues">Issues</a>
+            <a href="/founding-members">Founding Members</a>
+          </div>
+          <div class="footer-links">
+            <h4>Get Involved</h4>
+            <a href="/donate">Donate</a>
+            <a href="/contact">Contact Us</a>
+          </div>
+          <div class="footer-links">
+            <h4>Legal</h4>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="compliance-footer">
+      <div class="container">
+        <p>
+          Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David
+          Donofrio, Treasurer.
+        </p>
+        <p class="irs-line">
+          Contributions are not tax-deductible for federal income tax purposes.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const BILL_ID = "hb457";
+    </script>
+    <script src="/js/main.js" defer></script>
+    <script src="/js/bill-data.js"></script>
+    <script src="/js/bill-pipeline.js"></script>
+    <script src="/js/bill-detail.js"></script>
+    <script src="/js/enhancements.js" defer></script>
+  </body>
+</html>

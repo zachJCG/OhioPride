@@ -4,7 +4,7 @@
    ========================================================================== */
 
 // Update this constant whenever bill data changes
-const LAST_UPDATED = { date: "04/14/26", time: "06:21 PM EDT" };
+const LAST_UPDATED = { date: "04/20/26", time: "05:35 PM EDT" };
 
 const BILLS = [
   /* ===== ANTI-LGBTQ+ BILLS ===== */
@@ -23,17 +23,18 @@ const BILLS = [
     description:
       "Creates 'unlawful adult cabaret performance' with a definition reaching gender expression differing from 'biological sex.' Penalties escalate from misdemeanors to felonies when minors are present.",
     sponsors: "Rep. Angela N. King (R-84), Rep. Josh Williams (R-44)",
-    lastAction: "In Senate — awaiting committee assignment (as of April 4, 2026)",
-    nextDate: "Awaiting Senate committee assignment",
+    lastAction: "Referred to Senate Judiciary Committee — April 15, 2026",
+    nextDate: "Awaiting first Senate committee hearing",
     houseVote: "Passed 63–32 on March 25, 2026",
     chamber: "house",
-    currentStep: 5,
+    currentStep: 6,
     pipelineDates: {
       0: "Apr 29, 2025",
       1: "May 7, 2025",
       3: "Mar 25, 2026",
       4: "Mar 25, 2026",
       5: "Mar 26, 2026",
+      6: "Apr 15, 2026",
     },
     url: "/issues/hb249",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb249",
@@ -246,6 +247,116 @@ const BILLS = [
       "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb196/00_IN/pdf/",
   },
   {
+    id: "sb34",
+    bill: "SB 34",
+    title: "Founding Documents Displays Act",
+    nickname: "Ten Commandments Classroom Displays",
+    officialTitle:
+      "Enact the Display of Founding Documents of Historic Significance Act",
+    stance: "anti",
+    status: "passed-senate",
+    statusLabel: "Passed Senate → In House",
+    statusColor: "#dc2626",
+    categories: ["education"],
+    categoryLabels: ["Education"],
+    description:
+      "Requires school boards to adopt policies displaying at least four of nine 'founding documents' — including the Ten Commandments — in social studies and history classrooms. Permits private donors (e.g., the Center for Christian Virtue) to fund displays, inviting religious-right messaging into public schools. Passed the Ohio Senate 23–10 on November 20, 2025.",
+    sponsors: "Sen. Terry Johnson (R-14)",
+    lastAction: "Referred to House Education Committee — February 4, 2026",
+    nextDate: "Awaiting House committee hearing",
+    chamber: "senate",
+    currentStep: 6,
+    pipelineDates: {
+      0: "Feb 2025",
+      3: "Apr 8, 2025",
+      4: "Nov 20, 2025",
+      5: "Nov 20, 2025",
+      6: "Feb 4, 2026",
+    },
+    url: "/issues/sb34",
+    legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/sb34",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/sb34/00_IN/pdf/",
+  },
+  {
+    id: "hb602",
+    bill: "HB 602",
+    title: "State Flag Display Restriction",
+    nickname: "Pride Flag Ban on State Property",
+    officialTitle:
+      "Limit types of flags that state agencies may display on grounds or buildings",
+    stance: "anti",
+    status: "in-committee",
+    statusLabel: "In Committee",
+    statusColor: "#f59e0b",
+    categories: ["expression"],
+    categoryLabels: ["Expression"],
+    description:
+      "Limits flags on state-owned property to the U.S., Ohio, POW/MIA, and pre-approved agency flags — effectively banning Pride flags from state buildings and grounds. Revives language that Gov. DeWine line-item-vetoed from the FY26-27 budget (HB 96).",
+    sponsors: "Rep. D.J. Swearingen (R-89), Rep. Rodney Creech (R-40)",
+    lastAction: "Sponsor testimony in House General Government — week of March 30, 2026",
+    nextDate: "Additional hearings expected",
+    chamber: "house",
+    currentStep: 2,
+    pipelineDates: { 0: "Nov 18, 2025", 2: "Mar 30, 2026" },
+    url: "/issues/hb602",
+    legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb602",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb602/00_IN/pdf/",
+  },
+  {
+    id: "sb274",
+    bill: "SB 274",
+    title: "Minor Mental Health Consent (Senate)",
+    nickname: "Senate Companion to HB 172",
+    officialTitle:
+      "Prohibit mental health service to minors without parental consent",
+    stance: "anti",
+    status: "in-committee",
+    statusLabel: "In Committee",
+    statusColor: "#f59e0b",
+    categories: ["youth"],
+    categoryLabels: ["Youth / Family"],
+    description:
+      "Senate companion to HB 172. Repeals ORC 5122.04, eliminating the 1989-era provision that allows minors 14+ to access up to six outpatient mental-health sessions without parental consent. Closes a critical confidential-care pathway for LGBTQ+ youth.",
+    sponsors: "Sen. Jerry Cirino (R-18), Sen. Andrew Brenner (R-19)",
+    lastAction: "Referred to Senate Health Committee — October 1, 2025",
+    nextDate: "Awaiting committee hearing",
+    chamber: "senate",
+    currentStep: 1,
+    pipelineDates: { 0: "Sep 30, 2025", 1: "Oct 1, 2025" },
+    url: "/issues/sb274",
+    legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/sb274",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/sb274/00_IN/pdf/",
+  },
+  {
+    id: "hb457",
+    bill: "HB 457",
+    title: "Politically-Motivated Crimes",
+    nickname: "Sexual Orientation Aggravator Removal",
+    officialTitle:
+      "Create enhanced penalties for politically motivated offenses",
+    stance: "anti",
+    status: "in-committee",
+    statusLabel: "In Committee",
+    statusColor: "#f59e0b",
+    categories: ["civil-rights", "anti-trans"],
+    categoryLabels: ["Civil Rights", "Anti-Trans"],
+    description:
+      "Creates new aggravated-murder offenses for politically motivated violence and mandatory prison terms. Adds 'biological sex' as an aggravating factor while removing 'sexual orientation' from Ohio's existing aggravating-factor list — a net loss for LGBTQ+ protections.",
+    sponsors: "Rep. Jack K. Daniels (R-32), Rep. Josh Williams (R-44)",
+    lastAction: "Referred to House Criminal Justice Committee",
+    nextDate: "Awaiting committee hearing",
+    chamber: "house",
+    currentStep: 1,
+    pipelineDates: {},
+    url: "/issues/hb457",
+    legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb457",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb457/00_IN/pdf/",
+  },
+  {
     id: "hb262",
     bill: "HB 262",
     title: "Designate Natural Family Month",
@@ -311,8 +422,8 @@ const BILLS = [
     categoryLabels: ["Civil Rights"],
     description:
       "House companion to SB 70. Extends Ohio's civil rights protections to include sexual orientation and gender identity across employment, housing, and public accommodations.",
-    sponsors: "Rep. Bride Rose Sweeney (D-16), Rep. Brett Hillyer (R-37)",
-    lastAction: "Referred to House Civil Justice Committee",
+    sponsors: "Rep. Tristan Rader (D-13), Rep. Crystal Lett (D-11)",
+    lastAction: "Referred to House Judiciary Committee — March 5, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "house",
     currentStep: 1,
@@ -361,12 +472,12 @@ const BILLS = [
     categoryLabels: ["Healthcare", "Youth / Family"],
     description:
       "House companion to SB 71. Bans conversion therapy on minors by licensed professionals. Supported by the American Medical Association, American Psychological Association, and American Academy of Pediatrics.",
-    sponsors: "Rep. Bride Rose Sweeney (D-16)",
-    lastAction: "Introduced — May 20, 2025",
-    nextDate: "Awaiting committee assignment",
+    sponsors: "Rep. Karen Brownlee (D-28), Rep. Crystal Lett (D-11)",
+    lastAction: "Referred to House Health Committee — May 28, 2025",
+    nextDate: "Awaiting committee hearing",
     chamber: "house",
-    currentStep: 0,
-    pipelineDates: { 0: "May 20, 2025" },
+    currentStep: 1,
+    pipelineDates: { 0: "May 21, 2025", 1: "May 28, 2025" },
     url: "/issues/hb300",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb300",
     textUrl:
@@ -411,8 +522,8 @@ const BILLS = [
     categoryLabels: ["Youth / Family", "Civil Rights"],
     description:
       "Protects parents who affirm and support their LGBTQ+ children from state interference. Ensures affirming parenting decisions cannot be used as grounds for custody challenges or abuse allegations.",
-    sponsors: "Rep. Dontavius Jarrells (D-25), Rep. Ismail Mohamed (D-3)",
-    lastAction: "Referred to House Families, Aging, and Human Services Committee",
+    sponsors: "Rep. Karen Brownlee (D-28), Rep. Darnell Brewer (D-23)",
+    lastAction: "Referred to House Children and Human Services Committee — June 11, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "house",
     currentStep: 1,
@@ -421,6 +532,33 @@ const BILLS = [
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb327",
     textUrl:
       "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb327/00_IN/pdf/",
+  },
+
+  {
+    id: "hjr4",
+    bill: "HJR 4",
+    title: "Marriage Equality Act",
+    nickname: "Repeal Ohio's 2004 Same-Sex Marriage Ban",
+    officialTitle:
+      "Amend Article XV Section 11 of the Constitution of Ohio regarding marriage",
+    stance: "pro",
+    status: "in-committee",
+    statusLabel: "In Committee",
+    statusColor: "#22c55e",
+    categories: ["civil-rights"],
+    categoryLabels: ["Civil Rights"],
+    description:
+      "Constitutional amendment to repeal Ohio's dormant 2004 same-sex marriage ban and recognize the right to interracial marriage in the Ohio Constitution. Would let Ohio voters codify marriage equality independent of federal precedent. No committee hearings have been held to date.",
+    sponsors: "Rep. Eric Synenberg (D-22), Rep. Anita Somani (D-11)",
+    lastAction: "Referred to House Judiciary Committee — June 2025",
+    nextDate: "Awaiting committee hearing",
+    chamber: "house",
+    currentStep: 1,
+    pipelineDates: { 0: "Jun 3, 2025", 1: "Jun 2025" },
+    url: "/issues/hjr4",
+    legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hjr4",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hjr4/00_IN/pdf/",
   },
 
   /* ===== MIXED BILLS ===== */
@@ -439,11 +577,11 @@ const BILLS = [
     description:
       "Creates enhanced penalties for hate crimes based on race, religion, national origin, disability, and sexual orientation — but notably excludes gender identity, leaving transgender Ohioans without protection.",
     sponsors: "Rep. Brett Hillyer (R-37), Rep. Bride Rose Sweeney (D-16)",
-    lastAction: "Referred to House Criminal Justice Committee",
-    nextDate: "Awaiting committee hearing",
+    lastAction: "1st hearing in House Criminal Justice Committee — February 25, 2026",
+    nextDate: "Additional hearings expected",
     chamber: "house",
-    currentStep: 1,
-    pipelineDates: { 0: "May 27, 2025", 1: "Jun 4, 2025" },
+    currentStep: 2,
+    pipelineDates: { 0: "May 27, 2025", 1: "Jun 4, 2025", 2: "Feb 25, 2026" },
     url: "/issues/hb306",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb306",
     textUrl:
