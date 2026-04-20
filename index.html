@@ -171,6 +171,75 @@
         flex-wrap: wrap;
       }
 
+      .launch-countdown {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        margin: 0 auto 1.5rem;
+        max-width: 520px;
+      }
+      .countdown-unit {
+        flex: 1 1 0;
+        min-width: 88px;
+        padding: 1rem 0.75rem 0.85rem;
+        border-radius: 12px;
+        background: rgba(8, 21, 33, 0.75);
+        border: 1px solid rgba(182, 140, 255, 0.35);
+        box-shadow: 0 0 18px rgba(118, 80, 180, 0.12);
+        position: relative;
+        overflow: hidden;
+      }
+      .countdown-unit::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3px;
+        background: var(--pride-gradient);
+        opacity: 0.85;
+      }
+      .countdown-value {
+        display: block;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: clamp(1.75rem, 5vw, 2.5rem);
+        line-height: 1;
+        color: var(--text-white);
+        background: var(--pride-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 0.02em;
+        font-variant-numeric: tabular-nums;
+      }
+      .countdown-label {
+        display: block;
+        margin-top: 0.4rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-light);
+      }
+      .countdown-tick {
+        animation: countdownTick 0.55s ease-out;
+      }
+      @keyframes countdownTick {
+        0% { transform: translateY(-8px); opacity: 0.35; }
+        60% { transform: translateY(2px); opacity: 1; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .countdown-tick { animation: none; }
+      }
+      @media (max-width: 480px) {
+        .launch-countdown { gap: 0.5rem; }
+        .countdown-unit { min-width: 0; padding: 0.75rem 0.4rem 0.6rem; }
+        .countdown-label { font-size: 0.65rem; letter-spacing: 0.08em; }
+      }
+
       .cards-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -366,6 +435,26 @@
           <span>Ohio Statehouse</span>
           <span>Columbus, Ohio</span>
         </div>
+        <div
+          class="launch-countdown"
+          id="launchCountdown"
+          data-target="2026-05-22T12:00:00-04:00"
+          aria-label="Countdown to Ohio Pride PAC Launch Day"
+          aria-live="polite"
+        >
+          <div class="countdown-unit">
+            <span class="countdown-value" id="cdDays">--</span>
+            <span class="countdown-label">Days</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-value" id="cdHours">--</span>
+            <span class="countdown-label">Hours</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-value" id="cdMinutes">--</span>
+            <span class="countdown-label">Minutes</span>
+          </div>
+        </div>
         <p>
           We’re officially launching Ohio Pride PAC in public with our founding
           board, members, and allies from across the state. RSVP now and stand
@@ -526,6 +615,53 @@
         if (text)
           text.textContent =
             FOUNDING_MEMBER_COUNT + " of 1,969 Founding Members";
+      })();
+    </script>
+    <script>
+      (function () {
+        var root = document.getElementById("launchCountdown");
+        if (!root) return;
+        var target = new Date(root.getAttribute("data-target")).getTime();
+        if (isNaN(target)) return;
+
+        var daysEl = document.getElementById("cdDays");
+        var hoursEl = document.getElementById("cdHours");
+        var minutesEl = document.getElementById("cdMinutes");
+
+        function pad(n) { n = Math.max(0, n); return n < 10 ? "0" + n : "" + n; }
+
+        function setValue(el, next) {
+          if (!el) return;
+          if (el.textContent === next) return;
+          el.textContent = next;
+          el.classList.remove("countdown-tick");
+          void el.offsetWidth;
+          el.classList.add("countdown-tick");
+        }
+
+        function render() {
+          var diff = target - Date.now();
+          if (diff <= 0) {
+            setValue(daysEl, "0");
+            setValue(hoursEl, "00");
+            setValue(minutesEl, "00");
+            return false;
+          }
+          var totalMinutes = Math.floor(diff / 60000);
+          var days = Math.floor(totalMinutes / (60 * 24));
+          var hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+          var minutes = totalMinutes % 60;
+          setValue(daysEl, String(days));
+          setValue(hoursEl, pad(hours));
+          setValue(minutesEl, pad(minutes));
+          return true;
+        }
+
+        render();
+        var msToNextMinute = 60000 - (Date.now() % 60000);
+        setTimeout(function tick() {
+          if (render()) setTimeout(tick, 60000);
+        }, msToNextMinute);
       })();
     </script>
   </body>

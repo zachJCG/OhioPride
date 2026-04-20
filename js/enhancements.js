@@ -7,6 +7,58 @@
 (function() {
   'use strict';
 
+  // 0. PROGRESS PRIDE BANNER (animated)
+  // Injects an animated Progress Pride flag banner at the top of every page,
+  // and upgrades any existing .pride-stripe / .pride-banner to the same look.
+  function initPrideProgressBanner() {
+    var style = document.createElement('style');
+    style.textContent = `
+      :root {
+        --progress-pride-gradient: linear-gradient(90deg,
+          #000000 0%, #613915 5%, #73d7ee 10%, #ffafc8 15%, #ffffff 20%,
+          #e40303 28%, #ff8c00 38%, #ffed00 48%, #008026 60%, #004dff 72%, #750787 85%,
+          #e40303 100%);
+      }
+      @keyframes progressPrideShimmer {
+        0%   { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+      }
+      .progress-pride-banner {
+        height: 6px;
+        width: 100%;
+        background: var(--progress-pride-gradient);
+        background-size: 200% 100%;
+        animation: progressPrideShimmer 10s linear infinite;
+        display: block;
+        position: relative;
+        z-index: 2;
+      }
+      /* Upgrade any existing stripe/banner element to the animated progress flag */
+      .pride-stripe, .pride-banner {
+        background: var(--progress-pride-gradient) !important;
+        background-size: 200% 100% !important;
+        animation: progressPrideShimmer 10s linear infinite !important;
+        height: 6px !important;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .progress-pride-banner, .pride-stripe, .pride-banner {
+          animation: none !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // If a page already has a top-level pride stripe/banner, leave it in place
+    // (the CSS above will restyle it). Otherwise, insert one as the first body child.
+    var existing = document.querySelector('body > .pride-stripe, body > .pride-banner, body > .progress-pride-banner');
+    if (!existing && document.body) {
+      var banner = document.createElement('div');
+      banner.className = 'progress-pride-banner';
+      banner.setAttribute('aria-hidden', 'true');
+      document.body.insertBefore(banner, document.body.firstChild);
+    }
+  }
+
   // 1. SCROLL-REVEAL ANIMATIONS
   // Fade in + slide up elements as they enter the viewport
   function initScrollReveal() {
@@ -204,6 +256,7 @@
 
   // INIT
   document.addEventListener('DOMContentLoaded', function() {
+    initPrideProgressBanner();
     initSmoothLoad();
     initRainbowAnimation();
     initScrollReveal();
