@@ -174,20 +174,22 @@
       .launch-countdown {
         display: flex;
         justify-content: center;
-        gap: 0.75rem;
+        flex-wrap: wrap;
+        gap: 0.6rem;
         margin: 0 auto 1.5rem;
-        max-width: 520px;
+        max-width: 640px;
       }
       .countdown-unit {
         flex: 1 1 0;
-        min-width: 88px;
-        padding: 1rem 0.75rem 0.85rem;
+        min-width: 76px;
+        padding: 1rem 0.6rem 0.85rem;
         border-radius: 12px;
         background: rgba(8, 21, 33, 0.75);
         border: 1px solid rgba(182, 140, 255, 0.35);
         box-shadow: 0 0 18px rgba(118, 80, 180, 0.12);
         position: relative;
         overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
       .countdown-unit::after {
         content: "";
@@ -197,7 +199,16 @@
         bottom: 0;
         height: 3px;
         background: var(--pride-gradient);
+        background-size: 200% 100%;
         opacity: 0.85;
+        animation: countdownShimmer 6s linear infinite;
+      }
+      @keyframes countdownShimmer {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+      }
+      .countdown-unit-seconds {
+        box-shadow: 0 0 22px rgba(255, 105, 180, 0.28);
       }
       .countdown-value {
         display: block;
@@ -207,11 +218,17 @@
         line-height: 1;
         color: var(--text-white);
         background: var(--pride-gradient);
+        background-size: 200% 100%;
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
         letter-spacing: 0.02em;
         font-variant-numeric: tabular-nums;
+        animation: countdownHue 8s linear infinite;
+      }
+      @keyframes countdownHue {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
       }
       .countdown-label {
         display: block;
@@ -226,18 +243,38 @@
       .countdown-tick {
         animation: countdownTick 0.55s ease-out;
       }
+      .countdown-tick-fast {
+        animation: countdownTickFast 0.45s ease-out;
+      }
       @keyframes countdownTick {
-        0% { transform: translateY(-8px); opacity: 0.35; }
-        60% { transform: translateY(2px); opacity: 1; }
-        100% { transform: translateY(0); opacity: 1; }
+        0% { transform: translateY(-8px) scale(1.05); opacity: 0.35; }
+        60% { transform: translateY(2px) scale(1); opacity: 1; }
+        100% { transform: translateY(0) scale(1); opacity: 1; }
+      }
+      @keyframes countdownTickFast {
+        0% { transform: translateY(-4px) scale(1.12); opacity: 0.5; filter: drop-shadow(0 0 6px rgba(255, 150, 220, 0.7)); }
+        100% { transform: translateY(0) scale(1); opacity: 1; filter: none; }
+      }
+      .countdown-pulse {
+        animation: countdownPulse 1s ease-out;
+      }
+      @keyframes countdownPulse {
+        0% { box-shadow: 0 0 22px rgba(255, 105, 180, 0.28); }
+        40% { box-shadow: 0 0 34px rgba(118, 80, 180, 0.55); }
+        100% { box-shadow: 0 0 22px rgba(255, 105, 180, 0.28); }
       }
       @media (prefers-reduced-motion: reduce) {
-        .countdown-tick { animation: none; }
+        .countdown-tick,
+        .countdown-tick-fast,
+        .countdown-pulse,
+        .countdown-value,
+        .countdown-unit::after { animation: none; }
       }
       @media (max-width: 480px) {
-        .launch-countdown { gap: 0.5rem; }
-        .countdown-unit { min-width: 0; padding: 0.75rem 0.4rem 0.6rem; }
-        .countdown-label { font-size: 0.65rem; letter-spacing: 0.08em; }
+        .launch-countdown { gap: 0.4rem; }
+        .countdown-unit { min-width: 0; padding: 0.7rem 0.3rem 0.55rem; }
+        .countdown-value { font-size: clamp(1.4rem, 6vw, 2rem); }
+        .countdown-label { font-size: 0.6rem; letter-spacing: 0.06em; }
       }
 
       .cards-grid {
@@ -454,6 +491,10 @@
             <span class="countdown-value" id="cdMinutes">--</span>
             <span class="countdown-label">Minutes</span>
           </div>
+          <div class="countdown-unit countdown-unit-seconds">
+            <span class="countdown-value" id="cdSeconds">--</span>
+            <span class="countdown-label">Seconds</span>
+          </div>
         </div>
         <p>
           We’re officially launching Ohio Pride PAC in public with our founding
@@ -627,16 +668,26 @@
         var daysEl = document.getElementById("cdDays");
         var hoursEl = document.getElementById("cdHours");
         var minutesEl = document.getElementById("cdMinutes");
+        var secondsEl = document.getElementById("cdSeconds");
+        var secondsUnit = secondsEl ? secondsEl.parentNode : null;
 
         function pad(n) { n = Math.max(0, n); return n < 10 ? "0" + n : "" + n; }
 
-        function setValue(el, next) {
+        function setValue(el, next, tickClass) {
           if (!el) return;
           if (el.textContent === next) return;
           el.textContent = next;
-          el.classList.remove("countdown-tick");
+          var cls = tickClass || "countdown-tick";
+          el.classList.remove("countdown-tick", "countdown-tick-fast");
           void el.offsetWidth;
-          el.classList.add("countdown-tick");
+          el.classList.add(cls);
+        }
+
+        function pulseUnit(unit) {
+          if (!unit) return;
+          unit.classList.remove("countdown-pulse");
+          void unit.offsetWidth;
+          unit.classList.add("countdown-pulse");
         }
 
         function render() {
@@ -645,23 +696,30 @@
             setValue(daysEl, "0");
             setValue(hoursEl, "00");
             setValue(minutesEl, "00");
+            setValue(secondsEl, "00");
             return false;
           }
-          var totalMinutes = Math.floor(diff / 60000);
-          var days = Math.floor(totalMinutes / (60 * 24));
-          var hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-          var minutes = totalMinutes % 60;
+          var totalSeconds = Math.floor(diff / 1000);
+          var days = Math.floor(totalSeconds / 86400);
+          var hours = Math.floor((totalSeconds % 86400) / 3600);
+          var minutes = Math.floor((totalSeconds % 3600) / 60);
+          var seconds = totalSeconds % 60;
           setValue(daysEl, String(days));
           setValue(hoursEl, pad(hours));
           setValue(minutesEl, pad(minutes));
+          var prevSeconds = secondsEl ? secondsEl.textContent : "";
+          setValue(secondsEl, pad(seconds), "countdown-tick-fast");
+          if (seconds === 0 && prevSeconds !== "00" && prevSeconds !== "") {
+            pulseUnit(secondsUnit);
+          }
           return true;
         }
 
         render();
-        var msToNextMinute = 60000 - (Date.now() % 60000);
+        var msToNextSecond = 1000 - (Date.now() % 1000);
         setTimeout(function tick() {
-          if (render()) setTimeout(tick, 60000);
-        }, msToNextMinute);
+          if (render()) setTimeout(tick, 1000 - (Date.now() % 1000));
+        }, msToNextSecond);
       })();
     </script>
   </body>
