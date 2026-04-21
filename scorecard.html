@@ -104,6 +104,38 @@
       margin: 0 0 18px;
       max-width: 720px;
     }
+
+    /* Collapsible on mobile; the <summary> is only the toggle UI below 768px.
+       On desktop we hide the summary and keep the body expanded always. */
+    .scoring-explainer-details { display: block; }
+    .scoring-explainer-details > summary {
+      list-style: none;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      margin: 0 0 16px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-light-blue);
+      letter-spacing: 0.3px;
+    }
+    .scoring-explainer-details > summary::-webkit-details-marker { display: none; }
+    .scoring-explainer-details > summary::marker { display: none; content: ''; }
+    .scoring-summary-label { flex: 1; }
+    .scoring-summary-chevron {
+      transition: transform 0.25s ease;
+      color: rgba(255, 255, 255, 0.55);
+    }
+    .scoring-explainer-details[open] > summary .scoring-summary-chevron {
+      transform: rotate(180deg);
+    }
+    .scoring-explainer-details[open] > summary { background: rgba(255, 255, 255, 0.07); }
     .scoring-explainer-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -545,6 +577,17 @@
     }
 
     /* ── Responsive ── */
+    /* Desktop: no toggle needed — body stays expanded regardless of
+       the <details> open state. !important overrides the UA rule
+       `details:not([open]) > :not(summary) { display: none }`. */
+    @media (min-width: 768px) {
+      .scoring-explainer-details > .scoring-explainer-body { display: block !important; }
+    }
+
+    @media (max-width: 767px) {
+      .scoring-explainer-details > summary { display: flex; }
+    }
+
     @media (max-width: 768px) {
       .scoring-explainer-grid { grid-template-columns: 1fr; gap: 10px; }
       .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -624,30 +667,38 @@
         <h2 id="scoring-explainer-title">How we score</h2>
         <p>Every Ohio legislator gets a weighted 0&ndash;100 score across three inputs, then maps to a letter grade A+ through F.</p>
       </div>
-      <div class="scoring-explainer-grid">
-        <div class="scoring-step">
-          <div class="scoring-weight">50%</div>
-          <div class="scoring-step-body">
-            <h3>Floor Votes</h3>
-            <p>+1 for every pro-equality vote; &minus;1 for every anti-equality vote on the record.</p>
+      <details class="scoring-explainer-details">
+        <summary>
+          <span class="scoring-summary-label">See how each input is weighted</span>
+          <svg class="scoring-summary-chevron" width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <div class="scoring-explainer-body">
+          <div class="scoring-explainer-grid">
+            <div class="scoring-step">
+              <div class="scoring-weight">50%</div>
+              <div class="scoring-step-body">
+                <h3>Floor Votes</h3>
+                <p>+1 for every pro-equality vote; &minus;1 for every anti-equality vote on the record.</p>
+              </div>
+            </div>
+            <div class="scoring-step">
+              <div class="scoring-weight">30%</div>
+              <div class="scoring-step-body">
+                <h3>Sponsorship</h3>
+                <p>+3 primary / +2 co-sponsor of pro-equality bills; &minus;3 / &minus;2 for anti-equality bills.</p>
+              </div>
+            </div>
+            <div class="scoring-step">
+              <div class="scoring-weight">20%</div>
+              <div class="scoring-step-body">
+                <h3>Public Statements</h3>
+                <p>+1 to +3 for pro-LGBTQ+ advocacy; &minus;1 to &minus;3 for documented anti-LGBTQ+ rhetoric.</p>
+              </div>
+            </div>
           </div>
+          <a href="#scoring-methodology" class="scoring-more-link">See the full methodology and grade scale &rarr;</a>
         </div>
-        <div class="scoring-step">
-          <div class="scoring-weight">30%</div>
-          <div class="scoring-step-body">
-            <h3>Sponsorship</h3>
-            <p>+3 primary / +2 co-sponsor of pro-equality bills; &minus;3 / &minus;2 for anti-equality bills.</p>
-          </div>
-        </div>
-        <div class="scoring-step">
-          <div class="scoring-weight">20%</div>
-          <div class="scoring-step-body">
-            <h3>Public Statements</h3>
-            <p>+1 to +3 for pro-LGBTQ+ advocacy; &minus;1 to &minus;3 for documented anti-LGBTQ+ rhetoric.</p>
-          </div>
-        </div>
-      </div>
-      <a href="#scoring-methodology" class="scoring-more-link">See the full methodology and grade scale &rarr;</a>
+      </details>
     </div>
   </section>
 
