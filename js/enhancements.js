@@ -8,8 +8,9 @@
   'use strict';
 
   // 0. PROGRESS PRIDE BANNER (animated)
-  // Injects an animated Progress Pride flag banner at the top of every page,
-  // and upgrades any existing .pride-stripe / .pride-banner to the same look.
+  // Injects an animated Progress Pride flag banner immediately below the site
+  // header on every page, and upgrades any existing .pride-stripe /
+  // .pride-banner elements to the same animated look.
   function initPrideProgressBanner() {
     var style = document.createElement('style');
     style.textContent = `
@@ -18,27 +19,34 @@
           #000000 0%, #613915 5%, #73d7ee 10%, #ffafc8 15%, #ffffff 20%,
           #e40303 28%, #ff8c00 38%, #ffed00 48%, #008026 60%, #004dff 72%, #750787 85%,
           #e40303 100%);
+        --progress-pride-banner-height: 6px;
+        --progress-pride-banner-top: var(--nav-height, 72px);
       }
       @keyframes progressPrideShimmer {
         0%   { background-position: 0% 50%; }
         100% { background-position: 200% 50%; }
       }
       .progress-pride-banner {
-        height: 6px;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: var(--progress-pride-banner-top);
+        height: var(--progress-pride-banner-height);
         width: 100%;
         background: var(--progress-pride-gradient);
         background-size: 200% 100%;
         animation: progressPrideShimmer 10s linear infinite;
         display: block;
-        position: relative;
-        z-index: 2;
+        z-index: 999;
+        pointer-events: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
       }
       /* Upgrade any existing stripe/banner element to the animated progress flag */
       .pride-stripe, .pride-banner {
         background: var(--progress-pride-gradient) !important;
         background-size: 200% 100% !important;
         animation: progressPrideShimmer 10s linear infinite !important;
-        height: 6px !important;
+        height: var(--progress-pride-banner-height) !important;
       }
       @media (prefers-reduced-motion: reduce) {
         .progress-pride-banner, .pride-stripe, .pride-banner {
@@ -48,15 +56,39 @@
     `;
     document.head.appendChild(style);
 
-    // If a page already has a top-level pride stripe/banner, leave it in place
-    // (the CSS above will restyle it). Otherwise, insert one as the first body child.
-    var existing = document.querySelector('body > .pride-stripe, body > .pride-banner, body > .progress-pride-banner');
-    if (!existing && document.body) {
-      var banner = document.createElement('div');
-      banner.className = 'progress-pride-banner';
-      banner.setAttribute('aria-hidden', 'true');
-      document.body.insertBefore(banner, document.body.firstChild);
+    // Drop any legacy top-of-body stripe/banner that page templates may have
+    // injected above the nav, so we don't end up with two bars.
+    var legacy = document.querySelectorAll(
+      'body > .pride-stripe, body > .pride-banner, body > .progress-pride-banner'
+    );
+    for (var i = 0; i < legacy.length; i++) {
+      legacy[i].parentNode.removeChild(legacy[i]);
     }
+
+    if (!document.body) return;
+    var banner = document.createElement('div');
+    banner.className = 'progress-pride-banner';
+    banner.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(banner);
+
+    // Position the banner directly below whatever nav/header this page uses
+    // (main site uses `.nav`, launch-day uses a bare `<nav>` with its own height).
+    function positionUnderHeader() {
+      var header = document.querySelector('.nav, nav, header');
+      if (!header) return;
+      var h = header.offsetHeight;
+      if (h > 0) {
+        document.documentElement.style.setProperty(
+          '--progress-pride-banner-top', h + 'px'
+        );
+      }
+    }
+
+    positionUnderHeader();
+    window.addEventListener('resize', positionUnderHeader);
+    // Re-measure once layout/fonts settle.
+    window.setTimeout(positionUnderHeader, 100);
+    window.setTimeout(positionUnderHeader, 500);
   }
 
   // 1. SCROLL-REVEAL ANIMATIONS
