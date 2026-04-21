@@ -70,6 +70,97 @@
       color: rgba(255, 255, 255, 0.5);
     }
 
+    .stat-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.45);
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+      min-height: 12px;
+    }
+
+    /* ── How We Score Explainer ── */
+    .scoring-explainer {
+      margin: 36px 0 8px;
+      padding: 24px;
+      background: rgba(19, 45, 68, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+    }
+    .scoring-explainer-head h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin: 0 0 6px;
+      letter-spacing: 0.2px;
+    }
+    .scoring-explainer-head p {
+      font-family: 'Roboto Slab', serif;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 18px;
+      max-width: 720px;
+    }
+    .scoring-explainer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .scoring-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+    }
+    .scoring-weight {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(0, 77, 255, 0.18), rgba(115, 215, 238, 0.2));
+      color: var(--text-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+    }
+    .scoring-step-body h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin: 2px 0 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .scoring-step-body p {
+      font-family: 'Roboto Slab', serif;
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 0;
+    }
+    .scoring-more-link {
+      display: inline-block;
+      margin-top: 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: var(--color-light-blue);
+      text-decoration: none;
+    }
+    .scoring-more-link:hover { text-decoration: underline; }
+
     /* ── Updated Badge ── */
     .updated-badge {
       display: inline-flex;
@@ -455,6 +546,7 @@
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
+      .scoring-explainer-grid { grid-template-columns: 1fr; gap: 10px; }
       .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; }
       .stat-card .stat-number { font-size: 28px; }
       .controls-inner { gap: 8px; }
@@ -506,21 +598,56 @@
   <section class="container" style="position: relative; z-index: 2;">
     <div class="stats-bar" id="stats-bar">
       <div class="stat-card">
-        <div class="stat-number stat-num" data-count="132" id="stat-total">0</div>
-        <div class="stat-label">Legislators Scored</div>
+        <div class="stat-number stat-num" data-count="132" id="stat-total">132</div>
+        <div class="stat-label" id="stat-total-label">Legislators Scored</div>
+        <div class="stat-sub" id="stat-total-sub" aria-hidden="true"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-number stat-num" data-count="0" id="stat-champions" style="color: var(--text-success);">0</div>
+        <div class="stat-number stat-num" data-count="8" id="stat-champions" style="color: var(--text-success);">8</div>
         <div class="stat-label">Champions (A+)</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number stat-num" data-count="0" id="stat-hostile" style="color: var(--text-danger);">0</div>
+        <div class="stat-number stat-num" data-count="14" id="stat-hostile" style="color: var(--text-danger);">14</div>
         <div class="stat-label">Hostile (F)</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number stat-num" data-count="0" id="stat-bills">0</div>
-        <div class="stat-label">Bills Scored</div>
+        <div class="stat-number stat-num" data-count="22" id="stat-bills">22</div>
+        <div class="stat-label">Bills Tracked</div>
       </div>
+    </div>
+  </section>
+
+  <!-- How we score (brief explainer) -->
+  <section class="container">
+    <div class="scoring-explainer" aria-labelledby="scoring-explainer-title">
+      <div class="scoring-explainer-head">
+        <h2 id="scoring-explainer-title">How we score</h2>
+        <p>Every Ohio legislator gets a weighted 0&ndash;100 score across three inputs, then maps to a letter grade A+ through F.</p>
+      </div>
+      <div class="scoring-explainer-grid">
+        <div class="scoring-step">
+          <div class="scoring-weight">50%</div>
+          <div class="scoring-step-body">
+            <h3>Floor Votes</h3>
+            <p>+1 for every pro-equality vote; &minus;1 for every anti-equality vote on the record.</p>
+          </div>
+        </div>
+        <div class="scoring-step">
+          <div class="scoring-weight">30%</div>
+          <div class="scoring-step-body">
+            <h3>Sponsorship</h3>
+            <p>+3 primary / +2 co-sponsor of pro-equality bills; &minus;3 / &minus;2 for anti-equality bills.</p>
+          </div>
+        </div>
+        <div class="scoring-step">
+          <div class="scoring-weight">20%</div>
+          <div class="scoring-step-body">
+            <h3>Public Statements</h3>
+            <p>+1 to +3 for pro-LGBTQ+ advocacy; &minus;1 to &minus;3 for documented anti-LGBTQ+ rhetoric.</p>
+          </div>
+        </div>
+      </div>
+      <a href="#scoring-methodology" class="scoring-more-link">See the full methodology and grade scale &rarr;</a>
     </div>
   </section>
 
@@ -579,7 +706,7 @@
   </section>
 
   <!-- Methodology -->
-  <section class="methodology">
+  <section class="methodology" id="scoring-methodology">
     <div class="container">
       <div class="methodology-toggle" id="methodology-toggle">
         <h3>Scoring Methodology</h3>
@@ -614,6 +741,7 @@
   <div id="site-footer"></div>
 
   <script src="/js/scorecard-data.js" defer></script>
+  <script src="/js/bill-data.js" defer></script>
   <script src="/js/main.js" defer></script>
   <script src="/js/enhancements.js" defer></script>
   <script src="/js/site-template.js" defer></script>
@@ -640,48 +768,36 @@
         });
       });
 
-      /* ── Compute summary stats ── */
-      var champCount = 0;
-      var hostileCount = 0;
-      allMembers.forEach(function(m) {
-        if (m.grade.grade === 'A+') champCount++;
-        if (m.grade.grade === 'F') hostileCount++;
-      });
+      /* ── Bill universe ── */
+      // Prefer the main legislative tracker's bill list so the scorecard's
+      // "Bills Tracked" matches what we publish on /issues. Fall back to the
+      // in-scorecard reference list if bill-data.js isn't loaded.
+      var trackerBills = (typeof BILLS !== 'undefined' && Array.isArray(BILLS)) ? BILLS : [];
+      var totalBillsTracked = trackerBills.length || SCORED_BILLS.length;
 
-      document.getElementById('stat-total').setAttribute('data-count', allMembers.length);
-      document.getElementById('stat-champions').setAttribute('data-count', champCount);
-      document.getElementById('stat-hostile').setAttribute('data-count', hostileCount);
-      document.getElementById('stat-bills').setAttribute('data-count', SCORED_BILLS.length);
+      /* ── Compute overall stats for the full chamber (used as baseline) ── */
+      var overallChampCount = allMembers.filter(function(m) { return m.grade.grade === 'A+'; }).length;
+      var overallHostileCount = allMembers.filter(function(m) { return m.grade.grade === 'F'; }).length;
+
+      /* Seed data-count + textContent with accurate baselines so the stats
+         render correctly on first paint, even if JS counter animation never
+         runs. main.js's IntersectionObserver owns any on-scroll animation. */
+      var statTotal = document.getElementById('stat-total');
+      var statChamps = document.getElementById('stat-champions');
+      var statHostile = document.getElementById('stat-hostile');
+      var statBills = document.getElementById('stat-bills');
+      function seedStat(el, n) {
+        el.setAttribute('data-count', n);
+        el.textContent = n;
+      }
+      seedStat(statTotal, allMembers.length);
+      seedStat(statChamps, overallChampCount);
+      seedStat(statHostile, overallHostileCount);
+      seedStat(statBills, totalBillsTracked);
 
       /* ── Updated badge ── */
       document.getElementById('updated-text').textContent =
         'Last updated ' + SCORECARD_UPDATED.date + ' at ' + SCORECARD_UPDATED.time;
-
-      /* ── Animate stat counters on scroll ── */
-      var statsAnimated = false;
-      function animateCounters() {
-        if (statsAnimated) return;
-        var bar = document.getElementById('stats-bar');
-        var rect = bar.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.9) {
-          statsAnimated = true;
-          var nums = bar.querySelectorAll('.stat-num[data-count]');
-          nums.forEach(function(el) {
-            var target = parseInt(el.getAttribute('data-count'), 10);
-            var duration = 1200;
-            var start = performance.now();
-            function tick(now) {
-              var progress = Math.min((now - start) / duration, 1);
-              var ease = 1 - Math.pow(1 - progress, 3);
-              el.textContent = Math.round(ease * target);
-              if (progress < 1) requestAnimationFrame(tick);
-            }
-            requestAnimationFrame(tick);
-          });
-        }
-      }
-      window.addEventListener('scroll', animateCounters);
-      animateCounters();
 
       /* ── Grade table ── */
       var gtHtml = '<thead><tr><th>Grade</th><th>Label</th><th>Score Range</th></tr></thead><tbody>';
@@ -780,6 +896,43 @@
       var filters = { search: '', chamber: 'all', party: 'all', grade: 'all' };
       var sortMode = 'score-desc';
 
+      function filtersActive() {
+        return filters.chamber !== 'all' || filters.party !== 'all' ||
+               filters.grade !== 'all' || !!filters.search;
+      }
+
+      function updateStats(filtered) {
+        /* Legislators Scored — reflect the current filter */
+        statTotal.textContent = filtered.length;
+        statTotal.setAttribute('data-count', filtered.length);
+
+        /* A+ and F counts — reflect the current filter */
+        var fChamps = 0, fHostile = 0;
+        filtered.forEach(function(m) {
+          if (m.grade.grade === 'A+') fChamps++;
+          if (m.grade.grade === 'F') fHostile++;
+        });
+        statChamps.textContent = fChamps;
+        statChamps.setAttribute('data-count', fChamps);
+        statHostile.textContent = fHostile;
+        statHostile.setAttribute('data-count', fHostile);
+
+        /* Bills Tracked is a constant scope figure — never changes with legislator filters */
+        statBills.textContent = totalBillsTracked;
+        statBills.setAttribute('data-count', totalBillsTracked);
+
+        /* Clarify the "Legislators Scored" label when a filter is applied */
+        var totalSub = document.getElementById('stat-total-sub');
+        var totalLabel = document.getElementById('stat-total-label');
+        if (filtersActive() && filtered.length !== allMembers.length) {
+          totalLabel.textContent = 'Legislators Shown';
+          if (totalSub) totalSub.textContent = 'of ' + allMembers.length + ' total';
+        } else {
+          totalLabel.textContent = 'Legislators Scored';
+          if (totalSub) totalSub.textContent = '';
+        }
+      }
+
       function applyFilters() {
         var filtered = allMembers.filter(function(m) {
           if (filters.chamber !== 'all' && m.chamber !== filters.chamber) return false;
@@ -809,6 +962,7 @@
         });
 
         renderCards(filtered);
+        updateStats(filtered);
       }
 
       /* Pill groups */
