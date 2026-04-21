@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Title
-  document.title = bill.bill + " — " + bill.title + " | Ohio Pride PAC";
+  document.title = bill.bill + " — " + bill.title + " | Ohio Pride";
   document.getElementById("billNumber").textContent = bill.bill;
   document.getElementById("billTitle").textContent = bill.title;
   document.getElementById("billNickname").textContent = bill.nickname;
