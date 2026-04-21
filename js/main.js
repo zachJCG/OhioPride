@@ -118,18 +118,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* --- Animated Number Counter --- */
   function animateCounter(el, target, duration) {
-    var start = 0;
     var startTime = null;
+    var format = el.dataset.format === "plain"
+      ? function (n) { return String(n); }
+      : function (n) { return n.toLocaleString(); };
     function step(timestamp) {
       if (!startTime) startTime = timestamp;
       var progress = Math.min((timestamp - startTime) / duration, 1);
       var eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
       var current = Math.floor(eased * target);
-      el.textContent = current.toLocaleString();
+      el.textContent = format(current);
       if (progress < 1) {
         requestAnimationFrame(step);
       } else {
-        el.textContent = target.toLocaleString();
+        el.textContent = format(target);
       }
     }
     requestAnimationFrame(step);
