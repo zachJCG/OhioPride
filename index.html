@@ -438,11 +438,27 @@
         justify-content: center;
         flex-wrap: wrap;
       }
-      @media (max-width: 600px) {
-        .scorecard-grades { grid-template-columns: repeat(6, 1fr); gap: 0.3rem; }
-        .scorecard-grade { padding: 0.5rem 0.1rem; }
-        .scorecard-grade .grade-letter { font-size: 0.95rem; }
-        .scorecard-grade .grade-label { font-size: 0.55rem; }
+      /* Keep labels on one line so grade cells stay visually balanced. */
+      .scorecard-grade .grade-label { white-space: nowrap; }
+
+      @media (max-width: 700px) {
+        .scorecard-callout { padding: 0 1rem; }
+        .scorecard-card { padding: 1.5rem 1.25rem; }
+        /* 2 rows × 3 cells gives every label room to breathe instead of
+           squeezing six cells into a viewport where "F" falls off the edge. */
+        .scorecard-grades {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0.5rem;
+          max-width: 360px;
+        }
+        .scorecard-grade { padding: 0.7rem 0.25rem; }
+        .scorecard-grade .grade-letter { font-size: 1.05rem; }
+        .scorecard-grade .grade-label { font-size: 0.6rem; letter-spacing: 0.06em; }
+      }
+      @media (max-width: 380px) {
+        .scorecard-grades { gap: 0.35rem; }
+        .scorecard-grade { padding: 0.55rem 0.2rem; }
+        .scorecard-grade .grade-label { font-size: 0.55rem; letter-spacing: 0.04em; }
       }
 
       .donate-cta-card {
