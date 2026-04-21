@@ -31,6 +31,11 @@
   status = 200
 
 [[redirects]]
+  from = "/scorecard"
+  to = "/scorecard.html"
+  status = 200
+
+[[redirects]]
   from = "/donate"
   to = "/donate.html"
   status = 200
