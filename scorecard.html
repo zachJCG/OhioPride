@@ -431,7 +431,7 @@
       transition: max-height 0.4s ease, padding 0.3s ease;
     }
     .leg-card.expanded .card-expanded {
-      max-height: 600px;
+      max-height: 900px;
       padding-top: 20px;
     }
     .card-expanded-inner {
@@ -476,6 +476,78 @@
     }
     .bill-tag.pro { background: rgba(74, 222, 128, 0.12); color: var(--text-success); border: 1px solid rgba(74, 222, 128, 0.2); }
     .bill-tag.anti { background: rgba(255, 107, 107, 0.12); color: var(--text-danger); border: 1px solid rgba(255, 107, 107, 0.2); }
+
+    /* ── Voting Record block (expanded card) ── */
+    .voting-record {
+      margin-top: 16px;
+    }
+    .voting-record-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .voting-record ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .voting-record li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+    }
+    .voting-record .vr-bill {
+      color: var(--text-white);
+      font-weight: 600;
+      text-decoration: none;
+      min-width: 72px;
+    }
+    .voting-record a.vr-bill:hover { text-decoration: underline; }
+    .voting-record .vr-title {
+      color: rgba(255, 255, 255, 0.55);
+      font-weight: 500;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .voting-record .vr-chip {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .vr-chip.for-equality {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--text-success);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+    .vr-chip.against-equality {
+      background: rgba(255, 107, 107, 0.15);
+      color: var(--text-danger);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+    }
+    .vr-chip.absent {
+      background: rgba(148, 163, 184, 0.15);
+      color: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    @media (max-width: 480px) {
+      .voting-record .vr-title { display: none; }
+    }
 
     /* ── Methodology ── */
     .methodology {
@@ -793,6 +865,7 @@
 
   <script src="/js/scorecard-data.js" defer></script>
   <script src="/js/bill-data.js" defer></script>
+  <script src="/js/voting-records.js" defer></script>
   <script src="/js/main.js" defer></script>
   <script src="/js/enhancements.js" defer></script>
   <script src="/js/site-template.js" defer></script>
@@ -897,6 +970,39 @@
             billsHtml += '</div>';
           }
 
+          /* Voting record: one row per tracked bill the member has a
+             recorded vote on. Each row shows the bill label, short title,
+             and a chip indicating whether the vote aligned with the
+             equality position. Empty string when no votes exist. */
+          var votingHtml = '';
+          if (typeof getMemberVoteSummary === 'function') {
+            var summary = getMemberVoteSummary(m, m.chamber);
+            if (summary.length > 0) {
+              votingHtml = '<div class="voting-record">' +
+                '<div class="voting-record-label">Voting Record (Tracked Bills)</div>' +
+                '<ul>';
+              summary.forEach(function(entry) {
+                var chips = entry.rollCalls.map(function(rc) {
+                  var cls = classifyVote(rc.vote, rc.stance);
+                  var text = cls === 'absent'
+                    ? 'Not Voting'
+                    : (cls === 'for-equality' ? 'Voted For Equality' : 'Voted Against Equality');
+                  return '<span class="vr-chip ' + cls + '" title="' + rc.label + ' — ' + rc.date + '">' + text + '</span>';
+                }).join(' ');
+                var billLabel = entry.url
+                  ? '<a class="vr-bill" href="' + entry.url + '">' + entry.bill + '</a>'
+                  : '<span class="vr-bill">' + entry.bill + '</span>';
+                votingHtml +=
+                  '<li>' +
+                    billLabel +
+                    '<span class="vr-title">' + (entry.title || '') + '</span>' +
+                    chips +
+                  '</li>';
+              });
+              votingHtml += '</ul></div>';
+            }
+          }
+
           html += '<div class="leg-card' + gradeClass + '" data-idx="' + idx + '">' +
             '<div class="card-collapsed">' +
               '<div class="grade-badge" style="background:' + m.grade.color + '">' + m.grade.grade + '</div>' +
@@ -925,6 +1031,7 @@
                 '</div>' +
                 '<div class="card-notes">' + m.notes + '</div>' +
                 billsHtml +
+                votingHtml +
               '</div>' +
             '</div>' +
           '</div>';
