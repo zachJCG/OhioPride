@@ -1,11 +1,13 @@
 /* ==========================================================================
    OHIO PRIDE PAC — Shared Site Header & Footer Template
    ------------------------------------------------------
-   This file is the single source of truth for the site-wide header (nav +
-   pride banner) and footer. To update navigation links, footer columns, or
-   leadership listings across the ENTIRE site, edit the HTML constants
-   below — every page that includes this script will pick up the change
-   automatically.
+   This file is the single source of truth for the site-wide nav and
+   footer. To update navigation links, footer columns, or leadership
+   listings across the ENTIRE site, edit the HTML constants below — every
+   page that includes this script will pick up the change automatically.
+
+   The animated Progress-Pride banner that sits immediately below the nav
+   is owned by /js/enhancements.js, not this file.
 
    Pages opt in by:
      1. Linking the stylesheet:
@@ -22,10 +24,11 @@
   'use strict';
 
   // -------------------------------------------------------------------------
-  // HEADER (pride banner + primary nav)
+  // HEADER (primary nav)
+  // The animated pride-flag banner is injected by /js/enhancements.js and
+  // positioned immediately BELOW the nav, so we do not render one here.
   // -------------------------------------------------------------------------
   var HEADER_HTML = [
-    '<div class="ohp-pride-banner" aria-hidden="true"></div>',
     '<nav class="ohp-nav" aria-label="Primary">',
     '  <div class="ohp-nav-inner">',
     '    <a href="/" class="ohp-nav-logo" aria-label="Ohio Pride PAC home">',
@@ -39,7 +42,7 @@
     '      <li><a href="/about">About</a></li>',
     '      <li><a href="/founding-members">Founding Members</a></li>',
     '      <li><a href="/contact">Contact</a></li>',
-    '      <li><a href="/donate">Donate</a></li>',
+    '      <li><a href="/donate" class="ohp-btn-donate">Donate</a></li>',
     '    </ul>',
     '  </div>',
     '</nav>'
@@ -94,11 +97,16 @@
   // -------------------------------------------------------------------------
   // Injection + behavior wiring
   // -------------------------------------------------------------------------
+  // We replace the placeholder element entirely (outerHTML) rather than
+  // populating it with innerHTML. If the placeholder stays in the tree as a
+  // short-height wrapper, it becomes the containing block for the sticky
+  // <nav> inside it — and the nav unsticks as soon as that wrapper scrolls
+  // out of view. Replacing the placeholder makes the <nav> a direct child of
+  // <body>, so sticky positioning works for the full length of the page.
   function injectInto(id, html) {
     var target = document.getElementById(id);
-    if (!target) return null;
-    target.innerHTML = html;
-    return target;
+    if (!target) return;
+    target.outerHTML = html;
   }
 
   function markActiveLink() {

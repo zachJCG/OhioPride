@@ -17,22 +17,13 @@
   --ohp-accent: #73d7ee;
   --ohp-border: rgba(255, 255, 255, 0.08);
   --ohp-rainbow: linear-gradient(90deg, #e40303 0%, #ff8c00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%, #e40303 100%);
-  --ohp-pride-stripe: linear-gradient(90deg, #000000, #613915, #73d7ee, #ffafc8, #e40303, #ff8c00, #ffed00, #008026, #004dff, #750787, #000000, #613915, #73d7ee, #ffafc8, #e40303, #ff8c00, #ffed00, #008026, #004dff, #750787);
   --ohp-transition: all 0.3s ease;
 }
 
-@keyframes ohpPrideShimmer {
-  0%   { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-/* Pride banner — thin rainbow strip at the very top of the page */
-.ohp-pride-banner {
-  height: 5px;
-  background: var(--ohp-pride-stripe);
-  background-size: 200% 100%;
-  animation: ohpPrideShimmer 8s linear infinite;
-}
+/* The animated Progress-Pride banner is owned by /js/enhancements.js, which
+   injects a single fixed-position bar immediately below whatever nav/header
+   the current page is using. We intentionally do NOT render a banner from
+   this template to avoid stacking two bars above the header. */
 
 /* ------------------------------- Navigation ------------------------------- */
 .ohp-nav {
@@ -130,6 +121,55 @@
   }
   .ohp-menu-toggle {
     display: block;
+  }
+}
+
+/* Donate call-to-action in the nav — animated rainbow border. The mask trick
+   lets the rainbow gradient show only as a border stroke around transparent
+   content, and the slow @keyframes shifts the gradient for a subtle shimmer. */
+@keyframes ohpRainbowSweep {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.ohp-nav-links a.ohp-btn-donate {
+  position: relative;
+  display: inline-block;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  color: var(--ohp-text-white);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  isolation: isolate;
+}
+.ohp-nav-links a.ohp-btn-donate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: var(--ohp-rainbow);
+  background-size: 200% 200%;
+  animation: ohpRainbowSweep 5s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  z-index: -1;
+}
+.ohp-nav-links a.ohp-btn-donate:hover,
+.ohp-nav-links a.ohp-btn-donate:focus-visible {
+  color: var(--ohp-text-white);
+}
+.ohp-nav-links a.ohp-btn-donate:hover::before,
+.ohp-nav-links a.ohp-btn-donate:focus-visible::before {
+  animation-duration: 2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ohp-nav-links a.ohp-btn-donate::before {
+    animation: none;
   }
 }
 
