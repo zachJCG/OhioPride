@@ -375,6 +375,76 @@
         margin-top: 2rem;
       }
 
+      .scorecard-callout {
+        max-width: 900px;
+        margin: 0 auto 1rem;
+        padding: 0 2rem;
+      }
+      .scorecard-card {
+        border: 1px solid rgba(115, 215, 238, 0.35);
+        background: linear-gradient(135deg, rgba(19, 45, 68, 0.92), rgba(12, 34, 55, 0.9));
+        border-radius: 14px;
+        padding: 2rem;
+        box-shadow: 0 0 24px rgba(0, 77, 255, 0.12);
+      }
+      .scorecard-card .section-label { margin-bottom: 0.75rem; }
+      .scorecard-card h2 {
+        font-family: "Montserrat", sans-serif;
+        color: var(--text-white);
+        margin-bottom: 0.75rem;
+        text-align: center;
+      }
+      .scorecard-card > p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        max-width: 640px;
+        margin: 0 auto 1.5rem;
+        line-height: 1.7;
+        text-align: center;
+      }
+      .scorecard-grades {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0.5rem;
+        margin: 0 auto 1.5rem;
+        max-width: 520px;
+      }
+      .scorecard-grade {
+        text-align: center;
+        padding: 0.6rem 0.2rem;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .scorecard-grade .grade-letter {
+        display: block;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 1.1rem;
+        line-height: 1;
+      }
+      .scorecard-grade .grade-label {
+        display: block;
+        margin-top: 0.3rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-light);
+      }
+      .scorecard-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      @media (max-width: 600px) {
+        .scorecard-grades { grid-template-columns: repeat(6, 1fr); gap: 0.3rem; }
+        .scorecard-grade { padding: 0.5rem 0.1rem; }
+        .scorecard-grade .grade-letter { font-size: 0.95rem; }
+        .scorecard-grade .grade-label { font-size: 0.55rem; }
+      }
+
       .donate-cta-card {
         background: rgba(19, 45, 68, 0.5);
         border: 1px solid var(--dark-bg-light, #1a3a52);
@@ -501,10 +571,11 @@
             <div class="card-icon">&#128218;</div>
             <h3>Educate Voters</h3>
             <p>
-              We inform LGBTQ+ Ohioans and allies about who's running, what's at
-              stake, and how anti-equality legislation directly affects their
-              lives and communities.
+              We score every Ohio legislator on their LGBTQ+ equality record and
+              publish plain-language guides, so voters know who's protecting
+              equality and who's voting against it.
             </p>
+            <a href="/scorecard" class="card-link">View the Scorecard →</a>
           </div>
           <div class="wwd-card">
             <div class="card-icon">⚖️</div>
@@ -516,6 +587,31 @@
             </p>
             <a href="/issues" class="card-link">View the Issue Tracker →</a>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scorecard-callout">
+      <div class="scorecard-card reveal">
+        <div class="section-label section-label-light" style="text-align: center;">Know Where They Stand</div>
+        <h2>Every Ohio Legislator, Graded on Equality</h2>
+        <p>
+          We score all 132 members of the Ohio General Assembly on their
+          LGBTQ+ voting records, bill sponsorships, and public statements.
+          Find your state senator and representative, see their grade, and
+          share it with your community.
+        </p>
+        <div class="scorecard-grades" aria-hidden="true">
+          <div class="scorecard-grade"><span class="grade-letter" style="color:#16a34a">A+</span><span class="grade-label">Champion</span></div>
+          <div class="scorecard-grade"><span class="grade-letter" style="color:#22c55e">A</span><span class="grade-label">Strong Ally</span></div>
+          <div class="scorecard-grade"><span class="grade-letter" style="color:#84cc16">B</span><span class="grade-label">Supportive</span></div>
+          <div class="scorecard-grade"><span class="grade-letter" style="color:#eab308">C</span><span class="grade-label">Mixed</span></div>
+          <div class="scorecard-grade"><span class="grade-letter" style="color:#f97316">D</span><span class="grade-label">Unfriendly</span></div>
+          <div class="scorecard-grade"><span class="grade-letter" style="color:#dc2626">F</span><span class="grade-label">Hostile</span></div>
+        </div>
+        <div class="scorecard-actions">
+          <a href="/scorecard" class="btn btn-primary">See the Scorecard</a>
+          <a href="/issues" class="btn btn-outline">Track the Bills</a>
         </div>
       </div>
     </section>
