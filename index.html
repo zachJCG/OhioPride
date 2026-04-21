@@ -384,6 +384,68 @@
         max-width: 600px;
         margin: 0 auto;
       }
+
+      .scorecard-cta-card {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem;
+        border-radius: 14px;
+        border: 1px solid rgba(115, 215, 238, 0.25);
+        background: linear-gradient(135deg, rgba(19, 45, 68, 0.92), rgba(10, 25, 41, 0.85));
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 2rem;
+        align-items: center;
+      }
+      .scorecard-cta-card h2 {
+        font-family: "Montserrat", sans-serif;
+        color: var(--text-white);
+        font-size: 1.75rem;
+        margin-bottom: 0.75rem;
+      }
+      .scorecard-cta-card p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        line-height: 1.7;
+        margin-bottom: 1.25rem;
+      }
+      .scorecard-cta-card .section-label {
+        margin-bottom: 0.5rem;
+      }
+      .scorecard-preview {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      .scorecard-preview .preview-tile {
+        padding: 1rem 0.75rem;
+        border-radius: 10px;
+        background: rgba(8, 21, 33, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+      }
+      .scorecard-preview .preview-grade {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 1.75rem;
+        line-height: 1;
+        margin-bottom: 0.35rem;
+      }
+      .scorecard-preview .preview-label {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-light);
+      }
+      @media (max-width: 768px) {
+        .scorecard-cta-card {
+          grid-template-columns: 1fr;
+          padding: 2rem 1.5rem;
+        }
+      }
       .donate-cta-card h2 {
         font-family: "Montserrat", sans-serif;
         color: var(--text-white);
@@ -515,6 +577,41 @@
               pro-equality policy.
             </p>
             <a href="/issues" class="card-link">View the Issue Tracker →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="scorecard-cta-card reveal">
+          <div>
+            <p class="section-label section-label-light">New · Legislative Scorecard</p>
+            <h2>Know Where Your Legislators Stand</h2>
+            <p>
+              Every Ohio House and Senate member scored on their LGBTQ+ equality
+              record &mdash; floor votes, bill sponsorship, and public statements.
+              Search by name or district, filter by grade, and see the receipts.
+            </p>
+            <a href="/scorecard" class="btn btn-primary">View the Scorecard</a>
+          </div>
+          <div class="scorecard-preview" aria-hidden="true">
+            <div class="preview-tile">
+              <div class="preview-grade" style="color: #22c55e;">A+</div>
+              <div class="preview-label">Champion</div>
+            </div>
+            <div class="preview-tile">
+              <div class="preview-grade" style="color: #84cc16;">B</div>
+              <div class="preview-label">Supportive</div>
+            </div>
+            <div class="preview-tile">
+              <div class="preview-grade" style="color: #f97316;">D</div>
+              <div class="preview-label">Unfriendly</div>
+            </div>
+            <div class="preview-tile">
+              <div class="preview-grade" style="color: #dc2626;">F</div>
+              <div class="preview-label">Hostile</div>
+            </div>
           </div>
         </div>
       </div>

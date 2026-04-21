@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legislative Scorecard | Ohio Pride</title>
+  <meta name="description" content="Every Ohio legislator scored on their LGBTQ+ equality record: floor votes, bill sponsorship, and public statements. Know where your legislators stand." />
+  <link rel="canonical" href="https://www.ohiopride.org/scorecard" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Legislative Scorecard | Ohio Pride" />
+  <meta property="og:description" content="Every Ohio legislator scored on their LGBTQ+ equality record: floor votes, bill sponsorship, and public statements." />
+  <meta property="og:url" content="https://www.ohiopride.org/scorecard" />
+  <meta property="og:site_name" content="Ohio Pride" />
+  <meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Legislative Scorecard | Ohio Pride" />
+  <meta name="twitter:description" content="Every Ohio legislator scored on their LGBTQ+ equality record: floor votes, bill sponsorship, and public statements." />
+  <meta name="twitter:image" content="https://ohiopride.org/assets/social/og-image.png" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+  <meta name="theme-color" content="#0F2233" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto+Slab:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/site-template.css" />
+
+  <style>
+    /* ── Summary Stats ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: -40px;
+      position: relative;
+      z-index: 2;
+    }
+    .stat-card {
+      background: rgba(19, 45, 68, 0.5);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .stat-card .stat-number {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-card .stat-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ── Updated Badge ── */
+    .updated-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.65);
+      letter-spacing: 0.5px;
+      margin-top: 20px;
+    }
+    .updated-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-success);
+      display: inline-block;
+      box-shadow: 0 0 8px var(--text-success);
+    }
+
+    /* ── Filter/Controls Bar ── */
+    .controls-bar {
+      position: sticky;
+      /* Offset = 64px .ohp-nav + 6px progress-pride-banner injected by enhancements.js */
+      top: 70px;
+      z-index: 100;
+      background: rgba(15, 34, 51, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-light);
+      padding: 16px 0;
+      margin-bottom: 32px;
+    }
+    .controls-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+    .search-input {
+      flex: 0 0 220px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-white);
+      font-family: 'Roboto Slab', serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input::placeholder { color: rgba(255, 255, 255, 0.35); }
+    .search-input:focus {
+      border-color: var(--color-light-blue);
+      box-shadow: 0 0 0 3px rgba(115, 215, 238, 0.15);
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .pill {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .pill:hover { border-color: rgba(255, 255, 255, 0.2); color: var(--text-white); }
+    .pill.active { background: var(--color-blue); border-color: var(--color-blue); color: var(--text-white); }
+    .pill.grade-pill.active { border-color: transparent; }
+
+    .sort-select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+    .sort-select option { background: #1a3a52; color: #fff; }
+
+    .results-count {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.45);
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .controls-divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+    }
+
+    /* ── Legislator Cards ── */
+    .card-list { padding-bottom: 40px; }
+
+    .leg-card {
+      background: rgba(19, 45, 68, 0.5);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .leg-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+    .leg-card.grade-f {
+      background: rgba(220, 38, 38, 0.08);
+      border-color: rgba(220, 38, 38, 0.18);
+    }
+    .leg-card.grade-f:hover { border-color: rgba(220, 38, 38, 0.35); }
+    .leg-card.grade-aplus {
+      background: rgba(22, 163, 74, 0.08);
+      border-color: rgba(22, 163, 74, 0.18);
+    }
+    .leg-card.grade-aplus:hover { border-color: rgba(22, 163, 74, 0.35); }
+
+    .card-collapsed {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .grade-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: #fff;
+      flex-shrink: 0;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-center {
+      flex: 1;
+      min-width: 0;
+    }
+    .card-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text-white);
+      line-height: 1.3;
+    }
+    .card-meta {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 2px;
+    }
+    .card-meta .party-d { color: #60a5fa; }
+    .card-meta .party-r { color: #f87171; }
+
+    .score-bar-wrap {
+      margin-top: 8px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 2px;
+      overflow: hidden;
+      max-width: 280px;
+    }
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    .card-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .card-score {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .card-subscores {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+      justify-content: flex-end;
+    }
+    .subscore {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 0.3px;
+    }
+    .subscore span {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .card-chevron {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.3);
+      transition: transform 0.3s;
+    }
+    .leg-card.expanded .card-chevron { transform: rotate(180deg); }
+
+    /* Expanded content */
+    .card-expanded {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+    .leg-card.expanded .card-expanded {
+      max-height: 600px;
+      padding-top: 20px;
+    }
+    .card-expanded-inner {
+      border-top: 1px solid var(--border-light);
+      padding-top: 16px;
+    }
+    .card-breakdown {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .breakdown-item {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .breakdown-item strong {
+      color: var(--text-white);
+      font-weight: 700;
+    }
+    .card-notes {
+      font-family: 'Roboto Slab', serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.75);
+      margin-top: 8px;
+    }
+    .card-bills {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .bill-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+    }
+    .bill-tag.pro { background: rgba(74, 222, 128, 0.12); color: var(--text-success); border: 1px solid rgba(74, 222, 128, 0.25); }
+    .bill-tag.anti { background: rgba(255, 107, 107, 0.12); color: var(--text-danger); border: 1px solid rgba(255, 107, 107, 0.25); }
+
+    /* ── Methodology ── */
+    .methodology {
+      padding: 40px 0 80px;
+    }
+    .methodology-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 20px 24px;
+      background: rgba(19, 45, 68, 0.5);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      transition: border-color 0.2s;
+    }
+    .methodology-toggle:hover { border-color: rgba(255, 255, 255, 0.2); }
+    .methodology-toggle h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin: 0;
+    }
+    .methodology-toggle .chevron-icon {
+      margin-left: auto;
+      color: rgba(255, 255, 255, 0.35);
+      transition: transform 0.3s;
+    }
+    .methodology-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+    .methodology-body.open { max-height: 1400px; }
+    .methodology-body-inner {
+      padding: 24px;
+      background: rgba(19, 45, 68, 0.3);
+      border: 1px solid var(--border-light);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+    }
+    .methodology-body h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 20px 0 10px;
+    }
+    .methodology-body h4:first-child { margin-top: 0; }
+    .methodology-body p, .methodology-body li {
+      font-family: 'Roboto Slab', serif;
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.75);
+    }
+    .methodology-body ul { padding-left: 20px; margin: 8px 0; }
+    .methodology-body li { margin-bottom: 4px; }
+
+    .grade-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+    }
+    .grade-table th {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.45);
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .grade-table td {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, 0.75);
+    }
+    .grade-table .grade-cell {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    /* ── No Results ── */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255, 255, 255, 0.45);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      display: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .stat-card .stat-number { font-size: 28px; }
+      .controls-inner { gap: 8px; }
+      .search-input { flex: 1 1 100%; }
+      .controls-divider { display: none; }
+      .results-count { margin-left: 0; flex: 1 1 100%; text-align: left; }
+      .card-collapsed { flex-wrap: wrap; gap: 12px; }
+      .card-center { flex: 1 1 calc(100% - 80px); order: 1; }
+      .grade-badge { order: 0; }
+      .card-right { order: 2; flex: 1 1 100%; text-align: left; display: flex; align-items: center; gap: 16px; }
+      .card-subscores { margin-top: 0; justify-content: flex-start; }
+      .card-score { font-size: 22px; }
+      .card-chevron { order: 3; }
+      .score-bar-wrap { max-width: 100%; }
+      .card-breakdown { gap: 12px; }
+    }
+    @media (max-width: 480px) {
+      .stats-bar { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: -30px; }
+      .stat-card { padding: 16px 12px; }
+      .stat-card .stat-number { font-size: 24px; }
+      .stat-card .stat-label { font-size: 10px; }
+      .leg-card { padding: 16px; }
+      .pill { font-size: 11px; padding: 5px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <!-- Hero -->
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="section-label reveal">Legislative Scorecard</p>
+      <h1 class="section-title reveal" style="font-size: clamp(32px, 5vw, 48px); margin-bottom: 12px;">
+        Know Where Your<br>
+        <span class="hero-gradient">Legislators Stand.</span>
+      </h1>
+      <p class="subpage-hero-sub reveal">
+        Every Ohio legislator scored on their LGBTQ+ equality record: floor votes, bill sponsorship, and public statements.
+      </p>
+      <div class="updated-badge reveal" id="updated-badge">
+        <span class="dot"></span>
+        <span id="updated-text">Loading...</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary Stats -->
+  <section class="container" style="position: relative; z-index: 2;">
+    <div class="stats-bar reveal-stagger" id="stats-bar">
+      <div class="stat-card">
+        <div class="stat-number stat-num" data-count="0" data-format="plain" id="stat-total">0</div>
+        <div class="stat-label">Legislators Scored</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number stat-num" data-count="0" data-format="plain" id="stat-champions" style="color: var(--text-success);">0</div>
+        <div class="stat-label">Champions (A+)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number stat-num" data-count="0" data-format="plain" id="stat-hostile" style="color: var(--text-danger);">0</div>
+        <div class="stat-label">Hostile (F)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number stat-num" data-count="0" data-format="plain" id="stat-bills">0</div>
+        <div class="stat-label">Bills Scored</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <div class="controls-bar">
+    <div class="container">
+      <div class="controls-inner">
+        <input type="text" class="search-input" id="search-input" placeholder="Search name or district..." aria-label="Search legislators" />
+
+        <div class="controls-divider"></div>
+
+        <div class="pill-group" id="chamber-filter" role="group" aria-label="Filter by chamber">
+          <button class="pill active" data-value="all">All</button>
+          <button class="pill" data-value="House">House</button>
+          <button class="pill" data-value="Senate">Senate</button>
+        </div>
+
+        <div class="controls-divider"></div>
+
+        <div class="pill-group" id="party-filter" role="group" aria-label="Filter by party">
+          <button class="pill active" data-value="all">All</button>
+          <button class="pill" data-value="D">Democrat</button>
+          <button class="pill" data-value="R">Republican</button>
+        </div>
+
+        <div class="controls-divider"></div>
+
+        <div class="pill-group" id="grade-filter" role="group" aria-label="Filter by grade">
+          <button class="pill active" data-value="all">All</button>
+          <button class="pill grade-pill" data-value="A+" style="--pill-color: #16a34a;">A+</button>
+          <button class="pill grade-pill" data-value="A" style="--pill-color: #22c55e;">A</button>
+          <button class="pill grade-pill" data-value="B" style="--pill-color: #84cc16;">B</button>
+          <button class="pill grade-pill" data-value="C" style="--pill-color: #eab308;">C</button>
+          <button class="pill grade-pill" data-value="D" style="--pill-color: #f97316;">D</button>
+          <button class="pill grade-pill" data-value="F" style="--pill-color: #dc2626;">F</button>
+        </div>
+
+        <div class="controls-divider"></div>
+
+        <select class="sort-select" id="sort-select" aria-label="Sort order">
+          <option value="score-desc">Score (High to Low)</option>
+          <option value="score-asc">Score (Low to High)</option>
+          <option value="name-asc">Name (A-Z)</option>
+          <option value="district">District</option>
+        </select>
+
+        <span class="results-count" id="results-count">0 results</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <section class="container">
+    <div class="card-list" id="card-list"></div>
+    <div class="no-results" id="no-results">No legislators match your current filters.</div>
+  </section>
+
+  <!-- Methodology -->
+  <section class="methodology">
+    <div class="container">
+      <div class="methodology-toggle" id="methodology-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="methodology-body">
+        <h3>Scoring Methodology</h3>
+        <svg class="chevron-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="methodology-body" id="methodology-body">
+        <div class="methodology-body-inner">
+          <h4>Score Weights</h4>
+          <ul>
+            <li><strong>Floor Votes (50%):</strong> +1 per pro-equality vote, -1 per anti-equality vote</li>
+            <li><strong>Sponsorship (30%):</strong> +3 primary sponsor pro bill, +2 co-sponsor pro bill; -3 primary sponsor anti bill, -2 co-sponsor anti bill</li>
+            <li><strong>News/Statements (20%):</strong> +1 to +3 for pro-LGBTQ+ advocacy; -1 to -3 for anti-LGBTQ+ rhetoric</li>
+          </ul>
+          <p>Raw scores are normalized to a 0-100 scale using the formula: <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 13px;">max(0, min(100, 50 + raw * 5))</code></p>
+
+          <h4>Grade Scale</h4>
+          <table class="grade-table" id="grade-table"></table>
+
+          <h4>Data Sources</h4>
+          <ul>
+            <li>Ohio General Assembly official vote records (legislature.ohio.gov)</li>
+            <li>Bill sponsorship and co-sponsorship records</li>
+            <li>Public statements, press conferences, and news coverage</li>
+            <li>Equality Ohio and TransOhio legislative tracking</li>
+            <li>ACLU Ohio legislative alerts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="site-footer"></div>
+
+  <!-- Mobile Donate FAB -->
+  <a href="/donate" class="mobile-donate-fab" aria-label="Donate">Donate</a>
+
+  <script src="/js/scorecard-data.js" defer></script>
+  <script src="/js/main.js" defer></script>
+  <script src="/js/enhancements.js" defer></script>
+  <script src="/js/site-template.js" defer></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      /* ── Combine data ── */
+      var allMembers = [];
+      HOUSE_MEMBERS.forEach(function(m) {
+        var score = calcScore(m);
+        var grade = calcGrade(score);
+        allMembers.push({
+          d: m.d, name: m.name, party: m.party, v: m.v, s: m.s, n: m.n,
+          notes: m.notes, chamber: 'House', score: score, grade: grade
+        });
+      });
+      SENATE_MEMBERS.forEach(function(m) {
+        var score = calcScore(m);
+        var grade = calcGrade(score);
+        allMembers.push({
+          d: m.d, name: m.name, party: m.party, v: m.v, s: m.s, n: m.n,
+          notes: m.notes, chamber: 'Senate', score: score, grade: grade
+        });
+      });
+
+      /* ── Compute summary stats ── */
+      var champCount = 0;
+      var hostileCount = 0;
+      allMembers.forEach(function(m) {
+        if (m.grade.grade === 'A+') champCount++;
+        if (m.grade.grade === 'F') hostileCount++;
+      });
+
+      /* main.js reads data-count when each .stat-num intersects the viewport
+         and animates the value; setting it here (before intersection fires)
+         lets us avoid a second counter implementation. */
+      document.getElementById('stat-total').setAttribute('data-count', allMembers.length);
+      document.getElementById('stat-champions').setAttribute('data-count', champCount);
+      document.getElementById('stat-hostile').setAttribute('data-count', hostileCount);
+      document.getElementById('stat-bills').setAttribute('data-count', SCORED_BILLS.length);
+
+      /* ── Updated badge ── */
+      document.getElementById('updated-text').textContent =
+        'Last updated ' + SCORECARD_UPDATED.date + ' at ' + SCORECARD_UPDATED.time;
+
+      /* ── Grade table ── */
+      var gtHtml = '<thead><tr><th>Grade</th><th>Label</th><th>Score Range</th></tr></thead><tbody>';
+      GRADE_SCALE.forEach(function(g, i) {
+        var maxVal = i === 0 ? 100 : GRADE_SCALE[i - 1].min - 1;
+        gtHtml += '<tr><td class="grade-cell" style="color:' + g.color + '">' + g.grade +
+          '</td><td>' + g.label + '</td><td>' + g.min + ' - ' + maxVal + '</td></tr>';
+      });
+      gtHtml += '</tbody>';
+      document.getElementById('grade-table').innerHTML = gtHtml;
+
+      /* ── Parse bill references from notes ── */
+      function parseBills(notes) {
+        var found = [];
+        if (!notes) return found;
+        SCORED_BILLS.forEach(function(b) {
+          if (notes.indexOf(b.bill) !== -1) found.push(b);
+        });
+        return found;
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      /* ── Render cards ── */
+      var cardList = document.getElementById('card-list');
+      var noResults = document.getElementById('no-results');
+
+      function renderCards(members) {
+        var html = '';
+        members.forEach(function(m, idx) {
+          var gradeClass = '';
+          if (m.grade.grade === 'F') gradeClass = ' grade-f';
+          if (m.grade.grade === 'A+') gradeClass = ' grade-aplus';
+
+          var partyLabel = m.party === 'D' ? 'Democrat' : 'Republican';
+          var partyClass = m.party === 'D' ? 'party-d' : 'party-r';
+
+          var bills = parseBills(m.notes);
+          var billsHtml = '';
+          if (bills.length > 0) {
+            billsHtml = '<div class="card-bills">';
+            bills.forEach(function(b) {
+              var cls = b.stance === 'pro' ? 'pro' : 'anti';
+              billsHtml += '<span class="bill-tag ' + cls + '">' +
+                escapeHtml(b.bill) + ': ' + escapeHtml(b.title) + '</span>';
+            });
+            billsHtml += '</div>';
+          }
+
+          html += '<div class="leg-card' + gradeClass + '" data-idx="' + idx + '">' +
+            '<div class="card-collapsed">' +
+              '<div class="grade-badge" style="background:' + m.grade.color + '">' + m.grade.grade + '</div>' +
+              '<div class="card-center">' +
+                '<div class="card-name">' + escapeHtml(m.name) + '</div>' +
+                '<div class="card-meta">' + m.chamber + ' District ' + m.d + ' &middot; <span class="' + partyClass + '">' + partyLabel + '</span></div>' +
+                '<div class="score-bar-wrap"><div class="score-bar-fill" style="width:' + m.score + '%;background:' + m.grade.color + '"></div></div>' +
+              '</div>' +
+              '<div class="card-right">' +
+                '<div class="card-score" style="color:' + m.grade.color + '">' + m.score + '</div>' +
+                '<div class="card-subscores">' +
+                  '<div class="subscore">V <span>' + m.v + '</span></div>' +
+                  '<div class="subscore">S <span>' + m.s + '</span></div>' +
+                  '<div class="subscore">N <span>' + m.n + '</span></div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="card-chevron"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
+            '</div>' +
+            '<div class="card-expanded">' +
+              '<div class="card-expanded-inner">' +
+                '<div class="card-breakdown">' +
+                  '<div class="breakdown-item">Floor Votes: <strong>' + m.v + '</strong></div>' +
+                  '<div class="breakdown-item">Sponsorship: <strong>' + m.s + '</strong></div>' +
+                  '<div class="breakdown-item">News/Statements: <strong>' + m.n + '</strong></div>' +
+                  '<div class="breakdown-item">Overall Score: <strong>' + m.score + '/100</strong></div>' +
+                '</div>' +
+                '<div class="card-notes">' + escapeHtml(m.notes) + '</div>' +
+                billsHtml +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        });
+
+        cardList.innerHTML = html;
+        noResults.style.display = members.length === 0 ? 'block' : 'none';
+        document.getElementById('results-count').textContent = members.length + ' result' + (members.length !== 1 ? 's' : '');
+
+        /* Wire expand/collapse */
+        var cards = cardList.querySelectorAll('.leg-card');
+        cards.forEach(function(card) {
+          card.addEventListener('click', function() {
+            card.classList.toggle('expanded');
+          });
+        });
+      }
+
+      /* ── Filtering + Sorting ── */
+      var filters = { search: '', chamber: 'all', party: 'all', grade: 'all' };
+      var sortMode = 'score-desc';
+
+      function applyFilters() {
+        var filtered = allMembers.filter(function(m) {
+          if (filters.chamber !== 'all' && m.chamber !== filters.chamber) return false;
+          if (filters.party !== 'all' && m.party !== filters.party) return false;
+          if (filters.grade !== 'all' && m.grade.grade !== filters.grade) return false;
+          if (filters.search) {
+            var q = filters.search.toLowerCase();
+            var nameMatch = m.name.toLowerCase().indexOf(q) !== -1;
+            var distMatch = String(m.d).indexOf(q) !== -1 ||
+                            ('district ' + m.d).indexOf(q) !== -1 ||
+                            (m.chamber.toLowerCase() + ' ' + m.d).indexOf(q) !== -1;
+            if (!nameMatch && !distMatch) return false;
+          }
+          return true;
+        });
+
+        filtered.sort(function(a, b) {
+          switch (sortMode) {
+            case 'score-desc': return b.score - a.score || a.name.localeCompare(b.name);
+            case 'score-asc':  return a.score - b.score || a.name.localeCompare(b.name);
+            case 'name-asc':   return a.name.localeCompare(b.name);
+            case 'district':
+              if (a.chamber !== b.chamber) return a.chamber.localeCompare(b.chamber);
+              return a.d - b.d;
+            default: return 0;
+          }
+        });
+
+        renderCards(filtered);
+      }
+
+      /* Repaint grade-pill background colors based on which is active.
+         Hoisted so setupPillGroup's onAfter hook can call it for every
+         click in #grade-filter, including the "All" pill. */
+      function paintGradePills() {
+        document.querySelectorAll('#grade-filter .grade-pill').forEach(function(p) {
+          if (p.classList.contains('active')) {
+            var c = p.style.getPropertyValue('--pill-color');
+            p.style.background = c;
+            p.style.borderColor = c;
+          } else {
+            p.style.background = '';
+            p.style.borderColor = '';
+          }
+        });
+      }
+
+      /* Pill groups */
+      function setupPillGroup(id, filterKey, onAfter) {
+        var group = document.getElementById(id);
+        var pills = group.querySelectorAll('.pill');
+        pills.forEach(function(pill) {
+          pill.addEventListener('click', function() {
+            pills.forEach(function(p) { p.classList.remove('active'); });
+            pill.classList.add('active');
+            filters[filterKey] = pill.getAttribute('data-value');
+            if (typeof onAfter === 'function') onAfter();
+            applyFilters();
+          });
+        });
+      }
+      setupPillGroup('chamber-filter', 'chamber');
+      setupPillGroup('party-filter', 'party');
+      setupPillGroup('grade-filter', 'grade', paintGradePills);
+
+      /* Sort */
+      document.getElementById('sort-select').addEventListener('change', function() {
+        sortMode = this.value;
+        applyFilters();
+      });
+
+      /* Search with debounce */
+      var searchTimeout;
+      document.getElementById('search-input').addEventListener('input', function() {
+        var val = this.value;
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+          filters.search = val;
+          applyFilters();
+        }, 200);
+      });
+
+      /* Methodology toggle */
+      var methToggle = document.getElementById('methodology-toggle');
+      var methBody = document.getElementById('methodology-body');
+      function toggleMethodology() {
+        var open = methBody.classList.toggle('open');
+        methToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        var chevron = methToggle.querySelector('.chevron-icon');
+        chevron.style.transform = open ? 'rotate(180deg)' : '';
+      }
+      methToggle.addEventListener('click', toggleMethodology);
+      methToggle.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleMethodology();
+        }
+      });
+
+      /* ── Initial render ── */
+      applyFilters();
+    });
+  </script>
+</body>
+</html>
