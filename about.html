@@ -469,21 +469,10 @@
     <meta name="twitter:title" content="Ohio Pride PAC: Ohio's PAC for LGBTQ+ Equality">
     <meta name="twitter:description" content="Nonpartisan, state-level PAC endorsing pro-equality candidates across Ohio.">
     <meta name="twitter:image" content="https://ohiopride.org/assets/social/og-image.png">
+<link rel="stylesheet" href="/css/site-template.css">
 </head>
 <body>
-    <div class="nav">
-        <div class="nav-inner">
-            <a href="/" class="nav-logo" aria-label="Ohio Pride PAC home"><img src="/assets/logo/wordmark-on-navy-primary.png" alt="Ohio Pride PAC"></a>
-            <button class="menu-toggle" id="menuToggle">&#9776;</button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="/issues">Issues</a></li>
-                <li><a href="/about" class="active">About</a></li>
-                <li><a href="/founding-members">Founding Members</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/donate">Donate</a></li>
-            </ul>
-        </div>
-    </div>
+<div id="site-header"></div>
 
     <section class="hero">
         <h1>About Ohio Pride PAC</h1>
@@ -648,58 +637,9 @@
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="footer-inner">
-            <div class="footer-col">
-                <a href="/" class="footer-brand-logo" aria-label="Ohio Pride PAC home"><img src="/assets/logo/wordmark-on-navy-primary.png" alt="Ohio Pride PAC"></a>
-                <p class="footer-brand-copy">Ohio's PAC for LGBTQ+ equality.</p>
-                <h4>Organization</h4>
-                <ul>
-                    <li><a href="/issues">Issues</a></li>
-                    <li><a href="/about">About &amp; Board</a></li>
-                    <li><a href="/founding-members">Founding Members</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Get Involved</h4>
-                <ul>
-                    <li><a href="/donate">Donate</a></li>
-                    <li><a href="/donate/founding-member">Founding Membership</a></li>
-                    <li><a href="/contact">Volunteer</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Use</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Leadership</h4>
-                <div class="directors">
-                    <strong>Director:</strong> Zachary R. Joseph<br>
-                    <strong>Treasurer:</strong> David Donofrio
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div>&copy; 2026 Ohio Pride PAC. All rights reserved.</div>
-        </div>
-    </footer>
-    <div class="compliance-footer">
-        Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.
-    </div>
+<div id="site-footer"></div>
 
     <script>
-        document.getElementById('menuToggle').addEventListener('click', () => {
-            document.getElementById('navLinks').classList.toggle('active');
-        });
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => document.getElementById('navLinks').classList.remove('active'));
-        });
-
         function toggleBio(btn) {
             const card = btn.closest('.member-card');
             card.classList.toggle('bio-open');
@@ -728,5 +668,6 @@
         });
     </script>
     <script src="/js/enhancements.js" defer></script>
+  <script src="/js/site-template.js" defer></script>
 </body>
 </html>
