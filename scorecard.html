@@ -479,7 +479,7 @@
 
     /* ── Methodology ── */
     .methodology {
-      padding: 60px 0 80px;
+      padding: 16px 0 32px;
     }
     .methodology-toggle {
       display: flex;
@@ -702,6 +702,39 @@
     </div>
   </section>
 
+  <!-- Methodology -->
+  <section class="methodology" id="scoring-methodology">
+    <div class="container">
+      <div class="methodology-toggle" id="methodology-toggle">
+        <h3>Scoring Methodology</h3>
+        <svg class="chevron-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="methodology-body" id="methodology-body">
+        <div class="methodology-body-inner">
+          <h4>Score Weights</h4>
+          <ul>
+            <li><strong>Floor Votes (50%):</strong> +1 per pro-equality vote, -1 per anti-equality vote</li>
+            <li><strong>Sponsorship (30%):</strong> +3 primary sponsor pro bill, +2 co-sponsor pro bill; -3 primary sponsor anti bill, -2 co-sponsor anti bill</li>
+            <li><strong>News/Statements (20%):</strong> +1 to +3 for pro-LGBTQ+ advocacy; -1 to -3 for anti-LGBTQ+ rhetoric</li>
+          </ul>
+          <p>Raw scores are normalized to a 0-100 scale using the formula: <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 13px;">max(0, min(100, 50 + raw * 5))</code></p>
+
+          <h4>Grade Scale</h4>
+          <table class="grade-table" id="grade-table"></table>
+
+          <h4>Data Sources</h4>
+          <ul>
+            <li>Ohio General Assembly official vote records (legislature.ohio.gov)</li>
+            <li>Bill sponsorship and co-sponsorship records</li>
+            <li>Public statements, press conferences, and news coverage</li>
+            <li>Equality Ohio and TransOhio legislative tracking</li>
+            <li>ACLU Ohio legislative alerts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Controls -->
   <div class="controls-bar">
     <div class="container">
@@ -754,39 +787,6 @@
   <section class="container">
     <div class="card-list" id="card-list"></div>
     <div class="no-results" id="no-results">No legislators match your current filters.</div>
-  </section>
-
-  <!-- Methodology -->
-  <section class="methodology" id="scoring-methodology">
-    <div class="container">
-      <div class="methodology-toggle" id="methodology-toggle">
-        <h3>Scoring Methodology</h3>
-        <svg class="chevron-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="methodology-body" id="methodology-body">
-        <div class="methodology-body-inner">
-          <h4>Score Weights</h4>
-          <ul>
-            <li><strong>Floor Votes (50%):</strong> +1 per pro-equality vote, -1 per anti-equality vote</li>
-            <li><strong>Sponsorship (30%):</strong> +3 primary sponsor pro bill, +2 co-sponsor pro bill; -3 primary sponsor anti bill, -2 co-sponsor anti bill</li>
-            <li><strong>News/Statements (20%):</strong> +1 to +3 for pro-LGBTQ+ advocacy; -1 to -3 for anti-LGBTQ+ rhetoric</li>
-          </ul>
-          <p>Raw scores are normalized to a 0-100 scale using the formula: <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 13px;">max(0, min(100, 50 + raw * 5))</code></p>
-
-          <h4>Grade Scale</h4>
-          <table class="grade-table" id="grade-table"></table>
-
-          <h4>Data Sources</h4>
-          <ul>
-            <li>Ohio General Assembly official vote records (legislature.ohio.gov)</li>
-            <li>Bill sponsorship and co-sponsorship records</li>
-            <li>Public statements, press conferences, and news coverage</li>
-            <li>Equality Ohio and TransOhio legislative tracking</li>
-            <li>ACLU Ohio legislative alerts</li>
-          </ul>
-        </div>
-      </div>
-    </div>
   </section>
 
   <div id="site-footer"></div>
