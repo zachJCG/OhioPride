@@ -139,23 +139,10 @@
     <meta property="og:url" content="https://ohiopride.org/launch-day">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/css/site-template.css">
 </head>
 <body>
-    <div class="pride-banner"></div>
-
-    <nav>
-        <div class="nav-inner">
-            <a href="/" class="nav-logo"><span class="ohio">Ohio</span> <span class="pride">Pride</span><span class="pac">PAC</span></a>
-            <button class="menu-toggle" id="menuToggle">&#9776;</button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="/issues">Issues</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/founding-members">Founding Members</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/donate">Donate</a></li>
-            </ul>
-        </div>
-    </nav>
+<div id="site-header"></div>
 
     <section class="hero">
         <p class="hero-label">You're Invited</p>
@@ -244,57 +231,10 @@
         </div>
     </div>
 
-    <footer>
-        <div class="footer-inner">
-            <div class="footer-col">
-                <h4>Organization</h4>
-                <ul>
-                    <li><a href="/issues">Issues</a></li>
-                    <li><a href="/about">About & Board</a></li>
-                    <li><a href="/founding-members">Founding Members</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Get Involved</h4>
-                <ul>
-                    <li><a href="/donate">Donate</a></li>
-                    <li><a href="/donate/founding-member">Founding Membership</a></li>
-                    <li><a href="/launch-day">Launch Day RSVP</a></li>
-                    <li><a href="/contact">Volunteer</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Use</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Leadership</h4>
-                <div class="directors">
-                    <strong>Director:</strong> Zachary R. Joseph<br>
-                    <strong>Treasurer:</strong> David Donofrio
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div>&copy; 2026 Ohio Pride PAC. All rights reserved.</div>
-            <div class="disclaimer">Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate's committee.</div>
-        </div>
-    </footer>
+<div id="site-footer"></div>
 
     <script src="/js/enhancements.js"></script>
     <script>
-        // Mobile nav
-        document.getElementById('menuToggle').addEventListener('click', () => {
-            document.getElementById('navLinks').classList.toggle('active');
-        });
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => document.getElementById('navLinks').classList.remove('active'));
-        });
-
         // Google Sheets Apps Script endpoint
         // ──────────────────────────────────────────────────────────
         // SETUP: Deploy a Google Apps Script web app on your Sheet
@@ -369,5 +309,6 @@
             }
         });
     </script>
+  <script src="/js/site-template.js" defer></script>
 </body>
 </html>

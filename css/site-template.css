@@ -1,0 +1,214 @@
+/* ==========================================================================
+   OHIO PRIDE PAC — Shared Site Header & Footer Template
+   ------------------------------------------------------
+   This file provides the site-wide header/footer styles. To update the
+   visual appearance of the header, menu, or footer across the ENTIRE site,
+   edit this file (markup lives in /js/site-template.js).
+   ========================================================================== */
+
+:root {
+  --ohp-navy: #0f2233;
+  --ohp-navy-light: #132d44;
+  --ohp-navy-footer: #0a1929;
+  --ohp-text-white: #ffffff;
+  --ohp-text-soft: rgba(255, 255, 255, 0.85);
+  --ohp-text-dim: rgba(255, 255, 255, 0.6);
+  --ohp-text-faint: rgba(255, 255, 255, 0.4);
+  --ohp-accent: #73d7ee;
+  --ohp-border: rgba(255, 255, 255, 0.08);
+  --ohp-rainbow: linear-gradient(90deg, #e40303 0%, #ff8c00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%, #e40303 100%);
+  --ohp-pride-stripe: linear-gradient(90deg, #000000, #613915, #73d7ee, #ffafc8, #e40303, #ff8c00, #ffed00, #008026, #004dff, #750787, #000000, #613915, #73d7ee, #ffafc8, #e40303, #ff8c00, #ffed00, #008026, #004dff, #750787);
+  --ohp-transition: all 0.3s ease;
+}
+
+@keyframes ohpPrideShimmer {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Pride banner — thin rainbow strip at the very top of the page */
+.ohp-pride-banner {
+  height: 5px;
+  background: var(--ohp-pride-stripe);
+  background-size: 200% 100%;
+  animation: ohpPrideShimmer 8s linear infinite;
+}
+
+/* ------------------------------- Navigation ------------------------------- */
+.ohp-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(15, 34, 51, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ohp-border);
+  padding: 0 2rem;
+  font-family: 'Roboto Slab', Georgia, serif;
+}
+
+.ohp-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+}
+
+.ohp-nav-logo {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 1.25rem;
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+}
+.ohp-nav-logo .ohp-logo-ohio {
+  font-weight: 400;
+  color: var(--ohp-text-dim);
+}
+.ohp-nav-logo .ohp-logo-pride {
+  font-weight: 700;
+  color: var(--ohp-text-white);
+  margin-left: 0.25rem;
+}
+.ohp-nav-logo .ohp-logo-pac {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--ohp-accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-left: 4px;
+}
+
+.ohp-nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ohp-nav-links a {
+  color: var(--ohp-text-soft);
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: var(--ohp-transition);
+}
+.ohp-nav-links a:hover,
+.ohp-nav-links a.active {
+  color: var(--ohp-text-white);
+}
+
+.ohp-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--ohp-text-white);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .ohp-nav-links {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--ohp-navy);
+    border-bottom: 1px solid var(--ohp-border);
+    padding: 1rem 2rem;
+    gap: 1rem;
+  }
+  .ohp-nav-links.active {
+    display: flex;
+  }
+  .ohp-menu-toggle {
+    display: block;
+  }
+}
+
+/* -------------------------------- Footer --------------------------------- */
+.ohp-footer {
+  background: var(--ohp-navy-footer);
+  border-top: 3px solid;
+  border-image: var(--ohp-rainbow) 1;
+  padding: 2.5rem 2rem;
+  margin-top: 2rem;
+  font-family: 'Roboto Slab', Georgia, serif;
+  color: var(--ohp-text-soft);
+}
+
+.ohp-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.ohp-footer-col h4 {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--ohp-accent);
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+}
+
+.ohp-footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ohp-footer-col li {
+  margin-bottom: 0.4rem;
+}
+.ohp-footer-col a {
+  color: var(--ohp-text-soft);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.ohp-footer-col a:hover {
+  color: var(--ohp-accent);
+}
+
+.ohp-footer-col .ohp-directors {
+  color: var(--ohp-text-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.ohp-footer-col .ohp-directors strong {
+  color: var(--ohp-text-white);
+}
+
+.ohp-footer-bottom {
+  max-width: 1200px;
+  margin: 1.5rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ohp-border);
+  text-align: center;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.8rem;
+  color: var(--ohp-text-dim);
+}
+.ohp-footer-bottom .ohp-disclaimer {
+  font-style: italic;
+  margin-top: 0.5rem;
+  color: var(--ohp-text-faint);
+}
+
+@media (max-width: 768px) {
+  .ohp-footer-inner {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}

@@ -303,32 +303,10 @@
         transform: translateY(-1px);
       }
     </style>
+  <link rel="stylesheet" href="/css/site-template.css">
   </head>
   <body>
-    <nav class="nav nav-solid" id="nav">
-      <div class="nav-inner">
-        <a href="/" class="nav-logo">
-          <span class="logo-ohio">Ohio</span
-          ><span class="logo-pride">Pride</span>
-          <span class="logo-pac">PAC</span>
-        </a>
-        <button
-          class="nav-toggle"
-          id="navToggle"
-          aria-label="Toggle navigation"
-          aria-expanded="false"
-        >
-          <span></span><span></span><span></span>
-        </button>
-        <div class="nav-links" id="navLinks">
-          <a href="/issues" class="active">Issues</a>
-          <a href="/founding-members">Founding Members</a>
-          <a href="/about">About</a>
-          <a href="/contact">Contact</a>
-          <a href="/donate" class="btn btn-nav">Donate</a>
-        </div>
-      </div>
-    </nav>
+<div id="site-header"></div>
 
     <div class="breadcrumb">
       <a href="/issues">← Back to Issue Tracker</a>
@@ -476,52 +454,7 @@
       </div>
     </div>
 
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-brand">
-            <a href="/" class="nav-logo footer-logo">
-              <span class="logo-ohio">Ohio</span
-              ><span class="logo-pride">Pride</span>
-              <span class="logo-pac">PAC</span>
-            </a>
-            <p class="footer-tagline">
-              Ohio's Political Action Committee for LGBTQ+ Equality.
-            </p>
-          </div>
-          <div class="footer-links">
-            <h4>Organization</h4>
-            <a href="/issues">Issues</a>
-            <a href="/founding-members">Founding Members</a>
-          </div>
-          <div class="footer-links">
-            <h4>Get Involved</h4>
-            <a href="/donate">Donate</a>
-            <a href="/contact">Contact Us</a>
-          </div>
-          <div class="footer-links">
-            <h4>Legal</h4>
-            <a href="/privacy">Privacy Policy</a>
-            <a href="/terms">Terms of Use</a>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-
-    <div class="compliance-footer">
-      <div class="container">
-        <p>
-          Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David
-          Donofrio, Treasurer.
-        </p>
-        <p class="irs-line">
-          Contributions are not tax-deductible for federal income tax purposes.
-        </p>
-      </div>
-    </div>
+<div id="site-footer"></div>
 
     <script>
       const BILL_ID = "hjr4";
@@ -531,5 +464,6 @@
     <script src="/js/bill-pipeline.js"></script>
     <script src="/js/bill-detail.js"></script>
     <script src="/js/enhancements.js" defer></script>
+    <script src="/js/site-template.js" defer></script>
   </body>
 </html>
