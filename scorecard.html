@@ -739,7 +739,7 @@
   <section class="container" style="position: relative; z-index: 2;">
     <div class="stats-bar" id="stats-bar">
       <div class="stat-card">
-        <div class="stat-number stat-num" data-count="132" id="stat-total">0</div>
+        <div class="stat-number stat-num" data-count="0" id="stat-total">0</div>
         <div class="stat-label">Legislators Scored</div>
       </div>
       <div class="stat-card">
@@ -903,43 +903,73 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-      /* ── Combine data ── */
+      /* ── Combine data ──
+         Pass chamber into the member object before calcScore so the
+         voting-records SQL resolver can find the right roll calls.
+         The v field on the rendered member is the COMPUTED v
+         (voting-records net clamped to ±5), not the static v, so the
+         card UI and stat cards reflect the same basis the grade was
+         computed from. */
+      function buildMember(m, chamber) {
+        var withChamber = {
+          d: m.d, name: m.name, party: m.party,
+          v: m.v, s: m.s, n: m.n,
+          notes: m.notes, chamber: chamber
+        };
+        var score = calcScore(withChamber);
+        var computedV = (typeof computedVoteScore === 'function')
+          ? computedVoteScore(withChamber) : null;
+        withChamber.v = (computedV !== null && computedV !== undefined)
+          ? computedV : m.v;
+        withChamber.score = score;
+        withChamber.grade = calcGrade(score);
+        return withChamber;
+      }
       var allMembers = [];
-      HOUSE_MEMBERS.forEach(function(m) {
-        var score = calcScore(m);
-        var grade = calcGrade(score);
-        allMembers.push({
-          d: m.d, name: m.name, party: m.party, v: m.v, s: m.s, n: m.n,
-          notes: m.notes, chamber: 'House', score: score, grade: grade
-        });
-      });
-      SENATE_MEMBERS.forEach(function(m) {
-        var score = calcScore(m);
-        var grade = calcGrade(score);
-        allMembers.push({
-          d: m.d, name: m.name, party: m.party, v: m.v, s: m.s, n: m.n,
-          notes: m.notes, chamber: 'Senate', score: score, grade: grade
-        });
-      });
-
-      /* ── Compute summary stats ── */
-      var champCount = 0;
-      var hostileCount = 0;
-      allMembers.forEach(function(m) {
-        if (m.grade.grade === 'A+') champCount++;
-        if (m.grade.grade === 'F') hostileCount++;
-      });
-
-      document.getElementById('stat-total').setAttribute('data-count', allMembers.length);
-      document.getElementById('stat-champions').setAttribute('data-count', champCount);
-      document.getElementById('stat-hostile').setAttribute('data-count', hostileCount);
-      document.getElementById('stat-bills').setAttribute('data-count', SCORED_BILLS.length);
+      HOUSE_MEMBERS.forEach(function(m) { allMembers.push(buildMember(m, 'House')); });
+      SENATE_MEMBERS.forEach(function(m) { allMembers.push(buildMember(m, 'Senate')); });
 
       /* ── Updated badge ── */
       document.getElementById('updated-text').textContent =
         'Last updated ' + SCORECARD_UPDATED.date + ' at ' + SCORECARD_UPDATED.time;
 
-      /* ── Animate stat counters on scroll ── */
+      /* ── Summary stats ──
+         Stats derive from whatever member set is currently rendered.
+         On first render the whole roster is included; when filters
+         narrow the list the stat cards recompute so the headline
+         numbers always match the cards on screen. */
+      function computeStats(members) {
+        var champs = 0, hostile = 0;
+        for (var i = 0; i < members.length; i++) {
+          var g = members[i].grade && members[i].grade.grade;
+          if (g === 'A+') champs++;
+          if (g === 'F')  hostile++;
+        }
+        return { total: members.length, champs: champs, hostile: hostile };
+      }
+      function writeStats(stats) {
+        var total = document.getElementById('stat-total');
+        var champs = document.getElementById('stat-champions');
+        var hostile = document.getElementById('stat-hostile');
+        var bills = document.getElementById('stat-bills');
+        total.setAttribute('data-count', stats.total);
+        champs.setAttribute('data-count', stats.champs);
+        hostile.setAttribute('data-count', stats.hostile);
+        bills.setAttribute('data-count', SCORED_BILLS.length);
+        /* textContent is set authoritatively here so the displayed
+           total always matches data-count, even if the scroll-based
+           animation hasn't fired yet (e.g., stats-bar above the
+           fold, viewport kept still by the user). */
+        total.textContent = stats.total;
+        champs.textContent = stats.champs;
+        hostile.textContent = stats.hostile;
+        bills.textContent = SCORED_BILLS.length;
+      }
+      writeStats(computeStats(allMembers));
+
+      /* One-time count-up animation on first scroll into view. After
+         that we just write numbers directly in writeStats so filter
+         clicks update instantly instead of re-animating. */
       var statsAnimated = false;
       function animateCounters() {
         if (statsAnimated) return;
@@ -950,7 +980,7 @@
           var nums = bar.querySelectorAll('.stat-num[data-count]');
           nums.forEach(function(el) {
             var target = parseInt(el.getAttribute('data-count'), 10);
-            var duration = 1200;
+            var duration = 900;
             var start = performance.now();
             function tick(now) {
               var progress = Math.min((now - start) / duration, 1);
@@ -1198,6 +1228,7 @@
         });
 
         renderCards(filtered);
+        writeStats(computeStats(filtered));
       }
 
       /* Pill groups */

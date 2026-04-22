@@ -190,9 +190,44 @@ const SENATE_MEMBERS = [
 
 /* -------------------------------------------------------
    SCORE CALCULATION (used by scorecard.html)
+
+   As of v2.1 the floor-vote component (member.v) is computed
+   at runtime from voting-records.js (ROLL_CALLS +
+   VOTE_EXCEPTIONS + party-line defaults) rather than
+   hand-assigned, so the score basis matches exactly what
+   the SQL layer (public.bills + public.roll_calls +
+   public.legislator_vote_exceptions) produces. The static
+   member.v field is kept as a fallback for when
+   summarizeVotes is not available (module context, older
+   cached scripts, etc.).
    ------------------------------------------------------- */
+
+/* Map the signed voting-records net (unbounded) into the
+   -5..+5 range the sponsorship (s) and news (n) components
+   already use. A net of ±5 or more saturates. */
+function computedVoteScore(member) {
+  if (typeof summarizeVotes !== 'function') return null;
+  try {
+    var leg = {
+      d: member.d,
+      party: member.party,
+      chamber: (member.chamber || '').toString().toLowerCase()
+    };
+    var totals = summarizeVotes(leg);
+    if (!totals || typeof totals.net !== 'number') return null;
+    var v = Math.round(totals.net);
+    if (v > 5) v = 5;
+    if (v < -5) v = -5;
+    return v;
+  } catch (e) {
+    return null;
+  }
+}
+
 function calcScore(member) {
-  var raw = member.v + member.s + member.n;
+  var v = computedVoteScore(member);
+  if (v === null) v = member.v;           // fallback for module / stale-cache contexts
+  var raw = v + member.s + member.n;
   return Math.max(0, Math.min(100, Math.round(50 + raw * 5)));
 }
 
