@@ -1,0 +1,62 @@
+# ==================================================================
+#  netlify.toml additions: social sharing wiring
+#  Last updated: 2026-04-22
+#
+#  HOW TO USE
+#  ----------
+#  Append the blocks below to the END of netlify.toml, then run:
+#      netlify deploy --build --no-prompt
+#  or push the branch and let Netlify build the Deploy Preview.
+#
+#  If a [build] block already exists, MERGE the `command` line
+#  rather than appending a second [build] block (TOML last-wins
+#  but it's noisy). The command must run the manifest builder
+#  before whatever you currently do (which for a static site is
+#  usually nothing, just publishing).
+#
+#  Two things this enables:
+#   1. Build hook: regenerate /assets/data/legislators.json from
+#      js/scorecard-data.js so the edge function has fresh grades
+#      on every deploy.
+#   2. Edge function: server-injects per-legislator OG meta tags
+#      into /scorecard?rep=<slug> for social-card scrapers.
+# ==================================================================
+
+# --- BUILD: regenerate legislator manifest before publish --------
+# If you already have a [build] block, swap your `command` line
+# for one that runs this script first. Example merged version:
+#
+#   [build]
+#     publish = "."
+#     command = "node scripts/build-legislators-manifest.mjs"
+#
+# If there is no [build] block at all, paste this whole block:
+
+[build]
+  publish = "."
+  command = "node scripts/build-legislators-manifest.mjs"
+
+
+# --- EDGE FUNCTION: per-legislator OG tag injection -------------
+# Lives at netlify/edge-functions/og-injector.ts. The `path` here
+# duplicates the `config.path` inside the function for clarity;
+# Netlify accepts either source. Keep them in sync.
+
+[[edge_functions]]
+  path = "/scorecard"
+  function = "og-injector"
+
+[[edge_functions]]
+  path = "/scorecard.html"
+  function = "og-injector"
+
+
+# --- HEADERS: cache the manifest aggressively but allow refresh -
+# legislators.json regenerates on every deploy, so a long max-age
+# with stale-while-revalidate is fine.
+
+[[headers]]
+  for = "/assets/data/legislators.json"
+  [headers.values]
+    Cache-Control = "public, max-age=300, stale-while-revalidate=86400"
+    Content-Type  = "application/json; charset=utf-8"
