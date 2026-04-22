@@ -178,7 +178,7 @@
               '<span class="toggle-label">Read bio</span>' +
               '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
             '</button>' +
-            '<div class="board-card-bio" id="' + bioId + '" hidden>' + bioHtml + '</div>';
+            '<div class="board-card-bio" id="' + bioId + '">' + bioHtml + '</div>';
 
           grid.appendChild(card);
         });
@@ -191,11 +191,9 @@
             if (!btn) return;
             var card = btn.closest('.board-card');
             if (!card) return;
-            var bio = card.querySelector('.board-card-bio');
             var label = btn.querySelector('.toggle-label');
             var isOpen = card.classList.toggle('is-open');
             btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            if (bio) bio.hidden = !isOpen;
             if (label) label.textContent = isOpen ? 'Hide bio' : 'Read bio';
           });
           grid.dataset.ohpBoardWired = '1';
