@@ -424,6 +424,31 @@
     }
     .leg-card.expanded .card-chevron { transform: rotate(180deg); }
 
+    .card-actions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .card-share-btn {
+      border: 1px solid rgba(115, 215, 238, 0.35);
+      border-radius: 999px;
+      background: rgba(10, 16, 29, 0.7);
+      color: #dbeafe;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .card-share-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(115, 215, 238, 0.65);
+      background: rgba(15, 35, 54, 0.85);
+    }
+
     /* Expanded content */
     .card-expanded {
       max-height: 0;
@@ -1032,6 +1057,9 @@
                 '<div class="card-notes">' + m.notes + '</div>' +
                 billsHtml +
                 votingHtml +
+                '<div class="card-actions">' +
+                  '<button type="button" class="card-share-btn" data-share-idx="' + idx + '">Share</button>' +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -1048,6 +1076,190 @@
             card.classList.toggle('expanded');
           });
         });
+
+        var shareButtons = cardList.querySelectorAll('.card-share-btn');
+        shareButtons.forEach(function(btn) {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var idx = Number(btn.getAttribute('data-share-idx'));
+            if (Number.isNaN(idx) || !members[idx]) return;
+            shareLegislatorCard(members[idx]);
+          });
+        });
+      }
+
+      function roundedRect(ctx, x, y, w, h, r) {
+        var radius = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.arcTo(x + w, y, x + w, y + h, radius);
+        ctx.arcTo(x + w, y + h, x, y + h, radius);
+        ctx.arcTo(x, y + h, x, y, radius);
+        ctx.arcTo(x, y, x + w, y, radius);
+        ctx.closePath();
+      }
+
+      function wrapText(ctx, text, maxWidth) {
+        var words = String(text || '').split(/\s+/).filter(Boolean);
+        var lines = [];
+        var line = '';
+        words.forEach(function(word) {
+          var testLine = line ? (line + ' ' + word) : word;
+          if (ctx.measureText(testLine).width > maxWidth && line) {
+            lines.push(line);
+            line = word;
+          } else {
+            line = testLine;
+          }
+        });
+        if (line) lines.push(line);
+        return lines;
+      }
+
+      function canvasToBlob(canvas) {
+        return new Promise(function(resolve, reject) {
+          canvas.toBlob(function(blob) {
+            if (blob) resolve(blob);
+            else reject(new Error('Unable to create image blob.'));
+          }, 'image/png');
+        });
+      }
+
+      async function createShareCardFile(member) {
+        var width = 1080;
+        var height = 1350;
+        var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext('2d');
+        if (!ctx) return null;
+
+        var bg = ctx.createLinearGradient(0, 0, 0, height);
+        bg.addColorStop(0, '#0b1630');
+        bg.addColorStop(1, '#132d44');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, width, height);
+
+        var panelX = 66;
+        var panelY = 78;
+        var panelW = width - (panelX * 2);
+        var panelH = height - (panelY * 2);
+        roundedRect(ctx, panelX, panelY, panelW, panelH, 42);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+
+        ctx.fillStyle = '#132d44';
+        ctx.font = '700 44px Montserrat, Arial, sans-serif';
+        ctx.fillText('Ohio Pride PAC', panelX + 52, panelY + 88);
+
+        var gradeCircleX = panelX + panelW - 124;
+        var gradeCircleY = panelY + 98;
+        ctx.beginPath();
+        ctx.arc(gradeCircleX, gradeCircleY, 50, 0, Math.PI * 2);
+        ctx.fillStyle = member.grade.color || '#38bdf8';
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 46px Montserrat, Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(member.grade.grade, gradeCircleX, gradeCircleY + 1);
+        ctx.textAlign = 'start';
+        ctx.textBaseline = 'alphabetic';
+
+        ctx.fillStyle = '#334155';
+        ctx.font = '700 28px Montserrat, Arial, sans-serif';
+        ctx.fillText('Legislative Scorecard', panelX + 52, panelY + 142);
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '700 74px Montserrat, Arial, sans-serif';
+        var nameLines = wrapText(ctx, member.name, panelW - 104);
+        if (nameLines.length > 3) {
+          nameLines = nameLines.slice(0, 3);
+          nameLines[2] = nameLines[2].replace(/\s+\S+$/, '') + '…';
+        }
+        var nameTop = panelY + 256;
+        nameLines.forEach(function(line, i) {
+          ctx.fillText(line, panelX + 52, nameTop + (i * 88));
+        });
+
+        ctx.fillStyle = '#334155';
+        ctx.font = '600 36px Montserrat, Arial, sans-serif';
+        var subtitle = member.chamber + ' District ' + member.d + ' • ' + (member.party === 'D' ? 'Democrat' : 'Republican');
+        ctx.fillText(subtitle, panelX + 52, nameTop + (nameLines.length * 88) + 30);
+
+        var statsY = panelY + 760;
+        var statW = (panelW - 156) / 3;
+        var stats = [
+          { label: 'Overall Score', value: String(member.score) + '/100' },
+          { label: 'Floor Votes', value: String(member.v) },
+          { label: 'Sponsorship', value: String(member.s) }
+        ];
+        stats.forEach(function(stat, i) {
+          var x = panelX + 52 + (i * (statW + 26));
+          roundedRect(ctx, x, statsY, statW, 196, 24);
+          ctx.fillStyle = '#e2e8f0';
+          ctx.fill();
+          ctx.fillStyle = '#334155';
+          ctx.font = '700 24px Montserrat, Arial, sans-serif';
+          ctx.fillText(stat.label, x + 22, statsY + 52);
+          ctx.fillStyle = '#0f172a';
+          ctx.font = '800 54px Montserrat, Arial, sans-serif';
+          ctx.fillText(stat.value, x + 22, statsY + 132);
+        });
+
+        roundedRect(ctx, panelX + 52, panelY + panelH - 182, panelW - 104, 92, 22);
+        ctx.fillStyle = '#132d44';
+        ctx.fill();
+        ctx.fillStyle = '#dbeafe';
+        ctx.font = '700 30px Montserrat, Arial, sans-serif';
+        ctx.fillText('ohiopride.org/scorecard', panelX + 86, panelY + panelH - 124);
+
+        var blob = await canvasToBlob(canvas);
+        return new File([blob], 'ohiopride-scorecard-' + member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.png', { type: 'image/png' });
+      }
+
+      async function shareLegislatorCard(member) {
+        var pageUrl = window.location.origin + '/scorecard';
+        var message = member.name + ' scored ' + member.score + '/100 (' + member.grade.grade + ') on Ohio Pride PAC’s Legislative Scorecard.';
+
+        try {
+          var imageFile = await createShareCardFile(member);
+          var shareDataWithImage = {
+            title: 'Ohio Pride PAC Legislative Scorecard',
+            text: message,
+            url: pageUrl,
+            files: imageFile ? [imageFile] : []
+          };
+
+          if (navigator.share && imageFile && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
+            await navigator.share(shareDataWithImage);
+            return;
+          }
+
+          if (navigator.share) {
+            await navigator.share({
+              title: 'Ohio Pride PAC Legislative Scorecard',
+              text: message,
+              url: pageUrl
+            });
+            return;
+          }
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+
+        var fallbackText = message + ' ' + pageUrl;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          try {
+            await navigator.clipboard.writeText(fallbackText);
+            alert('Share text copied. Paste it into Facebook, Instagram, or any app.');
+            return;
+          } catch (err) {
+            // no-op; fallback prompt below
+          }
+        }
+
+        window.prompt('Copy and share this:', fallbackText);
       }
 
       /* ── Filtering + Sorting ── */
