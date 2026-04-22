@@ -1,6 +1,7 @@
 [build]
   publish = "."
   functions = "netlify/functions"
+  command = "node scripts/build-legislators-manifest.mjs"
 
 # Hourly ActBlue contribution sync. Reads ACTBLUE_* and SUPABASE_* env vars
 # from the Netlify dashboard; fails gracefully when credentials are missing.
@@ -172,3 +173,19 @@
   to = "/"
   status = 301
   force = true
+
+# Edge function: per-legislator OG tag injection for /scorecard?rep=<slug>
+[[edge_functions]]
+  path = "/scorecard"
+  function = "og-injector"
+
+[[edge_functions]]
+  path = "/scorecard.html"
+  function = "og-injector"
+
+# Cache the per-deploy legislator manifest
+[[headers]]
+  for = "/assets/data/legislators.json"
+  [headers.values]
+    Cache-Control = "public, max-age=300, stale-while-revalidate=86400"
+    Content-Type  = "application/json; charset=utf-8"

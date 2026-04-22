@@ -18,6 +18,7 @@
   <meta name="twitter:title" content="Legislative Scorecard | Ohio Pride PAC" />
   <meta name="twitter:description" content="Every Ohio legislator scored on their LGBTQ+ equality record: floor votes, bill sponsorship, and public statements." />
   <meta name="twitter:image" content="https://ohiopride.org/assets/social/og-image.png" />
+  <!-- INJECT_OG_TAGS_HERE -->
 
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />
@@ -686,7 +687,54 @@
       .leg-card { padding: 16px; }
       .pill { font-size: 11px; padding: 5px 10px; }
     }
+
+    /* Share actions (per-card) */
+    .card-share {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .card-share-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      margin-right: 6px;
+    }
+    .share-btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .share-btn:hover { background: rgba(255, 255, 255, 0.10); border-color: rgba(255, 255, 255, 0.28); }
+    .share-btn:active { transform: translateY(1px); }
+    .share-btn.fb     { border-color: rgba(24, 119, 242, 0.45); color: #6aa3f7; }
+    .share-btn.fb:hover     { background: rgba(24, 119, 242, 0.12); }
+    .share-btn.tw     { border-color: rgba(255, 255, 255, 0.32); color: #fff; }
+    .share-btn.ig     { border-color: rgba(225, 48, 108, 0.5); color: #f178b6; }
+    .share-btn.ig:hover     { background: rgba(225, 48, 108, 0.12); }
+    .share-btn.copy   { border-color: rgba(255, 255, 255, 0.18); }
   </style>
+
+  <!-- html2canvas for instagram image generator (deferred, only loaded once) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+  <script src="/js/share.js" defer></script>
 </head>
 <body>
   <div id="site-header"></div>
@@ -1032,10 +1080,20 @@
                 '<div class="card-notes">' + m.notes + '</div>' +
                 billsHtml +
                 votingHtml +
+                '<div class="card-share">' +
+                  '<span class="card-share-label">Share This Grade</span>' +
+                  '<button type="button" class="share-btn fb"   data-share="facebook"  aria-label="Share on Facebook">Facebook</button>' +
+                  '<button type="button" class="share-btn tw"   data-share="twitter"   aria-label="Share on X">X / Twitter</button>' +
+                  '<button type="button" class="share-btn ig"   data-share="instagram" aria-label="Download Instagram image">Instagram Image</button>' +
+                  '<button type="button" class="share-btn copy" data-share="copy"      aria-label="Copy share link">Copy Link</button>' +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>';
         });
+
+        /* expose the rendered list so js/share.js can resolve data-idx -> member */
+        window.__OPP_RENDER_MEMBERS__ = members;
 
         cardList.innerHTML = html;
         noResults.style.display = members.length === 0 ? 'block' : 'none';
@@ -1048,6 +1106,24 @@
             card.classList.toggle('expanded');
           });
         });
+
+        /* Deep link: ?rep=<slug> auto-expands and scrolls to that legislator. */
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var repSlug = params.get('rep');
+          if (repSlug && window.OPP_SHARE && typeof window.OPP_SHARE.slugify === 'function') {
+            for (var i = 0; i < members.length; i++) {
+              if (window.OPP_SHARE.slugify(members[i]) === repSlug) {
+                var target = cardList.querySelector('.leg-card[data-idx="' + i + '"]');
+                if (target) {
+                  target.classList.add('expanded');
+                  setTimeout(function () { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 80);
+                }
+                break;
+              }
+            }
+          }
+        } catch (e) { /* no-op: deep link is best-effort */ }
       }
 
       /* ── Filtering + Sorting ── */
