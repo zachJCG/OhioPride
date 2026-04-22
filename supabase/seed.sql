@@ -22,10 +22,6 @@
 --      preserved as-is to avoid 404s; rename the asset files separately and
 --      then update img_path here.
 --
--- OPEN ITEM: Confirm with the board chair whether Chrisondra Goodwine, J.D. is
--- still an active director. If she has stepped off, delete her block before
--- applying this seed.
---
 -- Idempotency: both tables are fully re-seeded via DELETE + INSERT inside a
 -- transaction. site_leadership.board_member_id is set to NULL on delete (FK
 -- rule is SET NULL), so the final block re-links the Director and Treasurer
@@ -89,11 +85,12 @@ insert into public.board_members (name, role, chip, img_path, display_order, bio
   )
 ),
 (
-  -- Name corrected from "Ariel Marry Ann" on operator review.
+  -- Name corrected from "Ariel Marry Ann" on operator review. Asset renamed
+  -- in the same commit from /assets/board/ariel-marry-ann.png.
   'Ariel Mary Ann Shaw',
   'Board Member',
   '',
-  '/assets/board/ariel-marry-ann.png',
+  '/assets/board/ariel-mary-ann-shaw.png',
   50,
   jsonb_build_array(
     'Ariel Mary Ann Shaw is a Black trans woman, theatre artist, and advocate based in Cincinnati. She studied Women''s and Gender Studies at the University of Cincinnati and works in public health, bringing an intersectional lens to both her professional and creative life.',
@@ -114,8 +111,7 @@ insert into public.board_members (name, role, chip, img_path, display_order, bio
   )
 ),
 (
-  -- OPEN: confirm whether Chrisondra Goodwine is still a current director.
-  -- If not, delete this block (inclusive of its comma) before applying.
+  -- Chrisondra Goodwine joined the board replacing Jake Hogue. Confirmed active.
   'Chrisondra Goodwine, J.D.',
   'Board Member',
   '',
@@ -128,11 +124,12 @@ insert into public.board_members (name, role, chip, img_path, display_order, bio
   )
 ),
 (
-  -- Name corrected from "Dalma Grandjean" on operator review.
+  -- Name corrected from "Dalma Grandjean" on operator review. Asset renamed
+  -- in the same commit from /assets/board/dalma-grandjean.png.
   'Dalma Grangeen',
   'Board Member',
   '',
-  '/assets/board/dalma-grandjean.png',
+  '/assets/board/dalma-grangeen.png',
   80,
   jsonb_build_array(
     'Dalma Grangeen is a retired attorney and former Law Director for the City of Riverside. Born in Germany to Hungarian parents, she grew up in the Dayton area and earned her Juris Doctor summa cum laude from the University of Dayton School of Law.',
