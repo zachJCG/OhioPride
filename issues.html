@@ -772,9 +772,12 @@
 
     <!-- Shared bill data & pipeline component -->
     <script src="/js/main.js" defer></script>
-    <script src="/js/bill-data.js"></script>
     <script src="/js/bill-pipeline.js"></script>
     <script src="/js/enhancements.js" defer></script>
+    <!-- Round 3: Supabase data client. Exposes OhioPride.loadIssuesPage,
+         which populates window.BILLS + window.LAST_UPDATED and then calls
+         renderBills / updateStats (defined below). -->
+    <script src="/js/ohiopride-data.js" defer></script>
     <script>
       const catColors = {
         "Anti-Trans": "#e879f9",
@@ -933,16 +936,23 @@
         });
       });
 
-      renderBills(BILLS);
-      updateStats(BILLS);
-
-      // Populate the Last Updated card from LAST_UPDATED in bill-data.js
-      if (typeof LAST_UPDATED !== "undefined") {
-        const dateEl = document.getElementById("lastUpdatedDate");
-        const timeEl = document.getElementById("lastUpdatedTime");
-        if (dateEl) dateEl.textContent = LAST_UPDATED.date;
-        if (timeEl) timeEl.textContent = LAST_UPDATED.time;
-      }
+      // Hydrate BILLS, hero stats, and the "Last Updated" card from Supabase
+      // via the /.netlify/functions/bills endpoint. Deferred because
+      // ohiopride-data.js is itself loaded with `defer` and does not execute
+      // until HTML parsing finishes, so we wait for DOMContentLoaded before
+      // calling into it.
+      document.addEventListener("DOMContentLoaded", function () {
+        if (window.OhioPride && typeof window.OhioPride.loadIssuesPage === "function") {
+          window.OhioPride.loadIssuesPage();
+        } else {
+          // Defensive fallback: render an empty list so the filter bar still
+          // wires and the page stays functional if ohiopride-data.js never
+          // arrives.
+          window.BILLS = [];
+          renderBills([]);
+          updateStats([]);
+        }
+      });
     </script>
     <script src="/js/site-template.js" defer></script>
   </body>

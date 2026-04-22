@@ -18,6 +18,7 @@
   <meta name="twitter:title" content="Legislative Scorecard | Ohio Pride PAC" />
   <meta name="twitter:description" content="Every Ohio legislator scored on their LGBTQ+ equality record: floor votes, bill sponsorship, and public statements." />
   <meta name="twitter:image" content="https://ohiopride.org/assets/social/og-image.png" />
+  <!-- INJECT_OG_TAGS_HERE -->
 
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />
@@ -686,7 +687,53 @@
       .leg-card { padding: 16px; }
       .pill { font-size: 11px; padding: 5px 10px; }
     }
+
+    /* Share actions (per-card) */
+    .card-share {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .card-share-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      margin-right: 6px;
+    }
+    .share-btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .share-btn:hover { background: rgba(255, 255, 255, 0.10); border-color: rgba(255, 255, 255, 0.28); }
+    .share-btn:active { transform: translateY(1px); }
+    .share-btn.fb     { border-color: rgba(24, 119, 242, 0.45); color: #6aa3f7; }
+    .share-btn.fb:hover     { background: rgba(24, 119, 242, 0.12); }
+    .share-btn.ig     { border-color: rgba(225, 48, 108, 0.5); color: #f178b6; }
+    .share-btn.ig:hover     { background: rgba(225, 48, 108, 0.12); }
+    .share-btn.copy   { border-color: rgba(255, 255, 255, 0.18); }
   </style>
+
+  <!-- html2canvas for instagram image generator (deferred, only loaded once) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+  <script src="/js/share.js" defer></script>
 </head>
 <body>
   <div id="site-header"></div>
@@ -863,8 +910,15 @@
 
   <div id="site-footer"></div>
 
-  <script src="/js/scorecard-data.js" defer></script>
-  <script src="/js/bill-data.js" defer></script>
+  <!-- Round 3: Supabase-backed data loader. Exposes OhioPride.loadScorecardPage,
+       which populates window.HOUSE_MEMBERS / SENATE_MEMBERS / GRADE_SCALE /
+       SCORECARD_UPDATED / calcScore / calcGrade and dispatches the
+       `ohiopride:scorecard-data-ready` event when the roster is available. -->
+  <script src="/js/ohiopride-data.js" defer></script>
+  <!-- voting-records.js exposes ROLL_CALLS + getRollCallsForBill +
+       resolveVote, which the card renderer uses to compute a
+       voting-record block for every tracked bill in each member's
+       chamber. Party-line default with explicit defector overrides. -->
   <script src="/js/voting-records.js" defer></script>
   <script src="/js/main.js" defer></script>
   <script src="/js/enhancements.js" defer></script>
@@ -872,6 +926,19 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+      /* ── Main render pass ──
+         Wrapped in a function so the page can (a) render with whatever's
+         in window.HOUSE_MEMBERS / SENATE_MEMBERS / GRADE_SCALE right now,
+         and (b) re-render when OhioPride.loadScorecardPage finishes
+         hydrating those globals from Supabase. If the globals aren't
+         arrays yet (initial paint, loader still in flight), we bail out
+         without painting a half-filled page. */
+      function renderScorecard() {
+        if (!Array.isArray(window.HOUSE_MEMBERS) ||
+            !Array.isArray(window.SENATE_MEMBERS)) {
+          return;
+        }
 
       /* ── Combine data ── */
       var allMembers = [];
@@ -894,10 +961,14 @@
 
       /* ── Bill universe ── */
       // Prefer the main legislative tracker's bill list so the scorecard's
-      // "Bills Tracked" matches what we publish on /issues. Fall back to the
-      // in-scorecard reference list if bill-data.js isn't loaded.
+      // "Bills Tracked" matches what we publish on /issues. BILLS is set by
+      // OhioPride.loadIssuesPage on /issues, not here, so we treat it as
+      // optional. SCORED_BILLS is the legacy reference list from
+      // scorecard-data.js; when loadScorecardPage is the data source it stays
+      // undefined, so we coerce to [].
       var trackerBills = (typeof BILLS !== 'undefined' && Array.isArray(BILLS)) ? BILLS : [];
-      var totalBillsTracked = trackerBills.length || SCORED_BILLS.length;
+      var scoredBills = (typeof SCORED_BILLS !== 'undefined' && Array.isArray(SCORED_BILLS)) ? SCORED_BILLS : [];
+      var totalBillsTracked = trackerBills.length || scoredBills.length;
 
       /* ── Compute overall stats for the full chamber (used as baseline) ── */
       var overallChampCount = allMembers.filter(function(m) { return m.grade.grade === 'A+'; }).length;
@@ -937,7 +1008,7 @@
       function parseBills(notes) {
         var found = [];
         if (!notes) return found;
-        SCORED_BILLS.forEach(function(b) {
+        scoredBills.forEach(function(b) {
           if (notes.indexOf(b.bill) !== -1) {
             found.push(b);
           }
@@ -970,36 +1041,56 @@
             billsHtml += '</div>';
           }
 
-          /* Voting record: one row per tracked bill the member has a
-             recorded vote on. Each row shows the bill label, short title,
-             and a chip indicating whether the vote aligned with the
-             equality position. Empty string when no votes exist. */
+          /* Voting record: one row per tracked bill with a roll call in
+             this member's chamber. Each row shows the bill label, short
+             title, and a chip per roll call indicating whether the
+             member's vote aligned with the equality position. Uses
+             getRollCallsForBill + resolveVote from voting-records.js. */
           var votingHtml = '';
-          if (typeof getMemberVoteSummary === 'function') {
-            var summary = getMemberVoteSummary(m, m.chamber);
-            if (summary.length > 0) {
+          if (typeof getRollCallsForBill === 'function' &&
+              typeof resolveVote === 'function' &&
+              typeof BILLS !== 'undefined' && Array.isArray(BILLS)) {
+            var memberChamber = (m.chamber || '').toLowerCase();
+            var legForVote = { chamber: memberChamber, d: m.d, party: m.party };
+            var vrRows = [];
+            BILLS.forEach(function(bill) {
+              var rcs = getRollCallsForBill(bill.id).filter(function(rc) {
+                return rc.chamber === memberChamber;
+              });
+              if (rcs.length === 0) return;
+              var chips = [];
+              rcs.forEach(function(rc) {
+                var vote = resolveVote(legForVote, rc);
+                if (vote === '-') return;
+                var cls, text;
+                if (vote === 'NV') {
+                  cls = 'absent'; text = 'Not Voting';
+                } else {
+                  var forEq = (rc.stance === 'pro'  && vote === 'Y') ||
+                              (rc.stance === 'anti' && vote === 'N');
+                  cls = forEq ? 'for-equality' : 'against-equality';
+                  text = forEq ? 'Voted For Equality' : 'Voted Against Equality';
+                }
+                var title = (rc.label || '') + ', ' + (rc.voteDate || '');
+                chips.push('<span class="vr-chip ' + cls + '" title="' + title.replace(/"/g, '&quot;') + '">' + text + '</span>');
+              });
+              if (chips.length === 0) return;
+              var billLabel = bill.url
+                ? '<a class="vr-bill" href="' + bill.url + '">' + bill.bill + '</a>'
+                : '<span class="vr-bill">' + bill.bill + '</span>';
+              vrRows.push(
+                '<li>' +
+                  billLabel +
+                  '<span class="vr-title">' + (bill.title || '') + '</span>' +
+                  chips.join(' ') +
+                '</li>'
+              );
+            });
+            if (vrRows.length > 0) {
               votingHtml = '<div class="voting-record">' +
                 '<div class="voting-record-label">Voting Record (Tracked Bills)</div>' +
-                '<ul>';
-              summary.forEach(function(entry) {
-                var chips = entry.rollCalls.map(function(rc) {
-                  var cls = classifyVote(rc.vote, rc.stance);
-                  var text = cls === 'absent'
-                    ? 'Not Voting'
-                    : (cls === 'for-equality' ? 'Voted For Equality' : 'Voted Against Equality');
-                  return '<span class="vr-chip ' + cls + '" title="' + rc.label + ' — ' + rc.date + '">' + text + '</span>';
-                }).join(' ');
-                var billLabel = entry.url
-                  ? '<a class="vr-bill" href="' + entry.url + '">' + entry.bill + '</a>'
-                  : '<span class="vr-bill">' + entry.bill + '</span>';
-                votingHtml +=
-                  '<li>' +
-                    billLabel +
-                    '<span class="vr-title">' + (entry.title || '') + '</span>' +
-                    chips +
-                  '</li>';
-              });
-              votingHtml += '</ul></div>';
+                '<ul>' + vrRows.join('') + '</ul>' +
+              '</div>';
             }
           }
 
@@ -1032,10 +1123,19 @@
                 '<div class="card-notes">' + m.notes + '</div>' +
                 billsHtml +
                 votingHtml +
+                '<div class="card-share">' +
+                  '<span class="card-share-label">Share This Grade</span>' +
+                  '<button type="button" class="share-btn fb"   data-share="facebook"  aria-label="Share on Facebook">Facebook</button>' +
+                  '<button type="button" class="share-btn ig"   data-share="instagram" aria-label="Download Instagram image">Instagram Image</button>' +
+                  '<button type="button" class="share-btn copy" data-share="copy"      aria-label="Copy share link">Copy Link</button>' +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>';
         });
+
+        /* expose the rendered list so js/share.js can resolve data-idx -> member */
+        window.__OPP_RENDER_MEMBERS__ = members;
 
         cardList.innerHTML = html;
         noResults.style.display = members.length === 0 ? 'block' : 'none';
@@ -1048,6 +1148,24 @@
             card.classList.toggle('expanded');
           });
         });
+
+        /* Deep link: ?rep=<slug> auto-expands and scrolls to that legislator. */
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var repSlug = params.get('rep');
+          if (repSlug && window.OPP_SHARE && typeof window.OPP_SHARE.slugify === 'function') {
+            for (var i = 0; i < members.length; i++) {
+              if (window.OPP_SHARE.slugify(members[i]) === repSlug) {
+                var target = cardList.querySelector('.leg-card[data-idx="' + i + '"]');
+                if (target) {
+                  target.classList.add('expanded');
+                  setTimeout(function () { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 80);
+                }
+                break;
+              }
+            }
+          }
+        } catch (e) { /* no-op: deep link is best-effort */ }
       }
 
       /* ── Filtering + Sorting ── */
@@ -1184,6 +1302,23 @@
 
       /* ── Initial render ── */
       applyFilters();
+      } /* end renderScorecard() */
+
+      /* Hydrate from Supabase then render. OhioPride.loadScorecardPage is
+         deferred, so by the time this DOMContentLoaded handler runs it's
+         already loaded. The loader populates HOUSE_MEMBERS / SENATE_MEMBERS
+         / GRADE_SCALE / SCORECARD_UPDATED + calcScore + calcGrade, then
+         dispatches 'ohiopride:scorecard-data-ready'. Our listener reruns
+         renderScorecard once the globals are in place.
+         Fallback path: if ohiopride-data.js somehow didn't load, call
+         renderScorecard() directly — it no-ops when the globals are empty,
+         which keeps the page from throwing. */
+      if (window.OhioPride && typeof window.OhioPride.loadScorecardPage === 'function') {
+        window.addEventListener('ohiopride:scorecard-data-ready', renderScorecard);
+        window.OhioPride.loadScorecardPage();
+      } else {
+        renderScorecard();
+      }
     });
   </script>
 </body>
