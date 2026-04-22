@@ -213,12 +213,13 @@ export default async (_req, _context) => {
       email: (r['Donor Email'] || '').trim().toLowerCase() || null,
       display_name: displayName,
       amount_cents: amountCents,
+      recurrence,
       actblue_contribution_id: contribId,
       actblue_receipt_id: r['Receipt ID'] || null,
       contributed_at: r['Date'] || new Date().toISOString(),
       is_public: isPublic,
       is_vetted: false,
-      notes: `refcode=${refcode}; recurrence=${recurrence}; tier=${tierData || 'Supporter'}`,
+      notes: `refcode=${refcode}; tier=${tierData || 'Supporter'}`,
     });
   }
 
