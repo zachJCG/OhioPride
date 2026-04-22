@@ -217,6 +217,11 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 28px;
+      /* Default grid align-items is `stretch`, so if one card's bio
+         expands the rest of that row stretches to match. `start` lets
+         each card size to its own content and keeps the collapsed cards
+         from growing with their neighbor. */
+      align-items: start;
     }
     .board-card {
       background: var(--bg-white);
@@ -317,15 +322,33 @@
       margin-bottom: 14px;
     }
 
-    /* Bio area */
+    /* Bio area.
+       Collapsed state is animated via max-height + opacity + vertical
+       padding rather than `display: none`, so opening and closing the
+       panel smoothly expands the card instead of snapping to its final
+       height. The `align-items: start` on .board-grid keeps the rest of
+       the row from reacting to the change in this card's height. */
     .board-card-bio {
-      padding: 0 22px 22px;
+      padding: 0 22px;
       color: var(--text-secondary);
       font-size: 14.5px;
       line-height: 1.7;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.3s ease,
+                  padding 0.3s ease;
     }
     .board-card-bio p + p { margin-top: 0.8rem; }
-    .board-card-bio[hidden] { display: none; }
+    .board-card.is-open .board-card-bio {
+      /* 1600px is comfortably larger than the longest seeded bio and
+         avoids the layout-thrash that comes with `max-height: auto`. */
+      max-height: 1600px;
+      opacity: 1;
+      padding-top: 0;
+      padding-bottom: 22px;
+    }
 
     .board-card-toggle {
       margin: 0 22px 20px;
