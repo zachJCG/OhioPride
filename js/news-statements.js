@@ -129,7 +129,28 @@ const NEWS_STATEMENTS = [
     context:  "Fowler Arthur is a reliable floor vote for anti-LGBTQ+ legislation and affiliated with far-right caucus positioning.",
     sourceUrl: "" },
 
-  /* ───── Senate (Democrats, pro) ───── */
+  /* ───── Senate (Democrats, pro) ─────
+     Blackshear's House-tenure votes (135th GA) are recorded here
+     rather than in the voting-records resolver because the
+     resolver attributes each chamber-district pair to its current
+     occupant; cross-chamber service has to live in the statements
+     layer until a service-history table exists. */
+  { id: "6-s-01",  chamber: "senate", district: 6,  date: "2021-04-01", sentiment: "pro",  points:  1,
+    headline: "Prior service in the Ohio House (Dayton-area district)",
+    context:  "Blackshear was sworn into the Ohio House of Representatives in 2021 and represented a Dayton-area district before his election to the State Senate. House tenure included consistent Democratic-caucus votes against the precursor anti-LGBTQ+ bills of the 134th and 135th GAs.",
+    sourceUrl: "" },
+  { id: "6-s-02",  chamber: "senate", district: 6,  date: "2024-01-10", sentiment: "pro",  points:  2,
+    headline: "Voted N on HB 68 House override (135th GA, as state representative)",
+    context:  "As a state representative, Blackshear voted N on the House override of HB 68 (gender-affirming care + sports ban) on 2024-01-10 — the highest-stakes equality vote of the 135th GA. The override carried 65-28 with the Republican supermajority.",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb68/votes" },
+  { id: "6-s-03",  chamber: "senate", district: 6,  date: "2023-06-21", sentiment: "pro",  points:  1,
+    headline: "Voted N on HB 8 (Parents' Bill of Rights / forced outing) House passage",
+    context:  "Blackshear voted N on the House passage of HB 8 (Parents' Bill of Rights / forced outing) on 2023-06-21, joining the Democratic caucus against the bill that became law later that GA.",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb8/votes" },
+  { id: "6-s-04",  chamber: "senate", district: 6,  date: "2024-06-26", sentiment: "pro",  points:  1,
+    headline: "Voted N on SB 104 (bathroom ban) House passage with amendment",
+    context:  "Blackshear voted N on the House passage of SB 104 on 2024-06-26 after the bathroom/locker-room restriction was attached as an amendment in the House Higher Education Committee.",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/sb104/votes" },
   { id: "9-s-01",  chamber: "senate", district: 9,  date: "2024-11-13", sentiment: "pro",  points:  1,
     headline: "Vocal opponent of SB 104 (bathroom ban) during concurrence debate",
     context:  "Ingram took the floor during SB 104 concurrence and voted N with the Democratic caucus.",
