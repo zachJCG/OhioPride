@@ -30,31 +30,32 @@ interface LegislatorEntry {
 }
 
 const SITE = "https://ohiopride.org";
-const MANIFEST_URL = SITE + "/assets/data/legislators.json";
 
 // Cache manifest on the worker's global so we don't refetch every hit.
+// Keyed by origin so deploy previews and production don't cross-contaminate.
 // 5-minute TTL is plenty: manifest only changes on deploy.
-interface CacheShape { fetchedAt: number; data: Record<string, LegislatorEntry> | null; }
+interface CacheEntry { fetchedAt: number; data: Record<string, LegislatorEntry> | null; }
 // deno-lint-ignore no-explicit-any
 const g = globalThis as any;
-if (!g.__OPP_OG_CACHE__) g.__OPP_OG_CACHE__ = { fetchedAt: 0, data: null } as CacheShape;
-const CACHE: CacheShape = g.__OPP_OG_CACHE__;
+if (!g.__OPP_OG_CACHE__) g.__OPP_OG_CACHE__ = {} as Record<string, CacheEntry>;
+const CACHE: Record<string, CacheEntry> = g.__OPP_OG_CACHE__;
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
-async function loadManifest(): Promise<Record<string, LegislatorEntry> | null> {
+async function loadManifest(origin: string): Promise<Record<string, LegislatorEntry> | null> {
   const now = Date.now();
-  if (CACHE.data && now - CACHE.fetchedAt < CACHE_TTL_MS) return CACHE.data;
+  const entry = CACHE[origin] || (CACHE[origin] = { fetchedAt: 0, data: null });
+  if (entry.data && now - entry.fetchedAt < CACHE_TTL_MS) return entry.data;
   try {
-    const r = await fetch(MANIFEST_URL, { headers: { accept: "application/json" } });
-    if (!r.ok) return CACHE.data; // fall back to whatever we had
+    const r = await fetch(origin + "/assets/data/legislators.json", { headers: { accept: "application/json" } });
+    if (!r.ok) return entry.data; // fall back to whatever we had
     const list = (await r.json()) as LegislatorEntry[];
     const map: Record<string, LegislatorEntry> = {};
-    for (const entry of list) map[entry.slug] = entry;
-    CACHE.data = map;
-    CACHE.fetchedAt = now;
+    for (const e of list) map[e.slug] = e;
+    entry.data = map;
+    entry.fetchedAt = now;
     return map;
   } catch (_err) {
-    return CACHE.data;
+    return entry.data;
   }
 }
 
@@ -70,8 +71,8 @@ function escapeHtml(str: string): string {
 function buildOgBlock(entry: LegislatorEntry, shareUrl: string): string {
   const title = `${entry.name} (${entry.chamber} Dist. ${entry.district}): ${entry.grade}`;
   const desc =
-    `${entry.name} scored ${entry.score}/100 (${entry.grade}, ${entry.gradeLabel}) ` +
-    `on the Ohio Pride PAC LGBTQ+ Equality Scorecard.`;
+    `Check out ${entry.name}'s grade on Ohio Pride. ` +
+    `Scored ${entry.score}/100 (${entry.grade}, ${entry.gradeLabel}) on the LGBTQ+ Equality Scorecard.`;
   const t = escapeHtml(title);
   const d = escapeHtml(desc);
   const url = escapeHtml(shareUrl);
@@ -100,11 +101,15 @@ export default async (request: Request, context: Context): Promise<Response> => 
   const ct = response.headers.get("content-type") || "";
   if (!ct.includes("text/html")) return response;
 
-  const manifest = await loadManifest();
+  // Read manifest from the same origin as the incoming request so deploy
+  // previews see their own fresh manifest, not prod's.
+  const manifest = await loadManifest(url.origin);
   if (!manifest) return response;
   const entry = manifest[rep];
   if (!entry) return response;
 
+  // The public share URL stays canonical (prod) so link previews don't
+  // point at ephemeral deploy-preview hostnames.
   const shareUrl = `${SITE}/scorecard?rep=${encodeURIComponent(entry.slug)}`;
   const ogBlock = buildOgBlock(entry, shareUrl);
 
@@ -116,8 +121,14 @@ export default async (request: Request, context: Context): Promise<Response> => 
   }
   const patched = html.replace(marker, ogBlock + "\n  " + marker);
 
-  // Preserve original headers but make sure caches respect ?rep variants.
+  // Preserve original headers but:
+  //  - drop content-length (we rewrote the body, the inherited length is wrong and
+  //    scrapers may truncate or reject the response)
+  //  - drop content-encoding (upstream may be gzip; we hand back plain text)
+  //  - set cache-control so the edge respects ?rep variants
   const headers = new Headers(response.headers);
+  headers.delete("content-length");
+  headers.delete("content-encoding");
   headers.set("cache-control", "public, max-age=60, stale-while-revalidate=300");
   headers.append("vary", "accept");
   return new Response(patched, {

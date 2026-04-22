@@ -5,8 +5,8 @@
    Public API (called from scorecard.html):
      OPP_SHARE.slugify(member)               -> "callender-h57"
      OPP_SHARE.shareUrl(member)              -> "https://ohiopride.org/scorecard?rep=callender-h57"
-     OPP_SHARE.shareToFacebook(member)
-     OPP_SHARE.shareToTwitter(member)
+     OPP_SHARE.shareToFacebook(member)       -> generates + downloads PNG, opens FB sharer,
+                                                copies caption to clipboard
      OPP_SHARE.copyShareLink(member)         -> Promise<bool>
      OPP_SHARE.generateInstagramPost(member) -> downloads PNG (uses html2canvas)
 
@@ -39,38 +39,21 @@
     return SITE + "/scorecard?rep=" + encodeURIComponent(slugify(member));
   }
 
-  function shareText(member) {
-    var grade = member.grade && member.grade.grade ? member.grade.grade : "?";
-    var label = member.grade && member.grade.label ? member.grade.label : "";
-    return [
-      member.chamber + " Dist. " + member.d + " " + member.name,
-      "scored " + member.score + "/100 (" + grade + (label ? ", " + label : "") + ")",
-      "on the Ohio Pride PAC LGBTQ+ Equality Scorecard."
-    ].join(" ");
-  }
-
-  function shareToFacebook(member) {
-    var u = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(shareUrl(member));
-    window.open(u, "opp-share-fb", "width=620,height=520,noopener");
-  }
-
-  function shareToTwitter(member) {
-    var u = "https://twitter.com/intent/tweet"
-      + "?url=" + encodeURIComponent(shareUrl(member))
-      + "&text=" + encodeURIComponent(shareText(member))
-      + "&hashtags=" + encodeURIComponent("OhioPride,LGBTQEquality");
-    window.open(u, "opp-share-tw", "width=620,height=520,noopener");
+  function shareCaption(member) {
+    return "Check out " + member.name + "'s grade on Ohio Pride. " + shareUrl(member);
   }
 
   function copyShareLink(member) {
-    var url = shareUrl(member);
+    return writeClipboard(shareUrl(member));
+  }
+
+  function writeClipboard(text) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(url).then(function () { return true; }, function () { return false; });
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return false; });
     }
-    /* Fallback: textarea + execCommand */
     try {
       var ta = document.createElement("textarea");
-      ta.value = url;
+      ta.value = text;
       ta.setAttribute("readonly", "");
       ta.style.position = "absolute";
       ta.style.left = "-9999px";
@@ -84,73 +67,99 @@
     }
   }
 
-  /* Build a 1080x1080 instagram-ready card off-screen, then PNG it. */
-  function generateInstagramPost(member) {
-    if (typeof html2canvas !== "function") {
-      console.warn("html2canvas not loaded; cannot generate instagram post.");
-      alert("Instagram image generator is still loading. Try again in a moment.");
-      return;
-    }
+  /* Build a 1080x1080 card off-screen, PNG it, and download. */
+  function generateCardImage(member) {
+    return new Promise(function (resolve, reject) {
+      if (typeof html2canvas !== "function") {
+        alert("Share image generator is still loading. Try again in a moment.");
+        return reject(new Error("html2canvas not loaded"));
+      }
 
-    var grade = member.grade || { grade: "?", color: "#888", label: "" };
-    var partyLabel = member.party === "D" ? "Democrat" : "Republican";
+      var grade = member.grade || { grade: "?", color: "#888", label: "" };
+      var partyLabel = member.party === "D" ? "Democrat" : "Republican";
 
-    var stage = document.createElement("div");
-    stage.style.cssText = [
-      "position:fixed",
-      "left:-10000px",
-      "top:0",
-      "width:1080px",
-      "height:1080px",
-      "background:#0F2233",
-      "color:#fff",
-      "font-family:'Montserrat',Arial,sans-serif",
-      "padding:80px",
-      "box-sizing:border-box",
-      "display:flex",
-      "flex-direction:column",
-      "justify-content:space-between"
-    ].join(";");
+      var stage = document.createElement("div");
+      stage.style.cssText = [
+        "position:fixed",
+        "left:-10000px",
+        "top:0",
+        "width:1080px",
+        "height:1080px",
+        "background:#0F2233",
+        "color:#fff",
+        "font-family:'Montserrat',Arial,sans-serif",
+        "padding:80px",
+        "box-sizing:border-box",
+        "display:flex",
+        "flex-direction:column",
+        "justify-content:space-between"
+      ].join(";");
 
-    stage.innerHTML =
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+      stage.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+          '<div>' +
+            '<div style="font-size:24px;letter-spacing:4px;text-transform:uppercase;opacity:0.7">Ohio Pride PAC</div>' +
+            '<div style="font-size:36px;font-weight:700;margin-top:12px">2026 Legislative Scorecard</div>' +
+          '</div>' +
+          '<div style="background:linear-gradient(90deg,#e40303,#ff8c00,#ffed00,#008026,#004dff,#750787);height:14px;width:200px;border-radius:7px;margin-top:18px"></div>' +
+        '</div>' +
+
+        '<div style="display:flex;flex-direction:column;align-items:center;text-align:center">' +
+          '<div style="font-size:340px;font-weight:900;line-height:1;color:' + grade.color + '">' + grade.grade + '</div>' +
+          '<div style="font-size:36px;font-weight:600;opacity:0.85;margin-top:8px">' + escapeHtml(grade.label || "") + '</div>' +
+        '</div>' +
+
         '<div>' +
-          '<div style="font-size:24px;letter-spacing:4px;text-transform:uppercase;opacity:0.7">Ohio Pride PAC</div>' +
-          '<div style="font-size:36px;font-weight:700;margin-top:12px">2026 Legislative Scorecard</div>' +
-        '</div>' +
-        '<div style="background:linear-gradient(90deg,#e40303,#ff8c00,#ffed00,#008026,#004dff,#750787);height:14px;width:200px;border-radius:7px;margin-top:18px"></div>' +
-      '</div>' +
+          '<div style="font-size:64px;font-weight:800;line-height:1.1">' + escapeHtml(member.name) + '</div>' +
+          '<div style="font-size:32px;font-weight:500;opacity:0.75;margin-top:14px">' +
+            escapeHtml(member.chamber) + ' District ' + member.d +
+            ' &nbsp;&middot;&nbsp; ' + partyLabel +
+            ' &nbsp;&middot;&nbsp; Score ' + member.score + '/100' +
+          '</div>' +
+          '<div style="margin-top:36px;font-size:24px;letter-spacing:2px;text-transform:uppercase;opacity:0.65">ohiopride.org/scorecard</div>' +
+        '</div>';
 
-      '<div style="display:flex;flex-direction:column;align-items:center;text-align:center">' +
-        '<div style="font-size:340px;font-weight:900;line-height:1;color:' + grade.color + '">' + grade.grade + '</div>' +
-        '<div style="font-size:36px;font-weight:600;opacity:0.85;margin-top:8px">' + grade.label + '</div>' +
-      '</div>' +
+      document.body.appendChild(stage);
 
-      '<div>' +
-        '<div style="font-size:64px;font-weight:800;line-height:1.1">' + escapeHtml(member.name) + '</div>' +
-        '<div style="font-size:32px;font-weight:500;opacity:0.75;margin-top:14px">' +
-          escapeHtml(member.chamber) + ' District ' + member.d +
-          ' &nbsp;&middot;&nbsp; ' + partyLabel +
-          ' &nbsp;&middot;&nbsp; Score ' + member.score + '/100' +
-        '</div>' +
-        '<div style="margin-top:36px;font-size:24px;letter-spacing:2px;text-transform:uppercase;opacity:0.65">ohiopride.org/scorecard</div>' +
-      '</div>';
-
-    document.body.appendChild(stage);
-
-    html2canvas(stage, { backgroundColor: "#0F2233", scale: 1, logging: false }).then(function (canvas) {
-      var link = document.createElement("a");
-      link.download = "ohio-pride-scorecard-" + slugify(member) + ".png";
-      link.href = canvas.toDataURL("image/png");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }).catch(function (err) {
-      console.error("html2canvas failed:", err);
-      alert("Could not generate the share image. Try again or use the Facebook/X buttons.");
-    }).then(function () {
-      document.body.removeChild(stage);
+      html2canvas(stage, { backgroundColor: "#0F2233", scale: 1, logging: false }).then(function (canvas) {
+        var link = document.createElement("a");
+        link.download = "ohio-pride-scorecard-" + slugify(member) + ".png";
+        link.href = canvas.toDataURL("image/png");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        document.body.removeChild(stage);
+        resolve();
+      }).catch(function (err) {
+        if (stage.parentNode) document.body.removeChild(stage);
+        console.error("html2canvas failed:", err);
+        alert("Could not generate the share image. Try again or use Copy Link.");
+        reject(err);
+      });
     });
+  }
+
+  /* Facebook: download the grade image, open the FB share dialog
+     pointed at the per-rep URL (so FB's OG scraper grabs the edge-
+     injected preview), and copy a branded caption to the clipboard
+     so the user can paste it straight into the FB composer. */
+  function shareToFacebook(member) {
+    generateCardImage(member).then(function () {
+      return writeClipboard(shareCaption(member));
+    }).then(function () {
+      var u = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(shareUrl(member));
+      window.open(u, "opp-share-fb", "width=620,height=520,noopener");
+    }).catch(function () {
+      /* errors are already reported by generateCardImage */
+    });
+  }
+
+  /* Instagram: download the grade image and copy the branded caption
+     to the clipboard so the user can paste it into the IG app. */
+  function generateInstagramPost(member) {
+    generateCardImage(member).then(function () {
+      return writeClipboard(shareCaption(member));
+    }).catch(function () { /* already reported */ });
   }
 
   function escapeHtml(str) {
@@ -162,21 +171,19 @@
       .replace(/'/g, "&#39;");
   }
 
-  /* ── Public API ── */
   global.OPP_SHARE = {
     slugify: slugify,
     shareUrl: shareUrl,
     shareToFacebook: shareToFacebook,
-    shareToTwitter: shareToTwitter,
     copyShareLink: copyShareLink,
     generateInstagramPost: generateInstagramPost
   };
 
-  /* ── Delegated click handler (one listener for all cards) ── */
+  /* Delegated click handler (one listener for all cards) */
   document.addEventListener("click", function (e) {
     var btn = e.target.closest && e.target.closest("[data-share]");
     if (!btn) return;
-    e.stopPropagation(); /* don't toggle the card collapse */
+    e.stopPropagation();
 
     var card = btn.closest(".leg-card");
     if (!card) return;
@@ -187,7 +194,6 @@
 
     var action = btn.getAttribute("data-share");
     if (action === "facebook") shareToFacebook(member);
-    else if (action === "twitter") shareToTwitter(member);
     else if (action === "instagram") generateInstagramPost(member);
     else if (action === "copy") {
       copyShareLink(member).then(function (ok) {
