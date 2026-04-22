@@ -2,6 +2,11 @@
   publish = "."
   functions = "netlify/functions"
 
+# Hourly ActBlue contribution sync. Reads ACTBLUE_* and SUPABASE_* env vars
+# from the Netlify dashboard; fails gracefully when credentials are missing.
+[functions."actblue-sync"]
+  schedule = "@hourly"
+
 [[headers]]
   for = "/*"
   [headers.values]

@@ -1,32 +1,37 @@
 /* ==========================================================================
-   OHIO PRIDE PAC — Shared Site Header & Footer Template
+   OHIO PRIDE PAC — Shared Site Header & Footer Template (v2)
    ------------------------------------------------------
-   This file is the single source of truth for the site-wide nav and
-   footer. To update navigation links, footer columns, or leadership
-   listings across the ENTIRE site, edit the HTML constants below — every
-   page that includes this script will pick up the change automatically.
+   Updated from the Round 0 version to work alongside the Supabase-backed
+   leadership table. Two things changed:
 
-   The animated Progress-Pride banner that sits immediately below the nav
-   is owned by /js/enhancements.js, not this file.
+   1. The footer's "Leadership" block now carries the attribute
+      [data-ohp-directors] [data-ohp-entity="pac"]. The Round 2
+      OhioPride.loadSiteLeadership() helper populates this element on page
+      load from /.netlify/functions/site-leadership, so officer changes
+      propagate site-wide from a single database row.
+
+   2. The "Paid for by" disclaimer at the bottom carries
+      [data-ohp-disclaimer] [data-ohp-entity="pac"] for the same reason.
+      It starts with a hardcoded fallback string so the disclaimer is
+      still legally complete if the JS never runs (e.g. script-blocking
+      browser, slow network before first paint).
+
+   The animated Progress-Pride banner continues to live in
+   /js/enhancements.js, not here.
 
    Pages opt in by:
-     1. Linking the stylesheet:
-          <link rel="stylesheet" href="/css/site-template.css">
-     2. Adding placeholder elements where the header and footer should go:
-          <div id="site-header"></div>
-          ... page content ...
-          <div id="site-footer"></div>
-     3. Including this script (defer is fine):
-          <script src="/js/site-template.js" defer></script>
+     1. <link rel="stylesheet" href="/css/site-template.css">
+     2. <div id="site-header"></div>  and  <div id="site-footer"></div>
+     3. <script src="/js/site-template.js" defer></script>
+     4. <script src="/js/ohiopride-data.js" defer></script>
+        (so the leadership loader is available)
    ========================================================================== */
 
 (function () {
   'use strict';
 
   // -------------------------------------------------------------------------
-  // HEADER (primary nav)
-  // The animated pride-flag banner is injected by /js/enhancements.js and
-  // positioned immediately BELOW the nav, so we do not render one here.
+  // HEADER (primary nav). Unchanged from v1.
   // -------------------------------------------------------------------------
   var HEADER_HTML = [
     '<nav class="ohp-nav" aria-label="Primary">',
@@ -46,11 +51,19 @@
     '      <li><a href="/donate" class="ohp-btn-donate">Donate</a></li>',
     '    </ul>',
     '  </div>',
-    '</nav>'
+    '</nav>',
   ].join('\n');
 
   // -------------------------------------------------------------------------
-  // FOOTER (columns, legal, leadership, disclaimers)
+  // FOOTER
+  // -------------------------------------------------------------------------
+  // The Leadership block and the disclaimer line now carry data-attributes
+  // so the Supabase-backed loader can swap their contents. The hardcoded
+  // values that remain here are the fallbacks — what visitors see if the
+  // leadership fetch fails or runs late.
+  //
+  // Keep the hardcoded fallback in sync with the seeded values in
+  // migration 20260422000000_configuration_tables.sql (site_leadership seed).
   // -------------------------------------------------------------------------
   var FOOTER_HTML = [
     '<footer class="ohp-footer">',
@@ -84,7 +97,9 @@
     '    </div>',
     '    <div class="ohp-footer-col">',
     '      <h4>Leadership</h4>',
-    '      <div class="ohp-directors">',
+    '      <div class="ohp-directors" data-ohp-directors data-ohp-entity="pac">',
+    // Hardcoded fallback (matches site_leadership seed). The loader replaces
+    // this innerHTML on page load with the current database values.
     '        <strong>Director:</strong> Zachary R. Joseph<br>',
     '        <strong>Treasurer:</strong> David Donofrio',
     '      </div>',
@@ -92,20 +107,19 @@
     '  </div>',
     '  <div class="ohp-footer-bottom">',
     '    <div>&copy; 2026 Ohio Pride PAC. All rights reserved.</div>',
-    '    <div class="ohp-disclaimer">Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate\'s committee.</div>',
+    '    <div class="ohp-disclaimer" data-ohp-disclaimer data-ohp-entity="pac">',
+    // Hardcoded fallback. Must be a legally complete disclaimer on its own.
+    '      Paid for by Ohio Pride PAC. Not authorized by any candidate or candidate\'s committee.',
+    '    </div>',
     '  </div>',
-    '</footer>'
+    '</footer>',
   ].join('\n');
 
   // -------------------------------------------------------------------------
-  // Injection + behavior wiring
+  // Injection + behavior wiring. Unchanged from v1 except for the call to
+  // loadSiteLeadership at the end, which populates the two data-attributed
+  // elements above from Supabase.
   // -------------------------------------------------------------------------
-  // We replace the placeholder element entirely (outerHTML) rather than
-  // populating it with innerHTML. If the placeholder stays in the tree as a
-  // short-height wrapper, it becomes the containing block for the sticky
-  // <nav> inside it — and the nav unsticks as soon as that wrapper scrolls
-  // out of view. Replacing the placeholder makes the <nav> a direct child of
-  // <body>, so sticky positioning works for the full length of the page.
   function injectInto(id, html) {
     var target = document.getElementById(id);
     if (!target) return;
@@ -152,6 +166,15 @@
     injectInto('site-footer', FOOTER_HTML);
     markActiveLink();
     wireMenuToggle();
+
+    // Populate the leadership-driven parts of the footer if the data helper
+    // is available. Guard with a typeof check so pages that forget to load
+    // ohiopride-data.js do not error — they just keep the hardcoded
+    // fallback text.
+    if (typeof window.OhioPride !== 'undefined' &&
+        typeof window.OhioPride.loadSiteLeadership === 'function') {
+      window.OhioPride.loadSiteLeadership({ entity: 'pac' });
+    }
   }
 
   if (document.readyState === 'loading') {
