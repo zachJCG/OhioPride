@@ -449,6 +449,127 @@
       background: rgba(15, 35, 54, 0.85);
     }
 
+    .share-sheet {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.72);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 2000;
+      padding: 12px;
+    }
+    .share-sheet.open { display: flex; }
+    .share-sheet-panel {
+      width: min(560px, 100%);
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      background: #f8fafc;
+      border-radius: 24px;
+      padding: 16px 16px 18px;
+      box-shadow: 0 28px 50px rgba(2, 6, 23, 0.45);
+    }
+    .share-sheet-grabber {
+      width: 56px;
+      height: 5px;
+      border-radius: 999px;
+      background: #cbd5e1;
+      margin: 2px auto 12px;
+    }
+    .share-sheet-title {
+      margin: 0 0 12px;
+      color: #0f172a;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .share-preview-card {
+      background: #ffffff;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+      margin-bottom: 14px;
+    }
+    .share-preview-card img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      display: block;
+      background: #e2e8f0;
+    }
+    .share-preview-body {
+      padding: 12px 14px 14px;
+      color: #0f172a;
+    }
+    .share-preview-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #475569;
+      margin-bottom: 8px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .share-preview-headline {
+      margin: 0 0 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 25px;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .share-preview-byline {
+      font-size: 13px;
+      color: #334155;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .share-quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .share-quick-btn {
+      border: none;
+      background: transparent;
+      text-align: center;
+      cursor: pointer;
+      color: #0f172a;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .share-quick-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      margin: 0 auto 7px;
+      display: grid;
+      place-items: center;
+      background: #e2e8f0;
+      font-size: 24px;
+    }
+    .share-sheet-main-btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      background: #2563eb;
+      color: #ffffff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 13px 14px;
+      cursor: pointer;
+    }
+    .share-sheet-main-btn:disabled {
+      background: #94a3b8;
+      cursor: wait;
+    }
+
     /* Expanded content */
     .card-expanded {
       max-height: 0;
@@ -886,6 +1007,42 @@
     <div class="no-results" id="no-results">No legislators match your current filters.</div>
   </section>
 
+  <div class="share-sheet" id="share-sheet" aria-hidden="true">
+    <div class="share-sheet-panel" role="dialog" aria-modal="true" aria-label="Share scorecard card">
+      <div class="share-sheet-grabber" aria-hidden="true"></div>
+      <h3 class="share-sheet-title">Share scorecard</h3>
+      <article class="share-preview-card">
+        <img id="share-preview-image" alt="Share preview card image" />
+        <div class="share-preview-body">
+          <div class="share-preview-kicker">Legislative scorecard</div>
+          <p class="share-preview-headline" id="share-preview-headline">Ohio Pride PAC scorecard</p>
+          <div class="share-preview-byline" id="share-preview-byline">ohiopride.org/scorecard</div>
+        </div>
+      </article>
+
+      <div class="share-quick-actions">
+        <button type="button" class="share-quick-btn" data-share-action="copy-link">
+          <span class="share-quick-icon">🔗</span>
+          Copy link
+        </button>
+        <button type="button" class="share-quick-btn" data-share-action="message">
+          <span class="share-quick-icon">💬</span>
+          Message
+        </button>
+        <button type="button" class="share-quick-btn" data-share-action="instagram">
+          <span class="share-quick-icon">📸</span>
+          Instagram
+        </button>
+        <button type="button" class="share-quick-btn" data-share-action="facebook">
+          <span class="share-quick-icon">f</span>
+          Facebook
+        </button>
+      </div>
+
+      <button type="button" class="share-sheet-main-btn" id="share-sheet-main-btn">Share now</button>
+    </div>
+  </div>
+
   <div id="site-footer"></div>
 
   <script src="/js/scorecard-data.js" defer></script>
@@ -973,6 +1130,12 @@
       /* ── Render cards ── */
       var cardList = document.getElementById('card-list');
       var noResults = document.getElementById('no-results');
+      var shareSheet = document.getElementById('share-sheet');
+      var sharePreviewImage = document.getElementById('share-preview-image');
+      var sharePreviewHeadline = document.getElementById('share-preview-headline');
+      var sharePreviewByline = document.getElementById('share-preview-byline');
+      var shareSheetMainBtn = document.getElementById('share-sheet-main-btn');
+      var activeSharePayload = null;
 
       function renderCards(members) {
         var html = '';
@@ -1083,7 +1246,7 @@
             e.stopPropagation();
             var idx = Number(btn.getAttribute('data-share-idx'));
             if (Number.isNaN(idx) || !members[idx]) return;
-            shareLegislatorCard(members[idx]);
+            openSharePreview(members[idx]);
           });
         });
       }
@@ -1215,15 +1378,49 @@
         ctx.fillText('ohiopride.org/scorecard', panelX + 86, panelY + panelH - 124);
 
         var blob = await canvasToBlob(canvas);
-        return new File([blob], 'ohiopride-scorecard-' + member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.png', { type: 'image/png' });
+        return {
+          file: new File([blob], 'ohiopride-scorecard-' + member.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.png', { type: 'image/png' }),
+          previewUrl: URL.createObjectURL(blob)
+        };
       }
 
-      async function shareLegislatorCard(member) {
+      function closeSharePreview() {
+        if (activeSharePayload && activeSharePayload.previewUrl) {
+          URL.revokeObjectURL(activeSharePayload.previewUrl);
+        }
+        activeSharePayload = null;
+        shareSheet.classList.remove('open');
+        shareSheet.setAttribute('aria-hidden', 'true');
+      }
+
+      async function openSharePreview(member) {
+        shareSheet.classList.add('open');
+        shareSheet.setAttribute('aria-hidden', 'false');
+        shareSheetMainBtn.disabled = true;
+        shareSheetMainBtn.textContent = 'Preparing preview...';
+        sharePreviewHeadline.textContent = member.name + ' scored ' + member.score + '/100 (' + member.grade.grade + ')';
+        sharePreviewByline.textContent = (member.chamber + ' District ' + member.d + ' • ohiopride.org/scorecard');
+        try {
+          var generated = await createShareCardFile(member);
+          activeSharePayload = {
+            member: member,
+            file: generated.file,
+            previewUrl: generated.previewUrl
+          };
+          sharePreviewImage.src = generated.previewUrl;
+          shareSheetMainBtn.disabled = false;
+          shareSheetMainBtn.textContent = 'Share now';
+        } catch (err) {
+          closeSharePreview();
+          alert('Could not prepare the share preview on this device.');
+        }
+      }
+
+      async function shareLegislatorCard(member, imageFile) {
         var pageUrl = window.location.origin + '/scorecard';
         var message = member.name + ' scored ' + member.score + '/100 (' + member.grade.grade + ') on Ohio Pride PAC’s Legislative Scorecard.';
 
         try {
-          var imageFile = await createShareCardFile(member);
           var shareDataWithImage = {
             title: 'Ohio Pride PAC Legislative Scorecard',
             text: message,
@@ -1233,7 +1430,7 @@
 
           if (navigator.share && imageFile && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
             await navigator.share(shareDataWithImage);
-            return;
+            return true;
           }
 
           if (navigator.share) {
@@ -1242,7 +1439,7 @@
               text: message,
               url: pageUrl
             });
-            return;
+            return true;
           }
         } catch (err) {
           if (err && err.name === 'AbortError') return;
@@ -1253,14 +1450,64 @@
           try {
             await navigator.clipboard.writeText(fallbackText);
             alert('Share text copied. Paste it into Facebook, Instagram, or any app.');
-            return;
+            return false;
           } catch (err) {
             // no-op; fallback prompt below
           }
         }
 
         window.prompt('Copy and share this:', fallbackText);
+        return false;
       }
+
+      shareSheet.addEventListener('click', function(e) {
+        if (e.target === shareSheet) closeSharePreview();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && shareSheet.classList.contains('open')) closeSharePreview();
+      });
+
+      shareSheetMainBtn.addEventListener('click', async function() {
+        if (!activeSharePayload) return;
+        var shared = await shareLegislatorCard(activeSharePayload.member, activeSharePayload.file);
+        if (shared) closeSharePreview();
+      });
+
+      shareSheet.querySelectorAll('[data-share-action]').forEach(function(btn) {
+        btn.addEventListener('click', async function() {
+          if (!activeSharePayload) return;
+          var member = activeSharePayload.member;
+          var pageUrl = window.location.origin + '/scorecard';
+          var message = member.name + ' scored ' + member.score + '/100 (' + member.grade.grade + ') on Ohio Pride PAC’s Legislative Scorecard.';
+          var action = btn.getAttribute('data-share-action');
+
+          if (action === 'copy-link') {
+            try {
+              await navigator.clipboard.writeText(pageUrl);
+              alert('Scorecard link copied.');
+            } catch (err) {
+              window.prompt('Copy link:', pageUrl);
+            }
+            return;
+          }
+
+          if (action === 'message') {
+            window.location.href = 'sms:?&body=' + encodeURIComponent(message + ' ' + pageUrl);
+            return;
+          }
+
+          if (action === 'facebook') {
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl), '_blank', 'noopener');
+            return;
+          }
+
+          if (action === 'instagram') {
+            alert('Next, choose Instagram in the share options.');
+            var shared = await shareLegislatorCard(member, activeSharePayload.file);
+            if (shared) closeSharePreview();
+          }
+        });
+      });
 
       /* ── Filtering + Sorting ── */
       var filters = { search: '', chamber: 'all', party: 'all', grade: 'all' };
