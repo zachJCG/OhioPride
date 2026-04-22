@@ -47,6 +47,8 @@
     foundingMemberTiers:    '/.netlify/functions/founding-member-tiers',
     publicMembers:          '/.netlify/functions/public-members',
     siteLeadership:         '/.netlify/functions/site-leadership',
+    bills:                  '/.netlify/functions/bills',
+    scorecard:              '/.netlify/functions/scorecard',
   };
 
   // -----------------------------------------------------------------------
@@ -385,6 +387,125 @@
   }
 
   // -----------------------------------------------------------------------
+  // Issues page (/issues) — Round 3
+  //
+  // Replaces the BILLS + LAST_UPDATED globals that used to live in
+  // js/bill-data.js. Populates the same DOM the old inline script drove, so
+  // the existing filter buttons / sort / renderBills path keeps working
+  // unchanged.
+  // -----------------------------------------------------------------------
+  function loadIssuesPage(options) {
+    options = options || {};
+
+    getJson(ENDPOINTS.bills)
+      .then(function (data) {
+        if (!data || !data.ok) return;
+
+        // Expose the payload globally in the exact shape issues.html expects.
+        window.BILLS = data.bills || [];
+        window.LAST_UPDATED = data.last_updated || { date: '', time: '' };
+
+        // Hero stats (three numbers above the filter bar).
+        var statActive    = document.getElementById('statActive');
+        var statPassed    = document.getElementById('statPassed');
+        var statCommittee = document.getElementById('statCommittee');
+        if (statActive)    statActive.textContent    = data.stats.bills_tracked;
+        if (statPassed)    statPassed.textContent    = data.stats.passed_a_chamber;
+        if (statCommittee) statCommittee.textContent = data.stats.in_committee;
+
+        // "Last Updated" card.
+        var dateEl = document.getElementById('lastUpdatedDate');
+        var timeEl = document.getElementById('lastUpdatedTime');
+        if (dateEl) dateEl.textContent = data.last_updated.date;
+        if (timeEl) timeEl.textContent = data.last_updated.time;
+
+        // Trigger the page's own renderers.
+        if (typeof window.renderBills === 'function') {
+          window.renderBills(window.BILLS);
+        }
+        if (typeof window.updateStats === 'function') {
+          window.updateStats(window.BILLS);
+        }
+
+        if (typeof options.onReady === 'function') {
+          options.onReady(data);
+        }
+      })
+      .catch(function () { /* fail open — existing HTML stays visible */ });
+  }
+
+  // -----------------------------------------------------------------------
+  // Scorecard page (/scorecard) — Round 3
+  //
+  // Replaces the HOUSE_MEMBERS / SENATE_MEMBERS / GRADE_SCALE /
+  // SCORECARD_UPDATED globals that used to live in js/scorecard-data.js.
+  // -----------------------------------------------------------------------
+  function loadScorecardPage(options) {
+    options = options || {};
+
+    getJson(ENDPOINTS.scorecard)
+      .then(function (data) {
+        if (!data || !data.ok) return;
+
+        // Expose globals in the exact shape scorecard.html expects so the
+        // existing combine + render + filter path keeps working unchanged.
+        window.HOUSE_MEMBERS     = data.house  || [];
+        window.SENATE_MEMBERS    = data.senate || [];
+        window.GRADE_SCALE       = (data.grade_scale || []).slice().sort(function (a, b) {
+          return b.min - a.min; // highest min first, matches the old constant order
+        });
+        window.SCORECARD_UPDATED = data.last_updated || { date: '', time: '' };
+
+        // calcScore / calcGrade shims. scorecard.html calls these against each
+        // member; because the DB already computed score + grade per row we just
+        // return the precomputed values rather than re-running the formula.
+        window.calcScore = function (m) { return m.score; };
+        window.calcGrade = function (score) {
+          var scale = window.GRADE_SCALE || [];
+          for (var i = 0; i < scale.length; i++) {
+            if (score >= scale[i].min) return scale[i];
+          }
+          return scale[scale.length - 1] || { grade: 'F', label: 'Hostile', color: '#dc2626' };
+        };
+
+        // Hero stats on the scorecard header.
+        var statTotal    = document.getElementById('stat-total');
+        var statChamps   = document.getElementById('stat-champions');
+        var statHostile  = document.getElementById('stat-hostile');
+        var statBills    = document.getElementById('stat-bills');
+        function setStat(el, n) {
+          if (!el) return;
+          el.textContent = n;
+          el.setAttribute('data-count', n);
+        }
+        setStat(statTotal,   data.stats.legislators_scored);
+        setStat(statChamps,  data.stats.champions_a_plus);
+        setStat(statHostile, data.stats.hostile_f);
+        setStat(statBills,   data.stats.bills_tracked);
+
+        // "Last updated" badge.
+        var updated = document.getElementById('updated-text');
+        if (updated) {
+          updated.textContent = 'Last updated ' + data.last_updated.date +
+                                ' at ' + data.last_updated.time;
+        }
+
+        // Notify the page that globals are ready. scorecard.html wraps its
+        // main render in a DOMContentLoaded handler; by the time this fetch
+        // resolves that handler has already run with empty globals. We
+        // dispatch a custom event so the page can re-run its render cheaply.
+        window.dispatchEvent(new CustomEvent('ohiopride:scorecard-data-ready', {
+          detail: data,
+        }));
+
+        if (typeof options.onReady === 'function') {
+          options.onReady(data);
+        }
+      })
+      .catch(function () { /* fail open */ });
+  }
+
+  // -----------------------------------------------------------------------
   // Expose on window under a single namespace
   // -----------------------------------------------------------------------
   window.OhioPride = window.OhioPride || {};
@@ -394,4 +515,6 @@
   window.OhioPride.loadPublicMembers        = loadPublicMembers;
   window.OhioPride.loadSiteLeadership       = loadSiteLeadership;
   window.OhioPride.loadDonatePageTiers      = loadDonatePageTiers;
+  window.OhioPride.loadIssuesPage           = loadIssuesPage;
+  window.OhioPride.loadScorecardPage        = loadScorecardPage;
 })();
