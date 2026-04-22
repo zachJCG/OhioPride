@@ -424,6 +424,31 @@
     }
     .leg-card.expanded .card-chevron { transform: rotate(180deg); }
 
+    .card-actions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .card-share-btn {
+      border: 1px solid rgba(115, 215, 238, 0.35);
+      border-radius: 999px;
+      background: rgba(10, 16, 29, 0.7);
+      color: #dbeafe;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .card-share-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(115, 215, 238, 0.65);
+      background: rgba(15, 35, 54, 0.85);
+    }
+
     /* Expanded content */
     .card-expanded {
       max-height: 0;
@@ -1032,6 +1057,9 @@
                 '<div class="card-notes">' + m.notes + '</div>' +
                 billsHtml +
                 votingHtml +
+                '<div class="card-actions">' +
+                  '<button type="button" class="card-share-btn" data-share-idx="' + idx + '">Share</button>' +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -1048,6 +1076,48 @@
             card.classList.toggle('expanded');
           });
         });
+
+        var shareButtons = cardList.querySelectorAll('.card-share-btn');
+        shareButtons.forEach(function(btn) {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var idx = Number(btn.getAttribute('data-share-idx'));
+            if (Number.isNaN(idx) || !members[idx]) return;
+            shareLegislatorCard(members[idx]);
+          });
+        });
+      }
+
+      async function shareLegislatorCard(member) {
+        var pageUrl = window.location.origin + '/scorecard';
+        var message = member.name + ' scored ' + member.score + '/100 (' + member.grade.grade + ') on Ohio Pride PAC’s Legislative Scorecard.';
+        var shareData = {
+          title: 'Ohio Pride PAC Legislative Scorecard',
+          text: message,
+          url: pageUrl
+        };
+
+        if (navigator.share) {
+          try {
+            await navigator.share(shareData);
+            return;
+          } catch (err) {
+            if (err && err.name === 'AbortError') return;
+          }
+        }
+
+        var fallbackText = message + ' ' + pageUrl;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          try {
+            await navigator.clipboard.writeText(fallbackText);
+            alert('Share text copied. Paste it in Facebook, Instagram, or any app you want.');
+            return;
+          } catch (err) {
+            // no-op; fallback prompt below
+          }
+        }
+
+        window.prompt('Copy and share this:', fallbackText);
       }
 
       /* ── Filtering + Sorting ── */
