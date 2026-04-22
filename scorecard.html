@@ -910,8 +910,15 @@
 
   <div id="site-footer"></div>
 
-  <script src="/js/scorecard-data.js" defer></script>
-  <script src="/js/bill-data.js" defer></script>
+  <!-- Round 3: Supabase-backed data loader. Exposes OhioPride.loadScorecardPage,
+       which populates window.HOUSE_MEMBERS / SENATE_MEMBERS / GRADE_SCALE /
+       SCORECARD_UPDATED / calcScore / calcGrade and dispatches the
+       `ohiopride:scorecard-data-ready` event when the roster is available. -->
+  <script src="/js/ohiopride-data.js" defer></script>
+  <!-- voting-records.js stays for the getMemberVoteSummary + classifyVote
+       helpers. It returns empty summaries until bill_votes + legislator_votes
+       are seeded, so the voting-record block on each card just won't render
+       until that research pass ships. -->
   <script src="/js/voting-records.js" defer></script>
   <script src="/js/main.js" defer></script>
   <script src="/js/enhancements.js" defer></script>
@@ -919,6 +926,19 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+      /* ── Main render pass ──
+         Wrapped in a function so the page can (a) render with whatever's
+         in window.HOUSE_MEMBERS / SENATE_MEMBERS / GRADE_SCALE right now,
+         and (b) re-render when OhioPride.loadScorecardPage finishes
+         hydrating those globals from Supabase. If the globals aren't
+         arrays yet (initial paint, loader still in flight), we bail out
+         without painting a half-filled page. */
+      function renderScorecard() {
+        if (!Array.isArray(window.HOUSE_MEMBERS) ||
+            !Array.isArray(window.SENATE_MEMBERS)) {
+          return;
+        }
 
       /* ── Combine data ── */
       var allMembers = [];
@@ -941,10 +961,14 @@
 
       /* ── Bill universe ── */
       // Prefer the main legislative tracker's bill list so the scorecard's
-      // "Bills Tracked" matches what we publish on /issues. Fall back to the
-      // in-scorecard reference list if bill-data.js isn't loaded.
+      // "Bills Tracked" matches what we publish on /issues. BILLS is set by
+      // OhioPride.loadIssuesPage on /issues, not here, so we treat it as
+      // optional. SCORED_BILLS is the legacy reference list from
+      // scorecard-data.js; when loadScorecardPage is the data source it stays
+      // undefined, so we coerce to [].
       var trackerBills = (typeof BILLS !== 'undefined' && Array.isArray(BILLS)) ? BILLS : [];
-      var totalBillsTracked = trackerBills.length || SCORED_BILLS.length;
+      var scoredBills = (typeof SCORED_BILLS !== 'undefined' && Array.isArray(SCORED_BILLS)) ? SCORED_BILLS : [];
+      var totalBillsTracked = trackerBills.length || scoredBills.length;
 
       /* ── Compute overall stats for the full chamber (used as baseline) ── */
       var overallChampCount = allMembers.filter(function(m) { return m.grade.grade === 'A+'; }).length;
@@ -984,7 +1008,7 @@
       function parseBills(notes) {
         var found = [];
         if (!notes) return found;
-        SCORED_BILLS.forEach(function(b) {
+        scoredBills.forEach(function(b) {
           if (notes.indexOf(b.bill) !== -1) {
             found.push(b);
           }
@@ -1258,6 +1282,23 @@
 
       /* ── Initial render ── */
       applyFilters();
+      } /* end renderScorecard() */
+
+      /* Hydrate from Supabase then render. OhioPride.loadScorecardPage is
+         deferred, so by the time this DOMContentLoaded handler runs it's
+         already loaded. The loader populates HOUSE_MEMBERS / SENATE_MEMBERS
+         / GRADE_SCALE / SCORECARD_UPDATED + calcScore + calcGrade, then
+         dispatches 'ohiopride:scorecard-data-ready'. Our listener reruns
+         renderScorecard once the globals are in place.
+         Fallback path: if ohiopride-data.js somehow didn't load, call
+         renderScorecard() directly — it no-ops when the globals are empty,
+         which keeps the page from throwing. */
+      if (window.OhioPride && typeof window.OhioPride.loadScorecardPage === 'function') {
+        window.addEventListener('ohiopride:scorecard-data-ready', renderScorecard);
+        window.OhioPride.loadScorecardPage();
+      } else {
+        renderScorecard();
+      }
     });
   </script>
 </body>
