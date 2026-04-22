@@ -915,10 +915,10 @@
        SCORECARD_UPDATED / calcScore / calcGrade and dispatches the
        `ohiopride:scorecard-data-ready` event when the roster is available. -->
   <script src="/js/ohiopride-data.js" defer></script>
-  <!-- voting-records.js stays for the getMemberVoteSummary + classifyVote
-       helpers. It returns empty summaries until bill_votes + legislator_votes
-       are seeded, so the voting-record block on each card just won't render
-       until that research pass ships. -->
+  <!-- voting-records.js exposes ROLL_CALLS + getRollCallsForBill +
+       resolveVote, which the card renderer uses to compute a
+       voting-record block for every tracked bill in each member's
+       chamber. Party-line default with explicit defector overrides. -->
   <script src="/js/voting-records.js" defer></script>
   <script src="/js/main.js" defer></script>
   <script src="/js/enhancements.js" defer></script>
@@ -1041,36 +1041,56 @@
             billsHtml += '</div>';
           }
 
-          /* Voting record: one row per tracked bill the member has a
-             recorded vote on. Each row shows the bill label, short title,
-             and a chip indicating whether the vote aligned with the
-             equality position. Empty string when no votes exist. */
+          /* Voting record: one row per tracked bill with a roll call in
+             this member's chamber. Each row shows the bill label, short
+             title, and a chip per roll call indicating whether the
+             member's vote aligned with the equality position. Uses
+             getRollCallsForBill + resolveVote from voting-records.js. */
           var votingHtml = '';
-          if (typeof getMemberVoteSummary === 'function') {
-            var summary = getMemberVoteSummary(m, m.chamber);
-            if (summary.length > 0) {
+          if (typeof getRollCallsForBill === 'function' &&
+              typeof resolveVote === 'function' &&
+              typeof BILLS !== 'undefined' && Array.isArray(BILLS)) {
+            var memberChamber = (m.chamber || '').toLowerCase();
+            var legForVote = { chamber: memberChamber, d: m.d, party: m.party };
+            var vrRows = [];
+            BILLS.forEach(function(bill) {
+              var rcs = getRollCallsForBill(bill.id).filter(function(rc) {
+                return rc.chamber === memberChamber;
+              });
+              if (rcs.length === 0) return;
+              var chips = [];
+              rcs.forEach(function(rc) {
+                var vote = resolveVote(legForVote, rc);
+                if (vote === '-') return;
+                var cls, text;
+                if (vote === 'NV') {
+                  cls = 'absent'; text = 'Not Voting';
+                } else {
+                  var forEq = (rc.stance === 'pro'  && vote === 'Y') ||
+                              (rc.stance === 'anti' && vote === 'N');
+                  cls = forEq ? 'for-equality' : 'against-equality';
+                  text = forEq ? 'Voted For Equality' : 'Voted Against Equality';
+                }
+                var title = (rc.label || '') + ', ' + (rc.voteDate || '');
+                chips.push('<span class="vr-chip ' + cls + '" title="' + title.replace(/"/g, '&quot;') + '">' + text + '</span>');
+              });
+              if (chips.length === 0) return;
+              var billLabel = bill.url
+                ? '<a class="vr-bill" href="' + bill.url + '">' + bill.bill + '</a>'
+                : '<span class="vr-bill">' + bill.bill + '</span>';
+              vrRows.push(
+                '<li>' +
+                  billLabel +
+                  '<span class="vr-title">' + (bill.title || '') + '</span>' +
+                  chips.join(' ') +
+                '</li>'
+              );
+            });
+            if (vrRows.length > 0) {
               votingHtml = '<div class="voting-record">' +
                 '<div class="voting-record-label">Voting Record (Tracked Bills)</div>' +
-                '<ul>';
-              summary.forEach(function(entry) {
-                var chips = entry.rollCalls.map(function(rc) {
-                  var cls = classifyVote(rc.vote, rc.stance);
-                  var text = cls === 'absent'
-                    ? 'Not Voting'
-                    : (cls === 'for-equality' ? 'Voted For Equality' : 'Voted Against Equality');
-                  return '<span class="vr-chip ' + cls + '" title="' + rc.label + ' — ' + rc.date + '">' + text + '</span>';
-                }).join(' ');
-                var billLabel = entry.url
-                  ? '<a class="vr-bill" href="' + entry.url + '">' + entry.bill + '</a>'
-                  : '<span class="vr-bill">' + entry.bill + '</span>';
-                votingHtml +=
-                  '<li>' +
-                    billLabel +
-                    '<span class="vr-title">' + (entry.title || '') + '</span>' +
-                    chips +
-                  '</li>';
-              });
-              votingHtml += '</ul></div>';
+                '<ul>' + vrRows.join('') + '</ul>' +
+              '</div>';
             }
           }
 
