@@ -967,34 +967,6 @@
       }
       writeStats(computeStats(allMembers));
 
-      /* One-time count-up animation on first scroll into view. After
-         that we just write numbers directly in writeStats so filter
-         clicks update instantly instead of re-animating. */
-      var statsAnimated = false;
-      function animateCounters() {
-        if (statsAnimated) return;
-        var bar = document.getElementById('stats-bar');
-        var rect = bar.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.9) {
-          statsAnimated = true;
-          var nums = bar.querySelectorAll('.stat-num[data-count]');
-          nums.forEach(function(el) {
-            var target = parseInt(el.getAttribute('data-count'), 10);
-            var duration = 900;
-            var start = performance.now();
-            function tick(now) {
-              var progress = Math.min((now - start) / duration, 1);
-              var ease = 1 - Math.pow(1 - progress, 3);
-              el.textContent = Math.round(ease * target);
-              if (progress < 1) requestAnimationFrame(tick);
-            }
-            requestAnimationFrame(tick);
-          });
-        }
-      }
-      window.addEventListener('scroll', animateCounters);
-      animateCounters();
-
       /* ── Parse bill references from notes ── */
       function parseBills(notes) {
         var found = [];
