@@ -1,477 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Loading... | Ohio Pride</title>
-    <meta name="description" content="Track this Ohio bill's progress through the legislature. Ohio Pride monitors legislation affecting LGBTQ+ rights." />
-    <link rel="canonical" href="https://www.ohiopride.org/issues/sb34" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Bill Tracker | Ohio Pride" />
-    <meta property="og:description" content="Track this Ohio bill's progress through the legislature. Ohio Pride monitors legislation affecting LGBTQ+ rights." />
-    <meta property="og:url" content="https://www.ohiopride.org/issues/sb34" />
-    <meta property="og:site_name" content="Ohio Pride" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Bill Tracker | Ohio Pride" />
-    <meta name="twitter:description" content="Track this Ohio bill's progress through the legislature. Ohio Pride monitors legislation affecting LGBTQ+ rights." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/bill-pipeline.css" />
-    <style>
-      body {
-        background: var(--dark-bg);
-      }
-
-      :root {
-        --card-bg: #132d44;
-        --card-border: #1a3a52;
-        --text-gray: #a0b4c8;
-        --text-dim: #6889a6;
-      }
-
-      .breadcrumb {
-        max-width: 900px;
-        margin: 1.5rem auto 0;
-        padding: 0 2rem;
-        font-size: 0.85rem;
-        color: var(--text-dim);
-      }
-      .breadcrumb a {
-        color: var(--text-gray);
-        text-decoration: none;
-      }
-      .breadcrumb a:hover {
-        color: var(--text-white);
-      }
-
-      .bill-hero {
-        max-width: 900px;
-        margin: 1rem auto 0;
-        padding: 0 2rem 2rem;
-        position: relative;
-      }
-      .bill-hero::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 6px;
-        background: var(--pride-gradient);
-      }
-      .bill-hero .bill-number {
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: var(--text-dim);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 0.25rem;
-      }
-      .bill-hero h1 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 2.2rem;
-        font-weight: 800;
-        margin-bottom: 0.25rem;
-        color: var(--text-white);
-      }
-      .bill-hero .nickname {
-        font-size: 1.1rem;
-        color: var(--text-gray);
-        margin-bottom: 0.5rem;
-      }
-      .bill-hero .official-title {
-        font-size: 0.85rem;
-        color: var(--text-dim);
-        font-style: italic;
-        margin-bottom: 1rem;
-      }
-      .bill-hero .badge-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        align-items: center;
-        margin-bottom: 1rem;
-      }
-      .status-badge {
-        padding: 0.3rem 0.8rem;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-family: "Montserrat", sans-serif;
-      }
-      @media (max-width: 768px) {
-        .bill-hero h1 {
-          font-size: 1.6rem;
-        }
-      }
-
-      .detail-section {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 2rem;
-      }
-      .detail-section h2 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.3rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--card-border);
-        color: var(--text-white);
-      }
-      .detail-section p {
-        color: var(--text-gray);
-        margin-bottom: 1rem;
-        line-height: 1.7;
-      }
-      .detail-section ul {
-        color: var(--text-gray);
-        margin: 0 0 1rem 1.5rem;
-      }
-      .detail-section li {
-        margin-bottom: 0.5rem;
-        line-height: 1.6;
-      }
-
-      .meta-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      .meta-card {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 8px;
-        padding: 1rem;
-      }
-      .meta-card .meta-label {
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.75rem;
-        color: var(--text-dim);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 0.25rem;
-      }
-      .meta-card .meta-value {
-        font-size: 0.95rem;
-        color: var(--text-white);
-      }
-      @media (max-width: 768px) {
-        .meta-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .breadcrumb {
-          padding: 0 1rem;
-          margin-top: 1rem;
-        }
-        .bill-hero {
-          padding: 0 1rem 1.5rem;
-        }
-        .detail-section {
-          padding: 1.5rem 1rem;
-        }
-        .ext-links {
-          flex-direction: column;
-        }
-        .ext-link {
-          width: 100%;
-          justify-content: center;
-        }
-        .cta-bar {
-          padding: 0 1rem;
-        }
-      }
-
-      .timeline-list {
-        position: relative;
-        padding-left: 1.5rem;
-        border-left: 2px solid var(--card-border);
-      }
-      .timeline-item {
-        position: relative;
-        margin-bottom: 1.25rem;
-        padding-left: 1rem;
-      }
-      .timeline-item::before {
-        content: "";
-        position: absolute;
-        left: -1.75rem;
-        top: 0.5rem;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--card-border);
-      }
-      .timeline-item.completed::before {
-        background: #22c55e;
-      }
-      .timeline-item.current::before {
-        background: #f59e0b;
-        box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
-      }
-      .timeline-item .tl-date {
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.8rem;
-        color: var(--text-dim);
-        font-weight: 600;
-      }
-      .timeline-item .tl-event {
-        font-size: 0.95rem;
-        color: var(--text-gray);
-      }
-
-      .ext-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        margin-top: 1rem;
-      }
-      .ext-link {
-        display: none;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.5rem 1rem;
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 6px;
-        font-size: 0.85rem;
-        color: var(--text-gray);
-        transition: all 0.2s;
-        text-decoration: none;
-      }
-      .ext-link:hover {
-        border-color: var(--dark-bg-lighter);
-        color: var(--text-white);
-      }
-
-      .risk-card {
-        background: linear-gradient(
-          135deg,
-          rgba(239, 68, 68, 0.08),
-          rgba(239, 68, 68, 0.02)
-        );
-        border: 1px solid rgba(239, 68, 68, 0.15);
-        border-radius: 8px;
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-      }
-      .risk-card ul {
-        margin-left: 1.25rem;
-      }
-
-      .cta-bar {
-        max-width: 900px;
-        margin: 0 auto 3rem;
-        padding: 0 2rem;
-      }
-      .cta-inner {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 10px;
-        padding: 1.5rem;
-        text-align: center;
-      }
-      .cta-inner p {
-        color: var(--text-gray);
-        margin-bottom: 1rem;
-      }
-      .cta-inner a {
-        display: inline-block;
-        padding: 0.6rem 1.5rem;
-        background: var(--color-blue);
-        color: white;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        font-family: "Montserrat", sans-serif;
-        transition: all 0.2s;
-        text-decoration: none;
-      }
-      .cta-inner a:hover {
-        background: #0039cc;
-        transform: translateY(-1px);
-      }
-    </style>
-  <link rel="stylesheet" href="/css/site-template.css">
-  </head>
-  <body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SB 34, Display of Founding Documents of Historic Significance Act | Ohio Pride PAC</title>
+<meta name="description" content="SB 34: Display of Founding Documents of Historic Significance Act. Passed Senate â In House. Ohio Pride PAC legislative tracker." />
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/site.css" />
+<style>
+  body { background: #f8f7f4; color: #0b1a3b; font-family: 'Source Sans 3', system-ui, sans-serif; margin: 0; }
+  .bill-wrap { max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; }
+  .breadcrumb { font-size: 13px; color: #64748b; margin-bottom: 16px; }
+  .breadcrumb a { color: #0b1a3b; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .bill-hero { background: #0b1a3b; color: #fff; padding: 32px 32px 28px; border-radius: 16px; margin-bottom: 24px; }
+  .bill-badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: #dc2626; color: #fff; margin-bottom: 12px; }
+  .bill-num { font-family: 'Montserrat', sans-serif; font-size: 44px; font-weight: 800; line-height: 1; margin: 0 0 6px; }
+  .bill-title { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.3; margin: 0 0 12px; color: rgba(255,255,255,0.92); }
+  .bill-nickname { font-size: 14px; color: rgba(255,255,255,0.7); font-style: italic; margin-bottom: 16px; }
+  .bill-status { display: inline-block; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; background: rgba(255,255,255,0.12); color: #fff; border-left: 3px solid #dc2626; }
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+  .meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 700; margin-bottom: 4px; }
+  .meta-val { font-size: 15px; color: #0b1a3b; font-weight: 500; }
+  .bill-section { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; }
+  .bill-section h2 { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; margin: 0 0 12px; color: #0b1a3b; }
+  .bill-section p { font-size: 15px; line-height: 1.7; color: #334155; margin: 0 0 12px; }
+  .ext-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  .ext-links a { display: inline-block; padding: 10px 18px; border-radius: 8px; background: #0b1a3b; color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; }
+  .ext-links a:hover { background: #132d44; }
+  .ext-links a.alt { background: #fff; color: #0b1a3b; border: 1px solid #0b1a3b; }
+  .cta-bar { background: linear-gradient(90deg, #e40303, #ff8c00, #ffed00, #008026, #004dff, #750787); padding: 2px; border-radius: 14px; margin-top: 28px; }
+  .cta-inner { background: #0b1a3b; color: #fff; padding: 24px 28px; border-radius: 12px; text-align: center; }
+  .cta-inner h3 { font-family: 'Montserrat', sans-serif; font-size: 22px; margin: 0 0 8px; }
+  .cta-inner p { font-size: 15px; margin: 0 0 16px; color: rgba(255,255,255,0.85); }
+  .cta-inner a { display: inline-block; padding: 12px 28px; border-radius: 8px; background: #fff; color: #0b1a3b; font-weight: 700; text-decoration: none; }
+  @media (max-width: 640px) {
+    .bill-num { font-size: 36px; }
+    .bill-title { font-size: 18px; }
+    .bill-hero { padding: 24px 20px; }
+    .bill-section { padding: 20px; }
+  }
+</style>
+</head>
+<body>
 <div id="site-header"></div>
 
-    <div class="breadcrumb">
-      <a href="/issues">← Back to Issue Tracker</a>
-    </div>
+<main class="bill-wrap">
+  <div class="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/issues.html">Issues</a> &rsaquo; SB 34
+  </div>
 
-    <div class="bill-hero">
-      <div class="bill-number" id="billNumber"></div>
-      <h1 id="billTitle"></h1>
-      <div class="nickname" id="billNickname"></div>
-      <div class="official-title">
-        Official title: "<span id="billOfficialTitle"></span>"
-      </div>
-      <div class="badge-row">
-        <span class="status-badge" id="statusBadge"></span>
-        <span
-          id="billCategories"
-          style="display: flex; gap: 0.4rem; flex-wrap: wrap"
-        ></span>
-      </div>
-      <div id="detailPipeline"></div>
-    </div>
+  <section class="bill-hero">
+    <span class="bill-badge">Anti-Equality</span>
+    <h1 class="bill-num">SB 34</h1>
+    <div class="bill-title">Display of Founding Documents of Historic Significance Act</div>
+    <div class="bill-nickname">Ten Commandments Classroom Displays</div>
+    <div class="bill-status">Passed Senate â In House</div>
+  </section>
 
-    <div class="detail-section">
-      <div class="meta-grid">
-        <div class="meta-card">
-          <div class="meta-label">Sponsors</div>
-          <div class="meta-value" id="billSponsors"></div>
-        </div>
-        <div class="meta-card">
-          <div class="meta-label">Last Action</div>
-          <div class="meta-value" id="billLastAction"></div>
-        </div>
-        <div class="meta-card">
-          <div class="meta-label">Next Expected Action</div>
-          <div class="meta-value" id="billNextDate"></div>
-        </div>
-        <div class="meta-card" style="display: none">
-          <div class="meta-label">House Vote</div>
-          <div class="meta-value" id="billHouseVote"></div>
-        </div>
-      </div>
+  <div class="meta-grid">
+    <div><div class="meta-label">Official Title</div><div class="meta-val">Enact the Display of Founding Documents of Historic Significance Act</div></div>
+    <div><div class="meta-label">Sponsors</div><div class="meta-val">Sen. Terry Johnson (R-14)</div></div>
+    <div><div class="meta-label">Chamber of Origin</div><div class="meta-val">Ohio Senate</div></div>
+    <div><div class="meta-label">Latest Action</div><div class="meta-val">Referred to House Education Committee, February 4, 2026</div></div>
+    <div><div class="meta-label">Next Step</div><div class="meta-val">Awaiting House committee hearing</div></div>
+    <div><div class="meta-label">Categories</div><div class="meta-val"></div></div>
+  </div>
 
-      <div class="ext-links">
-        <a
-          href="#"
-          id="legislatureLink"
-          class="ext-link"
-          target="_blank"
-          rel="noopener"
-          >&#128279; Ohio Legislature Bill Page</a
-        >
-        <a
-          href="#"
-          id="textLink"
-          class="ext-link"
-          target="_blank"
-          rel="noopener"
-          >&#128196; Read Full Bill Text (PDF)</a
-        >
-      </div>
-    </div>
+  <section class="bill-section">
+    <h2>What This Bill Does</h2>
+    <p>Requires school boards to adopt policies displaying at least four of nine 'founding documents', including the Ten Commandments, in social studies and history classrooms. Permits private donors (e.g., the Center for Christian Virtue) to fund displays, inviting religious-right messaging into public schools. Passed the Ohio Senate 23-10 on November 20, 2025.</p>
+  </section>
 
-    <div class="detail-section">
-      <h2>What This Bill Does</h2>
-      <p>
-        SB 34 — renamed the
-        <strong>"Display of Founding Documents of Historic Significance Act"</strong>
-        after April 2025 amendments — requires every school board, community
-        school, and STEM school to adopt a policy displaying at least four of
-        nine historical documents in social studies and history classrooms for
-        grades 4–12. The list includes the Ten Commandments alongside the
-        Declaration of Independence, Constitution, and Bill of Rights.
-      </p>
-      <p>
-        The bill authorizes private donors to fund the displays and explicitly
-        permits donations from outside groups such as the Center for Christian
-        Virtue.
-      </p>
-    </div>
+  <section class="bill-section">
+    <h2>Why It Matters for LGBTQ+ Ohioans</h2>
+    <p>SB 34 requires school boards to adopt policies displaying at least four of nine 'founding documents,' including the Ten Commandments, in every social studies and history classroom. It permits private donors, including the Center for Christian Virtue, to fund the displays, inviting religious-right messaging into Ohio public schools. The Senate passed the bill 23-10 on November 20, 2025, and it was referred to the House Education Committee on February 4, 2026.</p>
+  </section>
 
-    <div class="detail-section">
-      <h2>Impact on LGBTQIA+ Ohioans</h2>
-      <p>
-        While SB 34 does not reference sexual orientation or gender identity on
-        its face, LGBTQ+ advocates oppose it because it invites anti-LGBTQ+
-        religious groups to fund and shape classroom messaging. The Center for
-        Christian Virtue — a principal likely funder — has been among the most
-        active lobbying forces behind Ohio's "Don't Say Gay" law (HB 8),
-        bathroom ban (HB 183), and gender-affirming care ban (HB 68).
-      </p>
-      <p>
-        By mandating displays funded by these groups, SB 34 positions
-        anti-LGBTQ+ religious messaging as a default feature of public-school
-        classroom walls.
-      </p>
+  <section class="bill-section">
+    <h2>Read the Bill</h2>
+    <p>Full legislative history, amendments, and roll call votes are available on the Ohio Legislature site. The enrolled or introduced text PDF links directly to the bill as filed.</p>
+    <div class="ext-links">
+      <a href="" target="_blank" rel="noopener">View on Ohio Legislature</a>
+      <a class="alt" href="" target="_blank" rel="noopener">Read the Bill Text (PDF)</a>
     </div>
+  </section>
 
-    <div class="detail-section">
-      <h2>Legal &amp; Constitutional Risks</h2>
-      <div class="risk-card">
-        <ul>
-          <li>
-            <strong>Establishment Clause</strong> — Mandated Ten Commandments
-            displays in public schools face sustained First Amendment
-            challenges; similar Louisiana and Texas laws are actively
-            litigated.
-          </li>
-          <li>
-            <strong>Coercion Doctrine</strong> — Courts have found
-            state-compelled religious display in captive classroom settings
-            more vulnerable than voluntary or public-square contexts.
-          </li>
-          <li>
-            <strong>Private Funding Does Not Cure</strong> — Supreme Court
-            precedent (<em>Stone v. Graham</em>, 1980) struck down
-            privately-funded Ten Commandments displays in Kentucky public
-            schools.
-          </li>
-        </ul>
-      </div>
+  <div class="cta-bar">
+    <div class="cta-inner">
+      <h3>Stand With Us</h3>
+      <p>Ohio Pride PAC tracks every bill that affects LGBTQ+ Ohioans and holds legislators accountable at the ballot box. Join as a Founding Member and help us build durable political power in Ohio.</p>
+      <a href="/founding-members.html">Become a Founding Member</a>
     </div>
-
-    <div class="detail-section">
-      <h2>Timeline</h2>
-      <div class="timeline-list">
-        <div class="timeline-item completed">
-          <div class="tl-date">February 2025</div>
-          <div class="tl-event">Introduced in the Senate as a Ten Commandments display bill</div>
-        </div>
-        <div class="timeline-item completed">
-          <div class="tl-date">April 2025</div>
-          <div class="tl-event">Amended into the "Founding Documents Displays Act" with a 4-of-9 document mandate</div>
-        </div>
-        <div class="timeline-item completed">
-          <div class="tl-date">November 20, 2025</div>
-          <div class="tl-event">Passed the Ohio Senate 23–10</div>
-        </div>
-        <div class="timeline-item completed">
-          <div class="tl-date">February 4, 2026</div>
-          <div class="tl-event">Referred to House Education Committee</div>
-        </div>
-        <div class="timeline-item current">
-          <div class="tl-date">Pending</div>
-          <div class="tl-event">Awaiting first House Education hearing</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="cta-bar">
-      <div class="cta-inner">
-        <p>Help us fight back against anti-LGBTQIA+ legislation in Ohio.</p>
-        <a href="/donate/founding-member">Become a Founding Member →</a>
-      </div>
-    </div>
+  </div>
+</main>
 
 <div id="site-footer"></div>
 
-    <script>
-      const BILL_ID = "sb34";
-    </script>
-    <script src="/js/main.js" defer></script>
-    <script src="/js/bill-data.js"></script>
-    <script src="/js/bill-pipeline.js"></script>
-    <script src="/js/bill-detail.js"></script>
-    <script src="/js/enhancements.js" defer></script>
-    <script src="/js/site-template.js" defer></script>
-  </body>
+<script src="/js/bill-data.js" defer></script>
+<script src="/js/main.js" defer></script>
+<script src="/js/site-template.js" defer></script>
+</body>
 </html>
