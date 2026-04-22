@@ -16,7 +16,7 @@
                   -1 to -3 for anti-LGBTQ+ rhetoric/scandals
    ============================================================ */
 
-const SCORECARD_UPDATED = { date: "04/21/26", time: "04:30 PM EDT" };
+const SCORECARD_UPDATED = { date: "04/22/26", time: "07:45 PM EDT" };
 
 /* Grade thresholds (weighted score 0-100) */
 const GRADE_SCALE = [

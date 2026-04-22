@@ -427,6 +427,19 @@
       background: rgba(255, 255, 255, 0.06);
       color: rgba(255, 255, 255, 0.45);
     }
+    /* Public-statement marker: pairs with .vote-row.dir-pro / dir-anti
+       to color the +/- in the leftmost cell. */
+    .vote-cell-vote.vote-news {
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 14px;
+    }
+    .vote-row.dir-pro  .vote-cell-vote.vote-news { color: var(--text-success); background: rgba(74, 222, 128, 0.14); }
+    .vote-row.dir-anti .vote-cell-vote.vote-news { color: var(--text-danger);  background: rgba(255, 107, 107, 0.14); }
+    .vb-source {
+      color: var(--text-accent);
+      text-decoration: underline;
+    }
 
     .vote-cell-bill {
       display: flex;
@@ -895,6 +908,7 @@
   <div id="site-footer"></div>
 
   <script src="/js/voting-records.js" defer></script>
+  <script src="/js/news-statements.js" defer></script>
   <script src="/js/scorecard-data.js" defer></script>
   <script src="/js/main.js" defer></script>
   <script src="/js/enhancements.js" defer></script>
@@ -1078,6 +1092,77 @@
         return '<div class="vote-rollcalls">' + head + body + '</div>';
       }
 
+      /* Escape raw text before inserting into HTML so headlines /
+         quotes from news-statements.js can't break the card layout
+         (e.g. an unescaped apostrophe in a legislator quote). */
+      function _esc(s) {
+        if (s == null) return '';
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      /* Returns the "Public Statements" section HTML for a legislator,
+         or an empty string if they have no n subscore and no entries.
+         Matches the Voting Record block visually so the expanded card
+         reads as two parallel tracks. */
+      function renderNewsStatements(m) {
+        if (typeof getNewsStatements !== 'function' ||
+            typeof summarizeNewsStatements !== 'function') return '';
+
+        var leg = _votingLegislator(m);
+        var rows = getNewsStatements(leg);
+        var totals = summarizeNewsStatements(leg);
+
+        /* No entries and no subscore -> suppress section entirely. */
+        if (!rows.length && (!m.n || m.n === 0)) return '';
+
+        var head =
+          '<div class="vote-rollcalls-head">' +
+            '<div class="vote-rollcalls-title">Public Statements</div>' +
+            '<div class="vote-totals">' +
+              '<span class="vt-pro">Pro-equality statements: ' + totals.proItems + '</span>' +
+              '<span class="vt-anti">Anti-equality statements: ' + totals.antiItems + '</span>' +
+              '<span class="' + _netClass(totals.net) + '">Net impact: ' + _formatPoints(totals.net) + '</span>' +
+            '</div>' +
+          '</div>';
+
+        if (!rows.length) {
+          return '<div class="vote-rollcalls">' + head +
+            '<div class="vote-empty">N subscore of ' + _formatPoints(m.n) +
+            ' is on file; individual statements have not been logged yet.</div>' +
+          '</div>';
+        }
+
+        var body = '';
+        rows.forEach(function (r) {
+          var rowDirClass = 'dir-' + (r.sentiment === 'pro' ? 'pro' : 'anti');
+          var ptsFmt = _formatPoints(r.points);
+          var source = r.sourceUrl
+            ? ' &middot; <a href="' + _esc(r.sourceUrl) + '" target="_blank" rel="noopener" class="vb-source">source</a>'
+            : '';
+          body +=
+            '<div class="vote-row ' + rowDirClass + '">' +
+              '<div class="vote-cell-vote vote-news">' +
+                (r.sentiment === 'pro' ? '&plus;' : '&minus;') +
+              '</div>' +
+              '<div class="vote-cell-bill">' +
+                '<div class="vb-label">' + _esc(r.headline) + '</div>' +
+                '<div class="vb-sub">' + _esc(r.date) + source +
+                  (r.context ? ' &middot; ' + _esc(r.context) : '') +
+                '</div>' +
+              '</div>' +
+              '<div class="vote-cell-dir ' + rowDirClass + '">' + r.sentiment + '</div>' +
+              '<div class="vote-cell-points ' + _ptsClass(r.points) + '">' + ptsFmt + '</div>' +
+            '</div>';
+        });
+
+        return '<div class="vote-rollcalls">' + head + body + '</div>';
+      }
+
       function renderCards(members) {
         var html = '';
         members.forEach(function(m, idx) {
@@ -1128,6 +1213,7 @@
                 '<div class="card-notes">' + m.notes + '</div>' +
                 billsHtml +
                 renderVoteBreakdown(m) +
+                renderNewsStatements(m) +
               '</div>' +
             '</div>' +
           '</div>';
