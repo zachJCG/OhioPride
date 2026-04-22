@@ -1,99 +1,232 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Ohio Pride PAC sitemap
+  Last generated: 2026-04-22
+  Mirrors the page set in /, /issues/, and the scorecard. Update
+  whenever a new top-level page or issue page is published.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Top-level pages -->
   <url>
-    <loc>https://www.ohiopride.org/</loc>
+    <loc>https://ohiopride.org/</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues</loc>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.ohiopride.org/scorecard</loc>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.ohiopride.org/donate</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.ohiopride.org/founding-members</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.ohiopride.org/contact</loc>
+    <loc>https://ohiopride.org/about.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/donate/founding-member</loc>
+    <loc>https://ohiopride.org/board.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/contact.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/donate.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/founding-members.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/launch-day.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb249</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb693</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/scorecard.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Issue pages: anti-equality, on the floor or moving -->
+  <url>
+    <loc>https://ohiopride.org/issues/hb249.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb798</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/sb34.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Issue pages: anti-equality, enacted (scorecard context) -->
+  <url>
+    <loc>https://ohiopride.org/issues/hb68.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb796</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/hb8.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb190</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/sb104.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb155</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/sb1.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Issue pages: anti-equality, in committee or introduced -->
+  <url>
+    <loc>https://ohiopride.org/issues/hb798.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/sb113</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/hb796.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb172</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/hb693.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb196</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/hb190.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb262</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/hb155.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/sb34</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/sb113.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb602</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/hb172.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/sb274</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/hb196.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hb457</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/hb262.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/issues/hjr4</loc>
-    <priority>0.6</priority>
+    <loc>https://ohiopride.org/issues/hb602.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/privacy</loc>
-    <priority>0.3</priority>
+    <loc>https://ohiopride.org/issues/sb274.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.ohiopride.org/terms</loc>
-    <priority>0.3</priority>
+    <loc>https://ohiopride.org/issues/hb457.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
+
+  <!-- Issue pages: pro-equality -->
+  <url>
+    <loc>https://ohiopride.org/issues/sb70.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/issues/hb136.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/issues/sb71.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/issues/hb300.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/issues/hb327.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/issues/sb211.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ohiopride.org/issues/hjr4.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Issue pages: mixed -->
+  <url>
+    <loc>https://ohiopride.org/issues/hb306.html</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>

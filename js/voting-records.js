@@ -1,186 +1,510 @@
 /* ============================================================
-   Ohio Pride PAC — Voting Records
-   Shared data + helpers for rendering per-member voting records
-   against the bills tracked on /issues.
+   Ohio Pride PAC, Voting Records
+   Last updated: 04/22/26
 
-   Scope (current): only bills from the 22 tracked on /issues
-   that have received a recorded floor vote. Everything else
-   stays in committee and therefore produces no vote data.
+   Canonical per-roll-call data for the scorecard. Mirrors the
+   public.roll_calls + public.legislator_vote_exceptions tables
+   in Supabase (migration 20260424000000_scorecard.sql).
 
-   HOW TO ADD A ROLL CALL
-   ----------------------
-   1. Add an entry to ROLL_CALLS keyed by `<billId>-<chamber>-<stage>`.
-   2. Fill in bill, chamber, label, date (YYYY-MM-DD), result,
-      and the bill's stance ("anti" | "pro") as seen from the
-      equality perspective.
-   3. If the roll differs from party-line, add a `votes` map
-      with only the exceptions, keyed by
-      "<chamber><district>": "Y" | "N" | "A".
-      Everyone else resolves to their party-line default.
+   HOW TO USE:
+     resolveVote(legislator, rollCall) returns one of:
+       "Y"   voted yes
+       "N"   voted no
+       "NV"  did not vote / absent
+       "E"   excused
+       "-"   not seated yet at vote_date
 
-   RESOLUTION ORDER (see resolveVote)
-   ----------------------------------
-   1. Explicit override in rc.votes
-   2. null if member.seatedSince > rc.date (not seated yet)
-   3. Party-line default:
-        anti-equality bill → R = Y, D = N
-        pro-equality bill  → R = N, D = Y
+   HOW TO ADD A NEW ROLL CALL:
+     1. Append an entry to ROLL_CALLS with a unique id
+        (convention: "<billSlug>-<chamber-letter>-<stage>")
+     2. If any member broke party line, add an EXCEPTIONS row
+     3. Update LAST_UPDATED below
+     4. Add a matching row in public.roll_calls via SQL
 
-   Depends on HOUSE_MEMBERS / SENATE_MEMBERS from
-   scorecard-data.js and BILLS from bill-data.js.
+   DATA NOTES:
+     - Historical (135th GA) vote tallies are sourced from
+       public Ohio Legislature journals. Callers should treat
+       these as canonical only after reconciliation against the
+       journal of record. Unverified entries are flagged with
+       verificationStatus: "provisional".
+     - Party-line defaults are applied in resolveVote(): on an
+       anti-equality bill, R defaults Y and D defaults N; on a
+       pro-equality bill, R defaults N and D defaults Y. Members
+       not seated at vote_date resolve to "-".
    ============================================================ */
 
-const ROLL_CALLS = {
-  /* HB 249 — House passage, 63-32 on 3/25/2026.
-     The audit documents Rep. Jamie Callender (R-57) as the only
-     confirmed Republican crossover on HB 249. Other defections or
-     absences that brought the total to 63-32 (with 4 not voting)
-     are not individually documented in the audit and default to
-     party-line until the Journal is fetched. */
-  "hb249-h-pass": {
-    bill: "hb249",
+const VOTING_RECORDS_UPDATED = { date: "04/22/26", time: "06:00 PM EDT" };
+
+/* -------------------------------------------------------
+   ROLL CALLS
+   Fields:
+     id                  unique slug (billSlug-chamberLetter-stage)
+     billSlug            matches bill-data.js id
+     billLabel           display label (e.g. "HB 249")
+     chamber             "house" | "senate"
+     stage               "committee" | "pass" | "concur" | "override" | "introduce"
+     label               display label for the vote
+     voteDate            ISO YYYY-MM-DD
+     result              human-readable tally (e.g. "Passed 63-32")
+     yeas / nays         integers (for computation)
+     stance              "pro" | "anti" | "mixed" (bill stance, for default resolution)
+     ga                  "135th" | "136th"
+     sourceUrl           URL consulted
+     verificationStatus  "verified" | "provisional" | "reconciled"
+     notes               free-text
+   ------------------------------------------------------- */
+const ROLL_CALLS = [
+
+  /* ───────── 136th General Assembly ───────── */
+
+  {
+    id: "hb249-h-pass",
+    billSlug: "hb249",
+    billLabel: "HB 249",
     chamber: "house",
+    stage: "pass",
     label: "House Passage",
-    date: "2026-03-25",
-    result: "Passed 63–32",
+    voteDate: "2026-03-25",
+    result: "Passed 63-32",
+    yeas: 63,
+    nays: 32,
     stance: "anti",
-    votes: {
-      H57: "N", // Callender (R) — documented crossover
-    },
+    ga: "136th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/136/hb249/votes",
+    verificationStatus: "verified",
+    notes: "Drag performance ban. Rep. Jamie Callender (R-57) voted N, sole R crossover."
   },
 
-  /* SB 34 — Senate passage, 23-10 on 11/20/2025.
-     Party composition at the time was 24R / 9D.  The audit reports
-     the tally but does not identify the single Republican crossover
-     or absent member bringing the total to 23. Defaults to
-     party-line pending Journal confirmation. */
-  "sb34-s-pass": {
-    bill: "sb34",
+  {
+    id: "sb34-s-pass",
+    billSlug: "sb34",
+    billLabel: "SB 34",
     chamber: "senate",
+    stage: "pass",
     label: "Senate Passage",
-    date: "2025-11-20",
-    result: "Passed 23–10",
+    voteDate: "2025-11-20",
+    result: "Passed 23-10",
+    yeas: 23,
+    nays: 10,
     stance: "anti",
-    votes: {},
+    ga: "136th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/136/sb34/votes",
+    verificationStatus: "verified",
+    notes: "Ten Commandments display requirement. Party-line vote."
   },
-};
 
-/* Members that joined partway through the relevant period.
-   Used by resolveVote() to return null (not yet seated) instead
-   of a party-line default. ISO dates.
+  {
+    id: "sb1-s-cmte",
+    billSlug: "sb1",
+    billLabel: "SB 1",
+    chamber: "senate",
+    stage: "committee",
+    label: "Senate Higher Education Committee",
+    voteDate: "2025-02-12",
+    result: "Reported 5-2",
+    yeas: 5,
+    nays: 2,
+    stance: "anti",
+    ga: "136th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/136/sb1/votes",
+    verificationStatus: "verified",
+    notes: "Committee report clearing SB 1 to the Senate floor. Dem minority opposed."
+  },
 
-   Every member listed here is marked in the audit research as
-   a freshman (no dash-marker) for the 136th GA, which convened
-   January 6, 2025. The only 136th roll call we currently track
-   occurred AFTER that date, so in practice these entries are
-   future-proofing for additional roll calls — not active. */
-const SEATED_SINCE = {
-  // Currently no active not-seated cases for HB 249 (2026) or SB 34 (2025)
-  // since the 136th GA was already in session. Left intentionally empty.
-};
+  {
+    id: "sb1-s-pass",
+    billSlug: "sb1",
+    billLabel: "SB 1",
+    chamber: "senate",
+    stage: "pass",
+    label: "Senate Passage",
+    voteDate: "2025-02-12",
+    result: "Passed 21-11",
+    yeas: 21,
+    nays: 11,
+    stance: "anti",
+    ga: "136th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/136/sb1/votes",
+    verificationStatus: "verified",
+    notes: "DEI ban in higher education. Sen. Louis Blessing III (R-8) and Sen. Tom Patton (S-24) crossed to vote N. Reconcile both defectors against Senate Journal 2/12/25."
+  },
 
-function _memberKey(member, chamber) {
-  return (chamber === "senate" ? "S" : "H") + member.d;
-}
+  {
+    id: "sb1-h-pass",
+    billSlug: "sb1",
+    billLabel: "SB 1",
+    chamber: "house",
+    stage: "pass",
+    label: "House Passage",
+    voteDate: "2025-03-19",
+    result: "Passed 59-34",
+    yeas: 59,
+    nays: 34,
+    stance: "anti",
+    ga: "136th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/136/sb1/votes",
+    verificationStatus: "verified",
+    notes: "DEI ban in higher education, House passage. Reconcile tally against House Journal 3/19/25."
+  },
 
-function resolveVote(member, rcId, chamber) {
-  const rc = ROLL_CALLS[rcId];
-  if (!rc) return null;
-  if (chamber && rc.chamber !== chamber) return null;
+  {
+    id: "sb1-s-concur",
+    billSlug: "sb1",
+    billLabel: "SB 1",
+    chamber: "senate",
+    stage: "concur",
+    label: "Senate Concurrence",
+    voteDate: "2025-03-26",
+    result: "Concurred 20-11",
+    yeas: 20,
+    nays: 11,
+    stance: "anti",
+    ga: "136th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/136/sb1/votes",
+    verificationStatus: "verified",
+    notes: "Senate concurrence sending SB 1 to the Governor. Sens. Blessing III (R-8) and Patton (R-24) crossed again to vote N."
+  },
 
-  const key = _memberKey(member, rc.chamber);
-  if (rc.votes && rc.votes[key]) return rc.votes[key];
+  /* ───────── 135th General Assembly (scorecard context) ───────── */
 
-  const seatedSince = member.seatedSince || SEATED_SINCE[key];
-  if (seatedSince && seatedSince > rc.date) return null;
+  {
+    id: "hb68-h-pass",
+    billSlug: "hb68",
+    billLabel: "HB 68",
+    chamber: "house",
+    stage: "pass",
+    label: "House Original Passage",
+    voteDate: "2023-06-14",
+    result: "Passed 64-27",
+    yeas: 64,
+    nays: 27,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb68/votes",
+    verificationStatus: "provisional",
+    notes: "Original House passage of HB 68 before Senate amendments added the sports ban. Reconcile tally against House Journal 6/14/23."
+  },
 
-  // Party-line default
-  if (rc.stance === "anti") {
-    return member.party === "R" ? "Y" : "N";
-  } else {
-    return member.party === "R" ? "N" : "Y";
+  {
+    id: "hb68-s-pass",
+    billSlug: "hb68",
+    billLabel: "HB 68",
+    chamber: "senate",
+    stage: "pass",
+    label: "Senate Passage (with Sports Ban amendment)",
+    voteDate: "2023-12-13",
+    result: "Passed 24-8",
+    yeas: 24,
+    nays: 8,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb68/votes",
+    verificationStatus: "provisional",
+    notes: "Senate added the Save Women's Sports Act language and passed the combined bill. Sen. Nathan Manning (R-13) voted N. Reconcile tally against Senate Journal 12/13/23."
+  },
+
+  {
+    id: "hb68-h-concur",
+    billSlug: "hb68",
+    billLabel: "HB 68",
+    chamber: "house",
+    stage: "concur",
+    label: "House Concurrence",
+    voteDate: "2023-12-13",
+    result: "Concurred 62-27",
+    yeas: 62,
+    nays: 27,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb68/votes",
+    verificationStatus: "provisional",
+    notes: "House concurred in Senate amendments, sending HB 68 to the Governor. Rep. Jamie Callender (R-57) voted N. Reconcile tally against House Journal 12/13/23."
+  },
+
+  {
+    id: "hb68-s-override",
+    billSlug: "hb68",
+    billLabel: "HB 68",
+    chamber: "senate",
+    stage: "override",
+    label: "Senate Veto Override",
+    voteDate: "2024-01-24",
+    result: "Override 24-8",
+    yeas: 24,
+    nays: 8,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb68/votes",
+    verificationStatus: "provisional",
+    notes: "Gender-affirming care ban + sports ban. Sen. Nathan Manning (R-13) voted N, sole R crossover on override."
+  },
+
+  {
+    id: "hb68-h-override",
+    billSlug: "hb68",
+    billLabel: "HB 68",
+    chamber: "house",
+    stage: "override",
+    label: "House Veto Override",
+    voteDate: "2024-01-10",
+    result: "Override 65-28",
+    yeas: 65,
+    nays: 28,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb68/votes",
+    verificationStatus: "provisional",
+    notes: "Rep. Jamie Callender (R-57) voted N on override. Verify tally against House Journal 1/10/24."
+  },
+
+  {
+    id: "hb8-h-pass",
+    billSlug: "hb8",
+    billLabel: "HB 8",
+    chamber: "house",
+    stage: "pass",
+    label: "House Passage",
+    voteDate: "2023-06-21",
+    result: "Passed 65-28",
+    yeas: 65,
+    nays: 28,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb8/votes",
+    verificationStatus: "provisional",
+    notes: "Parents' Bill of Rights / forced outing. Rep. Andrea White (R-36), Rep. Gayle Manning (R-52), Rep. Jamie Callender (R-57) voted N. Verify tally against House Journal 6/21/23."
+  },
+
+  {
+    id: "hb8-s-concur",
+    billSlug: "hb8",
+    billLabel: "HB 8",
+    chamber: "senate",
+    stage: "concur",
+    label: "Senate Passage",
+    voteDate: "2024-12-11",
+    result: "Passed 24-7",
+    yeas: 24,
+    nays: 7,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb8/votes",
+    verificationStatus: "provisional",
+    notes: "Sen. Louis Blessing III (R-8) voted N. Verify tally against Senate Journal 12/11/24."
+  },
+
+  {
+    id: "hb8-h-concur",
+    billSlug: "hb8",
+    billLabel: "HB 8",
+    chamber: "house",
+    stage: "concur",
+    label: "House Concurrence",
+    voteDate: "2024-12-18",
+    result: "Concurred 64-25",
+    yeas: 64,
+    nays: 25,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb8/votes",
+    verificationStatus: "provisional",
+    notes: "House concurred in Senate amendments, sending HB 8 to the Governor. Reconcile tally against House Journal 12/18/24 and confirm any R crossovers."
+  },
+
+  {
+    id: "sb104-s-pass",
+    billSlug: "sb104",
+    billLabel: "SB 104",
+    chamber: "senate",
+    stage: "pass",
+    label: "Senate Passage (with bathroom ban amendment)",
+    voteDate: "2024-11-13",
+    result: "Passed 24-7",
+    yeas: 24,
+    nays: 7,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/sb104/votes",
+    verificationStatus: "provisional",
+    notes: "College Credit Plus vehicle amended to include K-12 and higher-ed bathroom/locker-room restrictions. Verify tally against Senate Journal 11/13/24."
+  },
+
+  {
+    id: "sb104-h-concur",
+    billSlug: "sb104",
+    billLabel: "SB 104",
+    chamber: "house",
+    stage: "concur",
+    label: "House Concurrence",
+    voteDate: "2024-11-13",
+    result: "Concurred 60-31",
+    yeas: 60,
+    nays: 31,
+    stance: "anti",
+    ga: "135th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/135/sb104/votes",
+    verificationStatus: "provisional",
+    notes: "Rep. Jamie Callender (R-57) voted N on concurrence. Verify tally against House Journal 11/13/24."
   }
+];
+
+/* -------------------------------------------------------
+   VOTE EXCEPTIONS
+   One row per legislator-roll_call pair where the member
+   deviated from their party-line default. Party-line defaults
+   are applied automatically by resolveVote(); only list the
+   exceptions here.
+
+   Fields:
+     rollCallId   matches ROLL_CALLS.id
+     chamber      "house" | "senate" (redundant, for lookup speed)
+     district     integer district number
+     vote         "Y" | "N" | "NV" | "E"
+     notes        why this exception exists (optional)
+   ------------------------------------------------------- */
+const VOTE_EXCEPTIONS = [
+
+  /* HB 249 (136th, 2026-03-25), drag ban passage */
+  { rollCallId: "hb249-h-pass", chamber: "house", district: 57, vote: "N",
+    notes: "Callender, sole R to vote against drag ban." },
+
+  /* HB 68 (135th), gender-affirming care + sports ban overrides */
+  { rollCallId: "hb68-s-override", chamber: "senate", district: 13, vote: "N",
+    notes: "N. Manning, sole R to vote against Senate override." },
+  { rollCallId: "hb68-h-override", chamber: "house", district: 57, vote: "N",
+    notes: "Callender, against HB 68 override." },
+
+  /* HB 8 (135th), forced outing passage */
+  { rollCallId: "hb8-h-pass", chamber: "house", district: 36, vote: "N",
+    notes: "A. White, against HB 8." },
+  { rollCallId: "hb8-h-pass", chamber: "house", district: 52, vote: "N",
+    notes: "G. Manning, against HB 8." },
+  { rollCallId: "hb8-h-pass", chamber: "house", district: 57, vote: "N",
+    notes: "Callender, against HB 8." },
+  { rollCallId: "hb8-s-concur", chamber: "senate", district: 8, vote: "N",
+    notes: "Blessing, against HB 8 in Senate." },
+
+  /* SB 104 (135th), bathroom ban concurrence */
+  { rollCallId: "sb104-h-concur", chamber: "house", district: 57, vote: "N",
+    notes: "Callender, against SB 104 concurrence." },
+
+  /* SB 1 (136th): Higher Ed DEI ban */
+  { rollCallId: "sb1-s-pass", chamber: "senate", district: 8, vote: "N",
+    notes: "Blessing III: crossed on SB 1 Senate passage." },
+  { rollCallId: "sb1-s-pass", chamber: "senate", district: 24, vote: "N",
+    notes: "Patton: crossed on SB 1 Senate passage." },
+  { rollCallId: "sb1-s-concur", chamber: "senate", district: 8, vote: "N",
+    notes: "Blessing III: crossed on SB 1 Senate concurrence." },
+  { rollCallId: "sb1-s-concur", chamber: "senate", district: 24, vote: "N",
+    notes: "Patton: crossed on SB 1 Senate concurrence." }
+];
+
+/* -------------------------------------------------------
+   SEATING OVERRIDES
+   If a legislator was not seated at the time of a vote (e.g.,
+   won a special election mid-GA), add them here so their
+   resolveVote() returns "-" instead of a party-line default.
+   Leave empty if not applicable.
+
+   Fields:
+     chamber     "house" | "senate"
+     district    integer
+     seatedSince ISO YYYY-MM-DD (votes before this date resolve "-")
+   ------------------------------------------------------- */
+const SEATED_SINCE = [
+  // { chamber: "house", district: 0, seatedSince: "2025-01-01" },
+];
+
+/* -------------------------------------------------------
+   RESOLVERS
+   ------------------------------------------------------- */
+function getRollCall(rollCallId) {
+  for (var i = 0; i < ROLL_CALLS.length; i++) {
+    if (ROLL_CALLS[i].id === rollCallId) return ROLL_CALLS[i];
+  }
+  return null;
 }
 
-/* Returns one entry per roll call the bill has, in date order.
-   Each entry: { id, label, date, result, stance, chamber } */
-function getBillRollCalls(billId) {
-  const out = [];
-  Object.keys(ROLL_CALLS).forEach(function (id) {
-    const rc = ROLL_CALLS[id];
-    if (rc.bill === billId) {
-      out.push({
-        id: id,
-        label: rc.label,
-        date: rc.date,
-        result: rc.result,
-        stance: rc.stance,
-        chamber: rc.chamber,
-      });
+function getRollCallsForBill(billSlug) {
+  return ROLL_CALLS.filter(function (rc) { return rc.billSlug === billSlug; });
+}
+
+function _findException(rollCallId, chamber, district) {
+  for (var i = 0; i < VOTE_EXCEPTIONS.length; i++) {
+    var e = VOTE_EXCEPTIONS[i];
+    if (e.rollCallId === rollCallId && e.chamber === chamber && e.district === district) {
+      return e;
     }
-  });
-  out.sort(function (a, b) {
-    return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
-  });
-  return out;
-}
-
-/* For a member, returns a list of { bill, rollCalls: [...] } grouped
-   by bill, filtered to roll calls that applied to their chamber and
-   for which the member has a resolved vote.
-
-   rollCalls entries: { id, label, date, result, stance, vote }
-   where vote is "Y" | "N" | "A" and the caller decides color. */
-function getMemberVoteSummary(member, chamber) {
-  // chamber: "House" | "Senate"
-  const chamberKey = chamber === "Senate" ? "senate" : "house";
-  const byBill = {};
-  Object.keys(ROLL_CALLS).forEach(function (id) {
-    const rc = ROLL_CALLS[id];
-    if (rc.chamber !== chamberKey) return;
-    const vote = resolveVote(member, id, chamberKey);
-    if (vote == null) return;
-    if (!byBill[rc.bill]) byBill[rc.bill] = [];
-    byBill[rc.bill].push({
-      id: id,
-      label: rc.label,
-      date: rc.date,
-      result: rc.result,
-      stance: rc.stance,
-      vote: vote,
-    });
-  });
-  // Flatten to list with bill metadata
-  const out = [];
-  Object.keys(byBill).forEach(function (billId) {
-    const bill = typeof getBillById === "function" ? getBillById(billId) : null;
-    out.push({
-      billId: billId,
-      bill: bill ? bill.bill : billId.toUpperCase(),
-      title: bill ? bill.title : "",
-      stance: bill ? bill.stance : "anti",
-      url: bill ? bill.url : null,
-      rollCalls: byBill[billId].sort(function (a, b) {
-        return a.date < b.date ? -1 : 1;
-      }),
-    });
-  });
-  return out;
-}
-
-/* Classify a single vote against the bill's stance, returning the
-   label we should show on the scorecard card:
-     "for-equality"     — member voted with the equality position
-     "against-equality" — member voted against the equality position
-     "absent"           — member was not listed on either side
-*/
-function classifyVote(vote, stance) {
-  if (vote === "A") return "absent";
-  if (stance === "anti") {
-    // Anti-equality bill: Y = against-equality, N = for-equality
-    return vote === "Y" ? "against-equality" : "for-equality";
-  } else {
-    // Pro-equality bill: Y = for-equality, N = against-equality
-    return vote === "Y" ? "for-equality" : "against-equality";
   }
+  return null;
+}
+
+function _seatedAt(chamber, district, voteDate) {
+  for (var i = 0; i < SEATED_SINCE.length; i++) {
+    var s = SEATED_SINCE[i];
+    if (s.chamber === chamber && s.district === district) {
+      return s.seatedSince <= voteDate;
+    }
+  }
+  return true;
+}
+
+/**
+ * Resolve how a legislator voted on a given roll call.
+ *
+ * legislator: { chamber: "house"|"senate", d: <district>, party: "R"|"D"|"I" }
+ * rollCall:   entry from ROLL_CALLS
+ *
+ * Order of resolution:
+ *   1. Explicit exception row (hand-entered crossover / absence)
+ *   2. Not seated at vote_date → "-"
+ *   3. Party-line default:
+ *        anti bill:  R→Y, D→N
+ *        pro bill:   R→N, D→Y
+ *        mixed bill: resolves to "NV" (flag for manual review)
+ *   4. Independents default to "NV" unless an exception is set.
+ */
+function resolveVote(legislator, rollCall) {
+  if (!legislator || !rollCall) return "-";
+
+  var chamber = legislator.chamber;
+  if (!chamber) {
+    chamber = (typeof legislator.d === "number" && legislator.d <= 33 && legislator._senate)
+      ? "senate" : (legislator.chamber || "house");
+  }
+
+  var exc = _findException(rollCall.id, chamber, legislator.d);
+  if (exc) return exc.vote;
+
+  if (!_seatedAt(chamber, legislator.d, rollCall.voteDate)) return "-";
+
+  var party = legislator.party;
+  var stance = rollCall.stance;
+
+  if (stance === "anti") {
+    if (party === "R") return "Y";
+    if (party === "D") return "N";
+    return "NV";
+  }
+  if (stance === "pro") {
+    if (party === "R") return "N";
+    if (party === "D") return "Y";
+    return "NV";
+  }
+  return "NV";
+}
+
+/* -------------------------------------------------------
+   EXPORT (if used in a module context)
+   ------------------------------------------------------- */
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    VOTING_RECORDS_UPDATED: VOTING_RECORDS_UPDATED,
+    ROLL_CALLS: ROLL_CALLS,
+    VOTE_EXCEPTIONS: VOTE_EXCEPTIONS,
+    SEATED_SINCE: SEATED_SINCE,
+    getRollCall: getRollCall,
+    getRollCallsForBill: getRollCallsForBill,
+    resolveVote: resolveVote
+  };
 }

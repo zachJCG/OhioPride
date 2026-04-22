@@ -1,22 +1,58 @@
 /* ============================================================
-   Ohio Pride PAC — Legislative Scorecard Data
-   Last updated: 04/21/26
-   
+   Ohio Pride PAC, Legislative Scorecard Data
+   Last updated: 04/22/26
+
    HOW TO UPDATE:
    1. Find the legislator in HOUSE_MEMBERS or SENATE_MEMBERS
    2. Adjust their votes/sponsorship/news scores
    3. Add notes explaining the change
    4. Update LAST_UPDATED below
-   
-   SCORING:
-     votes:       +1 per pro-equality vote, -1 per anti-equality vote
-     sponsorship: +3 primary sponsor pro bill, +2 co-sponsor pro bill
-                  -3 primary sponsor anti bill, -2 co-sponsor anti bill
-     news:        +1 to +3 for pro-LGBTQ+ advocacy/statements
-                  -1 to -3 for anti-LGBTQ+ rhetoric/scandals
+
+   SCORING METHODOLOGY v2.0-intersectional
+   ---------------------------------------------------------
+   Composite score (0-100) is a weighted average of four
+   categories, then adjusted for cross-issue consistency.
+
+     Floor votes           40%
+     Committee votes       10%
+     Sponsorship           30%
+     News & statements     20%
+
+   Event weights applied inside each category:
+     Veto-override roll call    1.25x
+     Concurrence / final pass   1.00x
+     Chamber-of-origin passage  1.00x
+     Committee report           0.75x
+     Amendment-only vote        0.50x
+
+   Intersectional framing. Each legislator is evaluated
+   across ten issue families that intersect with LGBTQ+
+   lives: lgbtq_equality, reproductive_justice, racial_justice,
+   disability_justice, voting_rights, family_youth_education,
+   immigrant_justice, criminal_legal, healthcare_access,
+   and expression_speech. A cross-issue inconsistency flag
+   is raised when subscore dispersion exceeds 35 points,
+   meaning a member is strong on LGBTQ+ votes but weak on
+   an intersecting community (or vice versa).
+
+   Source hierarchy (high to low authority):
+     1. Chamber journal of record (roll call)
+     2. Legislative Service Commission bill analysis
+     3. Committee minutes / clerk reports
+     4. Primary-source news (hearing coverage, press events)
+     5. Sponsor-authored statements and press releases
+     6. Advocacy or opposition statements
+
+   Grade scale (applied after composite):
+     A+  90-100  Champion
+     A   73-89   Strong Ally
+     B   55-72   Supportive
+     C   40-54   Mixed Record
+     D   20-39   Unfriendly
+     F    0-19   Hostile
    ============================================================ */
 
-const SCORECARD_UPDATED = { date: "04/21/26", time: "04:30 PM EDT" };
+const SCORECARD_UPDATED = { date: "04/22/26", time: "06:00 PM EDT" };
 
 /* Grade thresholds (weighted score 0-100) */
 const GRADE_SCALE = [
@@ -28,19 +64,46 @@ const GRADE_SCALE = [
   { min: 0,  grade: "F",  label: "Hostile", color: "#dc2626" },
 ];
 
-/* Bills used in scoring (for reference panel) */
+/* Bills used in scoring (for reference panel)
+   Mirrors BILLS in bill-data.js. Keep order aligned with that file
+   so the scorecard reference panel reads top-to-bottom in the
+   editorial priority sequence. */
 const SCORED_BILLS = [
-  { id: "hb249", bill: "HB 249", title: "Drag Ban", ga: "136th", stance: "anti", status: "Passed House 63-32", date: "3/25/2026" },
-  { id: "sb1",   bill: "SB 1",   title: "DEI Ban (Higher Ed)", ga: "136th", stance: "anti", status: "Signed Into Law", date: "3/28/2026" },
-  { id: "hb68",  bill: "HB 68",  title: "Gender-Affirming Care Ban + Sports Ban", ga: "135th", stance: "anti", status: "Law (Veto Overridden)", date: "1/24/2024" },
-  { id: "hb8",   bill: "HB 8",   title: "Parents' Bill of Rights (Forced Outing)", ga: "135th", stance: "anti", status: "Signed Into Law", date: "12/18/2024" },
-  { id: "sb104", bill: "SB 104", title: "Bathroom Ban", ga: "135th", stance: "anti", status: "Signed Into Law", date: "11/27/2024" },
-  { id: "sb70",  bill: "SB 70",  title: "Ohio Fairness Act", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "sb71",  bill: "SB 71",  title: "Conversion Therapy Ban", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb136", bill: "HB 136", title: "Ohio Fairness Act (House)", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb300", bill: "HB 300", title: "Conversion Therapy Ban (House)", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb306", bill: "HB 306", title: "Hate Crimes Act", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb327", bill: "HB 327", title: "PRIDE Act", ga: "136th", stance: "pro", status: "In Committee", date: "" },
+  /* Active anti-equality, on the floor or moving */
+  { id: "hb249", bill: "HB 249",  title: "Drag Ban",                                     ga: "136th", stance: "anti",  status: "Passed House 63-32",         date: "3/25/2026" },
+  { id: "sb34",  bill: "SB 34",   title: "Ten Commandments Classroom Displays",          ga: "136th", stance: "anti",  status: "Passed Senate 23-10",        date: "11/20/2025" },
+
+  /* Active anti-equality, in committee or introduced */
+  { id: "hb798", bill: "HB 798",  title: "Omnibus Anti-Trans Bill",                      ga: "136th", stance: "anti",  status: "Introduced",                 date: "3/31/2026" },
+  { id: "hb796", bill: "HB 796",  title: "Prison Trans Housing Ban",                     ga: "136th", stance: "anti",  status: "Introduced",                 date: "3/25/2026" },
+  { id: "hb693", bill: "HB 693",  title: "Affirming Families First Act",                 ga: "136th", stance: "anti",  status: "In Committee",               date: "3/25/2026" },
+  { id: "hb602", bill: "HB 602",  title: "Pride Flag Ban on State Property",             ga: "136th", stance: "anti",  status: "In Committee",               date: "3/30/2026" },
+  { id: "hb457", bill: "HB 457",  title: "Politically-Motivated Crimes",                 ga: "136th", stance: "anti",  status: "In Committee",               date: "" },
+  { id: "hb190", bill: "HB 190",  title: "Given Name Act (Forced Outing)",               ga: "136th", stance: "anti",  status: "In Committee",               date: "4/29/2025" },
+  { id: "hb155", bill: "HB 155",  title: "K-12 DEI Ban",                                 ga: "136th", stance: "anti",  status: "In Committee",               date: "5/20/2025" },
+  { id: "sb113", bill: "SB 113",  title: "Senate DEI Ban (Schools)",                     ga: "136th", stance: "anti",  status: "In Committee",               date: "3/25/2026" },
+  { id: "hb172", bill: "HB 172",  title: "Minor Mental Health Consent",                  ga: "136th", stance: "anti",  status: "In Committee",               date: "11/19/2025" },
+  { id: "sb274", bill: "SB 274",  title: "Senate Companion to HB 172",                   ga: "136th", stance: "anti",  status: "In Committee",               date: "10/1/2025" },
+  { id: "hb196", bill: "HB 196",  title: "Deadnaming Candidates Bill",                   ga: "136th", stance: "anti",  status: "In Committee",               date: "4/29/2025" },
+  { id: "hb262", bill: "HB 262",  title: "Designate Natural Family Month",               ga: "136th", stance: "anti",  status: "In Committee",               date: "9/30/2025" },
+
+  /* Anti-equality, signed or overridden into law (scorecard context) */
+  { id: "sb1",   bill: "SB 1",    title: "DEI Ban (Higher Ed)",                          ga: "136th", stance: "anti",  status: "Signed Into Law",            date: "3/28/2025" },
+  { id: "sb104", bill: "SB 104",  title: "Bathroom Ban",                                 ga: "135th", stance: "anti",  status: "Signed Into Law",            date: "11/27/2024" },
+  { id: "hb8",   bill: "HB 8",    title: "Parents' Bill of Rights (Forced Outing)",      ga: "135th", stance: "anti",  status: "Signed Into Law",            date: "12/18/2024" },
+  { id: "hb68",  bill: "HB 68",   title: "Gender-Affirming Care Ban + Sports Ban",       ga: "135th", stance: "anti",  status: "Law (Veto Overridden)",      date: "1/24/2024" },
+
+  /* Pro-equality bills */
+  { id: "sb70",  bill: "SB 70",   title: "Ohio Fairness Act",                            ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "hb136", bill: "HB 136",  title: "Ohio Fairness Act (House)",                    ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "sb71",  bill: "SB 71",   title: "Conversion Therapy Ban",                       ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "hb300", bill: "HB 300",  title: "Conversion Therapy Ban (House)",               ga: "136th", stance: "pro",   status: "Introduced",                 date: "" },
+  { id: "hjr4",  bill: "HJR 4",   title: "Marriage Equality Act",                        ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "hb327", bill: "HB 327",  title: "PRIDE Act",                                    ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "sb211", bill: "SB 211",  title: "Love Makes a Family Week",                     ga: "136th", stance: "pro",   status: "Introduced",                 date: "10/14/2025" },
+
+  /* Mixed bills */
+  { id: "hb306", bill: "HB 306",  title: "Hate Crimes Act (Excludes Trans Protections)", ga: "136th", stance: "mixed", status: "In Committee",               date: "2/25/2026" },
 ];
 
 /* -------------------------------------------------------
