@@ -2,6 +2,10 @@
   publish = "."
   functions = "netlify/functions"
 
+[[scheduled.functions]]
+  path = "/.netlify/functions/actblue-sync"
+  schedule = "@hourly"
+
 [[headers]]
   for = "/*"
   [headers.values]

@@ -462,6 +462,7 @@
 
   <script src="/js/main.js" defer></script>
   <script src="/js/enhancements.js" defer></script>
+  <script src="/js/ohiopride-data.js" defer></script>
   <script src="/js/site-template.js" defer></script>
   <script>
     /* ============ BOARD MEMBER DATA ============ */
@@ -579,6 +580,10 @@
         }
       ];
 
+      /* Render the marquee, grid, toggles, and reveals. Called once we've
+         decided what `boardMembers` should hold (Supabase data if reachable,
+         hardcoded fallback otherwise). */
+      function renderBoard() {
       /* ============ BUILD NAME STRIP ============ */
       var strip = document.getElementById('nameStripTrack');
       if (strip) {
@@ -669,6 +674,37 @@
           reveals.forEach(function (el) { el.classList.add('visible'); });
         }
       });
+      } /* end renderBoard() */
+
+      /* Hydrate `boardMembers` from Supabase via the Netlify function. If the
+         fetch fails for any reason, the hardcoded array above is used as the
+         fallback so the page always renders a complete board (fail-open). */
+      function hydrateAndRender() {
+        if (!window.fetch) { renderBoard(); return; }
+        fetch('/.netlify/functions/board-members', { credentials: 'omit' })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (payload) {
+            if (payload && payload.ok && Array.isArray(payload.members) && payload.members.length) {
+              boardMembers = payload.members.map(function (m) {
+                return {
+                  name: m.name,
+                  role: m.role || 'Board Member',
+                  chip: m.chip || '',
+                  img:  m.img_path,
+                  bio:  Array.isArray(m.bio) ? m.bio : []
+                };
+              });
+            }
+          })
+          .catch(function () { /* fail open */ })
+          .then(renderBoard);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hydrateAndRender);
+      } else {
+        hydrateAndRender();
+      }
     })();
   </script>
 </body>

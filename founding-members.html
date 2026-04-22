@@ -218,7 +218,8 @@
         <!-- Tier Legend -->
         <div class="tier-legend reveal">
           <h3>Founding Member Tiers</h3>
-          <div class="tier-grid reveal-stagger">
+          <div class="tier-grid reveal-stagger" id="tierGrid">
+            <!-- Populated by OhioPride.loadFoundingMemberTiers; fallback below stays visible until the fetch succeeds. -->
             <div class="tier-legend-card">
               <div class="tier-name">Stonewall Sustainer</div>
               <div class="tier-price">$19.69/month</div>
@@ -247,7 +248,8 @@
     <!-- Member List -->
     <section class="section">
       <div class="container">
-        <div class="member-list reveal">
+        <div class="member-list reveal" id="memberList">
+          <!-- Populated by OhioPride.loadPublicMembers; fallback below stays visible until the fetch succeeds. -->
           <div class="tier-group">
             <div class="tier-group-header">
               <div class="tier-group-title">Stonewall Sustainer</div>
@@ -278,19 +280,14 @@
 
     <script src="/js/main.js" defer></script>
     <script src="/js/enhancements.js" defer></script>
-    <script>
-      (function () {
-        var FOUNDING_MEMBER_COUNT = 3;
-        var FOUNDING_MEMBER_GOAL = 1969;
-        var pct = (FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100;
-        var bar = document.getElementById("goalFill");
-        var text = document.getElementById("progressText");
-        if (bar) bar.style.width = pct + "%";
-        if (text)
-          text.textContent =
-            FOUNDING_MEMBER_COUNT + " of 1,969 Founding Members";
-      })();
-    </script>
+    <script src="/js/ohiopride-data.js" defer></script>
     <script src="/js/site-template.js" defer></script>
+    <script defer>
+      document.addEventListener('DOMContentLoaded', function () {
+        OhioPride.loadProgress('#goalFill', '#progressText');
+        OhioPride.loadFoundingMemberTiers('#tierGrid');
+        OhioPride.loadPublicMembers('#memberList');
+      });
+    </script>
   </body>
 </html>
