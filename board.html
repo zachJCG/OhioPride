@@ -323,31 +323,41 @@
     }
 
     /* Bio area.
-       Collapsed state is animated via max-height + opacity + vertical
-       padding rather than `display: none`, so opening and closing the
-       panel smoothly expands the card instead of snapping to its final
-       height. The `align-items: start` on .board-grid keeps the rest of
-       the row from reacting to the change in this card's height. */
+       Animates via `grid-template-rows: 0fr → 1fr` on a wrapper. That
+       interpolates against the bio's actual rendered height, which
+       avoids both the instant snap of `display: none` and the
+       "pauses-then-finishes" feel of `max-height: 1600px`. The inner
+       wrapper needs `min-height: 0` so its children can collapse to
+       zero size inside the 0fr track.
+       `align-items: start` on .board-grid keeps siblings in the row
+       from reacting to this card's height change. */
     .board-card-bio {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.25s ease 0s,
+                  padding 0.3s ease;
       padding: 0 22px;
       color: var(--text-secondary);
       font-size: 14.5px;
       line-height: 1.7;
-      max-height: 0;
-      opacity: 0;
+    }
+    .board-card-bio > .board-card-bio-inner {
+      min-height: 0;
       overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                  opacity 0.3s ease,
-                  padding 0.3s ease;
     }
     .board-card-bio p + p { margin-top: 0.8rem; }
     .board-card.is-open .board-card-bio {
-      /* 1600px is comfortably larger than the longest seeded bio and
-         avoids the layout-thrash that comes with `max-height: auto`. */
-      max-height: 1600px;
+      grid-template-rows: 1fr;
       opacity: 1;
       padding-top: 0;
       padding-bottom: 22px;
+      /* Delay the opacity fade-in slightly so content doesn't flicker
+         visible before the row has started expanding. */
+      transition: grid-template-rows 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.25s ease 0.1s,
+                  padding 0.3s ease;
     }
 
     .board-card-toggle {
