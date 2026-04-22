@@ -144,6 +144,10 @@ export default async (_req, _context) => {
   });
 
   // Pull bills with sponsors (legislator join) in one round-trip.
+  // Excludes enacted/vetoed/dead so the tracker only shows bills that are
+  // still live in the General Assembly. Matches the filter inside the
+  // issue_tracker_stats() RPC so the hero count and the list are always
+  // derived from the same universe of bills.
   const { data: bills, error: billsErr } = await supabase
     .from('bills')
     .select(`
@@ -158,6 +162,7 @@ export default async (_req, _context) => {
       )
     `)
     .eq('is_active', true)
+    .not('status', 'in', '(enacted,vetoed,dead)')
     .order('seed_priority', { ascending: true, nullsFirst: false })
     .order('bill_number',  { ascending: true });
 
