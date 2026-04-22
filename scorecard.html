@@ -600,92 +600,78 @@
       .scoring-explainer-grid { grid-template-columns: 1fr; gap: 10px; }
     }
 
-    /* ── Methodology ── */
+    /* ── Methodology summary panel (full text lives at /scorecard/methodology) ── */
     .methodology {
-      padding: 60px 0 80px;
+      padding: 40px 0 80px;
     }
-    .methodology-toggle {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      padding: 20px 24px;
+    .methodology-summary {
+      padding: 28px 32px;
       background: rgba(19, 45, 68, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      transition: border-color 0.2s;
     }
-    .methodology-toggle:hover { border-color: rgba(255, 255, 255, 0.15); }
-    .methodology-toggle h3 {
+    .methodology-summary h3 {
       font-family: 'Montserrat', sans-serif;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
       color: var(--text-white);
-      margin: 0;
+      margin: 0 0 10px;
     }
-    .methodology-toggle .chevron-icon {
-      margin-left: auto;
-      color: rgba(255, 255, 255, 0.3);
-      transition: transform 0.3s;
-    }
-    .methodology-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease;
-    }
-    .methodology-body.open { max-height: 3800px; }
-    .methodology-body-inner {
-      padding: 24px;
-      background: rgba(19, 45, 68, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-top: none;
-      border-radius: 0 0 12px 12px;
-    }
-    .methodology-body h4 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-accent);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin: 20px 0 10px;
-    }
-    .methodology-body h4:first-child { margin-top: 0; }
-    .methodology-body p, .methodology-body li {
-      font-size: 14px;
+    .methodology-summary-lead {
+      font-family: 'Roboto Slab', serif;
+      font-size: 14.5px;
       line-height: 1.7;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.78);
+      margin: 0 0 14px;
+      max-width: 760px;
     }
-    .methodology-body ul { padding-left: 20px; margin: 8px 0; }
-    .methodology-body li { margin-bottom: 4px; }
-
-    .grade-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0;
+    .methodology-summary-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 14px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 24px;
     }
-    .grade-table th {
+    .methodology-summary-list li {
+      font-family: 'Roboto Slab', serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.72);
+    }
+    .methodology-summary-list strong {
       font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
+      color: var(--text-accent);
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.4);
-      text-align: left;
-      padding: 8px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .grade-table td {
+    .methodology-summary-note {
+      font-family: 'Roboto Slab', serif;
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.6);
+      margin: 0 0 18px;
+      max-width: 760px;
+    }
+    .methodology-more-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-family: 'Montserrat', sans-serif;
       font-size: 13px;
-      font-weight: 600;
-      padding: 8px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: rgba(255, 255, 255, 0.7);
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: var(--text-accent);
+      text-decoration: none;
+      padding: 10px 18px;
+      border: 1px solid var(--text-accent);
+      border-radius: 8px;
+      background: rgba(115, 215, 238, 0.08);
+      transition: background 0.2s;
     }
-    .grade-table .grade-cell {
-      font-weight: 800;
-      font-size: 15px;
+    .methodology-more-link:hover { background: rgba(115, 215, 238, 0.16); text-decoration: none; }
+    @media (max-width: 640px) {
+      .methodology-summary { padding: 22px; }
+      .methodology-summary-list { grid-template-columns: 1fr; }
     }
 
     /* ── No Results ── */
@@ -726,53 +712,7 @@
       .pill { font-size: 11px; padding: 5px 10px; }
     }
 
-    /* ── Share actions (per-card) ── */
-    .card-share {
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .card-share-label {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.4px;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.55);
-      margin-right: 6px;
-    }
-    .share-btn {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 7px 14px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(255, 255, 255, 0.04);
-      color: rgba(255, 255, 255, 0.85);
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s, transform 0.1s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .share-btn:hover { background: rgba(255, 255, 255, 0.10); border-color: rgba(255, 255, 255, 0.28); }
-    .share-btn:active { transform: translateY(1px); }
-    .share-btn.fb     { border-color: rgba(24, 119, 242, 0.45); color: #6aa3f7; }
-    .share-btn.fb:hover     { background: rgba(24, 119, 242, 0.12); }
-    .share-btn.tw     { border-color: rgba(255, 255, 255, 0.32); color: #fff; }
-    .share-btn.ig     { border-color: rgba(225, 48, 108, 0.5); color: #f178b6; }
-    .share-btn.ig:hover     { background: rgba(225, 48, 108, 0.12); }
-    .share-btn.copy   { border-color: rgba(255, 255, 255, 0.18); }
   </style>
-
-  <!-- html2canvas for instagram image generator (deferred, only loaded once) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-  <script src="/js/share.js" defer></script>
 </head>
 <body>
   <div id="site-header"></div>
@@ -860,7 +800,7 @@
               </div>
             </div>
           </div>
-          <a href="#scoring-methodology" class="scoring-more-link">See the full methodology, event weights, and grade scale &rarr;</a>
+          <a href="/scorecard/methodology" class="scoring-more-link">See the full methodology, event weights, and grade scale &rarr;</a>
         </div>
       </details>
     </div>
@@ -920,111 +860,34 @@
     <div class="no-results" id="no-results">No legislators match your current filters.</div>
   </section>
 
-  <!-- Methodology -->
+  <!-- Methodology (summary + link to full page) -->
   <section class="methodology" id="scoring-methodology">
     <div class="container">
-      <div class="methodology-toggle" id="methodology-toggle">
+      <div class="methodology-summary">
         <h3>Scoring Methodology</h3>
-        <svg class="chevron-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="methodology-body" id="methodology-body">
-        <div class="methodology-body-inner">
-          <h4>Score Weights (v2.1 &mdash; SQL-backed intersectional)</h4>
-          <p style="margin-bottom: 16px;">Every legislator is scored across four dimensions. Floor votes carry the most weight because a recorded vote is the clearest measure of how a legislator behaves when the moment of decision arrives. Sponsorship is weighted up in v2 to reward members who drive the bills that protect our community, not just those who vote on them when someone else puts the question. Committee votes are tracked separately so members who stop bad bills in committee or advance good bills out of committee get the credit they deserve. As of v2.1, all four inputs are resolved from the Supabase <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">bills</code> / <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls</code> / <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">legislator_vote_exceptions</code> tables rather than a hand-maintained spreadsheet, so every score is traceable to a specific row of data.</p>
-
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 16px 0 20px;">
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--text-accent); padding: 14px 16px; border-radius: 8px;">
-              <div style="font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: var(--text-accent); line-height: 1;">40%</div>
-              <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-top: 6px;">Floor Votes</div>
-              <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; line-height: 1.5;">Recorded roll calls on chamber passage, concurrence, and veto overrides.</div>
-            </div>
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--text-accent); padding: 14px 16px; border-radius: 8px;">
-              <div style="font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: var(--text-accent); line-height: 1;">10%</div>
-              <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-top: 6px;">Committee Votes</div>
-              <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; line-height: 1.5;">Votes to report a bill out of, or hold a bill in, committee.</div>
-            </div>
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--text-accent); padding: 14px 16px; border-radius: 8px;">
-              <div style="font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: var(--text-accent); line-height: 1;">30%</div>
-              <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-top: 6px;">Sponsorship</div>
-              <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; line-height: 1.5;">Primary and co-sponsorship of pro- and anti-equality legislation.</div>
-            </div>
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--text-accent); padding: 14px 16px; border-radius: 8px;">
-              <div style="font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: var(--text-accent); line-height: 1;">20%</div>
-              <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-top: 6px;">News and Statements</div>
-              <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; line-height: 1.5;">Public statements, press coverage, and floor speeches for or against LGBTQ+ Ohioans.</div>
-            </div>
-          </div>
-
-          <h4>Event Weights</h4>
-          <p>Inside each category, not every vote counts the same. Higher-stakes events are weighted up, procedural or amendment-only votes are weighted down. These multipliers live in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">EVENT_WEIGHTS</code> in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">/js/voting-records.js</code> and in the <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls.stage</code> column comment in Migration 4.</p>
-          <ul>
-            <li><strong>Veto-override roll call:</strong> 1.25&times;</li>
-            <li><strong>Concurrence or final passage:</strong> 1.00&times;</li>
-            <li><strong>Chamber-of-origin passage:</strong> 1.00&times;</li>
-            <li><strong>Committee report:</strong> 0.75&times;</li>
-            <li><strong>Amendment-only vote:</strong> 0.50&times;</li>
-            <li><strong>Introduction / first reading:</strong> 0.25&times;</li>
-          </ul>
-
-          <h4>Data Pipeline (what the SQL database does)</h4>
-          <p>As of April 22, 2026 the scorecard is backed by Migration 4 (<code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">20260424000000_scorecard.sql</code>), which persists three tables the public scorecard reads over the <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">anon</code> role:</p>
-          <ul>
-            <li><code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">bills</code> &mdash; the catalog of tracked bills. Each row carries an editorial <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">stance</code> of <em>anti</em>, <em>pro</em>, or <em>mixed</em>. Stance drives scoring direction: on an anti bill, a Y vote subtracts points and an N adds them; on a pro bill, the signs flip. <em>Mixed</em> bills are tracked but never auto-scored.</li>
-            <li><code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls</code> &mdash; one row per recorded legislative action (committee, amend, pass, concur, override, introduce). Each row records the chamber, stage, vote date, tally, and the event weight that applies.</li>
-            <li><code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">legislator_vote_exceptions</code> &mdash; one row per member who broke from their party-line default, or whose NV / E was hand-recorded. The resolver falls back to the party-line default for every other member, so only crossovers need an exception row.</li>
-          </ul>
-          <p>The final per-member impact is the product of three values: <strong>stance direction</strong> (from <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">bills.stance</code>), <strong>resolved vote</strong> (exception row if one exists, otherwise the party-line default), and <strong>event weight</strong> (from the stage multiplier above). Legislators who were not seated at a roll call's vote date resolve to <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">-</code> and are filtered out so only votes that actually mattered to that member count against them. The dataset covers both the 135th GA (HB 68, HB 8, SB 104, SB 1&nbsp;(135th), HB 602&nbsp;(135th)) and the 136th GA (HB 249, SB 1, SB 34).</p>
-
-          <h4>Verification Status</h4>
-          <p>Every <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls</code> row carries a <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">verificationStatus</code> flag. Migration 5 (daily verification) will extend this into the database schema itself; until then the flag lives in the JS editorial layer.</p>
-          <ul>
-            <li><strong>verified</strong> &mdash; tally matches the chamber journal of record.</li>
-            <li><strong>provisional</strong> &mdash; committee clerk or press report, not yet cross-checked against the journal. Scored, but reviewed daily.</li>
-            <li><strong>reconciled</strong> &mdash; the row was previously provisional and has since been reconciled with the journal. Treated as canonical.</li>
-          </ul>
-
-          <h4>Intersectional Framing</h4>
-          <p>LGBTQ+ equality cannot be separated from racial justice, reproductive freedom, voting rights, disability justice, and economic dignity. The same legislators who attack our community almost always attack the communities we belong to. Every legislator is evaluated across ten issue families that intersect with LGBTQ+ lives:</p>
-          <ul>
-            <li>LGBTQ+ equality</li>
-            <li>Reproductive justice</li>
-            <li>Racial justice</li>
-            <li>Disability justice</li>
-            <li>Voting rights</li>
-            <li>Family, youth, and education</li>
-            <li>Immigrant justice</li>
-            <li>Criminal legal reform</li>
-            <li>Healthcare access</li>
-            <li>Expression and free speech</li>
-          </ul>
-          <p>A <strong>cross-issue inconsistency flag</strong> is raised when a legislator's subscore dispersion across these ten families exceeds 35 points. That means the member is strong on one side of the equality map and weak on an intersecting one, and we surface that gap instead of letting it hide inside a composite score.</p>
-
-          <h4>Source Hierarchy</h4>
-          <p>When sources conflict, the higher-authority source wins. Provisional <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls</code> rows are reconciled against the chamber journal of record before being promoted to <em>verified</em>. Hand-recorded crossovers in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">legislator_vote_exceptions</code> always override the party-line default.</p>
-          <ol>
-            <li>Chamber journal of record (roll call)</li>
-            <li>Legislative Service Commission bill analysis</li>
-            <li>Committee minutes and clerk reports</li>
-            <li>Primary-source news (hearing coverage, press events)</li>
-            <li>Sponsor-authored statements and press releases</li>
-            <li>Advocacy or opposition statements</li>
-          </ol>
-
-          <h4>Grade Scale</h4>
-          <table class="grade-table" id="grade-table"></table>
-          <p style="margin-top: 8px;">The per-member weighted total from the four inputs above is normalized to a 0&ndash;100 scale with <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 13px;">max(0, min(100, 50 + raw * 5))</code>, then the grade is applied from the table.</p>
-
-          <h4>Data Sources</h4>
-          <ul>
-            <li>Ohio General Assembly official vote records (legislature.ohio.gov), persisted in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">public.roll_calls</code> by Migration 4</li>
-            <li>Bill catalog and sponsorship records, persisted in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">public.bills</code> by Migration 4</li>
-            <li>Hand-recorded crossovers and absences, persisted in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">public.legislator_vote_exceptions</code></li>
-            <li>Public statements, press conferences, and news coverage</li>
-            <li>Equality Ohio and TransOhio legislative tracking</li>
-            <li>ACLU Ohio legislative alerts</li>
-            <li>Adjacent civil-rights scorecards (NARAL Pro-Choice Ohio, NAACP Ohio Conference, ACLU Ohio, Ohio Voter Rights Coalition) for the intersectional component</li>
-          </ul>
-        </div>
+        <p class="methodology-summary-lead">
+          Every legislator gets a weighted 0&ndash;100 score on LGBTQ+
+          equality, built from four inputs and resolved directly from
+          the Supabase roll-call database. The grade scale runs A+
+          through F.
+        </p>
+        <ul class="methodology-summary-list">
+          <li><strong>40% Floor Votes</strong> &mdash; chamber passage, concurrence, and veto overrides.</li>
+          <li><strong>10% Committee Votes</strong> &mdash; reports that advance or hold a bill.</li>
+          <li><strong>30% Sponsorship</strong> &mdash; primary (&plusmn;3) and co-sponsorship (&plusmn;2) of tracked bills.</li>
+          <li><strong>20% News &amp; Statements</strong> &mdash; public statements and floor speeches.</li>
+        </ul>
+        <p class="methodology-summary-note">
+          Event-stage multipliers (veto override 1.25&times;, passage 1.00&times;,
+          committee 0.75&times;, amendment 0.50&times;, introduction 0.25&times;)
+          apply inside each input. Full details &mdash; the SQL pipeline,
+          event weights, verification statuses, intersectional framing,
+          and grade scale &mdash; live on the methodology page.
+        </p>
+        <a href="/scorecard/methodology" class="methodology-more-link">
+          Read the full methodology
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
       </div>
     </div>
   </section>
@@ -1101,16 +964,6 @@
       }
       window.addEventListener('scroll', animateCounters);
       animateCounters();
-
-      /* ── Grade table ── */
-      var gtHtml = '<thead><tr><th>Grade</th><th>Label</th><th>Score Range</th></tr></thead><tbody>';
-      GRADE_SCALE.forEach(function(g, i) {
-        var maxVal = i === 0 ? 100 : GRADE_SCALE[i - 1].min - 1;
-        gtHtml += '<tr><td class="grade-cell" style="color:' + g.color + '">' + g.grade +
-          '</td><td>' + g.label + '</td><td>' + g.min + ' - ' + maxVal + '</td></tr>';
-      });
-      gtHtml += '</tbody>';
-      document.getElementById('grade-table').innerHTML = gtHtml;
 
       /* ── Parse bill references from notes ── */
       function parseBills(notes) {
@@ -1273,13 +1126,6 @@
                 '<div class="card-notes">' + m.notes + '</div>' +
                 billsHtml +
                 renderVoteBreakdown(m) +
-                '<div class="card-share">' +
-                  '<span class="card-share-label">Share This Grade</span>' +
-                  '<button type="button" class="share-btn fb"   data-share="facebook"  aria-label="Share on Facebook">Facebook</button>' +
-                  '<button type="button" class="share-btn tw"   data-share="twitter"   aria-label="Share on X">X / Twitter</button>' +
-                  '<button type="button" class="share-btn ig"   data-share="instagram" aria-label="Download Instagram image">Instagram Image</button>' +
-                  '<button type="button" class="share-btn copy" data-share="copy"      aria-label="Copy share link">Copy Link</button>' +
-                '</div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -1410,14 +1256,6 @@
           filters.search = val;
           applyFilters();
         }, 200);
-      });
-
-      /* Methodology toggle */
-      document.getElementById('methodology-toggle').addEventListener('click', function() {
-        var body = document.getElementById('methodology-body');
-        body.classList.toggle('open');
-        var chevron = this.querySelector('.chevron-icon');
-        chevron.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
       });
 
       /* ── Initial render ── */
