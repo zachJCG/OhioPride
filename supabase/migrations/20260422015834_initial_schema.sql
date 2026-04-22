@@ -16,6 +16,12 @@
 -- the migration portable to a local Postgres instance.
 create extension if not exists pgcrypto;
 
+-- citext (case-insensitive text) is used for the founding_members.email column
+-- below. Must be declared BEFORE any table that uses the type, otherwise the
+-- column definition fails with "type citext does not exist" on fresh branches.
+-- The Supabase branching integration caught this on the first run of PR #30.
+create extension if not exists citext;
+
 
 -- =============================================================================
 -- TABLE: board_members
@@ -97,12 +103,6 @@ create table if not exists public.founding_members (
   created_at                 timestamptz   not null default now(),
   updated_at                 timestamptz   not null default now()
 );
-
--- citext (case-insensitive text) is the right type for email. We need the
--- extension first, and we need it inside a DO block because citext is not
--- available inside a plain IF NOT EXISTS table DDL on older Postgres versions.
--- On Supabase this is fine; the extension is on the allowlist.
-create extension if not exists citext;
 
 comment on table public.founding_members is
   'Founding members contributing to the 1,969-person campaign. Contains PII; public access goes through the founding_members_public view only.';
