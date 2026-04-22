@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Scorecard | Ohio Pride PAC</title>
-  <meta name="description" content="Every Ohio legislator scored on their LGBTQ+ equality record: floor votes, bill sponsorship, and public statements. Know where your legislators stand." />
+  <meta name="description" content="Every Ohio legislator scored on their LGBTQ+ equality record: floor votes, intersectional civil rights, public statements, and bill sponsorship. Know where your legislators stand." />
   <link rel="canonical" href="https://www.ohiopride.org/scorecard" />
 
   <!-- Open Graph -->
@@ -18,6 +18,7 @@
   <meta name="twitter:title" content="Legislative Scorecard | Ohio Pride PAC" />
   <meta name="twitter:description" content="Every Ohio legislator scored on their LGBTQ+ equality record: floor votes, bill sponsorship, and public statements." />
   <meta name="twitter:image" content="https://ohiopride.org/assets/social/og-image.png" />
+  <!-- INJECT_OG_TAGS_HERE -->
 
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />
@@ -69,129 +70,6 @@
       text-transform: uppercase;
       color: rgba(255, 255, 255, 0.5);
     }
-
-    .stat-sub {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 10px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.45);
-      letter-spacing: 0.5px;
-      margin-top: 4px;
-      min-height: 12px;
-    }
-
-    /* ── How We Score Explainer ── */
-    .scoring-explainer {
-      margin: 36px 0 8px;
-      padding: 24px;
-      background: rgba(19, 45, 68, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-    }
-    .scoring-explainer-head h2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-white);
-      margin: 0 0 6px;
-      letter-spacing: 0.2px;
-    }
-    .scoring-explainer-head p {
-      font-family: 'Roboto Slab', serif;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 14px;
-      line-height: 1.6;
-      margin: 0 0 18px;
-      max-width: 720px;
-    }
-
-    /* Collapsible on mobile; the <summary> is only the toggle UI below 768px.
-       On desktop we hide the summary and keep the body expanded always. */
-    .scoring-explainer-details { display: block; }
-    .scoring-explainer-details > summary {
-      list-style: none;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      margin: 0 0 16px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--color-light-blue);
-      letter-spacing: 0.3px;
-    }
-    .scoring-explainer-details > summary::-webkit-details-marker { display: none; }
-    .scoring-explainer-details > summary::marker { display: none; content: ''; }
-    .scoring-summary-label { flex: 1; }
-    .scoring-summary-chevron {
-      transition: transform 0.25s ease;
-      color: rgba(255, 255, 255, 0.55);
-    }
-    .scoring-explainer-details[open] > summary .scoring-summary-chevron {
-      transform: rotate(180deg);
-    }
-    .scoring-explainer-details[open] > summary { background: rgba(255, 255, 255, 0.07); }
-    .scoring-explainer-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-    .scoring-step {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      padding: 14px 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 10px;
-    }
-    .scoring-weight {
-      flex-shrink: 0;
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(0, 77, 255, 0.18), rgba(115, 215, 238, 0.2));
-      color: var(--text-white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 800;
-      font-size: 14px;
-      letter-spacing: 0.3px;
-    }
-    .scoring-step-body h3 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-white);
-      margin: 2px 0 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-    .scoring-step-body p {
-      font-family: 'Roboto Slab', serif;
-      font-size: 13px;
-      line-height: 1.55;
-      color: rgba(255, 255, 255, 0.65);
-      margin: 0;
-    }
-    .scoring-more-link {
-      display: inline-block;
-      margin-top: 16px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-      color: var(--color-light-blue);
-      text-decoration: none;
-    }
-    .scoring-more-link:hover { text-decoration: underline; }
 
     /* ── Updated Badge ── */
     .updated-badge {
@@ -431,7 +309,7 @@
       transition: max-height 0.4s ease, padding 0.3s ease;
     }
     .leg-card.expanded .card-expanded {
-      max-height: 900px;
+      max-height: 600px;
       padding-top: 20px;
     }
     .card-expanded-inner {
@@ -477,81 +355,141 @@
     .bill-tag.pro { background: rgba(74, 222, 128, 0.12); color: var(--text-success); border: 1px solid rgba(74, 222, 128, 0.2); }
     .bill-tag.anti { background: rgba(255, 107, 107, 0.12); color: var(--text-danger); border: 1px solid rgba(255, 107, 107, 0.2); }
 
-    /* ── Voting Record block (expanded card) ── */
-    .voting-record {
-      margin-top: 16px;
+    /* ── Roll Call Breakdown ── */
+    .leg-card.expanded .card-expanded {
+      /* lift the collapse cap so longer vote tables are not clipped */
+      max-height: 2400px;
     }
-    .voting-record-label {
+    .vote-rollcalls {
+      margin-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 16px;
+    }
+    .vote-rollcalls-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .vote-rollcalls-title {
       font-family: 'Montserrat', sans-serif;
       font-size: 11px;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.45);
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.55);
     }
-    .voting-record ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
+    .vote-totals {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .voting-record li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      gap: 14px;
+      flex-wrap: wrap;
       font-family: 'Montserrat', sans-serif;
       font-size: 12px;
-    }
-    .voting-record .vr-bill {
-      color: var(--text-white);
       font-weight: 600;
-      text-decoration: none;
-      min-width: 72px;
+      color: rgba(255, 255, 255, 0.65);
     }
-    .voting-record a.vr-bill:hover { text-decoration: underline; }
-    .voting-record .vr-title {
-      color: rgba(255, 255, 255, 0.55);
+    .vote-totals .vt-pro { color: var(--text-success); }
+    .vote-totals .vt-anti { color: var(--text-danger); }
+    .vote-totals .vt-net-pos { color: var(--text-success); }
+    .vote-totals .vt-net-neg { color: var(--text-danger); }
+    .vote-totals .vt-net-zero { color: rgba(255, 255, 255, 0.55); }
+
+    .vote-row {
+      display: grid;
+      grid-template-columns: 44px 1fr auto auto;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+    }
+    .vote-row.dir-pro { border-left: 3px solid var(--text-success); }
+    .vote-row.dir-anti { border-left: 3px solid var(--text-danger); }
+    .vote-row.dir-neutral { border-left: 3px solid rgba(255, 255, 255, 0.15); }
+
+    .vote-cell-vote {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      padding: 4px 0;
+      border-radius: 6px;
+    }
+    .vote-cell-vote.vote-y { background: rgba(74, 222, 128, 0.14); color: var(--text-success); }
+    .vote-cell-vote.vote-n { background: rgba(255, 107, 107, 0.14); color: var(--text-danger); }
+    .vote-cell-vote.vote-nv,
+    .vote-cell-vote.vote-e,
+    .vote-cell-vote.vote-na {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .vote-cell-bill {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .vote-cell-bill .vb-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+    .vote-cell-bill .vb-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
       font-weight: 500;
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.3px;
     }
-    .voting-record .vr-chip {
+
+    .vote-cell-dir {
       font-family: 'Montserrat', sans-serif;
       font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.4px;
-      padding: 3px 8px;
-      border-radius: 4px;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      white-space: nowrap;
+      padding: 3px 9px;
+      border-radius: 20px;
     }
-    .vr-chip.for-equality {
-      background: rgba(74, 222, 128, 0.15);
-      color: var(--text-success);
-      border: 1px solid rgba(74, 222, 128, 0.3);
+    .vote-cell-dir.dir-pro { background: rgba(74, 222, 128, 0.15); color: var(--text-success); }
+    .vote-cell-dir.dir-anti { background: rgba(255, 107, 107, 0.15); color: var(--text-danger); }
+    .vote-cell-dir.dir-neutral { background: rgba(255, 255, 255, 0.06); color: rgba(255, 255, 255, 0.4); }
+
+    .vote-cell-points {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      min-width: 52px;
+      text-align: right;
     }
-    .vr-chip.against-equality {
-      background: rgba(255, 107, 107, 0.15);
-      color: var(--text-danger);
-      border: 1px solid rgba(255, 107, 107, 0.3);
-    }
-    .vr-chip.absent {
-      background: rgba(148, 163, 184, 0.15);
+    .vote-cell-points.pts-pos { color: var(--text-success); }
+    .vote-cell-points.pts-neg { color: var(--text-danger); }
+    .vote-cell-points.pts-zero { color: rgba(255, 255, 255, 0.4); }
+
+    .vote-empty {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
       color: rgba(255, 255, 255, 0.5);
-      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 12px 0 4px;
     }
-    @media (max-width: 480px) {
-      .voting-record .vr-title { display: none; }
+
+    @media (max-width: 640px) {
+      .vote-row {
+        grid-template-columns: 40px 1fr auto;
+      }
+      .vote-cell-dir { display: none; }
     }
 
     /* ── Methodology ── */
     .methodology {
-      padding: 16px 0 32px;
+      padding: 60px 0 80px;
     }
     .methodology-toggle {
       display: flex;
@@ -582,7 +520,7 @@
       overflow: hidden;
       transition: max-height 0.5s ease;
     }
-    .methodology-body.open { max-height: 1200px; }
+    .methodology-body.open { max-height: 2800px; }
     .methodology-body-inner {
       padding: 24px;
       background: rgba(19, 45, 68, 0.3);
@@ -649,19 +587,7 @@
     }
 
     /* ── Responsive ── */
-    /* Desktop: no toggle needed — body stays expanded regardless of
-       the <details> open state. !important overrides the UA rule
-       `details:not([open]) > :not(summary) { display: none }`. */
-    @media (min-width: 768px) {
-      .scoring-explainer-details > .scoring-explainer-body { display: block !important; }
-    }
-
-    @media (max-width: 767px) {
-      .scoring-explainer-details > summary { display: flex; }
-    }
-
     @media (max-width: 768px) {
-      .scoring-explainer-grid { grid-template-columns: 1fr; gap: 10px; }
       .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; }
       .stat-card .stat-number { font-size: 28px; }
       .controls-inner { gap: 8px; }
@@ -686,7 +612,54 @@
       .leg-card { padding: 16px; }
       .pill { font-size: 11px; padding: 5px 10px; }
     }
+
+    /* ── Share actions (per-card) ── */
+    .card-share {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .card-share-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      margin-right: 6px;
+    }
+    .share-btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .share-btn:hover { background: rgba(255, 255, 255, 0.10); border-color: rgba(255, 255, 255, 0.28); }
+    .share-btn:active { transform: translateY(1px); }
+    .share-btn.fb     { border-color: rgba(24, 119, 242, 0.45); color: #6aa3f7; }
+    .share-btn.fb:hover     { background: rgba(24, 119, 242, 0.12); }
+    .share-btn.tw     { border-color: rgba(255, 255, 255, 0.32); color: #fff; }
+    .share-btn.ig     { border-color: rgba(225, 48, 108, 0.5); color: #f178b6; }
+    .share-btn.ig:hover     { background: rgba(225, 48, 108, 0.12); }
+    .share-btn.copy   { border-color: rgba(255, 255, 255, 0.18); }
   </style>
+
+  <!-- html2canvas for instagram image generator (deferred, only loaded once) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+  <script src="/js/share.js" defer></script>
 </head>
 <body>
   <div id="site-header"></div>
@@ -713,96 +686,20 @@
   <section class="container" style="position: relative; z-index: 2;">
     <div class="stats-bar" id="stats-bar">
       <div class="stat-card">
-        <div class="stat-number stat-num" data-count="132" id="stat-total">132</div>
-        <div class="stat-label" id="stat-total-label">Legislators Scored</div>
-        <div class="stat-sub" id="stat-total-sub" aria-hidden="true"></div>
+        <div class="stat-number stat-num" data-count="132" id="stat-total">0</div>
+        <div class="stat-label">Legislators Scored</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number stat-num" data-count="8" id="stat-champions" style="color: var(--text-success);">8</div>
+        <div class="stat-number stat-num" data-count="0" id="stat-champions" style="color: var(--text-success);">0</div>
         <div class="stat-label">Champions (A+)</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number stat-num" data-count="14" id="stat-hostile" style="color: var(--text-danger);">14</div>
+        <div class="stat-number stat-num" data-count="0" id="stat-hostile" style="color: var(--text-danger);">0</div>
         <div class="stat-label">Hostile (F)</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number stat-num" data-count="22" id="stat-bills">22</div>
-        <div class="stat-label">Bills Tracked</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How we score (brief explainer) -->
-  <section class="container">
-    <div class="scoring-explainer" aria-labelledby="scoring-explainer-title">
-      <div class="scoring-explainer-head">
-        <h2 id="scoring-explainer-title">How we score</h2>
-        <p>Every Ohio legislator gets a weighted 0&ndash;100 score across three inputs, then maps to a letter grade A+ through F.</p>
-      </div>
-      <details class="scoring-explainer-details">
-        <summary>
-          <span class="scoring-summary-label">See how each input is weighted</span>
-          <svg class="scoring-summary-chevron" width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </summary>
-        <div class="scoring-explainer-body">
-          <div class="scoring-explainer-grid">
-            <div class="scoring-step">
-              <div class="scoring-weight">50%</div>
-              <div class="scoring-step-body">
-                <h3>Floor Votes</h3>
-                <p>+1 for every pro-equality vote; &minus;1 for every anti-equality vote on the record.</p>
-              </div>
-            </div>
-            <div class="scoring-step">
-              <div class="scoring-weight">30%</div>
-              <div class="scoring-step-body">
-                <h3>Sponsorship</h3>
-                <p>+3 primary / +2 co-sponsor of pro-equality bills; &minus;3 / &minus;2 for anti-equality bills.</p>
-              </div>
-            </div>
-            <div class="scoring-step">
-              <div class="scoring-weight">20%</div>
-              <div class="scoring-step-body">
-                <h3>Public Statements</h3>
-                <p>+1 to +3 for pro-LGBTQ+ advocacy; &minus;1 to &minus;3 for documented anti-LGBTQ+ rhetoric.</p>
-              </div>
-            </div>
-          </div>
-          <a href="#scoring-methodology" class="scoring-more-link">See the full methodology and grade scale &rarr;</a>
-        </div>
-      </details>
-    </div>
-  </section>
-
-  <!-- Methodology -->
-  <section class="methodology" id="scoring-methodology">
-    <div class="container">
-      <div class="methodology-toggle" id="methodology-toggle">
-        <h3>Scoring Methodology</h3>
-        <svg class="chevron-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="methodology-body" id="methodology-body">
-        <div class="methodology-body-inner">
-          <h4>Score Weights</h4>
-          <ul>
-            <li><strong>Floor Votes (50%):</strong> +1 per pro-equality vote, -1 per anti-equality vote</li>
-            <li><strong>Sponsorship (30%):</strong> +3 primary sponsor pro bill, +2 co-sponsor pro bill; -3 primary sponsor anti bill, -2 co-sponsor anti bill</li>
-            <li><strong>News/Statements (20%):</strong> +1 to +3 for pro-LGBTQ+ advocacy; -1 to -3 for anti-LGBTQ+ rhetoric</li>
-          </ul>
-          <p>Raw scores are normalized to a 0-100 scale using the formula: <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 13px;">max(0, min(100, 50 + raw * 5))</code></p>
-
-          <h4>Grade Scale</h4>
-          <table class="grade-table" id="grade-table"></table>
-
-          <h4>Data Sources</h4>
-          <ul>
-            <li>Ohio General Assembly official vote records (legislature.ohio.gov)</li>
-            <li>Bill sponsorship and co-sponsorship records</li>
-            <li>Public statements, press conferences, and news coverage</li>
-            <li>Equality Ohio and TransOhio legislative tracking</li>
-            <li>ACLU Ohio legislative alerts</li>
-          </ul>
-        </div>
+        <div class="stat-number stat-num" data-count="0" id="stat-bills">0</div>
+        <div class="stat-label">Bills Scored</div>
       </div>
     </div>
   </section>
@@ -861,11 +758,100 @@
     <div class="no-results" id="no-results">No legislators match your current filters.</div>
   </section>
 
+  <!-- Methodology -->
+  <section class="methodology">
+    <div class="container">
+      <div class="methodology-toggle" id="methodology-toggle">
+        <h3>Scoring Methodology</h3>
+        <svg class="chevron-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="methodology-body" id="methodology-body">
+        <div class="methodology-body-inner">
+          <h4>Score Weights (v2.0-intersectional)</h4>
+          <p style="margin-bottom: 16px;">Every legislator is scored across four dimensions. Floor votes carry the most weight because a recorded vote is the clearest measure of how a legislator behaves when the moment of decision arrives. Sponsorship is weighted higher in v2 to reward members who drive the bills that protect our community, not just those who vote on them when someone else puts the question. Committee votes are tracked separately so members who stop bad bills in committee or advance good bills out of committee get the credit they deserve.</p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 16px 0 20px;">
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--text-accent); padding: 14px 16px; border-radius: 8px;">
+              <div style="font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: var(--text-accent); line-height: 1;">40%</div>
+              <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-top: 6px;">Floor Votes</div>
+              <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; line-height: 1.5;">Recorded roll calls on chamber passage, concurrence, and veto overrides.</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--text-accent); padding: 14px 16px; border-radius: 8px;">
+              <div style="font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: var(--text-accent); line-height: 1;">10%</div>
+              <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-top: 6px;">Committee Votes</div>
+              <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; line-height: 1.5;">Votes to report a bill out of, or hold a bill in, committee.</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--text-accent); padding: 14px 16px; border-radius: 8px;">
+              <div style="font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: var(--text-accent); line-height: 1;">30%</div>
+              <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-top: 6px;">Sponsorship</div>
+              <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; line-height: 1.5;">Primary and co-sponsorship of pro- and anti-equality legislation.</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--text-accent); padding: 14px 16px; border-radius: 8px;">
+              <div style="font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: var(--text-accent); line-height: 1;">20%</div>
+              <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-top: 6px;">News and Statements</div>
+              <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; line-height: 1.5;">Public statements, press coverage, and floor speeches for or against LGBTQ+ Ohioans.</div>
+            </div>
+          </div>
+
+          <h4>Event Weights</h4>
+          <p>Inside each category, not every vote counts the same. Higher-stakes events are weighted up, procedural or amendment-only votes are weighted down.</p>
+          <ul>
+            <li><strong>Veto-override roll call:</strong> 1.25x</li>
+            <li><strong>Concurrence or final passage:</strong> 1.00x</li>
+            <li><strong>Chamber-of-origin passage:</strong> 1.00x</li>
+            <li><strong>Committee report:</strong> 0.75x</li>
+            <li><strong>Amendment-only vote:</strong> 0.50x</li>
+          </ul>
+
+          <h4>Intersectional Framing</h4>
+          <p>LGBTQ+ equality cannot be separated from racial justice, reproductive freedom, voting rights, disability justice, and economic dignity. The same legislators who attack our community almost always attack the communities we belong to. Every legislator is evaluated across ten issue families that intersect with LGBTQ+ lives:</p>
+          <ul>
+            <li>LGBTQ+ equality</li>
+            <li>Reproductive justice</li>
+            <li>Racial justice</li>
+            <li>Disability justice</li>
+            <li>Voting rights</li>
+            <li>Family, youth, and education</li>
+            <li>Immigrant justice</li>
+            <li>Criminal legal reform</li>
+            <li>Healthcare access</li>
+            <li>Expression and free speech</li>
+          </ul>
+          <p>A <strong>cross-issue inconsistency flag</strong> is raised when a legislator's subscore dispersion across these ten families exceeds 35 points. That means the member is strong on one side of the equality map and weak on an intersecting one, and we surface that gap instead of letting it hide inside a composite score.</p>
+
+          <h4>Source Hierarchy</h4>
+          <p>When sources conflict, the higher-authority source wins. Provisional entries flagged in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">verificationStatus: "provisional"</code> in the voting-records data file are reconciled against the chamber journal of record before being treated as canonical.</p>
+          <ol>
+            <li>Chamber journal of record (roll call)</li>
+            <li>Legislative Service Commission bill analysis</li>
+            <li>Committee minutes and clerk reports</li>
+            <li>Primary-source news (hearing coverage, press events)</li>
+            <li>Sponsor-authored statements and press releases</li>
+            <li>Advocacy or opposition statements</li>
+          </ol>
+
+          <h4>Grade Scale</h4>
+          <table class="grade-table" id="grade-table"></table>
+          <p style="margin-top: 8px;">Raw scores are normalized to a 0-100 scale using <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 13px;">max(0, min(100, 50 + raw * 5))</code>, then the grade is applied.</p>
+
+          <h4>Data Sources</h4>
+          <ul>
+            <li>Ohio General Assembly official vote records (legislature.ohio.gov)</li>
+            <li>Bill sponsorship and co-sponsorship records</li>
+            <li>Public statements, press conferences, and news coverage</li>
+            <li>Equality Ohio and TransOhio legislative tracking</li>
+            <li>ACLU Ohio legislative alerts</li>
+            <li>Adjacent civil-rights scorecards (NARAL Pro-Choice Ohio, NAACP Ohio Conference, ACLU Ohio, Ohio Voter Rights Coalition) for the intersectional component</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div id="site-footer"></div>
 
-  <script src="/js/scorecard-data.js" defer></script>
-  <script src="/js/bill-data.js" defer></script>
   <script src="/js/voting-records.js" defer></script>
+  <script src="/js/scorecard-data.js" defer></script>
   <script src="/js/main.js" defer></script>
   <script src="/js/enhancements.js" defer></script>
   <script src="/js/site-template.js" defer></script>
@@ -892,36 +878,48 @@
         });
       });
 
-      /* ── Bill universe ── */
-      // Prefer the main legislative tracker's bill list so the scorecard's
-      // "Bills Tracked" matches what we publish on /issues. Fall back to the
-      // in-scorecard reference list if bill-data.js isn't loaded.
-      var trackerBills = (typeof BILLS !== 'undefined' && Array.isArray(BILLS)) ? BILLS : [];
-      var totalBillsTracked = trackerBills.length || SCORED_BILLS.length;
+      /* ── Compute summary stats ── */
+      var champCount = 0;
+      var hostileCount = 0;
+      allMembers.forEach(function(m) {
+        if (m.grade.grade === 'A+') champCount++;
+        if (m.grade.grade === 'F') hostileCount++;
+      });
 
-      /* ── Compute overall stats for the full chamber (used as baseline) ── */
-      var overallChampCount = allMembers.filter(function(m) { return m.grade.grade === 'A+'; }).length;
-      var overallHostileCount = allMembers.filter(function(m) { return m.grade.grade === 'F'; }).length;
-
-      /* Seed data-count + textContent with accurate baselines so the stats
-         render correctly on first paint, even if JS counter animation never
-         runs. main.js's IntersectionObserver owns any on-scroll animation. */
-      var statTotal = document.getElementById('stat-total');
-      var statChamps = document.getElementById('stat-champions');
-      var statHostile = document.getElementById('stat-hostile');
-      var statBills = document.getElementById('stat-bills');
-      function seedStat(el, n) {
-        el.setAttribute('data-count', n);
-        el.textContent = n;
-      }
-      seedStat(statTotal, allMembers.length);
-      seedStat(statChamps, overallChampCount);
-      seedStat(statHostile, overallHostileCount);
-      seedStat(statBills, totalBillsTracked);
+      document.getElementById('stat-total').setAttribute('data-count', allMembers.length);
+      document.getElementById('stat-champions').setAttribute('data-count', champCount);
+      document.getElementById('stat-hostile').setAttribute('data-count', hostileCount);
+      document.getElementById('stat-bills').setAttribute('data-count', SCORED_BILLS.length);
 
       /* ── Updated badge ── */
       document.getElementById('updated-text').textContent =
         'Last updated ' + SCORECARD_UPDATED.date + ' at ' + SCORECARD_UPDATED.time;
+
+      /* ── Animate stat counters on scroll ── */
+      var statsAnimated = false;
+      function animateCounters() {
+        if (statsAnimated) return;
+        var bar = document.getElementById('stats-bar');
+        var rect = bar.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.9) {
+          statsAnimated = true;
+          var nums = bar.querySelectorAll('.stat-num[data-count]');
+          nums.forEach(function(el) {
+            var target = parseInt(el.getAttribute('data-count'), 10);
+            var duration = 1200;
+            var start = performance.now();
+            function tick(now) {
+              var progress = Math.min((now - start) / duration, 1);
+              var ease = 1 - Math.pow(1 - progress, 3);
+              el.textContent = Math.round(ease * target);
+              if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+          });
+        }
+      }
+      window.addEventListener('scroll', animateCounters);
+      animateCounters();
 
       /* ── Grade table ── */
       var gtHtml = '<thead><tr><th>Grade</th><th>Label</th><th>Score Range</th></tr></thead><tbody>';
@@ -949,6 +947,101 @@
       var cardList = document.getElementById('card-list');
       var noResults = document.getElementById('no-results');
 
+      /* Build a chamber-normalized legislator object for voting-records.js.
+         The resolver expects chamber as lowercase "house"|"senate"; our
+         renderCards member uses display-cased "House"/"Senate". */
+      function _votingLegislator(m) {
+        return {
+          d: m.d,
+          party: m.party,
+          chamber: (m.chamber || '').toString().toLowerCase()
+        };
+      }
+
+      function _voteCellClass(v) {
+        if (v === 'Y') return 'vote-y';
+        if (v === 'N') return 'vote-n';
+        if (v === 'NV') return 'vote-nv';
+        if (v === 'E') return 'vote-e';
+        return 'vote-na';
+      }
+
+      function _voteCellLabel(v) {
+        if (v === 'Y' || v === 'N' || v === 'NV' || v === 'E') return v;
+        return '—';
+      }
+
+      function _stageLabel(stage) {
+        if (!stage) return '';
+        return stage.charAt(0).toUpperCase() + stage.slice(1);
+      }
+
+      function _ptsClass(p) {
+        if (p > 0) return 'pts-pos';
+        if (p < 0) return 'pts-neg';
+        return 'pts-zero';
+      }
+
+      function _formatPoints(p) {
+        if (p === 0) return '0';
+        var sign = p > 0 ? '+' : '';
+        /* show one decimal only when non-integer */
+        return sign + (Math.abs(p) % 1 === 0 ? p.toFixed(0) : p.toFixed(2));
+      }
+
+      function _netClass(n) {
+        if (n > 0) return 'vt-net-pos';
+        if (n < 0) return 'vt-net-neg';
+        return 'vt-net-zero';
+      }
+
+      /* Returns the full "Voting Record" section HTML for a legislator, or
+         a minimal empty-state message when no eligible roll calls exist
+         (e.g. a member seated after all tracked votes). */
+      function renderVoteBreakdown(m) {
+        if (typeof getVoteBreakdown !== 'function' || typeof summarizeVotes !== 'function') {
+          return '';
+        }
+        var leg = _votingLegislator(m);
+        var rows = getVoteBreakdown(leg);
+        var totals = summarizeVotes(leg);
+
+        var head =
+          '<div class="vote-rollcalls-head">' +
+            '<div class="vote-rollcalls-title">Voting Record</div>' +
+            '<div class="vote-totals">' +
+              '<span class="vt-pro">Pro-equality votes: ' + totals.proVotes + '</span>' +
+              '<span class="vt-anti">Anti-equality votes: ' + totals.antiVotes + '</span>' +
+              '<span class="' + _netClass(totals.net) + '">Net impact: ' + _formatPoints(totals.net) + '</span>' +
+            '</div>' +
+          '</div>';
+
+        if (!rows.length) {
+          return '<div class="vote-rollcalls">' + head +
+            '<div class="vote-empty">No tracked roll calls for this legislator yet.</div>' +
+          '</div>';
+        }
+
+        var body = '';
+        rows.forEach(function(r) {
+          var rc = r.rollCall;
+          var ptsFmt = _formatPoints(r.points);
+          var rowDirClass = 'dir-' + r.direction;
+          body +=
+            '<div class="vote-row ' + rowDirClass + '">' +
+              '<div class="vote-cell-vote ' + _voteCellClass(r.vote) + '">' + _voteCellLabel(r.vote) + '</div>' +
+              '<div class="vote-cell-bill">' +
+                '<div class="vb-label">' + rc.billLabel + ' &middot; ' + rc.billTitle + '</div>' +
+                '<div class="vb-sub">' + _stageLabel(rc.stage) + ' &middot; ' + rc.label + ' &middot; ' + rc.voteDate + '</div>' +
+              '</div>' +
+              '<div class="vote-cell-dir ' + rowDirClass + '">' + r.direction + '</div>' +
+              '<div class="vote-cell-points ' + _ptsClass(r.points) + '">' + ptsFmt + '</div>' +
+            '</div>';
+        });
+
+        return '<div class="vote-rollcalls">' + head + body + '</div>';
+      }
+
       function renderCards(members) {
         var html = '';
         members.forEach(function(m, idx) {
@@ -968,39 +1061,6 @@
               billsHtml += '<span class="bill-tag ' + cls + '">' + b.bill + ': ' + b.title + '</span>';
             });
             billsHtml += '</div>';
-          }
-
-          /* Voting record: one row per tracked bill the member has a
-             recorded vote on. Each row shows the bill label, short title,
-             and a chip indicating whether the vote aligned with the
-             equality position. Empty string when no votes exist. */
-          var votingHtml = '';
-          if (typeof getMemberVoteSummary === 'function') {
-            var summary = getMemberVoteSummary(m, m.chamber);
-            if (summary.length > 0) {
-              votingHtml = '<div class="voting-record">' +
-                '<div class="voting-record-label">Voting Record (Tracked Bills)</div>' +
-                '<ul>';
-              summary.forEach(function(entry) {
-                var chips = entry.rollCalls.map(function(rc) {
-                  var cls = classifyVote(rc.vote, rc.stance);
-                  var text = cls === 'absent'
-                    ? 'Not Voting'
-                    : (cls === 'for-equality' ? 'Voted For Equality' : 'Voted Against Equality');
-                  return '<span class="vr-chip ' + cls + '" title="' + rc.label + ' — ' + rc.date + '">' + text + '</span>';
-                }).join(' ');
-                var billLabel = entry.url
-                  ? '<a class="vr-bill" href="' + entry.url + '">' + entry.bill + '</a>'
-                  : '<span class="vr-bill">' + entry.bill + '</span>';
-                votingHtml +=
-                  '<li>' +
-                    billLabel +
-                    '<span class="vr-title">' + (entry.title || '') + '</span>' +
-                    chips +
-                  '</li>';
-              });
-              votingHtml += '</ul></div>';
-            }
           }
 
           html += '<div class="leg-card' + gradeClass + '" data-idx="' + idx + '">' +
@@ -1031,11 +1091,21 @@
                 '</div>' +
                 '<div class="card-notes">' + m.notes + '</div>' +
                 billsHtml +
-                votingHtml +
+                renderVoteBreakdown(m) +
+                '<div class="card-share">' +
+                  '<span class="card-share-label">Share This Grade</span>' +
+                  '<button type="button" class="share-btn fb"   data-share="facebook"  aria-label="Share on Facebook">Facebook</button>' +
+                  '<button type="button" class="share-btn tw"   data-share="twitter"   aria-label="Share on X">X / Twitter</button>' +
+                  '<button type="button" class="share-btn ig"   data-share="instagram" aria-label="Download Instagram image">Instagram Image</button>' +
+                  '<button type="button" class="share-btn copy" data-share="copy"      aria-label="Copy share link">Copy Link</button>' +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>';
         });
+
+        /* expose the rendered list so js/share.js can resolve data-idx -> member */
+        window.__OPP_RENDER_MEMBERS__ = members;
 
         cardList.innerHTML = html;
         noResults.style.display = members.length === 0 ? 'block' : 'none';
@@ -1048,48 +1118,29 @@
             card.classList.toggle('expanded');
           });
         });
+
+        /* Deep link: ?rep=<slug> auto-expands and scrolls to that legislator. */
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var repSlug = params.get('rep');
+          if (repSlug && window.OPP_SHARE && typeof window.OPP_SHARE.slugify === 'function') {
+            for (var i = 0; i < members.length; i++) {
+              if (window.OPP_SHARE.slugify(members[i]) === repSlug) {
+                var target = cardList.querySelector('.leg-card[data-idx="' + i + '"]');
+                if (target) {
+                  target.classList.add('expanded');
+                  setTimeout(function () { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 80);
+                }
+                break;
+              }
+            }
+          }
+        } catch (e) { /* no-op: deep link is best-effort */ }
       }
 
       /* ── Filtering + Sorting ── */
       var filters = { search: '', chamber: 'all', party: 'all', grade: 'all' };
       var sortMode = 'score-desc';
-
-      function filtersActive() {
-        return filters.chamber !== 'all' || filters.party !== 'all' ||
-               filters.grade !== 'all' || !!filters.search;
-      }
-
-      function updateStats(filtered) {
-        /* Legislators Scored — reflect the current filter */
-        statTotal.textContent = filtered.length;
-        statTotal.setAttribute('data-count', filtered.length);
-
-        /* A+ and F counts — reflect the current filter */
-        var fChamps = 0, fHostile = 0;
-        filtered.forEach(function(m) {
-          if (m.grade.grade === 'A+') fChamps++;
-          if (m.grade.grade === 'F') fHostile++;
-        });
-        statChamps.textContent = fChamps;
-        statChamps.setAttribute('data-count', fChamps);
-        statHostile.textContent = fHostile;
-        statHostile.setAttribute('data-count', fHostile);
-
-        /* Bills Tracked is a constant scope figure — never changes with legislator filters */
-        statBills.textContent = totalBillsTracked;
-        statBills.setAttribute('data-count', totalBillsTracked);
-
-        /* Clarify the "Legislators Scored" label when a filter is applied */
-        var totalSub = document.getElementById('stat-total-sub');
-        var totalLabel = document.getElementById('stat-total-label');
-        if (filtersActive() && filtered.length !== allMembers.length) {
-          totalLabel.textContent = 'Legislators Shown';
-          if (totalSub) totalSub.textContent = 'of ' + allMembers.length + ' total';
-        } else {
-          totalLabel.textContent = 'Legislators Scored';
-          if (totalSub) totalSub.textContent = '';
-        }
-      }
 
       function applyFilters() {
         var filtered = allMembers.filter(function(m) {
@@ -1120,7 +1171,6 @@
         });
 
         renderCards(filtered);
-        updateStats(filtered);
       }
 
       /* Pill groups */
@@ -1140,19 +1190,26 @@
       setupPillGroup('party-filter', 'party');
       setupPillGroup('grade-filter', 'grade');
 
-      /* Grade pill active colors — runs on every click inside the grade group,
-         including the "All" pill, so inline styles always reflect current state. */
-      var gradeGroup = document.getElementById('grade-filter');
-      var gradePills = gradeGroup.querySelectorAll('.grade-pill');
-      gradeGroup.addEventListener('click', function(e) {
-        if (!e.target.classList.contains('pill')) return;
-        gradePills.forEach(function(p) {
-          if (p.classList.contains('active')) {
-            p.style.background = p.style.getPropertyValue('--pill-color');
-            p.style.borderColor = p.style.getPropertyValue('--pill-color');
-          } else {
-            p.style.background = '';
-            p.style.borderColor = '';
+      /* Grade pill active colors */
+      var gradePills = document.querySelectorAll('.grade-pill');
+      gradePills.forEach(function(pill) {
+        pill.addEventListener('click', function() {
+          gradePills.forEach(function(p) {
+            if (p.classList.contains('active')) {
+              p.style.background = p.style.getPropertyValue('--pill-color');
+              p.style.borderColor = p.style.getPropertyValue('--pill-color');
+            } else {
+              p.style.background = '';
+              p.style.borderColor = '';
+            }
+          });
+          /* Re-check the "All" pill too */
+          var allPill = document.querySelector('#grade-filter .pill:first-child');
+          if (allPill.classList.contains('active')) {
+            gradePills.forEach(function(p) {
+              p.style.background = '';
+              p.style.borderColor = '';
+            });
           }
         });
       });
