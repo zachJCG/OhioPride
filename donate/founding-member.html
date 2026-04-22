@@ -71,12 +71,13 @@
           <!-- Stonewall Sustainer (Featured) -->
           <div
             class="tier-card tier-card-featured founding-tier-featured"
+            data-ohp-tier-slug="stonewall-sustainer"
             style="position: relative"
           >
             <span class="featured-badge">Featured</span>
             <div class="tier-card-header">
-              <div class="tier-card-name">Stonewall Sustainer</div>
-              <div class="tier-card-amount">
+              <div class="tier-card-name" data-ohp-field="name">Stonewall Sustainer</div>
+              <div class="tier-card-amount" data-ohp-field="amount-html">
                 $19.69<span style="font-size: 14px; font-weight: 400">/mo</span>
               </div>
             </div>
@@ -95,10 +96,10 @@
           </div>
 
           <!-- Founding Member -->
-          <div class="tier-card">
+          <div class="tier-card" data-ohp-tier-slug="founding-member">
             <div class="tier-card-header">
-              <div class="tier-card-name">Founding Member</div>
-              <div class="tier-card-amount">$25</div>
+              <div class="tier-card-name" data-ohp-field="name">Founding Member</div>
+              <div class="tier-card-amount" data-ohp-field="amount-html">$25</div>
             </div>
             <div style="padding: 20px 24px 24px">
               <p class="founding-tier-desc">
@@ -115,10 +116,10 @@
           </div>
 
           <!-- Pride Builder -->
-          <div class="tier-card">
+          <div class="tier-card" data-ohp-tier-slug="pride-builder">
             <div class="tier-card-header">
-              <div class="tier-card-name">Pride Builder</div>
-              <div class="tier-card-amount">
+              <div class="tier-card-name" data-ohp-field="name">Pride Builder</div>
+              <div class="tier-card-amount" data-ohp-field="amount-html">
                 $50<span style="font-size: 14px; font-weight: 400">/mo</span>
               </div>
             </div>
@@ -137,10 +138,10 @@
           </div>
 
           <!-- Founding Circle -->
-          <div class="tier-card">
+          <div class="tier-card" data-ohp-tier-slug="founding-circle">
             <div class="tier-card-header">
-              <div class="tier-card-name">Founding Circle</div>
-              <div class="tier-card-amount">
+              <div class="tier-card-name" data-ohp-field="name">Founding Circle</div>
+              <div class="tier-card-amount" data-ohp-field="amount-html">
                 $100<span style="font-size: 14px; font-weight: 400">/mo</span>
               </div>
             </div>
@@ -159,10 +160,10 @@
           </div>
 
           <!-- Founding Patron -->
-          <div class="tier-card">
+          <div class="tier-card" data-ohp-tier-slug="founding-patron">
             <div class="tier-card-header">
-              <div class="tier-card-name">Founding Patron</div>
-              <div class="tier-card-amount">$250+</div>
+              <div class="tier-card-name" data-ohp-field="name">Founding Patron</div>
+              <div class="tier-card-amount" data-ohp-field="amount-html">$250+</div>
             </div>
             <div style="padding: 20px 24px 24px">
               <p class="founding-tier-desc">
@@ -244,18 +245,12 @@
 
     <script src="/js/main.js" defer></script>
     <script src="/js/enhancements.js" defer></script>
-    <script>
-      (function () {
-        var FOUNDING_MEMBER_COUNT = 1;
-        var FOUNDING_MEMBER_GOAL = 1969;
-        var pct = (FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100;
-        var bar = document.getElementById("goalFill");
-        var text = document.getElementById("progressText");
-        if (bar) bar.style.width = pct + "%";
-        if (text)
-          text.textContent =
-            FOUNDING_MEMBER_COUNT + " of 1,969 Founding Members";
-      })();
+    <script src="/js/ohiopride-data.js" defer></script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", function () {
+        OhioPride.loadProgress("#goalFill", "#progressText");
+        OhioPride.loadDonatePageTiers(".tiers-grid");
+      });
     </script>
     <script src="/js/site-template.js" defer></script>
   </body>

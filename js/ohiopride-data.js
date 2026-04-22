@@ -337,6 +337,56 @@
   }
 
   // -----------------------------------------------------------------------
+  // Donate page tier cards (Round 2)
+  // Updates the name and amount shown on each /donate/founding-member tier
+  // card from Supabase. Marketing copy and ActBlue button URLs stay
+  // hardcoded in the HTML because refcode routing is tightly coupled to
+  // campaign configuration in ActBlue; we only keep the customer-visible
+  // price and name in sync.
+  //
+  // Expected HTML hook:
+  //   <div class="tier-card" data-ohp-tier-slug="stonewall-sustainer">
+  //     <div class="tier-card-name"   data-ohp-field="name">...</div>
+  //     <div class="tier-card-amount" data-ohp-field="amount-html">...</div>
+  //   </div>
+  // -----------------------------------------------------------------------
+  function formatDonateAmountHtml(tier) {
+    var cents    = Number(tier.amount_cents || 0);
+    var dollars  = cents / 100;
+    var hasCents = cents % 100 !== 0;
+    var display  = hasCents
+      ? dollars.toFixed(2)
+      : dollars.toLocaleString('en-US');
+    var plus     = tier.match_mode === 'at_least' ? '+' : '';
+    var suffix   = tier.recurrence === 'monthly'
+      ? '<span style="font-size: 14px; font-weight: 400">/mo</span>'
+      : '';
+    return '$' + display + plus + suffix;
+  }
+
+  function loadDonatePageTiers(gridSelector) {
+    var grid = document.querySelector(gridSelector || '.tiers-grid');
+    if (!grid) return;
+
+    getJson(ENDPOINTS.foundingMemberTiers)
+      .then(function (data) {
+        if (!data || !data.ok || !Array.isArray(data.tiers)) return;
+
+        data.tiers.forEach(function (tier) {
+          var card = grid.querySelector('[data-ohp-tier-slug="' + tier.slug + '"]');
+          if (!card) return;
+
+          var nameEl = card.querySelector('[data-ohp-field="name"]');
+          if (nameEl) nameEl.textContent = tier.name;
+
+          var amountEl = card.querySelector('[data-ohp-field="amount-html"]');
+          if (amountEl) amountEl.innerHTML = formatDonateAmountHtml(tier);
+        });
+      })
+      .catch(function () { /* fail open */ });
+  }
+
+  // -----------------------------------------------------------------------
   // Expose on window under a single namespace
   // -----------------------------------------------------------------------
   window.OhioPride = window.OhioPride || {};
@@ -345,4 +395,5 @@
   window.OhioPride.loadFoundingMemberTiers  = loadFoundingMemberTiers;
   window.OhioPride.loadPublicMembers        = loadPublicMembers;
   window.OhioPride.loadSiteLeadership       = loadSiteLeadership;
+  window.OhioPride.loadDonatePageTiers      = loadDonatePageTiers;
 })();

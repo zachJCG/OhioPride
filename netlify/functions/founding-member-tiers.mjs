@@ -51,7 +51,7 @@ export default async (_req, _context) => {
 
   const { data, error } = await supabase
     .from('founding_member_tiers')
-    .select('name, slug, amount_cents, recurrence, description, display_order, actblue_refcode_prefix')
+    .select('name, slug, amount_cents, recurrence, match_mode, description, display_order, actblue_refcode_prefix')
     .eq('is_active', true)
     .order('display_order', { ascending: true });
 
@@ -68,6 +68,7 @@ export default async (_req, _context) => {
     amount_cents:   row.amount_cents,
     amount_display: formatAmount(row.amount_cents, row.recurrence),
     recurrence:     row.recurrence,
+    match_mode:     row.match_mode,
     description:    row.description,
     display_order:  row.display_order,
     // Helpful for building tier-specific ActBlue URLs on the client:
