@@ -487,6 +487,119 @@
       .vote-cell-dir { display: none; }
     }
 
+    /* ── How We Score Explainer (strip above controls) ── */
+    .scoring-explainer {
+      margin: 32px 0 8px;
+      padding: 24px;
+      background: rgba(19, 45, 68, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+    }
+    .scoring-explainer-head h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin: 0 0 6px;
+      letter-spacing: 0.2px;
+    }
+    .scoring-explainer-head p {
+      font-family: 'Roboto Slab', serif;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 18px;
+      max-width: 760px;
+    }
+    .scoring-explainer-details { display: block; }
+    .scoring-explainer-details > summary {
+      list-style: none;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      margin: 0 0 16px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-accent);
+      letter-spacing: 0.3px;
+    }
+    .scoring-explainer-details > summary::-webkit-details-marker { display: none; }
+    .scoring-explainer-details > summary::marker { display: none; content: ''; }
+    .scoring-summary-label { flex: 1; }
+    .scoring-summary-chevron {
+      transition: transform 0.25s ease;
+      color: rgba(255, 255, 255, 0.55);
+    }
+    .scoring-explainer-details[open] > summary .scoring-summary-chevron {
+      transform: rotate(180deg);
+    }
+    .scoring-explainer-details[open] > summary { background: rgba(255, 255, 255, 0.07); }
+    .scoring-explainer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .scoring-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-left: 3px solid var(--text-accent);
+      border-radius: 10px;
+    }
+    .scoring-weight {
+      flex-shrink: 0;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      line-height: 1;
+      color: var(--text-accent);
+    }
+    .scoring-step-body h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin: 0 0 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .scoring-step-body p {
+      font-family: 'Roboto Slab', serif;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 0;
+    }
+    .scoring-more-link {
+      display: inline-block;
+      margin-top: 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: var(--text-accent);
+      text-decoration: none;
+    }
+    .scoring-more-link:hover { text-decoration: underline; }
+
+    /* Desktop: keep body expanded regardless of <details> state. */
+    @media (min-width: 768px) {
+      .scoring-explainer-details > .scoring-explainer-body { display: block !important; }
+    }
+    @media (max-width: 767px) {
+      .scoring-explainer-details > summary { display: flex; }
+      .scoring-explainer-grid { grid-template-columns: 1fr; gap: 10px; }
+    }
+
     /* ── Methodology ── */
     .methodology {
       padding: 60px 0 80px;
@@ -520,7 +633,7 @@
       overflow: hidden;
       transition: max-height 0.5s ease;
     }
-    .methodology-body.open { max-height: 2800px; }
+    .methodology-body.open { max-height: 3800px; }
     .methodology-body-inner {
       padding: 24px;
       background: rgba(19, 45, 68, 0.3);
@@ -704,6 +817,55 @@
     </div>
   </section>
 
+  <!-- How we score (brief explainer) -->
+  <section class="container">
+    <div class="scoring-explainer" aria-labelledby="scoring-explainer-title">
+      <div class="scoring-explainer-head">
+        <h2 id="scoring-explainer-title">How we score</h2>
+        <p>Every Ohio legislator gets a weighted 0&ndash;100 score across four inputs, pulled directly from the Supabase roll-call database and mapped to a letter grade A+ through F.</p>
+      </div>
+      <details class="scoring-explainer-details">
+        <summary>
+          <span class="scoring-summary-label">See how each input is weighted</span>
+          <svg class="scoring-summary-chevron" width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </summary>
+        <div class="scoring-explainer-body">
+          <div class="scoring-explainer-grid">
+            <div class="scoring-step">
+              <div class="scoring-weight">40%</div>
+              <div class="scoring-step-body">
+                <h3>Floor Votes</h3>
+                <p>Recorded roll calls on chamber passage, concurrence, and veto overrides &mdash; resolved from the <code>roll_calls</code> table.</p>
+              </div>
+            </div>
+            <div class="scoring-step">
+              <div class="scoring-weight">10%</div>
+              <div class="scoring-step-body">
+                <h3>Committee Votes</h3>
+                <p>Committee reports that advance or hold a bill, weighted at 0.75&times; inside the floor-vote ladder.</p>
+              </div>
+            </div>
+            <div class="scoring-step">
+              <div class="scoring-weight">30%</div>
+              <div class="scoring-step-body">
+                <h3>Sponsorship</h3>
+                <p>Primary (&plusmn;3) and co-sponsorship (&plusmn;2) of pro- or anti-equality bills in the <code>bills</code> catalog.</p>
+              </div>
+            </div>
+            <div class="scoring-step">
+              <div class="scoring-weight">20%</div>
+              <div class="scoring-step-body">
+                <h3>News &amp; Statements</h3>
+                <p>Public statements, press coverage, and floor speeches for or against LGBTQ+ Ohioans.</p>
+              </div>
+            </div>
+          </div>
+          <a href="#scoring-methodology" class="scoring-more-link">See the full methodology, event weights, and grade scale &rarr;</a>
+        </div>
+      </details>
+    </div>
+  </section>
+
   <!-- Controls -->
   <div class="controls-bar">
     <div class="container">
@@ -759,7 +921,7 @@
   </section>
 
   <!-- Methodology -->
-  <section class="methodology">
+  <section class="methodology" id="scoring-methodology">
     <div class="container">
       <div class="methodology-toggle" id="methodology-toggle">
         <h3>Scoring Methodology</h3>
@@ -767,8 +929,8 @@
       </div>
       <div class="methodology-body" id="methodology-body">
         <div class="methodology-body-inner">
-          <h4>Score Weights (v2.0-intersectional)</h4>
-          <p style="margin-bottom: 16px;">Every legislator is scored across four dimensions. Floor votes carry the most weight because a recorded vote is the clearest measure of how a legislator behaves when the moment of decision arrives. Sponsorship is weighted higher in v2 to reward members who drive the bills that protect our community, not just those who vote on them when someone else puts the question. Committee votes are tracked separately so members who stop bad bills in committee or advance good bills out of committee get the credit they deserve.</p>
+          <h4>Score Weights (v2.1 &mdash; SQL-backed intersectional)</h4>
+          <p style="margin-bottom: 16px;">Every legislator is scored across four dimensions. Floor votes carry the most weight because a recorded vote is the clearest measure of how a legislator behaves when the moment of decision arrives. Sponsorship is weighted up in v2 to reward members who drive the bills that protect our community, not just those who vote on them when someone else puts the question. Committee votes are tracked separately so members who stop bad bills in committee or advance good bills out of committee get the credit they deserve. As of v2.1, all four inputs are resolved from the Supabase <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">bills</code> / <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls</code> / <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">legislator_vote_exceptions</code> tables rather than a hand-maintained spreadsheet, so every score is traceable to a specific row of data.</p>
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 16px 0 20px;">
             <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--text-accent); padding: 14px 16px; border-radius: 8px;">
@@ -794,13 +956,31 @@
           </div>
 
           <h4>Event Weights</h4>
-          <p>Inside each category, not every vote counts the same. Higher-stakes events are weighted up, procedural or amendment-only votes are weighted down.</p>
+          <p>Inside each category, not every vote counts the same. Higher-stakes events are weighted up, procedural or amendment-only votes are weighted down. These multipliers live in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">EVENT_WEIGHTS</code> in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">/js/voting-records.js</code> and in the <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls.stage</code> column comment in Migration 4.</p>
           <ul>
-            <li><strong>Veto-override roll call:</strong> 1.25x</li>
-            <li><strong>Concurrence or final passage:</strong> 1.00x</li>
-            <li><strong>Chamber-of-origin passage:</strong> 1.00x</li>
-            <li><strong>Committee report:</strong> 0.75x</li>
-            <li><strong>Amendment-only vote:</strong> 0.50x</li>
+            <li><strong>Veto-override roll call:</strong> 1.25&times;</li>
+            <li><strong>Concurrence or final passage:</strong> 1.00&times;</li>
+            <li><strong>Chamber-of-origin passage:</strong> 1.00&times;</li>
+            <li><strong>Committee report:</strong> 0.75&times;</li>
+            <li><strong>Amendment-only vote:</strong> 0.50&times;</li>
+            <li><strong>Introduction / first reading:</strong> 0.25&times;</li>
+          </ul>
+
+          <h4>Data Pipeline (what the SQL database does)</h4>
+          <p>As of April 22, 2026 the scorecard is backed by Migration 4 (<code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">20260424000000_scorecard.sql</code>), which persists three tables the public scorecard reads over the <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">anon</code> role:</p>
+          <ul>
+            <li><code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">bills</code> &mdash; the catalog of tracked bills. Each row carries an editorial <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">stance</code> of <em>anti</em>, <em>pro</em>, or <em>mixed</em>. Stance drives scoring direction: on an anti bill, a Y vote subtracts points and an N adds them; on a pro bill, the signs flip. <em>Mixed</em> bills are tracked but never auto-scored.</li>
+            <li><code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls</code> &mdash; one row per recorded legislative action (committee, amend, pass, concur, override, introduce). Each row records the chamber, stage, vote date, tally, and the event weight that applies.</li>
+            <li><code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">legislator_vote_exceptions</code> &mdash; one row per member who broke from their party-line default, or whose NV / E was hand-recorded. The resolver falls back to the party-line default for every other member, so only crossovers need an exception row.</li>
+          </ul>
+          <p>The final per-member impact is the product of three values: <strong>stance direction</strong> (from <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">bills.stance</code>), <strong>resolved vote</strong> (exception row if one exists, otherwise the party-line default), and <strong>event weight</strong> (from the stage multiplier above). Legislators who were not seated at a roll call's vote date resolve to <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">-</code> and are filtered out so only votes that actually mattered to that member count against them. The dataset covers both the 135th GA (HB 68, HB 8, SB 104, SB 1&nbsp;(135th), HB 602&nbsp;(135th)) and the 136th GA (HB 249, SB 1, SB 34).</p>
+
+          <h4>Verification Status</h4>
+          <p>Every <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls</code> row carries a <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">verificationStatus</code> flag. Migration 5 (daily verification) will extend this into the database schema itself; until then the flag lives in the JS editorial layer.</p>
+          <ul>
+            <li><strong>verified</strong> &mdash; tally matches the chamber journal of record.</li>
+            <li><strong>provisional</strong> &mdash; committee clerk or press report, not yet cross-checked against the journal. Scored, but reviewed daily.</li>
+            <li><strong>reconciled</strong> &mdash; the row was previously provisional and has since been reconciled with the journal. Treated as canonical.</li>
           </ul>
 
           <h4>Intersectional Framing</h4>
@@ -820,7 +1000,7 @@
           <p>A <strong>cross-issue inconsistency flag</strong> is raised when a legislator's subscore dispersion across these ten families exceeds 35 points. That means the member is strong on one side of the equality map and weak on an intersecting one, and we surface that gap instead of letting it hide inside a composite score.</p>
 
           <h4>Source Hierarchy</h4>
-          <p>When sources conflict, the higher-authority source wins. Provisional entries flagged in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">verificationStatus: "provisional"</code> in the voting-records data file are reconciled against the chamber journal of record before being treated as canonical.</p>
+          <p>When sources conflict, the higher-authority source wins. Provisional <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">roll_calls</code> rows are reconciled against the chamber journal of record before being promoted to <em>verified</em>. Hand-recorded crossovers in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">legislator_vote_exceptions</code> always override the party-line default.</p>
           <ol>
             <li>Chamber journal of record (roll call)</li>
             <li>Legislative Service Commission bill analysis</li>
@@ -832,12 +1012,13 @@
 
           <h4>Grade Scale</h4>
           <table class="grade-table" id="grade-table"></table>
-          <p style="margin-top: 8px;">Raw scores are normalized to a 0-100 scale using <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 13px;">max(0, min(100, 50 + raw * 5))</code>, then the grade is applied.</p>
+          <p style="margin-top: 8px;">The per-member weighted total from the four inputs above is normalized to a 0&ndash;100 scale with <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 13px;">max(0, min(100, 50 + raw * 5))</code>, then the grade is applied from the table.</p>
 
           <h4>Data Sources</h4>
           <ul>
-            <li>Ohio General Assembly official vote records (legislature.ohio.gov)</li>
-            <li>Bill sponsorship and co-sponsorship records</li>
+            <li>Ohio General Assembly official vote records (legislature.ohio.gov), persisted in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">public.roll_calls</code> by Migration 4</li>
+            <li>Bill catalog and sponsorship records, persisted in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">public.bills</code> by Migration 4</li>
+            <li>Hand-recorded crossovers and absences, persisted in <code style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 12px;">public.legislator_vote_exceptions</code></li>
             <li>Public statements, press conferences, and news coverage</li>
             <li>Equality Ohio and TransOhio legislative tracking</li>
             <li>ACLU Ohio legislative alerts</li>
