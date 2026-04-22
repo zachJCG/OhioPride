@@ -16,7 +16,7 @@
                   -1 to -3 for anti-LGBTQ+ rhetoric/scandals
    ============================================================ */
 
-const SCORECARD_UPDATED = { date: "04/22/26", time: "07:45 PM EDT" };
+const SCORECARD_UPDATED = { date: "04/22/26", time: "11:50 PM EDT" };
 
 /* Grade thresholds (weighted score 0-100) */
 const GRADE_SCALE = [
@@ -158,7 +158,7 @@ const SENATE_MEMBERS = [
   { d: 3,  name: "Michele Reynolds",          party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 4,  name: "George F. Lang",            party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 5,  name: "Stephen A. Huffman",        party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 6,  name: "Willis E. Blackshear, Jr.", party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
+  { d: 6,  name: "Willis E. Blackshear, Jr.", party: "D", v: 5,  s: 0,   n: 3,  notes: "Previously served in the Ohio House (Dayton-area district) before election to the Senate. House tenure (135th GA): voted N on HB 68 override (2024-01-10), HB 8 forced outing (2023-06-21), and SB 104 bathroom ban (2024-06-26). Continues to vote against anti-LGBTQ+ bills in the Senate." },
   { d: 7,  name: "Steve Wilson",              party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 8,  name: "Louis W. Blessing, III",    party: "R", v: -3, s: 0,   n: 1,  notes: "Voted against HB 8 (forced outing) in Senate. Otherwise votes party line." },
   { d: 9,  name: "Catherine D. Ingram",       party: "D", v: 5,  s: 0,   n: 1,  notes: "Votes against anti-LGBTQ+ bills. Vocal opponent of SB 104 (bathroom ban)." },

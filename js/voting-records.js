@@ -40,7 +40,7 @@
        not seated at vote_date resolve to "-".
    ============================================================ */
 
-const VOTING_RECORDS_UPDATED = { date: "04/22/26", time: "07:45 PM EDT" };
+const VOTING_RECORDS_UPDATED = { date: "04/22/26", time: "11:50 PM EDT" };
 
 /* -------------------------------------------------------
    EVENT WEIGHTS
