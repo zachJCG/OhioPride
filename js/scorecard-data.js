@@ -46,7 +46,7 @@
      6. Advocacy or opposition statements
    ============================================================ */
 
-const SCORECARD_UPDATED = { date: "04/23/26", time: "v6 — Trackable Evidence Only" };
+const SCORECARD_UPDATED = { date: "04/23/26", time: "Trackable Evidence Only" };
 
 /* Grade thresholds (weighted score 0-100)
    New 7-grade scale (April 2026 rebalance):

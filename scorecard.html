@@ -54,6 +54,27 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
+    button.stat-card {
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    button.stat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(19, 45, 68, 0.7);
+    }
+    button.stat-card:focus-visible {
+      outline: 2px solid var(--text-accent);
+      outline-offset: 2px;
+    }
+    button.stat-card[aria-pressed="true"] {
+      border-color: var(--text-accent);
+      box-shadow: 0 0 0 1px var(--text-accent) inset;
+    }
     .stat-card .stat-number {
       font-family: 'Montserrat', sans-serif;
       font-size: 36px;
@@ -344,6 +365,32 @@
       transition: transform 0.3s;
     }
     .leg-card.expanded .card-chevron { transform: rotate(180deg); }
+
+    /* ── Sticky member header when the card is expanded ──
+       Keeps the lawmaker's name, grade, and score visible while the
+       reader scrolls through the vote/sponsorship breakdown below.
+       The per-tally subscore counts on the right are hidden in the
+       expanded state because the expanded content shows them in full
+       detail just below, and we want the sticky header to be about
+       *who* the record belongs to, not the headline tally. */
+    .leg-card.expanded .card-collapsed {
+      position: sticky;
+      top: 140px;
+      z-index: 20;
+      background: rgba(19, 45, 68, 0.97);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      margin: -24px -24px 0;
+      padding: 16px 24px;
+      border-radius: 12px 12px 0 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .leg-card.grade-f.expanded .card-collapsed { background: rgba(60, 22, 22, 0.97); }
+    .leg-card.grade-aplus.expanded .card-collapsed,
+    .leg-card.grade-a.expanded .card-collapsed,
+    .leg-card.grade-aminus.expanded .card-collapsed { background: rgba(15, 50, 28, 0.97); }
+    .leg-card.expanded .card-subscores { display: none; }
+    .leg-card.expanded .score-bar-wrap { display: none; }
 
     /* Expanded content */
     .card-expanded {
@@ -1779,21 +1826,21 @@
   <!-- Summary Stats (live: updates as you filter below) -->
   <section class="container" style="position: relative; z-index: 2; margin-top: 32px;">
     <div class="stats-bar" id="stats-bar" data-live="true">
-      <div class="stat-card">
+      <button type="button" class="stat-card stat-filter" data-filter="all" aria-pressed="true">
         <div class="stat-number" id="stat-total">0</div>
-        <div class="stat-label" id="stat-total-label">Lawmakers Graded</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="stat-allies" style="color: var(--text-success);">0</div>
-        <div class="stat-label">Pro-Equality Allies (A- and Above)</div>
-      </div>
-      <div class="stat-card">
+        <div class="stat-label" id="stat-total-label">Legislators Scored</div>
+      </button>
+      <button type="button" class="stat-card stat-filter" data-filter="grade:A+" aria-pressed="false">
+        <div class="stat-number" id="stat-champions" style="color: var(--text-success);">0</div>
+        <div class="stat-label">Champions (A+)</div>
+      </button>
+      <button type="button" class="stat-card stat-filter" data-filter="grade:F" aria-pressed="false">
         <div class="stat-number" id="stat-hostile" style="color: var(--text-danger);">0</div>
-        <div class="stat-label">Hostile or Unfriendly (D and F)</div>
-      </div>
-      <div class="stat-card">
+        <div class="stat-label">Hostile (F)</div>
+      </button>
+      <div class="stat-card stat-static">
         <div class="stat-number" id="stat-bills">0</div>
-        <div class="stat-label">Bills Tracked</div>
+        <div class="stat-label">Bills Scored</div>
       </div>
     </div>
     <div class="stats-hint" id="stats-hint">
@@ -2004,11 +2051,10 @@
       for (var _k in _billSet) { if (Object.prototype.hasOwnProperty.call(_billSet, _k)) BILL_COUNT++; }
 
       /* ── Live stats bar: re-rendered on every filter change. ──
-         "Allies" = A+, A, A-. "Hostile/Unfriendly" = D, F.
-         A small hint line under the bar tells the reader whether they're
-         looking at the full chamber or a filtered subset, and a Clear
-         filters chip pops in when the view is filtered. Numbers pulse
-         briefly when their value changes so the bar feels alive. */
+         Four cards at the top double as filter buttons: click "Champions"
+         to jump to grade=A+, click "Hostile" to jump to grade=F, click
+         "Legislators Scored" to clear all filters. Numbers pulse briefly
+         when their value changes so the bar feels alive. */
       function _setStatNumber(id, val) {
         var el = document.getElementById(id);
         if (!el) return;
@@ -2023,14 +2069,14 @@
         }
       }
       function renderStats(members) {
-        var allyCount = 0, hostileCount = 0;
+        var championCount = 0, hostileCount = 0;
         members.forEach(function(m) {
           var g = m.grade.grade;
-          if (g === 'A+' || g === 'A' || g === 'A-') allyCount++;
-          if (g === 'D' || g === 'F') hostileCount++;
+          if (g === 'A+') championCount++;
+          if (g === 'F')  hostileCount++;
         });
         _setStatNumber('stat-total', members.length);
-        _setStatNumber('stat-allies', allyCount);
+        _setStatNumber('stat-champions', championCount);
         _setStatNumber('stat-hostile', hostileCount);
         _setStatNumber('stat-bills', BILL_COUNT);
 
@@ -2742,6 +2788,7 @@
             pills.forEach(function(p) { p.classList.remove('active'); });
             pill.classList.add('active');
             filters[filterKey] = pill.getAttribute('data-value');
+            _syncStatFilterFromFilters();
             applyFilters();
           });
         });
@@ -2749,6 +2796,57 @@
       setupPillGroup('chamber-filter', 'chamber');
       setupPillGroup('party-filter', 'party');
       setupPillGroup('grade-filter', 'grade');
+
+      /* Stat cards double as filter buttons. Clicking "Champions" or
+         "Hostile" drives the grade pill group so every control stays
+         in sync; clicking the total card clears filters. */
+      function _syncGradePillColors() {
+        var allPill = document.querySelector('#grade-filter .pill:first-child');
+        document.querySelectorAll('#grade-filter .grade-pill').forEach(function(p) {
+          if (p.classList.contains('active') && !(allPill && allPill.classList.contains('active'))) {
+            p.style.background = p.style.getPropertyValue('--pill-color');
+            p.style.borderColor = p.style.getPropertyValue('--pill-color');
+          } else {
+            p.style.background = '';
+            p.style.borderColor = '';
+          }
+        });
+      }
+      function _setStatFilterPressed(targetFilter) {
+        document.querySelectorAll('.stat-filter').forEach(function(btn) {
+          btn.setAttribute('aria-pressed', btn.getAttribute('data-filter') === targetFilter ? 'true' : 'false');
+        });
+      }
+      function _syncStatFilterFromFilters() {
+        var clean = filters.chamber === 'all' && filters.party === 'all' && !filters.search;
+        if (clean && filters.grade === 'all') _setStatFilterPressed('all');
+        else if (clean && filters.grade === 'A+') _setStatFilterPressed('grade:A+');
+        else if (clean && filters.grade === 'F')  _setStatFilterPressed('grade:F');
+        else _setStatFilterPressed(null);
+      }
+      document.querySelectorAll('.stat-filter').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var f = btn.getAttribute('data-filter');
+          if (f === 'all') {
+            filters.chamber = 'all';
+            filters.party = 'all';
+            filters.grade = 'all';
+            filters.search = '';
+            _activatePill('chamber-filter', 'all');
+            _activatePill('party-filter', 'all');
+            _activatePill('grade-filter', 'all');
+            var search = document.getElementById('search-input');
+            if (search) search.value = '';
+          } else if (f.indexOf('grade:') === 0) {
+            var g = f.slice(6);
+            filters.grade = g;
+            _activatePill('grade-filter', g);
+          }
+          _syncGradePillColors();
+          _setStatFilterPressed(f);
+          applyFilters();
+        });
+      });
 
       /* Grade pill active colors */
       var gradePills = document.querySelectorAll('.grade-pill');
@@ -2787,6 +2885,7 @@
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(function() {
           filters.search = val;
+          _syncStatFilterFromFilters();
           applyFilters();
         }, 200);
       });
@@ -2820,6 +2919,7 @@
           if (search) search.value = '';
           var sort = document.getElementById('sort-select');
           if (sort) { sort.value = 'score-desc'; sortMode = 'score-desc'; }
+          _setStatFilterPressed('all');
           applyFilters();
           /* Brief tactile feedback on the chip. */
           resetBtn.style.transform = 'scale(0.92)';
@@ -2862,6 +2962,7 @@
       _activatePill('chamber-filter', filters.chamber);
       _activatePill('party-filter', filters.party);
       _activatePill('grade-filter', filters.grade);
+      _syncStatFilterFromFilters();
       var _searchEl = document.getElementById('search-input');
       if (_searchEl && filters.search) _searchEl.value = filters.search;
       var _sortEl = document.getElementById('sort-select');
