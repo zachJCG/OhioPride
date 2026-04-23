@@ -1,22 +1,44 @@
 /* ============================================================
-   Ohio Pride PAC — Legislative Scorecard Data
-   Last updated: 04/21/26
-   
+   Ohio Pride PAC, Legislative Scorecard Data
+   Last updated: 04/22/26
+
    HOW TO UPDATE:
    1. Find the legislator in HOUSE_MEMBERS or SENATE_MEMBERS
    2. Adjust their votes/sponsorship/news scores
    3. Add notes explaining the change
-   4. Update LAST_UPDATED below
-   
-   SCORING:
-     votes:       +1 per pro-equality vote, -1 per anti-equality vote
-     sponsorship: +3 primary sponsor pro bill, +2 co-sponsor pro bill
-                  -3 primary sponsor anti bill, -2 co-sponsor anti bill
-     news:        +1 to +3 for pro-LGBTQ+ advocacy/statements
-                  -1 to -3 for anti-LGBTQ+ rhetoric/scandals
+   4. Update SCORECARD_UPDATED below
+
+   SCORING OVERVIEW
+   ---------------------------------------------------------
+   Each legislator carries three editorial subscores on a
+   -5 to +5 scale, sourced from official Ohio General
+   Assembly roll call records and the bill text itself:
+
+     v   Floor and committee votes
+     s   Sponsorship and co-sponsorship
+     n   News, public statements, and floor speeches
+
+   Composite score (0-100) is computed in calcScore() as:
+     score = max(0, min(100, round(50 + (v + s + n) * 5)))
+
+   Grade scale (applied after composite):
+     A+  90-100  Champion
+     A   73-89   Strong Ally
+     B   55-72   Supportive
+     C   40-54   Mixed Record
+     D   20-39   Unfriendly
+     F    0-19   Hostile
+
+   Source hierarchy (high to low authority):
+     1. Chamber journal of record (roll call)
+     2. Legislative Service Commission bill analysis
+     3. Committee minutes and clerk reports
+     4. Primary-source news (hearing coverage, press events)
+     5. Sponsor-authored statements and press releases
+     6. Advocacy or opposition statements
    ============================================================ */
 
-const SCORECARD_UPDATED = { date: "04/22/26", time: "11:50 PM EDT" };
+const SCORECARD_UPDATED = { date: "04/22/26", time: "06:00 PM EDT" };
 
 /* Grade thresholds (weighted score 0-100) */
 const GRADE_SCALE = [
@@ -28,19 +50,46 @@ const GRADE_SCALE = [
   { min: 0,  grade: "F",  label: "Hostile", color: "#dc2626" },
 ];
 
-/* Bills used in scoring (for reference panel) */
+/* Bills used in scoring (for reference panel)
+   Mirrors BILLS in bill-data.js. Keep order aligned with that file
+   so the scorecard reference panel reads top-to-bottom in the
+   editorial priority sequence. */
 const SCORED_BILLS = [
-  { id: "hb249", bill: "HB 249", title: "Drag Ban", ga: "136th", stance: "anti", status: "Passed House 63-32", date: "3/25/2026" },
-  { id: "sb1",   bill: "SB 1",   title: "DEI Ban (Higher Ed)", ga: "136th", stance: "anti", status: "Signed Into Law", date: "3/28/2026" },
-  { id: "hb68",  bill: "HB 68",  title: "Gender-Affirming Care Ban + Sports Ban", ga: "135th", stance: "anti", status: "Law (Veto Overridden)", date: "1/24/2024" },
-  { id: "hb8",   bill: "HB 8",   title: "Parents' Bill of Rights (Forced Outing)", ga: "135th", stance: "anti", status: "Signed Into Law", date: "12/18/2024" },
-  { id: "sb104", bill: "SB 104", title: "Bathroom Ban", ga: "135th", stance: "anti", status: "Signed Into Law", date: "11/27/2024" },
-  { id: "sb70",  bill: "SB 70",  title: "Ohio Fairness Act", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "sb71",  bill: "SB 71",  title: "Conversion Therapy Ban", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb136", bill: "HB 136", title: "Ohio Fairness Act (House)", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb300", bill: "HB 300", title: "Conversion Therapy Ban (House)", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb306", bill: "HB 306", title: "Hate Crimes Act", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb327", bill: "HB 327", title: "PRIDE Act", ga: "136th", stance: "pro", status: "In Committee", date: "" },
+  /* Active anti-equality, on the floor or moving */
+  { id: "hb249", bill: "HB 249",  title: "Drag Ban",                                     ga: "136th", stance: "anti",  status: "Passed House 63-32",         date: "3/25/2026" },
+  { id: "sb34",  bill: "SB 34",   title: "Ten Commandments Classroom Displays",          ga: "136th", stance: "anti",  status: "Passed Senate 23-10",        date: "11/20/2025" },
+
+  /* Active anti-equality, in committee or introduced */
+  { id: "hb798", bill: "HB 798",  title: "Omnibus Anti-Trans Bill",                      ga: "136th", stance: "anti",  status: "Introduced",                 date: "3/31/2026" },
+  { id: "hb796", bill: "HB 796",  title: "Prison Trans Housing Ban",                     ga: "136th", stance: "anti",  status: "Introduced",                 date: "3/25/2026" },
+  { id: "hb693", bill: "HB 693",  title: "Affirming Families First Act",                 ga: "136th", stance: "anti",  status: "In Committee",               date: "3/25/2026" },
+  { id: "hb602", bill: "HB 602",  title: "Pride Flag Ban on State Property",             ga: "136th", stance: "anti",  status: "In Committee",               date: "3/30/2026" },
+  { id: "hb457", bill: "HB 457",  title: "Politically-Motivated Crimes",                 ga: "136th", stance: "anti",  status: "In Committee",               date: "" },
+  { id: "hb190", bill: "HB 190",  title: "Given Name Act (Forced Outing)",               ga: "136th", stance: "anti",  status: "In Committee",               date: "4/29/2025" },
+  { id: "hb155", bill: "HB 155",  title: "K-12 DEI Ban",                                 ga: "136th", stance: "anti",  status: "In Committee",               date: "5/20/2025" },
+  { id: "sb113", bill: "SB 113",  title: "Senate DEI Ban (Schools)",                     ga: "136th", stance: "anti",  status: "In Committee",               date: "3/25/2026" },
+  { id: "hb172", bill: "HB 172",  title: "Minor Mental Health Consent",                  ga: "136th", stance: "anti",  status: "In Committee",               date: "11/19/2025" },
+  { id: "sb274", bill: "SB 274",  title: "Senate Companion to HB 172",                   ga: "136th", stance: "anti",  status: "In Committee",               date: "10/1/2025" },
+  { id: "hb196", bill: "HB 196",  title: "Deadnaming Candidates Bill",                   ga: "136th", stance: "anti",  status: "In Committee",               date: "4/29/2025" },
+  { id: "hb262", bill: "HB 262",  title: "Designate Natural Family Month",               ga: "136th", stance: "anti",  status: "In Committee",               date: "9/30/2025" },
+
+  /* Anti-equality, signed or overridden into law (scorecard context) */
+  { id: "sb1",   bill: "SB 1",    title: "DEI Ban (Higher Ed)",                          ga: "136th", stance: "anti",  status: "Signed Into Law",            date: "3/28/2025" },
+  { id: "sb104", bill: "SB 104",  title: "Bathroom Ban",                                 ga: "135th", stance: "anti",  status: "Signed Into Law",            date: "11/27/2024" },
+  { id: "hb8",   bill: "HB 8",    title: "Parents' Bill of Rights (Forced Outing)",      ga: "135th", stance: "anti",  status: "Signed Into Law",            date: "12/18/2024" },
+  { id: "hb68",  bill: "HB 68",   title: "Gender-Affirming Care Ban + Sports Ban",       ga: "135th", stance: "anti",  status: "Law (Veto Overridden)",      date: "1/24/2024" },
+
+  /* Pro-equality bills */
+  { id: "sb70",  bill: "SB 70",   title: "Ohio Fairness Act",                            ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "hb136", bill: "HB 136",  title: "Ohio Fairness Act (House)",                    ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "sb71",  bill: "SB 71",   title: "Conversion Therapy Ban",                       ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "hb300", bill: "HB 300",  title: "Conversion Therapy Ban (House)",               ga: "136th", stance: "pro",   status: "Introduced",                 date: "" },
+  { id: "hjr4",  bill: "HJR 4",   title: "Marriage Equality Act",                        ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "hb327", bill: "HB 327",  title: "PRIDE Act",                                    ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "sb211", bill: "SB 211",  title: "Love Makes a Family Week",                     ga: "136th", stance: "pro",   status: "Introduced",                 date: "10/14/2025" },
+
+  /* Mixed bills */
+  { id: "hb306", bill: "HB 306",  title: "Hate Crimes Act (Excludes Trans Protections)", ga: "136th", stance: "mixed", status: "In Committee",               date: "2/25/2026" },
 ];
 
 /* -------------------------------------------------------
@@ -158,7 +207,7 @@ const SENATE_MEMBERS = [
   { d: 3,  name: "Michele Reynolds",          party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 4,  name: "George F. Lang",            party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 5,  name: "Stephen A. Huffman",        party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 6,  name: "Willis E. Blackshear, Jr.", party: "D", v: 5,  s: 0,   n: 3,  notes: "Previously served in the Ohio House (Dayton-area district) before election to the Senate. House tenure (135th GA): voted N on HB 68 override (2024-01-10), HB 8 forced outing (2023-06-21), and SB 104 bathroom ban (2024-06-26). Continues to vote against anti-LGBTQ+ bills in the Senate." },
+  { d: 6,  name: "Willis E. Blackshear, Jr.", party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 7,  name: "Steve Wilson",              party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 8,  name: "Louis W. Blessing, III",    party: "R", v: -3, s: 0,   n: 1,  notes: "Voted against HB 8 (forced outing) in Senate. Otherwise votes party line." },
   { d: 9,  name: "Catherine D. Ingram",       party: "D", v: 5,  s: 0,   n: 1,  notes: "Votes against anti-LGBTQ+ bills. Vocal opponent of SB 104 (bathroom ban)." },
@@ -190,44 +239,9 @@ const SENATE_MEMBERS = [
 
 /* -------------------------------------------------------
    SCORE CALCULATION (used by scorecard.html)
-
-   As of v2.1 the floor-vote component (member.v) is computed
-   at runtime from voting-records.js (ROLL_CALLS +
-   VOTE_EXCEPTIONS + party-line defaults) rather than
-   hand-assigned, so the score basis matches exactly what
-   the SQL layer (public.bills + public.roll_calls +
-   public.legislator_vote_exceptions) produces. The static
-   member.v field is kept as a fallback for when
-   summarizeVotes is not available (module context, older
-   cached scripts, etc.).
    ------------------------------------------------------- */
-
-/* Map the signed voting-records net (unbounded) into the
-   -5..+5 range the sponsorship (s) and news (n) components
-   already use. A net of ±5 or more saturates. */
-function computedVoteScore(member) {
-  if (typeof summarizeVotes !== 'function') return null;
-  try {
-    var leg = {
-      d: member.d,
-      party: member.party,
-      chamber: (member.chamber || '').toString().toLowerCase()
-    };
-    var totals = summarizeVotes(leg);
-    if (!totals || typeof totals.net !== 'number') return null;
-    var v = Math.round(totals.net);
-    if (v > 5) v = 5;
-    if (v < -5) v = -5;
-    return v;
-  } catch (e) {
-    return null;
-  }
-}
-
 function calcScore(member) {
-  var v = computedVoteScore(member);
-  if (v === null) v = member.v;           // fallback for module / stale-cache contexts
-  var raw = v + member.s + member.n;
+  var raw = member.v + member.s + member.n;
   return Math.max(0, Math.min(100, Math.round(50 + raw * 5)));
 }
 

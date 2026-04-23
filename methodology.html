@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scoring Methodology | Ohio Pride PAC</title>
+  <meta name="description" content="A complete, source-cited explanation of how Ohio Pride PAC scores Ohio legislators on LGBTQ+ equality. Built from Ohio General Assembly roll call records, sponsorship filings, and public statements." />
+  <link rel="canonical" href="https://www.ohiopride.org/methodology" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Scoring Methodology | Ohio Pride PAC" />
+  <meta property="og:description" content="A complete, source-cited explanation of how Ohio Pride PAC scores Ohio legislators on LGBTQ+ equality." />
+  <meta property="og:url" content="https://www.ohiopride.org/methodology" />
+  <meta property="og:site_name" content="Ohio Pride PAC" />
+  <meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Scoring Methodology | Ohio Pride PAC" />
+  <meta name="twitter:description" content="How Ohio Pride PAC scores every state lawmaker on LGBTQ+ equality." />
+  <meta name="twitter:image" content="https://ohiopride.org/assets/social/og-image.png" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+  <meta name="theme-color" content="#0F2233" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto+Slab:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/site-template.css" />
+
+  <style>
+    body { background: var(--dark-bg); }
+
+    /* ── Page layout ── */
+    .meth-wrap {
+      padding: 40px 0 100px;
+    }
+    .meth-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .meth-grid { grid-template-columns: 1fr; gap: 24px; }
+      .meth-toc { position: static; }
+    }
+
+    /* ── Sticky table of contents ── */
+    .meth-toc {
+      position: sticky;
+      top: 96px;
+      background: rgba(19, 45, 68, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .meth-toc-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.5);
+      margin: 0 0 12px;
+    }
+    .meth-toc ol {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      counter-reset: toc;
+    }
+    .meth-toc li {
+      counter-increment: toc;
+      margin-bottom: 8px;
+    }
+    .meth-toc a {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      padding: 6px 8px;
+      border-left: 2px solid transparent;
+      border-radius: 0 4px 4px 0;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .meth-toc a::before {
+      content: counter(toc, decimal-leading-zero);
+      color: rgba(255, 255, 255, 0.3);
+      margin-right: 8px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+    .meth-toc a:hover, .meth-toc a.active {
+      color: var(--text-white);
+      border-left-color: var(--text-accent);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* ── Article body ── */
+    .meth-article {
+      max-width: 760px;
+    }
+    .meth-article h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-white);
+      margin: 0 0 14px;
+      scroll-margin-top: 100px;
+    }
+    .meth-article h2:not(:first-of-type) { margin-top: 56px; }
+    .meth-article h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-accent);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin: 32px 0 10px;
+    }
+    .meth-article p, .meth-article li {
+      font-family: 'Roboto Slab', serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .meth-article p { margin: 0 0 16px; }
+    .meth-article ul, .meth-article ol { padding-left: 22px; margin: 8px 0 18px; }
+    .meth-article li { margin-bottom: 6px; }
+    .meth-article a { color: var(--text-accent); }
+    .meth-article strong { color: var(--text-white); font-weight: 700; }
+
+    .formula-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', 'Menlo', monospace;
+      font-size: 15px;
+      color: var(--text-white);
+      margin: 12px 0 18px;
+      overflow-x: auto;
+    }
+
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 18px 0 28px;
+    }
+    .pillar-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-left: 3px solid var(--text-accent);
+      padding: 16px 18px;
+      border-radius: 8px;
+    }
+    .pillar-card .pc-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-accent);
+      line-height: 1;
+    }
+    .pillar-card .pc-range {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.55);
+      margin-top: 6px;
+    }
+    .pillar-card .pc-desc {
+      font-family: 'Roboto Slab', serif;
+      font-size: 14px;
+      color: rgba(255,255,255,0.78);
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    .weight-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 24px;
+    }
+    .weight-table th, .weight-table td {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .weight-table th {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.5);
+    }
+    .weight-table td {
+      color: rgba(255,255,255,0.78);
+      font-weight: 500;
+    }
+    .weight-table td.mult {
+      font-family: 'JetBrains Mono', 'Menlo', monospace;
+      font-weight: 700;
+      color: var(--text-accent);
+    }
+
+    .grade-scale {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 14px 0 24px;
+    }
+    .grade-tile {
+      padding: 14px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(19,45,68,0.4);
+      text-align: center;
+    }
+    .grade-tile .gt-letter {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .grade-tile .gt-range {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.55);
+      margin-top: 6px;
+    }
+    .grade-tile .gt-label {
+      font-family: 'Roboto Slab', serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      margin-top: 4px;
+    }
+
+    .callout {
+      background: rgba(255,255,255,0.04);
+      border-left: 3px solid var(--text-accent);
+      padding: 16px 20px;
+      border-radius: 0 10px 10px 0;
+      margin: 20px 0;
+    }
+    .callout p:last-child { margin-bottom: 0; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 20px;
+      margin-top: 24px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .back-link:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    .last-reviewed {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <!-- Hero -->
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="section-label reveal">Reference Document</p>
+      <h1 class="section-title reveal" style="font-size: clamp(32px, 5vw, 48px); margin-bottom: 12px;">
+        Scoring<br>
+        <span class="hero-gradient">Methodology.</span>
+      </h1>
+      <p style="color: rgba(255,255,255,0.7); max-width: 680px; margin-top: 16px; font-size: 15px;">
+        A complete, source-cited explanation of how Ohio Pride PAC arrives at every legislator's grade. Written for journalists, policy staff, candidates, donors, and members of the public who want to audit our work.
+      </p>
+      <a class="back-link" href="/scorecard">&larr; Back to the scorecard</a>
+    </div>
+  </section>
+
+  <section class="meth-wrap">
+    <div class="container">
+      <div class="meth-grid">
+
+        <!-- Sticky table of contents -->
+        <aside class="meth-toc" aria-label="Section navigation">
+          <p class="meth-toc-title">Contents</p>
+          <ol>
+            <li><a href="#principles">Guiding principles</a></li>
+            <li><a href="#scope">Scope of who is scored</a></li>
+            <li><a href="#subscores">The three subscores</a></li>
+            <li><a href="#composite">Composite formula</a></li>
+            <li><a href="#weights">Roll-call weighting</a></li>
+            <li><a href="#floor-vs-cmte">Floor vs. committee</a></li>
+            <li><a href="#exceptions">Vote exceptions</a></li>
+            <li><a href="#sources">Source hierarchy</a></li>
+            <li><a href="#grade">Grade scale</a></li>
+            <li><a href="#review">Review &amp; corrections</a></li>
+            <li><a href="#changelog">Changelog</a></li>
+          </ol>
+        </aside>
+
+        <article class="meth-article">
+
+          <h2 id="principles">Guiding principles</h2>
+          <p>The Ohio Pride PAC scorecard is editorial in nature: every component reflects considered judgment by our policy team about what a record on LGBTQ+ equality looks like in practice. We commit to four principles that govern every grade.</p>
+          <p><strong>Primary sources first.</strong> Every roll call, sponsorship line, and floor statement we cite is anchored to an authoritative public record, with the chamber journal of the Ohio General Assembly as the canonical document. Secondary aggregators are used only for cross-verification and never to replace a primary source.</p>
+          <p><strong>Transparent math.</strong> A composite score is built from three named subscores using a simple, additive formula that any reader can reproduce. We have deliberately avoided opaque weighting schemes that obscure how a number was reached.</p>
+          <p><strong>Silence is not absolution.</strong> A legislator who avoids voting, refuses to take a public position, or routinely takes walk on contested LGBTQ+ legislation is recorded as such. Strategic absence is part of a record.</p>
+          <p><strong>Correctable in public.</strong> We publish a changelog and accept written corrections. When evidence warrants, scores move, and the move is documented.</p>
+
+          <h2 id="scope">Scope of who is scored</h2>
+          <p>The scorecard covers all 132 sitting members of the Ohio General Assembly: 99 House members and 33 Senate members. Vacancies are noted but not graded. Members who serve only a partial term receive a partial-term notation alongside their grade. Statewide officeholders, judges, members of Congress, and local officials are out of scope; separate scorecards may be issued for those offices in future cycles.</p>
+
+          <h2 id="subscores">The three subscores</h2>
+          <p>Each legislator receives three editorial subscores. Each subscore ranges from <strong>&minus;5</strong>, indicating a consistent record against LGBTQ+ Ohioans, to <strong>+5</strong>, indicating a consistent pro-equality record. The subscores are independent and capture different signals, which is why we report them individually as well as in aggregate.</p>
+
+          <div class="pillar-grid">
+            <div class="pillar-card">
+              <div class="pc-name">Votes</div>
+              <div class="pc-range">&minus;5 to +5</div>
+              <div class="pc-desc">Aggregated record on roll call votes affecting LGBTQ+ Ohioans, covering both floor action (chamber-of-origin passage, concurrence, veto override) and committee reports out of substantive committee.</div>
+            </div>
+            <div class="pillar-card">
+              <div class="pc-name">Bills</div>
+              <div class="pc-range">&minus;5 to +5</div>
+              <div class="pc-desc">Primary sponsorship and co-sponsorship of legislation tracked by Ohio Pride PAC. Primary authorship counts more heavily than adding a name to a colleague's bill, and hostile sponsorship counts symmetrically against pro-equality sponsorship.</div>
+            </div>
+            <div class="pillar-card">
+              <div class="pc-name">Voice</div>
+              <div class="pc-range">&minus;5 to +5</div>
+              <div class="pc-desc">Public statements, floor speeches, committee remarks, op-eds, and press coverage that explicitly support or attack LGBTQ+ Ohioans. Silence on contested bills is treated as a neutral signal, not as a positive one.</div>
+            </div>
+          </div>
+
+          <p>We chose three subscores rather than a longer list of weighted line items because every input is grounded in primary-source evidence and a transparent additive model is easier for journalists, candidates, and members of the public to audit than a black-box weighting scheme.</p>
+
+          <h2 id="composite">Composite formula</h2>
+          <p>The three subscores are summed into a raw figure between &minus;15 and +15, then mapped to a 0&ndash;100 composite using the following formula:</p>
+          <div class="formula-box">score = clamp(0, 100, round(50 + (Votes + Bills + Voice) &times; 5))</div>
+          <p>A subscore vector of <strong>0, 0, 0</strong> produces a baseline composite of 50. A perfect <strong>+5, +5, +5</strong> reaches 100; a worst-case <strong>&minus;5, &minus;5, &minus;5</strong> bottoms out at 0. Mid-cycle, a legislator with no recorded action on tracked legislation will sit near 50 by design, until the record gives us reason to move them.</p>
+          <div class="callout">
+            <p style="margin: 0;">A handful of legislators currently carry subscores outside the &plusmn;5 nominal range as the result of unusually concentrated activity in a single category. We are reviewing these outliers and will normalize them in the next refresh; the composite formula already clamps at 0 and 100, so no published grade is affected.</p>
+          </div>
+
+          <h2 id="weights">How roll calls are weighted inside the Votes subscore</h2>
+          <p>When the Votes subscore is constructed, not every roll call carries the same weight. Higher-stakes procedural moments count more, while preliminary or amendment-only votes count less. The vote breakdown shown on each legislator's card uses the multipliers below.</p>
+
+          <table class="weight-table">
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>What it is</th>
+                <th>Multiplier</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Veto-override</td><td>Roll call to override a gubernatorial veto</td><td class="mult">1.25&times;</td></tr>
+              <tr><td>Concurrence</td><td>Concurrence vote on the second chamber's amendments</td><td class="mult">1.00&times;</td></tr>
+              <tr><td>Final passage</td><td>Chamber-of-origin passage of the underlying bill</td><td class="mult">1.00&times;</td></tr>
+              <tr><td>Committee report</td><td>Vote in substantive committee to report a bill</td><td class="mult">0.75&times;</td></tr>
+              <tr><td>Amendment</td><td>Stand-alone vote on a floor or committee amendment</td><td class="mult">0.50&times;</td></tr>
+              <tr><td>Introduction</td><td>Introduction or referral motion</td><td class="mult">0.25&times;</td></tr>
+            </tbody>
+          </table>
+
+          <h2 id="floor-vs-cmte">Floor versus committee</h2>
+          <p>Floor votes and committee votes are tallied independently and reported in separate sections on each legislator's card. We track committee action because legislation often lives or dies long before it reaches a chamber floor. Members who quietly hold a harmful bill in committee, or who advance a protective bill out of committee, deserve credit (or accountability) for that posture even when no floor vote ever materializes.</p>
+          <p>Committee chairs and ranking members carry an additional editorial responsibility on bills referred to their committee. We do not apply an automatic multiplier for chairmanship, but a chair's pattern of scheduling, refusing to schedule, or amending a bill in committee informs the Voice subscore and, where reflected in a recorded committee vote, the Votes subscore as well.</p>
+
+          <h2 id="exceptions">Vote exceptions</h2>
+          <p>Where a legislator's recorded vote diverges from their established pattern in a way that materially affects scoring, we publish a brief vote-exception note alongside the relevant roll call. This includes:</p>
+          <ul>
+            <li>Pairings, walk-offs, and announced absences on contested LGBTQ+ legislation.</li>
+            <li>Procedural votes that are commonly conflated with substantive ones (e.g., a vote on a previous question that effectively kills an amendment).</li>
+            <li>Cases where a legislator publicly committed to a position and then voted differently on the floor.</li>
+          </ul>
+          <p>Vote exceptions are surfaced in the legislator's record so readers can understand the texture behind a single roll call rather than judging the member solely on a green or red dot.</p>
+
+          <h2 id="sources">Source hierarchy</h2>
+          <p>When sources conflict, the higher-authority source prevails. Our hierarchy, in descending order:</p>
+          <ol>
+            <li>Chamber journal of record (official roll call as published by the Clerk of the Ohio House or the Clerk of the Ohio Senate).</li>
+            <li>Legislative Service Commission bill analysis and committee reports.</li>
+            <li>Committee minutes, witness testimony as filed, and clerk reports.</li>
+            <li>Primary-source news coverage of hearings, press conferences, and floor debate.</li>
+            <li>Sponsor-authored statements, press releases, and constituent newsletters.</li>
+            <li>Advocacy or opposition statements, including from allied organizations.</li>
+          </ol>
+          <p>Cross-verification with Equality Ohio, TransOhio, and the ACLU of Ohio is used to flag inconsistencies for review, but their tracking does not substitute for our own review of the primary sources.</p>
+
+          <h2 id="grade">Grade scale</h2>
+          <p>Once the composite is computed, the letter grade is applied directly from the table below. There are no curves and no chamber- or party-relative adjustments.</p>
+          <div class="grade-scale">
+            <div class="grade-tile" style="border-color: rgba(22,163,74,0.5);"><div class="gt-letter" style="color:#16a34a;">A+</div><div class="gt-range">90&ndash;100</div><div class="gt-label">Champion</div></div>
+            <div class="grade-tile" style="border-color: rgba(34,197,94,0.45);"><div class="gt-letter" style="color:#22c55e;">A</div><div class="gt-range">73&ndash;89</div><div class="gt-label">Strong ally</div></div>
+            <div class="grade-tile" style="border-color: rgba(132,204,22,0.45);"><div class="gt-letter" style="color:#84cc16;">B</div><div class="gt-range">55&ndash;72</div><div class="gt-label">Generally supportive</div></div>
+            <div class="grade-tile" style="border-color: rgba(234,179,8,0.45);"><div class="gt-letter" style="color:#eab308;">C</div><div class="gt-range">40&ndash;54</div><div class="gt-label">Mixed record</div></div>
+            <div class="grade-tile" style="border-color: rgba(249,115,22,0.45);"><div class="gt-letter" style="color:#f97316;">D</div><div class="gt-range">20&ndash;39</div><div class="gt-label">Generally opposed</div></div>
+            <div class="grade-tile" style="border-color: rgba(220,38,38,0.5);"><div class="gt-letter" style="color:#dc2626;">F</div><div class="gt-range">0&ndash;19</div><div class="gt-label">Hostile</div></div>
+          </div>
+
+          <h2 id="review">Review and corrections</h2>
+          <p>Every grade is reviewed at least quarterly by Ohio Pride PAC's policy team and refreshed when the legislative calendar produces material new evidence. Members of the public, legislators, and legislative staff may submit factual corrections at <a href="mailto:scorecard@ohiopride.org">scorecard@ohiopride.org</a>. We do not entertain disputes about editorial judgment, but we do correct factual errors quickly and document the change in the changelog.</p>
+          <p>Where a legislator's office disputes how a vote has been characterized, we will publish a short note alongside the affected roll call summarizing the office's position. We do not remove primary-source citations.</p>
+
+          <h2 id="changelog">Changelog</h2>
+          <p>Material changes to this methodology are documented here, in reverse chronological order.</p>
+          <ul>
+            <li><strong>April 2026.</strong> Methodology page split out from the scorecard into a standalone document. Subscore framework reframed from a four-input weighted average (Votes / Sponsorship / Statements / Constituent Service) into the three-subscore additive model (Votes / Bills / Voice). Roll-call weighting table published for the first time.</li>
+            <li><strong>February 2026.</strong> Floor and committee tallies separated on the legislator card. Vote-exception notes introduced for pairings, walk-offs, and announced absences.</li>
+            <li><strong>January 2026.</strong> Initial public release of the scorecard for the 136th General Assembly.</li>
+          </ul>
+
+          <p class="last-reviewed">Last reviewed by the Ohio Pride PAC policy team in April 2026.</p>
+
+          <a class="back-link" href="/scorecard">&larr; Back to the scorecard</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div id="site-footer"></div>
+
+  <script src="/js/main.js" defer></script>
+  <script src="/js/site-template.js" defer></script>
+  <script>
+    // Scroll-spy for the sticky table of contents.
+    document.addEventListener('DOMContentLoaded', function() {
+      var tocLinks = document.querySelectorAll('.meth-toc a');
+      var sections = Array.prototype.map.call(tocLinks, function(a) {
+        return document.getElementById(a.getAttribute('href').slice(1));
+      });
+      function syncActive() {
+        var pos = window.scrollY + 140;
+        var activeIdx = 0;
+        for (var i = 0; i < sections.length; i++) {
+          if (sections[i] && sections[i].offsetTop <= pos) activeIdx = i;
+        }
+        tocLinks.forEach(function(a, i) {
+          if (i === activeIdx) a.classList.add('active');
+          else a.classList.remove('active');
+        });
+      }
+      window.addEventListener('scroll', syncActive, { passive: true });
+      syncActive();
+    });
+  </script>
+</body>
+</html>

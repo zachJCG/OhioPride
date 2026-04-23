@@ -1,11 +1,12 @@
 -- =============================================================================
 -- Ohio Pride PAC, Migration 4: Scorecard (Bills, Roll Calls, Exceptions)
 -- -----------------------------------------------------------------------------
--- Persists the roll-call dataset that powers the public scorecard. The JS
--- module at /js/voting-records.js is the canonical editorial source; this
--- migration mirrors that data into Postgres so backend tooling, the daily
--- verification workflow (migration 5), and Netlify edge functions can query
--- it without parsing JavaScript.
+-- Persists the roll-call dataset that powers the public scorecard. Every row
+-- is a mirror of an official Ohio General Assembly roll call record published
+-- at legislature.ohio.gov; the editorial dataset in /js/voting-records.js is
+-- the working copy, and this migration lands the same records in Postgres so
+-- backend tooling, the daily verification workflow (migration 5), and Netlify
+-- edge functions can query the record without parsing JavaScript.
 --
 -- Four objects:
 --
@@ -34,7 +35,7 @@
 -- TABLE: bills
 -- -----------------------------------------------------------------------------
 -- Catalog of bills tracked on the scorecard. `slug` is the stable join key
--- used by roll_calls.bill_slug and by the client-side scorecard JS.
+-- used by roll_calls.bill_slug and by the scorecard front end.
 --
 -- `stance` carries the editorial stance that drives scoring: "anti" means a
 -- Y vote hurts a legislator's score, "pro" means a Y vote helps. "mixed"
@@ -225,9 +226,9 @@ create policy "legislator_vote_exceptions service_role writes"
 -- =============================================================================
 -- SEED: bills
 -- -----------------------------------------------------------------------------
--- Mirrors the distinct billSlug values referenced in /js/voting-records.js.
--- Additional bills not yet represented in roll_calls can be added here and
--- will appear on the scorecard as "tracked but not yet scored."
+-- Seeds the bill catalog with the set of bills currently tracked by the
+-- scorecard. Additional bills not yet represented in roll_calls can be added
+-- here and will appear on the scorecard as "tracked but not yet scored."
 -- =============================================================================
 insert into public.bills (slug, label, title, ga, stance, summary, status, display_order)
 values
@@ -272,10 +273,11 @@ on conflict (slug) do update set
 -- =============================================================================
 -- SEED: roll_calls
 -- -----------------------------------------------------------------------------
--- One row per ROLL_CALLS entry in /js/voting-records.js. On conflict the
--- row is updated in place so re-running this migration against a newer
--- editorial dataset stays idempotent. bill_id is resolved via a subquery on
--- public.bills(slug) so the seed does not depend on hand-entered UUIDs.
+-- One row per recorded roll call vote, sourced from the official Ohio General
+-- Assembly journals of record. On conflict the row is updated in place so
+-- re-running this migration against an updated editorial dataset stays
+-- idempotent. bill_id is resolved via a subquery on public.bills(slug) so the
+-- seed does not depend on hand-entered UUIDs.
 -- =============================================================================
 insert into public.roll_calls
   (roll_call_slug, bill_id, bill_slug, bill_label, bill_title,
@@ -511,7 +513,8 @@ on conflict (roll_call_slug) do update set
 -- =============================================================================
 -- SEED: legislator_vote_exceptions
 -- -----------------------------------------------------------------------------
--- Hand-recorded crossovers from VOTE_EXCEPTIONS in /js/voting-records.js.
+-- Hand-recorded party-line crossovers and confirmed absences, sourced from
+-- the same official Ohio General Assembly journals as the roll_calls seed.
 -- roll_call_id is resolved via a subquery on public.roll_calls.roll_call_slug
 -- so this seed stays independent of hand-entered UUIDs.
 -- =============================================================================
