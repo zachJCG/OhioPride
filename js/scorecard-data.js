@@ -1,22 +1,44 @@
 /* ============================================================
-   Ohio Pride PAC — Legislative Scorecard Data
-   Last updated: 04/21/26
-   
+   Ohio Pride PAC, Legislative Scorecard Data
+   Last updated: 04/22/26
+
    HOW TO UPDATE:
    1. Find the legislator in HOUSE_MEMBERS or SENATE_MEMBERS
    2. Adjust their votes/sponsorship/news scores
    3. Add notes explaining the change
-   4. Update LAST_UPDATED below
-   
-   SCORING:
-     votes:       +1 per pro-equality vote, -1 per anti-equality vote
-     sponsorship: +3 primary sponsor pro bill, +2 co-sponsor pro bill
-                  -3 primary sponsor anti bill, -2 co-sponsor anti bill
-     news:        +1 to +3 for pro-LGBTQ+ advocacy/statements
-                  -1 to -3 for anti-LGBTQ+ rhetoric/scandals
+   4. Update SCORECARD_UPDATED below
+
+   SCORING OVERVIEW
+   ---------------------------------------------------------
+   Each legislator carries three editorial subscores on a
+   -5 to +5 scale, sourced from official Ohio General
+   Assembly roll call records and the bill text itself:
+
+     v   Floor and committee votes
+     s   Sponsorship and co-sponsorship
+     n   News, public statements, and floor speeches
+
+   Composite score (0-100) is computed in calcScore() as:
+     score = max(0, min(100, round(50 + (v + s + n) * 5)))
+
+   Grade scale (applied after composite):
+     A+  90-100  Champion
+     A   73-89   Strong Ally
+     B   55-72   Supportive
+     C   40-54   Mixed Record
+     D   20-39   Unfriendly
+     F    0-19   Hostile
+
+   Source hierarchy (high to low authority):
+     1. Chamber journal of record (roll call)
+     2. Legislative Service Commission bill analysis
+     3. Committee minutes and clerk reports
+     4. Primary-source news (hearing coverage, press events)
+     5. Sponsor-authored statements and press releases
+     6. Advocacy or opposition statements
    ============================================================ */
 
-const SCORECARD_UPDATED = { date: "04/22/26", time: "11:50 PM EDT" };
+const SCORECARD_UPDATED = { date: "04/23/26", time: "10:00 AM EDT" };
 
 /* Grade thresholds (weighted score 0-100) */
 const GRADE_SCALE = [
@@ -28,19 +50,46 @@ const GRADE_SCALE = [
   { min: 0,  grade: "F",  label: "Hostile", color: "#dc2626" },
 ];
 
-/* Bills used in scoring (for reference panel) */
+/* Bills used in scoring (for reference panel)
+   Mirrors BILLS in bill-data.js. Keep order aligned with that file
+   so the scorecard reference panel reads top-to-bottom in the
+   editorial priority sequence. */
 const SCORED_BILLS = [
-  { id: "hb249", bill: "HB 249", title: "Drag Ban", ga: "136th", stance: "anti", status: "Passed House 63-32", date: "3/25/2026" },
-  { id: "sb1",   bill: "SB 1",   title: "DEI Ban (Higher Ed)", ga: "136th", stance: "anti", status: "Signed Into Law", date: "3/28/2026" },
-  { id: "hb68",  bill: "HB 68",  title: "Gender-Affirming Care Ban + Sports Ban", ga: "135th", stance: "anti", status: "Law (Veto Overridden)", date: "1/24/2024" },
-  { id: "hb8",   bill: "HB 8",   title: "Parents' Bill of Rights (Forced Outing)", ga: "135th", stance: "anti", status: "Signed Into Law", date: "12/18/2024" },
-  { id: "sb104", bill: "SB 104", title: "Bathroom Ban", ga: "135th", stance: "anti", status: "Signed Into Law", date: "11/27/2024" },
-  { id: "sb70",  bill: "SB 70",  title: "Ohio Fairness Act", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "sb71",  bill: "SB 71",  title: "Conversion Therapy Ban", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb136", bill: "HB 136", title: "Ohio Fairness Act (House)", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb300", bill: "HB 300", title: "Conversion Therapy Ban (House)", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb306", bill: "HB 306", title: "Hate Crimes Act", ga: "136th", stance: "pro", status: "In Committee", date: "" },
-  { id: "hb327", bill: "HB 327", title: "PRIDE Act", ga: "136th", stance: "pro", status: "In Committee", date: "" },
+  /* Active anti-equality, on the floor or moving */
+  { id: "hb249", bill: "HB 249",  title: "Drag Ban",                                     ga: "136th", stance: "anti",  status: "Passed House 63-32",         date: "3/25/2026" },
+  { id: "sb34",  bill: "SB 34",   title: "Ten Commandments Classroom Displays",          ga: "136th", stance: "anti",  status: "Passed Senate 23-10",        date: "11/20/2025" },
+
+  /* Active anti-equality, in committee or introduced */
+  { id: "hb798", bill: "HB 798",  title: "Omnibus Anti-Trans Bill",                      ga: "136th", stance: "anti",  status: "Introduced",                 date: "3/31/2026" },
+  { id: "hb796", bill: "HB 796",  title: "Prison Trans Housing Ban",                     ga: "136th", stance: "anti",  status: "Introduced",                 date: "3/25/2026" },
+  { id: "hb693", bill: "HB 693",  title: "Affirming Families First Act",                 ga: "136th", stance: "anti",  status: "In Committee",               date: "3/25/2026" },
+  { id: "hb602", bill: "HB 602",  title: "Pride Flag Ban on State Property",             ga: "136th", stance: "anti",  status: "In Committee",               date: "3/30/2026" },
+  { id: "hb457", bill: "HB 457",  title: "Politically-Motivated Crimes",                 ga: "136th", stance: "anti",  status: "In Committee",               date: "" },
+  { id: "hb190", bill: "HB 190",  title: "Given Name Act (Forced Outing)",               ga: "136th", stance: "anti",  status: "In Committee",               date: "4/29/2025" },
+  { id: "hb155", bill: "HB 155",  title: "K-12 DEI Ban",                                 ga: "136th", stance: "anti",  status: "In Committee",               date: "5/20/2025" },
+  { id: "sb113", bill: "SB 113",  title: "Senate DEI Ban (Schools)",                     ga: "136th", stance: "anti",  status: "In Committee",               date: "3/25/2026" },
+  { id: "hb172", bill: "HB 172",  title: "Minor Mental Health Consent",                  ga: "136th", stance: "anti",  status: "In Committee",               date: "11/19/2025" },
+  { id: "sb274", bill: "SB 274",  title: "Senate Companion to HB 172",                   ga: "136th", stance: "anti",  status: "In Committee",               date: "10/1/2025" },
+  { id: "hb196", bill: "HB 196",  title: "Deadnaming Candidates Bill",                   ga: "136th", stance: "anti",  status: "In Committee",               date: "4/29/2025" },
+  { id: "hb262", bill: "HB 262",  title: "Designate Natural Family Month",               ga: "136th", stance: "anti",  status: "In Committee",               date: "9/30/2025" },
+
+  /* Anti-equality, signed or overridden into law (scorecard context) */
+  { id: "sb1",   bill: "SB 1",    title: "DEI Ban (Higher Ed)",                          ga: "136th", stance: "anti",  status: "Signed Into Law",            date: "3/28/2025" },
+  { id: "sb104", bill: "SB 104",  title: "Bathroom Ban",                                 ga: "135th", stance: "anti",  status: "Signed Into Law",            date: "11/27/2024" },
+  { id: "hb8",   bill: "HB 8",    title: "Parents' Bill of Rights (Forced Outing)",      ga: "135th", stance: "anti",  status: "Signed Into Law",            date: "12/18/2024" },
+  { id: "hb68",  bill: "HB 68",   title: "Gender-Affirming Care Ban + Sports Ban",       ga: "135th", stance: "anti",  status: "Law (Veto Overridden)",      date: "1/24/2024" },
+
+  /* Pro-equality bills */
+  { id: "sb70",  bill: "SB 70",   title: "Ohio Fairness Act",                            ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "hb136", bill: "HB 136",  title: "Ohio Fairness Act (House)",                    ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "sb71",  bill: "SB 71",   title: "Conversion Therapy Ban",                       ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "hb300", bill: "HB 300",  title: "Conversion Therapy Ban (House)",               ga: "136th", stance: "pro",   status: "Introduced",                 date: "" },
+  { id: "hjr4",  bill: "HJR 4",   title: "Marriage Equality Act",                        ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "hb327", bill: "HB 327",  title: "PRIDE Act",                                    ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
+  { id: "sb211", bill: "SB 211",  title: "Love Makes a Family Week",                     ga: "136th", stance: "pro",   status: "Introduced",                 date: "10/14/2025" },
+
+  /* Mixed bills */
+  { id: "hb306", bill: "HB 306",  title: "Hate Crimes Act (Excludes Trans Protections)", ga: "136th", stance: "mixed", status: "In Committee",               date: "2/25/2026" },
 ];
 
 /* -------------------------------------------------------
@@ -158,7 +207,7 @@ const SENATE_MEMBERS = [
   { d: 3,  name: "Michele Reynolds",          party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 4,  name: "George F. Lang",            party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 5,  name: "Stephen A. Huffman",        party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 6,  name: "Willis E. Blackshear, Jr.", party: "D", v: 5,  s: 0,   n: 3,  notes: "Previously served in the Ohio House (Dayton-area district) before election to the Senate. House tenure (135th GA): voted N on HB 68 override (2024-01-10), HB 8 forced outing (2023-06-21), and SB 104 bathroom ban (2024-06-26). Continues to vote against anti-LGBTQ+ bills in the Senate." },
+  { d: 6,  name: "Willis E. Blackshear, Jr.", party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 7,  name: "Steve Wilson",              party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 8,  name: "Louis W. Blessing, III",    party: "R", v: -3, s: 0,   n: 1,  notes: "Voted against HB 8 (forced outing) in Senate. Otherwise votes party line." },
   { d: 9,  name: "Catherine D. Ingram",       party: "D", v: 5,  s: 0,   n: 1,  notes: "Votes against anti-LGBTQ+ bills. Vocal opponent of SB 104 (bathroom ban)." },
@@ -189,45 +238,122 @@ const SENATE_MEMBERS = [
 ];
 
 /* -------------------------------------------------------
+   CHAMBER TAGGING
+   The member objects above don't carry a chamber field on their own,
+   so we tag each one here. Downstream helpers (legKey, news/sponsorship
+   lookup, voting-records joins) all rely on m.chamber being set.
+   ------------------------------------------------------- */
+(function tagChambers() {
+  for (var i = 0; i < HOUSE_MEMBERS.length; i++) HOUSE_MEMBERS[i].chamber = 'house';
+  for (var j = 0; j < SENATE_MEMBERS.length; j++) SENATE_MEMBERS[j].chamber = 'senate';
+})();
+
+/* -------------------------------------------------------
    SCORE CALCULATION (used by scorecard.html)
 
-   As of v2.1 the floor-vote component (member.v) is computed
-   at runtime from voting-records.js (ROLL_CALLS +
-   VOTE_EXCEPTIONS + party-line defaults) rather than
-   hand-assigned, so the score basis matches exactly what
-   the SQL layer (public.bills + public.roll_calls +
-   public.legislator_vote_exceptions) produces. The static
-   member.v field is kept as a fallback for when
-   summarizeVotes is not available (module context, older
-   cached scripts, etc.).
+   Per the published methodology, each legislator's grade is
+   derived from real evidence on three subscores in -5..+5:
+
+     v  Votes        weighted sum of resolved roll calls
+                     (override 1.25, pass/concur 1.00, committee
+                     0.75, amend 0.50, introduce 0.25). Net
+                     points are normalized by the legislator's
+                     total possible points across eligible roll
+                     calls and scaled to -5..+5.
+
+     s  Sponsorship  primary sponsor of an anti-equality bill is
+                     -2; primary sponsor of a pro-equality bill
+                     is +2; co-sponsor is +/-1. Sum, then clamp
+                     to -5..+5.
+
+     n  News         per documented public statement: pro = +1,
+                     anti = -1, neutral = 0. Sum, then clamp to
+                     -5..+5.
+
+   Composite: score = clamp(0, 100, round(50 + (v + s + n) * 5))
+
+   The editorial m.v / m.s / m.n fields are kept for reference
+   only; they are NOT used in grading. They get superseded by
+   computeSubscores() so the scorecard always shows what real
+   evidence supports.
    ------------------------------------------------------- */
 
-/* Map the signed voting-records net (unbounded) into the
-   -5..+5 range the sponsorship (s) and news (n) components
-   already use. A net of ±5 or more saturates. */
-function computedVoteScore(member) {
-  if (typeof summarizeVotes !== 'function') return null;
-  try {
-    var leg = {
-      d: member.d,
-      party: member.party,
-      chamber: (member.chamber || '').toString().toLowerCase()
-    };
-    var totals = summarizeVotes(leg);
-    if (!totals || typeof totals.net !== 'number') return null;
-    var v = Math.round(totals.net);
-    if (v > 5) v = 5;
-    if (v < -5) v = -5;
-    return v;
-  } catch (e) {
-    return null;
+/* Convert a legislator's real vote breakdown into a -5..+5 v subscore.
+   Skips members for whom no eligible roll calls exist (returns 0). */
+function _computeVoteSubscore(member) {
+  if (typeof getVoteBreakdown !== 'function') return 0;
+  var rows;
+  try { rows = getVoteBreakdown(member); } catch (e) { return 0; }
+  if (!rows || !rows.length) return 0;
+  var net = 0, denom = 0;
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    net   += (r.points || 0);
+    // Denominator counts the magnitude of every eligible roll call so
+    // perfect-pro and perfect-anti records both saturate at +/-5.
+    if (r.direction === 'pro' || r.direction === 'anti') {
+      denom += Math.abs(r.weight || 0);
+    }
   }
+  if (denom <= 0) return 0;
+  var scaled = (net / denom) * 5;
+  if (scaled >  5) scaled =  5;
+  if (scaled < -5) scaled = -5;
+  return Math.round(scaled * 10) / 10;
+}
+
+/* Convert sponsorship list into a -5..+5 s subscore.
+   Primary +/-2 each, co +/-1 each, then clamp. */
+function _computeSponsorshipSubscore(member) {
+  if (typeof getLegislatorSponsorships !== 'function') return 0;
+  var sponsorships;
+  try { sponsorships = getLegislatorSponsorships(member); } catch (e) { return 0; }
+  if (!sponsorships || !sponsorships.length) return 0;
+  var sum = 0;
+  for (var i = 0; i < sponsorships.length; i++) {
+    var sp = sponsorships[i];
+    var sign = 0;
+    if (sp.stance === 'pro')  sign = +1;
+    if (sp.stance === 'anti') sign = -1;
+    var weight = (sp.role === 'primary') ? 2 : 1;
+    sum += sign * weight;
+  }
+  if (sum >  5) sum =  5;
+  if (sum < -5) sum = -5;
+  return sum;
+}
+
+/* Convert news entries into a -5..+5 n subscore.
+   pro +1, anti -1, neutral 0, then clamp. */
+function _computeNewsSubscore(member) {
+  if (typeof getLegislatorNews !== 'function') return 0;
+  var news;
+  try { news = getLegislatorNews(member); } catch (e) { return 0; }
+  if (!news || !news.length) return 0;
+  var sum = 0;
+  for (var i = 0; i < news.length; i++) {
+    var n = news[i];
+    if (n.stance === 'pro')  sum += 1;
+    if (n.stance === 'anti') sum -= 1;
+  }
+  if (sum >  5) sum =  5;
+  if (sum < -5) sum = -5;
+  return sum;
+}
+
+/* Derive a legislator's three subscores from real evidence.
+   Returns { v, s, n } each on the -5..+5 scale. */
+function computeSubscores(member) {
+  return {
+    v: _computeVoteSubscore(member),
+    s: _computeSponsorshipSubscore(member),
+    n: _computeNewsSubscore(member)
+  };
 }
 
 function calcScore(member) {
-  var v = computedVoteScore(member);
-  if (v === null) v = member.v;           // fallback for module / stale-cache contexts
-  var raw = v + member.s + member.n;
+  var sub = computeSubscores(member);
+  var raw = sub.v + sub.s + sub.n;
   return Math.max(0, Math.min(100, Math.round(50 + raw * 5)));
 }
 
@@ -236,4 +362,385 @@ function calcGrade(score) {
     if (score >= GRADE_SCALE[i].min) return GRADE_SCALE[i];
   }
   return GRADE_SCALE[GRADE_SCALE.length - 1];
+}
+
+/* =========================================================
+   PUBLIC STATEMENTS / NEWS
+   =========================================================
+   Curated list of on-the-record public statements by Ohio
+   legislators about LGBTQ+ legislation. Each entry includes
+   a short quote, the venue or outlet, the date, and a search
+   URL that surfaces the underlying coverage. We use search
+   links rather than direct article URLs so readers always
+   land on a verifiable, non-link-rotting result.
+
+   Keyed by `chamber-district` (e.g., "house-44", "senate-23").
+   Add entries here as new statements are documented.
+   ========================================================= */
+const LEGISLATOR_NEWS = {
+  "house-11": [
+    { headline: "Lett: 'Ohio is stronger when every Ohioan can fully participate'", outlet: "Press release on HB 136 introduction", date: "2025-04-22",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Crystal+Lett%22+HB+136+Ohio+Fairness+Act" }
+  ],
+  "house-13": [
+    { headline: "Rader hosts Statehouse Pride press conference, condemns drag ban", outlet: "Ohio Capital Journal", date: "2026-03-26",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Tristan+Rader%22+%22HB+249%22+drag" },
+    { headline: "Rader: HB 136 'a long-overdue civil rights protection'", outlet: "Cleveland.com", date: "2025-04-22",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Tristan+Rader%22+%22Ohio+Fairness+Act%22" },
+    { headline: "Rader floor remarks against HB 249", outlet: "Ohio House floor session", date: "2026-03-25",
+      stance: "pro",
+      url: "https://ohiochannel.org/search?query=Tristan+Rader+HB+249" }
+  ],
+  "house-21": [
+    { headline: "Synenberg joins Pride press conference at the Statehouse", outlet: "Ohio Statehouse News Bureau", date: "2026-03-26",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Eric+Synenberg%22+pride+statehouse" }
+  ],
+  "house-24": [
+    { headline: "Isaacsohn: HB 68 'cruelty dressed up as policy'", outlet: "Cincinnati Enquirer", date: "2024-01-25",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Dani+Isaacsohn%22+%22HB+68%22" }
+  ],
+  "house-28": [
+    { headline: "Brownlee introduces conversion therapy ban", outlet: "Cincinnati Enquirer", date: "2025-05-13",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Karen+Brownlee%22+%22conversion+therapy%22" },
+    { headline: "Brownlee files PRIDE Act in Ohio House", outlet: "Press release", date: "2025-09-10",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Karen+Brownlee%22+%22PRIDE+Act%22" }
+  ],
+  "house-36": [
+    { headline: "White breaks with caucus on HB 8 forced-outing vote", outlet: "Dayton Daily News", date: "2024-06-26",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Andrea+White%22+%22HB+8%22+vote" }
+  ],
+  "house-40": [
+    { headline: "Creech named in BCI documents over alleged misconduct involving minor relative", outlet: "Ohio Capital Journal", date: "2024-09-12",
+      stance: "neutral",
+      url: "https://www.google.com/search?q=%22Rodney+Creech%22+BCI+investigation" },
+    { headline: "Creech introduces HB 196 to require trans candidates to disclose former names", outlet: "Statehouse News Bureau", date: "2025-04-29",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Rodney+Creech%22+%22HB+196%22" }
+  ],
+  "house-44": [
+    { headline: "Williams introduces omnibus anti-trans bill HB 798", outlet: "Ohio Capital Journal", date: "2026-03-31",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Josh+Williams%22+%22HB+798%22" },
+    { headline: "Williams: 'Drag has no place in front of children'", outlet: "Toledo Blade, HB 249 floor debate", date: "2026-03-25",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Josh+Williams%22+%22HB+249%22+drag" },
+    { headline: "Williams files HB 190 to require schools to use legal names", outlet: "Press release", date: "2025-04-29",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Josh+Williams%22+%22HB+190%22" }
+  ],
+  "house-52": [
+    { headline: "Manning votes against HB 8 in committee", outlet: "Cleveland.com", date: "2024-06-04",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Gayle+Manning%22+%22HB+8%22+committee" }
+  ],
+  "house-57": [
+    { headline: "Callender: 'I am a Republican because I believe in empowering individuals'", outlet: "Cleveland.com", date: "2024-01-24",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Jamie+Callender%22+%22HB+68%22+empowering" },
+    { headline: "Callender lone Republican against HB 249 drag ban", outlet: "Ohio Capital Journal", date: "2026-03-25",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Jamie+Callender%22+%22HB+249%22" },
+    { headline: "Callender floor remarks against HB 8", outlet: "Ohio House floor session", date: "2024-06-26",
+      stance: "pro",
+      url: "https://ohiochannel.org/search?query=Jamie+Callender+HB+8" }
+  ],
+  "house-61": [
+    { headline: "Lear: 'natural family' bill restores 'biological reality'", outlet: "Statehouse News Bureau", date: "2025-09-30",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Beth+Lear%22+%22natural+family%22+HB+262" }
+  ],
+  "house-78": [
+    { headline: "Huffman: Senate will 'finish the job' on HB 68 override", outlet: "Ohio Capital Journal", date: "2024-01-24",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Matt+Huffman%22+%22HB+68%22+override" }
+  ],
+  "house-80": [
+    { headline: "Newman files HB 190 with Center for Christian Virtue support", outlet: "Statehouse News Bureau", date: "2025-04-29",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Johnathan+Newman%22+%22HB+190%22+Christian" }
+  ],
+  "house-84": [
+    { headline: "King: HB 249 protects children 'from sexualized performances'", outlet: "Statehouse News Bureau", date: "2026-03-25",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Angela+King%22+%22HB+249%22" }
+  ],
+  "house-88": [
+    { headline: "Click compares trans-affirming care to 'Lucifer'", outlet: "Ohio Capital Journal", date: "2024-01-23",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Gary+Click%22+Lucifer+%22HB+68%22" },
+    { headline: "Click introduces Affirming Families First Act (HB 693)", outlet: "Press release", date: "2026-03-25",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Gary+Click%22+%22Affirming+Families+First%22" }
+  ],
+  "house-94": [
+    { headline: "Ritter introduces School Chaplain Act (HB 507)", outlet: "Marietta Times", date: "2025-10-14",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Kevin+Ritter%22+%22HB+507%22+chaplain" }
+  ],
+  "house-99": [
+    { headline: "Fowler Arthur: public schools 'pushing transgender ideology'", outlet: "Ashtabula Star Beacon", date: "2025-09-12",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Sarah+Fowler+Arthur%22+transgender+schools" }
+  ],
+  "senate-8": [
+    { headline: "Blessing: 'I won't vote to out kids to abusive parents'", outlet: "Cincinnati Enquirer", date: "2024-12-18",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Louis+Blessing%22+%22HB+8%22+vote" }
+  ],
+  "senate-9": [
+    { headline: "Ingram: SB 104 'a solution in search of a problem'", outlet: "WCPO Cincinnati", date: "2024-11-19",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Catherine+Ingram%22+%22SB+104%22+bathroom" }
+  ],
+  "senate-11": [
+    { headline: "Hicks-Hudson: 'Just let me live' during HB 68 override debate", outlet: "Toledo Blade", date: "2024-01-24",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Paula+Hicks-Hudson%22+%22HB+68%22+%22just+let+me+live%22" }
+  ],
+  "senate-13": [
+    { headline: "Manning sole Senate Republican against HB 68 override", outlet: "Cleveland.com", date: "2024-01-24",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Nathan+Manning%22+%22HB+68%22+override" },
+    { headline: "Manning: override 'a step too far for limited government'", outlet: "Statehouse News Bureau", date: "2024-01-24",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Nathan+Manning%22+%22limited+government%22+%22HB+68%22" }
+  ],
+  "senate-14": [
+    { headline: "Johnson introduces SB 34 to mandate Ten Commandments displays", outlet: "Statehouse News Bureau", date: "2025-11-20",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Terry+Johnson%22+%22SB+34%22+%22ten+commandments%22" }
+  ],
+  "senate-16": [
+    { headline: "Liston co-sponsors SB 71 conversion therapy ban", outlet: "Press release", date: "2025-05-13",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Beth+Liston%22+%22SB+71%22+%22conversion+therapy%22" }
+  ],
+  "senate-18": [
+    { headline: "Cirino: SB 1 will 'restore merit' to Ohio higher ed", outlet: "Statehouse News Bureau", date: "2025-03-28",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Jerry+Cirino%22+%22SB+1%22+merit" },
+    { headline: "Cirino cites scripture on Senate floor during HB 68 override", outlet: "Ohio Capital Journal", date: "2024-01-24",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Jerry+Cirino%22+%22HB+68%22+scripture" }
+  ],
+  "senate-19": [
+    { headline: "Brenner: DEI is 'institutional discrimination'", outlet: "Statehouse News Bureau", date: "2025-03-28",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Andrew+Brenner%22+DEI+%22institutional+discrimination%22" }
+  ],
+  "senate-21": [
+    { headline: "Smith calls HB 68 'state-sponsored bullying of trans youth'", outlet: "Cleveland.com", date: "2024-01-24",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Kent+Smith%22+%22state-sponsored+bullying%22" }
+  ],
+  "senate-23": [
+    { headline: "Antonio reintroduces Ohio Fairness Act for the 12th time", outlet: "Cleveland.com", date: "2025-04-22",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Nickie+Antonio%22+%22Ohio+Fairness+Act%22+12th" },
+    { headline: "Antonio: SB 71 will 'protect young people from predatory practices'", outlet: "Press release", date: "2025-05-13",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Nickie+Antonio%22+%22SB+71%22+conversion" },
+    { headline: "Antonio remarks at Statehouse Pride press conference", outlet: "Ohio Statehouse News Bureau", date: "2026-03-26",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Nickie+Antonio%22+pride+statehouse+2026" }
+  ],
+  "senate-25": [
+    { headline: "DeMora moves to adjourn before HB 68 override vote", outlet: "Statehouse News Bureau", date: "2024-01-24",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22William+DeMora%22+%22HB+68%22+adjourn" }
+  ],
+  "senate-27": [
+    { headline: "Roegner makes anti-trans remarks during HB 68 override debate", outlet: "Akron Beacon Journal", date: "2024-01-24",
+      stance: "anti",
+      url: "https://www.google.com/search?q=%22Kristina+Roegner%22+%22HB+68%22+transgender" }
+  ],
+  "senate-28": [
+    { headline: "Weinstein: anti-LGBTQ+ bills are 'distractions from real problems'", outlet: "Akron Beacon Journal", date: "2025-09-30",
+      stance: "pro",
+      url: "https://www.google.com/search?q=%22Casey+Weinstein%22+LGBTQ+distractions" }
+  ]
+};
+
+/* Optional explicit sponsorship overrides keyed by "chamber-district".
+   If a legislator has an entry here, it wins over notes-derived parsing.
+   Each entry is an array of bill objects from SCORED_BILLS plus a role
+   ("primary" | "co"). Used for cases the notes regex can't catch. */
+const LEGISLATOR_SPONSORSHIPS = {
+  /* Example:
+  "senate-23": [
+    { id: "sb70",  role: "primary" },
+    { id: "sb71",  role: "primary" },
+    { id: "sb211", role: "primary" }
+  ]
+  */
+};
+
+/* Build a lookup key for the news / sponsorship maps from a member object. */
+function legKey(m) {
+  var ch = (m && m.chamber ? m.chamber : '').toString().toLowerCase();
+  return ch + '-' + (m ? m.d : '');
+}
+
+/* Public API: news entries for a given legislator. Always returns an array. */
+function getLegislatorNews(m) {
+  var key = legKey(m);
+  return (LEGISLATOR_NEWS[key] || []).slice();
+}
+
+/* Public API: sponsorship entries for a given legislator. Falls back to
+   parsing the member's notes for "Primary sponsor X" / "Co-sponsor X"
+   patterns when no explicit override exists. Always returns an array. */
+function getLegislatorSponsorships(m) {
+  var key = legKey(m);
+  var explicit = LEGISLATOR_SPONSORSHIPS[key];
+  if (explicit && explicit.length) {
+    return explicit.map(function (e) {
+      var bill = _findBillById(e.id);
+      return {
+        role: e.role || 'co',
+        id: e.id,
+        bill: bill ? bill.bill : e.id,
+        title: bill ? bill.title : '',
+        stance: bill ? bill.stance : 'mixed',
+        ga: bill ? bill.ga : '',
+        url: _ohioBillUrl(bill)
+      };
+    });
+  }
+  return deriveSponsorshipsFromNotes(m);
+}
+
+function _findBillById(id) {
+  for (var i = 0; i < SCORED_BILLS.length; i++) {
+    if (SCORED_BILLS[i].id === id) return SCORED_BILLS[i];
+  }
+  return null;
+}
+
+/* Build a deterministic Ohio General Assembly bill URL from a bill record. */
+function _ohioBillUrl(bill) {
+  if (!bill) return '';
+  // Format used by legislature.ohio.gov: /legislation/{ga#}/{billnumber}
+  var ga = (bill.ga || '').replace(/[^0-9]/g, '');
+  var num = (bill.bill || '').toLowerCase().replace(/\s+/g, '');
+  if (!ga || !num) return '';
+  return 'https://www.legislature.ohio.gov/legislation/' + ga + '/' + num;
+}
+
+/* Parse a member's notes field for sponsorship language and return an
+   array of structured sponsorship entries that match SCORED_BILLS. We
+   look for patterns like:
+     "Primary sponsor HB 249"
+     "Co-sponsor SB 71"
+     "Primary/co-sponsor of 8+ anti-LGBTQ+ bills: HB 249, 155, 190, ..."
+   When the notes mention a bill label that exists in SCORED_BILLS, we
+   record it. Role defaults to "co" unless "Primary sponsor" / "primary"
+   appears immediately before the label.
+
+   Best-effort by design: notes are human-written, and a few sponsorships
+   will be missed. Use LEGISLATOR_SPONSORSHIPS for hard overrides. */
+function deriveSponsorshipsFromNotes(m) {
+  var out = [];
+  if (!m || !m.notes) return out;
+  var notes = m.notes;
+  var seen = {};
+
+  // Pre-compute a normalized lookup of bill label -> bill record.
+  var labelMap = {};
+  for (var i = 0; i < SCORED_BILLS.length; i++) {
+    var b = SCORED_BILLS[i];
+    var key = b.bill.toLowerCase().replace(/\s+/g, '');
+    labelMap[key] = b;
+  }
+
+  // Phrases that indicate a bill mention is NOT a sponsorship -- e.g.
+  // "voted against HB 68" or "opposed HB 8". When any of these appear in
+  // the 80-char window before a bill label, skip the match entirely.
+  var negativeCtxRe = /\b(vot(e|ed|ing)\s+(against|for|no|yes)|opposed?|opposing|against|kill(ed)?|block(ed)?|defeat(ed)?|spoke against|criticized)\b/i;
+
+  // Walk through the notes and find both prefixed bill mentions (HB 249)
+  // AND bare numbers in comma-separated lists that inherit the last seen
+  // prefix (e.g. "HB 249, 155, 190" -> HB249, HB155, HB190).
+  var tokenRe = /\b(HB|SB|HJR|SJR)\s*(\d+)\b|,\s*(\d{1,4})\b/gi;
+  var lastPrefix = null;        // most recent HB/SB/etc seen
+  var lastPrefixIdx = -1;       // where it appeared
+  var lastPrefixContext = '';   // 80-char ctx captured from the prefix match
+
+  var match;
+  while ((match = tokenRe.exec(notes)) !== null) {
+    var prefix, number, matchIdx, ctx;
+
+    if (match[1]) {
+      // Explicit HB/SB/HJR/SJR + number
+      prefix = match[1].toUpperCase();
+      number = match[2];
+      matchIdx = match.index;
+      var windowStart = Math.max(0, matchIdx - 80);
+      ctx = notes.slice(windowStart, matchIdx).toLowerCase();
+      lastPrefix = prefix;
+      lastPrefixIdx = matchIdx;
+      lastPrefixContext = ctx;
+    } else if (match[3]) {
+      // Bare number in a comma list. Only inherit the prefix if the previous
+      // explicit bill mention was very close (within ~50 chars), suggesting
+      // this is "HB 249, 155, 190" rather than an unrelated number.
+      if (!lastPrefix) continue;
+      matchIdx = match.index;
+      if (matchIdx - lastPrefixIdx > 60) continue;
+      // Reject if the inherited number is implausibly small (legislators
+      // sometimes mention years, vote counts, etc).
+      number = match[3];
+      if (parseInt(number, 10) < 1) continue;
+      prefix = lastPrefix;
+      ctx = lastPrefixContext; // inherit the original context
+      // Update last position so we can continue chaining commas.
+      lastPrefixIdx = matchIdx;
+    } else {
+      continue;
+    }
+
+    var label = (prefix + number).toUpperCase();
+    var lookupKey = label.toLowerCase();
+    var bill = labelMap[lookupKey];
+    if (!bill) continue;
+    if (seen[bill.id]) continue;
+
+    // Skip negative-context mentions (e.g. "voted against HB 68").
+    if (negativeCtxRe.test(ctx)) continue;
+
+    var role = 'co';
+    if (/primary(\s|\/)/.test(ctx) || /\bprimary\s+sponsor\b/.test(ctx)) {
+      role = 'primary';
+    } else if (/\bco-?sponsor/.test(ctx)) {
+      role = 'co';
+    }
+
+    out.push({
+      role: role,
+      id: bill.id,
+      bill: bill.bill,
+      title: bill.title,
+      stance: bill.stance,
+      ga: bill.ga,
+      url: _ohioBillUrl(bill)
+    });
+    seen[bill.id] = true;
+  }
+  return out;
+}
+
+/* Convenience counts used by the card subscore display. */
+function countLegislatorNews(m) {
+  return getLegislatorNews(m).length;
+}
+function countLegislatorSponsorships(m) {
+  return getLegislatorSponsorships(m).length;
 }
