@@ -1,17 +1,47 @@
 -- =============================================================================
 -- Ohio Pride PAC, Migration 4: Scorecard (Bills, Roll Calls, Exceptions)
 -- -----------------------------------------------------------------------------
--- Persists the roll-call dataset that powers the public scorecard. The JS
--- module at /js/voting-records.js is the canonical editorial source; this
--- migration mirrors that data into Postgres so backend tooling, the daily
--- verification workflow (migration 5), and Netlify edge functions can query
--- it without parsing JavaScript.
+-- Persists the raw evidence that powers the public scorecard. Every row is a
+-- mirror of an official Ohio General Assembly roll call record published at
+-- legislature.ohio.gov; the editorial dataset in /js/voting-records.js is the
+-- working copy, and this migration lands the same records in Postgres so
+-- backend tooling, the daily verification workflow (migration 5), and Netlify
+-- edge functions can query the evidence without parsing JavaScript.
+--
+-- SCORING MODEL (v6, April 2026): composite scores are computed from this
+-- evidence at view time, not stored. There is no per-subscore column and
+-- there is no party_baseline column. The published formula is trackable
+-- evidence only, with a flat 50 starting baseline applied to every
+-- legislator regardless of party, chamber, or caucus role:
+--
+--   score = clamp(0, 100, round(50 + (Vf * 4) + (Vc * 4) + (S * 2)))
+--
+-- where:
+--
+--   Vf = Floor-vote subscore on -5..+5 (pass / concur / override stages)
+--   Vc = Committee-vote subscore on -5..+5 (committee stage)
+--   S  = Sponsorship subscore on -5..+5 (primary +/-2, co-sponsor +/-1)
+--
+-- Floor and committee are weighted equally because both are binding action;
+-- they're tracked as separate subscores so a reader can see each signal.
+-- Sponsorship counts at half weight because it signals public commitment but
+-- isn't a recorded yes/no on the bill itself. v6 dropped the previous
+-- "News / Public Statements" subscore: quotes and floor speeches were too
+-- easy to spin and too hard to weight consistently across lawmakers.
+--
+-- To shift a legislator's grade you change the underlying evidence: add or
+-- correct a roll_calls row, add a legislator_vote_exception, or update
+-- sponsorship attribution in /js/scorecard-data.js (LEGISLATOR_SPONSORSHIPS
+-- map). The scorecard front end recomputes from there. See computeSubscores()
+-- and calcScore() in scorecard-data.js for the canonical implementation, and
+-- /methodology on the live site for the public-facing explanation.
 --
 -- Four objects:
 --
 --   1. public.bills: the catalog of bills the scorecard tracks. Keyed by
 --      slug to match HOUSE_MEMBERS / SENATE_MEMBERS notes in
---      scorecard-data.js.
+--      scorecard-data.js. Seeded with all 26 currently tracked bills plus
+--      3 historical 135th-GA bills.
 --
 --   2. public.roll_calls: one row per recorded floor / committee / concur
 --      / override / amend / introduce vote. Carries chamber, stage,
@@ -34,7 +64,7 @@
 -- TABLE: bills
 -- -----------------------------------------------------------------------------
 -- Catalog of bills tracked on the scorecard. `slug` is the stable join key
--- used by roll_calls.bill_slug and by the client-side scorecard JS.
+-- used by roll_calls.bill_slug and by the scorecard front end.
 --
 -- `stance` carries the editorial stance that drives scoring: "anti" means a
 -- Y vote hurts a legislator's score, "pro" means a Y vote helps. "mixed"
@@ -225,39 +255,110 @@ create policy "legislator_vote_exceptions service_role writes"
 -- =============================================================================
 -- SEED: bills
 -- -----------------------------------------------------------------------------
--- Mirrors the distinct billSlug values referenced in /js/voting-records.js.
--- Additional bills not yet represented in roll_calls can be added here and
--- will appear on the scorecard as "tracked but not yet scored."
+-- Seeds the bill catalog with the set of bills currently tracked by the
+-- scorecard. Additional bills not yet represented in roll_calls can be added
+-- here and will appear on the scorecard as "tracked but not yet scored."
 -- =============================================================================
 insert into public.bills (slug, label, title, ga, stance, summary, status, display_order)
 values
-  ('hb249',      'HB 249',          'Drag Performance Ban',                      '136th', 'anti',
-     'Would criminalize "adult cabaret performances" in any venue where a minor could be present. Targets drag artists.',
+  -- Active anti-equality bills, on the floor or moving (10..29)
+  ('hb249',      'HB 249',          'Drag Ban',                                  '136th', 'anti',
+     'Criminalizes "adult cabaret performances" in any venue where a minor could be present. Targets drag artists.',
      'pending-senate', 10),
-  ('sb1',        'SB 1',            'Higher Ed DEI Ban',                         '136th', 'anti',
-     'Bans diversity, equity, and inclusion programming in Ohio public universities and restricts classroom discussion of "controversial" topics.',
-     'signed', 20),
   ('sb34',       'SB 34',           'Ten Commandments Classroom Displays',       '136th', 'anti',
      'Requires a copy of the Ten Commandments to be displayed in every Ohio public school classroom.',
-     'pending-house', 30),
-  ('hb68',       'HB 68',           'Gender-Affirming Care + Sports Ban',        '135th', 'anti',
-     'Bans gender-affirming medical care for minors and bars transgender women and girls from participating in girls'' and women''s sports teams.',
-     'signed-override', 40),
-  ('hb8',        'HB 8',            'Parents'' Bill of Rights (Forced Outing)',  '135th', 'anti',
-     'Requires schools to disclose a student''s gender identity to parents and to notify parents in advance of any "sexuality content" instruction.',
-     'signed', 50),
-  ('sb104',      'SB 104',          'Bathroom Ban (on CCP vehicle)',             '135th', 'anti',
-     'Attached a K-12 and higher-ed bathroom/locker-room restriction to a College Credit Plus vehicle.',
+     'pending-house', 20),
+
+  -- Active anti-equality, in committee or introduced (30..59)
+  ('hb798',      'HB 798',          'Omnibus Anti-Trans Bill',                   '136th', 'anti',
+     'Sweeping bill bundling multiple anti-trans provisions into a single statute.',
+     'introduced', 30),
+  ('hb796',      'HB 796',          'Prison Trans Housing Ban',                  '136th', 'anti',
+     'Bars Ohio Department of Rehabilitation and Correction from housing transgender prisoners by gender identity.',
+     'introduced', 32),
+  ('hb693',      'HB 693',          'Affirming Families First Act',              '136th', 'anti',
+     'Limits parental and provider authority over gender-affirming care for minors.',
+     'in-committee', 34),
+  ('hb602',      'HB 602',          'Pride Flag Ban on State Property',          '136th', 'anti',
+     'Restricts which flags may be flown at state and local public buildings.',
+     'in-committee', 36),
+  ('hb457',      'HB 457',          'Politically-Motivated Crimes',              '136th', 'anti',
+     'Creates a new criminal classification with carve-outs that exclude LGBTQ+ Ohioans from protections.',
+     'in-committee', 38),
+  ('hb190',      'HB 190',          'Given Name Act (Forced Outing)',            '136th', 'anti',
+     'Requires schools to use a student''s legal name and notify parents of any change.',
+     'in-committee', 40),
+  ('hb155',      'HB 155',          'K-12 DEI Ban',                              '136th', 'anti',
+     'Extends the higher-ed DEI ban into K-12 schools.',
+     'in-committee', 42),
+  ('sb113',      'SB 113',          'Senate DEI Ban (Schools)',                  '136th', 'anti',
+     'Senate companion to the K-12 DEI ban.',
+     'in-committee', 44),
+  ('hb172',      'HB 172',          'Minor Mental Health Consent',               '136th', 'anti',
+     'Restricts a minor''s ability to access mental health care without parental consent.',
+     'in-committee', 46),
+  ('sb274',      'SB 274',          'Senate Companion to HB 172',                '136th', 'anti',
+     'Senate companion to HB 172.',
+     'in-committee', 48),
+  ('hb196',      'HB 196',          'Deadnaming Candidates Bill',                '136th', 'anti',
+     'Requires candidates for office who have changed their legal name to disclose former names on the ballot.',
+     'in-committee', 50),
+  ('hb262',      'HB 262',          'Designate Natural Family Month',            '136th', 'anti',
+     'Establishes a "Natural Family Month" with statutory language excluding same-sex parents.',
+     'in-committee', 52),
+
+  -- Anti-equality, signed or overridden into law (60..79)
+  ('sb1',        'SB 1',            'DEI Ban (Higher Ed)',                       '136th', 'anti',
+     'Bans DEI programming in Ohio public universities and restricts classroom discussion of "controversial" topics.',
      'signed', 60),
+  ('sb104',      'SB 104',          'Bathroom Ban',                              '135th', 'anti',
+     'Attached a K-12 and higher-ed bathroom/locker-room restriction to a College Credit Plus vehicle.',
+     'signed', 62),
+  ('hb8',        'HB 8',            'Parents'' Bill of Rights (Forced Outing)',  '135th', 'anti',
+     'Requires schools to disclose a student''s gender identity to parents and to notify parents of any "sexuality content" instruction.',
+     'signed', 64),
+  ('hb68',       'HB 68',           'Gender-Affirming Care Ban + Sports Ban',    '135th', 'anti',
+     'Bans gender-affirming medical care for minors and bars transgender women and girls from participating in girls'' and women''s sports.',
+     'signed-override', 66),
+
+  -- Pro-equality bills (80..99)
+  ('sb70',       'SB 70',           'Ohio Fairness Act',                         '136th', 'pro',
+     'Adds sexual orientation and gender identity to Ohio''s nondiscrimination protections in employment, housing, and public accommodations.',
+     'in-committee', 80),
+  ('hb136',      'HB 136',          'Ohio Fairness Act (House)',                 '136th', 'pro',
+     'House companion to SB 70.',
+     'in-committee', 82),
+  ('sb71',       'SB 71',           'Conversion Therapy Ban',                    '136th', 'pro',
+     'Bans licensed mental health professionals from practicing conversion therapy on minors.',
+     'in-committee', 84),
+  ('hb300',      'HB 300',          'Conversion Therapy Ban (House)',            '136th', 'pro',
+     'House companion to SB 71.',
+     'introduced', 86),
+  ('hjr4',       'HJR 4',           'Marriage Equality Act',                     '136th', 'pro',
+     'Constitutional amendment removing the dormant 2004 same-sex marriage ban from the Ohio Constitution.',
+     'in-committee', 88),
+  ('hb327',      'HB 327',          'PRIDE Act',                                 '136th', 'pro',
+     'Strengthens hate-crime, school, and workplace protections for LGBTQ+ Ohioans.',
+     'in-committee', 90),
+  ('sb211',      'SB 211',          'Love Makes a Family Week',                  '136th', 'pro',
+     'Designates an annual "Love Makes a Family Week" recognizing LGBTQ+ families.',
+     'introduced', 92),
+
+  -- Mixed (100..109)
+  ('hb306',      'HB 306',          'Hate Crimes Act (Excludes Trans Protections)', '136th', 'mixed',
+     'Adds aggravating sentencing factors for hate crimes but pointedly omits gender identity from the protected classes.',
+     'in-committee', 100),
+
+  -- Historical / 135th-GA scoring context (200..299)
   ('sb1-135',    'SB 1 (135th)',    'Higher Ed Reform (DEI precursor)',          '135th', 'anti',
      'Prior-GA version of the higher-ed DEI restrictions that passed the Senate but did not clear the House in the 135th GA.',
-     'died-house', 70),
+     'died-house', 200),
   ('sb34-135',   'SB 34 (135th)',   'Liquor Control and Beer Act',               '135th', 'pro',
      'Non-LGBTQ+ bill kept in the dataset for roster completeness; all members had a recorded vote.',
-     'signed', 80),
+     'signed', 202),
   ('hb602-135',  'HB 602 (135th)',  'Pride Flag Ban Precursor',                  '135th', 'anti',
      'Prior-GA predecessor restricting which flags may be flown at public buildings; cleared committee but never reached a floor vote.',
-     'died', 90)
+     'died', 204)
 on conflict (slug) do update set
   label         = excluded.label,
   title         = excluded.title,
@@ -272,10 +373,11 @@ on conflict (slug) do update set
 -- =============================================================================
 -- SEED: roll_calls
 -- -----------------------------------------------------------------------------
--- One row per ROLL_CALLS entry in /js/voting-records.js. On conflict the
--- row is updated in place so re-running this migration against a newer
--- editorial dataset stays idempotent. bill_id is resolved via a subquery on
--- public.bills(slug) so the seed does not depend on hand-entered UUIDs.
+-- One row per recorded roll call vote, sourced from the official Ohio General
+-- Assembly journals of record. On conflict the row is updated in place so
+-- re-running this migration against an updated editorial dataset stays
+-- idempotent. bill_id is resolved via a subquery on public.bills(slug) so the
+-- seed does not depend on hand-entered UUIDs.
 -- =============================================================================
 insert into public.roll_calls
   (roll_call_slug, bill_id, bill_slug, bill_label, bill_title,
@@ -511,7 +613,8 @@ on conflict (roll_call_slug) do update set
 -- =============================================================================
 -- SEED: legislator_vote_exceptions
 -- -----------------------------------------------------------------------------
--- Hand-recorded crossovers from VOTE_EXCEPTIONS in /js/voting-records.js.
+-- Hand-recorded party-line crossovers and confirmed absences, sourced from
+-- the same official Ohio General Assembly journals as the roll_calls seed.
 -- roll_call_id is resolved via a subquery on public.roll_calls.roll_call_slug
 -- so this seed stays independent of hand-entered UUIDs.
 -- =============================================================================
