@@ -41,9 +41,22 @@
   status = 200
 
 [[redirects]]
-  from = "/scorecard/methodology"
-  to = "/scorecard/methodology.html"
+  from = "/methodology"
+  to = "/methodology.html"
   status = 200
+
+# Legacy scorecard methodology URL
+[[redirects]]
+  from = "/scorecard/methodology"
+  to = "/methodology.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/scorecard/methodology.html"
+  to = "/methodology.html"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/donate"
