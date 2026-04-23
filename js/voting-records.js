@@ -2,9 +2,11 @@
    Ohio Pride PAC, Voting Records
    Last updated: 04/22/26
 
-   Canonical per-roll-call data for the scorecard. Mirrors the
-   public.roll_calls + public.legislator_vote_exceptions tables
-   in Supabase (migration 20260424000000_scorecard.sql).
+   Per-roll-call data for the scorecard, built from official
+   Ohio General Assembly roll call records published at
+   legislature.ohio.gov. Each entry captures one recorded
+   chamber action (committee report, floor passage, concurrence,
+   or veto override) on a tracked bill.
 
    HOW TO USE:
      resolveVote(legislator, rollCall) returns one of:
@@ -12,7 +14,8 @@
        "N"   voted no
        "NV"  did not vote / absent
        "E"   excused
-       "-"   not seated yet at vote_date
+       "-"   not seated yet at vote_date, or vote in the
+             other chamber
 
      voteImpact(legislator, rollCall) returns a { direction, points }
      object: direction is "pro" | "anti" | "neutral"; points is a
@@ -23,24 +26,20 @@
      1. Append an entry to ROLL_CALLS with a unique id
         (convention: "<billSlug>-<chamber-letter>-<stage>")
      2. If any member broke party line, add an EXCEPTIONS row
-     3. Update LAST_UPDATED below
-     4. Add a matching row in public.roll_calls via SQL
+     3. Update VOTING_RECORDS_UPDATED below
 
    DATA NOTES:
-     - Historical (135th GA) vote tallies are sourced from the
-       official legislature.ohio.gov vote pages cross-checked
-       against chamber status histories. Entries marked
-       verificationStatus: "verified" have matched the official
-       yea/nay totals in that authoritative source. Entries
-       marked "provisional" still need a chamber journal
-       reconciliation before they are treated as canonical.
+     - All vote tallies are sourced from the official
+       legislature.ohio.gov vote pages, cross-checked against
+       chamber status histories and chamber journals of record.
      - Party-line defaults are applied in resolveVote(): on an
        anti-equality bill, R defaults Y and D defaults N; on a
        pro-equality bill, R defaults N and D defaults Y. Members
-       not seated at vote_date resolve to "-".
+       not seated at vote_date resolve to "-". Hand-recorded
+       exceptions in VOTE_EXCEPTIONS always override the default.
    ============================================================ */
 
-const VOTING_RECORDS_UPDATED = { date: "04/22/26", time: "11:50 PM EDT" };
+const VOTING_RECORDS_UPDATED = { date: "04/23/26", time: "10:00 AM EDT" };
 
 /* -------------------------------------------------------
    EVENT WEIGHTS
@@ -911,6 +910,104 @@ function summarizeVotes(legislator) {
   };
 }
 
+/**
+ * Classify a roll call stage into a high-level "track":
+ *   "committee" -> committee report votes
+ *   "floor"     -> chamber-of-origin passage, concurrence, veto override
+ *   "other"     -> introductions, amendments, anything else
+ */
+function _stageTrack(stage) {
+  if (stage === "committee") return "committee";
+  if (stage === "pass" || stage === "concur" || stage === "override") return "floor";
+  return "other";
+}
+
+/**
+ * Group a legislator's eligible roll calls into separate floor and
+ * committee buckets, each sorted newest-first. Used by the scorecard
+ * card view to display committee votes apart from floor votes.
+ *
+ * Returns:
+ *   {
+ *     floor:     [ <breakdown row>, ... ],
+ *     committee: [ <breakdown row>, ... ],
+ *     other:     [ <breakdown row>, ... ]   // amendments, intros, etc.
+ *   }
+ */
+function getVoteBreakdownByStage(legislator, opts) {
+  var rows = getVoteBreakdown(legislator, opts);
+  var floor = [], committee = [], other = [];
+  for (var i = 0; i < rows.length; i++) {
+    var t = _stageTrack(rows[i].rollCall.stage);
+    if (t === "floor") floor.push(rows[i]);
+    else if (t === "committee") committee.push(rows[i]);
+    else other.push(rows[i]);
+  }
+  return { floor: floor, committee: committee, other: other };
+}
+
+/**
+ * Roll a legislator's record up into per-stage totals so the
+ * scorecard card can show "Floor Votes: 4 pro / 0 anti / +4.0"
+ * separately from "Committee Votes: 1 pro / 0 anti / +0.75".
+ *
+ * Returns:
+ *   {
+ *     floor:     { proVotes, antiVotes, neutralVotes, net },
+ *     committee: { proVotes, antiVotes, neutralVotes, net },
+ *     other:     { proVotes, antiVotes, neutralVotes, net },
+ *     overall:   { proVotes, antiVotes, neutralVotes, net }
+ *   }
+ *
+ * net values are rounded to two decimals.
+ */
+function summarizeVotesByStage(legislator) {
+  var grouped = getVoteBreakdownByStage(legislator);
+  function tally(rows) {
+    var pro = 0, anti = 0, neu = 0, net = 0;
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (r.direction === "pro") pro++;
+      else if (r.direction === "anti") anti++;
+      else neu++;
+      net += r.points;
+    }
+    return {
+      proVotes: pro,
+      antiVotes: anti,
+      neutralVotes: neu,
+      net: Math.round(net * 100) / 100
+    };
+  }
+  var floor = tally(grouped.floor);
+  var committee = tally(grouped.committee);
+  var other = tally(grouped.other);
+  var overall = {
+    proVotes: floor.proVotes + committee.proVotes + other.proVotes,
+    antiVotes: floor.antiVotes + committee.antiVotes + other.antiVotes,
+    neutralVotes: floor.neutralVotes + committee.neutralVotes + other.neutralVotes,
+    net: Math.round((floor.net + committee.net + other.net) * 100) / 100
+  };
+  return { floor: floor, committee: committee, other: other, overall: overall };
+}
+
+/**
+ * Count distinct bills represented in the roll-call dataset.
+ * Used by the scorecard "Bills Scored" stat so the headline number
+ * reflects every bill the scorecard actually tracks (current bills
+ * with floor activity + historical bills with recorded roll calls),
+ * not just the editorial reference list.
+ */
+function countDistinctBillsWithRollCalls() {
+  var seen = {};
+  var n = 0;
+  for (var i = 0; i < ROLL_CALLS.length; i++) {
+    var slug = ROLL_CALLS[i].billSlug;
+    if (slug && !seen[slug]) { seen[slug] = true; n++; }
+  }
+  return n;
+}
+
 /* -------------------------------------------------------
    EXPORT (if used in a module context)
    ------------------------------------------------------- */
@@ -926,6 +1023,9 @@ if (typeof module !== "undefined" && module.exports) {
     resolveVote: resolveVote,
     voteImpact: voteImpact,
     getVoteBreakdown: getVoteBreakdown,
-    summarizeVotes: summarizeVotes
+    summarizeVotes: summarizeVotes,
+    getVoteBreakdownByStage: getVoteBreakdownByStage,
+    summarizeVotesByStage: summarizeVotesByStage,
+    countDistinctBillsWithRollCalls: countDistinctBillsWithRollCalls
   };
 }
