@@ -245,7 +245,7 @@ const SENATE_MEMBERS = [
   { d: 22, name: "Mark Romanchuk",            party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 23, name: "Nickie J. Antonio",         party: "D", v: 5,  s: 9,   n: 3,  notes: "Primary sponsor SB 70 (Fairness Act, 12th time), SB 71 (conversion therapy ban), SB 211 (Love Makes a Family). Senate Minority Leader. First openly LGBTQ+ Ohio legislator." },
   { d: 24, name: "Thomas F. Patton",          party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 25, name: "William P. DeMora",         party: "D", v: 5,  s: 0,   n: 1,  notes: "Motioned to adjourn before HB 68 override vote." },
+  { d: 25, name: "William P. DeMora",         party: "D", v: 5,  s: 0,   n: 1,  notes: "Motioned to adjourn in protest against HB 68 override vote. Did not co-sponsor HB 68 or any tracked anti-equality bill." },
   { d: 26, name: "Bill Reineke",              party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 27, name: "Kristina D. Roegner",       party: "R", v: -5, s: 0,   n: -2, notes: "Made anti-trans statements during HB 68 override debate." },
   { d: 28, name: "Casey Weinstein",           party: "D", v: 5,  s: 0,   n: 1,  notes: "Votes against anti-LGBTQ+ bills." },
