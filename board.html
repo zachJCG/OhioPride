@@ -154,8 +154,11 @@
       -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
     }
     .name-strip-track {
-      display: inline-flex;
-      gap: 48px;
+      /* `flex` + `width: max-content` is the canonical marquee pattern.
+         `inline-flex` was inconsistent across browsers and could collapse
+         to the parent's content width, killing the scroll. */
+      display: flex;
+      width: max-content;
       white-space: nowrap;
       animation: marquee 45s linear infinite;
     }
@@ -170,6 +173,11 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: rgba(255, 255, 255, 0.7);
+      /* Per-item right padding instead of `gap` on the track. This keeps
+         both halves of the doubled track identical, so translateX(-50%)
+         lines up exactly and the loop is seamless. */
+      padding-right: 48px;
+      flex-shrink: 0;
     }
     .name-strip-dot {
       color: var(--text-accent);
