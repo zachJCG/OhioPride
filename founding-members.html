@@ -188,15 +188,16 @@
       /* DIRECTORY CONTROLS */
       .directory-controls {
         display: grid;
-        grid-template-columns: 1.4fr 1fr 1fr auto;
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr);
         gap: 0.75rem;
         max-width: 1080px;
         margin: 0 auto 1rem;
-        align-items: center;
+        align-items: stretch;
       }
       .directory-controls input,
       .directory-controls select {
         width: 100%;
+        min-height: 44px;
         background: rgba(19, 45, 68, 0.7);
         border: 1px solid var(--dark-bg-light, #1a3a52);
         color: var(--text-white, #fff);
@@ -205,25 +206,62 @@
         padding: 0.7rem 0.9rem;
         border-radius: 10px;
         outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+      .directory-controls select {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23c5d2dd' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 0.85rem center;
+        padding-right: 2.2rem;
       }
       .directory-controls input:focus,
-      .directory-controls select:focus { border-color: var(--color-blue, #2c8df0); }
+      .directory-controls select:focus {
+        border-color: var(--color-blue, #2c8df0);
+        box-shadow: 0 0 0 3px rgba(44,141,240,0.22);
+      }
       .directory-controls input::placeholder { color: rgba(255,255,255,0.5); }
+
+      /* Elected-only toggle styled as a proper pressable pill that matches
+         the height of the inputs/selects and visually flips when checked. */
       .toggle-elected {
-        display: inline-flex;
+        display: flex;
         align-items: center;
-        gap: 0.5rem;
+        justify-content: center;
+        gap: 0.55rem;
+        width: 100%;
+        min-height: 44px;
         background: rgba(19, 45, 68, 0.7);
         border: 1px solid var(--dark-bg-light, #1a3a52);
         border-radius: 10px;
         padding: 0.55rem 0.9rem;
         cursor: pointer;
+        user-select: none;
         font-family: "Roboto Slab", serif;
         color: var(--text-white, #fff);
         font-size: 0.9rem;
+        line-height: 1.2;
         white-space: nowrap;
+        transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
       }
-      .toggle-elected input { accent-color: var(--color-blue, #2c8df0); }
+      .toggle-elected:hover { border-color: rgba(255,255,255,0.35); }
+      .toggle-elected:focus-within {
+        border-color: var(--color-blue, #2c8df0);
+        box-shadow: 0 0 0 3px rgba(44,141,240,0.25);
+      }
+      .toggle-elected:has(input:checked) {
+        border-color: #7fb6ff;
+        background: rgba(44, 141, 240, 0.18);
+        color: #eaf3ff;
+      }
+      .toggle-elected input {
+        flex: none;
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        accent-color: var(--color-blue, #2c8df0);
+        cursor: pointer;
+      }
 
       .result-meta {
         max-width: 1080px;
@@ -416,10 +454,45 @@
         font-size: 0.9rem;
       }
 
+      /* Result-meta: never let the count + clear button collide on narrow widths. */
+      @media (max-width: 480px) {
+        .result-meta {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.35rem;
+        }
+      }
+
+      /* Tablet: drop the directory controls to two columns, search spans full
+         width so it stays readable. */
+      @media (max-width: 900px) {
+        .directory-controls {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+        .directory-controls .field:first-child { grid-column: 1 / -1; }
+      }
+
+      /* Small tablet / large phone: 2-up hero stats reads better than 1-up. */
       @media (max-width: 720px) {
-        .hero-stats { grid-template-columns: 1fr; gap: 0.6rem; }
-        .directory-controls { grid-template-columns: 1fr; }
+        .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+        .hero-stat { padding: 0.85rem 0.9rem; }
         .endorsed-strip .roster { gap: 0.45rem 0.9rem; }
+        .tier-chips-section h2 { font-size: 1.2rem; }
+        .cta-row .btn { width: 100%; max-width: 360px; }
+      }
+
+      /* Phone: full-width controls, the toggle becomes its own row. */
+      @media (max-width: 600px) {
+        .directory-controls {
+          grid-template-columns: 1fr;
+        }
+        .directory-controls .field:first-child { grid-column: auto; }
+      }
+
+      /* Very narrow phone: collapse hero stats so numbers don't wrap. */
+      @media (max-width: 420px) {
+        .hero-stats { grid-template-columns: 1fr; }
+        .member-grid { grid-template-columns: 1fr; }
       }
     </style>
   </head>
