@@ -727,7 +727,7 @@
         <p class="rsvp-eyebrow">RSVP</p>
         <h2>I'll be there.</h2>
         <p class="rsvp-subtitle">Tell us you're coming and we'll send the final logistics a few days out.</p>
-        <form id="rsvpForm" name="launch-day-rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <form id="rsvpForm" name="launch-day-rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-launch-form data-source="launch-day-rsvp">
             <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
             <input type="hidden" name="form-name" value="launch-day-rsvp">
             <div class="form-row full">
@@ -809,49 +809,9 @@
         }
     })();
 
-    // Google Sheets Apps Script endpoint
-    // (Same setup as before; see notes in original file. Leave URL empty to skip.)
-    const GOOGLE_SCRIPT_URL = '';
-    const form = document.getElementById('rsvpForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const successMsg = document.getElementById('successMessage');
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting\u2026';
-        const formData = new FormData(form);
-        const payload = {
-            email: formData.get('email'),
-            first_name: formData.get('first_name'),
-            last_name: formData.get('last_name'),
-            organization: formData.get('organization'),
-            title: formData.get('title')
-        };
-        try {
-            // 1. Netlify Forms (email notification)
-            await fetch('/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(formData).toString()
-            });
-            // 2. Google Sheets (if configured)
-            if (GOOGLE_SCRIPT_URL) {
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            }
-            form.style.display = 'none';
-            successMsg.style.display = 'block';
-        } catch (err) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Count Me In';
-            alert('Something went wrong. Please try again or email zach@ohiopride.org directly.');
-        }
-    });
 </script>
+
+  <script src="/js/launch-signup.js" defer></script>
 
   <script src="/js/site-template.js" defer></script>
 </body>
