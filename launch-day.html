@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Launch Day — May 22, 2026 | Ohio Pride</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <title>Launch Day &mdash; Harvey Milk Day, May 22, 2026 | Ohio Pride</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --navy: #0f2233;
+            --navy-deep: #0a1929;
             --navy-light: #132d44;
             --navy-card: rgba(19,45,68,0.5);
             --text-white: #ffffff;
@@ -18,297 +19,840 @@
             --accent: #73d7ee;
             --action-blue: #004dff;
             --purple: #750787;
+            --pink: #ffafc8;
+            --red: #e40303;
+            --orange: #ff8c00;
+            --yellow: #ffed00;
+            --green: #008026;
             --border: rgba(255,255,255,0.08);
             --rainbow: linear-gradient(90deg, #e40303 0%, #ff8c00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%, #e40303 100%);
-            --pride-stripe: linear-gradient(90deg,#000000,#613915,#73d7ee,#ffafc8,#e40303,#ff8c00,#ffed00,#008026,#004dff,#750787,#000000,#613915,#73d7ee,#ffafc8,#e40303,#ff8c00,#ffed00,#008026,#004dff,#750787);
             --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
             --transition: all 0.3s ease;
         }
 
-        @keyframes prideShimmer {
-            0%   { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
+    @keyframes prideShimmer {
+        0%   { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(115,215,238,0.15); }
+        50% { box-shadow: 0 0 40px rgba(115,215,238,0.35); }
+    }
+    @keyframes pulseDot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.15); }
+    }
+    @keyframes marquee {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+    @keyframes confettiDrift {
+        0%   { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+        10%  { opacity: 0.9; }
+        100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Roboto Slab', Georgia, serif; background-color: var(--navy); color: var(--text-white); line-height: 1.6; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
 
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Roboto Slab', Georgia, serif; background-color: var(--navy); color: var(--text-white); line-height: 1.6; }
-        a { color: inherit; text-decoration: none; }
+    /* Confetti backdrop */
+    .confetti-layer {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 700px;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+    }
+    .confetti-piece {
+        position: absolute;
+        top: 0;
+        width: 8px;
+        height: 14px;
+        opacity: 0;
+        animation: confettiDrift linear infinite;
+    }
 
-        /* Pride Banner */
-        .pride-banner { height: 5px; background: var(--pride-stripe); background-size: 200% 100%; animation: prideShimmer 8s linear infinite; }
+    /* Hero */
+    .hero {
+        position: relative;
+        padding: 5rem 2rem 4rem;
+        text-align: center;
+        max-width: 900px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(115,215,238,0.12) 0%, rgba(117,7,135,0.06) 40%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .hero > * { position: relative; z-index: 1; }
+    .save-the-date-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.25rem;
+        background: rgba(115,215,238,0.1);
+        border: 1px solid rgba(115,215,238,0.3);
+        border-radius: 100px;
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        animation: fadeInUp 0.6s ease-out;
+    }
+    .save-the-date-badge .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: pulseDot 2s ease-in-out infinite;
+    }
+    .hero h1 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: clamp(2.5rem, 7vw, 4.5rem);
+        line-height: 1.05;
+        margin-bottom: 1rem;
+        font-weight: 900;
+        letter-spacing: -1.5px;
+        animation: fadeInUp 0.8s ease-out;
+    }
+    .hero h1 .rainbow-word {
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 6s linear infinite;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .hero-tagline {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: clamp(1rem, 2.2vw, 1.25rem);
+        color: var(--text-soft);
+        max-width: 640px;
+        margin: 0 auto 2rem;
+        font-weight: 400;
+        line-height: 1.55;
+        animation: fadeInUp 1s ease-out;
+    }
+    .hero-divider {
+        width: 100px;
+        height: 4px;
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 4s linear infinite;
+        margin: 0 auto;
+        border-radius: 2px;
+    }
 
-        /* Navigation */
-        nav { position: sticky; top: 0; z-index: 1000; background: rgba(15,34,51,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; }
-        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 64px; }
-        .nav-logo { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.25rem; }
-        .nav-logo .ohio { font-weight: 400; color: var(--text-dim); }
-        .nav-logo .pride { font-weight: 700; color: var(--text-white); }
-        .nav-logo .pac { font-size: 0.65rem; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-left: 4px; }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { color: var(--text-soft); font-family: 'Montserrat', Arial, sans-serif; font-size: 0.9rem; transition: var(--transition); }
-        .nav-links a:hover, .nav-links a.active { color: var(--text-white); }
-        .menu-toggle { display: none; background: none; border: none; color: var(--text-white); font-size: 1.5rem; cursor: pointer; }
-        @media (max-width: 768px) {
-            .nav-links { display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; background: var(--navy); border-bottom: 1px solid var(--border); padding: 1rem 2rem; gap: 1rem; }
-            .nav-links.active { display: flex; }
-            .menu-toggle { display: block; }
-        }
+    /* Marquee strip */
+    .marquee-strip {
+        background: var(--navy-deep);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .marquee-track {
+        display: inline-block;
+        animation: marquee 40s linear infinite;
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+    }
+    .marquee-track span { color: var(--text-dim); padding: 0 1.5rem; }
+    .marquee-track .star { color: var(--accent); }
 
-        /* Hero */
-        .hero { padding: 5rem 2rem 3rem; text-align: center; max-width: 800px; margin: 0 auto; }
-        .hero-label { font-family: 'Montserrat', Arial, sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--accent); font-weight: 700; margin-bottom: 1rem; }
-        .hero h1 { font-family: 'Montserrat', Arial, sans-serif; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin-bottom: 1.25rem; font-weight: 700; letter-spacing: -0.4px; }
-        .hero-divider { width: 80px; height: 4px; background: var(--rainbow); background-size: 200% 100%; animation: prideShimmer 4s linear infinite; margin: 1.5rem auto; border-radius: 2px; }
+    /* Event details (3-card layout: date / time / location) */
+    .event-details {
+        max-width: 1000px;
+        margin: 4rem auto 0;
+        padding: 0 2rem;
+    }
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 3rem;
+    }
+    .detail-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.75rem 1rem;
+        text-align: center;
+        background: var(--navy-card);
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition);
+    }
+    .detail-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(115,215,238,0.3);
+    }
+    .detail-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 4s linear infinite;
+    }
+    .detail-card .icon { font-size: 1.75rem; margin-bottom: 0.5rem; display: block; }
+    .detail-card .label {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--accent);
+        margin-bottom: 0.4rem;
+        font-weight: 700;
+    }
+    .detail-card .value {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+    .detail-card .sub {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        margin-top: 0.35rem;
+        font-weight: 400;
+    }
+    @media (max-width: 720px) {
+        .detail-grid { grid-template-columns: 1fr; }
+    }
 
-        /* Event details */
-        .event-details { max-width: 700px; margin: 0 auto; padding: 0 2rem 3rem; }
-        .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
-        .detail-card { border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; background: var(--navy-card); position: relative; overflow: hidden; }
-        .detail-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rainbow); background-size: 200% 100%; animation: prideShimmer 4s linear infinite; }
-        .detail-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-        .detail-card .label { font-family: 'Montserrat', Arial, sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 0.25rem; font-weight: 700; }
-        .detail-card .value { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.1rem; font-weight: 700; }
-        @media (max-width: 600px) { .detail-grid { grid-template-columns: 1fr; } }
+    /* Section header */
+    .section-header { text-align: center; max-width: 720px; margin: 0 auto 2rem; }
+    .section-eyebrow {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+    .section-header h2 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        line-height: 1.15;
+        margin-bottom: 1rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+    .section-header p { color: var(--text-soft); font-size: 1.05rem; line-height: 1.7; }
 
-        .event-description { color: var(--text-soft); font-size: 1.05rem; line-height: 1.8; text-align: center; margin-bottom: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+    /* Harvey Milk tribute section */
+    .milk-section {
+        max-width: 900px;
+        margin: 5rem auto;
+        padding: 0 2rem;
+    }
+    .milk-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 3rem 2.5rem;
+        background: linear-gradient(135deg, rgba(19,45,68,0.7) 0%, rgba(117,7,135,0.18) 100%);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+    .milk-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 4s linear infinite;
+    }
+    .milk-eyebrow {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .milk-card h2 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+        font-weight: 800;
+        margin-bottom: 1.25rem;
+        letter-spacing: -0.3px;
+    }
+    .milk-quote {
+        font-family: 'Roboto Slab', Georgia, serif;
+        font-size: clamp(1.4rem, 3.2vw, 1.85rem);
+        line-height: 1.4;
+        font-style: italic;
+        color: var(--text-white);
+        margin: 1.5rem auto 1rem;
+        max-width: 640px;
+    }
+    .milk-attr {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.85rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+        margin-bottom: 1.75rem;
+    }
+    .milk-context {
+        color: var(--text-soft);
+        font-size: 1rem;
+        line-height: 1.75;
+        max-width: 640px;
+        margin: 0 auto;
+        text-align: left;
+    }
+    .milk-context p { margin-bottom: 1rem; }
+    .milk-context p:last-child { margin-bottom: 0; }
 
-        /* RSVP Form */
-        .rsvp-section { max-width: 560px; margin: 0 auto; padding: 0 2rem 4rem; }
-        .rsvp-card { border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; background: var(--navy-card); position: relative; overflow: hidden; }
-        .rsvp-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rainbow); background-size: 200% 100%; animation: prideShimmer 4s linear infinite; }
-        .rsvp-card h2 { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; font-weight: 700; }
-        .rsvp-subtitle { color: var(--text-dim); font-family: 'Montserrat', Arial, sans-serif; font-size: 0.9rem; text-align: center; margin-bottom: 2rem; }
+    /* What to expect */
+    .what-section { max-width: 1000px; margin: 5rem auto; padding: 0 2rem; }
+    .what-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .what-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        background: var(--navy-card);
+        transition: var(--transition);
+    }
+    .what-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(115,215,238,0.25);
+        background: rgba(19,45,68,0.7);
+    }
+    .what-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .what-card h3 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+    .what-card p { color: var(--text-soft); font-size: 0.95rem; line-height: 1.65; }
+    @media (max-width: 800px) { .what-grid { grid-template-columns: 1fr; } }
 
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-        .form-row.full { grid-template-columns: 1fr; }
-        @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+    /* Why this moment */
+    .why-section {
+        background: linear-gradient(180deg, transparent 0%, rgba(117,7,135,0.08) 50%, transparent 100%);
+        padding: 5rem 2rem;
+        margin: 3rem 0;
+    }
+    .why-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .why-context { color: var(--text-soft); font-size: 1rem; line-height: 1.8; text-align: left; margin-top: 1.5rem; }
+    .why-context p { margin-bottom: 1rem; }
+    .why-context p:last-child { margin-bottom: 0; }
 
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-family: 'Montserrat', Arial, sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 0.4rem; font-weight: 700; }
-        .form-group input { background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; color: var(--text-white); font-size: 1rem; font-family: 'Roboto Slab', Georgia, serif; transition: var(--transition); }
-        .form-group input:focus { outline: none; border-color: var(--accent); background: rgba(115,215,238,0.05); }
-        .form-group input::placeholder { color: rgba(255,255,255,0.25); }
+    /* RSVP Form */
+    .rsvp-section { max-width: 600px; margin: 5rem auto 4rem; padding: 0 2rem; }
+    .rsvp-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.5rem;
+        background: var(--navy-card);
+        position: relative;
+        overflow: hidden;
+        animation: glow 4s ease-in-out infinite;
+    }
+    .rsvp-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 4s linear infinite;
+    }
+    .rsvp-eyebrow {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        color: var(--accent);
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    .rsvp-card h2 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+    }
+    .rsvp-subtitle {
+        color: var(--text-soft);
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.95rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-row.full { grid-template-columns: 1fr; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--accent);
+        margin-bottom: 0.4rem;
+        font-weight: 700;
+    }
+    .form-group input {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+        color: var(--text-white);
+        font-size: 1rem;
+        font-family: 'Roboto Slab', Georgia, serif;
+        transition: var(--transition);
+    }
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: rgba(115,215,238,0.05);
+    }
+    .form-group input::placeholder { color: rgba(255,255,255,0.25); }
+    .btn {
+        font-family: 'Montserrat', Arial, sans-serif;
+        padding: 0.875rem 2rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+        letter-spacing: 0.3px;
+    }
+    .btn-submit {
+        background: var(--action-blue);
+        color: #ffffff;
+        width: 100%;
+        margin-top: 0.75rem;
+        font-size: 1.05rem;
+        padding: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0,77,255,0.4);
+        background: #0040d9;
+    }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        .btn { font-family: 'Montserrat', Arial, sans-serif; padding: 0.875rem 2rem; border-radius: 6px; font-weight: 700; font-size: 0.95rem; transition: var(--transition); border: none; cursor: pointer; display: inline-block; text-align: center; letter-spacing: 0.3px; }
-        .btn-submit { background: var(--action-blue); color: #ffffff; width: 100%; margin-top: 0.5rem; font-size: 1rem; padding: 1rem; }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,77,255,0.35); }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    /* Success */
+    .success-message { display: none; text-align: center; padding: 2rem 0; }
+    .success-message .check {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        color: var(--accent);
+        animation: float 3s ease-in-out infinite;
+    }
+    .success-message h3 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 800;
+    }
+    .success-message p { color: var(--text-soft); line-height: 1.7; }
+    .success-share {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+    }
+    .success-share p {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.85rem;
+        color: var(--text-dim);
+        margin-bottom: 0.75rem;
+    }
+    .share-buttons { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+    .share-btn {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text-soft);
+        transition: var(--transition);
+        font-weight: 600;
+    }
+    .share-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* Success */
-        .success-message { display: none; text-align: center; padding: 2rem 0; }
-        .success-message .check { font-size: 3rem; margin-bottom: 1rem; color: var(--accent); }
-        .success-message h3 { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.3rem; margin-bottom: 0.75rem; }
-        .success-message p { color: var(--text-soft); line-height: 1.7; }
+    /* Founding nudge */
+    .founding-nudge { max-width: 600px; margin: 0 auto; padding: 0 2rem 5rem; text-align: center; }
+    .nudge-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.5rem;
+        background: linear-gradient(135deg, rgba(19,45,68,0.7) 0%, rgba(117,7,135,0.15) 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    .nudge-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 4s linear infinite;
+    }
+    .nudge-card .stonewall-num {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 3rem;
+        font-weight: 900;
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 6s linear infinite;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+    .nudge-card .stonewall-label {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .nudge-card h3 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 1.4rem;
+        margin-bottom: 0.75rem;
+        font-weight: 800;
+    }
+    .nudge-card p {
+        color: var(--text-soft);
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+    .btn-outline {
+        font-family: 'Montserrat', Arial, sans-serif;
+        background: transparent;
+        color: var(--text-white);
+        border: 2px solid var(--accent);
+        padding: 0.85rem 2rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        display: inline-block;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .btn-outline:hover {
+        background: var(--accent);
+        color: var(--navy);
+        transform: translateY(-2px);
+    }
 
-        /* Founding nudge */
-        .founding-nudge { max-width: 560px; margin: 0 auto; padding: 0 2rem 4rem; text-align: center; }
-        .nudge-card { border: 1px solid var(--border); border-radius: 12px; padding: 2rem; background: var(--navy-card); position: relative; overflow: hidden; }
-        .nudge-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rainbow); background-size: 200% 100%; animation: prideShimmer 4s linear infinite; }
-        .nudge-card h3 { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.2rem; margin-bottom: 0.75rem; }
-        .nudge-card p { color: var(--text-soft); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.7; }
-        .btn-outline { font-family: 'Montserrat', Arial, sans-serif; background: transparent; color: var(--text-white); border: 2px solid var(--accent); padding: 0.75rem 2rem; border-radius: 6px; font-weight: 700; font-size: 0.95rem; transition: var(--transition); display: inline-block; letter-spacing: 0.3px; }
-        .btn-outline:hover { border-color: var(--text-white); transform: translateY(-2px); }
-
-        /* Footer */
-        footer { background: #0a1929; border-top: 3px solid; border-image: var(--rainbow) 1; padding: 2.5rem 2rem; margin-top: 2rem; }
-        .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; }
-        .footer-col h4 { font-family: 'Montserrat', Arial, sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 0.75rem; font-weight: 700; }
-        .footer-col ul { list-style: none; }
-        .footer-col li { margin-bottom: 0.4rem; }
-        .footer-col a { color: var(--text-soft); font-size: 0.9rem; transition: color 0.2s; }
-        .footer-col a:hover { color: var(--accent); }
-        .footer-col .directors { color: var(--text-soft); font-size: 0.9rem; line-height: 1.6; }
-        .footer-col .directors strong { color: var(--text-white); }
-        .footer-bottom { max-width: 1200px; margin: 1.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center; font-family: 'Montserrat', Arial, sans-serif; font-size: 0.8rem; color: var(--text-dim); }
-        .footer-bottom .disclaimer { font-style: italic; margin-top: 0.5rem; color: var(--text-faint); }
-        @media (max-width: 768px) {
-            .footer-inner { flex-direction: column; gap: 1.5rem; }
-            .hero { padding: 3.5rem 1.5rem 2rem; }
-            .event-details, .rsvp-section, .founding-nudge { padding-left: 1.5rem; padding-right: 1.5rem; }
-            .rsvp-card { padding: 1.5rem; }
-        }
-    </style>
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
-    <meta name="theme-color" content="#0F2233">
-    <meta property="og:title" content="Launch Day — May 22, 2026 | Ohio Pride">
-    <meta property="og:description" content="Join us on the steps of the Ohio Statehouse as we publicly launch Ohio's Political Action Committee for LGBTQ+ Equality.">
-    <meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png">
-    <meta property="og:url" content="https://ohiopride.org/launch-day">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
+    /* Mobile tweaks */
+    @media (max-width: 768px) {
+        .hero { padding: 3.5rem 1.5rem 2.5rem; }
+        .event-details, .rsvp-section, .founding-nudge, .what-section, .milk-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .rsvp-card, .nudge-card { padding: 2rem 1.5rem; }
+        .milk-card { padding: 2.25rem 1.5rem; }
+        .why-section { padding: 3.5rem 1.5rem; }
+    }
+</style>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<meta name="theme-color" content="#0F2233">
+<meta property="og:title" content="Launch Day &mdash; Harvey Milk Day, May 22, 2026 | Ohio Pride">
+<meta property="og:description" content="On Harvey Milk Day, Ohio Pride launches at the Statehouse. Join the founding board, founding members, and allies as we kick off Ohio's first statewide LGBTQ+ PAC.">
+<meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png">
+<meta property="og:url" content="https://ohiopride.org/launch-day">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="/css/site-template.css">
+
 </head>
 <body>
 <div id="site-header"></div>
 
-    <section class="hero">
-        <p class="hero-label">You're Invited</p>
-        <h1>Ohio Pride Launch Day</h1>
-        <div class="hero-divider"></div>
-    </section>
+<!-- Confetti backdrop (decorative, in pride colors) -->
+<div class="confetti-layer" aria-hidden="true" id="confettiLayer"></div>
 
-    <div class="event-details">
-        <div class="detail-grid">
-            <div class="detail-card">
-                <div class="icon">&#128197;</div>
-                <div class="label">Date</div>
-                <div class="value">May 22, 2026</div>
-            </div>
-            <div class="detail-card">
-                <div class="icon">&#127963;&#65039;</div>
-                <div class="label">Location</div>
-                <div class="value">Ohio Statehouse</div>
-            </div>
-            <div class="detail-card">
-                <div class="icon">&#128205;</div>
-                <div class="label">City</div>
-                <div class="value">Columbus, OH</div>
-            </div>
+<section class="hero">
+    <div class="save-the-date-badge">
+        <span class="dot"></span>
+        <span>Harvey Milk Day &middot; Friday, May 22</span>
+    </div>
+    <h1>This is how a <span class="rainbow-word">movement</span> starts.</h1>
+    <p class="hero-tagline">
+        On Harvey Milk Day, we launch Ohio Pride &mdash; Ohio's first statewide LGBTQ+ political action committee. Bring a friend. Bring a flag. Bring your hope.
+    </p>
+    <div class="hero-divider"></div>
+</section>
+
+<div class="marquee-strip">
+    <div class="marquee-track">
+        <span class="star">&#9733;</span><span>Harvey Milk Day</span><span class="star">&#9733;</span><span>Friday May 22</span><span class="star">&#9733;</span><span>Ohio Statehouse</span><span class="star">&#9733;</span><span>Columbus</span><span class="star">&#9733;</span><span>Free &amp; Open to All</span><span class="star">&#9733;</span><span>Hope is Never Silent</span><span class="star">&#9733;</span><span>Harvey Milk Day</span><span class="star">&#9733;</span><span>Friday May 22</span><span class="star">&#9733;</span><span>Ohio Statehouse</span><span class="star">&#9733;</span><span>Columbus</span><span class="star">&#9733;</span><span>Hope is Never Silent</span><span class="star">&#9733;</span>
+    </div>
+</div>
+
+<div class="event-details">
+    <div class="detail-grid">
+        <div class="detail-card">
+            <span class="icon">&#128197;</span>
+            <div class="label">Date</div>
+            <div class="value">Friday, May 22, 2026</div>
+            <div class="sub">Harvey Milk Day</div>
         </div>
+        <div class="detail-card">
+            <span class="icon">&#127963;&#65039;</span>
+            <div class="label">Where</div>
+            <div class="value">Ohio Statehouse</div>
+            <div class="sub">West Plaza steps, Columbus</div>
+        </div>
+        <div class="detail-card">
+            <span class="icon">&#127757;</span>
+            <div class="label">Cost</div>
+            <div class="value">Free</div>
+            <div class="sub">Open to the public</div>
+        </div>
+    </div>
+</div>
 
-        <p class="event-description">
-            Join us on the steps of the Ohio Statehouse as we publicly announce Ohio Pride — Ohio's Political Action Committee for LGBTQ+ Equality. We'll be joined by our founding board, founding members, and allies from across the state.
+<!-- Harvey Milk tribute -->
+<section class="milk-section">
+    <div class="milk-card">
+        <p class="milk-eyebrow">Why May 22</p>
+        <h2>Launching on Harvey Milk Day.</h2>
+        <p class="milk-quote">
+            &ldquo;You have to give people hope.&rdquo;
         </p>
+        <p class="milk-attr">&mdash; Harvey Milk, 1978</p>
+        <div class="milk-context">
+            <p>May 22 would have been Harvey Milk's ninety-sixth birthday. He was the first openly gay person elected to public office in California, a San Francisco city supervisor, and a founding figure of the modern movement for LGBTQ+ political power. He believed in coalitions, in showing up, and in giving people something to hope for. He paid for that work with his life.</p>
+            <p>Almost half a century later, his birthday is observed as Harvey Milk Day. We can think of no better day to launch the first statewide LGBTQ+ PAC in Ohio history.</p>
+        </div>
     </div>
+</section>
 
-    <div class="rsvp-section">
-        <div class="rsvp-card">
-            <h2>RSVP</h2>
-            <p class="rsvp-subtitle">Reserve your spot for Launch Day.</p>
+<section class="what-section">
+    <div class="section-header">
+        <p class="section-eyebrow">What to Expect</p>
+        <h2>A launch worth showing up for.</h2>
+        <p>This is a celebration and a statement: Ohio's LGBTQ+ community has political infrastructure of its own, and we're putting it to work for 2026 and beyond.</p>
+    </div>
+    <div class="what-grid">
+        <div class="what-card">
+            <div class="what-icon">&#127908;</div>
+            <h3>Voices that matter</h3>
+            <p>Remarks from our founding board, elected allies from across Ohio, and community leaders who have been doing this work long before there was a PAC behind it.</p>
+        </div>
+        <div class="what-card">
+            <div class="what-icon">&#128221;</div>
+            <h3>The plan, on the record</h3>
+            <p>How we'll endorse, score legislators, mobilize voters, and put real resources behind candidates who fight for equality. With all five statewide offices and a U.S. Senate seat on the 2026 ballot, the stakes are unmistakable.</p>
+        </div>
+        <div class="what-card">
+            <div class="what-icon">&#127881;</div>
+            <h3>Community, in person</h3>
+            <p>Time to meet the founding members, sign up new ones, take photos with the team, and stand together at the Statehouse. Bring signs, bring friends, bring your favorite flag.</p>
+        </div>
+    </div>
+</section>
 
-            <form id="rsvpForm" name="launch-day-rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-                <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
-                <input type="hidden" name="form-name" value="launch-day-rsvp">
+<section class="why-section">
+    <div class="why-inner">
+        <p class="section-eyebrow">Why This Moment</p>
+        <div class="section-header" style="margin-bottom:0.5rem;">
+            <h2>Hope, organized.</h2>
+        </div>
+        <div class="why-context">
+            <p>Ohio Pride launches at a defining moment. In 2026, every statewide executive office and a U.S. Senate seat are on the ballot at the same time. Two constitutional amendment campaigns, the Right to Marry and the Ohio Equal Rights Amendment, are gathering signatures. Anti-LGBTQ+ legislation continues to move through the General Assembly. And the state's largest LGBTQ+ advocacy organization significantly reduced its operations last year.</p>
+            <p>The community needs a PAC that endorses, fundraises, scorecards, and turns out voters with focus and discipline. That's what we're building, and we're building it in public, starting at the Statehouse on Harvey Milk Day.</p>
+        </div>
+    </div>
+</section>
 
-                <div class="form-row full">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required placeholder="you@example.com">
-                    </div>
+<div class="rsvp-section">
+    <div class="rsvp-card">
+        <p class="rsvp-eyebrow">RSVP</p>
+        <h2>I'll be there.</h2>
+        <p class="rsvp-subtitle">Tell us you're coming and we'll send the final logistics a few days out.</p>
+        <form id="rsvpForm" name="launch-day-rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+            <input type="hidden" name="form-name" value="launch-day-rsvp">
+            <div class="form-row full">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="you@example.com">
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="first_name">First Name</label>
-                        <input type="text" id="first_name" name="first_name" required placeholder="First">
-                    </div>
-                    <div class="form-group">
-                        <label for="last_name">Last Name</label>
-                        <input type="text" id="last_name" name="last_name" required placeholder="Last">
-                    </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" required placeholder="First">
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="organization">Organization</label>
-                        <input type="text" id="organization" name="organization" placeholder="Optional">
-                    </div>
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" id="title" name="title" placeholder="Optional">
-                    </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" required placeholder="Last">
                 </div>
-
-                <button type="submit" class="btn btn-submit" id="submitBtn">RSVP for Launch Day</button>
-            </form>
-
-            <div class="success-message" id="successMessage">
-                <div class="check">&#10003;</div>
-                <h3>You're on the list.</h3>
-                <p>We'll send event details to your inbox as May 22 approaches. See you at the Statehouse.</p>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="organization">Organization</label>
+                    <input type="text" id="organization" name="organization" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" placeholder="Optional">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-submit" id="submitBtn">Count Me In</button>
+        </form>
+        <div class="success-message" id="successMessage">
+            <div class="check">&#10003;</div>
+            <h3>You're on the list.</h3>
+            <p>We'll send final details to your inbox as Harvey Milk Day gets closer. See you on the Statehouse steps.</p>
+            <div class="success-share">
+                <p>Help spread the word:</p>
+                <div class="share-buttons">
+                    <a href="https://twitter.com/intent/tweet?text=I'll%20be%20at%20the%20Ohio%20Pride%20launch%20on%20Harvey%20Milk%20Day%2C%20Friday%2C%20May%2022%20at%20the%20Statehouse.%20Come%20stand%20with%20us.&url=https://ohiopride.org/launch-day" target="_blank" rel="noopener" class="share-btn">Share on X</a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://ohiopride.org/launch-day" target="_blank" rel="noopener" class="share-btn">Share on Facebook</a>
+                    <a href="mailto:?subject=Ohio%20Pride%20Launch%20Day%20-%20Harvey%20Milk%20Day&body=I'm%20going%20to%20the%20Ohio%20Pride%20launch%20on%20Harvey%20Milk%20Day%2C%20Friday%2C%20May%2022%20at%20the%20Ohio%20Statehouse.%20You%20should%20come%20too%3A%20https%3A%2F%2Fohiopride.org%2Flaunch-day" class="share-btn">Email a friend</a>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="founding-nudge">
-        <div class="nudge-card">
-            <h3>Become a Founding Member</h3>
-            <p>Stand behind this work from day one. A $25 contribution puts your name on ohiopride.org among the first 1,969 founding members — a nod to the year of the Stonewall uprising.</p>
-            <a href="/donate/founding-member" class="btn-outline">Join the Founding Roster &rarr;</a>
-        </div>
+<div class="founding-nudge">
+    <div class="nudge-card">
+        <div class="stonewall-num">1,969</div>
+        <p class="stonewall-label">Founding Members</p>
+        <h3>Don't just show up. Show up first.</h3>
+        <p>We're building the founding member roster to 1,969 supporters, a nod to the year of the Stonewall uprising. A $25 contribution puts your name on ohiopride.org among the first to back this work.</p>
+        <a href="/donate/founding-member" class="btn-outline">Become a Founding Member &rarr;</a>
     </div>
+</div>
 
 <div id="site-footer"></div>
 
-    <script src="/js/enhancements.js"></script>
-    <script>
-        // Google Sheets Apps Script endpoint
-        // ──────────────────────────────────────────────────────────
-        // SETUP: Deploy a Google Apps Script web app on your Sheet
-        // (spreadsheet ID: 1M-AMQBYNdaQJK2zX5ubL4R_qpsSfk60fH8Pau54I6zo)
-        //
-        // 1. Open the Sheet → Extensions → Apps Script
-        // 2. Paste this code:
-        //
-        //    function doPost(e) {
-        //      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-        //      var data = JSON.parse(e.postData.contents);
-        //      sheet.appendRow([
-        //        new Date(),
-        //        data.email,
-        //        data.first_name,
-        //        data.last_name,
-        //        data.organization || '',
-        //        data.title || ''
-        //      ]);
-        //      return ContentService
-        //        .createTextOutput(JSON.stringify({ result: 'ok' }))
-        //        .setMimeType(ContentService.MimeType.JSON);
-        //    }
-        //
-        // 3. Deploy → New deployment → Web app → Execute as: Me → Who has access: Anyone
-        // 4. Copy the URL and paste it below
-        // ──────────────────────────────────────────────────────────
-        const GOOGLE_SCRIPT_URL = '';
+<script src="/js/enhancements.js"></script>
+<script>
+    /* Confetti backdrop in Pride colors. Decorative only, respects reduced motion. */
+    (function () {
+        var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) return;
+        var layer = document.getElementById('confettiLayer');
+        if (!layer) return;
+        var colors = ['#e40303', '#ff8c00', '#ffed00', '#008026', '#004dff', '#750787', '#73d7ee', '#ffafc8'];
+        var pieces = 28;
+        for (var i = 0; i < pieces; i++) {
+            var p = document.createElement('span');
+            p.className = 'confetti-piece';
+            p.style.left = (Math.random() * 100) + '%';
+            p.style.background = colors[i % colors.length];
+            p.style.animationDuration = (8 + Math.random() * 8) + 's';
+            p.style.animationDelay = (Math.random() * 8) + 's';
+            p.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+            if (Math.random() > 0.5) { p.style.borderRadius = '50%'; p.style.width = '10px'; p.style.height = '10px'; }
+            layer.appendChild(p);
+        }
+    })();
 
-        const form = document.getElementById('rsvpForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const successMsg = document.getElementById('successMessage');
-
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting\u2026';
-
-            const formData = new FormData(form);
-            const payload = {
-                email: formData.get('email'),
-                first_name: formData.get('first_name'),
-                last_name: formData.get('last_name'),
-                organization: formData.get('organization'),
-                title: formData.get('title')
-            };
-
-            try {
-                // 1. Netlify Forms (email notification)
-                await fetch('/', {
+    // Google Sheets Apps Script endpoint
+    // (Same setup as before; see notes in original file. Leave URL empty to skip.)
+    const GOOGLE_SCRIPT_URL = '';
+    const form = document.getElementById('rsvpForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('successMessage');
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting\u2026';
+        const formData = new FormData(form);
+        const payload = {
+            email: formData.get('email'),
+            first_name: formData.get('first_name'),
+            last_name: formData.get('last_name'),
+            organization: formData.get('organization'),
+            title: formData.get('title')
+        };
+        try {
+            // 1. Netlify Forms (email notification)
+            await fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(formData).toString()
+            });
+            // 2. Google Sheets (if configured)
+            if (GOOGLE_SCRIPT_URL) {
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams(formData).toString()
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
-
-                // 2. Google Sheets (if configured)
-                if (GOOGLE_SCRIPT_URL) {
-                    await fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                }
-
-                form.style.display = 'none';
-                successMsg.style.display = 'block';
-            } catch (err) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'RSVP for Launch Day';
-                alert('Something went wrong \u2014 please try again or email zach@ohiopride.org directly.');
             }
-        });
-    </script>
+            form.style.display = 'none';
+            successMsg.style.display = 'block';
+        } catch (err) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Count Me In';
+            alert('Something went wrong. Please try again or email zach@ohiopride.org directly.');
+        }
+    });
+</script>
+
   <script src="/js/site-template.js" defer></script>
 </body>
 </html>
