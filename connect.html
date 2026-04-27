@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect | Ohio Pride</title>
+    <meta name="description" content="Schedule a 30, 60, or 90 minute conversation with Ohio Pride, or send us a note. Whether you want to endorse, partner, volunteer, or learn more, we want to hear from you.">
+    <link rel="canonical" href="https://www.ohiopride.org/connect">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --navy: #0f2233;
+            --navy-deep: #0a1929;
+            --navy-light: #132d44;
+            --navy-card: rgba(19,45,68,0.5);
+            --text-white: #ffffff;
+            --text-soft: rgba(255,255,255,0.85);
+            --text-dim: rgba(255,255,255,0.6);
+            --accent: #73d7ee;
+            --action-blue: #004dff;
+            --border: rgba(255,255,255,0.08);
+            --rainbow: linear-gradient(90deg, #e40303 0%, #ff8c00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%, #e40303 100%);
+            --transition: all 0.3s ease;
+        }
+
+    @keyframes prideShimmer {
+        0%   { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Roboto Slab', Georgia, serif; background-color: var(--navy); color: var(--text-white); line-height: 1.6; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Hero */
+    .hero {
+        position: relative;
+        padding: 5rem 2rem 3rem;
+        text-align: center;
+        max-width: 900px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(115,215,238,0.12) 0%, rgba(117,7,135,0.06) 40%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .hero > * { position: relative; z-index: 1; }
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.25rem;
+        background: rgba(115,215,238,0.1);
+        border: 1px solid rgba(115,215,238,0.3);
+        border-radius: 100px;
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        animation: fadeInUp 0.6s ease-out;
+    }
+    .hero h1 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: clamp(2.5rem, 6.5vw, 4rem);
+        line-height: 1.05;
+        margin-bottom: 1rem;
+        font-weight: 900;
+        letter-spacing: -1.5px;
+        animation: fadeInUp 0.8s ease-out;
+    }
+    .hero h1 .rainbow-word {
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 6s linear infinite;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .hero-tagline {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: clamp(1rem, 2.2vw, 1.2rem);
+        color: var(--text-soft);
+        max-width: 620px;
+        margin: 0 auto 2rem;
+        line-height: 1.55;
+        animation: fadeInUp 1s ease-out;
+    }
+    .hero-divider {
+        width: 100px;
+        height: 4px;
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 4s linear infinite;
+        margin: 0 auto;
+        border-radius: 2px;
+    }
+
+    /* Section */
+    .section { max-width: 1100px; margin: 4rem auto; padding: 0 2rem; }
+    .section-header { text-align: center; max-width: 720px; margin: 0 auto 2.5rem; }
+    .section-eyebrow {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+    .section-header h2 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: clamp(1.75rem, 4vw, 2.4rem);
+        line-height: 1.15;
+        margin-bottom: 1rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+    .section-header p { color: var(--text-soft); font-size: 1.05rem; line-height: 1.7; }
+
+    /* Schedule cards */
+    .schedule-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    @media (max-width: 800px) { .schedule-grid { grid-template-columns: 1fr; } }
+
+    .schedule-card {
+        position: relative;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem 1.75rem 1.75rem;
+        background: var(--navy-card);
+        display: flex;
+        flex-direction: column;
+        transition: var(--transition);
+        overflow: hidden;
+    }
+    .schedule-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(115,215,238,0.3);
+        background: rgba(19,45,68,0.7);
+    }
+    .schedule-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 4s linear infinite;
+    }
+    .schedule-card.featured {
+        border-color: rgba(115,215,238,0.4);
+        background: linear-gradient(135deg, rgba(19,45,68,0.7) 0%, rgba(117,7,135,0.18) 100%);
+    }
+    .featured-tag {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--navy);
+        background: var(--accent);
+        padding: 0.25rem 0.6rem;
+        border-radius: 100px;
+        font-weight: 800;
+    }
+    .duration {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .schedule-card h3 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.3px;
+    }
+    .schedule-card p {
+        color: var(--text-soft);
+        font-size: 0.95rem;
+        line-height: 1.65;
+        margin-bottom: 1.25rem;
+        flex-grow: 1;
+    }
+    .schedule-card ul {
+        list-style: none;
+        margin-bottom: 1.5rem;
+    }
+    .schedule-card ul li {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.85rem;
+        color: var(--text-soft);
+        padding: 0.35rem 0 0.35rem 1.5rem;
+        position: relative;
+        line-height: 1.4;
+    }
+    .schedule-card ul li::before {
+        content: '\2713';
+        position: absolute;
+        left: 0;
+        top: 0.35rem;
+        color: var(--accent);
+        font-weight: 700;
+    }
+    .btn {
+        font-family: 'Montserrat', Arial, sans-serif;
+        padding: 0.95rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .btn-schedule {
+        background: var(--action-blue);
+        color: #ffffff;
+        width: 100%;
+    }
+    .btn-schedule:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,77,255,0.4);
+        background: #0040d9;
+    }
+    .btn-schedule.secondary {
+        background: transparent;
+        color: var(--text-white);
+        border: 2px solid var(--accent);
+        padding: 0.8rem 1.5rem;
+    }
+    .btn-schedule.secondary:hover {
+        background: var(--accent);
+        color: var(--navy);
+        box-shadow: none;
+    }
+
+    /* Direct contact */
+    .contact-section { max-width: 720px; margin: 5rem auto 4rem; padding: 0 2rem; }
+    .contact-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.5rem;
+        background: var(--navy-card);
+        position: relative;
+        overflow: hidden;
+    }
+    .contact-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--rainbow);
+        background-size: 200% 100%;
+        animation: prideShimmer 4s linear infinite;
+    }
+    .contact-card h2 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 1.6rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+    .contact-card .subtitle {
+        text-align: center;
+        font-family: 'Montserrat', Arial, sans-serif;
+        color: var(--text-soft);
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-row.full { grid-template-columns: 1fr; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--accent);
+        margin-bottom: 0.4rem;
+        font-weight: 700;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+        color: var(--text-white);
+        font-size: 1rem;
+        font-family: 'Roboto Slab', Georgia, serif;
+        transition: var(--transition);
+    }
+    .form-group select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--accent) 50%), linear-gradient(135deg, var(--accent) 50%, transparent 50%); background-position: calc(100% - 18px) center, calc(100% - 13px) center; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 2.5rem; }
+    .form-group select option { background: var(--navy-deep); color: var(--text-white); }
+    .form-group textarea { resize: vertical; min-height: 130px; font-family: 'Roboto Slab', Georgia, serif; }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: rgba(115,215,238,0.05);
+    }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+    .btn-submit {
+        background: var(--action-blue);
+        color: #ffffff;
+        width: 100%;
+        margin-top: 0.75rem;
+        font-size: 1rem;
+        padding: 1.05rem;
+        border-radius: 8px;
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0,77,255,0.4);
+        background: #0040d9;
+    }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .success-message { display: none; text-align: center; padding: 2rem 0; }
+    .success-message .check {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        color: var(--accent);
+    }
+    .success-message h3 {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 1.4rem;
+        margin-bottom: 0.75rem;
+        font-weight: 800;
+    }
+    .success-message p { color: var(--text-soft); line-height: 1.7; }
+
+    /* Direct contact strip */
+    .direct-strip {
+        max-width: 1100px;
+        margin: 0 auto 5rem;
+        padding: 0 2rem;
+    }
+    .direct-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    @media (max-width: 720px) { .direct-grid { grid-template-columns: 1fr; } }
+    .direct-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        background: var(--navy-card);
+        text-align: center;
+        transition: var(--transition);
+    }
+    .direct-card:hover { border-color: rgba(115,215,238,0.25); }
+    .direct-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
+    .direct-card .label {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+    }
+    .direct-card .value {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-white);
+        word-break: break-word;
+    }
+    .direct-card .value a:hover { color: var(--accent); }
+
+    @media (max-width: 768px) {
+        .hero { padding: 3.5rem 1.5rem 2rem; }
+        .section, .contact-section, .direct-strip { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .contact-card { padding: 2rem 1.5rem; }
+        .schedule-card { padding: 1.75rem 1.5rem 1.5rem; }
+    }
+</style>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<meta name="theme-color" content="#0F2233">
+<meta property="og:title" content="Connect | Ohio Pride">
+<meta property="og:description" content="Schedule a 30, 60, or 90 minute conversation with Ohio Pride, or send us a note. Whether you want to endorse, partner, volunteer, or learn more, we want to hear from you.">
+<meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png">
+<meta property="og:url" content="https://ohiopride.org/connect">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/css/site-template.css">
+
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="hero">
+    <div class="hero-eyebrow">
+        <span>Connect with Ohio Pride</span>
+    </div>
+    <h1>Let's <span class="rainbow-word">talk</span>.</h1>
+    <p class="hero-tagline">
+        Whether you're a candidate, a community partner, a journalist, or a neighbor with an idea, we want to hear from you. Pick a time that works, or send a note.
+    </p>
+    <div class="hero-divider"></div>
+</section>
+
+<!-- Schedule -->
+<section class="section" id="schedule">
+    <div class="section-header">
+        <p class="section-eyebrow">Book a Call</p>
+        <h2>Find a time on the calendar.</h2>
+        <p>Calls happen over Zoom. Pick the length that fits the conversation you want to have.</p>
+    </div>
+    <div class="schedule-grid">
+        <div class="schedule-card">
+            <div class="duration">30 Minutes</div>
+            <h3>Quick conversation</h3>
+            <p>Best for introductions, quick questions, press requests, or a fast yes/no on a specific ask.</p>
+            <ul>
+                <li>Intro &amp; introductions</li>
+                <li>Press &amp; media questions</li>
+                <li>Quick partner check-in</li>
+            </ul>
+            <a href="https://scheduler.zoom.us/zachary-joseph-dz9423/30-minutes" target="_blank" rel="noopener" class="btn btn-schedule">Schedule 30 minutes</a>
+        </div>
+
+        <div class="schedule-card featured">
+            <div class="featured-tag">Most Common</div>
+            <div class="duration">60 Minutes</div>
+            <h3>Full meeting</h3>
+            <p>The right pick for most candidate, partner, and donor conversations. Time to get into substance and walk out with next steps.</p>
+            <ul>
+                <li>Candidate intros &amp; endorsement discussions</li>
+                <li>Partnership &amp; coalition planning</li>
+                <li>Founding member &amp; major donor calls</li>
+            </ul>
+            <a href="https://scheduler.zoom.us/zachary-joseph-dz9423/60-minutes" target="_blank" rel="noopener" class="btn btn-schedule">Schedule 60 minutes</a>
+        </div>
+
+        <div class="schedule-card">
+            <div class="duration">90 Minutes</div>
+            <h3>Working session</h3>
+            <p>For deeper strategy, in-depth interviews, briefings, or sessions with multiple people on the call.</p>
+            <ul>
+                <li>Strategy &amp; campaign planning</li>
+                <li>In-depth media interviews</li>
+                <li>Group or board-level briefings</li>
+            </ul>
+            <a href="https://scheduler.zoom.us/zachary-joseph-dz9423/90-minutes" target="_blank" rel="noopener" class="btn btn-schedule">Schedule 90 minutes</a>
+        </div>
+    </div>
+</section>
+
+<!-- Message form -->
+<section class="contact-section" id="message">
+    <div class="contact-card">
+        <h2>Or send us a note.</h2>
+        <p class="subtitle">Prefer to write first? We'll get back within a couple of business days.</p>
+        <form id="connectForm" name="connect" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+            <input type="hidden" name="form-name" value="connect">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" required placeholder="First">
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" required placeholder="Last">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone (Optional)</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(xxx) xxx-xxxx">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="organization">Organization</label>
+                    <input type="text" id="organization" name="organization" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="subject">Reason for reaching out</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Select one</option>
+                        <option value="candidate">I'm a candidate</option>
+                        <option value="endorsement">Endorsement inquiry</option>
+                        <option value="partnership">Partnership or coalition</option>
+                        <option value="founding-membership">Founding membership</option>
+                        <option value="volunteer">Volunteering</option>
+                        <option value="press">Press or media</option>
+                        <option value="legislative">Legislative issue</option>
+                        <option value="general">Something else</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row full">
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required placeholder="Tell us a bit about what's on your mind."></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">Send Message</button>
+        </form>
+        <div class="success-message" id="successMessage">
+            <div class="check">&#10003;</div>
+            <h3>Message received.</h3>
+            <p>Thanks for reaching out. We'll be in touch within a couple of business days. If it's urgent, email zach@ohiopride.org directly.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Direct contact strip -->
+<section class="direct-strip">
+    <div class="direct-grid">
+        <div class="direct-card">
+            <span class="icon">&#9993;&#65039;</span>
+            <div class="label">Email</div>
+            <div class="value"><a href="mailto:zach@ohiopride.org">zach@ohiopride.org</a></div>
+        </div>
+        <div class="direct-card">
+            <span class="icon">&#128205;</span>
+            <div class="label">Based in</div>
+            <div class="value">Columbus &amp; Cincinnati, Ohio</div>
+        </div>
+        <div class="direct-card">
+            <span class="icon">&#127775;</span>
+            <div class="label">Press</div>
+            <div class="value"><a href="mailto:press@ohiopride.org">press@ohiopride.org</a></div>
+        </div>
+    </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="/js/enhancements.js"></script>
+<script>
+    const form = document.getElementById('connectForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('successMessage');
+
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending\u2026';
+            const formData = new FormData(form);
+            try {
+                await fetch('/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(formData).toString()
+                });
+                form.style.display = 'none';
+                successMsg.style.display = 'block';
+            } catch (err) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+                alert('Something went wrong. Please try again or email zach@ohiopride.org directly.');
+            }
+        });
+    }
+</script>
+
+  <script src="/js/site-template.js" defer></script>
+</body>
+</html>
