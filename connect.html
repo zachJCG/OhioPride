@@ -135,6 +135,32 @@
     }
     .section-header p { color: var(--text-soft); font-size: 1.05rem; line-height: 1.7; }
 
+    /* Format note */
+    .format-note {
+        display: inline-flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.4rem 0.9rem;
+        padding: 0.6rem 1.1rem;
+        margin: 0.75rem auto 0;
+        background: rgba(115,215,238,0.08);
+        border: 1px solid rgba(115,215,238,0.25);
+        border-radius: 100px;
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.78rem;
+        color: var(--text-soft);
+        letter-spacing: 0.5px;
+    }
+    .format-note .pill {
+        font-weight: 700;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-size: 0.7rem;
+    }
+    .format-note .sep { color: var(--text-dim); }
+
     /* Schedule cards */
     .schedule-grid {
         display: grid;
@@ -142,6 +168,14 @@
         gap: 1.5rem;
     }
     @media (max-width: 800px) { .schedule-grid { grid-template-columns: 1fr; } }
+    .schedule-card .format {
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        margin-bottom: 1rem;
+        letter-spacing: 0.5px;
+    }
+    .schedule-card .format strong { color: var(--accent); font-weight: 700; }
 
     .schedule-card {
         position: relative;
@@ -457,12 +491,19 @@
     <div class="section-header">
         <p class="section-eyebrow">Book a Call</p>
         <h2>Find a time on the calendar.</h2>
-        <p>Pick the length that fits the conversation you want to have. Meet over Zoom, or in person in Cincinnati or Dayton (location TBD).</p>
+        <p>Pick the length that fits the conversation you want to have.</p>
+        <div class="format-note" role="note">
+            <span class="pill">Format</span>
+            <span>Virtual on Zoom</span>
+            <span class="sep">&middot;</span>
+            <span>Or in person in Cincinnati or Dayton (location TBD)</span>
+        </div>
     </div>
     <div class="schedule-grid">
         <div class="schedule-card">
             <div class="duration">30 Minutes</div>
             <h3>Quick conversation</h3>
+            <div class="format"><strong>Zoom</strong> or in person &middot; Cincinnati or Dayton</div>
             <p>Best for introductions, quick questions, press requests, or a fast yes/no on a specific ask.</p>
             <ul>
                 <li>Intro &amp; introductions</li>
@@ -476,6 +517,7 @@
             <div class="featured-tag">Most Common</div>
             <div class="duration">60 Minutes</div>
             <h3>Full meeting</h3>
+            <div class="format"><strong>Zoom</strong> or in person &middot; Cincinnati or Dayton</div>
             <p>The right pick for most candidate, partner, and donor conversations. Time to get into substance and walk out with next steps.</p>
             <ul>
                 <li>Candidate intros &amp; endorsement discussions</li>
@@ -488,6 +530,7 @@
         <div class="schedule-card">
             <div class="duration">90 Minutes</div>
             <h3>Working session</h3>
+            <div class="format"><strong>Zoom</strong> or in person &middot; Cincinnati or Dayton</div>
             <p>For deeper strategy, in-depth interviews, briefings, or sessions with multiple people on the call.</p>
             <ul>
                 <li>Strategy &amp; campaign planning</li>
