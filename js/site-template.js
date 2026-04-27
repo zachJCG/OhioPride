@@ -93,7 +93,6 @@
     '      <ul>',
     '        <li><a href="/connect#schedule">Schedule a Call</a></li>',
     '        <li><a href="/connect#message">Send a Message</a></li>',
-    '        <li><a href="mailto:zach@ohiopride.org">zach@ohiopride.org</a></li>',
     '        <li><a href="mailto:press@ohiopride.org">Press Inquiries</a></li>',
     '      </ul>',
     '    </div>',
