@@ -21,6 +21,11 @@
   status = 200
 
 [[redirects]]
+  from = "/connect"
+  to = "/connect.html"
+  status = 200
+
+[[redirects]]
   from = "/founding-members"
   to = "/founding-members.html"
   status = 200
