@@ -47,7 +47,7 @@
     '      <li><a href="/scorecard">Scorecard</a></li>',
     '      <li><a href="/about">About</a></li>',
     '      <li><a href="/founding-members">Founding Members</a></li>',
-    '      <li><a href="/contact">Contact</a></li>',
+    '      <li><a href="/connect">Connect</a></li>',
     '      <li><a href="/donate" class="ohp-btn-donate">Donate</a></li>',
     '    </ul>',
     '  </div>',
