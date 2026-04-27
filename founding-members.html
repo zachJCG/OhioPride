@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Founding Members | Ohio Pride</title>
+    <title>Founding Members | Ohio Pride PAC</title>
     <meta
       name="description"
-      content="Join the first 1,969 founding members building LGBTQ+ political power in Ohio."
+      content="Meet the first 1,969 Ohioans building LGBTQ+ political power. Search by county, tier, or elected office."
     />
     <link rel="canonical" href="https://www.ohiopride.org/founding-members" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Founding Members | Ohio Pride" />
-    <meta property="og:description" content="Join the first 1,969 founding members building LGBTQ+ political power in Ohio." />
+    <meta property="og:title" content="Founding Members | Ohio Pride PAC" />
+    <meta property="og:description" content="Meet the first 1,969 Ohioans building LGBTQ+ political power." />
     <meta property="og:url" content="https://www.ohiopride.org/founding-members" />
-    <meta property="og:site_name" content="Ohio Pride" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Founding Members | Ohio Pride" />
-    <meta name="twitter:description" content="Join the first 1,969 founding members building LGBTQ+ political power in Ohio." />
+    <meta property="og:site_name" content="Ohio Pride PAC" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Founding Members | Ohio Pride PAC" />
+    <meta name="twitter:description" content="Meet the first 1,969 Ohioans building LGBTQ+ political power." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -25,164 +25,455 @@
     />
     <link rel="stylesheet" href="/css/style.css" />
     <style>
-      body {
-        background: var(--dark-bg);
+      :root {
+        --tier-stonewall: #ff5a36;
+        --tier-founding: #ffb300;
+        --tier-builder: #2bb673;
+        --tier-circle: #2c8df0;
+        --tier-patron: #a14fff;
       }
 
-      /* Tier cards specific to this page */
-      .tier-legend {
-        padding: 3rem 0;
-      }
-      .tier-legend h3 {
-        font-family: "Montserrat", sans-serif;
-        text-align: center;
-        margin-bottom: 2rem;
-        font-size: 1.5rem;
-        color: var(--text-white);
-      }
-      .tier-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        max-width: 1000px;
-        margin: 0 auto;
-      }
-      .tier-legend-card {
-        padding: 1.5rem;
-        border: 1px solid var(--dark-bg-light);
-        border-radius: 8px;
-        text-align: center;
-        background: rgba(19, 45, 68, 0.5);
-        transition:
-          border-color 0.3s ease,
-          background-color 0.3s ease;
-      }
-      .tier-legend-card:hover {
-        background-color: rgba(0, 77, 255, 0.05);
-        border-color: var(--color-blue);
-      }
-      .tier-legend-card .tier-name {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 700;
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-        color: var(--text-white);
-      }
-      .tier-legend-card .tier-price {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        font-size: 0.95rem;
-      }
+      body { background: var(--dark-bg, #0b1f33); }
 
-      /* Member empty state */
-      .member-empty-state {
-        padding: 4rem 2rem;
-        border: 2px dashed rgba(255, 255, 255, 0.15);
-        border-radius: 12px;
-        text-align: center;
-        background: rgba(19, 45, 68, 0.3);
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      .member-empty-state h3 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        color: var(--text-white);
-      }
-      .member-empty-state p {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        font-size: 1rem;
-        line-height: 1.8;
-      }
-
-      /* Founding member list */
-      .member-list {
-        max-width: 800px;
-        margin: 0 auto;
+      /* HERO STATS */
+      .hero-stats {
         display: grid;
-        gap: 2.5rem;
-      }
-      .tier-group {
-        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 1rem;
+        max-width: 880px;
+        margin: 1.5rem auto 0;
       }
-      .tier-group-header {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--dark-bg-light, #1a3a52);
-      }
-      .tier-group-title {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.1rem;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: var(--text-white);
-      }
-      .tier-group-price {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.9rem;
-        color: var(--text-light);
-      }
-      .member-row {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-        padding: 1.25rem 1.5rem;
-        background: rgba(19, 45, 68, 0.5);
+      .hero-stat {
+        background: rgba(19, 45, 68, 0.55);
         border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 10px;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        text-align: center;
         position: relative;
         overflow: hidden;
       }
-      .member-row::before {
+      .hero-stat::before {
         content: "";
         position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 3px;
-        background: var(--pride-gradient);
+        top: 0; left: 0; right: 0; height: 3px;
+        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
       }
-      .member-name {
+      .hero-stat .num {
         font-family: "Montserrat", sans-serif;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--text-white);
+        font-weight: 700;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        color: var(--text-white, #fff);
+        line-height: 1.1;
+      }
+      .hero-stat .label {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.78rem;
+        margin-top: 0.25rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .hero-stat .sub {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.85rem;
+        margin-top: 0.4rem;
       }
 
-      @media (max-width: 768px) {
-        .tier-grid {
-          grid-template-columns: 1fr;
-        }
+      /* PROGRESS BAR */
+      .goal-block { max-width: 720px; margin: 2.25rem auto 0; }
+
+      /* TIER CHIPS */
+      .tier-chips-section { padding: 2rem 0 1rem; }
+      .tier-chips-section h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.35rem;
+        color: var(--text-white, #fff);
+        text-align: center;
+        margin-bottom: 0.4rem;
+      }
+      .tier-chips-section .lede {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        text-align: center;
+        max-width: 640px;
+        margin: 0 auto 1.5rem;
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+      .tier-chips {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.75rem;
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+      .tier-chip {
+        background: rgba(19, 45, 68, 0.55);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 12px;
+        padding: 1rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.15s ease, border-color 0.2s ease, background-color 0.2s ease;
+        position: relative;
+      }
+      .tier-chip:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.35); }
+      .tier-chip[aria-pressed="true"] {
+        border-color: var(--text-white, #fff);
+        background: rgba(255,255,255,0.06);
+      }
+      .tier-chip .dot {
+        display: inline-block;
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        margin-right: 0.4rem;
+        vertical-align: middle;
+      }
+      .tier-chip .name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--text-white, #fff);
+      }
+      .tier-chip .price {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+      }
+      .tier-chip .count {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.72rem;
+        color: var(--text-light, #c5d2dd);
+        margin-top: 0.4rem;
+        opacity: 0.8;
+      }
+
+      .cta-row { text-align: center; margin: 2rem 0 1.5rem; }
+
+      /* ENDORSED BY STRIP */
+      .endorsed-strip {
+        max-width: 1080px;
+        margin: 1rem auto 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+      }
+      .endorsed-strip .label {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-light, #c5d2dd);
+        margin-bottom: 0.5rem;
+      }
+      .endorsed-strip .roster {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+      }
+      .endorsed-strip a {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-white, #fff);
+        text-decoration: none;
+        font-size: 0.95rem;
+        border-bottom: 1px dotted rgba(255,255,255,0.3);
+        padding-bottom: 1px;
+      }
+      .endorsed-strip a:hover { border-bottom-color: var(--text-white, #fff); }
+
+      /* DIRECTORY CONTROLS */
+      .directory-controls {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr auto;
+        gap: 0.75rem;
+        max-width: 1080px;
+        margin: 0 auto 1rem;
+        align-items: center;
+      }
+      .directory-controls input,
+      .directory-controls select {
+        width: 100%;
+        background: rgba(19, 45, 68, 0.7);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        color: var(--text-white, #fff);
+        font-family: "Roboto Slab", serif;
+        font-size: 0.95rem;
+        padding: 0.7rem 0.9rem;
+        border-radius: 10px;
+        outline: none;
+      }
+      .directory-controls input:focus,
+      .directory-controls select:focus { border-color: var(--color-blue, #2c8df0); }
+      .directory-controls input::placeholder { color: rgba(255,255,255,0.5); }
+      .toggle-elected {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(19, 45, 68, 0.7);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 10px;
+        padding: 0.55rem 0.9rem;
+        cursor: pointer;
+        font-family: "Roboto Slab", serif;
+        color: var(--text-white, #fff);
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+      .toggle-elected input { accent-color: var(--color-blue, #2c8df0); }
+
+      .result-meta {
+        max-width: 1080px;
+        margin: 0.25rem auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.9rem;
+      }
+      .result-meta .clear {
+        background: none;
+        border: none;
+        color: var(--color-blue, #2c8df0);
+        cursor: pointer;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.9rem;
+        padding: 0;
+      }
+      .result-meta .clear:hover { text-decoration: underline; }
+
+      /* MEMBER GRID */
+      .member-grid {
+        max-width: 1080px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+      .member-card {
+        position: relative;
+        background: rgba(19, 45, 68, 0.55);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 14px;
+        padding: 1.1rem 1.1rem 1rem;
+        overflow: hidden;
+        content-visibility: auto;
+        contain-intrinsic-size: auto 200px;
+        transition: transform 0.15s ease, border-color 0.2s ease;
+      }
+      .member-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.25); }
+      .member-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; bottom: 0;
+        width: 4px;
+        background: var(--tier-color, var(--pride-gradient, linear-gradient(180deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff)));
+      }
+      .member-card .pos {
+        position: absolute;
+        top: 0.7rem;
+        right: 0.85rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.72rem;
+        color: var(--text-light, #c5d2dd);
+        letter-spacing: 0.05em;
+      }
+      .member-card .name-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .member-card .name {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text-white, #fff);
+        line-height: 1.2;
+      }
+      .member-card .elected-pin {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        background: rgba(44, 141, 240, 0.15);
+        color: #7fb6ff;
+        border: 1px solid rgba(127, 182, 255, 0.4);
+        padding: 0.18rem 0.45rem;
+        border-radius: 999px;
+      }
+      .member-card .office {
+        font-family: "Roboto Slab", serif;
+        color: #c8dcf2;
+        font-size: 0.82rem;
+        margin-top: 0.25rem;
+        line-height: 1.3;
+      }
+      .member-card .meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.7rem;
+        flex-wrap: wrap;
+      }
+      .member-card .tier-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--text-white, #fff);
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 999px;
+        padding: 0.18rem 0.55rem;
+      }
+      .member-card .tier-tag .dot { width: 8px; height: 8px; border-radius: 50%; }
+      .member-card .loc {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.85rem;
+        color: var(--text-light, #c5d2dd);
+      }
+      .member-card .quote {
+        margin-top: 0.7rem;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.85rem;
+        color: var(--text-light, #c5d2dd);
+        font-style: italic;
+        line-height: 1.4;
+        border-left: 2px solid rgba(255,255,255,0.15);
+        padding-left: 0.6rem;
+      }
+      .member-card .joined {
+        margin-top: 0.7rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.7rem;
+        color: var(--text-light, #c5d2dd);
+        opacity: 0.8;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      /* PLACEHOLDER CARDS */
+      .member-card.placeholder {
+        background: repeating-linear-gradient(
+          135deg,
+          rgba(255,255,255,0.02),
+          rgba(255,255,255,0.02) 10px,
+          rgba(255,255,255,0.04) 10px,
+          rgba(255,255,255,0.04) 20px
+        );
+        border-style: dashed;
+        opacity: 0.55;
+      }
+      .member-card.placeholder::before { background: rgba(255,255,255,0.15); }
+      .member-card.placeholder .name { color: var(--text-light, #c5d2dd); }
+
+      .load-more-row { max-width: 1080px; margin: 1.5rem auto 0; text-align: center; }
+      .load-more-row button {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        color: var(--text-white, #fff);
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+        padding: 0.7rem 1.4rem;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      .load-more-row button:hover { background: rgba(255,255,255,0.1); }
+
+      .no-results {
+        max-width: 600px;
+        margin: 2rem auto;
+        text-align: center;
+        padding: 2rem 1.5rem;
+        border: 1px dashed rgba(255,255,255,0.15);
+        border-radius: 12px;
+        background: rgba(19, 45, 68, 0.3);
+      }
+      .no-results h4 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.05rem;
+        color: var(--text-white, #fff);
+        margin-bottom: 0.4rem;
+      }
+      .no-results p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 720px) {
+        .hero-stats { grid-template-columns: 1fr; gap: 0.6rem; }
+        .directory-controls { grid-template-columns: 1fr; }
+        .endorsed-strip .roster { gap: 0.45rem 0.9rem; }
       }
     </style>
-  <link rel="stylesheet" href="/css/site-template.css">
   </head>
   <body>
-<div id="site-header"></div>
+    <div class="pride-stripe"></div>
+
+    <!-- Navigation -->
+    <nav class="nav nav-solid" id="nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span>
+          <span class="logo-pac">PAC</span>
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="navLinks">
+          <a href="/issues">Issues</a>
+          <a href="/founding-members">Founding Members</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/donate" class="btn btn-nav">Donate</a>
+        </div>
+      </div>
+    </nav>
 
     <!-- Hero -->
     <header class="subpage-hero">
       <div class="container">
         <div class="section-label">Founding Members</div>
-        <h1 class="section-title">Our Founding Members</h1>
+        <h1 class="section-title">The First 1,969</h1>
         <p class="subpage-hero-sub">
-          The first 1,969 people building LGBTQ+ political power in Ohio
+          Ohioans building durable LGBTQ+ political power, one founding member at a time.
         </p>
-      </div>
-    </header>
 
-    <!-- Progress + Tiers -->
-    <section class="section">
-      <div class="container">
-        <!-- Progress Bar -->
-        <div class="goal-block" style="max-width: 640px; margin: 0 auto 48px">
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num" id="statMembers">0</div>
+            <div class="label">Founding Members</div>
+            <div class="sub">of 1,969</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num" id="statCounties">0</div>
+            <div class="label">Ohio Counties</div>
+            <div class="sub">of 88 represented</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num" id="statNewestName" style="font-size:1.1rem; line-height:1.3;">&mdash;</div>
+            <div class="label">Newest Member</div>
+            <div class="sub" id="statNewestWhen">Be the next.</div>
+          </div>
+        </div>
+
+        <div class="goal-block">
           <div class="goal-top">
             <span class="goal-text">Founding Members</span>
             <span class="goal-amt">1,969</span>
@@ -190,64 +481,634 @@
           <div class="goal-track">
             <div class="goal-fill" id="goalFill"></div>
           </div>
-          <div class="goal-note" id="progressText">
-            0 of 1,969 Founding Members
-          </div>
-        </div>
-
-        <p
-          style="
-            font-family: &quot;Roboto Slab&quot;, serif;
-            color: var(--text-light);
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 2rem;
-            line-height: 1.8;
-          "
-        >
-          In 1969, the Stonewall uprising ignited a movement. We're honoring
-          that legacy by building a founding base of 1,969 members.
-        </p>
-
-        <div style="text-align: center; margin-bottom: 3rem">
-          <a href="/donate/founding-member" class="btn btn-pride-shimmer"
-            >Become a Founding Member</a
-          >
-        </div>
-
-        <!-- Tier Legend (hydrated by OhioPride.loadFoundingMemberTiers) -->
-        <div class="tier-legend reveal">
-          <h3>Founding Member Tiers</h3>
-          <div class="tier-grid reveal-stagger" id="tierGrid">
-            <!-- Tier cards injected from /.netlify/functions/founding-member-tiers -->
-          </div>
+          <div class="goal-note" id="progressText">0 of 1,969 Founding Members</div>
         </div>
       </div>
-    </section>
+    </header>
 
-    <!-- Member List -->
+    <!-- Tier chips + CTA -->
     <section class="section">
       <div class="container">
-        <div class="member-list reveal" id="memberList">
-          <!-- Tier-grouped members injected from /.netlify/functions/public-members -->
+        <div class="tier-chips-section">
+          <h2>Pick Your Role In The Movement</h2>
+          <p class="lede">
+            Every tier counts the same toward 1,969. Tap a chip to filter the directory by role.
+          </p>
+          <div class="tier-chips" id="tierChips" role="group" aria-label="Filter by tier"></div>
+        </div>
+
+        <div class="cta-row">
+          <a href="/donate/founding-member" class="btn btn-pride-shimmer">Become a Founding Member</a>
         </div>
       </div>
     </section>
 
-<div id="site-footer"></div>
+    <!-- Endorsed By + Directory -->
+    <section class="section">
+      <div class="container">
+
+        <div class="endorsed-strip" id="endorsedStrip" hidden>
+          <div class="label">Founding Members In Office</div>
+          <div class="roster" id="endorsedRoster"></div>
+        </div>
+
+        <h2 style="font-family:'Montserrat',sans-serif; color:var(--text-white,#fff); text-align:center; margin: 2rem 0 1rem;">
+          Member Directory
+        </h2>
+
+        <div class="directory-controls">
+          <div class="field">
+            <input type="search" id="searchInput" placeholder="Search by name, city, or county" aria-label="Search members" />
+          </div>
+          <div class="field">
+            <select id="countyFilter" aria-label="Filter by county">
+              <option value="">All Ohio counties</option>
+            </select>
+          </div>
+          <div class="field">
+            <select id="sortSelect" aria-label="Sort members">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="az">Name A to Z</option>
+              <option value="county">County A to Z</option>
+              <option value="position">By founding number</option>
+            </select>
+          </div>
+          <label class="toggle-elected">
+            <input type="checkbox" id="electedToggle" />
+            Elected officials only
+          </label>
+        </div>
+
+        <div class="result-meta">
+          <div id="resultCount">Loading members&hellip;</div>
+          <button class="clear" id="clearFilters" hidden>Clear filters</button>
+        </div>
+
+        <div class="member-grid" id="memberGrid" aria-live="polite"></div>
+
+        <div class="load-more-row" id="loadMoreRow" hidden>
+          <button id="loadMoreBtn">Show more members</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="nav-logo footer-logo">
+              <span class="logo-ohio">Ohio</span><span class="logo-pride">Pride</span>
+              <span class="logo-pac">PAC</span>
+            </a>
+            <p class="footer-tagline">
+              Ohio's Political Action Committee for LGBTQ+ Equality.
+            </p>
+          </div>
+          <div class="footer-links">
+            <h4>Organization</h4>
+            <a href="/issues">Issues</a>
+            <a href="/founding-members">Founding Members</a>
+            <a href="/about">About</a>
+          </div>
+          <div class="footer-links">
+            <h4>Get Involved</h4>
+            <a href="/donate">Donate</a>
+            <a href="/contact">Contact Us</a>
+          </div>
+          <div class="footer-links">
+            <h4>Legal</h4>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Ohio Pride PAC. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="compliance-footer">
+      <div class="container">
+        <p>Paid for by Ohio Pride PAC. Zachary R. Joseph, Director &middot; David Donofrio, Treasurer.</p>
+        <p class="irs-line">Contributions are not tax-deductible for federal income tax purposes.</p>
+      </div>
+    </div>
 
     <a href="/donate" class="mobile-donate-fab">Donate</a>
 
     <script src="/js/main.js" defer></script>
     <script src="/js/enhancements.js" defer></script>
-    <script src="/js/ohiopride-data.js" defer></script>
-    <script defer>
-      document.addEventListener("DOMContentLoaded", function () {
-        OhioPride.loadProgress("#goalFill", "#progressText");
-        OhioPride.loadFoundingMemberTiers("#tierGrid");
-        OhioPride.loadPublicMembers("#memberList");
-      });
+
+    <script>
+      // ============================================================
+      // FOUNDING MEMBERS DIRECTORY
+      // Live source: Supabase view public.founding_members_public.
+      // The static MEMBERS array below is a fallback snapshot used
+      // if the network call fails so the page never blanks.
+      // The render code is data-source agnostic and built to handle
+      // ~2,000 records on mobile.
+      // ============================================================
+
+      var SUPABASE_URL = "https://dkdxefzhttkmjhdbkvqn.supabase.co";
+      var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4";
+
+      var TIERS = [
+        { id: "stonewall-sustainer", name: "Stonewall Sustainer", price: "$19.69 / month", color: "var(--tier-stonewall)" },
+        { id: "founding-member",     name: "Founding Member",     price: "$25 one-time",   color: "var(--tier-founding)" },
+        { id: "pride-builder",       name: "Pride Builder",       price: "$50 / month",    color: "var(--tier-builder)" },
+        { id: "founding-circle",     name: "Founding Circle",     price: "$100 / month",   color: "var(--tier-circle)" },
+        { id: "founding-patron",     name: "Founding Patron",     price: "$250+ one-time", color: "var(--tier-patron)" }
+      ];
+
+      var OHIO_COUNTIES = [
+        "Adams","Allen","Ashland","Ashtabula","Athens","Auglaize","Belmont","Brown","Butler","Carroll",
+        "Champaign","Clark","Clermont","Clinton","Columbiana","Coshocton","Crawford","Cuyahoga","Darke","Defiance",
+        "Delaware","Erie","Fairfield","Fayette","Franklin","Fulton","Gallia","Geauga","Greene","Guernsey",
+        "Hamilton","Hancock","Hardin","Harrison","Henry","Highland","Hocking","Holmes","Huron","Jackson",
+        "Jefferson","Knox","Lake","Lawrence","Licking","Logan","Lorain","Lucas","Madison","Mahoning",
+        "Marion","Medina","Meigs","Mercer","Miami","Monroe","Montgomery","Morgan","Morrow","Muskingum",
+        "Noble","Ottawa","Paulding","Perry","Pickaway","Pike","Portage","Preble","Putnam","Richland",
+        "Ross","Sandusky","Scioto","Seneca","Shelby","Stark","Summit","Trumbull","Tuscarawas","Union",
+        "Van Wert","Vinton","Warren","Washington","Wayne","Williams","Wood","Wyandot"
+      ];
+
+      // ============================================================
+      // MEMBER DATA. Schema:
+      //   id            number   founding member position (1..1969)
+      //   displayName   string   how the name appears publicly
+      //   sortName      string   "Last, First" for A-Z sorting
+      //   city          string|null
+      //   county        string|null  (no "County" suffix)
+      //   tier          string   one of TIERS[].id
+      //   joinedAt      string   ISO date YYYY-MM-DD
+      //   electedOffice string|null  e.g. "City Commissioner"
+      //   jurisdiction  string|null  e.g. "City of Dayton"
+      //   quote         string|null  optional one-liner
+      //   publicConsent boolean       must be true to display
+      // ============================================================
+      // Fallback snapshot (mirrors public.founding_members_public at deploy time).
+      // Live data overwrites this on init() if the fetch succeeds.
+      var MEMBERS = [
+        {
+          id: 1,
+          displayName: "Jesse Shepherd",
+          sortName: "Shepherd, Jesse",
+          city: null,
+          county: "Hamilton",
+          tier: "founding-member",
+          joinedAt: "2026-03-01",
+          electedOffice: null,
+          jurisdiction: null,
+          quote: null,
+          publicConsent: true
+        },
+        {
+          id: 2,
+          displayName: "Nicole Green",
+          sortName: "Green, Nicole",
+          city: null,
+          county: "Montgomery",
+          tier: "stonewall-sustainer",
+          joinedAt: "2026-03-01",
+          electedOffice: null,
+          jurisdiction: null,
+          quote: null,
+          publicConsent: true
+        },
+        {
+          id: 3,
+          displayName: "Zachary Smith",
+          sortName: "Smith, Zachary",
+          city: null,
+          county: "Hamilton",
+          tier: "founding-member",
+          joinedAt: "2026-03-01",
+          electedOffice: null,
+          jurisdiction: null,
+          quote: null,
+          publicConsent: true
+        },
+        {
+          id: 4,
+          displayName: "Matt Joseph",
+          sortName: "Joseph, Matt",
+          city: "Dayton",
+          county: "Montgomery",
+          tier: "founding-circle",
+          joinedAt: "2026-04-27",
+          electedOffice: "City Commissioner",
+          jurisdiction: "City of Dayton",
+          quote: null,
+          publicConsent: true
+        }
+      ];
+
+      var FOUNDING_GOAL = 1969;
+      var PAGE_SIZE = 60;
+
+      var state = {
+        search: "",
+        county: "",
+        tiers: new Set(),
+        electedOnly: false,
+        sort: "newest",
+        visibleCount: PAGE_SIZE
+      };
+
+      var tierMap = TIERS.reduce(function (acc, t) { acc[t.id] = t; return acc; }, {});
+      function tierColor(id) { return (tierMap[id] && tierMap[id].color) || "rgba(255,255,255,0.4)"; }
+      function tierName(id)  { return (tierMap[id] && tierMap[id].name)  || id; }
+
+      function escapeHtml(s) {
+        if (s == null) return "";
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function formatJoined(iso) {
+        if (!iso) return "";
+        var d = new Date(iso + "T12:00:00");
+        if (isNaN(d.getTime())) return "";
+        return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+      }
+
+      function relativeTime(iso) {
+        if (!iso) return "";
+        var d = new Date(iso + "T12:00:00");
+        if (isNaN(d.getTime())) return "";
+        var diffMs = Date.now() - d.getTime();
+        var days = Math.floor(diffMs / 86400000);
+        if (days < 1) return "Joined today";
+        if (days === 1) return "Joined yesterday";
+        if (days < 7) return "Joined " + days + " days ago";
+        if (days < 30) {
+          var w = Math.floor(days / 7);
+          return "Joined " + w + " week" + (w === 1 ? "" : "s") + " ago";
+        }
+        return "Joined " + d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+      }
+
+      function renderTierChips() {
+        var host = document.getElementById("tierChips");
+        var counts = {};
+        TIERS.forEach(function (t) { counts[t.id] = 0; });
+        MEMBERS.forEach(function (m) {
+          if (m.publicConsent && counts.hasOwnProperty(m.tier)) counts[m.tier]++;
+        });
+
+        host.innerHTML = TIERS.map(function (t) {
+          var pressed = state.tiers.has(t.id);
+          return ''
+            + '<button type="button" class="tier-chip" data-tier="' + t.id + '" aria-pressed="' + pressed + '">'
+            +   '<div class="name"><span class="dot" style="background:' + t.color + '"></span>' + escapeHtml(t.name) + '</div>'
+            +   '<div class="price">' + escapeHtml(t.price) + '</div>'
+            +   '<div class="count">' + counts[t.id] + ' member' + (counts[t.id] === 1 ? '' : 's') + '</div>'
+            + '</button>';
+        }).join("");
+
+        host.querySelectorAll(".tier-chip").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var t = btn.getAttribute("data-tier");
+            if (state.tiers.has(t)) state.tiers.delete(t); else state.tiers.add(t);
+            btn.setAttribute("aria-pressed", state.tiers.has(t));
+            state.visibleCount = PAGE_SIZE;
+            renderGrid();
+          });
+        });
+      }
+
+      function renderCountyOptions() {
+        var sel = document.getElementById("countyFilter");
+        var present = {};
+        MEMBERS.forEach(function (m) { if (m.publicConsent && m.county) present[m.county] = true; });
+        var html = '<option value="">All Ohio counties</option>';
+        OHIO_COUNTIES.slice().sort().forEach(function (c) {
+          var has = present[c];
+          html += '<option value="' + escapeHtml(c) + '">' + escapeHtml(c)
+                + (has ? '' : ' (no members yet)') + '</option>';
+        });
+        sel.innerHTML = html;
+      }
+
+      function renderEndorsedStrip() {
+        var electeds = MEMBERS.filter(function (m) { return m.publicConsent && m.electedOffice; });
+        var strip = document.getElementById("endorsedStrip");
+        var roster = document.getElementById("endorsedRoster");
+        if (electeds.length === 0) { strip.hidden = true; return; }
+        strip.hidden = false;
+        roster.innerHTML = electeds.map(function (m) {
+          var label = escapeHtml(m.displayName)
+            + ' <span style="color:var(--text-light,#c5d2dd); font-size:0.85em;">('
+            + escapeHtml(m.electedOffice)
+            + (m.jurisdiction ? ', ' + escapeHtml(m.jurisdiction) : '')
+            + ')</span>';
+          return '<a href="#member-' + m.id + '">' + label + '</a>';
+        }).join("");
+      }
+
+      function renderHeroStats() {
+        var visible = MEMBERS.filter(function (m) { return m.publicConsent; });
+        var count = visible.length;
+
+        var counties = {};
+        visible.forEach(function (m) { if (m.county) counties[m.county] = true; });
+        var countyCount = Object.keys(counties).length;
+
+        var newest = visible.slice().sort(function (a, b) {
+          return (b.joinedAt || "").localeCompare(a.joinedAt || "");
+        })[0];
+
+        document.getElementById("statMembers").textContent = count.toLocaleString();
+        document.getElementById("statCounties").textContent = countyCount;
+        if (newest) {
+          var firstName = newest.displayName.split(" ")[0];
+          var label = firstName + (newest.county ? " from " + newest.county + " County" : "");
+          document.getElementById("statNewestName").textContent = label;
+          document.getElementById("statNewestWhen").textContent = relativeTime(newest.joinedAt);
+        }
+
+        var pct = Math.min(100, (count / FOUNDING_GOAL) * 100);
+        var bar = document.getElementById("goalFill");
+        var text = document.getElementById("progressText");
+        if (bar) bar.style.width = pct + "%";
+        if (text) text.textContent = count.toLocaleString() + " of 1,969 Founding Members";
+      }
+
+      function getFiltered() {
+        var q = state.search.trim().toLowerCase();
+        var rows = MEMBERS.filter(function (m) {
+          if (!m.publicConsent) return false;
+          if (state.electedOnly && !m.electedOffice) return false;
+          if (state.county && m.county !== state.county) return false;
+          if (state.tiers.size > 0 && !state.tiers.has(m.tier)) return false;
+          if (q) {
+            var hay = [m.displayName, m.city, m.county, m.electedOffice, m.jurisdiction]
+              .filter(Boolean).join(" ").toLowerCase();
+            if (hay.indexOf(q) === -1) return false;
+          }
+          return true;
+        });
+
+        switch (state.sort) {
+          case "oldest":
+            rows.sort(function (a, b) { return (a.joinedAt || "").localeCompare(b.joinedAt || ""); });
+            break;
+          case "az":
+            rows.sort(function (a, b) { return (a.sortName || a.displayName).localeCompare(b.sortName || b.displayName); });
+            break;
+          case "county":
+            rows.sort(function (a, b) { return (a.county || "zzz").localeCompare(b.county || "zzz"); });
+            break;
+          case "position":
+            rows.sort(function (a, b) { return a.id - b.id; });
+            break;
+          case "newest":
+          default:
+            rows.sort(function (a, b) {
+              var d = (b.joinedAt || "").localeCompare(a.joinedAt || "");
+              return d !== 0 ? d : b.id - a.id;
+            });
+        }
+        return rows;
+      }
+
+      function memberCardHTML(m) {
+        var color = tierColor(m.tier);
+        var hasElected = !!m.electedOffice;
+        var officeLine = hasElected
+          ? '<div class="office">' + escapeHtml(m.electedOffice)
+            + (m.jurisdiction ? ', ' + escapeHtml(m.jurisdiction) : '') + '</div>'
+          : '';
+        var quote = m.quote ? '<div class="quote">&ldquo;' + escapeHtml(m.quote) + '&rdquo;</div>' : '';
+        var loc = (m.city || m.county)
+          ? '<div class="loc">' + escapeHtml([m.city, m.county ? m.county + " County" : null].filter(Boolean).join(", ")) + '</div>'
+          : '<div class="loc" style="opacity:0.55;">Ohio</div>';
+        var pin = hasElected
+          ? '<span class="elected-pin" title="Elected official">'
+            + '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
+            + '<path d="M12 2l2.39 4.84L20 7.27l-3.91 3.81.92 5.39L12 13.93l-5.01 2.54.92-5.39L4 7.27l5.61-.43L12 2z"/>'
+            + '</svg>Elected</span>'
+          : '';
+        var joined = formatJoined(m.joinedAt)
+          ? "Founding Member since " + formatJoined(m.joinedAt)
+          : "Founding Member";
+        return ''
+          + '<article class="member-card" id="member-' + m.id + '" style="--tier-color:' + color + ';">'
+          +   '<div class="pos">#' + m.id + '</div>'
+          +   '<div class="name-row">'
+          +     '<div class="name">' + escapeHtml(m.displayName) + '</div>'
+          +     pin
+          +   '</div>'
+          +   officeLine
+          +   '<div class="meta">'
+          +     '<span class="tier-tag"><span class="dot" style="background:' + color + ';"></span>' + escapeHtml(tierName(m.tier)) + '</span>'
+          +     loc
+          +   '</div>'
+          +   quote
+          +   '<div class="joined">' + escapeHtml(joined) + '</div>'
+          + '</article>';
+      }
+
+      function placeholderCardHTML(num) {
+        return ''
+          + '<article class="member-card placeholder" aria-hidden="true">'
+          +   '<div class="pos">#' + num + '</div>'
+          +   '<div class="name-row"><div class="name">Reserved for #' + num + '</div></div>'
+          +   '<div class="meta"><span class="loc">Your seat is open.</span></div>'
+          +   '<div class="joined">Become a Founding Member</div>'
+          + '</article>';
+      }
+
+      function renderGrid() {
+        var grid = document.getElementById("memberGrid");
+        var meta = document.getElementById("resultCount");
+        var clearBtn = document.getElementById("clearFilters");
+        var loadMoreRow = document.getElementById("loadMoreRow");
+
+        var filtered = getFiltered();
+        var anyFilter = state.search || state.county || state.tiers.size > 0 || state.electedOnly;
+        clearBtn.hidden = !anyFilter;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = ''
+            + '<div class="no-results" style="grid-column: 1 / -1;">'
+            +   '<h4>No members match those filters yet.</h4>'
+            +   '<p>Try clearing a filter, or be the first from your county to join.</p>'
+            + '</div>';
+          meta.textContent = '0 members';
+          loadMoreRow.hidden = true;
+          return;
+        }
+
+        var visibleCounties = {};
+        filtered.forEach(function (m) { if (m.county) visibleCounties[m.county] = true; });
+        var cText = filtered.length.toLocaleString() + ' member' + (filtered.length === 1 ? '' : 's');
+        var cyCount = Object.keys(visibleCounties).length;
+        if (cyCount > 0) cText += ' across ' + cyCount + ' count' + (cyCount === 1 ? 'y' : 'ies');
+        meta.textContent = cText;
+
+        var slice = filtered.slice(0, state.visibleCount);
+        var html = slice.map(memberCardHTML).join("");
+
+        if (!anyFilter && filtered.length < 12 && state.visibleCount === PAGE_SIZE) {
+          var lastId = Math.max.apply(null, filtered.map(function (m) { return m.id; }));
+          var n = Math.min(8, 12 - filtered.length);
+          for (var i = 1; i <= n; i++) html += placeholderCardHTML(lastId + i);
+        }
+
+        grid.innerHTML = html;
+
+        if (filtered.length > state.visibleCount) {
+          loadMoreRow.hidden = false;
+          document.getElementById("loadMoreBtn").textContent =
+            'Show more members (' + (filtered.length - state.visibleCount).toLocaleString() + ' remaining)';
+        } else {
+          loadMoreRow.hidden = true;
+        }
+      }
+
+      function debounce(fn, wait) {
+        var t;
+        return function () {
+          var args = arguments;
+          clearTimeout(t);
+          t = setTimeout(function () { fn.apply(null, args); }, wait);
+        };
+      }
+
+      function bindControls() {
+        var search = document.getElementById("searchInput");
+        var county = document.getElementById("countyFilter");
+        var sort = document.getElementById("sortSelect");
+        var elected = document.getElementById("electedToggle");
+        var clearBtn = document.getElementById("clearFilters");
+        var loadMore = document.getElementById("loadMoreBtn");
+
+        search.addEventListener("input", debounce(function (e) {
+          state.search = e.target.value;
+          state.visibleCount = PAGE_SIZE;
+          renderGrid();
+        }, 120));
+
+        county.addEventListener("change", function (e) {
+          state.county = e.target.value;
+          state.visibleCount = PAGE_SIZE;
+          renderGrid();
+        });
+
+        sort.addEventListener("change", function (e) {
+          state.sort = e.target.value;
+          renderGrid();
+        });
+
+        elected.addEventListener("change", function (e) {
+          state.electedOnly = e.target.checked;
+          state.visibleCount = PAGE_SIZE;
+          renderGrid();
+        });
+
+        clearBtn.addEventListener("click", function () {
+          state.search = "";
+          state.county = "";
+          state.tiers = new Set();
+          state.electedOnly = false;
+          state.visibleCount = PAGE_SIZE;
+          search.value = "";
+          county.value = "";
+          elected.checked = false;
+          document.querySelectorAll(".tier-chip").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+          renderGrid();
+        });
+
+        loadMore.addEventListener("click", function () {
+          state.visibleCount += PAGE_SIZE;
+          renderGrid();
+        });
+      }
+
+      // Map a row from the Supabase public view to the page schema
+      function adaptSupabaseRow(row) {
+        var tierName = row.tier || "";
+        var tierSlug = tierName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        if (!tierMap[tierSlug]) tierSlug = "founding-member";
+        var name = row.display_name || "Anonymous";
+        var parts = name.trim().split(/\s+/);
+        var sortName = parts.length > 1
+          ? parts[parts.length - 1] + ", " + parts.slice(0, -1).join(" ")
+          : name;
+        var joined = "";
+        if (row.contributed_at) {
+          joined = String(row.contributed_at).slice(0, 10);
+        }
+        return {
+          id: row.founding_number || 0,
+          displayName: name,
+          sortName: sortName,
+          city: row.city || null,
+          county: row.county || null,
+          tier: tierSlug,
+          joinedAt: joined,
+          electedOffice: row.elected_office || null,
+          jurisdiction: row.jurisdiction || null,
+          quote: row.public_quote || null,
+          publicConsent: true
+        };
+      }
+
+      function fetchMembersFromSupabase() {
+        var url = SUPABASE_URL
+          + "/rest/v1/founding_members_public"
+          + "?select=*&order=founding_number.asc";
+        return fetch(url, {
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: "Bearer " + SUPABASE_ANON_KEY,
+            Accept: "application/json"
+          }
+        }).then(function (res) {
+          if (!res.ok) throw new Error("Supabase fetch failed: " + res.status);
+          return res.json();
+        });
+      }
+
+      function renderAll() {
+        renderHeroStats();
+        renderTierChips();
+        renderCountyOptions();
+        renderEndorsedStrip();
+        renderGrid();
+      }
+
+      function init() {
+        // Paint immediately from the embedded snapshot so the page never blanks.
+        bindControls();
+        renderAll();
+
+        // Then refresh from Supabase if reachable.
+        try {
+          fetchMembersFromSupabase()
+            .then(function (rows) {
+              if (Array.isArray(rows) && rows.length > 0) {
+                MEMBERS = rows.map(adaptSupabaseRow);
+                renderAll();
+              }
+            })
+            .catch(function (err) {
+              if (window && window.console) console.warn("Founding members live fetch failed, using snapshot.", err);
+            });
+        } catch (e) {
+          if (window && window.console) console.warn("Founding members fetch threw, using snapshot.", e);
+        }
+      }
+
+      init();
     </script>
-    <script src="/js/site-template.js" defer></script>
   </body>
 </html>
