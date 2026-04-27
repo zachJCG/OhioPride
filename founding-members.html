@@ -719,6 +719,19 @@
           jurisdiction: "City of Dayton",
           quote: null,
           publicConsent: true
+        },
+        {
+          id: 5,
+          displayName: "Samuel Dorf",
+          sortName: "Dorf, Samuel",
+          city: "Oakwood",
+          county: "Montgomery",
+          tier: "founding-member",
+          joinedAt: "2026-04-27",
+          electedOffice: "City Council",
+          jurisdiction: "City of Oakwood",
+          quote: null,
+          publicConsent: true
         }
       ];
 
@@ -838,7 +851,8 @@
         var countyCount = Object.keys(counties).length;
 
         var newest = visible.slice().sort(function (a, b) {
-          return (b.joinedAt || "").localeCompare(a.joinedAt || "");
+          var d = (b.joinedAt || "").localeCompare(a.joinedAt || "");
+          return d !== 0 ? d : (b.id || 0) - (a.id || 0);
         })[0];
 
         document.getElementById("statMembers").textContent = count.toLocaleString();
