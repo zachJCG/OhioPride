@@ -1,0 +1,99 @@
+/* =============================================================================
+ * Round-3 CSS additions
+ * Append the contents of this file to css/style.css (or import it after).
+ *
+ * Includes:
+ *   1. Tier-legend cards on /founding-members made tappable + ActBlue CTA
+ *   2. Mobile filter button reliability fix for /issues + /scorecard
+ *   3. Tap-target sizing nudge so filter pills don't sit under the
+ *      mobile-donate-fab.
+ * ============================================================================= */
+
+/* 1. Tier-legend cards as ActBlue links --------------------------------- */
+.tier-legend-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+}
+.tier-legend-card-link:hover,
+.tier-legend-card-link:focus-visible {
+  border-color: var(--color-blue, #004dff);
+  background-color: rgba(0, 77, 255, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 77, 255, 0.18);
+}
+.tier-legend-card-link:focus-visible {
+  outline: 2px solid var(--color-blue, #004dff);
+  outline-offset: 2px;
+}
+.tier-legend-card-link .tier-cta {
+  margin-top: 0.75rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-blue, #004dff);
+  font-weight: 700;
+}
+
+/* 2. Mobile filter button reliability ----------------------------------- *
+ *
+ * Symptoms before this fix on iOS Safari + Android Chrome at <=768px:
+ *   - Tapping a .filter-btn or .pill sometimes registered as a scroll
+ *     gesture (300ms tap delay or accidental swipe).
+ *   - The mobile-donate-fab overlapped the bottom-most filter row when
+ *     filters wrapped over multiple lines, blocking taps.
+ */
+
+@media (max-width: 768px) {
+  /* /issues filter pills */
+  .filter-btn,
+  /* /scorecard filter pills */
+  .pill,
+  /* /scorecard top-stat filter cards */
+  .stat-filter,
+  /* /scorecard control buttons */
+  .stats-reset {
+    touch-action: manipulation;       /* kill 300ms tap delay */
+    -webkit-tap-highlight-color: rgba(0, 77, 255, 0.18);
+    user-select: none;
+    -webkit-user-select: none;
+    min-height: 40px;                 /* WCAG-friendly tap target */
+    cursor: pointer;
+  }
+
+  /* Don't let the floating donate FAB cover filter rows */
+  .filters,
+  .controls-bar,
+  .pill-group,
+  .stats-bar {
+    padding-bottom: 88px;             /* fab is ~64px tall, 24px breathing */
+  }
+
+  /* Make sure the filter container scrolls horizontally if a row gets wide,
+     instead of pushing the page wider than the viewport */
+  .filter-row,
+  .pill-group {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+  .filter-row > .filter-btn,
+  .pill-group > .pill {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+}
+
+/* 3. Tier grid tightens neatly on small screens (round 3) --------------- */
+@media (max-width: 480px) {
+  .tier-legend-card,
+  .tier-legend-card-link {
+    padding: 1.1rem 1rem;
+  }
+  .tier-legend-card-link .tier-cta {
+    font-size: 0.7rem;
+  }
+}

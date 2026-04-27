@@ -2006,6 +2006,8 @@
 
   <script src="/js/voting-records.js" defer></script>
   <script src="/js/scorecard-data.js" defer></script>
+  <script src="/js/scorecard-data-supabase.js" defer></script>
+  <script src="/js/bill-data-supabase.js" defer></script>
   <script src="/js/main.js" defer></script>
   <script src="/js/enhancements.js" defer></script>
   <script src="/js/site-template.js" defer></script>
@@ -2746,7 +2748,7 @@
       function _setPartyFilter(value)   { filters.party   = value; _activatePill('party-filter', value); }
       function _setGradeFilter(value)   { filters.grade   = value; _activatePill('grade-filter', value); }
 
-      function applyFilters() {
+      window.applyFilters = function applyFilters() {
         var filtered = allMembers.filter(function(m) {
           if (filters.chamber !== 'all' && m.chamber !== filters.chamber) return false;
           if (filters.party !== 'all' && m.party !== filters.party) return false;

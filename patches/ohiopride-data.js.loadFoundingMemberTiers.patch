@@ -1,0 +1,25 @@
+--- a/js/ohiopride-data.js
++++ b/js/ohiopride-data.js
+@@ -235,6 +235,22 @@
+         if (!data || !data.ok || !Array.isArray(data.tiers)) return;
+
+         grid.innerHTML = data.tiers.map(function (t) {
++          // Round 3: tier-legend cards become ActBlue links when actblue_url
++          // is provided so the founding-members page is one tap from giving.
++          // Falls back to a non-clickable div if the URL is missing.
++          if (t.actblue_url) {
++            return (
++              '<a class="tier-legend-card tier-legend-card-link" ' +
++                'href="' + escapeAttr(t.actblue_url) + '" ' +
++                'data-slug="' + escapeAttr(t.slug) + '" ' +
++                'data-actblue-tier="' + escapeAttr(t.slug) + '" ' +
++                'rel="noopener">' +
++                '<div class="tier-name">' + escapeHtml(t.name) + '</div>' +
++                '<div class="tier-price">' + escapeHtml(t.amount_display) + '</div>' +
++                '<div class="tier-cta">Donate via ActBlue &rarr;</div>' +
++              '</a>'
++            );
++          }
+           return (
+             '<div class="tier-legend-card" data-slug="' + escapeAttr(t.slug) + '">' +
+               '<div class="tier-name">' + escapeHtml(t.name) + '</div>' +
