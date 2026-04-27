@@ -1,109 +1,260 @@
-# Scorecard Rework v6 — Trackable Evidence Only
+# Round 3 PR Bundle — 2026-04-27
 
-Released: April 23, 2026
+Drop-in changes for the [zachJCG/OhioPride](https://github.com/zachJCG/OhioPride) repo. Unpack at the repo root and let Claude Code wire the PR. Every change is additive or idempotent — nothing here deletes or replaces existing migrations.
 
-## What Changed
+## What's in this PR
 
-The Ohio Pride PAC legislative scorecard now relies exclusively on
-trackable, primary-source evidence. The composite score is driven by
-three subscores tied to the official chamber journal and the
-Legislative Service Commission. Editorial commentary and curated news
-quotes are still part of our reporting, but they no longer move a
-lawmaker's grade.
+1. **Donor tracker** — store ZIP and derive county from a Supabase lookup table, set explicit `display_order` so the public list reads Zach, Jesse, Nicole, Matt.
+2. **Issues + Scorecard wiring** — close the audit gap. `/js/bill-data.js`, `/js/scorecard-data.js`, and `/js/voting-records.js` are still loaded for first-paint, but new shim scripts upgrade them with live Supabase data on page load.
+3. **Founding-members tier cards** — Stonewall Sustainer / Founding Member / Pride Builder / Founding Circle / Founding Patron tier-legend cards on `/founding-members` become real ActBlue links pulled from Supabase.
+4. **Mobile filter buttons** — defensive CSS fix for `/issues` and `/scorecard` filter pills (touch-action, tap-target, no overlap with mobile-donate-fab).
+5. **Project memory** — `CLAUDE.md` at repo root captures the source-of-truth notes so future sessions don't waste time on Drive deadlocks.
 
-### New Scoring Model
+## Files in this bundle
 
 ```
-score = clamp(0, 100, round(50 + (Vf × 4) + (Vc × 4) + (S × 2)))
+ohiopride-pr-bundle/
+├── CLAUDE.md                                           ← copy to repo root
+├── CHANGES.md                                          ← this file
+├── supabase/
+│   ├── migrations/
+│   │   ├── 20260427000000_ohio_zip_county.sql         ← new
+│   │   ├── 20260427000001_founding_members_county_from_zip.sql ← new
+│   │   ├── 20260427000002_legislators_and_sponsorships.sql     ← new
+│   │   ├── 20260427000002_legislative_scorecard.sql   ← DELETE before commit
+│   │   └── 20260427000003_founding_tiers_actblue_url.sql       ← new
+│   └── seed/
+│       └── 20260427_current_donor_reorder.sql         ← run once after migrations
+├── netlify/functions/
+│   ├── bills.mjs                                      ← new
+│   ├── scorecard.mjs                                  ← new
+│   ├── zip-county-lookup.mjs                          ← new
+│   └── founding-member-tiers.mjs                      ← REPLACES existing (adds actblue_url)
+├── js/
+│   ├── bill-data-supabase.js                          ← new
+│   └── scorecard-data-supabase.js                     ← new
+├── css/
+│   └── round-3-mobile-and-tier-cta.css                ← append to css/style.css
+└── patches/
+    └── ohiopride-data.js.loadFoundingMemberTiers.patch
 ```
 
-- Vf — Floor Votes subscore (-5 to +5). Pass, concur, override stages.
-- Vc — Committee Votes subscore (-5 to +5). Committee stage.
-- S  — Bills (Sponsorship) subscore (-5 to +5). Primary ±2, co ±1.
+> The file `20260427000002_legislative_scorecard.sql` is a no-op stub. Delete it before committing — the real migration is `..._legislators_and_sponsorships.sql` at the same timestamp prefix. (Build env couldn't delete it.)
 
-Floor and committee votes carry equal weight because both are binding
-action; we track them as separate subscores so a reader can see each
-signal independently. Sponsorship counts at half weight because adding
-your name to a bill is a public commitment but not a recorded yes/no
-on it.
+## Apply order
 
-### Why the News Subscore Was Removed
+Migrations: run in filename order. Supabase will pick them up automatically.
 
-Earlier versions (v3 through v5) included a fourth subscore for
-on-the-record public statements: floor speeches, press releases,
-op-eds, quoted remarks. We retired it in v6. Quotes proved too easy
-to spin and too hard to weight consistently across lawmakers. A
-sympathetic press release in a friendly outlet and a hostile remark
-on a hot mic both arrived as "public statements" without a defensible
-way to compare their political weight. The v6 model keeps only the
-signals every constituent can verify in the official record.
+```
+20260427000000_ohio_zip_county.sql
+20260427000001_founding_members_county_from_zip.sql
+20260427000002_legislators_and_sponsorships.sql
+20260427000003_founding_tiers_actblue_url.sql
+```
 
-### Bills Catalog Update
+After migrations land, run the donor reorder seed once:
 
-Added **HB 467 (135th GA) — Trans Candidate Name-Change Fix** to the
-tracked bills list. Bill died in committee 12/31/2024 but the
-sponsorship attribution remains scoreable for current 136th GA
-members who put their name on it. 12 current members credited
-(district numbers reflect the 136th GA roster):
+```
+psql $SUPABASE_DB_URL -f supabase/seed/20260427_current_donor_reorder.sql
+```
 
-- Primary sponsors (now scored at +2 each):
-  - Beryl Brown Piccolantonio (House 4)
-  - Michele Grim (House 43)
-- Co-sponsors (now scored at +1 each):
-  - Dontavius L. Jarrells (House 1)
-  - Anita Somani (House 8)
-  - Munira Abdullahi (House 9)
-  - Crystal Lett (House 11)
-  - Tristan Rader (House 13)
-  - Bride Rose Sweeney (House 16)
-  - Karen Brownlee (House 28)
-  - Joseph A. Miller, III (House 53)
-  - Catherine D. Ingram (Senate 9)
-  - Hearcel F. Craig (Senate 15)
+Then deploy the Netlify functions and JS/CSS changes.
 
-(Jodi Whitted, listed in earlier draft notes, is not a 136th GA
-member and was dropped from the credit list.)
+## Manual edits required
 
-## Files Changed
+### 1. `founding-members.html` — wire the new CSS
 
-| File | Summary |
-|---|---|
-| `js/scorecard-data.js` | New computeSubscores returns {vf, vc, s, v, n}. New calcScore: 50 + (vf*4) + (vc*4) + (s*2). Floor and committee subscore helpers split out by stage. HB 467 (135th) added to SCORED_BILLS. LEGISLATOR_SPONSORSHIPS map populated with 13 current-member credits. SCORECARD_UPDATED bumped to "v6 — Trackable Evidence Only". |
-| `js/voting-records.js` | No code changes — confirmed `stage` field values used by new floor/committee split. |
-| `scorecard.html` | renderGradeMath rewritten: three rows (Floor, Committee, Bills) with new ×4/×4/×2 formula. Card subscores show Floor / Cmte / Bills counts. renderNewsBreakdown stubbed; not called from card render. Inline How We Score updated. A- grade pill added. Meta tags updated. |
-| `methodology.html` | Subscore section restructured to Floor Votes / Committee Votes / Bills (Sponsorship). Composite formula updated. Weight rationale rewritten. "Why we removed News in v6" section added. Floor-vs-committee section, intersectional section, and roll-call weighting section reworded. Meta description updated. |
-| `SQL Migration/20260424000000_scorecard.sql` | Header SCORING MODEL block rewritten: v6 formula, three subscores, news removal explained. |
-| `SQL Migration/PROJECT-INSTRUCTIONS-daily-bill-check.md` | Daily verification guidance updated to reference v6 formula and LEGISLATOR_SPONSORSHIPS map. News evidence no longer scored. |
+At the bottom of the existing `<link rel="stylesheet" href="/css/style.css" />` block, append the new CSS file:
 
-## Deploy Checklist
+```html
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/round-3-mobile-and-tier-cta.css" />
+```
 
-- [ ] Drop the four front-end files into the Netlify site root:
-  - `scorecard.html`
-  - `methodology.html`
-  - `js/scorecard-data.js`
-  - `js/voting-records.js`
-- [ ] Apply the SQL migration header update by running
-  `20260424000000_scorecard.sql` against the staging Supabase project
-  (header-only change; schema is unchanged from v5, safe to re-run).
-- [ ] Spot-check after deploy:
-  - Search for a known A+ champion — confirm they still score 90+.
-  - Search for a known F-grade member — confirm they still score under
-    18.
-  - Confirm card subscores read "Floor / Cmte / Bills" not "Votes /
-    Bills / News".
-  - Click into a card and confirm the grade math shows three rows and
-    the v6 formula `50 + (Vf × 4) + (Vc × 4) + (S × 2)`.
-  - Click the new A- pill in the grade filter and confirm Reliable
-    Allies surface.
-- [ ] Re-run any cached share-image generation (the per-card numbers
-  shifted under the new weights).
+(Or, simpler: cat `css/round-3-mobile-and-tier-cta.css` onto the end of `css/style.css` and skip the new link.)
 
-## Known Follow-ups
+### 2. `js/ohiopride-data.js` — apply the patch
 
-- Several legacy `.news-row` / `.news-link` CSS rules remain in
-  `scorecard.html` even though no element uses them. They are harmless
-  dead code and can be swept out in a future cleanup pass.
-- The methodology page section anchor `#composite` no longer
-  references the outlier callout from v5; if any external link points
-  to that anchor it still resolves correctly to the composite-formula
-  section.
+Apply `patches/ohiopride-data.js.loadFoundingMemberTiers.patch`. It only touches the `loadFoundingMemberTiers` function, replacing the inner `<div class="tier-legend-card">` template with one that emits a real `<a>` when `actblue_url` is present (which it will be, after migration `..._founding_tiers_actblue_url.sql` runs).
+
+```bash
+git apply patches/ohiopride-data.js.loadFoundingMemberTiers.patch
+```
+
+### 3. `issues.html` — load the Supabase shim
+
+Add **after** the existing `bill-data.js` script tag (do not replace it — the static seed renders first paint):
+
+```html
+<script src="/js/bill-data.js"></script>
+<script src="/js/bill-pipeline.js"></script>
+<script src="/js/bill-data-supabase.js" defer></script>   <!-- NEW -->
+```
+
+Inside the inline `<script>` block at the bottom of `issues.html`, expose `applyFilters` on `window` so the shim can re-render after upgrading data:
+
+```diff
+-      function applyFilters() {
++      window.applyFilters = function applyFilters() {
+         var filtered = BILLS.filter((b) => {
+            ...
+         });
+         renderBills(filtered);
+         updateStats(filtered);
+-      }
++      };
+```
+
+(Same change for any per-bill detail pages under `/issues/<slug>.html` if they read `BILLS`.)
+
+### 4. `scorecard.html` — load the Supabase shim
+
+```html
+<script src="/js/bill-data.js"></script>
+<script src="/js/scorecard-data.js"></script>
+<script src="/js/voting-records.js"></script>
+<script src="/js/scorecard-data-supabase.js" defer></script>  <!-- NEW -->
+<script src="/js/bill-data-supabase.js" defer></script>       <!-- NEW -->
+```
+
+Inside the page's render closure, expose a refresh hook:
+
+```js
+window.OhioPrideRefreshScorecard = function () {
+  // Whatever your existing render-all-from-state function is named.
+  applyFilters();
+};
+```
+
+If the page already calls `applyFilters` after every UI change, just expose that:
+
+```js
+window.applyFilters = applyFilters;
+```
+
+## Database schema additions
+
+### Tables
+- `public.ohio_zip_county` — HUD Q1 2023 ZIP↔county crosswalk (1,359 ZIPs, 88 counties, 2,056 ZIP-county pairs)
+- `public.legislators` — replaces `HOUSE_MEMBERS` + `SENATE_MEMBERS` arrays
+- `public.legislator_sponsorships` — replaces `LEGISLATOR_SPONSORSHIPS` map
+- `public.bill_pipeline_steps` — replaces `BILLS[i].pipelineDates`
+
+### Columns added
+- `founding_members.zip` (TEXT, normalised to 5 digits by trigger)
+- `founding_members.county_name` (TEXT, derived from ZIP)
+- `founding_members.county_fips` (TEXT)
+- `founding_members.display_order` (INT, controls public list ordering)
+- `bills` gets the issues-page denorm fields: `nickname`, `official_title`, `status_label`, `status_color`, `categories`, `category_labels`, `sponsors_text`, `last_action`, `next_date`, `house_vote`, `chamber`, `current_step`, `url`, `legislature_url`, `text_url`
+- `founding_member_tiers.actblue_url`
+
+### Views / functions
+- `public.ohio_zip_primary_county` (view) — one row per ZIP, primary county only
+- `public.county_for_zip(text)` — normalises input, returns county name
+- `public.normalize_zip(text)` — returns 5-digit ZIP or NULL
+- `public.legislator_scorecard` (view) — composite score + grade per legislator
+- Trigger `trg_founding_members_set_county` — keeps `county_name` in sync with `zip`
+
+## Donor reorder applied
+
+Per the request, this is the public order after running the seed:
+
+| Order | Name              | ZIP   | County     | Amount  |
+|-------|-------------------|-------|------------|---------|
+| 1     | Zachary V Smith   | 45202 | Hamilton   | $25.00  |
+| 2     | Jesse Shepherd    | 45248 | Hamilton   | $25.00  |
+| 3     | Nicole Green      | 45420 | Montgomery | $19.69  |
+| 4     | Matthew Joseph    | 45420 | Montgomery | $100.00 |
+
+The seed matches by `LOWER(full_name) LIKE '...%'` so suffixes/middle initials don't break it. If a name doesn't match exactly, run:
+
+```sql
+SELECT id, full_name, zip, county_name, amount_cents
+FROM public.founding_members
+ORDER BY contributed_at;
+```
+
+then update the four UPDATEs in the seed file with the right `WHERE` clause.
+
+## Backfill (one-time, after schema migrations)
+
+The trigger handles new rows. To backfill existing rows that have a usps zip but no county yet, the migration `20260427000001_founding_members_county_from_zip.sql` runs the backfill at the bottom. No extra step required.
+
+If you want to seed the `legislators` and `legislator_sponsorships` tables from the existing JS files, run:
+
+```bash
+node scripts/seed-legislators-from-js.mjs
+```
+
+(Script not included in this bundle — happy to generate it if you want a one-shot importer rather than typing the data into the new tables by hand.)
+
+## Verification
+
+After deploy, sanity checks:
+
+```sql
+-- ZIP -> county
+SELECT public.county_for_zip('45420');  -- 'Montgomery County'
+SELECT public.county_for_zip('45202');  -- 'Hamilton County'
+
+-- Donor list
+SELECT display_order, full_name, zip, county_name, amount_cents
+FROM   public.founding_members
+WHERE  display_order IS NOT NULL
+ORDER  BY display_order;
+
+-- Tiers expose ActBlue URLs
+SELECT slug, name, actblue_url
+FROM   public.founding_member_tiers
+ORDER  BY display_order;
+
+-- Functions return data
+-- (browser)
+fetch('/.netlify/functions/bills').then(r => r.json()).then(console.log);
+fetch('/.netlify/functions/scorecard').then(r => r.json()).then(console.log);
+fetch('/.netlify/functions/zip-county-lookup?zip=45420').then(r => r.json()).then(console.log);
+```
+
+Mobile sanity checks (test on a real iPhone if possible):
+- /issues — every filter pill registers a tap on first try
+- /scorecard — chamber/party/grade pills filter without delay
+- /founding-members — each tier-legend card opens ActBlue
+- The mobile-donate-fab no longer covers the bottom filter row
+
+## Things deliberately not done in this PR
+
+- No batch backfill of legislators/sponsorships into Supabase. The static JS keeps the page functional in the meantime; a separate import script can land the editorial data in a follow-up PR.
+- `/js/bill-data.js` and `/js/scorecard-data.js` aren't deleted yet. They're still loaded as the first-paint fallback. Once Supabase is the source of truth and tested, a follow-up can shrink those files to a `// see /.netlify/functions/...` stub.
+- No changes to `/donate/founding-member.html`. Its tier buttons already have ActBlue URLs hardcoded. The migration `..._founding_tiers_actblue_url.sql` mirrors the same URLs into Supabase so the data layer is canonical, but the page keeps its inline buttons as a working fallback.
+
+## Rollback
+
+Each migration is idempotent and additive. To roll back the Round 3 work:
+
+```sql
+-- 1. Revert ohiopride-data.js patch (git revert the commit)
+
+-- 2. Drop new schema (DESTRUCTIVE; only run if you're sure)
+DROP VIEW  IF EXISTS public.legislator_scorecard;
+DROP TABLE IF EXISTS public.legislator_sponsorships;
+DROP TABLE IF EXISTS public.legislators;
+DROP TABLE IF EXISTS public.bill_pipeline_steps;
+
+ALTER TABLE public.founding_member_tiers DROP COLUMN IF EXISTS actblue_url;
+
+DROP TRIGGER IF EXISTS trg_founding_members_set_county ON public.founding_members;
+DROP FUNCTION IF EXISTS public.fn_founding_members_set_county();
+DROP FUNCTION IF EXISTS public.normalize_zip(text);
+DROP FUNCTION IF EXISTS public.county_for_zip(text);
+
+ALTER TABLE public.founding_members
+  DROP COLUMN IF EXISTS zip,
+  DROP COLUMN IF EXISTS county_name,
+  DROP COLUMN IF EXISTS county_fips,
+  DROP COLUMN IF EXISTS display_order;
+
+DROP VIEW  IF EXISTS public.ohio_zip_primary_county;
+DROP TABLE IF EXISTS public.ohio_zip_county;
+```
+
+ActBlue URLs in the seed are exact mirrors of the URLs already on `/donate/founding-member.html`, so removing them doesn't lose anything that isn't already in the HTML.
