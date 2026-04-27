@@ -774,6 +774,7 @@
     <script src="/js/main.js" defer></script>
     <script src="/js/bill-data.js"></script>
     <script src="/js/bill-pipeline.js"></script>
+    <script src="/js/bill-data-supabase.js" defer></script>
     <script src="/js/enhancements.js" defer></script>
     <script>
       const catColors = {
@@ -904,7 +905,7 @@
         activeStatus = "all",
         activeCategory = "all";
 
-      function applyFilters() {
+      window.applyFilters = function applyFilters() {
         var filtered = BILLS.filter((b) => {
           const stm = activeStance === "all" || (b.stance || "anti") === activeStance;
           const sm = activeStatus === "all" || b.status === activeStatus;
@@ -913,7 +914,7 @@
         });
         renderBills(filtered);
         updateStats(filtered);
-      }
+      };
 
       document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
