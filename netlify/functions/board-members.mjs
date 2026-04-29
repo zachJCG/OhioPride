@@ -64,10 +64,12 @@ export default async (_req, _context) => {
       status: 200,
       headers: {
         'content-type': 'application/json',
-        // Board changes rarely. Cache for 5 min at edge, 2 min in browser.
-        // When a board member is added/removed, trigger a Netlify deploy or
-        // purge — both will invalidate the edge cache.
-        'cache-control': 'public, max-age=120, s-maxage=300, stale-while-revalidate=600',
+        // Board data changes rarely in steady state, but iterations like
+        // bio rewrites or photo swaps happen in bursts where 5-minute
+        // edge caches feel broken. Keep TTLs low enough that fixes show
+        // up quickly; stale-while-revalidate lets the edge keep serving
+        // while it refreshes in the background.
+        'cache-control': 'public, max-age=30, s-maxage=60, stale-while-revalidate=300',
       },
     }
   );
