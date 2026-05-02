@@ -305,7 +305,11 @@
         content-visibility: auto;
         contain-intrinsic-size: auto 200px;
         transition: transform 0.15s ease, border-color 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        min-height: 9rem;
       }
+      .member-card .joined { margin-top: auto; }
       .member-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.25); }
       .member-card::before {
         content: "";
@@ -912,14 +916,21 @@
       function memberCardHTML(m) {
         var color = tierColor(m.tier);
         var hasElected = !!m.electedOffice;
-        var officeLine = hasElected
-          ? '<div class="office">' + escapeHtml(m.electedOffice)
-            + (m.jurisdiction ? ', ' + escapeHtml(m.jurisdiction) : '') + '</div>'
-          : '';
         var quote = m.quote ? '<div class="quote">&ldquo;' + escapeHtml(m.quote) + '&rdquo;</div>' : '';
-        var loc = (m.city || m.county)
-          ? '<div class="loc">' + escapeHtml([m.city, m.county ? m.county + " County" : null].filter(Boolean).join(", ")) + '</div>'
-          : '<div class="loc" style="opacity:0.55;">Ohio</div>';
+        // For elected members, the role line replaces the location line so every
+        // card has exactly one location/role row and they align in the grid.
+        var loc;
+        if (hasElected) {
+          loc = '<div class="loc">'
+            + escapeHtml(m.electedOffice + (m.jurisdiction ? ', ' + m.jurisdiction : ''))
+            + '</div>';
+        } else if (m.city || m.county) {
+          loc = '<div class="loc">'
+            + escapeHtml([m.city, m.county ? m.county + " County" : null].filter(Boolean).join(", "))
+            + '</div>';
+        } else {
+          loc = '<div class="loc" style="opacity:0.55;">Ohio</div>';
+        }
         var pin = hasElected
           ? '<span class="elected-pin" title="Elected official">'
             + '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
@@ -936,7 +947,6 @@
           +     '<div class="name">' + escapeHtml(m.displayName) + '</div>'
           +     pin
           +   '</div>'
-          +   officeLine
           +   '<div class="meta">'
           +     '<span class="tier-tag"><span class="dot" style="background:' + color + ';"></span>' + escapeHtml(tierName(m.tier)) + '</span>'
           +     loc
