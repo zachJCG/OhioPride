@@ -26,13 +26,16 @@
   var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4";
 
   function postToSupabase(payload) {
+    // Anon role has INSERT but not SELECT on launch_signups. Do not request
+    // the inserted row back (no return=representation, no resolution=*) or
+    // PostgREST will 42501 even though the write succeeds.
     return fetch(SUPABASE_URL + "/rest/v1/launch_signups", {
       method: "POST",
       headers: {
         apikey: SUPABASE_ANON_KEY,
         Authorization: "Bearer " + SUPABASE_ANON_KEY,
         "Content-Type": "application/json",
-        Prefer: "return=minimal,resolution=ignore-duplicates"
+        Prefer: "return=minimal"
       },
       body: JSON.stringify(payload)
     });
