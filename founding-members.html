@@ -362,32 +362,12 @@
         margin-top: 0.25rem;
         line-height: 1.3;
       }
-      .member-card .meta {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-top: 0.7rem;
-        flex-wrap: wrap;
-      }
-      .member-card .tier-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        color: var(--text-white, #fff);
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 999px;
-        padding: 0.18rem 0.55rem;
-      }
-      .member-card .tier-tag .dot { width: 8px; height: 8px; border-radius: 50%; }
       .member-card .loc {
         font-family: "Roboto Slab", serif;
         font-size: 0.85rem;
         color: var(--text-light, #c5d2dd);
+        margin-top: 0.7rem;
+        line-height: 1.35;
       }
       .member-card .quote {
         margin-top: 0.7rem;
@@ -753,7 +733,6 @@
 
       var tierMap = TIERS.reduce(function (acc, t) { acc[t.id] = t; return acc; }, {});
       function tierColor(id) { return (tierMap[id] && tierMap[id].color) || "rgba(255,255,255,0.4)"; }
-      function tierName(id)  { return (tierMap[id] && tierMap[id].name)  || id; }
 
       function escapeHtml(s) {
         if (s == null) return "";
@@ -947,10 +926,7 @@
           +     '<div class="name">' + escapeHtml(m.displayName) + '</div>'
           +     pin
           +   '</div>'
-          +   '<div class="meta">'
-          +     '<span class="tier-tag"><span class="dot" style="background:' + color + ';"></span>' + escapeHtml(tierName(m.tier)) + '</span>'
-          +     loc
-          +   '</div>'
+          +   loc
           +   quote
           +   '<div class="joined">' + escapeHtml(joined) + '</div>'
           + '</article>';
@@ -961,7 +937,7 @@
           + '<article class="member-card placeholder" aria-hidden="true">'
           +   '<div class="pos">#' + num + '</div>'
           +   '<div class="name-row"><div class="name">Reserved for #' + num + '</div></div>'
-          +   '<div class="meta"><span class="loc">Your seat is open.</span></div>'
+          +   '<div class="loc">Your seat is open.</div>'
           +   '<div class="joined">Become a Founding Member</div>'
           + '</article>';
       }
