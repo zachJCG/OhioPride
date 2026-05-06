@@ -17,6 +17,18 @@
 (function () {
   'use strict';
 
+  function getScorecardEndpoint() {
+    if (window.OHIOPRIDE_API_BASE) {
+      return window.OHIOPRIDE_API_BASE.replace(/\/$/, '') + '/scorecard';
+    }
+    // Vercel-style serverless functions
+    if (window.location && window.location.hostname && window.location.hostname.indexOf('vercel.app') !== -1) {
+      return '/api/scorecard';
+    }
+    // Netlify-style functions (default/back-compat)
+    return '/.netlify/functions/scorecard';
+  }
+
   function refreshUI() {
     if (typeof window.OhioPrideRefreshScorecard === 'function') {
       window.OhioPrideRefreshScorecard();
@@ -27,7 +39,7 @@
     }
   }
 
-  fetch('/.netlify/functions/scorecard', {
+  fetch(getScorecardEndpoint(), {
     credentials: 'omit',
     headers: { accept: 'application/json' },
   })

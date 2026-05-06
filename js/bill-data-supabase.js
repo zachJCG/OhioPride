@@ -23,6 +23,18 @@
 (function () {
   'use strict';
 
+  function getBillsEndpoint() {
+    if (window.OHIOPRIDE_API_BASE) {
+      return window.OHIOPRIDE_API_BASE.replace(/\/$/, '') + '/bills';
+    }
+    // Vercel-style serverless functions
+    if (window.location && window.location.hostname && window.location.hostname.indexOf('vercel.app') !== -1) {
+      return '/api/bills';
+    }
+    // Netlify-style functions (default/back-compat)
+    return '/.netlify/functions/bills';
+  }
+
   function refreshUI() {
     if (typeof window.OhioPrideRefreshBills === 'function') {
       window.OhioPrideRefreshBills();
@@ -38,7 +50,7 @@
     }
   }
 
-  fetch('/.netlify/functions/bills', {
+  fetch(getBillsEndpoint(), {
     credentials: 'omit',
     headers: { accept: 'application/json' },
   })
