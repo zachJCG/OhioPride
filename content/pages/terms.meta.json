@@ -1,0 +1,27 @@
+{
+  "title": "Terms of Use | Ohio Pride",
+  "description": "Terms of Use for Ohio Pride. Review the terms and conditions governing your use of our website.",
+  "canonical": "https://www.ohiopride.org/terms",
+  "og": {
+    "title": "Terms of Use | Ohio Pride",
+    "description": "Terms of Use for Ohio Pride. Review the terms and conditions governing your use of our website.",
+    "image": null,
+    "type": "website"
+  },
+  "twitter": {
+    "card": "summary",
+    "title": "Terms of Use | Ohio Pride",
+    "description": "Terms of Use for Ohio Pride. Review the terms and conditions governing your use of our website.",
+    "image": null
+  },
+  "jsonLd": [],
+  "headStyles": [
+    "\n      body {\n        background: var(--dark-bg);\n      }\n      .legal-hero {\n        padding: calc(var(--nav-height) + 3rem) 2rem 2rem;\n        text-align: center;\n      }\n      .legal-hero h1 {\n        font-family: \"Montserrat\", sans-serif;\n        font-size: clamp(1.8rem, 4vw, 2.8rem);\n        font-weight: 700;\n        color: var(--text-white);\n        margin-bottom: 0.5rem;\n      }\n      .legal-hero .hero-divider {\n        width: 80px;\n        height: 4px;\n        background: var(--pride-gradient);\n        margin: 1.5rem auto;\n        border-radius: 2px;\n      }\n      .legal-hero p {\n        font-family: \"Roboto Slab\", serif;\n        color: var(--text-light);\n        font-size: 1rem;\n      }\n      .legal-body {\n        max-width: 800px;\n        margin: 0 auto;\n        padding: 2rem;\n      }\n      .legal-body h2 {\n        font-family: \"Montserrat\", sans-serif;\n        font-size: 1.3rem;\n        font-weight: 700;\n        color: var(--text-white);\n        margin-top: 2.5rem;\n        margin-bottom: 0.75rem;\n      }\n      .legal-body p,\n      .legal-body li {\n        font-family: \"Roboto Slab\", serif;\n        color: var(--text-light);\n        font-size: 0.95rem;\n        line-height: 1.8;\n        margin-bottom: 1rem;\n      }\n      .legal-body ul {\n        padding-left: 1.5rem;\n        margin-bottom: 1rem;\n      }\n      .legal-body li {\n        margin-bottom: 0.5rem;\n      }\n      .legal-body a {\n        color: var(--color-light-blue, #60a5fa);\n        text-decoration: underline;\n      }\n    "
+  ],
+  "externalScripts": [
+    "/js/main.js",
+    "/js/enhancements.js",
+    "/js/site-template.js"
+  ],
+  "inlineScripts": []
+}

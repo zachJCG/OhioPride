@@ -1,0 +1,27 @@
+{
+  "title": "Donate | Ohio Pride",
+  "description": "Support Ohio Pride with a contribution. Become a founding member or make a one-time donation.",
+  "canonical": "https://www.ohiopride.org/donate",
+  "og": {
+    "title": "Donate | Ohio Pride",
+    "description": "Support Ohio Pride with a contribution. Become a founding member or make a one-time donation.",
+    "image": null,
+    "type": "website"
+  },
+  "twitter": {
+    "card": "summary",
+    "title": "Donate | Ohio Pride",
+    "description": "Support Ohio Pride with a contribution. Become a founding member or make a one-time donation.",
+    "image": null
+  },
+  "jsonLd": [],
+  "headStyles": [
+    "\n      body {\n        background: var(--dark-bg);\n      }\n\n      .donate-grid {\n        display: grid;\n        grid-template-columns: 1fr 1fr;\n        gap: 2rem;\n        margin-bottom: 3rem;\n      }\n      .donate-card {\n        padding: 2.5rem;\n        border-radius: 8px;\n        background: rgba(19, 45, 68, 0.5);\n        border: 1px solid var(--dark-bg-light);\n        transition: all 0.3s;\n      }\n      .donate-card.prominent {\n        border: 2px solid var(--color-blue);\n        position: relative;\n      }\n      .donate-card.prominent::before {\n        content: \"Featured\";\n        position: absolute;\n        top: -12px;\n        left: 24px;\n        background: var(--color-blue);\n        color: var(--text-white);\n        font-family: \"Montserrat\", sans-serif;\n        font-size: 0.7rem;\n        font-weight: 700;\n        text-transform: uppercase;\n        letter-spacing: 1px;\n        padding: 4px 12px;\n        border-radius: 4px;\n      }\n      .donate-card h2 {\n        font-family: \"Montserrat\", sans-serif;\n        font-size: 1.5rem;\n        margin-bottom: 1rem;\n        color: var(--text-white);\n      }\n      .donate-card p {\n        font-family: \"Roboto Slab\", serif;\n        font-size: 1rem;\n        margin-bottom: 1.5rem;\n        color: var(--text-light);\n        line-height: 1.7;\n      }\n\n      .amount-buttons {\n        display: flex;\n        flex-wrap: wrap;\n        gap: 0.75rem;\n        margin-bottom: 1rem;\n      }\n      .amount-btn {\n        padding: 0.5rem 1rem;\n        background-color: var(--dark-bg-lighter);\n        color: var(--text-white);\n        border: 1px solid var(--dark-bg-light);\n        border-radius: 6px;\n        text-decoration: none;\n        transition: all 0.2s;\n        font-family: \"Montserrat\", sans-serif;\n        font-weight: 600;\n        font-size: 0.95rem;\n      }\n      .amount-btn:hover {\n        background-color: var(--color-blue);\n        border-color: var(--color-blue);\n      }\n\n      @media (max-width: 768px) {\n        .donate-grid {\n          grid-template-columns: 1fr;\n        }\n        .donate-card {\n          padding: 1.5rem;\n        }\n        .amount-buttons {\n          flex-direction: column;\n        }\n        .amount-btn {\n          width: 100%;\n          text-align: center;\n        }\n      }\n    "
+  ],
+  "externalScripts": [
+    "/js/main.js",
+    "/js/enhancements.js",
+    "/js/site-template.js"
+  ],
+  "inlineScripts": []
+}

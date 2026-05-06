@@ -1,0 +1,27 @@
+{
+  "title": "Contact | Ohio Pride",
+  "description": "Get in touch with Ohio Pride. Have questions? Want to volunteer? We",
+  "canonical": "https://www.ohiopride.org/contact",
+  "og": {
+    "title": "Contact | Ohio Pride",
+    "description": "Get in touch with Ohio Pride. Have questions? Want to volunteer? We",
+    "image": null,
+    "type": "website"
+  },
+  "twitter": {
+    "card": "summary",
+    "title": "Contact | Ohio Pride",
+    "description": "Get in touch with Ohio Pride. Have questions? Want to volunteer? We",
+    "image": null
+  },
+  "jsonLd": [],
+  "headStyles": [
+    "\n      body {\n        background: var(--dark-bg);\n      }\n\n      /* Two-column layout */\n      .contact-wrapper {\n        display: grid;\n        grid-template-columns: 1fr 1fr;\n        gap: 3rem;\n        margin-top: 2rem;\n      }\n\n      /* Form styles */\n      .contact-form {\n        display: flex;\n        flex-direction: column;\n        gap: 1.5rem;\n      }\n      .contact-form .form-group {\n        display: flex;\n        flex-direction: column;\n        gap: 0.5rem;\n      }\n      .contact-form label {\n        font-family: \"Montserrat\", sans-serif;\n        font-weight: 600;\n        font-size: 0.95rem;\n        color: var(--text-white);\n      }\n      .contact-form input,\n      .contact-form select,\n      .contact-form textarea {\n        padding: 0.75rem;\n        background-color: var(--dark-bg-light);\n        border: 1px solid var(--dark-bg-lighter);\n        color: var(--text-white);\n        font-family: \"Roboto Slab\", serif;\n        font-size: 1rem;\n        border-radius: 6px;\n        transition: border-color 0.2s;\n      }\n      .contact-form input:focus,\n      .contact-form select:focus,\n      .contact-form textarea:focus {\n        outline: none;\n        border-color: var(--color-blue);\n      }\n      .contact-form textarea {\n        min-height: 150px;\n        resize: vertical;\n      }\n\n      /* Contact info card */\n      .contact-info-card {\n        background-color: var(--dark-bg-light);\n        border: 1px solid var(--dark-bg-lighter);\n        padding: 2rem;\n        border-radius: 8px;\n        display: flex;\n        flex-direction: column;\n        gap: 2rem;\n        height: fit-content;\n      }\n      .info-section {\n        display: flex;\n        flex-direction: column;\n        gap: 0.5rem;\n      }\n      .info-section h3 {\n        font-family: \"Montserrat\", sans-serif;\n        font-size: 0.85rem;\n        text-transform: uppercase;\n        letter-spacing: 1px;\n        color: var(--text-light);\n        font-weight: 700;\n      }\n      .info-section p,\n      .info-section a {\n        font-family: \"Roboto Slab\", serif;\n        color: var(--text-white);\n        font-size: 1rem;\n        text-decoration: none;\n        transition: color 0.2s;\n      }\n      .info-section a:hover {\n        color: var(--color-light-blue);\n      }\n      .social-links {\n        display: flex;\n        gap: 1rem;\n        margin-top: 0.5rem;\n      }\n      .social-links a {\n        display: inline-flex;\n        align-items: center;\n        justify-content: center;\n        width: 40px;\n        height: 40px;\n        background-color: var(--dark-bg-lighter);\n        border-radius: 6px;\n        color: var(--text-white);\n        text-decoration: none;\n        font-family: \"Montserrat\", sans-serif;\n        font-weight: 600;\n        font-size: 0.85rem;\n        transition: background-color 0.2s;\n      }\n      .social-links a:hover {\n        background-color: var(--color-blue);\n      }\n\n      @media (max-width: 768px) {\n        .contact-wrapper {\n          grid-template-columns: 1fr;\n          gap: 2rem;\n        }\n        .contact-info-card {\n          height: auto;\n        }\n      }\n    "
+  ],
+  "externalScripts": [
+    "/js/main.js",
+    "/js/enhancements.js",
+    "/js/site-template.js"
+  ],
+  "inlineScripts": []
+}
