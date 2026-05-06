@@ -1,9 +1,30 @@
 {
   "name": "ohiopride-web",
   "private": true,
-  "version": "1.0.0",
-  "description": "Ohio Pride PAC website. Static HTML deployed by Netlify, backed by Supabase for dynamic content.",
+  "version": "2.0.0",
+  "description": "Ohio Pride PAC website. Next.js app deployed on Vercel, backed by Supabase for dynamic content.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0"
+    "@supabase/supabase-js": "^2.45.0",
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.1.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

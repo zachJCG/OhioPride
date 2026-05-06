@@ -1,0 +1,28 @@
+{
+  "title": "Founding Members | Ohio Pride",
+  "description": "Become one of the first 1,969 founding members of Ohio Pride. Choose your tier and join the movement for LGBTQ+ equality in Ohio.",
+  "canonical": "https://www.ohiopride.org/donate/founding-member",
+  "og": {
+    "title": "Founding Members | Ohio Pride",
+    "description": "Become one of the first 1,969 founding members of Ohio Pride. Choose your tier and join the movement for LGBTQ+ equality in Ohio.",
+    "image": null,
+    "type": "website"
+  },
+  "twitter": {
+    "card": "summary",
+    "title": "Founding Members | Ohio Pride",
+    "description": "Become one of the first 1,969 founding members of Ohio Pride. Choose your tier and join the movement for LGBTQ+ equality in Ohio.",
+    "image": null
+  },
+  "jsonLd": [],
+  "headStyles": [],
+  "externalScripts": [
+    "/js/main.js",
+    "/js/enhancements.js",
+    "/js/ohiopride-data.js",
+    "/js/site-template.js"
+  ],
+  "inlineScripts": [
+    "\n      document.addEventListener(\"DOMContentLoaded\", function () {\n        OhioPride.loadProgress(\"#goalFill\", \"#progressText\");\n        OhioPride.loadDonatePageTiers(\".tiers-grid\");\n      });\n    "
+  ]
+}

@@ -1,0 +1,111 @@
+<!-- Hero -->
+    <header class="subpage-hero">
+      <div class="container">
+        <div class="section-label">Founding Members</div>
+        <h1 class="section-title">The First 1,969</h1>
+        <p class="subpage-hero-sub">
+          Ohioans building durable LGBTQ+ political power, one founding member at a time.
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num" id="statMembers">0</div>
+            <div class="label">Founding Members</div>
+            <div class="sub">of 1,969</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num" id="statCounties">0</div>
+            <div class="label">Ohio Counties</div>
+            <div class="sub">of 88 represented</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num" id="statNewestName" style="font-size:1.1rem; line-height:1.3;">&mdash;</div>
+            <div class="label">Newest Member</div>
+            <div class="sub" id="statNewestWhen">Be the next.</div>
+          </div>
+        </div>
+
+        <div class="goal-block">
+          <div class="goal-top">
+            <span class="goal-text">Founding Members</span>
+            <span class="goal-amt">1,969</span>
+          </div>
+          <div class="goal-track">
+            <div class="goal-fill" id="goalFill"></div>
+          </div>
+          <div class="goal-note" id="progressText">0 of 1,969 Founding Members</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tier chips + CTA -->
+    <section class="section">
+      <div class="container">
+        <div class="tier-chips-section">
+          <h2>Pick Your Role In The Movement</h2>
+          <p class="lede">
+            Every tier counts the same toward 1,969. Tap a chip to filter the directory by role.
+          </p>
+          <div class="tier-chips" id="tierChips" role="group" aria-label="Filter by tier"></div>
+        </div>
+
+        <div class="cta-row">
+          <a href="/donate/founding-member" class="btn btn-pride-shimmer">Become a Founding Member</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Endorsed By + Directory -->
+    <section class="section">
+      <div class="container">
+
+        <div class="endorsed-strip" id="endorsedStrip" hidden>
+          <div class="label">Founding Members In Office</div>
+          <div class="roster" id="endorsedRoster"></div>
+        </div>
+
+        <h2 style="font-family:'Montserrat',sans-serif; color:var(--text-white,#fff); text-align:center; margin: 2rem 0 1rem;">
+          Member Directory
+        </h2>
+
+        <div class="directory-controls">
+          <div class="field">
+            <input type="search" id="searchInput" placeholder="Search by name, city, or county" aria-label="Search members" />
+          </div>
+          <div class="field">
+            <select id="countyFilter" aria-label="Filter by county">
+              <option value="">All Ohio counties</option>
+            </select>
+          </div>
+          <div class="field">
+            <select id="sortSelect" aria-label="Sort members">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="az">Name A to Z</option>
+              <option value="county">County A to Z</option>
+              <option value="position">By founding number</option>
+            </select>
+          </div>
+          <label class="toggle-elected">
+            <input type="checkbox" id="electedToggle" />
+            Elected officials only
+          </label>
+        </div>
+
+        <div class="result-meta">
+          <div id="resultCount">Loading members&hellip;</div>
+          <button class="clear" id="clearFilters" hidden>Clear filters</button>
+        </div>
+
+        <div class="member-grid" id="memberGrid" aria-live="polite"></div>
+
+        <div class="load-more-row" id="loadMoreRow" hidden>
+          <button id="loadMoreBtn">Show more members</button>
+        </div>
+
+      </div>
+    </section>
+
+    
+
+    <a href="/donate" class="mobile-donate-fab" aria-label="Donate">Donate</a>

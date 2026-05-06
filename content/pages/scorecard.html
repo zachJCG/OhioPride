@@ -1,0 +1,202 @@
+<!-- Hero -->
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="section-label reveal">Legislative Scorecard</p>
+      <h1 class="section-title reveal" style="font-size: clamp(32px, 5vw, 48px); margin-bottom: 12px;">
+        Know Where Your<br>
+        <span class="hero-gradient">Legislators Stand.</span>
+      </h1>
+      <p style="color: rgba(255,255,255,0.7); max-width: 640px; margin-top: 16px; font-size: 15px;">
+        Every Ohio state lawmaker is graded on their record for LGBTQ+ Ohioans. We score how they vote on the floor, how they vote in committee, what bills they sponsor, and what they say in public. Scores are built from official Ohio General Assembly roll call records.
+      </p>
+      <div class="updated-badge" id="updated-badge">
+        <span class="dot"></span>
+        <span id="updated-text">Loading...</span>
+      </div>
+      <p class="hero-method-link-row">
+        <a href="#methodology" class="hero-method-link" data-jump="methodology">
+          See our scoring approach
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Summary Stats (live: updates as you filter below) -->
+  <section class="container" style="position: relative; z-index: 2; margin-top: 32px;">
+    <div class="stats-bar" id="stats-bar" data-live="true">
+      <button type="button" class="stat-card stat-filter" data-filter="all" aria-pressed="true">
+        <div class="stat-number" id="stat-total">0</div>
+        <div class="stat-label" id="stat-total-label">Legislators Scored</div>
+      </button>
+      <button type="button" class="stat-card stat-filter" data-filter="grade:A+" aria-pressed="false">
+        <div class="stat-number" id="stat-champions" style="color: var(--text-success);">0</div>
+        <div class="stat-label">Champions (A+)</div>
+      </button>
+      <button type="button" class="stat-card stat-filter" data-filter="grade:F" aria-pressed="false">
+        <div class="stat-number" id="stat-hostile" style="color: var(--text-danger);">0</div>
+        <div class="stat-label">Hostile (F)</div>
+      </button>
+      <div class="stat-card stat-static">
+        <div class="stat-number" id="stat-bills">0</div>
+        <div class="stat-label">Bills Scored</div>
+      </div>
+    </div>
+    <div class="stats-hint" id="stats-hint">
+      <span class="sh-text" id="stats-hint-text">Showing the full General Assembly. Filter below to see these numbers shift.</span>
+      <button type="button" class="stats-reset" id="stats-reset" aria-label="Clear all filters">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 8a6 6 0 1 0 1.76-4.24"/>
+          <polyline points="2 2 2 6 6 6"/>
+        </svg>
+        Clear filters
+      </button>
+    </div>
+  </section>
+
+  <!-- Chamber breakdown -->
+  <section class="container" style="margin-top: 32px;">
+    <div class="chamber-grid">
+      <div class="chamber-tile" data-chamber="House">
+        <div class="ct-head">
+          <div class="ct-title">Ohio House</div>
+          <div class="ct-meta"><span id="ct-house-count">99</span> Members</div>
+        </div>
+        <div class="ct-avg">
+          <span class="ct-avg-num" id="ct-house-avg">&mdash;</span>
+          <span class="ct-avg-suffix">Average Grade</span>
+        </div>
+        <div class="ct-bars" id="ct-house-bars"></div>
+      </div>
+      <div class="chamber-tile" data-chamber="Senate">
+        <div class="ct-head">
+          <div class="ct-title">Ohio Senate</div>
+          <div class="ct-meta"><span id="ct-senate-count">33</span> Members</div>
+        </div>
+        <div class="ct-avg">
+          <span class="ct-avg-num" id="ct-senate-avg">&mdash;</span>
+          <span class="ct-avg-suffix">Average Grade</span>
+        </div>
+        <div class="ct-bars" id="ct-senate-bars"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leaderboards -->
+  <section class="container" style="margin-top: 32px;">
+    <div class="leaderboard-grid">
+      <div class="leaderboard">
+        <div class="lb-head lb-head-pos">
+          <h3>Top 5 Champions</h3>
+          <span class="lb-sub">Highest scores in the General Assembly</span>
+        </div>
+        <ol class="lb-list" id="lb-champions"></ol>
+      </div>
+      <div class="leaderboard">
+        <div class="lb-head lb-head-neg">
+          <h3>Bottom 5 Hostiles</h3>
+          <span class="lb-sub">Lowest scores in the General Assembly</span>
+        </div>
+        <ol class="lb-list" id="lb-hostiles"></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <div class="controls-bar">
+    <div class="container">
+      <div class="controls-inner">
+        <input type="text" class="search-input" id="search-input" placeholder="Search name or district... (press / to focus)" />
+
+        <div class="controls-divider"></div>
+
+        <div class="pill-group" id="chamber-filter">
+          <button class="pill active" data-value="all">All</button>
+          <button class="pill" data-value="House">House</button>
+          <button class="pill" data-value="Senate">Senate</button>
+        </div>
+
+        <div class="controls-divider"></div>
+
+        <div class="pill-group" id="party-filter">
+          <button class="pill active" data-value="all">All</button>
+          <button class="pill" data-value="D">Democrat</button>
+          <button class="pill" data-value="R">Republican</button>
+        </div>
+
+        <div class="controls-divider"></div>
+
+        <div class="pill-group" id="grade-filter">
+          <button class="pill active" data-value="all">All</button>
+          <button class="pill grade-pill" data-value="A+" style="--pill-color: #16a34a;">A+</button>
+          <button class="pill grade-pill" data-value="A" style="--pill-color: #22c55e;">A</button>
+          <button class="pill grade-pill" data-value="A-" style="--pill-color: #65a30d;">A-</button>
+          <button class="pill grade-pill" data-value="B" style="--pill-color: #84cc16;">B</button>
+          <button class="pill grade-pill" data-value="C" style="--pill-color: #eab308;">C</button>
+          <button class="pill grade-pill" data-value="D" style="--pill-color: #f97316;">D</button>
+          <button class="pill grade-pill" data-value="F" style="--pill-color: #dc2626;">F</button>
+        </div>
+
+        <div class="controls-divider"></div>
+
+        <select class="sort-select" id="sort-select">
+          <option value="score-desc">Score (High to Low)</option>
+          <option value="score-asc">Score (Low to High)</option>
+          <option value="name-asc">Name (A-Z)</option>
+          <option value="district">District</option>
+        </select>
+
+        <span class="results-count" id="results-count">0 results</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <section class="container">
+    <div class="card-list" id="card-list"></div>
+    <div class="no-results" id="no-results">No legislators match your current filters.</div>
+  </section>
+
+  <!-- How We Score (brief explainer; full detail lives at /methodology) -->
+  <section class="methodology-full" id="methodology" style="margin-top: 56px;">
+    <div class="container">
+
+      <div class="m-hero">
+        <p class="section-label">How We Score</p>
+        <h2 class="m-h1">The Quick Version</h2>
+        <p class="m-lede">
+          Three subscores measure what each lawmaker actually did: <strong>Floor Votes</strong> on tracked bills, <strong>Committee Votes</strong> on tracked bills, and <strong>Bills</strong> they sponsored or co-sponsored. Each subscore scales from &minus;5 to +5. We weight them, add a flat 50 baseline that every lawmaker starts from, and clamp to 0&ndash;100. No party calibration. No chamber curve. Trackable evidence only.
+        </p>
+      </div>
+
+      <div class="m-section">
+        <h3 class="m-h2">The Formula</h3>
+        <div class="m-formula-card">
+          <div class="m-formula-line">
+            Score = 50 + (Vf &times; 4) + (Vc &times; 4) + (S &times; 2)
+          </div>
+          <p class="m-formula-foot">
+            <strong>Why 50?</strong> Every lawmaker, regardless of party, starts at 50. The subscores move the score up or down from there based on individual action. Floor and committee votes are weighted equally because both are binding action; sponsorship counts at half weight because it signals public commitment but isn't a recorded yes/no on the bill itself. A lawmaker with no tracked votes or sponsorships holds the 50 baseline (a C, labeled Mixed Record) until the record gives us evidence to move them. A perfect +5, +5, +5 record reaches exactly 100 (A+). A worst-case &minus;5, &minus;5, &minus;5 record reaches exactly 0 (F).
+          </p>
+        </div>
+      </div>
+
+      <div class="m-section">
+        <h3 class="m-h2">Grading Scale</h3>
+        <div class="m-grade-table-wrap">
+          <table class="m-grade-table" id="m-grade-table"></table>
+        </div>
+      </div>
+
+      <div class="m-cta-row">
+        <div>
+          <h3 class="m-cta-title">The full methodology</h3>
+          <p class="m-cta-sub">College-level detail on subscore construction, roll-call weighting, source hierarchy, vote exceptions, and the intersectional lens we use when tracking which bills affect LGBTQ+ Ohioans.</p>
+        </div>
+        <a href="/methodology" class="methodology-cta-btn">Read the full methodology &rarr;</a>
+      </div>
+
+      <p class="m-foot-note">Found a mistake? Tell us at <a href="mailto:scorecard@ohiopride.org">scorecard@ohiopride.org</a> with the lawmaker's name, the issue, and a link to the source. We update fast.</p>
+
+    </div>
+  </section>

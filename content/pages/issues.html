@@ -1,0 +1,103 @@
+<section class="tracker-hero">
+      <h1>Legislative Issue Tracker</h1>
+      <p>
+        Tracking anti-LGBTQIA+ legislation in the Ohio Statehouse — 136th
+        General Assembly (2025–2026)
+      </p>
+    </section>
+
+    <div class="tracker-body">
+      <div class="alert-banner">
+        <div class="alert-inner">
+          <span class="alert-icon">&#9888;&#65039;</span>
+          <div class="alert-text">
+            <strong
+              >HB 249 has passed the Ohio House and is now in the Senate</strong
+            >
+            <span
+              >The "Indecent Exposure Modernization Act" — widely described as a
+              drag ban — passed 63–32 on March 25, 2026.</span
+            >
+          </div>
+          <a href="/issues/hb249" class="alert-link">Track HB 249 →</a>
+        </div>
+      </div>
+
+      <div class="stats-bar reveal-stagger">
+        <div class="stat-card">
+          <div class="stat-num" id="statActive">22</div>
+          <div class="stat-label">Bills Tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statPassed">2</div>
+          <div class="stat-label">Passed a Chamber</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statCommittee">16</div>
+          <div class="stat-label">In Committee</div>
+        </div>
+        <div class="stat-card stat-card-updated">
+          <div class="stat-updated-date" id="lastUpdatedDate">—</div>
+          <div class="stat-updated-time" id="lastUpdatedTime">—</div>
+          <div class="stat-label">Last Updated</div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="filter-row">
+          <span class="filter-label">Stance</span>
+          <button class="filter-btn active" data-filter="stance" data-value="all">All</button>
+          <button class="filter-btn stance-anti" data-filter="stance" data-value="anti">Anti-LGBTQ+</button>
+          <button class="filter-btn stance-pro" data-filter="stance" data-value="pro">Pro-LGBTQ+</button>
+          <button class="filter-btn stance-mixed" data-filter="stance" data-value="mixed">Mixed</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Status</span>
+          <button class="filter-btn active" data-filter="status" data-value="all">All</button>
+          <button class="filter-btn" data-filter="status" data-value="introduced">Introduced</button>
+          <button class="filter-btn" data-filter="status" data-value="in-committee">In Committee</button>
+          <button class="filter-btn" data-filter="status" data-value="passed-house">Passed House</button>
+          <button class="filter-btn" data-filter="status" data-value="passed-senate">Passed Senate</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Category</span>
+          <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+          <button class="filter-btn" data-filter="category" data-value="anti-trans">Anti-Trans</button>
+          <button class="filter-btn" data-filter="category" data-value="civil-rights">Civil Rights</button>
+          <button class="filter-btn" data-filter="category" data-value="healthcare">Healthcare</button>
+          <button class="filter-btn" data-filter="category" data-value="education">Education / DEI</button>
+          <button class="filter-btn" data-filter="category" data-value="expression">Expression</button>
+          <button class="filter-btn" data-filter="category" data-value="youth">Youth / Family</button>
+          <button class="filter-btn" data-filter="category" data-value="elections">Elections</button>
+          <button class="filter-btn" data-filter="category" data-value="corrections">Corrections</button>
+        </div>
+      </div>
+
+      <div id="billsContainer"></div>
+
+      <div class="source-credit">
+        <div class="source-credit-inner">
+          Data sourced from <strong>The Buckeye Flame</strong> &mdash;
+          Ohio's LGBTQ+ news source. See Ken Schneck's
+          <a href="https://thebuckeyeflame.com/2025/11/23/2025-26-guide-to-ohios-lgbtq-legislation/" target="_blank" rel="noopener">guide to Ohio's LGBTQ+ legislation</a>
+          and visit <a href="https://thebuckeyeflame.com/" target="_blank" rel="noopener">TheBuckeyeFlame.com</a>.
+        </div>
+      </div>
+
+      <div class="contact-note">
+        <p>
+          This tracker is updated regularly based on official Ohio Legislature
+          records. Know about new legislation or have a correction?
+          <a href="mailto:info@ohiopride.org"
+            >Contact us at info@ohiopride.org</a
+          >
+        </p>
+      </div>
+    </div>
+    <!-- end .tracker-body -->
+
+
+
+    <a href="/donate" class="mobile-donate-fab">Donate</a>
+
+    <!-- Shared bill data & pipeline component -->
