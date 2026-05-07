@@ -37,6 +37,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.ohiopride.org/issues/hb96</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.ohiopride.org/issues/hb112</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.ohiopride.org/issues/hb838</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.ohiopride.org/issues/hb249</loc>
     <priority>0.6</priority>
   </url>
