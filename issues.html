@@ -695,15 +695,15 @@
 
       <div class="stats-bar reveal-stagger">
         <div class="stat-card">
-          <div class="stat-num" id="statActive">22</div>
+          <div class="stat-num" id="statActive">25</div>
           <div class="stat-label">Bills Tracked</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num" id="statPassed">2</div>
+          <div class="stat-num" id="statPassed">3</div>
           <div class="stat-label">Passed a Chamber</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num" id="statCommittee">16</div>
+          <div class="stat-num" id="statCommittee">17</div>
           <div class="stat-label">In Committee</div>
         </div>
         <div class="stat-card stat-card-updated">
@@ -890,6 +890,31 @@
         });
       }
 
+      function setStat(el, target, animate) {
+        if (!el) return;
+        var prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!animate || prefersReducedMotion) {
+          el.textContent = target;
+          return;
+        }
+        var start = parseInt(el.textContent, 10);
+        if (isNaN(start)) start = 0;
+        if (start === target) { el.textContent = target; return; }
+        var duration = 1100;
+        var startTime = null;
+        function tick(now) {
+          if (startTime === null) startTime = now;
+          var t = Math.min(1, (now - startTime) / duration);
+          var eased = 1 - Math.pow(1 - t, 3);
+          var value = Math.round(start + (target - start) * eased);
+          el.textContent = value;
+          if (t < 1) requestAnimationFrame(tick);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      var statsAnimated = false;
       function updateStats(filtered) {
         var elActive = document.getElementById("statActive");
         var elPassed = document.getElementById("statPassed");
@@ -897,9 +922,16 @@
         var total = filtered.length;
         var passed = filtered.filter(function(b) { return b.status === "passed-house" || b.status === "passed-senate" || b.status === "passed-committee" || b.status === "law"; }).length;
         var committee = filtered.filter(function(b) { return b.status === "in-committee"; }).length;
-        if (elActive) elActive.textContent = total;
-        if (elPassed) elPassed.textContent = passed;
-        if (elCommittee) elCommittee.textContent = committee;
+        var animate = !statsAnimated;
+        if (animate) {
+          if (elActive) elActive.textContent = "0";
+          if (elPassed) elPassed.textContent = "0";
+          if (elCommittee) elCommittee.textContent = "0";
+        }
+        setStat(elActive, total, animate);
+        setStat(elPassed, passed, animate);
+        setStat(elCommittee, committee, animate);
+        statsAnimated = true;
       }
 
       let activeStance = "all",
