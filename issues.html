@@ -127,26 +127,37 @@
         color: white;
       }
 
+      .stats-bar-sticky {
+        position: sticky;
+        top: var(--nav-height);
+        z-index: 90;
+        background: rgba(15, 34, 51, 0.92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        margin-top: 2rem;
+      }
       .stats-bar {
         max-width: 1200px;
-        margin: 2rem auto;
+        margin: 0 auto;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
-        padding: 0 2rem;
+        padding: 0.85rem 2rem;
       }
       .stat-card {
         background: var(--card-bg);
         border: 1px solid var(--card-border);
         border-radius: 8px;
-        padding: 1.25rem;
+        padding: 0.85rem 1rem;
         text-align: center;
       }
       .stat-card .stat-num {
         font-family: "Montserrat", sans-serif;
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: 800;
         color: var(--text-white);
+        line-height: 1.05;
       }
       .stat-card .stat-label {
         color: var(--text-gray);
@@ -640,22 +651,52 @@
         }
       }
 
+      .archive-link-row {
+        max-width: 1200px;
+        margin: 1rem auto 0;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .archive-link {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-gray);
+        text-decoration: none;
+        padding: 0.45rem 0.85rem;
+        border: 1px solid var(--card-border);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.02);
+        transition: color 0.15s, border-color 0.15s, background 0.15s;
+      }
+      .archive-link:hover {
+        color: var(--text-white);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
       @media (max-width: 480px) {
         .stats-bar {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 0.5rem;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0.4rem;
+          padding: 0.5rem 0.75rem;
         }
         .stat-card {
-          padding: 0.75rem;
+          padding: 0.4rem 0.25rem;
         }
         .stat-card .stat-num {
-          font-size: 1.5rem;
+          font-size: 1.05rem;
         }
         .stat-card .stat-label {
-          font-size: 0.65rem;
+          font-size: 0.55rem;
+          letter-spacing: 0.04em;
+          line-height: 1.15;
         }
         .stat-card-updated .stat-updated-date {
-          font-size: 1.15rem;
+          font-size: 0.8rem;
         }
         .stat-card-updated .stat-updated-time {
           font-size: 0.8rem;
@@ -693,24 +734,29 @@
         </div>
       </div>
 
-      <div class="stats-bar reveal-stagger">
-        <div class="stat-card">
-          <div class="stat-num" id="statActive">25</div>
-          <div class="stat-label">Bills Tracked</div>
+      <div class="stats-bar-sticky">
+        <div class="stats-bar reveal-stagger">
+          <div class="stat-card">
+            <div class="stat-num" id="statActive">24</div>
+            <div class="stat-label">Bills Tracked</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statPassed">2</div>
+            <div class="stat-label">Passed a Chamber</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statCommittee">17</div>
+            <div class="stat-label">In Committee</div>
+          </div>
+          <div class="stat-card stat-card-updated">
+            <div class="stat-updated-date" id="lastUpdatedDate">—</div>
+            <div class="stat-updated-time" id="lastUpdatedTime">—</div>
+            <div class="stat-label">Last Updated</div>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-num" id="statPassed">3</div>
-          <div class="stat-label">Passed a Chamber</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="statCommittee">17</div>
-          <div class="stat-label">In Committee</div>
-        </div>
-        <div class="stat-card stat-card-updated">
-          <div class="stat-updated-date" id="lastUpdatedDate">—</div>
-          <div class="stat-updated-time" id="lastUpdatedTime">—</div>
-          <div class="stat-label">Last Updated</div>
-        </div>
+      </div>
+      <div class="archive-link-row">
+        <a href="/issues/archive" class="archive-link">View enacted legislation archive &rarr;</a>
       </div>
 
       <div class="filters">
@@ -728,7 +774,6 @@
           <button class="filter-btn" data-filter="status" data-value="in-committee">In Committee</button>
           <button class="filter-btn" data-filter="status" data-value="passed-house">Passed House</button>
           <button class="filter-btn" data-filter="status" data-value="passed-senate">Passed Senate</button>
-          <button class="filter-btn" data-filter="status" data-value="law">Enacted</button>
         </div>
         <div class="filter-row">
           <span class="filter-label">Category</span>
@@ -934,12 +979,15 @@
         statsAnimated = true;
       }
 
+      // Active tracker excludes enacted bills — those live on /issues/archive.
+      const ACTIVE_BILLS = BILLS.filter((b) => b.status !== "law");
+
       let activeStance = "all",
         activeStatus = "all",
         activeCategory = "all";
 
       window.applyFilters = function applyFilters() {
-        var filtered = BILLS.filter((b) => {
+        var filtered = ACTIVE_BILLS.filter((b) => {
           const stm = activeStance === "all" || (b.stance || "anti") === activeStance;
           const sm = activeStatus === "all" || b.status === activeStatus;
           const cm = activeCategory === "all" || b.categories.includes(activeCategory);
@@ -967,8 +1015,8 @@
         });
       });
 
-      renderBills(BILLS);
-      updateStats(BILLS);
+      renderBills(ACTIVE_BILLS);
+      updateStats(ACTIVE_BILLS);
 
       // Populate the Last Updated card from LAST_UPDATED in bill-data.js
       if (typeof LAST_UPDATED !== "undefined") {

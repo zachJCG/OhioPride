@@ -73,7 +73,27 @@
   to = "/donate/founding-member.html"
   status = 200
 
+[[redirects]]
+  from = "/issues/archive"
+  to = "/issues/archive.html"
+  status = 200
+
 # Individual bill tracker pages
+[[redirects]]
+  from = "/issues/hb96"
+  to = "/issues/hb96.html"
+  status = 200
+
+[[redirects]]
+  from = "/issues/hb112"
+  to = "/issues/hb112.html"
+  status = 200
+
+[[redirects]]
+  from = "/issues/hb838"
+  to = "/issues/hb838.html"
+  status = 200
+
 [[redirects]]
   from = "/issues/hb249"
   to = "/issues/hb249.html"
