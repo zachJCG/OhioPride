@@ -4,10 +4,92 @@
    ========================================================================== */
 
 // Update this constant whenever bill data changes
-const LAST_UPDATED = { date: "04/20/26", time: "05:35 PM EDT" };
+const LAST_UPDATED = { date: "05/07/26", time: "12:00 PM EDT" };
 
 const BILLS = [
   /* ===== ANTI-LGBTQ+ BILLS ===== */
+  {
+    id: "hb96",
+    bill: "HB 96",
+    title: "FY 2026-2027 Operating Budget",
+    nickname: "Budget with Anti-LGBTQ+ Riders",
+    officialTitle: "Make operating appropriations for the biennium ending June 30, 2027",
+    stance: "anti",
+    status: "law",
+    statusLabel: "Enacted with Anti-LGBTQ+ Riders",
+    statusColor: "#dc2626",
+    categories: ["education", "anti-trans", "civil-rights"],
+    categoryLabels: ["Education", "Anti-Trans", "Civil Rights"],
+    description:
+      "Ohio's biennial state operating budget for FY 2026-2027. Contains anti-LGBTQ+ riders affecting K–12, higher education, and state agencies. DeWine line-item-vetoed select equality-related provisions on June 30, 2025; the legislature later overrode select vetoes (House 61–28, Senate 21–11).",
+    sponsors: "Executive Budget (Gov. DeWine) / House Finance",
+    lastAction: "Signed with line-item vetoes; select overrides recorded — June 30, 2025",
+    nextDate: "Provision-level mapping of surviving language pending",
+    chamber: "house",
+    currentStep: 8,
+    pipelineDates: {
+      0: "Apr 1, 2025",
+      4: "Apr 9, 2025",
+      7: "Jun 11, 2025",
+      8: "Jun 30, 2025",
+    },
+    url: "/issues/hb96",
+    legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb96",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb96/00_IN/pdf/",
+  },
+  {
+    id: "hb838",
+    bill: "HB 838",
+    title: "Restrict Public Coverage of Gender-Affirming Surgery",
+    nickname: "Adult Trans Care Coverage Ban",
+    officialTitle:
+      "Restrict Medicaid and public-employee coverage of gender-affirming surgery",
+    stance: "anti",
+    status: "introduced",
+    statusLabel: "Introduced",
+    statusColor: "#3b82f6",
+    categories: ["healthcare", "anti-trans"],
+    categoryLabels: ["Healthcare", "Anti-Trans"],
+    description:
+      "Restricts Medicaid and public-employee health benefits from covering gender-affirming surgery for adult Ohioans. Extends the HB 68 framework from minors into adult care via state coverage rather than direct prohibition.",
+    sponsors: "Rep. Gross",
+    lastAction: "Introduced — April 30, 2026",
+    nextDate: "Awaiting committee assignment",
+    chamber: "house",
+    currentStep: 0,
+    pipelineDates: { 0: "Apr 30, 2026" },
+    url: "/issues/hb838",
+    legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb838",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb838/00_IN/pdf/",
+  },
+  {
+    id: "hb112",
+    bill: "HB 112",
+    title: "Healthcare Sharing Ministries / Right of Conscience",
+    nickname: "Healthcare Refusal Bill",
+    officialTitle:
+      "Regards healthcare sharing ministries and right-of-conscience protections",
+    stance: "anti",
+    status: "in-committee",
+    statusLabel: "In Committee",
+    statusColor: "#f59e0b",
+    categories: ["healthcare"],
+    categoryLabels: ["Healthcare"],
+    description:
+      "Lets providers, hospitals, pharmacists, and insurers refuse to participate in or pay for services on conscience or religious grounds. Pairs broad refusal protections with a healthcare sharing ministry framework outside standard insurance regulation — long-tail risk for LGBTQ+ patients.",
+    sponsors: "Rep. Gross",
+    lastAction: "Referred to House Judiciary Committee — February 26, 2025",
+    nextDate: "Awaiting committee hearing",
+    chamber: "house",
+    currentStep: 1,
+    pipelineDates: { 0: "Feb 18, 2025", 1: "Feb 26, 2025" },
+    url: "/issues/hb112",
+    legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb112",
+    textUrl:
+      "https://search-prod.lis.state.oh.us/api/v2/general_assembly_136/legislation/hb112/00_IN/pdf/",
+  },
   {
     id: "hb249",
     bill: "HB 249",
