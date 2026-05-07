@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Admin Sign In | Ohio Pride PAC</title>
+  <meta name="robots" content="noindex,nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/admin/endorsements/admin.css" />
+
+  <style>
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 16px;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+    .login-card-banner { height: 4px; background: var(--pride-gradient); }
+    .login-body { padding: 40px 36px 36px; }
+    .login-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin: 0 0 10px;
+    }
+    .login-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin: 0 0 8px;
+    }
+    .login-subtitle {
+      color: var(--ink-soft);
+      font-size: 14px;
+      margin: 0 0 28px;
+    }
+    .field { margin-bottom: 18px; }
+    .alert {
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .alert.visible { display: block; }
+    .alert-error {
+      background: var(--error-soft);
+      border: 1.5px solid var(--error);
+      color: var(--error);
+    }
+    .alert-success {
+      background: var(--success-soft);
+      border: 1.5px solid rgba(31,122,77,0.3);
+      color: var(--success);
+    }
+    .alert-success strong { display: block; font-weight: 700; margin-bottom: 4px; }
+    .login-foot {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line-soft);
+      font-size: 12px;
+      color: var(--ink-mute);
+      text-align: center;
+    }
+    .login-foot a { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 2px; }
+    .login-foot a:hover { color: var(--navy); }
+    .btn-block { display: flex; width: 100%; }
+  </style>
+
+  <link rel="stylesheet" href="/css/site-template.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+  <div class="admin-subnav">
+    <div class="admin-subnav-inner">
+      <span class="admin-tag">Admin &middot; Endorsements</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="login-card">
+      <div class="login-card-banner" aria-hidden="true"></div>
+      <div class="login-body">
+        <p class="login-eyebrow">Restricted Access</p>
+        <h1 class="login-title">Admin Sign In</h1>
+        <p class="login-subtitle">Magic link only. Enter your authorized email and we will send a one-time sign in link.</p>
+
+        <div class="alert alert-error" id="alertError" role="alert"></div>
+        <div class="alert alert-success" id="alertSuccess" role="status">
+          <strong>Check your email.</strong>
+          <span id="successText">A sign in link has been sent.</span>
+        </div>
+
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label class="label" for="email">Email address</label>
+            <input class="input" type="email" id="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@ohiopride.org" />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="label">Send Magic Link</span>
+          </button>
+        </form>
+
+        <div class="login-foot">
+          Not authorized? <a href="/">Return to OhioPride.org</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<div id="site-footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/ohiopride-data.js" defer></script>
+  <script src="/js/site-template.js" defer></script>
+  <script>
+    /* ===================================================================
+       CONFIG
+       =================================================================== */
+    const CONFIG = {
+      SUPABASE_URL:      'https://dkdxefzhttkmjhdbkvqn.supabase.co',
+      SUPABASE_ANON_KEY: '__PASTE_SUPABASE_ANON_KEY__',
+      LIST_PATH:         '/admin/endorsements',
+      // Where Supabase sends the user after they click the magic link.
+      // This URL must be in the Auth redirect allowlist.
+      REDIRECT_TO:       'https://ohiopride.org/admin/endorsements'
+    };
+
+    const $ = (s) => document.querySelector(s);
+
+    function showError(msg) {
+      const el = $('#alertError');
+      el.textContent = msg;
+      el.classList.add('visible');
+      $('#alertSuccess').classList.remove('visible');
+    }
+    function showSuccess(email) {
+      $('#successText').textContent =
+        `A sign in link has been sent to ${email}. Click it within 60 minutes to access the admin dashboard.`;
+      $('#alertSuccess').classList.add('visible');
+      $('#alertError').classList.remove('visible');
+    }
+
+    const client = window.supabase.createClient(
+      CONFIG.SUPABASE_URL,
+      CONFIG.SUPABASE_ANON_KEY,
+      { auth: { detectSessionInUrl: true, persistSession: true } }
+    );
+
+    /* ===================================================================
+       Auto-redirect if already signed in
+       =================================================================== */
+    (async function checkExistingSession() {
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        if (session) {
+          window.location.replace(CONFIG.LIST_PATH);
+        }
+      } catch (_) { /* no-op */ }
+    })();
+
+    /* ===================================================================
+       Submit handler
+       =================================================================== */
+    $('#loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = $('#btnSubmit');
+      const email = $('#email').value.trim().toLowerCase();
+      if (!email) {
+        showError('Please enter your email address.');
+        return;
+      }
+
+      btn.classList.add('loading');
+      btn.disabled = true;
+      $('#alertError').classList.remove('visible');
+
+      try {
+        const { error } = await client.auth.signInWithOtp({
+          email,
+          options: {
+            emailRedirectTo: CONFIG.REDIRECT_TO,
+            shouldCreateUser: true
+          }
+        });
+        if (error) throw error;
+        showSuccess(email);
+      } catch (err) {
+        console.error('Magic link error:', err);
+        showError(err.message || 'Could not send sign in link. Please try again.');
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

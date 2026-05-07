@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Endorsed Candidates | Ohio Pride PAC</title>
+  <meta name="description" content="Candidates endorsed by Ohio Pride PAC for federal, state, and local office in Ohio. Vetted by our screening committee, approved by our board." />
+  <meta name="robots" content="index,follow" />
+
+  <meta property="og:title" content="Endorsed Candidates | Ohio Pride PAC" />
+  <meta property="og:description" content="Candidates endorsed by Ohio Pride PAC for federal, state, and local office in Ohio." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ohiopride.org/endorsements" />
+  <meta property="og:site_name" content="Ohio Pride PAC" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="canonical" href="https://ohiopride.org/endorsements" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =================================================================
+       Ohio Pride PAC :: Public Endorsements Page
+       Brand v1.1
+       ================================================================= */
+
+    :root {
+      --navy:          #0F2233;
+      --navy-light:    #1A3A52;
+      --navy-lighter:  #234A66;
+      --cyan:          #73D7EE;
+      --cyan-soft:     rgba(115, 215, 238, 0.18);
+      --cyan-edge:     rgba(115, 215, 238, 0.45);
+      --white:         #FFFFFF;
+      --paper:         #F7F8FA;
+      --paper-2:       #EFF2F5;
+      --ink:           #0F2233;
+      --ink-soft:      #4A5C6E;
+      --ink-mute:      #7A8896;
+      --line:          #D9DEE4;
+      --line-soft:     #E8EBEF;
+      --success:       #1F7A4D;
+      --success-soft:  #E8F4EE;
+
+      --pride-gradient: linear-gradient(
+        90deg,
+        #E40303 0%,
+        #FF8C00 20%,
+        #FFED00 40%,
+        #008026 60%,
+        #004DFF 80%,
+        #750787 100%
+      );
+
+      --radius:    4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow-card:  0 1px 2px rgba(15, 34, 51, 0.04), 0 8px 24px rgba(15, 34, 51, 0.06);
+      --shadow-soft:  0 1px 2px rgba(15, 34, 51, 0.04), 0 2px 8px rgba(15, 34, 51, 0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--paper);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header / footer / pride stripes are owned by the shared site shell. */
+
+    /* ----------------------------------------------------------------
+       Hero
+       ---------------------------------------------------------------- */
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 56px 24px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan-edge), transparent);
+    }
+    .hero-inner {
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .hero-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin: 0 0 16px;
+    }
+    .hero h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: clamp(32px, 6vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      margin: 0 0 20px;
+      color: var(--white);
+    }
+    .hero p {
+      font-size: clamp(15px, 1.6vw, 17px);
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.82);
+      margin: 0 0 12px;
+      max-width: 64ch;
+    }
+    .hero strong { color: var(--white); font-weight: 600; }
+
+    /* ----------------------------------------------------------------
+       Filters
+       ---------------------------------------------------------------- */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: -36px auto 0;
+      padding: 0 16px 56px;
+      position: relative;
+    }
+
+    .filter-bar {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      padding: 18px 22px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .filter-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      flex: 0 0 auto;
+    }
+    .chip-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 8px 14px;
+      border: 1.5px solid var(--line);
+      background: var(--white);
+      color: var(--ink-soft);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .chip:hover { border-color: var(--ink-soft); color: var(--ink); }
+    .chip.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: var(--white);
+    }
+    .chip .count {
+      margin-left: 6px;
+      font-weight: 400;
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .filter-year {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 14px;
+      padding: 8px 32px 8px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%234A5C6E' d='M6 8L0 0h12z'/%3E%3C/svg%3E") right 12px center / 10px 7px no-repeat;
+      color: var(--ink);
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .filter-year:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px var(--cyan-soft);
+    }
+
+    .filter-spacer { flex: 1; }
+    .filter-count {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      flex: 0 0 auto;
+    }
+    .filter-count strong { color: var(--ink); font-size: 14px; margin-right: 4px; }
+
+    /* ----------------------------------------------------------------
+       Card grid
+       ---------------------------------------------------------------- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 1px 2px rgba(15,34,51,0.04), 0 12px 32px rgba(15,34,51,0.10);
+    }
+    .card-stripe {
+      height: 4px;
+      background: var(--pride-gradient);
+      flex: 0 0 auto;
+    }
+    .card-body {
+      padding: 22px 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .card-head {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .avatar {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-lighter) 100%);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .head-text { flex: 1; min-width: 0; }
+    .card-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin: 0;
+      word-break: break-word;
+    }
+    .card-pronouns {
+      font-size: 12px;
+      color: var(--ink-mute);
+      margin: 4px 0 0;
+      font-family: 'Roboto Slab', Georgia, serif;
+    }
+
+    .card-office {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      margin: 0;
+      line-height: 1.4;
+    }
+    .card-meta {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: var(--ink-mute);
+      margin: 4px 0 0;
+    }
+
+    .endorsed-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 5px 11px 5px 9px;
+      background: var(--cyan-soft);
+      color: var(--navy);
+      border: 1px solid var(--cyan-edge);
+      border-radius: 999px;
+      align-self: flex-start;
+    }
+    .endorsed-pill svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+    .card-bio {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--ink-soft);
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      line-clamp: 4;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-bio.empty { font-style: italic; color: var(--ink-mute); }
+
+    .card-foot {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .campaign-link {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--navy);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s;
+    }
+    .campaign-link:hover { color: var(--cyan); }
+    .campaign-link::after {
+      content: '\2192';
+      font-size: 14px;
+      transition: transform 0.15s;
+    }
+    .campaign-link:hover::after { transform: translateX(2px); }
+    .campaign-link.disabled {
+      color: var(--ink-mute);
+      pointer-events: none;
+    }
+
+    /* ----------------------------------------------------------------
+       States: loading, empty
+       ---------------------------------------------------------------- */
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .skeleton-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      height: 280px;
+      position: relative;
+      overflow: hidden;
+    }
+    .skeleton-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--line);
+    }
+    .skeleton-card::after {
+      content: '';
+      position: absolute;
+      top: 4px; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+      animation: shimmer 1.6s infinite;
+    }
+    @keyframes shimmer {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 80px 24px;
+      text-align: center;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+    }
+    .empty-state h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--ink);
+      margin: 0 0 10px;
+      letter-spacing: -0.01em;
+    }
+    .empty-state p {
+      color: var(--ink-soft);
+      font-size: 14px;
+      max-width: 50ch;
+      margin: 0 auto 20px;
+    }
+    .empty-state .btn-clear {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 11px 20px;
+      background: transparent;
+      color: var(--ink-soft);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .empty-state .btn-clear:hover {
+      color: var(--ink);
+      border-color: var(--ink-soft);
+    }
+
+    /* ----------------------------------------------------------------
+       CTA Banner
+       ---------------------------------------------------------------- */
+    .cta-banner {
+      max-width: 1200px;
+      margin: 56px auto 0;
+      padding: 0 16px;
+    }
+    .cta-card {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--pride-gradient);
+    }
+    .cta-text { flex: 1; min-width: 280px; }
+    .cta-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin: 0 0 10px;
+    }
+    .cta-card h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: clamp(22px, 3vw, 30px);
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      margin: 0 0 10px;
+    }
+    .cta-card p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.78);
+      margin: 0;
+      max-width: 56ch;
+    }
+    .cta-actions {
+      flex: 0 0 auto;
+      display: flex;
+      gap: 12px;
+    }
+    .btn-cta {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 16px 26px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-cta-primary {
+      background: var(--cyan);
+      color: var(--navy);
+    }
+    .btn-cta-primary:hover {
+      background: var(--white);
+    }
+
+    /* ----------------------------------------------------------------
+       Mobile
+       ---------------------------------------------------------------- */
+    @media (max-width: 720px) {
+      .hero { padding: 40px 20px 56px; }
+      main { padding: 0 12px 36px; margin-top: -28px; }
+      .filter-bar {
+        padding: 14px;
+        gap: 10px;
+      }
+      .filter-label { width: 100%; margin-bottom: 4px; }
+      .chip-group { width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+      .filter-spacer { display: none; }
+      .filter-count { width: 100%; text-align: right; }
+
+      .grid, .skeleton-grid { grid-template-columns: 1fr; gap: 16px; }
+      .cta-card { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+      .cta-actions { width: 100%; }
+      .btn-cta { width: 100%; justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+
+  <link rel="stylesheet" href="/css/site-template.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Endorsed Candidates</p>
+      <h1 id="page-title">Pro-equality leadership for Ohio.</h1>
+      <p>Ohio Pride PAC endorses candidates who demonstrate strong, consistent support for LGBTQ+ equality. Each candidate below has been vetted by our Screening Committee and approved by our Board.</p>
+      <p><strong>Endorse. Mobilize. Fight for Ohio.</strong></p>
+    </div>
+  </section>
+
+  <main>
+    <div class="filter-bar" role="region" aria-label="Filters">
+      <span class="filter-label">Filter</span>
+      <div class="chip-group" role="group" aria-label="Office level">
+        <button class="chip active" data-level="all">All Offices</button>
+        <button class="chip" data-level="federal">Federal</button>
+        <button class="chip" data-level="state">State</button>
+        <button class="chip" data-level="local">Local</button>
+      </div>
+      <select class="filter-year" id="filterYear" aria-label="Election year">
+        <option value="">All years</option>
+      </select>
+      <span class="filter-spacer"></span>
+      <span class="filter-count" id="filterCount">
+        <strong id="countNum">0</strong>endorsed
+      </span>
+    </div>
+
+    <div id="skeletonGrid" class="skeleton-grid">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </div>
+
+    <div id="grid" class="grid" hidden></div>
+    <div id="emptyState" class="empty-state" hidden></div>
+
+    <section class="cta-banner" aria-labelledby="cta-title">
+      <div class="cta-card">
+        <div class="cta-text">
+          <p class="cta-eyebrow">Are You a Candidate?</p>
+          <h2 id="cta-title">Apply for an Ohio Pride PAC endorsement.</h2>
+          <p>If you're running for federal, state, or local office in Ohio and want to make a real commitment to LGBTQ+ equality, we want to hear from you. Applications are reviewed on a rolling basis.</p>
+        </div>
+        <div class="cta-actions">
+          <a href="/endorsement/screening" class="btn-cta btn-cta-primary">
+            Apply for Endorsement
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<div id="site-footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/ohiopride-data.js" defer></script>
+  <script src="/js/site-template.js" defer></script>
+  <script>
+    /* ===================================================================
+       CONFIG
+       Anon key is public by design. Public-readable rows are restricted
+       to status='endorsed' by RLS and the public_endorsements view.
+       =================================================================== */
+    const CONFIG = {
+      SUPABASE_URL:      'https://dkdxefzhttkmjhdbkvqn.supabase.co',
+      SUPABASE_ANON_KEY: '__PASTE_SUPABASE_ANON_KEY__',
+      SCREENING_PATH:    '/endorsement/screening'
+    };
+
+    const $  = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    const state = {
+      rows: [],
+      level: 'all',
+      year:  ''
+    };
+
+    /* ===================================================================
+       Office classifier
+       Derives Federal / State / Local from the office_sought free text.
+       Tweak the regexes as needed; defaults to "local" when ambiguous.
+       =================================================================== */
+    function classifyOffice(office) {
+      if (!office) return 'local';
+      const s = String(office).toLowerCase();
+
+      // Federal: U.S. House, U.S. Senate, Congress, President
+      if (/\bu\.?\s?s\.?\b/.test(s))               return 'federal';
+      if (/\bunited states\b/.test(s))             return 'federal';
+      if (/\bcongress(?:ional|woman|man)?\b/.test(s)) return 'federal';
+      if (/\bpresident\b/.test(s))                 return 'federal';
+      if (/\bfederal\b/.test(s))                   return 'federal';
+
+      // State: Ohio Senate, Ohio House, Governor, Attorney General, etc.
+      if (/\bohio (?:senate|house|statehouse)\b/.test(s))                return 'state';
+      if (/\bstate (?:senate|house|representative|senator|treasurer|board of education)\b/.test(s)) return 'state';
+      if (/\bgovernor\b/.test(s))                                        return 'state';
+      if (/\battorney general\b/.test(s))                                return 'state';
+      if (/\bsecretary of state\b/.test(s))                              return 'state';
+      if (/\bstate (?:treasurer|auditor)\b/.test(s))                     return 'state';
+      if (/\b(?:ohio )?supreme court\b/.test(s))                         return 'state';
+      if (/\bcourt of appeals\b/.test(s) && /\bohio\b/.test(s))          return 'state';
+
+      // Default: local
+      return 'local';
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+    function initials(name) {
+      if (!name) return '?';
+      const first = String(name).trim().split(/\s+/)[0] || '';
+      return (first[0] || '?').toUpperCase();
+    }
+    function normalizeUrl(url) {
+      if (!url) return null;
+      const trimmed = url.trim();
+      if (!trimmed) return null;
+      if (/^https?:\/\//i.test(trimmed)) return trimmed;
+      return 'https://' + trimmed;
+    }
+
+    /* ===================================================================
+       Render
+       =================================================================== */
+    function renderCard(row) {
+      const officeLevel = classifyOffice(row.office_sought);
+      const meta = [];
+      if (row.district)      meta.push(escapeHtml(row.district));
+      if (row.election_year) meta.push(escapeHtml(row.election_year));
+      if (row.party)         meta.push(escapeHtml(row.party));
+
+      const bioHtml = row.bio
+        ? `<p class="card-bio">${escapeHtml(row.bio)}</p>`
+        : `<p class="card-bio empty">No bio provided.</p>`;
+
+      const websiteUrl = normalizeUrl(row.website);
+      const linkHtml = websiteUrl
+        ? `<a class="campaign-link" href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener">Visit Campaign Site</a>`
+        : `<span class="campaign-link disabled">Campaign site coming soon</span>`;
+
+      const pronouns = row.pronouns
+        ? `<p class="card-pronouns">${escapeHtml(row.pronouns)}</p>`
+        : '';
+
+      return `
+        <article class="card" data-level="${officeLevel}" data-year="${row.election_year || ''}">
+          <div class="card-stripe" aria-hidden="true"></div>
+          <div class="card-body">
+            <div class="card-head">
+              <div class="avatar" aria-hidden="true">${escapeHtml(initials(row.candidate_name))}</div>
+              <div class="head-text">
+                <h3 class="card-name">${escapeHtml(row.candidate_name)}</h3>
+                ${pronouns}
+              </div>
+            </div>
+
+            <div>
+              <p class="card-office">${escapeHtml(row.office_sought)}</p>
+              ${meta.length ? `<p class="card-meta">${meta.join(' &middot; ')}</p>` : ''}
+            </div>
+
+            <span class="endorsed-pill">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="3,8 7,12 13,4" />
+              </svg>
+              Endorsed by Ohio Pride PAC
+            </span>
+
+            ${bioHtml}
+
+            <div class="card-foot">${linkHtml}</div>
+          </div>
+        </article>
+      `;
+    }
+
+    function applyFilters() {
+      const filtered = state.rows.filter(r => {
+        if (state.level !== 'all' && classifyOffice(r.office_sought) !== state.level) return false;
+        if (state.year && String(r.election_year) !== state.year) return false;
+        return true;
+      });
+
+      const grid = $('#grid');
+      const empty = $('#emptyState');
+      $('#countNum').textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        grid.hidden = true;
+        empty.hidden = false;
+        if (state.rows.length === 0) {
+          empty.innerHTML = `
+            <h2>Endorsements coming soon</h2>
+            <p>Our Screening Committee is reviewing applications now. The first round of endorsed candidates will appear here as the Board approves them.</p>
+            <a href="/endorsement/screening" class="btn-clear">Are you a candidate? Apply now</a>
+          `;
+        } else {
+          empty.innerHTML = `
+            <h2>No matches</h2>
+            <p>No endorsed candidates match the current filters. Try clearing them.</p>
+            <button class="btn-clear" id="btnClearFilters">Clear filters</button>
+          `;
+          $('#btnClearFilters').addEventListener('click', () => {
+            state.level = 'all';
+            state.year = '';
+            $$('.chip').forEach(c => c.classList.toggle('active', c.dataset.level === 'all'));
+            $('#filterYear').value = '';
+            applyFilters();
+          });
+        }
+      } else {
+        empty.hidden = true;
+        grid.hidden = false;
+        grid.innerHTML = filtered.map(renderCard).join('');
+      }
+
+      updateChipCounts();
+    }
+
+    function updateChipCounts() {
+      const counts = { all: state.rows.length, federal: 0, state: 0, local: 0 };
+      for (const r of state.rows) {
+        const lvl = classifyOffice(r.office_sought);
+        if (counts[lvl] !== undefined) counts[lvl]++;
+      }
+      $$('.chip').forEach(chip => {
+        const lvl = chip.dataset.level;
+        const n = counts[lvl] ?? 0;
+        const label = chip.textContent.replace(/\s*\(\d+\)$/, '').trim();
+        chip.innerHTML = `${escapeHtml(label)}<span class="count">(${n})</span>`;
+      });
+    }
+
+    /* ===================================================================
+       Year dropdown
+       =================================================================== */
+    function populateYears() {
+      const years = Array.from(new Set(
+        state.rows.map(r => r.election_year).filter(Boolean)
+      )).sort((a, b) => b - a);
+      const sel = $('#filterYear');
+      sel.innerHTML = '<option value="">All years</option>' +
+        years.map(y => `<option value="${y}">${y}</option>`).join('');
+    }
+
+    /* ===================================================================
+       Data fetch
+       =================================================================== */
+    async function loadEndorsements() {
+      try {
+        if (!window.supabase) throw new Error('Supabase library failed to load.');
+        const client = window.supabase.createClient(
+          CONFIG.SUPABASE_URL,
+          CONFIG.SUPABASE_ANON_KEY
+        );
+        const { data, error } = await client
+          .from('public_endorsements')
+          .select('*')
+          .order('election_year', { ascending: false })
+          .order('candidate_name', { ascending: true });
+        if (error) throw error;
+        return data || [];
+      } catch (err) {
+        console.error('Failed to load endorsements:', err);
+        return [];
+      }
+    }
+
+    /* ===================================================================
+       Init
+       =================================================================== */
+    (async function init() {
+      // Filter chip clicks
+      $$('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          $$('.chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          state.level = chip.dataset.level;
+          applyFilters();
+        });
+      });
+
+      // Year select
+      $('#filterYear').addEventListener('change', (e) => {
+        state.year = e.target.value;
+        applyFilters();
+      });
+
+      // Fetch and render
+      const data = await loadEndorsements();
+      state.rows = data;
+      $('#skeletonGrid').remove();
+      populateYears();
+      applyFilters();
+    })();
+  </script>
+</body>
+</html>

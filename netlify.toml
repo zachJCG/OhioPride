@@ -2,10 +2,19 @@
   publish = "."
   functions = "netlify/functions"
 
+[build.environment]
+  # Pinned for the generate-endorsement-pdf Python function (ReportLab).
+  PYTHON_VERSION = "3.11"
+
 # Hourly ActBlue contribution sync. Reads ACTBLUE_* and SUPABASE_* env vars
 # from the Netlify dashboard; fails gracefully when credentials are missing.
 [functions."actblue-sync"]
   schedule = "@hourly"
+
+# Endorsement PDF generation: ReportLab + Storage upload can take a few
+# seconds, especially on cold start. Bumped from the 10s default.
+[functions."generate-endorsement-pdf"]
+  timeout = 26
 
 [[headers]]
   for = "/*"
@@ -215,3 +224,34 @@
   to = "/"
   status = 301
   force = true
+
+# Endorsement system clean URLs
+[[redirects]]
+  from = "/endorsements"
+  to = "/endorsements/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/endorsement/screening"
+  to = "/endorsement/screening/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/endorsement/screening/thank-you"
+  to = "/endorsement/screening/thank-you/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/endorsements"
+  to = "/admin/endorsements/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/endorsements/login"
+  to = "/admin/endorsements/login/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/endorsements/detail"
+  to = "/admin/endorsements/detail/index.html"
+  status = 200
