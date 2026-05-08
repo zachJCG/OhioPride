@@ -292,6 +292,12 @@
       display: flex;
       gap: 10px;
       margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .yesno-group-3 .yesno-option { min-width: calc(33.333% - 7px); }
+    @media (max-width: 480px) {
+      .yesno-group-3 { flex-direction: column; }
+      .yesno-group-3 .yesno-option { min-width: 100%; }
     }
     .yesno-option {
       flex: 1;
@@ -555,16 +561,35 @@
             <p class="step-desc">Tell us about you and your campaign. All fields marked with an asterisk are required.</p>
           </div>
 
-          <div class="field-row cols-2">
+          <div class="field-row cols-3">
             <div class="field">
-              <label class="label" for="candidate_name">Full name <span class="required" aria-hidden="true">*</span></label>
-              <input class="input" type="text" id="candidate_name" name="candidate_name" required autocomplete="name" />
-              <div class="field-error">Please enter your full name.</div>
+              <label class="label" for="first_name">First name <span class="required" aria-hidden="true">*</span></label>
+              <input class="input" type="text" id="first_name" name="first_name" required autocomplete="given-name" />
+              <div class="field-error">Please enter your first name.</div>
             </div>
             <div class="field">
-              <label class="label" for="pronouns">Pronouns <span class="optional">Optional</span></label>
-              <input class="input" type="text" id="pronouns" name="pronouns" placeholder="e.g., she/her, they/them, he/him" />
+              <label class="label" for="middle_name">Middle name <span class="optional">Optional</span></label>
+              <input class="input" type="text" id="middle_name" name="middle_name" autocomplete="additional-name" />
             </div>
+            <div class="field">
+              <label class="label" for="last_name">Last name <span class="required" aria-hidden="true">*</span></label>
+              <input class="input" type="text" id="last_name" name="last_name" required autocomplete="family-name" />
+              <div class="field-error">Please enter your last name.</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="pronouns">Pronouns <span class="optional">Optional</span></label>
+            <select class="select" id="pronouns" name="pronouns">
+              <option value="">Choose one</option>
+              <option value="she/her">she/her</option>
+              <option value="he/him">he/him</option>
+              <option value="they/them">they/them</option>
+              <option value="she/they">she/they</option>
+              <option value="he/they">he/they</option>
+              <option value="other">Other (please specify in bio)</option>
+              <option value="prefer_not_to_say">Prefer not to say</option>
+            </select>
           </div>
 
           <div class="field-row cols-2">
@@ -582,7 +607,15 @@
           <div class="field-row cols-3">
             <div class="field">
               <label class="label" for="election_year">Election year</label>
-              <input class="input" type="number" id="election_year" name="election_year" min="2026" max="2040" inputmode="numeric" placeholder="2026" />
+              <select class="select" id="election_year" name="election_year">
+                <option value="">Choose one</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
+                <option value="special">Special Election</option>
+              </select>
             </div>
             <div class="field">
               <label class="label" for="party">Party affiliation</label>
@@ -644,7 +677,7 @@
           <div class="step-header">
             <p class="step-eyebrow">Section 2 of 5</p>
             <h2 id="step2-title" class="step-title">Core Positions</h2>
-            <p class="step-desc">Five yes-or-no questions on the issues that matter most. A short explanation is required for each so the committee can review your reasoning.</p>
+            <p class="step-desc">Five questions on the issues that matter most. A short explanation is required for each so the committee can review your reasoning.</p>
           </div>
 
           <!-- Q1 -->
@@ -743,7 +776,7 @@
           <div class="position">
             <p class="position-q"><span class="num">Q5.</span> Will you vote against bills that roll back LGBTQ+ rights or create broad religious exemptions used to justify discrimination?</p>
             <div class="field" data-required-radio="q5_vote_against_rollbacks">
-              <div class="yesno-group" role="radiogroup" aria-label="Question 5 yes or no">
+              <div class="yesno-group yesno-group-3" role="radiogroup" aria-label="Question 5 answer">
                 <label class="yesno-option">
                   <input type="radio" name="q5_vote_against_rollbacks" value="true" required />
                   <span class="yesno-option-label">Yes</span>
@@ -752,12 +785,16 @@
                   <input type="radio" name="q5_vote_against_rollbacks" value="false" required />
                   <span class="yesno-option-label">No</span>
                 </label>
+                <label class="yesno-option">
+                  <input type="radio" name="q5_vote_against_rollbacks" value="na" required />
+                  <span class="yesno-option-label">Not Applicable</span>
+                </label>
               </div>
-              <div class="field-error">Please select Yes or No.</div>
+              <div class="field-error">Please select an answer.</div>
             </div>
             <div class="field">
               <label class="label" for="q5_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-              <textarea class="textarea" id="q5_explanation" name="q5_explanation" required rows="4"></textarea>
+              <textarea class="textarea" id="q5_explanation" name="q5_explanation" required rows="4" placeholder="If selecting Not Applicable (e.g., your office does not vote on legislation), briefly explain how you would use your office to push back against rollbacks of LGBTQ+ rights."></textarea>
               <div class="field-error">Please provide a brief explanation.</div>
             </div>
           </div>
@@ -903,7 +940,7 @@
       SUPABASE_URL:        'https://dkdxefzhttkmjhdbkvqn.supabase.co',
       SUPABASE_ANON_KEY:   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4',
       THANK_YOU_PATH:      '/endorsement/screening/thank-you',
-      STORAGE_KEY:         'op_endorsement_draft_v1',
+      STORAGE_KEY:         'op_endorsement_draft_v2',
       AUTOSAVE_DEBOUNCE_MS: 600,
       MIN_FILL_TIME_MS:    4000  // submissions faster than this are dropped as bots
     };
@@ -1144,12 +1181,29 @@
       };
       const trim = v => (typeof v === 'string' ? v.trim() : v);
 
+      const firstName  = trim(raw.first_name)  || '';
+      const middleName = trim(raw.middle_name) || '';
+      const lastName   = trim(raw.last_name)   || '';
+      const candidateName = [firstName, middleName, lastName]
+        .filter(Boolean)
+        .join(' ');
+
+      const q5Raw = raw.q5_vote_against_rollbacks;
+      const q5IsNa = q5Raw === 'na';
+
+      const electionYearRaw = trim(raw.election_year) || '';
+      const isSpecialElection = electionYearRaw === 'special';
+
       return {
-        candidate_name:            trim(raw.candidate_name),
+        candidate_name:            candidateName,
+        first_name:                firstName  || null,
+        middle_name:               middleName || null,
+        last_name:                 lastName   || null,
         pronouns:                  trim(raw.pronouns) || null,
         office_sought:             trim(raw.office_sought),
         district:                  trim(raw.district) || null,
-        election_year:             toInt(raw.election_year),
+        election_year:             isSpecialElection ? null : toInt(electionYearRaw),
+        is_special_election:       isSpecialElection,
         party:                     trim(raw.party) || null,
         committee_name:            trim(raw.committee_name) || null,
         treasurer_name:            trim(raw.treasurer_name) || null,
@@ -1165,7 +1219,8 @@
         q3_explanation:            trim(raw.q3_explanation),
         q4_inclusive_education:    toBool(raw.q4_inclusive_education),
         q4_explanation:            trim(raw.q4_explanation),
-        q5_vote_against_rollbacks: toBool(raw.q5_vote_against_rollbacks),
+        q5_vote_against_rollbacks: q5IsNa ? null : toBool(q5Raw),
+        q5_not_applicable:         q5IsNa,
         q5_explanation:            trim(raw.q5_explanation),
         q6_priorities:             trim(raw.q6_priorities),
         q7_legislation:            trim(raw.q7_legislation),
