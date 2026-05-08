@@ -213,6 +213,26 @@
   status = 200
 
 [[redirects]]
+  from = "/admin"
+  to = "/admin/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/login"
+  to = "/admin/login/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/donors"
+  to = "/admin/donors/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/volunteers"
+  to = "/admin/volunteers/index.html"
+  status = 200
+
+[[redirects]]
   from = "/admin/endorsements"
   to = "/admin/endorsements/index.html"
   status = 200

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Donors | Ohio Pride PAC Admin</title>
+  <meta name="robots" content="noindex,nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/admin/admin-shell.css" />
+</head>
+<body>
+  <main class="admin-main">
+    <div id="adminShellContent">
+      <div class="page-head">
+        <div>
+          <p class="page-eyebrow">Development</p>
+          <h1 class="page-title">Donors</h1>
+          <p class="page-subtitle">Founding members and future contribution records. Synced from ActBlue and the public roster.</p>
+        </div>
+      </div>
+
+      <div class="placeholder-card">
+        <span class="placeholder-tag">Coming next</span>
+        <h2>Donor database is on the way</h2>
+        <p>The donor module will let board members search the founding-member roster, review ActBlue contributions, and export donor reports. It is the next planned split of the admin system.</p>
+        <div class="placeholder-actions">
+          <a class="btn btn-secondary" href="/founding-members">View public roster</a>
+          <a class="btn btn-primary" href="/admin">Back to dashboard</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/admin/admin-shell.js"></script>
+  <script>
+    window.AdminShell.protect({ active: 'donors' });
+  </script>
+</body>
+</html>
