@@ -196,6 +196,37 @@
   to = "/brand.html"
   status = 200
 
+# Endorsement system (folder-based, served by directory index)
+[[redirects]]
+  from = "/endorsements"
+  to = "/endorsements/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/endorsement/screening"
+  to = "/endorsement/screening/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/endorsement/screening/thank-you"
+  to = "/endorsement/screening/thank-you/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/endorsements"
+  to = "/admin/endorsements/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/endorsements/login"
+  to = "/admin/endorsements/login/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/endorsements/detail"
+  to = "/admin/endorsements/detail/index.html"
+  status = 200
+
 # Legacy redirects
 [[redirects]]
   from = "/gala"
