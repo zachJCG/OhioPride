@@ -191,6 +191,11 @@
   to = "/terms.html"
   status = 200
 
+[[redirects]]
+  from = "/brand"
+  to = "/brand.html"
+  status = 200
+
 # Legacy redirects
 [[redirects]]
   from = "/gala"
