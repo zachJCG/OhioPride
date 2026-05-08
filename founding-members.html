@@ -294,22 +294,28 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
         gap: 1rem;
+        align-items: stretch;
       }
+      /* Cards share a fixed slot order so every card has the same lines in the
+         same place: name -> role (elected) -> location -> tier -> [quote] -> joined.
+         Slots that have no data render empty but reserve no space (.is-empty),
+         so the joined line still anchors to the bottom via margin-top:auto. */
       .member-card {
         position: relative;
         background: rgba(19, 45, 68, 0.55);
         border: 1px solid var(--dark-bg-light, #1a3a52);
         border-radius: 14px;
         padding: 1.1rem 1.1rem 1rem;
+        padding-right: 3.2rem; /* keep text from colliding with #N badge */
         overflow: hidden;
         content-visibility: auto;
-        contain-intrinsic-size: auto 200px;
+        contain-intrinsic-size: auto 220px;
         transition: transform 0.15s ease, border-color 0.2s ease;
         display: flex;
         flex-direction: column;
-        min-height: 9rem;
+        height: 100%;
+        min-height: 11rem;
       }
-      .member-card .joined { margin-top: auto; }
       .member-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.25); }
       .member-card::before {
         content: "";
@@ -332,13 +338,20 @@
         align-items: center;
         gap: 0.5rem;
         flex-wrap: wrap;
+        min-height: 1.6rem;
       }
       .member-card .name {
         font-family: "Montserrat", sans-serif;
         font-size: 1.05rem;
         font-weight: 700;
         color: var(--text-white, #fff);
-        line-height: 1.2;
+        line-height: 1.25;
+        /* Clamp to 2 lines so a long name can't push the rest of the card around. */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
       }
       .member-card .elected-pin {
         display: inline-flex;
@@ -354,14 +367,33 @@
         border: 1px solid rgba(127, 182, 255, 0.4);
         padding: 0.18rem 0.45rem;
         border-radius: 999px;
+        flex-shrink: 0;
       }
-      .member-card .office {
+      .member-card .role {
         font-family: "Roboto Slab", serif;
         color: #c8dcf2;
-        font-size: 0.82rem;
-        margin-top: 0.25rem;
+        font-size: 0.85rem;
+        margin-top: 0.35rem;
         line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
+      .member-card .role.is-empty { display: none; }
+      .member-card .loc {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.85rem;
+        color: var(--text-light, #c5d2dd);
+        margin-top: 0.35rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .member-card .loc.is-fallback { opacity: 0.55; }
       .member-card .meta {
         display: flex;
         align-items: center;
@@ -381,14 +413,13 @@
         background: rgba(255,255,255,0.04);
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 999px;
-        padding: 0.18rem 0.55rem;
+        padding: 0.2rem 0.6rem;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
-      .member-card .tier-tag .dot { width: 8px; height: 8px; border-radius: 50%; }
-      .member-card .loc {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.85rem;
-        color: var(--text-light, #c5d2dd);
-      }
+      .member-card .tier-tag .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
       .member-card .quote {
         margin-top: 0.7rem;
         font-family: "Roboto Slab", serif;
@@ -398,9 +429,14 @@
         line-height: 1.4;
         border-left: 2px solid rgba(255,255,255,0.15);
         padding-left: 0.6rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
       .member-card .joined {
-        margin-top: 0.7rem;
+        margin-top: auto;
+        padding-top: 0.85rem;
         font-family: "Montserrat", sans-serif;
         font-size: 0.7rem;
         color: var(--text-light, #c5d2dd);
@@ -499,6 +535,23 @@
       @media (max-width: 420px) {
         .hero-stats { grid-template-columns: 1fr; }
         .member-grid { grid-template-columns: 1fr; }
+        .member-card {
+          min-height: 0; /* let single-column cards size to content */
+          padding: 1rem 1rem 0.9rem;
+          padding-right: 3rem;
+        }
+        .member-card .name { font-size: 1rem; }
+      }
+
+      /* Reduce motion: respect user's preference. */
+      @media (prefers-reduced-motion: reduce) {
+        .member-card,
+        .member-card:hover,
+        .tier-chip,
+        .tier-chip:hover {
+          transition: none;
+          transform: none;
+        }
       }
     </style>
   </head>
@@ -862,7 +915,8 @@
         document.getElementById("statMembers").textContent = count.toLocaleString();
         document.getElementById("statCounties").textContent = countyCount;
         if (newest) {
-          var firstName = newest.displayName.split(" ")[0];
+          var displayName = resolveDisplayName(newest);
+          var firstName = (displayName.split(" ")[0] || displayName).trim();
           var label = firstName + (newest.county ? " from " + newest.county + " County" : "");
           document.getElementById("statNewestName").textContent = label;
           document.getElementById("statNewestWhen").textContent = relativeTime(newest.joinedAt);
@@ -913,43 +967,74 @@
         return rows;
       }
 
+      // Resolve the public name for a member with graceful fallbacks.
+      // Order: displayName -> full_name (defensive — view never exposes this,
+      // but adapters from other sources might) -> "Founding Member #N" -> "Anonymous".
+      function resolveDisplayName(m) {
+        var raw = (m && (m.displayName || m.display_name || m.full_name || m.name));
+        if (typeof raw === "string") {
+          raw = raw.trim();
+          if (raw) return raw;
+        }
+        if (m && m.id) return "Founding Member #" + m.id;
+        return "Anonymous";
+      }
+
       function memberCardHTML(m) {
         var color = tierColor(m.tier);
         var hasElected = !!m.electedOffice;
-        var quote = m.quote ? '<div class="quote">&ldquo;' + escapeHtml(m.quote) + '&rdquo;</div>' : '';
-        // For elected members, the role line replaces the location line so every
-        // card has exactly one location/role row and they align in the grid.
-        var loc;
-        if (hasElected) {
-          loc = '<div class="loc">'
-            + escapeHtml(m.electedOffice + (m.jurisdiction ? ', ' + m.jurisdiction : ''))
-            + '</div>';
-        } else if (m.city || m.county) {
-          loc = '<div class="loc">'
-            + escapeHtml([m.city, m.county ? m.county + " County" : null].filter(Boolean).join(", "))
-            + '</div>';
+        var displayName = resolveDisplayName(m);
+
+        // Each card has the same five slots, in the same order, so text aligns
+        // across the grid: name -> role (elected only, hidden otherwise) ->
+        // location -> tier tag -> [optional quote] -> joined.
+        var roleText = hasElected
+          ? m.electedOffice + (m.jurisdiction ? ', ' + m.jurisdiction : '')
+          : '';
+        var roleClass = roleText ? 'role' : 'role is-empty';
+
+        var locText, locClass = 'loc';
+        if (m.city || m.county) {
+          locText = [m.city, m.county ? m.county + ' County' : null].filter(Boolean).join(', ');
         } else {
-          loc = '<div class="loc" style="opacity:0.55;">Ohio</div>';
+          locText = 'Ohio';
+          locClass = 'loc is-fallback';
         }
+
         var pin = hasElected
           ? '<span class="elected-pin" title="Elected official">'
-            + '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
+            + '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">'
             + '<path d="M12 2l2.39 4.84L20 7.27l-3.91 3.81.92 5.39L12 13.93l-5.01 2.54.92-5.39L4 7.27l5.61-.43L12 2z"/>'
             + '</svg>Elected</span>'
           : '';
+
+        var quote = m.quote
+          ? '<div class="quote">&ldquo;' + escapeHtml(m.quote) + '&rdquo;</div>'
+          : '';
+
         var joined = formatJoined(m.joinedAt)
-          ? "Founding Member since " + formatJoined(m.joinedAt)
-          : "Founding Member";
+          ? 'Founding Member since ' + formatJoined(m.joinedAt)
+          : 'Founding Member';
+
+        var ariaLabel = displayName
+          + (hasElected ? ', ' + roleText : '')
+          + ', ' + locText
+          + ', ' + tierName(m.tier);
+
         return ''
-          + '<article class="member-card" id="member-' + m.id + '" style="--tier-color:' + color + ';">'
-          +   '<div class="pos">#' + m.id + '</div>'
+          + '<article class="member-card" id="member-' + m.id + '" style="--tier-color:' + color + ';" '
+          +   'aria-label="' + escapeHtml(ariaLabel) + '">'
+          +   '<div class="pos" aria-label="Founding number ' + m.id + '">#' + m.id + '</div>'
           +   '<div class="name-row">'
-          +     '<div class="name">' + escapeHtml(m.displayName) + '</div>'
+          +     '<div class="name">' + escapeHtml(displayName) + '</div>'
           +     pin
           +   '</div>'
+          +   '<div class="' + roleClass + '">' + escapeHtml(roleText) + '</div>'
+          +   '<div class="' + locClass + '">' + escapeHtml(locText) + '</div>'
           +   '<div class="meta">'
-          +     '<span class="tier-tag"><span class="dot" style="background:' + color + ';"></span>' + escapeHtml(tierName(m.tier)) + '</span>'
-          +     loc
+          +     '<span class="tier-tag"><span class="dot" style="background:' + color + ';"></span>'
+          +       escapeHtml(tierName(m.tier))
+          +     '</span>'
           +   '</div>'
           +   quote
           +   '<div class="joined">' + escapeHtml(joined) + '</div>'
@@ -957,11 +1042,16 @@
       }
 
       function placeholderCardHTML(num) {
+        // Mirror the real card's slot order so placeholders align with members.
         return ''
           + '<article class="member-card placeholder" aria-hidden="true">'
           +   '<div class="pos">#' + num + '</div>'
           +   '<div class="name-row"><div class="name">Reserved for #' + num + '</div></div>'
-          +   '<div class="meta"><span class="loc">Your seat is open.</span></div>'
+          +   '<div class="role is-empty"></div>'
+          +   '<div class="loc is-fallback">Your seat is open.</div>'
+          +   '<div class="meta">'
+          +     '<span class="tier-tag"><span class="dot" style="background:rgba(255,255,255,0.25);"></span>Open</span>'
+          +   '</div>'
           +   '<div class="joined">Become a Founding Member</div>'
           + '</article>';
       }
@@ -1073,12 +1163,20 @@
         });
       }
 
-      // Map a row from the Supabase public view to the page schema
+      // Map a row from the Supabase public view to the page schema.
+      // The view coalesces empty display_name to "Anonymous" already, but we
+      // re-run the fallback chain (display_name -> full_name -> #N -> Anonymous)
+      // so this adapter is safe against future schema drift.
       function adaptSupabaseRow(row) {
         var tierName = row.tier || "";
         var tierSlug = tierName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
         if (!tierMap[tierSlug]) tierSlug = "founding-member";
-        var name = row.display_name || "Anonymous";
+        var foundingNum = row.founding_number || 0;
+        var name = resolveDisplayName({
+          displayName: row.display_name,
+          full_name: row.full_name,
+          id: foundingNum
+        });
         var parts = name.trim().split(/\s+/);
         var sortName = parts.length > 1
           ? parts[parts.length - 1] + ", " + parts.slice(0, -1).join(" ")
@@ -1088,7 +1186,7 @@
           joined = String(row.contributed_at).slice(0, 10);
         }
         return {
-          id: row.founding_number || 0,
+          id: foundingNum,
           displayName: name,
           sortName: sortName,
           city: row.city || null,
