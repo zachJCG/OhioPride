@@ -46,21 +46,32 @@ function renderPipeline(container, chamber, currentStep, options = {}) {
   const size = options.size || "sm";
   const dates = options.dates || {};
   const dangerStep = options.dangerStep != null ? options.dangerStep : null;
+  const isDanger = dangerStep != null;
+  const headlineIdx = isDanger ? dangerStep : currentStep;
+  const headlineLabel = steps[headlineIdx] || steps[steps.length - 1] || "";
 
-  const pipeline = document.createElement("div");
+  const pipeline = document.createElement("ol");
   pipeline.className = "pipeline" + (size === "lg" ? " pipeline-lg" : "");
+  pipeline.setAttribute("aria-label",
+    `Legislative progress: step ${headlineIdx + 1} of ${steps.length} — ${headlineLabel}`);
 
   steps.forEach((label, i) => {
-    const step = document.createElement("div");
+    const step = document.createElement("li");
     step.className = "pipeline-step";
+    let stateLabel = "Pending";
 
     if (dangerStep != null && i === dangerStep) {
       step.classList.add("danger");
+      stateLabel = "Stalled at";
     } else if (i < currentStep) {
       step.classList.add("completed");
+      stateLabel = "Completed";
     } else if (i === currentStep) {
       step.classList.add("current");
+      step.setAttribute("aria-current", "step");
+      stateLabel = "Current step";
     }
+    step.setAttribute("aria-label", `${stateLabel}: ${label}` + (dates[i] ? ` (${dates[i]})` : ""));
 
     let html = label;
     if (dates[i]) {
@@ -71,6 +82,23 @@ function renderPipeline(container, chamber, currentStep, options = {}) {
   });
 
   container.innerHTML = "";
+
+  // Compact mobile-only "current stage" badge for narrow viewports. Renders
+  // inline above the full pipeline; CSS hides one or the other depending on
+  // viewport width. Skipped on the `pipeline-lg` (detail page) to avoid
+  // duplication where the timeline below already gives the context.
+  if (size !== "lg") {
+    const compact = document.createElement("div");
+    compact.className = "pipeline-compact";
+    compact.setAttribute("aria-hidden", "true");
+    const stageClass = isDanger ? "pipeline-compact-stage danger" : "pipeline-compact-stage";
+    compact.innerHTML =
+      `<span class="pipeline-compact-label">${isDanger ? "Stalled at" : "Current"}</span>` +
+      `<span class="${stageClass}">${headlineLabel}</span>` +
+      `<span class="pipeline-compact-progress">Step ${headlineIdx + 1} of ${steps.length}</span>`;
+    container.appendChild(compact);
+  }
+
   container.appendChild(pipeline);
 }
 

@@ -204,7 +204,8 @@ body {
   min-width: 70px;
 }
 .filter-btn {
-  padding: 0.35rem 0.9rem;
+  padding: 0.45rem 0.95rem;
+  min-height: 36px;
   border-radius: 20px;
   border: 1px solid var(--card-border);
   background: transparent;
@@ -213,16 +214,36 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   font-family: "Montserrat", sans-serif;
+  line-height: 1.2;
 }
 .filter-btn:hover {
   border-color: var(--text-gray);
   color: var(--text-white);
 }
-.filter-btn.active {
+.filter-btn:focus-visible {
+  outline: 2px solid var(--color-light-blue, #60a5fa);
+  outline-offset: 2px;
+}
+.filter-btn.active,
+.filter-btn[aria-pressed="true"] {
   background: var(--color-blue);
   color: var(--text-white);
   border-color: var(--color-blue);
 }
+
+/* Polite live region for filter result announcements. Visible at small font
+   so it can also serve as a result count, but kept minimal so it doesn't
+   compete with the stats bar. */
+.filter-status {
+  max-width: 1200px;
+  margin: 0 auto 0.75rem;
+  padding: 0 2rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+.filter-status:empty { display: none; }
 .filter-btn.stance-anti.active { background: #dc2626; border-color: #dc2626; }
 .filter-btn.stance-pro.active  { background: #16a34a; border-color: #16a34a; }
 .filter-btn.stance-mixed.active { background: #ca8a04; border-color: #ca8a04; }
@@ -507,8 +528,16 @@ body {
   }
 
   .filters { padding: 0 1rem; }
-  .filter-row { gap: 0.4rem; }
-  .filter-btn { padding: 0.4rem 0.7rem; font-size: 0.75rem; }
+  .filter-row {
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.78rem;
+    min-height: 40px;
+  }
+  .filter-status { padding: 0 1rem; }
 
   .archive-link-row { padding: 0 1rem; justify-content: stretch; }
   .archive-link { width: 100%; text-align: center; }
@@ -611,6 +640,19 @@ body {
 @media (max-width: 480px) {
   .tracker-hero h1 { font-size: 1.45rem; }
   .tracker-hero p { font-size: 0.9rem; }
+
+  /* Belt-and-suspenders: prevent any inline content from forcing the
+     viewport wider than the screen on 375px-class phones. */
+  .tracker-body,
+  .tracker-hero,
+  .filters,
+  .filter-row,
+  .bills-container,
+  .bill-card,
+  .bill-content { max-width: 100%; }
+  .filters,
+  .alert-banner,
+  .archive-link-row { padding-left: 0.85rem; padding-right: 0.85rem; }
 
   .stats-bar {
     grid-template-columns: repeat(2, 1fr);

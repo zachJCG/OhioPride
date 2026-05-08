@@ -42,10 +42,23 @@
         color: var(--text-dim);
       }
       .breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0.4rem 0.6rem;
+        margin-left: -0.6rem;
+        border-radius: 6px;
         color: var(--text-gray);
         text-decoration: none;
+        transition: color 0.15s, background 0.15s;
       }
       .breadcrumb a:hover {
+        color: var(--text-white);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .breadcrumb a:focus-visible {
+        outline: 2px solid var(--color-light-blue, #60a5fa);
+        outline-offset: 2px;
         color: var(--text-white);
       }
 
@@ -388,8 +401,9 @@
   <body>
 <div id="site-header"></div>
 
+    <main id="main">
     <div class="breadcrumb">
-      <a href="/issues">← Back to Issue Tracker</a>
+      <a href="/issues" class="breadcrumb-back">← Back to Issue Tracker</a>
     </div>
 
     <div class="bill-hero">
@@ -616,6 +630,7 @@
         <a href="/donate/founding-member">Become a Founding Member →</a>
       </div>
     </div>
+    </main>
 
 <div id="site-footer"></div>
 

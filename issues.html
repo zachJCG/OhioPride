@@ -31,6 +31,7 @@
   <body>
 <div id="site-header"></div>
 
+    <main id="main">
     <section class="tracker-hero">
       <h1>Legislative Issue Tracker</h1>
       <p>
@@ -40,9 +41,9 @@
     </section>
 
     <div class="tracker-body">
-      <div class="alert-banner">
+      <div class="alert-banner" role="status" aria-live="polite">
         <div class="alert-inner">
-          <span class="alert-icon">&#9888;&#65039;</span>
+          <span class="alert-icon" aria-hidden="true">&#9888;&#65039;</span>
           <div class="alert-text">
             <strong
               >HB 249 has passed the Ohio House and is now in the Senate</strong
@@ -52,7 +53,7 @@
               drag ban — passed 63–32 on March 25, 2026.</span
             >
           </div>
-          <a href="/issues/hb249" class="alert-link">Track HB 249 →</a>
+          <a href="/issues/hb249" class="alert-link" aria-label="Track HB 249 — drag ban currently in the Senate">Track HB 249 →</a>
         </div>
       </div>
 
@@ -77,39 +78,41 @@
           </div>
         </div>
       </div>
-      <div class="filters">
-        <div class="filter-row">
-          <span class="filter-label">Stance</span>
-          <button class="filter-btn active" data-filter="stance" data-value="all">All</button>
-          <button class="filter-btn stance-anti" data-filter="stance" data-value="anti">Anti-LGBTQ+</button>
-          <button class="filter-btn stance-pro" data-filter="stance" data-value="pro">Pro-LGBTQ+</button>
-          <button class="filter-btn stance-mixed" data-filter="stance" data-value="mixed">Mixed</button>
+      <section class="filters" aria-label="Bill filters">
+        <div class="filter-row" role="group" aria-label="Filter by stance">
+          <span class="filter-label" id="filter-label-stance">Stance</span>
+          <button class="filter-btn active" data-filter="stance" data-value="all" aria-pressed="true">All</button>
+          <button class="filter-btn stance-anti" data-filter="stance" data-value="anti" aria-pressed="false">Anti-LGBTQ+</button>
+          <button class="filter-btn stance-pro" data-filter="stance" data-value="pro" aria-pressed="false">Pro-LGBTQ+</button>
+          <button class="filter-btn stance-mixed" data-filter="stance" data-value="mixed" aria-pressed="false">Mixed</button>
         </div>
-        <div class="filter-row">
-          <span class="filter-label">Status</span>
-          <button class="filter-btn active" data-filter="status" data-value="all">All</button>
-          <button class="filter-btn" data-filter="status" data-value="introduced">Introduced</button>
-          <button class="filter-btn" data-filter="status" data-value="in-committee">In Committee</button>
-          <button class="filter-btn" data-filter="status" data-value="passed-house">Passed House</button>
-          <button class="filter-btn" data-filter="status" data-value="passed-senate">Passed Senate</button>
+        <div class="filter-row" role="group" aria-label="Filter by status">
+          <span class="filter-label" id="filter-label-status">Status</span>
+          <button class="filter-btn active" data-filter="status" data-value="all" aria-pressed="true">All</button>
+          <button class="filter-btn" data-filter="status" data-value="introduced" aria-pressed="false">Introduced</button>
+          <button class="filter-btn" data-filter="status" data-value="in-committee" aria-pressed="false">In Committee</button>
+          <button class="filter-btn" data-filter="status" data-value="passed-house" aria-pressed="false">Passed House</button>
+          <button class="filter-btn" data-filter="status" data-value="passed-senate" aria-pressed="false">Passed Senate</button>
         </div>
-        <div class="filter-row">
-          <span class="filter-label">Category</span>
-          <button class="filter-btn active" data-filter="category" data-value="all">All</button>
-          <button class="filter-btn" data-filter="category" data-value="anti-trans">Anti-Trans</button>
-          <button class="filter-btn" data-filter="category" data-value="civil-rights">Civil Rights</button>
-          <button class="filter-btn" data-filter="category" data-value="healthcare">Healthcare</button>
-          <button class="filter-btn" data-filter="category" data-value="education">Education / DEI</button>
-          <button class="filter-btn" data-filter="category" data-value="expression">Expression</button>
-          <button class="filter-btn" data-filter="category" data-value="youth">Youth / Family</button>
-          <button class="filter-btn" data-filter="category" data-value="elections">Elections</button>
-          <button class="filter-btn" data-filter="category" data-value="corrections">Corrections</button>
+        <div class="filter-row" role="group" aria-label="Filter by category">
+          <span class="filter-label" id="filter-label-category">Category</span>
+          <button class="filter-btn active" data-filter="category" data-value="all" aria-pressed="true">All</button>
+          <button class="filter-btn" data-filter="category" data-value="anti-trans" aria-pressed="false">Anti-Trans</button>
+          <button class="filter-btn" data-filter="category" data-value="civil-rights" aria-pressed="false">Civil Rights</button>
+          <button class="filter-btn" data-filter="category" data-value="healthcare" aria-pressed="false">Healthcare</button>
+          <button class="filter-btn" data-filter="category" data-value="education" aria-pressed="false">Education / DEI</button>
+          <button class="filter-btn" data-filter="category" data-value="expression" aria-pressed="false">Expression</button>
+          <button class="filter-btn" data-filter="category" data-value="youth" aria-pressed="false">Youth / Family</button>
+          <button class="filter-btn" data-filter="category" data-value="elections" aria-pressed="false">Elections</button>
+          <button class="filter-btn" data-filter="category" data-value="corrections" aria-pressed="false">Corrections</button>
         </div>
-      </div>
+      </section>
 
       <div class="archive-link-row">
         <a href="/issues/archive" class="archive-link">View enacted legislation archive &rarr;</a>
       </div>
+
+      <p class="filter-status" id="filterStatus" role="status" aria-live="polite"></p>
 
       <div id="billsContainer"></div>
 
@@ -133,6 +136,7 @@
       </div>
     </div>
     <!-- end .tracker-body -->
+    </main>
 
 <div id="site-footer"></div>
 
@@ -224,23 +228,30 @@
           if (!bills.length) return;
 
           const cfg = stanceConfig[stance];
+          const headingId = `stance-heading-${stance}`;
 
-          // Section header
+          // Wrap each stance group in a labelled <section>
+          const section = document.createElement("section");
+          section.className = "stance-section";
+          section.setAttribute("aria-labelledby", headingId);
+
           const header = document.createElement("div");
           header.className = "stance-section-header";
           header.innerHTML = `
-            <span class="stance-indicator ${cfg.color}"></span>
-            <h2>${cfg.label}</h2>
+            <span class="stance-indicator ${cfg.color}" aria-hidden="true"></span>
+            <h2 id="${headingId}">${cfg.label}</h2>
             <span class="stance-count">(${bills.length} bill${bills.length > 1 ? "s" : ""})</span>
           `;
-          wrapper.appendChild(header);
+          section.appendChild(header);
 
           // Bills container for this group - stacks vertically on all screens
           const container = document.createElement("div");
           container.className = "bills-container";
           container.style.marginBottom = "2rem";
           container.innerHTML = bills.map(billCardHTML).join("");
-          wrapper.appendChild(container);
+          section.appendChild(container);
+
+          wrapper.appendChild(section);
         });
 
         // Render pipelines
@@ -326,20 +337,43 @@
       document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           const ft = btn.dataset.filter, v = btn.dataset.value;
-          if (ft === "stance") {
-            activeStance = v;
-            document.querySelectorAll('[data-filter="stance"]').forEach((b) => b.classList.remove("active"));
-          } else if (ft === "status") {
-            activeStatus = v;
-            document.querySelectorAll('[data-filter="status"]').forEach((b) => b.classList.remove("active"));
-          } else {
-            activeCategory = v;
-            document.querySelectorAll('[data-filter="category"]').forEach((b) => b.classList.remove("active"));
-          }
+          const groupSelector = `[data-filter="${ft}"]`;
+          if (ft === "stance") activeStance = v;
+          else if (ft === "status") activeStatus = v;
+          else activeCategory = v;
+          document.querySelectorAll(groupSelector).forEach((b) => {
+            b.classList.remove("active");
+            b.setAttribute("aria-pressed", "false");
+          });
           btn.classList.add("active");
+          btn.setAttribute("aria-pressed", "true");
           applyFilters();
         });
       });
+
+      // Announce result count to screen readers via a polite live region.
+      function announceFilterStatus(filtered) {
+        const el = document.getElementById("filterStatus");
+        if (!el) return;
+        const total = ACTIVE_BILLS.length;
+        const n = filtered.length;
+        if (n === total) {
+          el.textContent = `Showing all ${total} active bills.`;
+        } else {
+          el.textContent = `Showing ${n} of ${total} active bills.`;
+        }
+      }
+      const _origApplyFilters = window.applyFilters;
+      window.applyFilters = function () {
+        _origApplyFilters();
+        const filtered = ACTIVE_BILLS.filter((b) => {
+          const stm = activeStance === "all" || (b.stance || "anti") === activeStance;
+          const sm = activeStatus === "all" || b.status === activeStatus;
+          const cm = activeCategory === "all" || b.categories.includes(activeCategory);
+          return stm && sm && cm;
+        });
+        announceFilterStatus(filtered);
+      };
 
       renderBills(ACTIVE_BILLS);
       updateStats(ACTIVE_BILLS);
