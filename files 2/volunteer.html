@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volunteer | Ohio Pride</title>
+    <meta
+      name="description"
+      content="Volunteer with Ohio Pride. Endorsements, voter mobilization, and statewide advocacy take people in every county. Tell us how you want to help."
+    />
+    <link rel="canonical" href="https://www.ohiopride.org/volunteer" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Volunteer | Ohio Pride" />
+    <meta property="og:description" content="Volunteer with Ohio Pride. Endorsements, voter mobilization, and statewide advocacy take people in every county. Tell us how you want to help." />
+    <meta property="og:url" content="https://www.ohiopride.org/volunteer" />
+    <meta property="og:site_name" content="Ohio Pride" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Volunteer | Ohio Pride" />
+    <meta name="twitter:description" content="Volunteer with Ohio Pride. Endorsements, voter mobilization, and statewide advocacy take people in every county. Tell us how you want to help." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+
+    <style>
+      body { background: var(--dark-bg); }
+
+      /* --- Volunteer page intro layout --- */
+      .volunteer-intro { max-width: 760px; margin: 0 auto; }
+      .volunteer-intro p { color: var(--text-secondary); font-size: 17px; line-height: 1.75; margin-bottom: 18px; }
+      .volunteer-intro p:last-child { margin-bottom: 0; }
+
+      /* --- Role grid (above the form) --- */
+      .role-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px; max-width: 1000px; margin: 40px auto 0;
+      }
+      .role-card {
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        border-radius: 10px;
+        padding: 22px 24px;
+        transition: border-color 0.2s, background 0.2s;
+      }
+      .role-card:hover { border-color: var(--border-medium); background: var(--bg-white); }
+      .role-card-name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700; font-size: 15px; color: var(--text-white);
+        margin-bottom: 8px; letter-spacing: 0.2px;
+      }
+      .role-card-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+      /* --- Form section background --- */
+      .volunteer-form-section { background: var(--bg-light); }
+
+      /* --- Form shell --- */
+      .volunteer-form-shell {
+        max-width: 720px;
+        margin: 0 auto;
+        background: var(--bg-white);
+        border: 1px solid var(--border-medium);
+        border-radius: 14px;
+        padding: 40px 36px 36px;
+      }
+      .volunteer-form-shell h2 {
+        font-size: 26px; margin-bottom: 8px; color: var(--text-white);
+        line-height: 1.2;
+      }
+      .volunteer-form-shell .lede {
+        color: var(--text-secondary); font-size: 15px; line-height: 1.7;
+        margin-bottom: 28px;
+      }
+
+      /* --- Progress indicator --- */
+      .vform-progress { margin-bottom: 28px; }
+      .vform-progress-meta {
+        display: flex; justify-content: space-between; align-items: baseline;
+        margin-bottom: 10px;
+      }
+      .vform-progress-text {
+        font-family: "Montserrat", sans-serif;
+        font-size: 12px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        color: var(--color-light-blue);
+      }
+      .vform-progress-percent {
+        font-family: "Montserrat", sans-serif;
+        font-size: 12px; font-weight: 600;
+        color: var(--text-muted);
+      }
+      .vform-progress-bar {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 4px; overflow: hidden;
+      }
+      .vform-progress-fill {
+        height: 100%;
+        background: var(--pride-gradient);
+        width: 20%;
+        transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* --- Step transitions --- */
+      .vform-step {
+        animation: vformFadeIn 0.35s ease-out;
+      }
+      .vform-step[hidden] { display: none; }
+      @keyframes vformFadeIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .vform-step-title {
+        font-size: 22px; margin-bottom: 6px; color: var(--text-white);
+        outline: none;
+      }
+      .vform-step-sub {
+        font-size: 14px; color: var(--text-muted);
+        margin-bottom: 24px; line-height: 1.6;
+      }
+
+      /* --- Field layout --- */
+      .vform-row { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
+      .vform-row-2 { grid-template-columns: 1fr 1fr; }
+      @media (max-width: 540px) { .vform-row-2 { grid-template-columns: 1fr; } }
+
+      .vform-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+      .vform-field:last-child { margin-bottom: 0; }
+      .vform-field label,
+      .vform-fieldset legend {
+        font-family: "Montserrat", sans-serif;
+        font-size: 13px; font-weight: 600;
+        color: var(--text-white);
+        letter-spacing: 0.2px;
+      }
+      .vform-optional {
+        color: var(--text-muted); font-weight: 400;
+        font-size: 12px; margin-left: 4px;
+      }
+
+      /* --- Inputs / textareas / selects --- */
+      .vform-field input[type="text"],
+      .vform-field input[type="email"],
+      .vform-field input[type="tel"],
+      .vform-field select,
+      .vform-field textarea {
+        width: 100%;
+        padding: 12px 14px;
+        background: rgba(15, 34, 51, 0.6);
+        border: 1px solid var(--border-medium);
+        border-radius: 8px;
+        color: var(--text-white);
+        font-family: "Roboto Slab", Georgia, serif;
+        font-size: 15px;
+        line-height: 1.5;
+        transition: border-color 0.2s, background-color 0.2s;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      .vform-field input:focus,
+      .vform-field select:focus,
+      .vform-field textarea:focus {
+        outline: none;
+        border-color: var(--color-light-blue);
+        background: rgba(15, 34, 51, 0.85);
+      }
+      .vform-field textarea { resize: vertical; min-height: 80px; }
+
+      /* Select chevron (since we removed native appearance) */
+      .vform-field select {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2373d7ee' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        background-size: 16px;
+        padding-right: 40px;
+      }
+      .vform-field select option {
+        background: var(--dark-bg);
+        color: var(--text-white);
+      }
+
+      /* --- Fieldsets --- */
+      .vform-fieldset {
+        border: none; padding: 0; margin: 0 0 20px;
+        display: flex; flex-direction: column; gap: 10px;
+      }
+      .vform-fieldset legend { padding: 0; margin-bottom: 4px; }
+
+      /* --- Card-style checkboxes (Step 3 interests) --- */
+      .vform-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 10px;
+      }
+      .vform-card-check {
+        display: flex; align-items: flex-start; gap: 10px;
+        padding: 14px 16px;
+        background: rgba(15, 34, 51, 0.5);
+        border: 1px solid var(--border-medium);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: border-color 0.2s, background-color 0.2s;
+      }
+      .vform-card-check:hover { border-color: rgba(115, 215, 238, 0.4); }
+      .vform-card-check input { margin: 3px 0 0 0; accent-color: var(--color-light-blue); cursor: pointer; }
+      .vform-card-check:has(input:checked) {
+        border-color: var(--color-light-blue);
+        background: rgba(115, 215, 238, 0.08);
+      }
+      .vform-card-content { display: flex; flex-direction: column; gap: 2px; }
+      .vform-card-content strong {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700; font-size: 14px;
+        color: var(--text-white);
+        line-height: 1.3;
+      }
+      .vform-card-content span {
+        font-size: 13px; color: var(--text-muted);
+        line-height: 1.45;
+      }
+
+      /* --- Chip-style checkboxes (Step 4 skills + availability) --- */
+      .vform-chip-grid {
+        display: flex; flex-wrap: wrap; gap: 8px;
+      }
+      .vform-chip {
+        display: inline-flex; align-items: center;
+        padding: 9px 16px;
+        background: rgba(15, 34, 51, 0.5);
+        border: 1px solid var(--border-medium);
+        border-radius: 999px;
+        font-size: 14px; color: var(--text-light);
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+      }
+      .vform-chip:hover { border-color: rgba(115, 215, 238, 0.4); color: var(--text-white); }
+      .vform-chip input { display: none; }
+      .vform-chip:has(input:checked) {
+        background: rgba(115, 215, 238, 0.15);
+        border-color: var(--color-light-blue);
+        color: var(--text-white);
+      }
+
+      /* --- Radio cards (registered voter, time commitment) --- */
+      .vform-radio-group { display: flex; flex-direction: column; gap: 8px; }
+      .vform-radio-row { flex-direction: row; flex-wrap: wrap; gap: 10px; }
+      .vform-radio {
+        display: inline-flex; align-items: center; gap: 10px;
+        padding: 11px 16px;
+        background: rgba(15, 34, 51, 0.5);
+        border: 1px solid var(--border-medium);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px; color: var(--text-light);
+      }
+      .vform-radio:hover { border-color: rgba(115, 215, 238, 0.4); }
+      .vform-radio input { accent-color: var(--color-light-blue); cursor: pointer; }
+      .vform-radio:has(input:checked) {
+        border-color: var(--color-light-blue);
+        background: rgba(115, 215, 238, 0.08);
+        color: var(--text-white);
+      }
+      .vform-radio-row .vform-radio { flex: 1 1 auto; min-width: 90px; justify-content: center; }
+
+      /* --- Inline checkbox lines (consent, prior experience) --- */
+      .vform-checkbox-line {
+        display: flex; align-items: flex-start; gap: 10px;
+        padding: 10px 0;
+        cursor: pointer;
+        font-size: 14px; color: var(--text-light);
+        line-height: 1.5;
+      }
+      .vform-checkbox-line input {
+        margin-top: 3px; accent-color: var(--color-light-blue); cursor: pointer;
+        flex-shrink: 0;
+      }
+      .vform-checkbox-line span { flex: 1; }
+
+      .vform-consent { padding: 16px; border: 1px solid var(--border-light); border-radius: 8px; background: rgba(15, 34, 51, 0.4); }
+      .vform-consent legend { padding: 0 8px; }
+
+      /* --- Honeypot (hidden from humans) --- */
+      .vform-honeypot {
+        position: absolute; left: -9999px; width: 1px; height: 1px;
+        opacity: 0; pointer-events: none;
+      }
+
+      /* --- Error banner --- */
+      .vform-error {
+        margin: 16px 0;
+        padding: 12px 16px;
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid rgba(255, 107, 107, 0.4);
+        border-radius: 8px;
+        color: var(--text-danger);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      /* --- Nav buttons --- */
+      .vform-nav {
+        display: flex; gap: 12px;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-light);
+      }
+      .vform-nav .btn { min-width: 120px; }
+      .vform-nav .vform-back { margin-right: auto; }
+      .vform-nav .vform-next,
+      .vform-nav .vform-submit { margin-left: auto; }
+      @media (max-width: 480px) {
+        .vform-nav { flex-direction: column-reverse; gap: 10px; }
+        .vform-nav .btn { width: 100%; margin: 0 !important; }
+      }
+
+      /* --- Success state --- */
+      .vform-success {
+        text-align: center;
+        padding: 24px 8px;
+        animation: vformFadeIn 0.5s ease-out;
+      }
+      .vform-success-icon {
+        width: 64px; height: 64px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: var(--pride-gradient);
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-size: 32px; font-weight: 700;
+        line-height: 1;
+      }
+      .vform-success h2 {
+        font-size: 28px; margin-bottom: 12px;
+        outline: none;
+      }
+      .vform-success p {
+        color: var(--text-secondary);
+        font-size: 16px; line-height: 1.7;
+        max-width: 480px; margin: 0 auto 16px;
+      }
+      .vform-success-actions {
+        display: flex; gap: 12px; flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 28px;
+      }
+      .vform-success-actions .btn { min-width: 200px; }
+
+      /* --- Mobile padding tweak --- */
+      @media (max-width: 640px) {
+        .volunteer-form-shell {
+          padding: 28px 20px 24px;
+          border-radius: 10px;
+        }
+        .volunteer-form-shell h2 { font-size: 22px; }
+        .vform-step-title { font-size: 19px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <!-- Hero -->
+    <section class="subpage-hero">
+      <div class="container">
+        <div class="section-label">Get Involved</div>
+        <h1 class="section-title">Power statewide. Built by people who show up.</h1>
+        <p class="subpage-hero-sub">
+          Ohio Pride needs volunteers in all 88 counties. Tell us how you want to help, and we will plug you in.
+        </p>
+      </div>
+    </section>
+
+    <!-- Intro -->
+    <section class="section">
+      <div class="container">
+        <div class="volunteer-intro">
+          <p>
+            Endorsements move the needle. Voters decide elections. Volunteers do both jobs. Whether you have an hour a month or ten hours a week, there is a place for you on this team.
+          </p>
+          <p>
+            We are building a statewide network of organizers, captains, and skill-based volunteers who can power candidate work, voter mobilization, and our legislative scorecard. The roles below are the most common ways people plug in. Pick whatever fits.
+          </p>
+        </div>
+
+        <div class="role-grid" aria-label="Volunteer role types">
+          <div class="role-card"><div class="role-card-name">Field and Canvassing</div><div class="role-card-desc">Knock doors, drop literature, and turn out voters for endorsed candidates.</div></div>
+          <div class="role-card"><div class="role-card-name">Phone and Text Banking</div><div class="role-card-desc">Reach voters from your couch. Scripts and lists provided.</div></div>
+          <div class="role-card"><div class="role-card-name">Pride Tabling</div><div class="role-card-desc">Sign up volunteers and register voters at Pride events across Ohio in June.</div></div>
+          <div class="role-card"><div class="role-card-name">Social Amplification</div><div class="role-card-desc">Share, repost, and help our content reach voters who need to see it.</div></div>
+          <div class="role-card"><div class="role-card-name">Skills-Based</div><div class="role-card-desc">Writers, designers, photographers, attorneys, data folks, and more. Use what you do best.</div></div>
+          <div class="role-card"><div class="role-card-name">House Party Host</div><div class="role-card-desc">Open your home for a small fundraiser or organizing meeting in your community.</div></div>
+          <div class="role-card"><div class="role-card-name">Local Captain</div><div class="role-card-desc">Lead volunteer coordination in your city or county. Higher commitment, higher impact.</div></div>
+          <div class="role-card"><div class="role-card-name">Day-of Logistics</div><div class="role-card-desc">Show up for events, rallies, and press conferences when we need hands on deck.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section class="section volunteer-form-section">
+      <div class="container">
+        <div class="volunteer-form-shell" id="volunteer-form-container">
+          <h2>Sign up to volunteer</h2>
+          <p class="lede">
+            Five quick steps. Tell us who you are, where you live, and how you want to help. We will follow up within a few days with a way to plug in.
+          </p>
+
+          <!-- Progress indicator -->
+          <div class="vform-progress" id="vformProgress">
+            <div class="vform-progress-meta">
+              <div class="vform-progress-text" id="vformProgressText">Step 1 of 5</div>
+              <div class="vform-progress-percent" id="vformProgressPercent">20%</div>
+            </div>
+            <div class="vform-progress-bar">
+              <div class="vform-progress-fill" id="vformProgressFill"></div>
+            </div>
+          </div>
+
+          <!-- Form -->
+          <form id="volunteerForm" novalidate>
+            <!-- Honeypot -->
+            <label class="vform-honeypot" aria-hidden="true">
+              Leave this empty
+              <input type="text" name="website" tabindex="-1" autocomplete="off" />
+            </label>
+
+            <!-- Step 1: About You -->
+            <div class="vform-step" data-step="1">
+              <h3 class="vform-step-title">About you</h3>
+              <p class="vform-step-sub">Just the basics, so we can reach you.</p>
+
+              <div class="vform-row vform-row-2">
+                <div class="vform-field">
+                  <label for="firstName">First name</label>
+                  <input id="firstName" name="first_name" type="text" autocomplete="given-name" required maxlength="100" />
+                </div>
+                <div class="vform-field">
+                  <label for="lastName">Last name</label>
+                  <input id="lastName" name="last_name" type="text" autocomplete="family-name" required maxlength="100" />
+                </div>
+              </div>
+
+              <div class="vform-field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required maxlength="320" />
+              </div>
+
+              <div class="vform-row vform-row-2">
+                <div class="vform-field">
+                  <label for="phone">Phone <span class="vform-optional">optional</span></label>
+                  <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" />
+                </div>
+                <div class="vform-field">
+                  <label for="pronouns">Pronouns <span class="vform-optional">optional</span></label>
+                  <input id="pronouns" name="pronouns" type="text" maxlength="60" placeholder="e.g. she/her" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Where You Live -->
+            <div class="vform-step" data-step="2" hidden>
+              <h3 class="vform-step-title">Where you live</h3>
+              <p class="vform-step-sub">So we can connect you with the right local crew.</p>
+
+              <div class="vform-row vform-row-2">
+                <div class="vform-field">
+                  <label for="city">City <span class="vform-optional">optional</span></label>
+                  <input id="city" name="city" type="text" autocomplete="address-level2" maxlength="100" />
+                </div>
+                <div class="vform-field">
+                  <label for="county">County <span class="vform-optional">optional</span></label>
+                  <select id="county" name="county">
+                    <option value="">Select your county</option>
+                    <option>Adams</option><option>Allen</option><option>Ashland</option><option>Ashtabula</option>
+                    <option>Athens</option><option>Auglaize</option><option>Belmont</option><option>Brown</option>
+                    <option>Butler</option><option>Carroll</option><option>Champaign</option><option>Clark</option>
+                    <option>Clermont</option><option>Clinton</option><option>Columbiana</option><option>Coshocton</option>
+                    <option>Crawford</option><option>Cuyahoga</option><option>Darke</option><option>Defiance</option>
+                    <option>Delaware</option><option>Erie</option><option>Fairfield</option><option>Fayette</option>
+                    <option>Franklin</option><option>Fulton</option><option>Gallia</option><option>Geauga</option>
+                    <option>Greene</option><option>Guernsey</option><option>Hamilton</option><option>Hancock</option>
+                    <option>Hardin</option><option>Harrison</option><option>Henry</option><option>Highland</option>
+                    <option>Hocking</option><option>Holmes</option><option>Huron</option><option>Jackson</option>
+                    <option>Jefferson</option><option>Knox</option><option>Lake</option><option>Lawrence</option>
+                    <option>Licking</option><option>Logan</option><option>Lorain</option><option>Lucas</option>
+                    <option>Madison</option><option>Mahoning</option><option>Marion</option><option>Medina</option>
+                    <option>Meigs</option><option>Mercer</option><option>Miami</option><option>Monroe</option>
+                    <option>Montgomery</option><option>Morgan</option><option>Morrow</option><option>Muskingum</option>
+                    <option>Noble</option><option>Ottawa</option><option>Paulding</option><option>Perry</option>
+                    <option>Pickaway</option><option>Pike</option><option>Portage</option><option>Preble</option>
+                    <option>Putnam</option><option>Richland</option><option>Ross</option><option>Sandusky</option>
+                    <option>Scioto</option><option>Seneca</option><option>Shelby</option><option>Stark</option>
+                    <option>Summit</option><option>Trumbull</option><option>Tuscarawas</option><option>Union</option>
+                    <option>Van Wert</option><option>Vinton</option><option>Warren</option><option>Washington</option>
+                    <option>Wayne</option><option>Williams</option><option>Wood</option><option>Wyandot</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="vform-field">
+                <label for="zip">ZIP <span class="vform-optional">optional</span></label>
+                <input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="e.g. 43215" />
+              </div>
+
+              <fieldset class="vform-fieldset">
+                <legend>Are you registered to vote in Ohio? <span class="vform-optional">optional</span></legend>
+                <div class="vform-radio-group vform-radio-row">
+                  <label class="vform-radio"><input type="radio" name="registered_voter" value="yes" /><span>Yes</span></label>
+                  <label class="vform-radio"><input type="radio" name="registered_voter" value="no" /><span>No</span></label>
+                  <label class="vform-radio"><input type="radio" name="registered_voter" value="unsure" /><span>Not sure</span></label>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- Step 3: How You Want to Help -->
+            <div class="vform-step" data-step="3" hidden>
+              <h3 class="vform-step-title">How you want to help</h3>
+              <p class="vform-step-sub">Pick anything that sounds like you. You can always change this later.</p>
+
+              <div class="vform-card-grid">
+                <label class="vform-card-check">
+                  <input type="checkbox" name="interests" value="field_canvassing" />
+                  <div class="vform-card-content"><strong>Field and canvassing</strong><span>Knock doors, turn out voters</span></div>
+                </label>
+                <label class="vform-card-check">
+                  <input type="checkbox" name="interests" value="phone_text_banking" />
+                  <div class="vform-card-content"><strong>Phone and text banking</strong><span>Reach voters from your couch</span></div>
+                </label>
+                <label class="vform-card-check">
+                  <input type="checkbox" name="interests" value="pride_tabling" />
+                  <div class="vform-card-content"><strong>Pride tabling</strong><span>Help at June Pride events</span></div>
+                </label>
+                <label class="vform-card-check">
+                  <input type="checkbox" name="interests" value="social_amplification" />
+                  <div class="vform-card-content"><strong>Social amplification</strong><span>Share and repost our content</span></div>
+                </label>
+                <label class="vform-card-check">
+                  <input type="checkbox" name="interests" value="skills_based" />
+                  <div class="vform-card-content"><strong>Skills-based</strong><span>Use a professional skill</span></div>
+                </label>
+                <label class="vform-card-check">
+                  <input type="checkbox" name="interests" value="house_party_host" />
+                  <div class="vform-card-content"><strong>House party host</strong><span>Host a small fundraiser</span></div>
+                </label>
+                <label class="vform-card-check">
+                  <input type="checkbox" name="interests" value="local_captain" />
+                  <div class="vform-card-content"><strong>Local captain</strong><span>Lead in your city or county</span></div>
+                </label>
+                <label class="vform-card-check">
+                  <input type="checkbox" name="interests" value="day_of_logistics" />
+                  <div class="vform-card-content"><strong>Day-of logistics</strong><span>Hands on deck for events</span></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Step 4: Skills & Availability -->
+            <div class="vform-step" data-step="4" hidden>
+              <h3 class="vform-step-title">Skills and availability</h3>
+              <p class="vform-step-sub">Tell us what you bring and when you can show up.</p>
+
+              <fieldset class="vform-fieldset">
+                <legend>Skills you can offer <span class="vform-optional">optional</span></legend>
+                <div class="vform-chip-grid">
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="writing" /><span>Writing</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="graphic_design" /><span>Graphic design</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="photography" /><span>Photography</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="videography" /><span>Videography</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="legal" /><span>Legal</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="data_analysis" /><span>Data analysis</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="web_development" /><span>Web development</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="accounting_finance" /><span>Accounting / finance</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="event_planning" /><span>Event planning</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="public_speaking" /><span>Public speaking</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="fundraising" /><span>Fundraising</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="social_media" /><span>Social media</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="asl" /><span>ASL</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="spanish" /><span>Spanish</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="skills" value="other_language" /><span>Other language</span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="vform-fieldset">
+                <legend>How much time can you give? <span class="vform-optional">optional</span></legend>
+                <div class="vform-radio-group">
+                  <label class="vform-radio"><input type="radio" name="time_commitment" value="one_time" /><span>One-time event helper</span></label>
+                  <label class="vform-radio"><input type="radio" name="time_commitment" value="monthly" /><span>A few hours a month</span></label>
+                  <label class="vform-radio"><input type="radio" name="time_commitment" value="weekly" /><span>A few hours a week</span></label>
+                  <label class="vform-radio"><input type="radio" name="time_commitment" value="surge_only" /><span>Big moments only (elections, rallies)</span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="vform-fieldset">
+                <legend>When are you usually free? <span class="vform-optional">optional</span></legend>
+                <div class="vform-chip-grid">
+                  <label class="vform-chip"><input type="checkbox" name="availability" value="weekday_days" /><span>Weekday days</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="availability" value="weekday_evenings" /><span>Weekday evenings</span></label>
+                  <label class="vform-chip"><input type="checkbox" name="availability" value="weekends" /><span>Weekends</span></label>
+                </div>
+              </fieldset>
+
+              <label class="vform-checkbox-line">
+                <input type="checkbox" name="prior_campaign_experience" id="priorCampaign" />
+                <span>I have volunteered for a campaign or political organization before</span>
+              </label>
+
+              <div class="vform-field" id="priorCampaignWrap" hidden>
+                <label for="priorCampaignNotes">Which one(s)? <span class="vform-optional">optional</span></label>
+                <textarea id="priorCampaignNotes" name="prior_campaign_notes" maxlength="500" rows="2"></textarea>
+              </div>
+            </div>
+
+            <!-- Step 5: Wrap Up -->
+            <div class="vform-step" data-step="5" hidden>
+              <h3 class="vform-step-title">Wrap up</h3>
+              <p class="vform-step-sub">One last screen. Then we will be in touch.</p>
+
+              <div class="vform-field">
+                <label for="referralSource">How did you hear about Ohio Pride? <span class="vform-optional">optional</span></label>
+                <input id="referralSource" name="referral_source" type="text" maxlength="200" placeholder="e.g. Instagram, a friend, a Pride event" />
+              </div>
+
+              <label class="vform-checkbox-line">
+                <input type="checkbox" name="is_founding_member" />
+                <span>I am already an Ohio Pride Founding Member</span>
+              </label>
+
+              <div class="vform-field">
+                <label for="additionalNotes">Anything else we should know? <span class="vform-optional">optional</span></label>
+                <textarea id="additionalNotes" name="additional_notes" maxlength="1000" rows="4" placeholder="Specific candidate or issue you care about, neighborhoods you can canvass, scheduling conflicts, etc."></textarea>
+              </div>
+
+              <fieldset class="vform-fieldset vform-consent">
+                <legend>Stay in the loop</legend>
+                <label class="vform-checkbox-line">
+                  <input type="checkbox" name="email_optin" checked />
+                  <span>Email me Ohio Pride updates and volunteer opportunities</span>
+                </label>
+                <label class="vform-checkbox-line">
+                  <input type="checkbox" name="sms_optin" />
+                  <span>Text me time-sensitive volunteer opportunities (msg and data rates may apply)</span>
+                </label>
+              </fieldset>
+            </div>
+
+            <!-- Error banner -->
+            <div class="vform-error" id="vformError" role="alert" hidden></div>
+
+            <!-- Nav buttons -->
+            <div class="vform-nav">
+              <button type="button" class="btn btn-outline vform-back" id="vformBack" hidden>Back</button>
+              <button type="button" class="btn btn-primary vform-next" id="vformNext">Continue</button>
+              <button type="submit" class="btn btn-primary vform-submit" id="vformSubmit" hidden>Sign me up</button>
+            </div>
+          </form>
+
+          <!-- Success state -->
+          <div class="vform-success" id="vformSuccess" hidden>
+            <div class="vform-success-icon" aria-hidden="true">&check;</div>
+            <h2 id="vformSuccessHeading">You are in.</h2>
+            <p>Thanks for signing up to volunteer with Ohio Pride. We will be in touch within a few days with concrete ways to plug in.</p>
+            <p>While you wait, two other ways to fight for a pro-equality Ohio:</p>
+            <div class="vform-success-actions">
+              <a href="/donate/founding-member" class="btn btn-primary">Become a Founding Member</a>
+              <a href="/scorecard" class="btn btn-outline">View the Scorecard</a>
+            </div>
+          </div>
+
+          <noscript>
+            <div class="vform-error" style="margin-top:24px;">
+              This form requires JavaScript. In the meantime, please email
+              <a href="mailto:info@ohiopride.org?subject=Volunteer%20Interest" style="color:var(--text-accent);font-weight:600;">info@ohiopride.org</a>
+              and we will reach out directly.
+            </div>
+          </noscript>
+        </div>
+      </div>
+    </section>
+
+    <div id="site-footer"></div>
+
+    <a href="/donate" class="mobile-donate-fab">Donate</a>
+
+    <script src="/js/main.js" defer></script>
+    <script src="/js/enhancements.js" defer></script>
+    <script src="/js/site-template.js" defer></script>
+    <script src="/js/volunteer-form.js" defer></script>
+  </body>
+</html>
