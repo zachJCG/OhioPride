@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -6,209 +6,101 @@
   <title>Candidate Endorsement Application | Ohio Pride PAC</title>
   <meta name="description" content="Apply for an Ohio Pride PAC endorsement. Open to candidates running for federal, state, or local office in Ohio who support LGBTQ+ equality." />
   <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://www.ohiopride.org/endorsement/screening" />
 
+  <meta property="og:type" content="website" />
   <meta property="og:title" content="Candidate Endorsement Application | Ohio Pride PAC" />
   <meta property="og:description" content="Apply for an Ohio Pride PAC endorsement. Open to candidates running for federal, state, or local office in Ohio who support LGBTQ+ equality." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://ohiopride.org/endorsement/screening" />
+  <meta property="og:url" content="https://www.ohiopride.org/endorsement/screening" />
+  <meta property="og:site_name" content="Ohio Pride PAC" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+  <meta name="theme-color" content="#0F2233" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto+Slab:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/site-template.css" />
 
   <style>
     /* =================================================================
-       Ohio Pride PAC :: Endorsement Application
-       Brand v1.1
+       Endorsement Application — dark theme, mirrors /issues + /scorecard
        ================================================================= */
+    body { background: var(--dark-bg); }
 
     :root {
-      --navy:          #0F2233;
-      --navy-light:    #1A3A52;
-      --navy-lighter:  #234A66;
-      --cyan:          #73D7EE;
-      --cyan-soft:     rgba(115, 215, 238, 0.18);
-      --cyan-edge:     rgba(115, 215, 238, 0.45);
-      --white:         #FFFFFF;
-      --paper:         #F7F8FA;
-      --ink:           #0F2233;
-      --ink-soft:      #4A5C6E;
-      --ink-mute:      #7A8896;
-      --line:          #D9DEE4;
-      --line-soft:     #E8EBEF;
-      --error:         #C0392B;
-      --error-soft:    #FCE9E6;
-      --success:       #1F7A4D;
-
-      --pride-gradient: linear-gradient(
-        90deg,
-        #E40303 0%,
-        #FF8C00 20%,
-        #FFED00 40%,
-        #008026 60%,
-        #004DFF 80%,
-        #750787 100%
-      );
-
-      --radius:        4px;
-      --radius-lg:     8px;
-      --shadow-card:   0 1px 2px rgba(15, 34, 51, 0.04), 0 8px 24px rgba(15, 34, 51, 0.08);
+      --form-card-bg: #132d44;
+      --form-card-border: rgba(255, 255, 255, 0.08);
+      --form-card-border-strong: rgba(255, 255, 255, 0.18);
+      --form-input-bg: rgba(255, 255, 255, 0.04);
+      --form-input-bg-hover: rgba(255, 255, 255, 0.06);
+      --form-text-gray: #a0b4c8;
+      --form-text-dim: #6889a6;
+      --form-error: #ff6b6b;
+      --form-error-bg: rgba(220, 38, 38, 0.12);
+      --form-success: #4ade80;
     }
 
-    *, *::before, *::after { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      font-family: 'Roboto Slab', Georgia, serif;
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--ink);
-      background: var(--paper);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    /* ── Hero (matches .tracker-hero) ─────────────────────────────────── */
+    .apply-hero {
+      padding: calc(var(--nav-height) + 48px) 1.5rem 40px;
+      text-align: center;
+      background: var(--dark-bg);
     }
-
-    /* Pride stripes */
-    .pride-stripe-top    { height: 14px; background: var(--pride-gradient); }
-    .pride-stripe-bottom { height: 10px; background: var(--pride-gradient); }
-
-    /* ----------------------------------------------------------------
-       Header
-       ---------------------------------------------------------------- */
-    .site-header {
-      background: var(--navy);
-      padding: 24px 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .site-header-inner {
-      max-width: 880px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .wordmark {
+    .apply-hero .eyebrow {
       font-family: 'Montserrat', sans-serif;
-      text-decoration: none;
-      letter-spacing: -0.01em;
-      display: inline-flex;
-      align-items: baseline;
-      gap: 0;
-      line-height: 1;
-    }
-    .wordmark-ohio {
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.65);
-      font-size: 26px;
-    }
-    .wordmark-pride {
+      font-size: 0.75rem;
       font-weight: 700;
-      color: var(--white);
-      font-size: 26px;
-    }
-    .wordmark-pac {
-      font-weight: 700;
-      color: var(--cyan);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-left: 8px;
-      align-self: center;
-      padding-top: 2px;
-    }
-
-    .header-link {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.7);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .header-link:hover { color: var(--cyan); }
-
-    /* ----------------------------------------------------------------
-       Page intro band
-       ---------------------------------------------------------------- */
-    .page-intro {
-      background: var(--navy);
-      color: var(--white);
-      padding: 48px 24px 64px;
-      position: relative;
-      overflow: hidden;
-    }
-    .page-intro::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--cyan-edge), transparent);
-    }
-    .page-intro-inner {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    .page-intro .eyebrow {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--cyan);
-      margin: 0 0 16px;
+      color: var(--text-accent);
+      margin: 0 0 0.85rem;
     }
-    .page-intro h1 {
+    .apply-hero h1 {
       font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: clamp(28px, 5vw, 44px);
+      font-size: clamp(1.85rem, 4.5vw, 2.5rem);
+      font-weight: 800;
+      color: var(--text-white);
+      margin: 0 0 0.65rem;
       line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin: 0 0 20px;
-      color: var(--white);
+      letter-spacing: -0.015em;
     }
-    .page-intro p {
-      font-size: 16px;
-      line-height: 1.7;
-      color: rgba(255, 255, 255, 0.82);
-      margin: 0 0 12px;
-      max-width: 56ch;
+    .apply-hero p {
+      color: var(--text-light);
+      font-size: 1rem;
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.6;
     }
-    .page-intro p:last-child { margin-bottom: 0; }
-    .page-intro strong { color: var(--white); font-weight: 600; }
+    .apply-hero p + p { margin-top: 0.5rem; font-size: 0.9rem; color: var(--form-text-gray); }
 
-    /* ----------------------------------------------------------------
-       Form container
-       ---------------------------------------------------------------- */
+    /* ── Form shell ───────────────────────────────────────────────────── */
     .form-shell {
-      max-width: 720px;
-      margin: -32px auto 0;
-      padding: 0 16px 64px;
-      position: relative;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 1rem 4rem;
     }
 
     .progress {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
-      padding: 18px 20px;
-      margin-bottom: 20px;
+      background: var(--form-card-bg);
+      border: 1px solid var(--form-card-border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      position: relative;
+      gap: 14px;
     }
-
     .progress-bar {
       flex: 1;
       height: 6px;
-      background: var(--line-soft);
+      background: rgba(255, 255, 255, 0.06);
       border-radius: 999px;
       overflow: hidden;
       position: relative;
@@ -217,27 +109,25 @@
       position: absolute;
       inset: 0;
       width: 20%;
-      background: var(--pride-gradient);
+      background: var(--brand-pride-gradient-h, var(--ohp-rainbow));
       transition: width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
-
     .progress-label {
       font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 0.7rem;
+      font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--ink-soft);
+      color: var(--form-text-gray);
       white-space: nowrap;
     }
-    .progress-label .current { color: var(--ink); }
-
+    .progress-label .current { color: var(--text-white); }
     .save-indicator {
       font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 0.7rem;
+      font-weight: 600;
       letter-spacing: 0.5px;
-      color: var(--ink-mute);
+      color: var(--form-text-dim);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -248,63 +138,62 @@
     .save-indicator .dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--success);
+      background: var(--form-success);
     }
 
     .form-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
+      background: var(--form-card-bg);
+      border: 1px solid var(--form-card-border);
+      border-radius: 12px;
       overflow: hidden;
     }
 
     .form-step {
-      padding: 32px 28px;
+      padding: 28px 26px;
       display: none;
     }
     .form-step.active { display: block; }
 
     .step-header {
-      margin: 0 0 28px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--line-soft);
+      margin: 0 0 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--form-card-border);
     }
     .step-eyebrow {
       font-family: 'Montserrat', sans-serif;
-      font-size: 10px;
+      font-size: 0.65rem;
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--cyan);
+      color: var(--text-accent);
       margin: 0 0 8px;
     }
     .step-title {
       font-family: 'Montserrat', sans-serif;
       font-weight: 700;
-      font-size: 22px;
+      font-size: 1.4rem;
       line-height: 1.2;
       letter-spacing: -0.01em;
-      color: var(--ink);
+      color: var(--text-white);
       margin: 0 0 6px;
     }
     .step-desc {
-      font-size: 14px;
-      color: var(--ink-soft);
+      font-size: 0.95rem;
+      color: var(--form-text-gray);
       margin: 0;
       max-width: 56ch;
+      line-height: 1.55;
     }
 
-    /* ----------------------------------------------------------------
-       Form fields
-       ---------------------------------------------------------------- */
-    .field {
-      margin-bottom: 20px;
-    }
+    /* ── Form fields ──────────────────────────────────────────────────── */
+    .field { margin-bottom: 18px; }
     .field-row {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 14px;
+      margin-bottom: 18px;
     }
+    .field-row .field { margin-bottom: 0; }
     @media (min-width: 600px) {
       .field-row.cols-2 { grid-template-columns: 1fr 1fr; }
       .field-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
@@ -312,25 +201,25 @@
 
     .label {
       font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
+      font-size: 0.82rem;
       font-weight: 600;
       letter-spacing: 0.2px;
-      color: var(--ink);
+      color: var(--text-white);
       display: block;
       margin-bottom: 6px;
     }
-    .label .required { color: var(--cyan); margin-left: 2px; }
+    .label .required { color: var(--text-accent); margin-left: 2px; }
     .label .optional {
-      color: var(--ink-mute);
-      font-weight: 400;
-      font-size: 11px;
+      color: var(--form-text-dim);
+      font-weight: 500;
+      font-size: 0.65rem;
       margin-left: 6px;
       letter-spacing: 1px;
       text-transform: uppercase;
     }
     .help {
-      font-size: 13px;
-      color: var(--ink-soft);
+      font-size: 0.85rem;
+      color: var(--form-text-gray);
       margin: 4px 0 8px;
       line-height: 1.5;
     }
@@ -340,29 +229,39 @@
     .textarea {
       width: 100%;
       font-family: 'Roboto Slab', Georgia, serif;
-      font-size: 15px;
+      font-size: 0.95rem;
       line-height: 1.5;
-      color: var(--ink);
-      background: var(--white);
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius);
-      padding: 12px 14px;
-      transition: border-color 0.15s, box-shadow 0.15s;
+      color: var(--text-white);
+      background: var(--form-input-bg);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 11px 14px;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
       -webkit-appearance: none;
       appearance: none;
+    }
+    .input::placeholder,
+    .textarea::placeholder { color: rgba(255, 255, 255, 0.35); }
+    .input:hover,
+    .select:hover,
+    .textarea:hover {
+      background: var(--form-input-bg-hover);
+      border-color: rgba(255, 255, 255, 0.2);
     }
     .input:focus,
     .select:focus,
     .textarea:focus {
       outline: none;
-      border-color: var(--cyan);
-      box-shadow: 0 0 0 3px var(--cyan-soft);
+      border-color: var(--text-accent);
+      background: rgba(115, 215, 238, 0.06);
+      box-shadow: 0 0 0 3px rgba(115, 215, 238, 0.18);
     }
     .input.invalid,
     .select.invalid,
     .textarea.invalid {
-      border-color: var(--error);
-      box-shadow: 0 0 0 3px var(--error-soft);
+      border-color: var(--form-error);
+      background: var(--form-error-bg);
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.18);
     }
     .textarea {
       min-height: 120px;
@@ -370,28 +269,29 @@
       font-family: 'Roboto Slab', Georgia, serif;
     }
     .select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%234A5C6E' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a0b4c8' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 14px center;
       background-size: 10px 7px;
       padding-right: 36px;
     }
+    .select option { background: #1a3a52; color: #fff; }
 
     .field-error {
       display: none;
-      font-size: 12px;
-      color: var(--error);
+      font-size: 0.78rem;
+      color: var(--form-error);
       margin-top: 6px;
       font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
+      font-weight: 600;
     }
     .field.has-error .field-error { display: block; }
 
-    /* Yes/No radio groups for core positions */
+    /* Yes/No radio group */
     .yesno-group {
       display: flex;
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .yesno-option {
       flex: 1;
@@ -402,87 +302,56 @@
       display: block;
       text-align: center;
       padding: 12px 16px;
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
       font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      color: var(--ink-soft);
-      background: var(--white);
+      color: var(--form-text-gray);
+      background: var(--form-input-bg);
       transition: all 0.15s;
     }
     .yesno-option:hover .yesno-option-label {
-      border-color: var(--ink-soft);
-      color: var(--ink);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: var(--text-white);
+      background: var(--form-input-bg-hover);
     }
     .yesno-option input:checked + .yesno-option-label {
-      border-color: var(--navy);
-      background: var(--navy);
-      color: var(--white);
+      border-color: var(--text-accent);
+      background: rgba(115, 215, 238, 0.15);
+      color: var(--text-white);
+      box-shadow: inset 0 0 0 1px var(--text-accent);
     }
     .yesno-option input:focus-visible + .yesno-option-label {
-      box-shadow: 0 0 0 3px var(--cyan-soft);
+      outline: 2px solid var(--text-accent);
+      outline-offset: 2px;
     }
     .field.has-error .yesno-option-label {
-      border-color: var(--error);
-    }
-
-    /* Vertical radio list for is_out */
-    .radio-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .radio-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .radio-row:hover { border-color: var(--ink-soft); }
-    .radio-row input[type="radio"] {
-      width: 16px; height: 16px;
-      accent-color: var(--navy);
-      margin: 0;
-      flex: 0 0 auto;
-    }
-    .radio-row input[type="radio"]:checked ~ span { color: var(--ink); font-weight: 500; }
-    .radio-row:has(input:checked) {
-      border-color: var(--navy);
-      background: rgba(15, 34, 51, 0.03);
-    }
-    .radio-row span {
-      font-family: 'Roboto Slab', Georgia, serif;
-      font-size: 14px;
-      color: var(--ink-soft);
+      border-color: var(--form-error);
     }
 
     /* Position card: question + yes/no + explanation */
     .position {
-      padding: 20px;
-      background: var(--paper);
-      border-radius: var(--radius);
-      margin-bottom: 16px;
-      border: 1px solid var(--line-soft);
+      padding: 18px 18px 4px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--form-card-border);
+      border-radius: 10px;
+      margin-bottom: 14px;
     }
     .position-q {
       font-family: 'Roboto Slab', Georgia, serif;
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--ink);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--text-light);
       margin: 0 0 14px;
       font-weight: 500;
     }
     .position-q .num {
       font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      color: var(--cyan);
+      font-weight: 800;
+      color: var(--text-accent);
       margin-right: 6px;
     }
 
@@ -492,88 +361,94 @@
       align-items: flex-start;
       gap: 12px;
       padding: 16px;
-      background: var(--paper);
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius);
+      background: var(--form-input-bg);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
       cursor: pointer;
       transition: border-color 0.15s, background 0.15s;
     }
     .attest:has(input:checked) {
-      border-color: var(--navy);
-      background: rgba(15, 34, 51, 0.03);
+      border-color: var(--text-accent);
+      background: rgba(115, 215, 238, 0.08);
     }
     .attest input[type="checkbox"] {
       width: 18px; height: 18px;
-      accent-color: var(--navy);
+      accent-color: var(--text-accent);
       margin: 2px 0 0 0;
       flex: 0 0 auto;
+      cursor: pointer;
     }
     .attest-text {
-      font-size: 14px;
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.92rem;
       line-height: 1.5;
-      color: var(--ink);
+      color: var(--text-light);
     }
-    .field.has-error .attest { border-color: var(--error); }
+    .field.has-error .attest { border-color: var(--form-error); }
 
-    /* ----------------------------------------------------------------
-       Step navigation
-       ---------------------------------------------------------------- */
+    /* ── Step navigation ──────────────────────────────────────────────── */
     .step-nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      padding: 24px 28px;
-      background: var(--paper);
-      border-top: 1px solid var(--line-soft);
+      padding: 20px 26px;
+      background: rgba(0, 0, 0, 0.18);
+      border-top: 1px solid var(--form-card-border);
     }
 
     .btn {
       font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       padding: 13px 22px;
-      border-radius: var(--radius);
-      border: 1.5px solid transparent;
+      border-radius: 6px;
+      border: 1px solid transparent;
       cursor: pointer;
       transition: all 0.15s;
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      min-height: 44px;
     }
     .btn:disabled {
-      opacity: 0.5;
+      opacity: 0.4;
       cursor: not-allowed;
     }
+    .btn:focus-visible {
+      outline: 2px solid var(--text-accent);
+      outline-offset: 2px;
+    }
     .btn-primary {
-      background: var(--navy);
-      color: var(--white);
-      border-color: var(--navy);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-white);
+      border-color: rgba(255, 255, 255, 0.18);
     }
     .btn-primary:not(:disabled):hover {
-      background: var(--navy-light);
-      border-color: var(--navy-light);
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.3);
     }
     .btn-secondary {
       background: transparent;
-      color: var(--ink-soft);
-      border-color: var(--line);
+      color: var(--form-text-gray);
+      border-color: rgba(255, 255, 255, 0.12);
     }
     .btn-secondary:not(:disabled):hover {
-      color: var(--ink);
-      border-color: var(--ink-soft);
+      color: var(--text-white);
+      border-color: rgba(255, 255, 255, 0.25);
     }
     .btn-submit {
-      background: var(--cyan);
-      color: var(--navy);
-      border-color: var(--cyan);
+      background: var(--text-accent);
+      color: var(--dark-bg);
+      border-color: var(--text-accent);
     }
     .btn-submit:not(:disabled):hover {
-      background: var(--white);
+      background: var(--text-white);
+      border-color: var(--text-white);
+      transform: translateY(-1px);
     }
-
     .btn .spinner {
       width: 14px; height: 14px;
       border: 2px solid currentColor;
@@ -584,11 +459,9 @@
     }
     .btn.loading .spinner { display: inline-block; }
     .btn.loading .label { opacity: 0.5; }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Honeypot field: visually hidden, accessible-hidden, but still
-       in the form so bots that fill every input will reveal themselves. */
+    /* Honeypot field (visually hidden). */
     .hp-field {
       position: absolute;
       left: -9999px;
@@ -603,64 +476,39 @@
     .submit-error {
       display: none;
       padding: 14px 16px;
-      background: var(--error-soft);
-      border: 1.5px solid var(--error);
-      border-radius: var(--radius);
-      color: var(--error);
-      font-size: 14px;
+      background: var(--form-error-bg);
+      border: 1px solid rgba(220, 38, 38, 0.5);
+      border-radius: 6px;
+      color: #fecaca;
+      font-size: 0.9rem;
+      line-height: 1.5;
       margin-bottom: 16px;
     }
     .submit-error.visible { display: block; }
 
-    /* ----------------------------------------------------------------
-       Footer
-       ---------------------------------------------------------------- */
-    .site-footer {
-      background: var(--navy);
-      color: rgba(255, 255, 255, 0.65);
-      padding: 32px 24px 28px;
-      text-align: center;
-    }
-    .site-footer-inner {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    .site-footer .disclaimer {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin: 0 0 8px;
-      color: rgba(255, 255, 255, 0.85);
-    }
-    .site-footer .links {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
-    }
-    .site-footer .links a {
-      color: rgba(255, 255, 255, 0.65);
-      text-decoration: none;
-      margin: 0 8px;
-    }
-    .site-footer .links a:hover { color: var(--cyan); }
-
-    /* Mobile adjustments */
+    /* ── Mobile ───────────────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      .form-shell { padding: 0 12px 48px; }
-      .form-step { padding: 24px 18px; }
-      .step-nav { padding: 18px; flex-direction: row; }
-      .progress { padding: 14px 16px; }
+      .apply-hero {
+        padding: calc(var(--nav-height) + 24px) 1rem 28px;
+      }
+      .apply-hero h1 { font-size: 1.55rem; }
+      .apply-hero p { font-size: 0.9rem; }
+      .form-shell { padding: 0 0.85rem 3rem; }
+      .form-step { padding: 22px 18px; }
+      .step-nav { padding: 16px 18px; gap: 8px; }
+      .progress { padding: 12px 14px; gap: 10px; }
       .progress-label { display: none; }
       .save-indicator { display: none; }
       .yesno-group { gap: 8px; }
-      .yesno-option-label { padding: 11px 8px; font-size: 12px; letter-spacing: 0.5px; }
-      .btn { padding: 12px 16px; font-size: 12px; letter-spacing: 1px; }
-      .page-intro { padding: 36px 20px 56px; }
-      .site-header { padding: 18px 20px; }
+      .yesno-option-label { padding: 11px 8px; font-size: 0.75rem; letter-spacing: 0.5px; }
+      .btn { padding: 12px 14px; font-size: 0.72rem; letter-spacing: 1px; }
+      .btn-primary, .btn-submit { flex: 1 1 auto; justify-content: center; }
+      .btn-secondary { flex: 0 0 auto; }
+      .step-header { margin-bottom: 18px; padding-bottom: 14px; }
+      .step-title { font-size: 1.2rem; }
+      .position { padding: 14px 14px 2px; }
     }
 
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -671,393 +519,374 @@
   </style>
 </head>
 <body>
-  <div class="pride-stripe-top" aria-hidden="true"></div>
+  <div id="site-header"></div>
 
-  <header class="site-header">
-    <div class="site-header-inner">
-      <a href="/" class="wordmark" aria-label="Ohio Pride PAC home">
-        <span class="wordmark-ohio">Ohio</span><span class="wordmark-pride">Pride</span><span class="wordmark-pac">PAC</span>
-      </a>
-      <a href="/endorsements" class="header-link">Endorsements</a>
-    </div>
-  </header>
-
-  <section class="page-intro" aria-labelledby="page-title">
-    <div class="page-intro-inner">
+  <main id="main">
+    <section class="apply-hero" aria-labelledby="page-title">
       <p class="eyebrow">Endorsement Application</p>
-      <h1 id="page-title">Apply for an Ohio Pride PAC Endorsement</h1>
+      <h1 id="page-title">Apply for an Ohio Pride PAC endorsement.</h1>
       <p>Ohio Pride PAC endorses candidates who demonstrate strong, consistent support for LGBTQ+ equality. Submissions are reviewed by our Screening Committee and Board.</p>
       <p>Plan for 15 to 20 minutes. Your progress autosaves locally as you go, so you can return later on the same device. Responses may be shared publicly with voters.</p>
+    </section>
+
+    <div class="form-shell">
+      <div class="progress" role="region" aria-label="Application progress">
+        <div class="progress-bar" aria-hidden="true">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-label" aria-live="polite">
+          Step <span class="current" id="currentStepNum">1</span> of <span id="totalSteps">5</span>
+        </div>
+        <div class="save-indicator" id="saveIndicator" aria-live="polite">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Saved</span>
+        </div>
+      </div>
+
+      <form id="endorsementForm" class="form-card" novalidate autocomplete="on">
+
+        <!-- ============================================================
+             STEP 1: Candidate Information
+             ============================================================ -->
+        <section class="form-step active" data-step="1" aria-labelledby="step1-title">
+          <div class="step-header">
+            <p class="step-eyebrow">Section 1 of 5</p>
+            <h2 id="step1-title" class="step-title">Candidate Information</h2>
+            <p class="step-desc">Tell us about you and your campaign. All fields marked with an asterisk are required.</p>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label class="label" for="candidate_name">Full name <span class="required" aria-hidden="true">*</span></label>
+              <input class="input" type="text" id="candidate_name" name="candidate_name" required autocomplete="name" />
+              <div class="field-error">Please enter your full name.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="pronouns">Pronouns <span class="optional">Optional</span></label>
+              <input class="input" type="text" id="pronouns" name="pronouns" placeholder="e.g., she/her, they/them, he/him" />
+            </div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label class="label" for="office_sought">Office sought <span class="required" aria-hidden="true">*</span></label>
+              <input class="input" type="text" id="office_sought" name="office_sought" required placeholder="e.g., State Senate, Ohio House, Mayor of ..." />
+              <div class="field-error">Please tell us which office you are seeking.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="district">District / jurisdiction</label>
+              <input class="input" type="text" id="district" name="district" placeholder="e.g., District 24, City of Akron" />
+            </div>
+          </div>
+
+          <div class="field-row cols-3">
+            <div class="field">
+              <label class="label" for="election_year">Election year</label>
+              <input class="input" type="number" id="election_year" name="election_year" min="2026" max="2040" inputmode="numeric" placeholder="2026" />
+            </div>
+            <div class="field">
+              <label class="label" for="party">Party affiliation</label>
+              <select class="select" id="party" name="party">
+                <option value="">Choose one</option>
+                <option value="Democratic">Democratic</option>
+                <option value="Republican">Republican</option>
+                <option value="Independent">Independent</option>
+                <option value="Green">Green</option>
+                <option value="Libertarian">Libertarian</option>
+                <option value="Nonpartisan">Nonpartisan</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="label" for="is_out">Are you out as LGBTQ+?</label>
+              <select class="select" id="is_out" name="is_out">
+                <option value="">Choose one</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="prefer_not_to_say">Prefer not to say</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label class="label" for="committee_name">Campaign committee name</label>
+              <input class="input" type="text" id="committee_name" name="committee_name" placeholder="As registered with the Ohio Secretary of State" />
+            </div>
+            <div class="field">
+              <label class="label" for="treasurer_name">Campaign treasurer of record</label>
+              <input class="input" type="text" id="treasurer_name" name="treasurer_name" />
+            </div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label class="label" for="email">Campaign email <span class="required" aria-hidden="true">*</span></label>
+              <input class="input" type="email" id="email" name="email" required autocomplete="email" inputmode="email" />
+              <div class="field-error">Please enter a valid email address.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="phone">Campaign phone</label>
+              <input class="input" type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="website">Campaign website</label>
+            <input class="input" type="url" id="website" name="website" inputmode="url" placeholder="https://..." />
+          </div>
+        </section>
+
+        <!-- ============================================================
+             STEP 2: Core Positions
+             ============================================================ -->
+        <section class="form-step" data-step="2" aria-labelledby="step2-title">
+          <div class="step-header">
+            <p class="step-eyebrow">Section 2 of 5</p>
+            <h2 id="step2-title" class="step-title">Core Positions</h2>
+            <p class="step-desc">Five yes-or-no questions on the issues that matter most. A short explanation is required for each so the committee can review your reasoning.</p>
+          </div>
+
+          <!-- Q1 -->
+          <div class="position">
+            <p class="position-q"><span class="num">Q1.</span> Do you support statewide nondiscrimination protections for LGBTQ+ Ohioans in employment, housing, public accommodations, and healthcare (the Ohio Fairness Act)?</p>
+            <div class="field" data-required-radio="q1_nondiscrimination">
+              <div class="yesno-group" role="radiogroup" aria-label="Question 1 yes or no">
+                <label class="yesno-option">
+                  <input type="radio" name="q1_nondiscrimination" value="true" required />
+                  <span class="yesno-option-label">Yes</span>
+                </label>
+                <label class="yesno-option">
+                  <input type="radio" name="q1_nondiscrimination" value="false" required />
+                  <span class="yesno-option-label">No</span>
+                </label>
+              </div>
+              <div class="field-error">Please select Yes or No.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="q1_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
+              <textarea class="textarea" id="q1_explanation" name="q1_explanation" required rows="4"></textarea>
+              <div class="field-error">Please provide a brief explanation.</div>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="position">
+            <p class="position-q"><span class="num">Q2.</span> Do you oppose legislation restricting medically recommended gender-affirming care, or imposing broad bans on gender expression including drag performances (e.g., HB 249)?</p>
+            <div class="field" data-required-radio="q2_anti_lgbtq_legislation">
+              <div class="yesno-group" role="radiogroup" aria-label="Question 2 yes or no">
+                <label class="yesno-option">
+                  <input type="radio" name="q2_anti_lgbtq_legislation" value="true" required />
+                  <span class="yesno-option-label">Yes</span>
+                </label>
+                <label class="yesno-option">
+                  <input type="radio" name="q2_anti_lgbtq_legislation" value="false" required />
+                  <span class="yesno-option-label">No</span>
+                </label>
+              </div>
+              <div class="field-error">Please select Yes or No.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="q2_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
+              <textarea class="textarea" id="q2_explanation" name="q2_explanation" required rows="4"></textarea>
+              <div class="field-error">Please provide a brief explanation.</div>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="position">
+            <p class="position-q"><span class="num">Q3.</span> Do you support a statewide ban on so-called conversion therapy?</p>
+            <div class="field" data-required-radio="q3_conversion_therapy">
+              <div class="yesno-group" role="radiogroup" aria-label="Question 3 yes or no">
+                <label class="yesno-option">
+                  <input type="radio" name="q3_conversion_therapy" value="true" required />
+                  <span class="yesno-option-label">Yes</span>
+                </label>
+                <label class="yesno-option">
+                  <input type="radio" name="q3_conversion_therapy" value="false" required />
+                  <span class="yesno-option-label">No</span>
+                </label>
+              </div>
+              <div class="field-error">Please select Yes or No.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="q3_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
+              <textarea class="textarea" id="q3_explanation" name="q3_explanation" required rows="4"></textarea>
+              <div class="field-error">Please provide a brief explanation.</div>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="position">
+            <p class="position-q"><span class="num">Q4.</span> Do you support inclusive K-12 schools, including protections against bullying, opposition to forced outing policies, and access to accurate information about LGBTQ+ people and families?</p>
+            <div class="field" data-required-radio="q4_inclusive_education">
+              <div class="yesno-group" role="radiogroup" aria-label="Question 4 yes or no">
+                <label class="yesno-option">
+                  <input type="radio" name="q4_inclusive_education" value="true" required />
+                  <span class="yesno-option-label">Yes</span>
+                </label>
+                <label class="yesno-option">
+                  <input type="radio" name="q4_inclusive_education" value="false" required />
+                  <span class="yesno-option-label">No</span>
+                </label>
+              </div>
+              <div class="field-error">Please select Yes or No.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="q4_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
+              <textarea class="textarea" id="q4_explanation" name="q4_explanation" required rows="4"></textarea>
+              <div class="field-error">Please provide a brief explanation.</div>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="position">
+            <p class="position-q"><span class="num">Q5.</span> Will you vote against bills that roll back LGBTQ+ rights or create broad religious exemptions used to justify discrimination?</p>
+            <div class="field" data-required-radio="q5_vote_against_rollbacks">
+              <div class="yesno-group" role="radiogroup" aria-label="Question 5 yes or no">
+                <label class="yesno-option">
+                  <input type="radio" name="q5_vote_against_rollbacks" value="true" required />
+                  <span class="yesno-option-label">Yes</span>
+                </label>
+                <label class="yesno-option">
+                  <input type="radio" name="q5_vote_against_rollbacks" value="false" required />
+                  <span class="yesno-option-label">No</span>
+                </label>
+              </div>
+              <div class="field-error">Please select Yes or No.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="q5_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
+              <textarea class="textarea" id="q5_explanation" name="q5_explanation" required rows="4"></textarea>
+              <div class="field-error">Please provide a brief explanation.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             STEP 3: Legislative & Advocacy Commitment
+             ============================================================ -->
+        <section class="form-step" data-step="3" aria-labelledby="step3-title">
+          <div class="step-header">
+            <p class="step-eyebrow">Section 3 of 5</p>
+            <h2 id="step3-title" class="step-title">Legislative and Advocacy Commitment</h2>
+            <p class="step-desc">How you will work for equality if elected.</p>
+          </div>
+
+          <div class="field">
+            <label class="label" for="q6_priorities">If elected, what are your top three pro-equality legislative or policy priorities? <span class="required" aria-hidden="true">*</span></label>
+            <textarea class="textarea" id="q6_priorities" name="q6_priorities" required rows="5"></textarea>
+            <div class="field-error">Please share your top priorities.</div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="q7_legislation">Will you sponsor or co-sponsor pro-equality legislation? Please name specific bills you would champion. <span class="required" aria-hidden="true">*</span></label>
+            <textarea class="textarea" id="q7_legislation" name="q7_legislation" required rows="5"></textarea>
+            <div class="field-error">Please share specific bills or commitments.</div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="q8_safety">How will you address threats to LGBTQ+ safety, events, and community spaces in your district or role? <span class="required" aria-hidden="true">*</span></label>
+            <textarea class="textarea" id="q8_safety" name="q8_safety" required rows="5"></textarea>
+            <div class="field-error">Please describe your approach to safety.</div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             STEP 4: Vision and Ohio Context
+             ============================================================ -->
+        <section class="form-step" data-step="4" aria-labelledby="step4-title">
+          <div class="step-header">
+            <p class="step-eyebrow">Section 4 of 5</p>
+            <h2 id="step4-title" class="step-title">Vision and Ohio Context</h2>
+            <p class="step-desc">Help us understand how equality fits into the broader case you are making to voters.</p>
+          </div>
+
+          <div class="field">
+            <label class="label" for="q9_intersection">How do LGBTQ+ equality issues connect to other priorities in your race, such as healthcare, education, economic opportunity, and rural communities? <span class="required" aria-hidden="true">*</span></label>
+            <textarea class="textarea" id="q9_intersection" name="q9_intersection" required rows="6"></textarea>
+            <div class="field-error">Please respond to this question.</div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="q10_why_endorsement">Why are you seeking Ohio Pride's endorsement, and what specific commitments will you make if endorsed? <span class="required" aria-hidden="true">*</span></label>
+            <textarea class="textarea" id="q10_why_endorsement" name="q10_why_endorsement" required rows="6"></textarea>
+            <div class="field-error">Please respond to this question.</div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             STEP 5: Background and Attestation
+             ============================================================ -->
+        <section class="form-step" data-step="5" aria-labelledby="step5-title">
+          <div class="step-header">
+            <p class="step-eyebrow">Section 5 of 5</p>
+            <h2 id="step5-title" class="step-title">Background and Attestation</h2>
+            <p class="step-desc">A brief bio if you'd like to share one, a disclosure check, and your signature.</p>
+          </div>
+
+          <div class="field">
+            <label class="label" for="bio">Brief bio or relevant experience on equality and civil rights <span class="optional">Optional, 2 to 3 sentences</span></label>
+            <textarea class="textarea" id="bio" name="bio" rows="4"></textarea>
+          </div>
+
+          <div class="field">
+            <label class="label" for="conflicts_disclosure">Have you ever taken a public position, cast a vote, or made a statement that conflicts with the answers above? <span class="required" aria-hidden="true">*</span></label>
+            <p class="help">If yes, please explain. If no, type "None" so we know you considered the question.</p>
+            <textarea class="textarea" id="conflicts_disclosure" name="conflicts_disclosure" required rows="4"></textarea>
+            <div class="field-error">Please respond, or type "None".</div>
+          </div>
+
+          <div class="field" data-required-checkbox="attestation">
+            <label class="attest">
+              <input type="checkbox" id="attestation" name="attestation" required />
+              <span class="attest-text">I certify that the information provided in this application is accurate and complete to the best of my knowledge. I understand that my responses may be shared publicly with voters.</span>
+            </label>
+            <div class="field-error">You must certify before submitting.</div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label class="label" for="signature">Signature (typed full name) <span class="required" aria-hidden="true">*</span></label>
+              <input class="input" type="text" id="signature" name="signature" required autocomplete="off" />
+              <div class="field-error">Please type your full name as your signature.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="signed_date">Date</label>
+              <input class="input" type="text" id="signed_date" readonly />
+            </div>
+          </div>
+
+          <!-- Honeypot field. Hidden from humans, attractive to bots. If
+               filled, the submission is silently dropped. -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="company_url">Company URL</label>
+            <input type="text" id="company_url" name="company_url" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="submit-error" id="submitError" role="alert"></div>
+        </section>
+
+        <!-- Step navigation -->
+        <div class="step-nav">
+          <button type="button" class="btn btn-secondary" id="btnBack" disabled>
+            <span class="label">Back</span>
+          </button>
+          <button type="button" class="btn btn-primary" id="btnNext">
+            <span class="label">Next</span>
+          </button>
+          <button type="submit" class="btn btn-submit" id="btnSubmit" style="display:none;">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="label">Submit Application</span>
+          </button>
+        </div>
+      </form>
     </div>
-  </section>
-
-  <main class="form-shell">
-    <div class="progress" role="region" aria-label="Application progress">
-      <div class="progress-bar" aria-hidden="true">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <div class="progress-label" aria-live="polite">
-        Step <span class="current" id="currentStepNum">1</span> of <span id="totalSteps">5</span>
-      </div>
-      <div class="save-indicator" id="saveIndicator" aria-live="polite">
-        <span class="dot" aria-hidden="true"></span>
-        <span>Saved</span>
-      </div>
-    </div>
-
-    <form id="endorsementForm" class="form-card" novalidate autocomplete="on">
-
-      <!-- ============================================================
-           STEP 1: Candidate Information
-           ============================================================ -->
-      <section class="form-step active" data-step="1" aria-labelledby="step1-title">
-        <div class="step-header">
-          <p class="step-eyebrow">Section 1 of 5</p>
-          <h2 id="step1-title" class="step-title">Candidate Information</h2>
-          <p class="step-desc">Tell us about you and your campaign. All fields marked with an asterisk are required.</p>
-        </div>
-
-        <div class="field-row cols-2">
-          <div class="field">
-            <label class="label" for="candidate_name">Full name <span class="required" aria-hidden="true">*</span></label>
-            <input class="input" type="text" id="candidate_name" name="candidate_name" required autocomplete="name" />
-            <div class="field-error">Please enter your full name.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="pronouns">Pronouns <span class="optional">Optional</span></label>
-            <input class="input" type="text" id="pronouns" name="pronouns" placeholder="e.g., she/her, they/them, he/him" />
-          </div>
-        </div>
-
-        <div class="field-row cols-2">
-          <div class="field">
-            <label class="label" for="office_sought">Office sought <span class="required" aria-hidden="true">*</span></label>
-            <input class="input" type="text" id="office_sought" name="office_sought" required placeholder="e.g., State Senate, Ohio House, Mayor of ..." />
-            <div class="field-error">Please tell us which office you are seeking.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="district">District / jurisdiction</label>
-            <input class="input" type="text" id="district" name="district" placeholder="e.g., District 24, City of Akron" />
-          </div>
-        </div>
-
-        <div class="field-row cols-3">
-          <div class="field">
-            <label class="label" for="election_year">Election year</label>
-            <input class="input" type="number" id="election_year" name="election_year" min="2026" max="2040" inputmode="numeric" placeholder="2026" />
-          </div>
-          <div class="field">
-            <label class="label" for="party">Party affiliation</label>
-            <select class="select" id="party" name="party">
-              <option value="">Choose one</option>
-              <option value="Democratic">Democratic</option>
-              <option value="Republican">Republican</option>
-              <option value="Independent">Independent</option>
-              <option value="Green">Green</option>
-              <option value="Libertarian">Libertarian</option>
-              <option value="Nonpartisan">Nonpartisan</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="label" for="is_out">Are you out as LGBTQ+?</label>
-            <select class="select" id="is_out" name="is_out">
-              <option value="">Choose one</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-              <option value="prefer_not_to_say">Prefer not to say</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field-row cols-2">
-          <div class="field">
-            <label class="label" for="committee_name">Campaign committee name</label>
-            <input class="input" type="text" id="committee_name" name="committee_name" placeholder="As registered with the Ohio Secretary of State" />
-          </div>
-          <div class="field">
-            <label class="label" for="treasurer_name">Campaign treasurer of record</label>
-            <input class="input" type="text" id="treasurer_name" name="treasurer_name" />
-          </div>
-        </div>
-
-        <div class="field-row cols-2">
-          <div class="field">
-            <label class="label" for="email">Campaign email <span class="required" aria-hidden="true">*</span></label>
-            <input class="input" type="email" id="email" name="email" required autocomplete="email" inputmode="email" />
-            <div class="field-error">Please enter a valid email address.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="phone">Campaign phone</label>
-            <input class="input" type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label" for="website">Campaign website</label>
-          <input class="input" type="url" id="website" name="website" inputmode="url" placeholder="https://..." />
-        </div>
-      </section>
-
-      <!-- ============================================================
-           STEP 2: Core Positions
-           ============================================================ -->
-      <section class="form-step" data-step="2" aria-labelledby="step2-title">
-        <div class="step-header">
-          <p class="step-eyebrow">Section 2 of 5</p>
-          <h2 id="step2-title" class="step-title">Core Positions</h2>
-          <p class="step-desc">Five yes-or-no questions on the issues that matter most. A short explanation is required for each so the committee can review your reasoning.</p>
-        </div>
-
-        <!-- Q1 -->
-        <div class="position">
-          <p class="position-q"><span class="num">Q1.</span> Do you support statewide nondiscrimination protections for LGBTQ+ Ohioans in employment, housing, public accommodations, and healthcare (the Ohio Fairness Act)?</p>
-          <div class="field" data-required-radio="q1_nondiscrimination">
-            <div class="yesno-group" role="radiogroup" aria-label="Question 1 yes or no">
-              <label class="yesno-option">
-                <input type="radio" name="q1_nondiscrimination" value="true" required />
-                <span class="yesno-option-label">Yes</span>
-              </label>
-              <label class="yesno-option">
-                <input type="radio" name="q1_nondiscrimination" value="false" required />
-                <span class="yesno-option-label">No</span>
-              </label>
-            </div>
-            <div class="field-error">Please select Yes or No.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="q1_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q1_explanation" name="q1_explanation" required rows="4"></textarea>
-            <div class="field-error">Please provide a brief explanation.</div>
-          </div>
-        </div>
-
-        <!-- Q2 -->
-        <div class="position">
-          <p class="position-q"><span class="num">Q2.</span> Do you oppose legislation restricting medically recommended gender-affirming care, or imposing broad bans on gender expression including drag performances (e.g., HB 249)?</p>
-          <div class="field" data-required-radio="q2_anti_lgbtq_legislation">
-            <div class="yesno-group" role="radiogroup" aria-label="Question 2 yes or no">
-              <label class="yesno-option">
-                <input type="radio" name="q2_anti_lgbtq_legislation" value="true" required />
-                <span class="yesno-option-label">Yes</span>
-              </label>
-              <label class="yesno-option">
-                <input type="radio" name="q2_anti_lgbtq_legislation" value="false" required />
-                <span class="yesno-option-label">No</span>
-              </label>
-            </div>
-            <div class="field-error">Please select Yes or No.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="q2_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q2_explanation" name="q2_explanation" required rows="4"></textarea>
-            <div class="field-error">Please provide a brief explanation.</div>
-          </div>
-        </div>
-
-        <!-- Q3 -->
-        <div class="position">
-          <p class="position-q"><span class="num">Q3.</span> Do you support a statewide ban on so-called conversion therapy?</p>
-          <div class="field" data-required-radio="q3_conversion_therapy">
-            <div class="yesno-group" role="radiogroup" aria-label="Question 3 yes or no">
-              <label class="yesno-option">
-                <input type="radio" name="q3_conversion_therapy" value="true" required />
-                <span class="yesno-option-label">Yes</span>
-              </label>
-              <label class="yesno-option">
-                <input type="radio" name="q3_conversion_therapy" value="false" required />
-                <span class="yesno-option-label">No</span>
-              </label>
-            </div>
-            <div class="field-error">Please select Yes or No.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="q3_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q3_explanation" name="q3_explanation" required rows="4"></textarea>
-            <div class="field-error">Please provide a brief explanation.</div>
-          </div>
-        </div>
-
-        <!-- Q4 -->
-        <div class="position">
-          <p class="position-q"><span class="num">Q4.</span> Do you support inclusive K-12 schools, including protections against bullying, opposition to forced outing policies, and access to accurate information about LGBTQ+ people and families?</p>
-          <div class="field" data-required-radio="q4_inclusive_education">
-            <div class="yesno-group" role="radiogroup" aria-label="Question 4 yes or no">
-              <label class="yesno-option">
-                <input type="radio" name="q4_inclusive_education" value="true" required />
-                <span class="yesno-option-label">Yes</span>
-              </label>
-              <label class="yesno-option">
-                <input type="radio" name="q4_inclusive_education" value="false" required />
-                <span class="yesno-option-label">No</span>
-              </label>
-            </div>
-            <div class="field-error">Please select Yes or No.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="q4_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q4_explanation" name="q4_explanation" required rows="4"></textarea>
-            <div class="field-error">Please provide a brief explanation.</div>
-          </div>
-        </div>
-
-        <!-- Q5 -->
-        <div class="position">
-          <p class="position-q"><span class="num">Q5.</span> Will you vote against bills that roll back LGBTQ+ rights or create broad religious exemptions used to justify discrimination?</p>
-          <div class="field" data-required-radio="q5_vote_against_rollbacks">
-            <div class="yesno-group" role="radiogroup" aria-label="Question 5 yes or no">
-              <label class="yesno-option">
-                <input type="radio" name="q5_vote_against_rollbacks" value="true" required />
-                <span class="yesno-option-label">Yes</span>
-              </label>
-              <label class="yesno-option">
-                <input type="radio" name="q5_vote_against_rollbacks" value="false" required />
-                <span class="yesno-option-label">No</span>
-              </label>
-            </div>
-            <div class="field-error">Please select Yes or No.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="q5_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q5_explanation" name="q5_explanation" required rows="4"></textarea>
-            <div class="field-error">Please provide a brief explanation.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============================================================
-           STEP 3: Legislative & Advocacy Commitment
-           ============================================================ -->
-      <section class="form-step" data-step="3" aria-labelledby="step3-title">
-        <div class="step-header">
-          <p class="step-eyebrow">Section 3 of 5</p>
-          <h2 id="step3-title" class="step-title">Legislative and Advocacy Commitment</h2>
-          <p class="step-desc">How you will work for equality if elected.</p>
-        </div>
-
-        <div class="field">
-          <label class="label" for="q6_priorities">If elected, what are your top three pro-equality legislative or policy priorities? <span class="required" aria-hidden="true">*</span></label>
-          <textarea class="textarea" id="q6_priorities" name="q6_priorities" required rows="5"></textarea>
-          <div class="field-error">Please share your top priorities.</div>
-        </div>
-
-        <div class="field">
-          <label class="label" for="q7_legislation">Will you sponsor or co-sponsor pro-equality legislation? Please name specific bills you would champion. <span class="required" aria-hidden="true">*</span></label>
-          <textarea class="textarea" id="q7_legislation" name="q7_legislation" required rows="5"></textarea>
-          <div class="field-error">Please share specific bills or commitments.</div>
-        </div>
-
-        <div class="field">
-          <label class="label" for="q8_safety">How will you address threats to LGBTQ+ safety, events, and community spaces in your district or role? <span class="required" aria-hidden="true">*</span></label>
-          <textarea class="textarea" id="q8_safety" name="q8_safety" required rows="5"></textarea>
-          <div class="field-error">Please describe your approach to safety.</div>
-        </div>
-      </section>
-
-      <!-- ============================================================
-           STEP 4: Vision and Ohio Context
-           ============================================================ -->
-      <section class="form-step" data-step="4" aria-labelledby="step4-title">
-        <div class="step-header">
-          <p class="step-eyebrow">Section 4 of 5</p>
-          <h2 id="step4-title" class="step-title">Vision and Ohio Context</h2>
-          <p class="step-desc">Help us understand how equality fits into the broader case you are making to voters.</p>
-        </div>
-
-        <div class="field">
-          <label class="label" for="q9_intersection">How do LGBTQ+ equality issues connect to other priorities in your race, such as healthcare, education, economic opportunity, and rural communities? <span class="required" aria-hidden="true">*</span></label>
-          <textarea class="textarea" id="q9_intersection" name="q9_intersection" required rows="6"></textarea>
-          <div class="field-error">Please respond to this question.</div>
-        </div>
-
-        <div class="field">
-          <label class="label" for="q10_why_endorsement">Why are you seeking Ohio Pride's endorsement, and what specific commitments will you make if endorsed? <span class="required" aria-hidden="true">*</span></label>
-          <textarea class="textarea" id="q10_why_endorsement" name="q10_why_endorsement" required rows="6"></textarea>
-          <div class="field-error">Please respond to this question.</div>
-        </div>
-      </section>
-
-      <!-- ============================================================
-           STEP 5: Background and Attestation
-           ============================================================ -->
-      <section class="form-step" data-step="5" aria-labelledby="step5-title">
-        <div class="step-header">
-          <p class="step-eyebrow">Section 5 of 5</p>
-          <h2 id="step5-title" class="step-title">Background and Attestation</h2>
-          <p class="step-desc">A brief bio if you'd like to share one, a disclosure check, and your signature.</p>
-        </div>
-
-        <div class="field">
-          <label class="label" for="bio">Brief bio or relevant experience on equality and civil rights <span class="optional">Optional, 2 to 3 sentences</span></label>
-          <textarea class="textarea" id="bio" name="bio" rows="4"></textarea>
-        </div>
-
-        <div class="field">
-          <label class="label" for="conflicts_disclosure">Have you ever taken a public position, cast a vote, or made a statement that conflicts with the answers above? <span class="required" aria-hidden="true">*</span></label>
-          <p class="help">If yes, please explain. If no, type "None" so we know you considered the question.</p>
-          <textarea class="textarea" id="conflicts_disclosure" name="conflicts_disclosure" required rows="4"></textarea>
-          <div class="field-error">Please respond, or type "None".</div>
-        </div>
-
-        <div class="field" data-required-checkbox="attestation">
-          <label class="attest">
-            <input type="checkbox" id="attestation" name="attestation" required />
-            <span class="attest-text">I certify that the information provided in this application is accurate and complete to the best of my knowledge. I understand that my responses may be shared publicly with voters.</span>
-          </label>
-          <div class="field-error">You must certify before submitting.</div>
-        </div>
-
-        <div class="field-row cols-2">
-          <div class="field">
-            <label class="label" for="signature">Signature (typed full name) <span class="required" aria-hidden="true">*</span></label>
-            <input class="input" type="text" id="signature" name="signature" required autocomplete="off" />
-            <div class="field-error">Please type your full name as your signature.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="signed_date">Date</label>
-            <input class="input" type="text" id="signed_date" readonly />
-          </div>
-        </div>
-
-        <!-- Honeypot field. Hidden from humans, attractive to bots. If
-             filled, the submission is silently dropped. -->
-        <div class="hp-field" aria-hidden="true">
-          <label for="company_url">Company URL</label>
-          <input type="text" id="company_url" name="company_url" tabindex="-1" autocomplete="off" />
-        </div>
-
-        <div class="submit-error" id="submitError" role="alert"></div>
-      </section>
-
-      <!-- Step navigation -->
-      <div class="step-nav">
-        <button type="button" class="btn btn-secondary" id="btnBack" disabled>
-          <span class="label">Back</span>
-        </button>
-        <button type="button" class="btn btn-primary" id="btnNext">
-          <span class="label">Next</span>
-        </button>
-        <button type="submit" class="btn btn-submit" id="btnSubmit" style="display:none;">
-          <span class="spinner" aria-hidden="true"></span>
-          <span class="label">Submit Application</span>
-        </button>
-      </div>
-    </form>
   </main>
 
-  <footer class="site-footer">
-    <div class="site-footer-inner">
-      <p class="disclaimer">Paid for by Ohio Pride PAC. Zachary R. Joseph, Director.</p>
-      <div class="links">
-        <a href="/about">About</a>
-        <a href="/issues">Issues</a>
-        <a href="/scorecard">Scorecard</a>
-        <a href="/contact">Contact</a>
-      </div>
-    </div>
-  </footer>
+  <div id="site-footer"></div>
 
-  <div class="pride-stripe-bottom" aria-hidden="true"></div>
+  <a href="/donate" class="mobile-donate-fab">Donate</a>
 
   <!-- =================================================================
        External scripts
@@ -1067,8 +896,8 @@
   <script>
     /* =================================================================
        CONFIG
-       Replace placeholder with the Supabase anon public key. Both
-       values are designed to be public and safe to ship in client code.
+       Anon key is public by design and safe to ship in client code.
+       RLS allows public inserts to `endorsement_applications` only.
        ================================================================= */
     const CONFIG = {
       SUPABASE_URL:        'https://dkdxefzhttkmjhdbkvqn.supabase.co',
@@ -1105,6 +934,7 @@
 
     function showSaved() {
       const ind = $('#saveIndicator');
+      if (!ind) return;
       ind.classList.add('visible');
       clearTimeout(showSaved._t);
       showSaved._t = setTimeout(() => ind.classList.remove('visible'), 1600);
@@ -1174,10 +1004,6 @@
         const parsed = JSON.parse(raw);
         if (parsed && parsed.data) {
           applyFormData(parsed.data);
-          if (parsed.step && parsed.step >= 1 && parsed.step <= state.totalSteps) {
-            // Don't auto-jump back into the form on reload; start at step 1.
-            // The data is already populated.
-          }
         }
       } catch (_) { /* ignore */ }
     }
@@ -1217,7 +1043,6 @@
       let allValid = true;
       let firstInvalid = null;
 
-      // Standard inputs/selects/textareas
       const inputs = $$('input:not([type=radio]):not([type=checkbox]), select, textarea', stepEl);
       for (const f of inputs) {
         if (!validateField(f)) {
@@ -1226,7 +1051,6 @@
         }
       }
 
-      // Required radio groups
       const radioGroups = $$('[data-required-radio]', stepEl);
       for (const grp of radioGroups) {
         const name = grp.getAttribute('data-required-radio');
@@ -1240,7 +1064,6 @@
         }
       }
 
-      // Required checkboxes (attestation)
       const checkGroups = $$('[data-required-checkbox]', stepEl);
       for (const grp of checkGroups) {
         const name = grp.getAttribute('data-required-checkbox');
@@ -1281,11 +1104,16 @@
       $('#btnNext').style.display   = isLast ? 'none' : 'inline-flex';
       $('#btnSubmit').style.display = isLast ? 'inline-flex' : 'none';
 
-      // Focus the step heading for screen readers
       const heading = $(`.form-step[data-step="${n}"] .step-title`);
-      if (heading) heading.setAttribute('tabindex', '-1'), heading.focus({ preventScroll: true });
+      if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        heading.focus({ preventScroll: true });
+      }
 
-      window.scrollTo({ top: $('.form-shell').offsetTop - 16, behavior: 'smooth' });
+      const shellEl = $('.form-shell');
+      if (shellEl) {
+        window.scrollTo({ top: shellEl.offsetTop - 16, behavior: 'smooth' });
+      }
     }
 
     function nextStep() {
@@ -1350,8 +1178,6 @@
         signature:                 trim(raw.signature),
         status:                    'submitted',
         user_agent:                navigator.userAgent
-        // submission_ip is not set client-side; populated by the
-        // notification trigger or a server-side Function in Phase 5.
       };
     }
 
@@ -1394,7 +1220,6 @@
         );
 
         const payload = buildPayload();
-        // Note: no .select() chained; anon role cannot read non-endorsed rows.
         const { error } = await client
           .from('endorsement_applications')
           .insert([payload]);
@@ -1430,11 +1255,9 @@
       $('#btnBack').addEventListener('click', prevStep);
       $('#endorsementForm').addEventListener('submit', submitApplication);
 
-      // Autosave on any input change
       $('#endorsementForm').addEventListener('input', persist);
       $('#endorsementForm').addEventListener('change', persist);
 
-      // Clear field-level error styling as soon as user fixes it
       $('#endorsementForm').addEventListener('input', (e) => {
         const f = e.target;
         const wrap = f.closest && f.closest('.field');
@@ -1458,5 +1281,9 @@
       });
     });
   </script>
+
+  <script src="/js/ohiopride-data.js" defer></script>
+  <script src="/js/site-template.js" defer></script>
+  <script src="/js/enhancements.js" defer></script>
 </body>
 </html>

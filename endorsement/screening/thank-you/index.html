@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,269 +7,190 @@
   <meta name="description" content="Your candidate endorsement application has been received by Ohio Pride PAC." />
   <meta name="robots" content="noindex,follow" />
 
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+  <meta name="theme-color" content="#0F2233" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto+Slab:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/site-template.css" />
 
   <style>
+    body { background: var(--dark-bg); }
+
     :root {
-      --navy:       #0F2233;
-      --navy-light: #1A3A52;
-      --cyan:       #73D7EE;
-      --white:      #FFFFFF;
-      --paper:      #F7F8FA;
-      --ink:        #0F2233;
-      --ink-soft:   #4A5C6E;
-      --ink-mute:   #7A8896;
-      --line:       #D9DEE4;
-      --line-soft:  #E8EBEF;
-
-      --pride-gradient: linear-gradient(
-        90deg,
-        #E40303 0%,
-        #FF8C00 20%,
-        #FFED00 40%,
-        #008026 60%,
-        #004DFF 80%,
-        #750787 100%
-      );
-      --radius:    4px;
-      --radius-lg: 8px;
-      --shadow-card: 0 1px 2px rgba(15,34,51,0.04), 0 8px 24px rgba(15,34,51,0.08);
+      --ty-card-bg: #132d44;
+      --ty-card-border: rgba(255, 255, 255, 0.08);
+      --ty-text-gray: #a0b4c8;
+      --ty-text-dim: #6889a6;
     }
-
-    *, *::before, *::after { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: 'Roboto Slab', Georgia, serif;
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--ink);
-      background: var(--paper);
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .pride-stripe-top    { height: 14px; background: var(--pride-gradient); }
-    .pride-stripe-bottom { height: 10px; background: var(--pride-gradient); }
-
-    .site-header {
-      background: var(--navy);
-      padding: 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .site-header-inner {
-      max-width: 880px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .wordmark {
-      font-family: 'Montserrat', sans-serif;
-      text-decoration: none;
-      letter-spacing: -0.01em;
-      display: inline-flex;
-      align-items: baseline;
-      line-height: 1;
-    }
-    .wordmark-ohio { font-weight: 400; color: rgba(255,255,255,0.65); font-size: 26px; }
-    .wordmark-pride{ font-weight: 700; color: var(--white); font-size: 26px; }
-    .wordmark-pac  {
-      font-weight: 700; color: var(--cyan); font-size: 12px;
-      text-transform: uppercase; letter-spacing: 2px;
-      margin-left: 8px; align-self: center; padding-top: 2px;
-    }
-    .header-link {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px; font-weight: 500;
-      letter-spacing: 1px; text-transform: uppercase;
-      color: rgba(255,255,255,0.7); text-decoration: none;
-      transition: color 0.15s;
-    }
-    .header-link:hover { color: var(--cyan); }
 
     main {
-      flex: 1;
-      padding: 56px 24px 64px;
+      padding: calc(var(--nav-height) + 32px) 1rem 4rem;
       display: flex;
       align-items: flex-start;
       justify-content: center;
+      min-height: calc(100vh - var(--nav-height));
     }
 
-    .card {
+    .ty-card {
       max-width: 640px;
       width: 100%;
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
+      background: var(--ty-card-bg);
+      border: 1px solid var(--ty-card-border);
+      border-radius: 14px;
       overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
     }
-
-    .card-banner {
+    .ty-card-banner {
       height: 6px;
-      background: var(--pride-gradient);
+      background: var(--brand-pride-gradient-h, var(--ohp-rainbow));
     }
+    .ty-card-body { padding: 44px 40px 36px; }
 
-    .card-body { padding: 48px 40px 36px; }
-
-    .check-icon {
+    .ty-check {
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: var(--navy);
+      background: rgba(115, 215, 238, 0.15);
+      border: 1px solid rgba(115, 215, 238, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 0 28px;
+      margin: 0 0 24px;
     }
-    .check-icon svg {
-      width: 28px;
-      height: 28px;
-      stroke: var(--cyan);
+    .ty-check svg {
+      width: 26px;
+      height: 26px;
+      stroke: var(--text-accent);
       stroke-width: 3;
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
-    .eyebrow {
+    .ty-eyebrow {
       font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
+      font-size: 0.7rem;
       font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--cyan);
+      color: var(--text-accent);
       margin: 0 0 12px;
     }
-
-    h1 {
+    .ty-card h1 {
       font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: clamp(28px, 4.5vw, 38px);
+      font-weight: 800;
+      font-size: clamp(1.7rem, 4vw, 2.2rem);
       line-height: 1.15;
       letter-spacing: -0.02em;
-      color: var(--ink);
-      margin: 0 0 20px;
+      color: var(--text-white);
+      margin: 0 0 18px;
+    }
+    .ty-lead {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 1rem;
+      color: var(--text-light);
+      margin: 0 0 24px;
+      line-height: 1.6;
     }
 
-    p.lead {
-      font-size: 16px;
-      color: var(--ink-soft);
-      margin: 0 0 28px;
+    .ty-next {
+      background: rgba(0, 0, 0, 0.25);
+      border-left: 3px solid var(--text-accent);
+      border-radius: 6px;
+      padding: 22px 22px 20px;
+      margin: 24px 0 28px;
     }
-
-    .what-next {
-      background: var(--paper);
-      border-radius: var(--radius);
-      padding: 24px;
-      margin: 28px 0 32px;
-      border-left: 3px solid var(--cyan);
-    }
-    .what-next h2 {
+    .ty-next h2 {
       font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
+      font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--ink);
-      margin: 0 0 14px;
+      color: var(--text-accent);
+      margin: 0 0 12px;
     }
-    .what-next ol {
+    .ty-next ol {
       margin: 0;
       padding: 0 0 0 20px;
-      color: var(--ink-soft);
-      font-size: 14px;
-      line-height: 1.7;
+      color: var(--ty-text-gray);
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.92rem;
+      line-height: 1.65;
     }
-    .what-next ol li { margin-bottom: 8px; }
-    .what-next ol li:last-child { margin-bottom: 0; }
+    .ty-next ol li { margin-bottom: 8px; }
+    .ty-next ol li:last-child { margin-bottom: 0; }
+    .ty-next ol li::marker { color: var(--text-accent); font-weight: 700; }
 
-    .actions {
+    .ty-actions {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
       margin-top: 8px;
     }
-    .btn {
+    .ty-btn {
       font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
       padding: 13px 22px;
-      border-radius: var(--radius);
-      border: 1.5px solid transparent;
+      border-radius: 6px;
+      border: 1px solid transparent;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      transition: all 0.15s;
+      gap: 8px;
+      transition: all 0.2s;
+      min-height: 44px;
     }
-    .btn-primary {
-      background: var(--navy);
-      color: var(--white);
-      border-color: var(--navy);
+    .ty-btn-primary {
+      background: var(--text-accent);
+      color: var(--dark-bg);
+      border-color: var(--text-accent);
     }
-    .btn-primary:hover {
-      background: var(--navy-light);
-      border-color: var(--navy-light);
+    .ty-btn-primary:hover {
+      background: var(--text-white);
+      border-color: var(--text-white);
+      transform: translateY(-1px);
     }
-    .btn-secondary {
+    .ty-btn-secondary {
       background: transparent;
-      color: var(--ink-soft);
-      border-color: var(--line);
+      color: var(--ty-text-gray);
+      border-color: rgba(255, 255, 255, 0.18);
     }
-    .btn-secondary:hover {
-      color: var(--ink);
-      border-color: var(--ink-soft);
+    .ty-btn-secondary:hover {
+      color: var(--text-white);
+      border-color: rgba(255, 255, 255, 0.35);
     }
 
-    .contact-note {
-      margin-top: 32px;
-      padding-top: 24px;
-      border-top: 1px solid var(--line-soft);
-      font-size: 13px;
-      color: var(--ink-mute);
+    .ty-contact {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--ty-card-border);
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.88rem;
+      color: var(--ty-text-dim);
     }
-    .contact-note a {
-      color: var(--ink-soft);
+    .ty-contact a {
+      color: var(--text-accent);
       text-decoration: underline;
       text-underline-offset: 2px;
     }
-    .contact-note a:hover { color: var(--navy); }
-
-    .site-footer {
-      background: var(--navy);
-      color: rgba(255,255,255,0.65);
-      padding: 32px 24px 28px;
-      text-align: center;
-    }
-    .site-footer .disclaimer {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 1px; text-transform: uppercase;
-      margin: 0 0 8px;
-      color: rgba(255,255,255,0.85);
-    }
-    .site-footer .links {
-      font-size: 13px; color: rgba(255,255,255,0.5);
-    }
-    .site-footer .links a {
-      color: rgba(255,255,255,0.65);
-      text-decoration: none;
-      margin: 0 8px;
-    }
-    .site-footer .links a:hover { color: var(--cyan); }
+    .ty-contact a:hover { color: var(--text-white); }
 
     @media (max-width: 600px) {
-      .card-body { padding: 36px 24px 28px; }
-      main { padding: 36px 16px 48px; }
-      .actions { flex-direction: column; }
-      .btn { justify-content: center; }
+      main { padding: calc(var(--nav-height) + 16px) 1rem 3rem; }
+      .ty-card-body { padding: 32px 22px 28px; }
+      .ty-actions { flex-direction: column; }
+      .ty-btn { justify-content: center; width: 100%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -281,32 +202,22 @@
   </style>
 </head>
 <body>
-  <div class="pride-stripe-top" aria-hidden="true"></div>
+  <div id="site-header"></div>
 
-  <header class="site-header">
-    <div class="site-header-inner">
-      <a href="/" class="wordmark" aria-label="Ohio Pride PAC home">
-        <span class="wordmark-ohio">Ohio</span><span class="wordmark-pride">Pride</span><span class="wordmark-pac">PAC</span>
-      </a>
-      <a href="/" class="header-link">Back to Home</a>
-    </div>
-  </header>
-
-  <main>
-    <div class="card">
-      <div class="card-banner" aria-hidden="true"></div>
-      <div class="card-body">
-
-        <div class="check-icon" aria-hidden="true">
+  <main id="main">
+    <div class="ty-card">
+      <div class="ty-card-banner" aria-hidden="true"></div>
+      <div class="ty-card-body">
+        <div class="ty-check" aria-hidden="true">
           <svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
         </div>
 
-        <p class="eyebrow">Application Received</p>
+        <p class="ty-eyebrow">Application Received</p>
         <h1>Thank you for applying.</h1>
-        <p class="lead">Your endorsement application has been submitted to the Ohio Pride PAC Screening Committee. A confirmation email is on its way to the campaign address you provided.</p>
+        <p class="ty-lead">Your endorsement application has been submitted to the Ohio Pride PAC Screening Committee. A confirmation email is on its way to the campaign address you provided.</p>
 
-        <div class="what-next">
-          <h2>What Happens Next</h2>
+        <div class="ty-next">
+          <h2>What happens next</h2>
           <ol>
             <li>The Screening Committee reviews your responses, typically within two to three weeks.</li>
             <li>We may follow up by email if we have clarifying questions or want to schedule a brief candidate conversation.</li>
@@ -315,30 +226,24 @@
           </ol>
         </div>
 
-        <div class="actions">
-          <a href="/" class="btn btn-primary">Return Home</a>
-          <a href="/issues" class="btn btn-secondary">View Issue Tracker</a>
+        <div class="ty-actions">
+          <a href="/" class="ty-btn ty-btn-primary">Return Home</a>
+          <a href="/issues" class="ty-btn ty-btn-secondary">View Issue Tracker</a>
         </div>
 
-        <p class="contact-note">
+        <p class="ty-contact">
           Questions about your application? Email <a href="mailto:screening@ohiopride.org">screening@ohiopride.org</a>.
         </p>
       </div>
     </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="site-footer-inner">
-      <p class="disclaimer">Paid for by Ohio Pride PAC. Zachary R. Joseph, Director.</p>
-      <div class="links">
-        <a href="/about">About</a>
-        <a href="/issues">Issues</a>
-        <a href="/scorecard">Scorecard</a>
-        <a href="/contact">Contact</a>
-      </div>
-    </div>
-  </footer>
+  <div id="site-footer"></div>
 
-  <div class="pride-stripe-bottom" aria-hidden="true"></div>
+  <a href="/donate" class="mobile-donate-fab">Donate</a>
+
+  <script src="/js/ohiopride-data.js" defer></script>
+  <script src="/js/site-template.js" defer></script>
+  <script src="/js/enhancements.js" defer></script>
 </body>
 </html>
