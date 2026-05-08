@@ -27,7 +27,14 @@ const ROOT = path.resolve(__dirname, '..');
 // Directories that ship to production. Anything outside these is
 // ignored — legacy snapshots (Update/, OhioPride-Refocused/) are not
 // deployed and intentionally do not follow the system.
-const SCAN_ROOTS = ['.', 'issues', 'donate'];
+const SCAN_ROOTS = [
+  '.',
+  'issues',
+  'donate',
+  'endorsements',
+  'endorsement/screening',
+  'endorsement/screening/thank-you',
+];
 
 // Pages that legitimately don't use the shared chrome (e.g. embedded
 // fragments, redirect stubs). None today; placeholder for the future.
