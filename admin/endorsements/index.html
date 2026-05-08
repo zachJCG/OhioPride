@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Endorsement Applications | Ohio Pride PAC Admin</title>
+  <meta name="robots" content="noindex,nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/admin/endorsements/admin.css" />
+
+  <style>
+    main {
+      flex: 1;
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .page-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin: 0 0 6px;
+    }
+    .page-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .page-stats {
+      display: flex;
+      gap: 24px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .page-stats strong {
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .filters {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 720px) {
+      .filters { grid-template-columns: 1fr; }
+    }
+
+    .table-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    table.applications {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table.applications thead th {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      background: var(--paper);
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    table.applications thead th:hover { color: var(--ink); }
+    table.applications thead th .arrow { display: inline-block; margin-left: 4px; opacity: 0; }
+    table.applications thead th.sort-asc  .arrow,
+    table.applications thead th.sort-desc .arrow { opacity: 1; color: var(--cyan); }
+    table.applications thead th.sort-desc .arrow { transform: rotate(180deg); }
+
+    table.applications tbody tr {
+      border-bottom: 1px solid var(--line-soft);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    table.applications tbody tr:hover { background: var(--paper); }
+    table.applications tbody tr:last-child { border-bottom: none; }
+    table.applications tbody td {
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--ink);
+      vertical-align: middle;
+    }
+    table.applications tbody td.muted { color: var(--ink-soft); font-size: 13px; }
+    table.applications tbody td.name { font-weight: 600; }
+    table.applications tbody td.name .pronouns {
+      display: block;
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--ink-mute);
+      margin-top: 2px;
+    }
+    table.applications tbody td.chevron {
+      color: var(--ink-mute);
+      width: 24px;
+      text-align: right;
+      padding-right: 18px;
+    }
+
+    .empty-state, .loading-state {
+      padding: 80px 24px;
+      text-align: center;
+      color: var(--ink-soft);
+    }
+    .empty-state h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 8px;
+    }
+    .empty-state p { font-size: 14px; margin: 0; }
+
+    .auth-blocker {
+      max-width: 480px;
+      margin: 80px auto;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+    .auth-blocker h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      margin: 0 0 12px;
+    }
+    .auth-blocker p { color: var(--ink-soft); margin: 0 0 24px; }
+
+    /* Mobile: collapse table to cards */
+    @media (max-width: 640px) {
+      table.applications thead { display: none; }
+      table.applications tbody tr {
+        display: block;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+      table.applications tbody td {
+        display: block;
+        padding: 2px 0;
+      }
+      table.applications tbody td.chevron { display: none; }
+      table.applications tbody td.name { font-size: 16px; margin-bottom: 4px; }
+      table.applications tbody td:before {
+        content: attr(data-label);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--ink-mute);
+        margin-right: 6px;
+      }
+      table.applications tbody td.name:before { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="pride-stripe-top" aria-hidden="true"></div>
+
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="/admin/endorsements" class="wordmark" aria-label="Ohio Pride PAC home">
+        <span class="wordmark-ohio">Ohio</span><span class="wordmark-pride">Pride</span><span class="wordmark-pac">PAC</span>
+        <span class="admin-tag">Admin</span>
+      </a>
+      <div class="header-right">
+        <span class="header-user" id="headerUser"></span>
+        <button class="header-btn" id="btnSignOut">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="appShell" style="display:none;">
+      <div class="page-head">
+        <div>
+          <p class="page-eyebrow">Screening Committee</p>
+          <h1 class="page-title">Endorsement Applications</h1>
+        </div>
+        <div class="page-stats" id="pageStats">
+          <div><strong id="statTotal">0</strong>Total</div>
+          <div><strong id="statSubmitted">0</strong>New</div>
+          <div><strong id="statReview">0</strong>In Review</div>
+          <div><strong id="statEndorsed">0</strong>Endorsed</div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <input class="input" type="search" id="filterSearch" placeholder="Search by name or email..." autocomplete="off" />
+        <select class="select" id="filterStatus">
+          <option value="">All statuses</option>
+          <option value="submitted">Submitted</option>
+          <option value="under_review">Under Review</option>
+          <option value="endorsed">Endorsed</option>
+          <option value="declined">Declined</option>
+          <option value="withdrawn">Withdrawn</option>
+        </select>
+        <input class="input" type="search" id="filterOffice" placeholder="Filter by office..." autocomplete="off" />
+      </div>
+
+      <div class="table-card">
+        <table class="applications" id="appsTable">
+          <thead>
+            <tr>
+              <th data-sort="candidate_name">Candidate <span class="arrow">▼</span></th>
+              <th data-sort="office_sought">Office <span class="arrow">▼</span></th>
+              <th data-sort="district">District <span class="arrow">▼</span></th>
+              <th data-sort="status">Status <span class="arrow">▼</span></th>
+              <th data-sort="created_at" class="sort-desc">Submitted <span class="arrow">▼</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="appsBody">
+            <tr><td colspan="6"><div class="loading-state"><div class="spinner-large"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="auth-blocker" id="authBlocker" style="display:none;">
+      <h2 id="authTitle">Checking access...</h2>
+      <p id="authMsg">Verifying your session.</p>
+      <a href="/admin/endorsements/login" class="btn btn-primary" id="authAction" style="display:none;">Sign In</a>
+    </div>
+  </main>
+
+  <footer class="admin-footer">
+    <p class="disclaimer">Paid for by Ohio Pride PAC. Zachary R. Joseph, Director.</p>
+  </footer>
+
+  <div class="pride-stripe-bottom" aria-hidden="true"></div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    /* ===================================================================
+       CONFIG
+       =================================================================== */
+    const CONFIG = {
+      SUPABASE_URL:      'https://dkdxefzhttkmjhdbkvqn.supabase.co',
+      SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4',
+      LOGIN_PATH:        '/admin/endorsements/login',
+      DETAIL_PATH:       '/admin/endorsements/detail'
+    };
+
+    const STATUS_LABEL = {
+      submitted: 'Submitted',
+      under_review: 'Under Review',
+      endorsed: 'Endorsed',
+      declined: 'Declined',
+      withdrawn: 'Withdrawn'
+    };
+
+    const $  = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    const state = {
+      rows: [],
+      filtered: [],
+      sortKey: 'created_at',
+      sortDir: 'desc',
+      session: null,
+      user: null
+    };
+
+    const client = window.supabase.createClient(
+      CONFIG.SUPABASE_URL,
+      CONFIG.SUPABASE_ANON_KEY,
+      { auth: { detectSessionInUrl: true, persistSession: true } }
+    );
+
+    /* ===================================================================
+       Toast
+       =================================================================== */
+    function toast(msg, type) {
+      const el = $('#toast');
+      el.textContent = msg;
+      el.className = 'toast visible' + (type ? ' toast-' + type : '');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => el.classList.remove('visible'), 3500);
+    }
+
+    /* ===================================================================
+       Auth flow
+       =================================================================== */
+    function showBlocker(title, msg, action) {
+      $('#appShell').style.display = 'none';
+      $('#authBlocker').style.display = 'block';
+      $('#authTitle').textContent = title;
+      $('#authMsg').textContent = msg;
+      const btn = $('#authAction');
+      if (action) {
+        btn.style.display = 'inline-flex';
+        btn.textContent = action.label;
+        btn.href = action.href;
+      } else {
+        btn.style.display = 'none';
+      }
+    }
+
+    async function ensureAuthed() {
+      // Wait briefly for the client to process URL tokens (magic link callback)
+      await new Promise(r => setTimeout(r, 50));
+
+      const { data: { session } } = await client.auth.getSession();
+      if (!session) {
+        window.location.replace(CONFIG.LOGIN_PATH);
+        return null;
+      }
+
+      // Clean up auth tokens from URL hash if present
+      if (window.location.hash && window.location.hash.includes('access_token')) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+
+      state.session = session;
+      state.user = session.user;
+
+      // Verify admin allowlist via RLS-protected SELECT
+      const { data: allow, error } = await client
+        .from('admin_emails')
+        .select('email')
+        .eq('email', session.user.email)
+        .maybeSingle();
+
+      if (error || !allow) {
+        await client.auth.signOut();
+        showBlocker(
+          'Access denied',
+          'Your email is not authorized for the admin dashboard. If you believe this is a mistake, contact the Director.',
+          { label: 'Try a different email', href: CONFIG.LOGIN_PATH }
+        );
+        return null;
+      }
+
+      $('#headerUser').textContent = session.user.email;
+      return session;
+    }
+
+    /* ===================================================================
+       Data
+       =================================================================== */
+    async function loadApplications() {
+      const { data, error } = await client
+        .from('endorsement_applications')
+        .select('id, candidate_name, pronouns, office_sought, district, election_year, status, created_at, updated_at, email')
+        .order('created_at', { ascending: false });
+      if (error) {
+        console.error(error);
+        toast('Failed to load applications.', 'error');
+        return [];
+      }
+      return data || [];
+    }
+
+    /* ===================================================================
+       Stats
+       =================================================================== */
+    function updateStats() {
+      const counts = { total: state.rows.length, submitted: 0, under_review: 0, endorsed: 0 };
+      for (const r of state.rows) {
+        if (r.status === 'submitted')    counts.submitted++;
+        if (r.status === 'under_review') counts.under_review++;
+        if (r.status === 'endorsed')     counts.endorsed++;
+      }
+      $('#statTotal').textContent     = counts.total;
+      $('#statSubmitted').textContent = counts.submitted;
+      $('#statReview').textContent    = counts.under_review;
+      $('#statEndorsed').textContent  = counts.endorsed;
+    }
+
+    /* ===================================================================
+       Filtering and sorting
+       =================================================================== */
+    function applyFilters() {
+      const q     = $('#filterSearch').value.trim().toLowerCase();
+      const stat  = $('#filterStatus').value;
+      const off   = $('#filterOffice').value.trim().toLowerCase();
+
+      state.filtered = state.rows.filter(r => {
+        if (stat && r.status !== stat) return false;
+        if (off && !(r.office_sought || '').toLowerCase().includes(off)) return false;
+        if (q) {
+          const hay = ((r.candidate_name || '') + ' ' + (r.email || '')).toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+      applySort();
+    }
+
+    function applySort() {
+      const key = state.sortKey;
+      const dir = state.sortDir === 'asc' ? 1 : -1;
+      state.filtered.sort((a, b) => {
+        const av = a[key] ?? '';
+        const bv = b[key] ?? '';
+        if (key === 'created_at') {
+          return (new Date(av) - new Date(bv)) * dir;
+        }
+        return String(av).localeCompare(String(bv), undefined, { sensitivity: 'base' }) * dir;
+      });
+      renderRows();
+      renderSortHeaders();
+    }
+
+    function renderSortHeaders() {
+      $$('#appsTable thead th[data-sort]').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (th.dataset.sort === state.sortKey) {
+          th.classList.add(state.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+        }
+      });
+    }
+
+    /* ===================================================================
+       Rendering
+       =================================================================== */
+    function fmtDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      const now = new Date();
+      const diff = (now - d) / 1000;
+      if (diff < 60)        return 'Just now';
+      if (diff < 3600)      return Math.floor(diff/60) + 'm ago';
+      if (diff < 86400)     return Math.floor(diff/3600) + 'h ago';
+      if (diff < 86400 * 7) return Math.floor(diff/86400) + 'd ago';
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+
+    function renderRows() {
+      const body = $('#appsBody');
+      if (state.filtered.length === 0) {
+        const isFiltered = state.rows.length > 0;
+        body.innerHTML = `
+          <tr><td colspan="6">
+            <div class="empty-state">
+              <h2>${isFiltered ? 'No matches' : 'No applications yet'}</h2>
+              <p>${isFiltered ? 'Try clearing your filters.' : 'When a candidate submits the screening form, they\u2019ll appear here.'}</p>
+            </div>
+          </td></tr>`;
+        return;
+      }
+      body.innerHTML = state.filtered.map(r => {
+        const pronouns = r.pronouns ? `<span class="pronouns">${escapeHtml(r.pronouns)}</span>` : '';
+        const dist = r.district || (r.election_year ? r.election_year : '');
+        const badge = `<span class="badge badge-${r.status}">${STATUS_LABEL[r.status] || r.status}</span>`;
+        return `
+          <tr data-id="${escapeHtml(r.id)}">
+            <td class="name" data-label="Candidate">${escapeHtml(r.candidate_name)}${pronouns}</td>
+            <td class="muted" data-label="Office">${escapeHtml(r.office_sought)}</td>
+            <td class="muted" data-label="District">${escapeHtml(dist)}</td>
+            <td data-label="Status">${badge}</td>
+            <td class="muted" data-label="Submitted">${fmtDate(r.created_at)}</td>
+            <td class="chevron">&rsaquo;</td>
+          </tr>`;
+      }).join('');
+    }
+
+    /* ===================================================================
+       Init
+       =================================================================== */
+    (async function init() {
+      const session = await ensureAuthed();
+      if (!session) return;
+
+      $('#appShell').style.display = 'block';
+
+      state.rows = await loadApplications();
+      updateStats();
+      applyFilters();
+
+      // Filter inputs
+      let debounce;
+      const onFilter = () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(applyFilters, 150);
+      };
+      $('#filterSearch').addEventListener('input', onFilter);
+      $('#filterStatus').addEventListener('change', applyFilters);
+      $('#filterOffice').addEventListener('input', onFilter);
+
+      // Sort headers
+      $$('#appsTable thead th[data-sort]').forEach(th => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.sort;
+          if (state.sortKey === key) {
+            state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+          } else {
+            state.sortKey = key;
+            state.sortDir = 'asc';
+          }
+          applySort();
+        });
+      });
+
+      // Row clicks
+      $('#appsBody').addEventListener('click', (e) => {
+        const tr = e.target.closest('tr[data-id]');
+        if (!tr) return;
+        const id = tr.dataset.id;
+        window.location.href = `${CONFIG.DETAIL_PATH}?id=${encodeURIComponent(id)}`;
+      });
+
+      // Sign out
+      $('#btnSignOut').addEventListener('click', async () => {
+        await client.auth.signOut();
+        window.location.replace(CONFIG.LOGIN_PATH);
+      });
+    })();
+  </script>
+</body>
+</html>
