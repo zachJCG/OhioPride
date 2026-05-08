@@ -31,17 +31,65 @@
   'use strict';
 
   // -------------------------------------------------------------------------
-  // HEADER (primary nav). Unchanged from v1.
+  // WORDMARK — single source of truth for "Ohio Pride PAC" markup.
+  //
+  // Construction matches the brand guide (Ohio_Pride_PAC_Brand_Guide.pdf
+  // v1.1, April 2026):
+  //   Ohio  — Montserrat 400, white @ 65% opacity
+  //   Pride — Montserrat 700, pure white
+  //   PAC   — Montserrat 700, uppercase, ~18% size, 2px tracking, light blue
+  //
+  // The same three-span structure is reused inside the nav (with the
+  // `.ohp-nav-logo` styling) and via the public `.ohp-wordmark` utility
+  // class for any inline body usage. Centralizing it here means we never
+  // hand-edit the wordmark markup in another file.
+  //
+  // Two usable forms:
+  //   wordmarkLinkHtml('/'): full <a class="ohp-nav-logo"> link for nav
+  //   wordmarkSpansHtml():    just the three spans (caller wraps it)
+  // -------------------------------------------------------------------------
+  function wordmarkSpansHtml(prefix) {
+    var p = prefix || 'ohp-logo';
+    return (
+      '<span class="' + p + '-ohio">Ohio</span>' +
+      '<span class="' + p + '-pride">Pride</span>' +
+      '<span class="' + p + '-pac">PAC</span>'
+    );
+  }
+
+  function wordmarkLinkHtml(href) {
+    var h = href || '/';
+    return (
+      '<a href="' + h + '" class="ohp-nav-logo" aria-label="Ohio Pride PAC home">' +
+        wordmarkSpansHtml('ohp-logo') +
+      '</a>'
+    );
+  }
+
+  // Public wordmark helper. A page that wants to drop the brand wordmark
+  // anywhere in body content can call OhioPride.wordmark(targetEl) or
+  // include the markup directly via <span class="ohp-wordmark">…</span>.
+  function publicWordmarkHtml(opts) {
+    opts = opts || {};
+    var extra = opts.mono ? ' ohp-wordmark--mono' : '';
+    return (
+      '<span class="ohp-wordmark' + extra + '">' +
+        '<span class="ohp-wordmark__ohio">Ohio</span>' +
+        '<span class="ohp-wordmark__pride">Pride</span>' +
+        '<span class="ohp-wordmark__pac">PAC</span>' +
+      '</span>'
+    );
+  }
+
+  // -------------------------------------------------------------------------
+  // HEADER (primary nav). Wordmark markup is generated above so the same
+  // spec is reused anywhere on the site.
   // -------------------------------------------------------------------------
   var HEADER_HTML = [
     '<a class="ohp-skip-link" href="#main">Skip to main content</a>',
     '<nav class="ohp-nav" aria-label="Primary">',
     '  <div class="ohp-nav-inner">',
-    '    <a href="/" class="ohp-nav-logo" aria-label="Ohio Pride PAC home">',
-    '      <span class="ohp-logo-ohio">Ohio</span>',
-    '      <span class="ohp-logo-pride">Pride</span>',
-    '      <span class="ohp-logo-pac">PAC</span>',
-    '    </a>',
+    '    ' + wordmarkLinkHtml('/'),
     '    <button class="ohp-menu-toggle" id="ohpMenuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="ohpNavLinks">',
     '      <span class="ohp-menu-toggle-icon" aria-hidden="true"></span>',
     '    </button>',
@@ -200,6 +248,16 @@
       window.OhioPride.loadSiteLeadership({ entity: 'pac' });
     }
   }
+
+  // Expose the wordmark helper. Pages can call OhioPride.wordmarkHtml() to
+  // get a brand-correct wordmark string they can drop into innerHTML, or
+  // OhioPride.renderWordmark(target) to populate an existing element.
+  window.OhioPride = window.OhioPride || {};
+  window.OhioPride.wordmarkHtml = publicWordmarkHtml;
+  window.OhioPride.renderWordmark = function (target, opts) {
+    var el = typeof target === 'string' ? document.querySelector(target) : target;
+    if (el) el.innerHTML = publicWordmarkHtml(opts);
+  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', render);

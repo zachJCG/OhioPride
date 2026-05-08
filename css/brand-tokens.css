@@ -1,0 +1,192 @@
+/* ==========================================================================
+   OHIO PRIDE PAC — Brand Tokens
+   --------------------------------------------------------------------------
+   Single source of truth for brand color, type, and gradient variables.
+   Sourced from Ohio_Pride_PAC_Brand_Guide.pdf (v1.1, April 2026).
+
+   Loaded via @import from /css/style.css and /css/site-template.css so
+   every page that links either of those files inherits the canonical
+   tokens automatically. Do not redefine these values in page-level
+   stylesheets — extend or compose instead.
+
+   When adding a new token:
+     1. Add it here under the right section.
+     2. If it replaces an older ad-hoc value, leave a backward-compat alias
+        below in the "Legacy aliases" block so existing pages keep working.
+     3. Update docs/brand-system.md if the change is structural.
+   ========================================================================== */
+
+:root {
+  /* -- Brand colors (per brand guide) ------------------------------------ */
+  --brand-navy:           #0f2233;
+  --brand-navy-light:     #1a3a52;
+  --brand-navy-lighter:   #234a66;
+  --brand-navy-footer:    #0a1929; /* deeper navy for the footer band */
+
+  --brand-light-blue:     #73d7ee; /* PAC accent + primary on-dark accent */
+  --brand-white:          #ffffff;
+  --brand-white-65:       rgba(255, 255, 255, 0.65); /* "Ohio" wordmark stroke */
+
+  /* Progress Pride palette (raw chips — do not use as text on dark navy) */
+  --brand-pride-red:      #e40303;
+  --brand-pride-orange:   #ff8c00;
+  --brand-pride-yellow:   #ffed00;
+  --brand-pride-green:    #008026;
+  --brand-pride-blue:     #004dff;
+  --brand-pride-violet:   #750787;
+  --brand-pride-black:    #000000;
+  --brand-pride-brown:    #613915;
+  --brand-pride-pink:     #ffafc8;
+
+  /* On-dark accent text colors that meet WCAG AA on --brand-navy. Use
+     these instead of the raw Progress Pride chips when the color is
+     applied to text, icons, or small UI on a navy background. */
+  --brand-text-accent:    #73d7ee;   /* light-blue, ~9.6:1 on navy */
+  --brand-text-danger:    #ff6b6b;   /* coral red, ~5.8:1 on navy */
+  --brand-text-success:   #4ade80;   /* lime,      ~8.9:1 on navy */
+  --brand-text-warning:   #fbbf24;   /* amber,    ~10.1:1 on navy */
+
+  /* On-navy text tones */
+  --brand-text-on-navy:        #ffffff;
+  --brand-text-on-navy-soft:   rgba(255, 255, 255, 0.85);
+  --brand-text-on-navy-dim:    rgba(255, 255, 255, 0.60);
+  --brand-text-on-navy-faint:  rgba(255, 255, 255, 0.40);
+
+  /* Hairline borders on navy */
+  --brand-border-on-navy:        rgba(255, 255, 255, 0.08);
+  --brand-border-on-navy-medium: rgba(255, 255, 255, 0.15);
+
+  /* -- Gradients --------------------------------------------------------- */
+  /* Signature 135° Progress Pride gradient. Use deliberately as accent
+     stripes, donate-button fills, and card-border hovers. Never as a
+     wordmark text fill. */
+  --brand-pride-gradient: linear-gradient(
+    135deg,
+    var(--brand-pride-red)    0%,
+    var(--brand-pride-orange) 18%,
+    var(--brand-pride-yellow) 34%,
+    var(--brand-pride-green)  50%,
+    var(--brand-pride-blue)   66%,
+    var(--brand-pride-violet) 82%,
+    var(--brand-pride-pink)  100%
+  );
+
+  /* Horizontal sweep variant used by the animated nav banner. */
+  --brand-pride-gradient-h: linear-gradient(
+    90deg,
+    var(--brand-pride-red)     0%,
+    var(--brand-pride-orange) 17%,
+    var(--brand-pride-yellow) 33%,
+    var(--brand-pride-green)  50%,
+    var(--brand-pride-blue)   67%,
+    var(--brand-pride-violet) 84%,
+    var(--brand-pride-red)   100%
+  );
+
+  /* -- Typography -------------------------------------------------------- */
+  --brand-font-display: 'Montserrat', Arial, sans-serif;
+  --brand-font-body:    'Roboto Slab', Georgia, serif;
+
+  /* -- Layout / chrome --------------------------------------------------- */
+  --brand-nav-height:     72px;
+  --brand-radius-sm:      6px;
+  --brand-radius-md:      10px;
+  --brand-radius-lg:      14px;
+  --brand-focus-ring:     0 0 0 3px rgba(115, 215, 238, 0.55);
+  --brand-transition:     all 0.3s ease;
+
+  /* -- Wordmark construction -------------------------------------------- */
+  /* Used by the .ohp-wordmark utility class and the nav logo. Sizes are
+     ratios so any container can scale the whole wordmark by setting
+     font-size on the parent. */
+  --brand-wordmark-pac-ratio:    0.52;   /* "PAC" size relative to "Ohio Pride" */
+  --brand-wordmark-pac-spacing:  2px;
+  --brand-wordmark-pac-color:    var(--brand-light-blue);
+  --brand-wordmark-ohio-color:   var(--brand-white-65);
+  --brand-wordmark-pride-color:  var(--brand-white);
+
+  /* ===========================================================
+     Legacy aliases — keep existing pages compiling unchanged.
+     New code should prefer the --brand-* tokens above.
+     =========================================================== */
+
+  /* Progress Pride palette (older names) */
+  --color-red:        var(--brand-pride-red);
+  --color-orange:     var(--brand-pride-orange);
+  --color-yellow:     var(--brand-pride-yellow);
+  --color-green:      var(--brand-pride-green);
+  --color-blue:       var(--brand-pride-blue);
+  --color-violet:     var(--brand-pride-violet);
+  --color-black:      var(--brand-pride-black);
+  --color-brown:      var(--brand-pride-brown);
+  --color-light-blue: var(--brand-light-blue);
+  --color-pink:       var(--brand-pride-pink);
+  --color-white:      var(--brand-white);
+
+  /* Older site-template tokens */
+  --ohp-navy:         var(--brand-navy);
+  --ohp-navy-light:   var(--brand-navy-light);
+  --ohp-navy-footer:  var(--brand-navy-footer);
+  --ohp-text-white:   var(--brand-text-on-navy);
+  --ohp-text-soft:    var(--brand-text-on-navy-soft);
+  --ohp-text-dim:     var(--brand-text-on-navy-dim);
+  --ohp-text-faint:   var(--brand-text-on-navy-faint);
+  --ohp-accent:       var(--brand-light-blue);
+  --ohp-border:       var(--brand-border-on-navy);
+  --ohp-rainbow:      var(--brand-pride-gradient-h);
+  --ohp-transition:   var(--brand-transition);
+}
+
+/* ==========================================================================
+   Wordmark utility — drop-in markup for any page that needs to inline the
+   Ohio Pride PAC wordmark in body content (hero, callout, footer, etc.).
+   Construction matches the brand guide:
+       Ohio   — Montserrat 400, white @65% opacity
+       Pride  — Montserrat 700, pure white
+       PAC    — Montserrat 700 uppercase, ~18% of full size, 2px tracking,
+                Light Blue #73D7EE
+   Scale by setting font-size on .ohp-wordmark itself.
+
+   Markup:
+     <span class="ohp-wordmark">
+       <span class="ohp-wordmark__ohio">Ohio</span>
+       <span class="ohp-wordmark__pride">Pride</span>
+       <span class="ohp-wordmark__pac">PAC</span>
+     </span>
+   ========================================================================== */
+.ohp-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--brand-font-display);
+  font-size: 1.25rem; /* default; override on the element itself */
+  line-height: 1;
+  text-decoration: none;
+  color: inherit;
+  white-space: nowrap;
+}
+.ohp-wordmark__ohio {
+  font-weight: 400;
+  color: var(--brand-wordmark-ohio-color);
+}
+.ohp-wordmark__pride {
+  font-weight: 700;
+  color: var(--brand-wordmark-pride-color);
+  margin-left: 0.25em;
+}
+.ohp-wordmark__pac {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--brand-wordmark-pac-spacing);
+  color: var(--brand-wordmark-pac-color);
+  font-size: calc(1em * var(--brand-wordmark-pac-ratio));
+  margin-left: 0.4em;
+  align-self: center;
+}
+
+/* Mono-white fallback for cases where the standard tri-color cannot run
+   (e.g. printed PDFs, single-color contexts). Apply on the parent. */
+.ohp-wordmark--mono .ohp-wordmark__ohio,
+.ohp-wordmark--mono .ohp-wordmark__pride,
+.ohp-wordmark--mono .ohp-wordmark__pac {
+  color: var(--brand-white);
+}
