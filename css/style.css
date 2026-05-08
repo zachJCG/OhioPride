@@ -2,7 +2,16 @@
    Ohio Pride PAC — Brand Stylesheet
    Progress Pride Palette · Montserrat + Roboto Slab
    Last updated: February 2026
+
+   Brand tokens (colors, gradients, typography, the .ohp-wordmark
+   utility) are defined in /css/brand-tokens.css. The legacy
+   --color-* / --dark-bg / --text-* tokens below are now thin
+   aliases that resolve to those brand tokens, so editing this
+   block in isolation will NOT change the palette — update
+   brand-tokens.css instead. See docs/brand-system.md.
    ============================================================ */
+
+@import url('/css/brand-tokens.css');
 
 /* --- CSS Custom Properties (Brand Architecture Guide) --- */
 :root {

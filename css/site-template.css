@@ -4,21 +4,13 @@
    This file provides the site-wide header/footer styles. To update the
    visual appearance of the header, menu, or footer across the ENTIRE site,
    edit this file (markup lives in /js/site-template.js).
+
+   Brand color, typography, and gradient tokens are imported from
+   /css/brand-tokens.css. Do not redefine palette values here — extend
+   the canonical tokens instead. See docs/brand-system.md.
    ========================================================================== */
 
-:root {
-  --ohp-navy: #0f2233;
-  --ohp-navy-light: #132d44;
-  --ohp-navy-footer: #0a1929;
-  --ohp-text-white: #ffffff;
-  --ohp-text-soft: rgba(255, 255, 255, 0.85);
-  --ohp-text-dim: rgba(255, 255, 255, 0.6);
-  --ohp-text-faint: rgba(255, 255, 255, 0.4);
-  --ohp-accent: #73d7ee;
-  --ohp-border: rgba(255, 255, 255, 0.08);
-  --ohp-rainbow: linear-gradient(90deg, #e40303 0%, #ff8c00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%, #e40303 100%);
-  --ohp-transition: all 0.3s ease;
-}
+@import url('/css/brand-tokens.css');
 
 /* The animated Progress-Pride banner is owned by /js/enhancements.js, which
    injects a single fixed-position bar immediately below whatever nav/header

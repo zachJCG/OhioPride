@@ -15,6 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto+Slab:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/site-template.css" />
 
   <style>
     .bill-page-hero {
@@ -240,19 +241,16 @@
       background: var(--text-danger);
     }
 
-    .site-disclaimer {
-      padding: 28px 0;
-      border-top: 1px solid var(--border-light);
-      font-size: 12px;
-      color: var(--text-muted);
-      text-align: center;
-    }
   </style>
 
 </head>
 <body>
 
-  <main class="bill-page-hero">
+<div id="site-header"></div>
+
+<main id="main">
+
+  <section class="bill-page-hero">
     <div class="container">
       <div class="breadcrumb"><a href="/">Home</a> &nbsp;/&nbsp; <a href="/issues">Issue Tracker</a> &nbsp;/&nbsp; HB 838</div>
       <div class="bill-eyebrow">
@@ -262,7 +260,7 @@
       <h1>Restrict Public Coverage of Gender-Affirming Surgery</h1>
       <p class="subtitle">Targets Medicaid and public-employee health coverage for gender-affirming surgical care. Builds on HB 68's prohibition for minors by extending coverage restrictions into adult care through fiscal mechanisms rather than direct prohibition.</p>
     </div>
-  </main>
+  </section>
 
   <section class="container">
     <div class="meta-grid">
@@ -350,9 +348,12 @@
     </div>
   </section>
 
-  <footer class="site-disclaimer">
-    <div class="container">Paid for by Ohio Pride PAC. Zachary R. Joseph, Director.</div>
-  </footer>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="/js/enhancements.js" defer></script>
+<script src="/js/site-template.js" defer></script>
 
 </body>
 </html>

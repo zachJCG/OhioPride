@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "description": "Ohio Pride PAC website. Static HTML deployed by Netlify, backed by Supabase for dynamic content.",
+  "scripts": {
+    "check:brand": "node scripts/check-brand-consistency.js"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
   }
