@@ -96,7 +96,18 @@
     '    <ul class="ohp-nav-links" id="ohpNavLinks">',
     '      <li><a href="/issues">Issues</a></li>',
     '      <li><a href="/scorecard">Scorecard</a></li>',
-    '      <li><a href="/about">About</a></li>',
+    '      <li class="ohp-nav-group" data-ohp-group="info">',
+    '        <button type="button" class="ohp-nav-group-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ohpNavInfoMenu">',
+    '          Info',
+    '          <span class="ohp-nav-group-caret" aria-hidden="true"></span>',
+    '        </button>',
+    '        <ul class="ohp-nav-submenu" id="ohpNavInfoMenu" role="menu">',
+    '          <li role="none"><a role="menuitem" href="/about">About</a></li>',
+    '          <li role="none"><a role="menuitem" href="/board">Board</a></li>',
+    '          <li role="none"><a role="menuitem" href="/volunteer">Volunteer</a></li>',
+    '          <li role="none"><a role="menuitem" href="/endorsements">Endorsements</a></li>',
+    '        </ul>',
+    '      </li>',
     '      <li><a href="/founding-members">Founding Members</a></li>',
     '      <li><a href="/contact">Contact</a></li>',
     '      <li><a href="/donate" class="ohp-btn-donate">Donate</a></li>',
@@ -204,6 +215,62 @@
         links[i].setAttribute('aria-current', 'page');
       }
     }
+
+    // If the active link lives inside a nav group (e.g. /about under "Info"),
+    // mark the parent toggle so the group reads as the current section.
+    var activeChild = document.querySelector('.ohp-nav-submenu a.active');
+    if (activeChild) {
+      var group = activeChild.closest('.ohp-nav-group');
+      if (group) {
+        group.classList.add('active');
+        var t = group.querySelector('.ohp-nav-group-toggle');
+        if (t) t.setAttribute('aria-current', 'true');
+      }
+    }
+  }
+
+  function wireNavGroups() {
+    var groups = document.querySelectorAll('.ohp-nav-group');
+    if (!groups.length) return;
+
+    function closeAll(except) {
+      groups.forEach(function (g) {
+        if (g === except) return;
+        g.classList.remove('open');
+        var t = g.querySelector('.ohp-nav-group-toggle');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    groups.forEach(function (group) {
+      var toggle = group.querySelector('.ohp-nav-group-toggle');
+      if (!toggle) return;
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var isOpen = group.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        if (isOpen) closeAll(group);
+      });
+    });
+
+    // Click outside closes any open group.
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.ohp-nav-group')) closeAll(null);
+    });
+
+    // Escape closes the open group and returns focus to its toggle.
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var open = document.querySelector('.ohp-nav-group.open');
+      if (!open) return;
+      var t = open.querySelector('.ohp-nav-group-toggle');
+      open.classList.remove('open');
+      if (t) {
+        t.setAttribute('aria-expanded', 'false');
+        t.focus();
+      }
+    });
   }
 
   function wireMenuToggle() {
@@ -241,6 +308,7 @@
     injectInto('site-footer', FOOTER_HTML);
     markActiveLink();
     wireMenuToggle();
+    wireNavGroups();
 
     // Populate the leadership-driven parts of the footer if the data helper
     // is available. Guard with a typeof check so pages that forget to load
