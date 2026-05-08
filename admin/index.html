@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Admin Dashboard | Ohio Pride PAC</title>
+  <meta name="robots" content="noindex,nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/admin/admin-shell.css" />
+</head>
+<body>
+  <main class="admin-main">
+    <div id="adminShellContent">
+      <div class="page-head">
+        <div>
+          <p class="page-eyebrow">Ohio Pride PAC</p>
+          <h1 class="page-title">Admin Dashboard</h1>
+          <p class="page-subtitle">Tools for the board, screening committee, and staff. Pick a module below.</p>
+        </div>
+      </div>
+
+      <div class="module-grid">
+        <a class="module-card is-link" href="/admin/endorsements">
+          <p class="module-card-eyebrow">Screening Committee</p>
+          <h2 class="module-card-title">Endorsements</h2>
+          <p class="module-card-desc">Review candidate endorsement applications submitted through the public screening form.</p>
+          <div class="module-card-foot">
+            <span class="module-card-cta">Open module</span>
+            <span class="module-card-status live">Live</span>
+          </div>
+        </a>
+
+        <a class="module-card is-link" href="/admin/donors">
+          <p class="module-card-eyebrow">Development</p>
+          <h2 class="module-card-title">Donors</h2>
+          <p class="module-card-desc">Founding members and future contribution records. Synced from ActBlue and the public roster.</p>
+          <div class="module-card-foot">
+            <span class="module-card-cta">Open module</span>
+            <span class="module-card-status coming">Coming next</span>
+          </div>
+        </a>
+
+        <a class="module-card is-link" href="/admin/volunteers">
+          <p class="module-card-eyebrow">Field</p>
+          <h2 class="module-card-title">Volunteers</h2>
+          <p class="module-card-desc">Volunteer database. Sign-ups, skills, availability, and outreach assignments.</p>
+          <div class="module-card-foot">
+            <span class="module-card-cta">Open module</span>
+            <span class="module-card-status coming">Coming next</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/admin/admin-shell.js"></script>
+  <script>
+    window.AdminShell.protect({ active: 'hub' });
+  </script>
+</body>
+</html>
