@@ -135,8 +135,11 @@
       gap: 12px;
     }
     .search-input {
-      flex: 0 0 220px;
-      padding: 8px 14px;
+      flex: 1 1 280px;
+      min-width: 240px;
+      max-width: 360px;
+      padding: 10px 14px;
+      min-height: 40px;
       border-radius: 6px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(255, 255, 255, 0.06);
@@ -148,6 +151,10 @@
     }
     .search-input::placeholder { color: rgba(255, 255, 255, 0.35); }
     .search-input:focus { border-color: var(--color-blue); }
+    .search-input:focus-visible {
+      outline: 2px solid var(--color-light-blue, #60a5fa);
+      outline-offset: 1px;
+    }
 
     .pill-group {
       display: flex;
@@ -159,7 +166,8 @@
       font-size: 12px;
       font-weight: 600;
       letter-spacing: 0.3px;
-      padding: 6px 14px;
+      padding: 8px 14px;
+      min-height: 36px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(255, 255, 255, 0.06);
@@ -167,10 +175,33 @@
       cursor: pointer;
       transition: all 0.2s;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .pill:hover { border-color: rgba(255, 255, 255, 0.2); color: var(--text-white); }
+    .pill:focus-visible {
+      outline: 2px solid var(--color-light-blue, #60a5fa);
+      outline-offset: 2px;
+    }
     .pill.active { background: var(--color-blue); border-color: var(--color-blue); color: var(--text-white); }
     .pill.grade-pill.active { border-color: transparent; }
+    .grade-pill {
+      min-width: 44px;
+    }
+
+    /* Visually hidden but available to assistive tech. */
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
     .sort-select {
       padding: 8px 12px;
@@ -211,12 +242,11 @@
       border-radius: 12px;
       padding: 20px 24px;
       margin-bottom: 8px;
-      cursor: pointer;
-      transition: all 0.3s;
+      transition: border-color 0.3s, transform 0.3s, background 0.3s;
     }
-    .leg-card:hover {
+    .leg-card:hover,
+    .leg-card:focus-within {
       border-color: rgba(255, 255, 255, 0.15);
-      transform: translateY(-1px);
     }
     .leg-card.grade-f {
       background: rgba(220, 38, 38, 0.08);
@@ -229,10 +259,26 @@
     }
     .leg-card.grade-aplus:hover { border-color: rgba(22, 163, 74, 0.3); }
 
+    button.card-collapsed,
     .card-collapsed {
       display: flex;
       align-items: center;
       gap: 20px;
+      width: 100%;
+      background: transparent;
+      border: 0;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      padding: 0;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    button.card-collapsed:focus-visible {
+      outline: 2px solid var(--text-accent, #fbbf24);
+      outline-offset: 4px;
+      border-radius: 8px;
     }
 
     .grade-badge {
@@ -1144,13 +1190,17 @@
     .hero-method-link svg { transition: transform 0.15s; }
     .hero-method-link:hover svg { transform: translateY(2px); }
 
-    /* ── Stats Hint ── */
+    /* ── Stats Hint ──
+       Prominent enough to read alongside the stats bar without competing
+       with the headline numbers. Bumped from 12 → 13.5 px and lifted out
+       of pure dim text so it reads as a real explainer, not a footnote. */
     .stats-hint {
-      margin: 10px 4px 0;
+      margin: 14px 4px 0;
       font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      color: rgba(255,255,255,0.45);
-      letter-spacing: 0.3px;
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+      letter-spacing: 0.2px;
       transition: color 0.2s ease;
       display: flex;
       align-items: center;
@@ -1502,7 +1552,18 @@
     @media (max-width: 480px) {
       .stat-card { padding: 16px 12px; }
       .leg-card { padding: 16px; }
-      .pill { font-size: 11px; padding: 5px 10px; }
+      .pill { font-size: 11px; padding: 7px 11px; min-height: 34px; }
+      .grade-pill { min-width: 40px; }
+
+      /* Belt-and-suspenders: prevent inline content from forcing the
+         viewport wider than the screen on 375px-class phones. */
+      .controls-bar,
+      .controls-inner { max-width: 100%; }
+      .controls-inner { padding-left: 0; padding-right: 0; }
+      .search-input {
+        max-width: 100%;
+        min-width: 0;
+      }
 
       /* Tighten mobile sticky stats bar on small phones */
       .stats-bar { padding: 6px 8px; gap: 3px; }
@@ -1798,6 +1859,7 @@
 </head>
 <body>
   <div id="site-header"></div>
+  <main id="main">
 
   <!-- Hero -->
   <section class="subpage-hero">
@@ -1907,7 +1969,8 @@
   <div class="controls-bar">
     <div class="container">
       <div class="controls-inner">
-        <input type="text" class="search-input" id="search-input" placeholder="Search name or district... (press / to focus)" />
+        <label class="visually-hidden" for="search-input">Search legislators by name or district</label>
+        <input type="search" class="search-input" id="search-input" placeholder="Search name or district…" aria-label="Search legislators by name or district. Press slash to focus." />
 
         <div class="controls-divider"></div>
 
@@ -2002,6 +2065,7 @@
     </div>
   </section>
 
+  </main>
   <div id="site-footer"></div>
 
   <script src="/js/voting-records.js" defer></script>
@@ -2158,23 +2222,44 @@
       _renderChamberTile('House', document.getElementById('ct-house-avg'), document.getElementById('ct-house-count'), document.getElementById('ct-house-bars'));
       _renderChamberTile('Senate', document.getElementById('ct-senate-avg'), document.getElementById('ct-senate-count'), document.getElementById('ct-senate-bars'));
 
+      /* Deterministic slug fallback used when share.js (window.OPP_SHARE)
+         hasn't loaded. Mirrors the share.js shape — first-last-chamber-d#
+         — so deep links from the leaderboard match what the live site
+         already supports. Without this, every Top/Bottom 5 link fell back
+         to a generic #card-list anchor, which the audit flagged. */
+      function _fallbackSlug(m) {
+        var name = String(m.name || '').toLowerCase()
+          .replace(/[^a-z0-9 -]/g, '')
+          .trim()
+          .replace(/\s+/g, '-');
+        var ch = String(m.chamber || '').toLowerCase();
+        return name + '-' + ch + '-d' + m.d;
+      }
+      function _legSlug(m) {
+        if (window.OPP_SHARE && typeof window.OPP_SHARE.slugify === 'function') {
+          try { return window.OPP_SHARE.slugify(m); } catch (e) { /* fall through */ }
+        }
+        return _fallbackSlug(m);
+      }
+
       /* ── Leaderboards (top 5 / bottom 5) ── */
       function _renderLeaderboard(targetId, members) {
         var container = document.getElementById(targetId);
         if (!container) return;
         container.innerHTML = members.map(function(m, idx) {
           var partyLabel = m.party === 'D' ? 'D' : 'R';
-          var slug = (window.OPP_SHARE && typeof window.OPP_SHARE.slugify === 'function')
-            ? window.OPP_SHARE.slugify(m) : '';
+          var slug = _legSlug(m);
           var href = slug ? '?rep=' + encodeURIComponent(slug) + '#card-list' : '#card-list';
-          return '<li><a class="lb-item" href="' + href + '" data-name="' + m.name.replace(/"/g, '&quot;') + '">' +
-            '<div class="lb-rank">' + (idx + 1) + '</div>' +
+          var aria = 'Rank ' + (idx + 1) + ': ' + m.name + ', ' + m.chamber +
+            ' District ' + m.d + ', score ' + m.score + ' out of 100, grade ' + m.grade.grade + '.';
+          return '<li><a class="lb-item" href="' + href + '" data-name="' + m.name.replace(/"/g, '&quot;') + '" aria-label="' + aria.replace(/"/g, '&quot;') + '">' +
+            '<div class="lb-rank" aria-hidden="true">' + (idx + 1) + '</div>' +
             '<div>' +
               '<div class="lb-name">' + m.name + '</div>' +
               '<div class="lb-meta">' + m.chamber + ' D' + m.d + ' &middot; ' + partyLabel + '</div>' +
             '</div>' +
-            '<div class="lb-score" style="color:' + m.grade.color + '">' + m.score + '</div>' +
-            '<div class="lb-grade" style="background:' + m.grade.color + '">' + m.grade.grade + '</div>' +
+            '<div class="lb-score" style="color:' + m.grade.color + '" aria-hidden="true">' + m.score + '</div>' +
+            '<div class="lb-grade" style="background:' + m.grade.color + '" aria-hidden="true">' + m.grade.grade + '</div>' +
           '</a></li>';
         }).join('');
       }
@@ -2635,29 +2720,33 @@
           var cDisp = String(cmteCount);
           var sDisp = String(sponsorCount);
 
+          var expandedId = 'leg-card-expanded-' + idx;
+          var ariaLabel = m.name + ', ' + m.chamber + ' District ' + m.d + ', ' +
+            partyLabel + '. Grade ' + m.grade.grade + ', ' + m.grade.label +
+            '. Score ' + m.score + ' out of 100. Activate to see the full record.';
           html += '<div class="leg-card' + gradeClass + '" data-idx="' + idx + '">' +
-            '<div class="card-collapsed">' +
-              '<div class="grade-badge" style="background:' + m.grade.color + '">' + m.grade.grade + '</div>' +
+            '<button type="button" class="card-collapsed" aria-expanded="false" aria-controls="' + expandedId + '" aria-label="' + ariaLabel.replace(/"/g, '&quot;') + '">' +
+              '<div class="grade-badge" style="background:' + m.grade.color + '" aria-label="Grade: ' + m.grade.grade + ' (' + m.grade.label + ')">' + m.grade.grade + '</div>' +
               '<div class="card-center">' +
                 '<div class="card-name">' + m.name + '</div>' +
                 '<div class="card-meta">' + m.chamber + ' District ' + m.d + ' &middot; <span class="' + partyClass + '">' + partyLabel + '</span></div>' +
-                '<div class="score-bar-wrap"><div class="score-bar-fill" style="width:' + m.score + '%;background:' + m.grade.color + '"></div></div>' +
+                '<div class="score-bar-wrap" role="progressbar" aria-valuenow="' + m.score + '" aria-valuemin="0" aria-valuemax="100" aria-label="Equality score: ' + m.score + ' out of 100"><div class="score-bar-fill" style="width:' + m.score + '%;background:' + m.grade.color + '"></div></div>' +
               '</div>' +
               '<div class="card-right">' +
-                '<div class="card-score-row">' +
-                  '<div class="card-score" style="color:' + m.grade.color + '">' + m.score + '</div>' +
-                  '<div class="card-score-suffix">/ 100</div>' +
+                '<div class="card-score-row" aria-label="Score: ' + m.score + ' out of 100">' +
+                  '<div class="card-score" style="color:' + m.grade.color + '" aria-hidden="true">' + m.score + '</div>' +
+                  '<div class="card-score-suffix" aria-hidden="true">/ 100</div>' +
                 '</div>' +
-                '<div class="card-grade-label" style="color:' + m.grade.color + '">' + m.grade.grade + ' &middot; ' + m.grade.label + '</div>' +
-                '<div class="card-subscores">' +
+                '<div class="card-grade-label" style="color:' + m.grade.color + '" aria-hidden="true">' + m.grade.grade + ' &middot; ' + m.grade.label + '</div>' +
+                '<div class="card-subscores" aria-hidden="true">' +
                   '<div class="subscore" title="Tracked floor roll calls (pass / concur / override)">Floor <span class="ss-num ' + fCls + '">' + fDisp + '</span></div>' +
                   '<div class="subscore" title="Tracked committee roll calls">Cmte <span class="ss-num ' + cCls + '">' + cDisp + '</span></div>' +
                   '<div class="subscore" title="Tracked bills sponsored or co-sponsored">Bills <span class="ss-num ' + sCls + '">' + sDisp + '</span></div>' +
                 '</div>' +
               '</div>' +
-              '<div class="card-chevron"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
-            '</div>' +
-            '<div class="card-expanded">' +
+              '<div class="card-chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
+            '</button>' +
+            '<div class="card-expanded" id="' + expandedId + '">' +
               '<div class="card-expanded-inner">' +
                 renderGradeMath(m) +
                 '<div class="card-notes">' + m.notes + '</div>' +
@@ -2676,24 +2765,36 @@
         noResults.style.display = members.length === 0 ? 'block' : 'none';
         document.getElementById('results-count').textContent = members.length + ' result' + (members.length !== 1 ? 's' : '');
 
-        /* Wire expand/collapse */
-        var cards = cardList.querySelectorAll('.leg-card');
-        cards.forEach(function(card) {
-          card.addEventListener('click', function() {
-            card.classList.toggle('expanded');
+        /* Wire expand/collapse on the card-collapsed button. The button
+           drives the visible expanded state of its parent .leg-card and
+           keeps aria-expanded in sync for screen readers. */
+        cardList.querySelectorAll('.leg-card > .card-collapsed').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            // Don't toggle when the click originated on a link inside the
+            // button (e.g. share/source links rendered into header).
+            if (e.target.closest('a, button:not(.card-collapsed)')) return;
+            var card = btn.parentElement;
+            var expanded = card.classList.toggle('expanded');
+            btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
           });
         });
 
-        /* Deep link: ?rep=<slug> auto-expands and scrolls to that legislator. */
+        /* Deep link: ?rep=<slug> auto-expands and scrolls to that legislator.
+           Resolves via window.OPP_SHARE.slugify when available (matches the
+           share dialog) and falls back to our deterministic slug fn so the
+           leaderboard links still hit individual cards if share.js is
+           blocked or hasn't loaded yet. */
         try {
           var params = new URLSearchParams(window.location.search);
           var repSlug = params.get('rep');
-          if (repSlug && window.OPP_SHARE && typeof window.OPP_SHARE.slugify === 'function') {
+          if (repSlug) {
             for (var i = 0; i < members.length; i++) {
-              if (window.OPP_SHARE.slugify(members[i]) === repSlug) {
+              if (_legSlug(members[i]) === repSlug) {
                 var target = cardList.querySelector('.leg-card[data-idx="' + i + '"]');
                 if (target) {
                   target.classList.add('expanded');
+                  var btn = target.querySelector('.card-collapsed');
+                  if (btn) btn.setAttribute('aria-expanded', 'true');
                   setTimeout(function () { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 80);
                 }
                 break;

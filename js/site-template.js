@@ -34,6 +34,7 @@
   // HEADER (primary nav). Unchanged from v1.
   // -------------------------------------------------------------------------
   var HEADER_HTML = [
+    '<a class="ohp-skip-link" href="#main">Skip to main content</a>',
     '<nav class="ohp-nav" aria-label="Primary">',
     '  <div class="ohp-nav-inner">',
     '    <a href="/" class="ohp-nav-logo" aria-label="Ohio Pride PAC home">',
@@ -41,7 +42,9 @@
     '      <span class="ohp-logo-pride">Pride</span>',
     '      <span class="ohp-logo-pac">PAC</span>',
     '    </a>',
-    '    <button class="ohp-menu-toggle" id="ohpMenuToggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>',
+    '    <button class="ohp-menu-toggle" id="ohpMenuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="ohpNavLinks">',
+    '      <span class="ohp-menu-toggle-icon" aria-hidden="true"></span>',
+    '    </button>',
     '    <ul class="ohp-nav-links" id="ohpNavLinks">',
     '      <li><a href="/issues">Issues</a></li>',
     '      <li><a href="/scorecard">Scorecard</a></li>',
@@ -147,6 +150,7 @@
         (normalized !== '/' && path.indexOf(normalized + '/') === 0)
       ) {
         links[i].classList.add('active');
+        links[i].setAttribute('aria-current', 'page');
       }
     }
   }
@@ -156,15 +160,27 @@
     var links = document.getElementById('ohpNavLinks');
     if (!toggle || !links) return;
 
-    toggle.addEventListener('click', function () {
-      var isOpen = links.classList.toggle('active');
+    function setOpen(isOpen) {
+      links.classList.toggle('active', isOpen);
       toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      toggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!links.classList.contains('active'));
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && links.classList.contains('active')) {
+        setOpen(false);
+        toggle.focus();
+      }
     });
 
     links.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
-        links.classList.remove('active');
-        toggle.setAttribute('aria-expanded', 'false');
+        setOpen(false);
       });
     });
   }
