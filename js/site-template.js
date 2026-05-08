@@ -136,7 +136,7 @@
     '        <li><a href="/donate">Donate</a></li>',
     '        <li><a href="/donate/founding-member">Founding Membership</a></li>',
     '        <li><a href="/launch-day">Launch Day RSVP</a></li>',
-    '        <li><a href="/connect">Volunteer</a></li>',
+    '        <li><a href="/volunteer">Volunteer</a></li>',
     '        <li><a href="/endorsements">Endorsed Candidates</a></li>',
     '        <li><a href="/endorsement/screening">Candidate Endorsement</a></li>',
     '      </ul>',
