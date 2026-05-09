@@ -222,6 +222,33 @@
   to = "/endorsement/screening/thank-you/index.html"
   status = 200
 
+# Central admin login + dashboard
+[[redirects]]
+  from = "/admin"
+  to = "/admin/login"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin/login"
+  to = "/admin/login/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/dashboard"
+  to = "/admin/dashboard/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/volunteers"
+  to = "/admin/volunteers/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/donors"
+  to = "/admin/donors/index.html"
+  status = 200
+
 [[redirects]]
   from = "/admin/endorsements"
   to = "/admin/endorsements/index.html"
@@ -229,8 +256,9 @@
 
 [[redirects]]
   from = "/admin/endorsements/login"
-  to = "/admin/endorsements/login/index.html"
-  status = 200
+  to = "/admin/login"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/admin/endorsements/detail"

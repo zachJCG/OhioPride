@@ -166,6 +166,7 @@
     '        <li><a href="/privacy">Privacy Policy</a></li>',
     '        <li><a href="/terms">Terms of Use</a></li>',
     '        <li><a href="/brand">Brand Guide</a></li>',
+    '        <li><a href="/admin/login" rel="nofollow">Admin Sign In</a></li>',
     '      </ul>',
     '    </div>',
     '    <div class="ohp-footer-col">',
