@@ -484,6 +484,23 @@
   color: var(--ohp-text-faint);
 }
 
+.ohp-footer-sep {
+  margin: 0 0.5rem;
+  color: var(--ohp-text-faint);
+}
+
+.ohp-footer-admin {
+  color: var(--ohp-text-dim);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ohp-border);
+  transition: var(--ohp-transition);
+}
+.ohp-footer-admin:hover,
+.ohp-footer-admin:focus-visible {
+  color: var(--ohp-text-white);
+  border-bottom-color: var(--ohp-accent);
+}
+
 @media (max-width: 768px) {
   .ohp-footer-inner {
     flex-direction: column;
