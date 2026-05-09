@@ -50,30 +50,406 @@
         <div class="admin-loading" id="loading">Loading&hellip;</div>
 
         <div class="admin-panel" id="panel" hidden>
-          <div class="admin-panel-empty">
-            <div class="admin-panel-empty-eyebrow">Coming Soon</div>
-            <h2>Donor Roster</h2>
-            <p>
-              The donor admin view is being wired up. Once connected to the
-              <code>founding_members</code> table, this panel will surface
-              every contribution with tier, recurrence, public-listing
-              consent, vetting status, and ActBlue receipt id.
-            </p>
-            <p class="admin-panel-empty-meta">
-              Public roster: <a href="/founding-members">/founding-members</a>
-              &middot; ActBlue sync runs hourly via
-              <code>netlify/functions/actblue-sync.mjs</code>.
-            </p>
+          <div class="admin-stat-grid" id="statGrid">
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statMembers">0</div>
+              <div class="admin-stat-label">Members</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statRaised">$0</div>
+              <div class="admin-stat-label">Total Raised</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statPublic">0</div>
+              <div class="admin-stat-label">On Public Roster</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statProgress">0%</div>
+              <div class="admin-stat-label">Toward 1,969</div>
+            </div>
           </div>
+
+          <div class="admin-toolbar">
+            <input
+              type="search"
+              class="admin-input"
+              id="filterSearch"
+              placeholder="Search name, email, ActBlue id&hellip;"
+              autocomplete="off"
+            />
+            <select class="admin-input" id="filterTier">
+              <option value="">All tiers</option>
+            </select>
+            <select class="admin-input" id="filterPublic">
+              <option value="">Public &amp; private</option>
+              <option value="public">On public roster</option>
+              <option value="private">Hidden from roster</option>
+            </select>
+            <select class="admin-input" id="filterVetted">
+              <option value="">All vetting states</option>
+              <option value="vetted">Vetted</option>
+              <option value="unvetted">Awaiting vetting</option>
+            </select>
+            <span class="admin-toolbar-spacer"></span>
+            <span class="admin-result-count" id="resultCount"></span>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="donorsTable">
+              <thead>
+                <tr>
+                  <th data-sort="founding_number" class="admin-sortable">#<span class="admin-sort-arrow">&darr;</span></th>
+                  <th data-sort="full_name" class="admin-sortable">Name<span class="admin-sort-arrow">&darr;</span></th>
+                  <th>Email</th>
+                  <th data-sort="amount_cents" class="admin-sortable admin-num">Amount<span class="admin-sort-arrow">&darr;</span></th>
+                  <th>Tier</th>
+                  <th data-sort="contributed_at" class="admin-sortable">Contributed<span class="admin-sort-arrow">&darr;</span></th>
+                  <th>City / County</th>
+                  <th class="admin-toggle-col">Public</th>
+                  <th class="admin-toggle-col">Vetted</th>
+                </tr>
+              </thead>
+              <tbody id="donorsBody">
+                <tr><td colspan="9" class="admin-empty-row">Loading donors&hellip;</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="admin-panel-foot">
+            Source of truth: <code>founding_members</code> &middot;
+            ActBlue sync runs hourly via
+            <code>netlify/functions/actblue-sync.mjs</code> &middot;
+            Public roster: <a href="/founding-members">/founding-members</a>
+          </p>
         </div>
       </div>
     </section>
 
     <div id="site-footer"></div>
+    <div class="admin-toast" id="toast"></div>
 
     <script src="/js/site-template.js" defer></script>
     <script src="/js/ohiopride-data.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/admin/admin-auth.js"></script>
+    <script>
+      (function () {
+        'use strict';
+
+        var TIERS = [
+          { key: 'Founders Circle',     min: 250000 },
+          { key: 'Leadership',          min: 100000 },
+          { key: 'Champion',            min:  50000 },
+          { key: 'Advocate',            min:  25000 },
+          { key: 'Stonewall Sustainer', recurrence: 'monthly', min: 1969 },
+          { key: 'Ally',                min:  10000 },
+          { key: 'Friend',              min:   5000 },
+          { key: 'Supporter',           min:      0 }
+        ];
+
+        var TIER_ORDER = TIERS.map(function (t) { return t.key; });
+
+        function tierFor(cents, recurrence) {
+          if (recurrence === 'monthly' && cents >= 1969 && cents < 5000) {
+            return 'Stonewall Sustainer';
+          }
+          if (cents >= 250000) return 'Founders Circle';
+          if (cents >= 100000) return 'Leadership';
+          if (cents >=  50000) return 'Champion';
+          if (cents >=  25000) return 'Advocate';
+          if (cents >=  10000) return 'Ally';
+          if (cents >=   5000) return 'Friend';
+          return 'Supporter';
+        }
+
+        var state = {
+          rows: [],
+          filtered: [],
+          sortKey: 'founding_number',
+          sortDir: 'asc',
+          pendingToggles: 0
+        };
+
+        var els = {};
+        function $(id) { return document.getElementById(id); }
+
+        function fmtMoney(cents) {
+          var dollars = (cents || 0) / 100;
+          return dollars.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: dollars % 1 === 0 ? 0 : 2
+          });
+        }
+
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+
+        function toast(msg, kind) {
+          var el = $('toast');
+          el.textContent = msg;
+          el.className = 'admin-toast visible' + (kind ? ' admin-toast-' + kind : '');
+          clearTimeout(toast._t);
+          toast._t = setTimeout(function () { el.classList.remove('visible'); }, 3200);
+        }
+
+        function populateTierFilter() {
+          var sel = $('filterTier');
+          TIER_ORDER.forEach(function (key) {
+            var opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = key;
+            sel.appendChild(opt);
+          });
+        }
+
+        function renderStats() {
+          var totalMembers = state.rows.length;
+          var totalCents = state.rows.reduce(function (s, r) { return s + (r.amount_cents || 0); }, 0);
+          var publicCount = state.rows.filter(function (r) { return r.is_public && r.is_vetted; }).length;
+          var goal = 1969;
+          var pct = totalMembers > 0 ? Math.min(100, Math.round((totalMembers / goal) * 1000) / 10) : 0;
+
+          $('statMembers').textContent  = totalMembers.toLocaleString();
+          $('statRaised').textContent   = fmtMoney(totalCents);
+          $('statPublic').textContent   = publicCount.toLocaleString();
+          $('statProgress').textContent = pct + '%';
+        }
+
+        function applyFilters() {
+          var q  = $('filterSearch').value.trim().toLowerCase();
+          var tier = $('filterTier').value;
+          var pub  = $('filterPublic').value;
+          var vet  = $('filterVetted').value;
+
+          state.filtered = state.rows.filter(function (r) {
+            if (tier && r._tier !== tier) return false;
+            if (pub === 'public'  && !(r.is_public && r.is_vetted)) return false;
+            if (pub === 'private' &&   r.is_public && r.is_vetted)  return false;
+            if (vet === 'vetted'   && !r.is_vetted) return false;
+            if (vet === 'unvetted' &&  r.is_vetted) return false;
+            if (q) {
+              var hay = (
+                (r.full_name || '') + ' ' +
+                (r.display_name || '') + ' ' +
+                (r.email || '') + ' ' +
+                (r.actblue_receipt_id || '') + ' ' +
+                (r.actblue_contribution_id || '')
+              ).toLowerCase();
+              if (hay.indexOf(q) === -1) return false;
+            }
+            return true;
+          });
+
+          applySort();
+        }
+
+        function applySort() {
+          var key = state.sortKey;
+          var dir = state.sortDir === 'asc' ? 1 : -1;
+
+          state.filtered.sort(function (a, b) {
+            var av = a[key];
+            var bv = b[key];
+            if (key === 'contributed_at') {
+              return ((new Date(av || 0)) - (new Date(bv || 0))) * dir;
+            }
+            if (key === 'founding_number' || key === 'amount_cents') {
+              var an = av == null ? Number.POSITIVE_INFINITY : Number(av);
+              var bn = bv == null ? Number.POSITIVE_INFINITY : Number(bv);
+              return (an - bn) * dir;
+            }
+            return String(av || '').localeCompare(String(bv || ''), undefined, { sensitivity: 'base' }) * dir;
+          });
+
+          renderRows();
+          renderSortHeaders();
+        }
+
+        function renderSortHeaders() {
+          var ths = document.querySelectorAll('#donorsTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            var th = ths[i];
+            th.classList.remove('admin-sort-asc', 'admin-sort-desc');
+            if (th.dataset.sort === state.sortKey) {
+              th.classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
+            }
+          }
+        }
+
+        function renderRows() {
+          var body = $('donorsBody');
+          $('resultCount').textContent =
+            state.filtered.length === state.rows.length
+              ? state.rows.length + ' total'
+              : state.filtered.length + ' of ' + state.rows.length;
+
+          if (state.filtered.length === 0) {
+            var msg = state.rows.length === 0
+              ? 'No founding members yet. ActBlue sync will populate this list as donations come in.'
+              : 'No donors match the current filters.';
+            body.innerHTML = '<tr><td colspan="9" class="admin-empty-row">' + msg + '</td></tr>';
+            return;
+          }
+
+          var html = '';
+          for (var i = 0; i < state.filtered.length; i++) {
+            var r = state.filtered[i];
+            var nameMain = escapeHtml(r.full_name || '—');
+            var displayLabel = r.display_name && r.display_name !== r.full_name
+              ? '<span class="admin-cell-sub">Public: ' + escapeHtml(r.display_name) + '</span>'
+              : '';
+            var foundingNum = r.founding_number ? '#' + r.founding_number : '<span class="admin-muted">&mdash;</span>';
+            var emailHtml = r.email
+              ? '<a href="mailto:' + escapeHtml(r.email) + '" class="admin-link">' + escapeHtml(r.email) + '</a>'
+              : '<span class="admin-muted">&mdash;</span>';
+            var amount = fmtMoney(r.amount_cents);
+            if (r.recurrence === 'monthly') amount += '<span class="admin-cell-sub">/mo</span>';
+            var tierBadge = '<span class="admin-pill admin-pill-tier">' + escapeHtml(r._tier) + '</span>';
+            var loc = [r.city, r.county ? r.county + ' Co.' : ''].filter(Boolean).join(', ');
+            if (!loc) loc = '<span class="admin-muted">&mdash;</span>';
+            else loc = escapeHtml(loc);
+            if (r.actblue_receipt_id) {
+              loc += '<span class="admin-cell-sub">ActBlue ' + escapeHtml(r.actblue_receipt_id) + '</span>';
+            }
+
+            html +=
+              '<tr data-id="' + escapeHtml(r.id) + '">' +
+                '<td class="admin-num">' + foundingNum + '</td>' +
+                '<td class="admin-cell-name">' + nameMain + displayLabel + '</td>' +
+                '<td>' + emailHtml + '</td>' +
+                '<td class="admin-num">' + amount + '</td>' +
+                '<td>' + tierBadge + '</td>' +
+                '<td>' + escapeHtml(fmtDate(r.contributed_at)) + '</td>' +
+                '<td>' + loc + '</td>' +
+                '<td class="admin-toggle-col">' + toggleHtml(r.id, 'is_public', r.is_public) + '</td>' +
+                '<td class="admin-toggle-col">' + toggleHtml(r.id, 'is_vetted', r.is_vetted) + '</td>' +
+              '</tr>';
+          }
+          body.innerHTML = html;
+        }
+
+        function toggleHtml(id, field, on) {
+          return (
+            '<label class="admin-switch">' +
+              '<input type="checkbox" data-toggle="' + field + '" data-id="' + escapeHtml(id) + '"' + (on ? ' checked' : '') + ' />' +
+              '<span class="admin-switch-slider"></span>' +
+            '</label>'
+          );
+        }
+
+        async function loadDonors(client) {
+          var resp = await client
+            .from('founding_members')
+            .select(
+              'id, full_name, display_name, email, amount_cents, recurrence, ' +
+              'actblue_contribution_id, actblue_receipt_id, contributed_at, ' +
+              'is_public, is_vetted, founding_number, city, county'
+            )
+            .order('founding_number', { ascending: true, nullsFirst: false });
+
+          if (resp.error) throw resp.error;
+
+          var rows = resp.data || [];
+          for (var i = 0; i < rows.length; i++) {
+            rows[i]._tier = tierFor(rows[i].amount_cents, rows[i].recurrence);
+          }
+          return rows;
+        }
+
+        async function toggleField(client, id, field, value) {
+          state.pendingToggles++;
+          var update = {};
+          update[field] = value;
+          var resp = await client
+            .from('founding_members')
+            .update(update)
+            .eq('id', id);
+          state.pendingToggles--;
+          if (resp.error) throw resp.error;
+        }
+
+        document.addEventListener('admin-auth-ready', function (e) {
+          var client = window.AdminAuth && window.AdminAuth.client;
+          if (!client) return;
+
+          populateTierFilter();
+
+          loadDonors(client).then(function (rows) {
+            state.rows = rows;
+            renderStats();
+            applyFilters();
+          }).catch(function (err) {
+            console.error('Failed to load donors:', err);
+            $('donorsBody').innerHTML =
+              '<tr><td colspan="9" class="admin-empty-row admin-error">' +
+              'Could not load donors. Your account may not be authorized for this view.' +
+              '</td></tr>';
+          });
+
+          var debounceT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debounceT);
+            debounceT = setTimeout(applyFilters, 150);
+          });
+          $('filterTier').addEventListener('change', applyFilters);
+          $('filterPublic').addEventListener('change', applyFilters);
+          $('filterVetted').addEventListener('change', applyFilters);
+
+          var sortableHeaders = document.querySelectorAll('#donorsTable thead th[data-sort]');
+          for (var i = 0; i < sortableHeaders.length; i++) {
+            sortableHeaders[i].addEventListener('click', function (ev) {
+              var key = ev.currentTarget.dataset.sort;
+              if (state.sortKey === key) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              } else {
+                state.sortKey = key;
+                state.sortDir = key === 'contributed_at' || key === 'amount_cents' ? 'desc' : 'asc';
+              }
+              applySort();
+            });
+          }
+
+          $('donorsBody').addEventListener('change', function (ev) {
+            var input = ev.target;
+            if (!input || input.tagName !== 'INPUT' || !input.dataset.toggle) return;
+            var id = input.dataset.id;
+            var field = input.dataset.toggle;
+            var value = input.checked;
+            input.disabled = true;
+            toggleField(client, id, field, value).then(function () {
+              for (var i = 0; i < state.rows.length; i++) {
+                if (state.rows[i].id === id) {
+                  state.rows[i][field] = value;
+                  break;
+                }
+              }
+              renderStats();
+              toast(
+                (field === 'is_public' ? 'Public roster' : 'Vetting') +
+                  (value ? ' enabled.' : ' disabled.'),
+                'success'
+              );
+            }).catch(function (err) {
+              console.error('Toggle failed:', err);
+              input.checked = !value;
+              toast('Could not update. Please try again.', 'error');
+            }).finally(function () {
+              input.disabled = false;
+            });
+          });
+        });
+      })();
+    </script>
   </body>
 </html>
