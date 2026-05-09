@@ -104,13 +104,9 @@
       <div class="login-body">
         <p class="login-eyebrow">Restricted Access</p>
         <h1 class="login-title">Admin Sign In</h1>
-        <p class="login-subtitle">Magic link only. Enter your authorized email and we will send a one-time sign in link.</p>
+        <p class="login-subtitle">Sign in with your authorized Ohio Pride board email and password.</p>
 
         <div class="alert alert-error" id="alertError" role="alert"></div>
-        <div class="alert alert-success" id="alertSuccess" role="status">
-          <strong>Check your email.</strong>
-          <span id="successText">A sign in link has been sent.</span>
-        </div>
 
         <form id="loginForm" novalidate>
           <div class="field">
@@ -118,14 +114,19 @@
             <input class="input" type="email" id="email" name="email" required autocomplete="email" inputmode="email" placeholder="you@ohiopride.org" />
           </div>
 
+          <div class="field">
+            <label class="label" for="password">Password</label>
+            <input class="input" type="password" id="password" name="password" required autocomplete="current-password" />
+          </div>
+
           <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">
             <span class="spinner" aria-hidden="true"></span>
-            <span class="label">Send Magic Link</span>
+            <span class="label">Sign In</span>
           </button>
         </form>
 
         <div class="login-foot">
-          Not authorized? <a href="/">Return to OhioPride.org</a>
+          Forgot your password? Contact <a href="mailto:zach@ohiopride.org">zach@ohiopride.org</a> for a reset.
         </div>
       </div>
     </div>
@@ -145,10 +146,7 @@
     const CONFIG = {
       SUPABASE_URL:      'https://dkdxefzhttkmjhdbkvqn.supabase.co',
       SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4',
-      LIST_PATH:         '/admin/endorsements',
-      // Where Supabase sends the user after they click the magic link.
-      // This URL must be in the Auth redirect allowlist.
-      REDIRECT_TO:       'https://ohiopride.org/admin/endorsements'
+      LIST_PATH:         '/admin/endorsements'
     };
 
     const $ = (s) => document.querySelector(s);
@@ -157,19 +155,15 @@
       const el = $('#alertError');
       el.textContent = msg;
       el.classList.add('visible');
-      $('#alertSuccess').classList.remove('visible');
     }
-    function showSuccess(email) {
-      $('#successText').textContent =
-        `A sign in link has been sent to ${email}. Click it within 60 minutes to access the admin dashboard.`;
-      $('#alertSuccess').classList.add('visible');
+    function clearError() {
       $('#alertError').classList.remove('visible');
     }
 
     const client = window.supabase.createClient(
       CONFIG.SUPABASE_URL,
       CONFIG.SUPABASE_ANON_KEY,
-      { auth: { detectSessionInUrl: true, persistSession: true } }
+      { auth: { detectSessionInUrl: false, persistSession: true } }
     );
 
     /* ===================================================================
@@ -191,28 +185,39 @@
       e.preventDefault();
       const btn = $('#btnSubmit');
       const email = $('#email').value.trim().toLowerCase();
-      if (!email) {
-        showError('Please enter your email address.');
+      const password = $('#password').value;
+      if (!email || !password) {
+        showError('Enter your email and password.');
         return;
       }
 
       btn.classList.add('loading');
       btn.disabled = true;
-      $('#alertError').classList.remove('visible');
+      clearError();
 
       try {
-        const { error } = await client.auth.signInWithOtp({
-          email,
-          options: {
-            emailRedirectTo: CONFIG.REDIRECT_TO,
-            shouldCreateUser: true
-          }
-        });
-        if (error) throw error;
-        showSuccess(email);
+        const { error: signInError } = await client.auth.signInWithPassword({ email, password });
+        if (signInError) {
+          showError('Invalid email or password. Contact zach@ohiopride.org if you need access.');
+          return;
+        }
+
+        const { data: row, error: lookupError } = await client
+          .from('admin_emails')
+          .select('email')
+          .eq('email', email)
+          .maybeSingle();
+
+        if (lookupError || !row) {
+          await client.auth.signOut();
+          showError('Your account does not have board access. Contact zach@ohiopride.org.');
+          return;
+        }
+
+        window.location.replace(CONFIG.LIST_PATH);
       } catch (err) {
-        console.error('Magic link error:', err);
-        showError(err.message || 'Could not send sign in link. Please try again.');
+        console.error('Sign in error:', err);
+        showError('Could not sign in. Please try again.');
       } finally {
         btn.classList.remove('loading');
         btn.disabled = false;
