@@ -4,7 +4,7 @@
 
    HOW TO UPDATE:
    1. Find the legislator in HOUSE_MEMBERS or SENATE_MEMBERS
-   2. Adjust their votes/sponsorship/news scores
+   2. Adjust their votes/sponsorship scores (news is no longer scored)
    3. Add notes explaining the change
    4. Update SCORECARD_UPDATED below
 
@@ -29,13 +29,14 @@
      score = max(0, min(100,
                 round(50 + (vf * 4) + (vc * 4) + (s * 2))))
 
-   Grade scale (applied after composite):
-     A+  90-100  Champion
-     A   73-89   Strong Ally
-     B   55-72   Supportive
-     C   40-54   Mixed Record
-     D   20-39   Unfriendly
-     F    0-19   Hostile
+   Grade scale (applied after composite, 7 grades, April 2026):
+     A+  95-100  Champion
+     A   88-94   Strong Ally
+     A-  78-87   Reliable Ally
+     B   60-77   Supportive
+     C   38-59   Mixed Record
+     D   18-37   Unfriendly
+     F    0-17   Hostile
 
    Source hierarchy (high to low authority):
      1. Chamber journal of record (roll call)
@@ -49,14 +50,15 @@
 const SCORECARD_UPDATED = { date: "04/23/26", time: "3:55 PM EDT" };
 
 /* Grade thresholds (weighted score 0-100)
-   New 7-grade scale (April 2026 rebalance):
-   A+ Champion       ≥95
+   7-grade scale (April 2026 rebalance), listed in order of the
+   GRADE_SCALE array below (highest to lowest):
+   A+ Champion       95-100
    A  Strong Ally    88-94
    A- Reliable Ally  78-87
-   D  Unfriendly     18-37
-   F  Hostile        0-17
    B  Supportive     60-77
    C  Mixed Record   38-59
+   D  Unfriendly     18-37
+   F  Hostile        0-17
 */
 const GRADE_SCALE = [
   { min: 95, grade: "A+", label: "Champion",      color: "#16a34a" },
@@ -113,7 +115,9 @@ const SCORED_BILLS = [
 
 /* -------------------------------------------------------
    HOUSE MEMBERS (99 seats)
-   Fields: district, name, party, votes, sponsorship, news, notes
+   Fields: district, name, party, votes, sponsorship, notes
+   (n is retained on each record for backward compatibility
+   only; the news subscore is no longer used in grading.)
    ------------------------------------------------------- */
 const HOUSE_MEMBERS = [
   { d: 1,  name: "Dontavius L. Jarrells",      party: "D", v: 5,  s: 3,   n: 2,  notes: "Primary sponsor HB 306 (Hate Crimes Act). Votes consistently against anti-LGBTQ+ bills." },
