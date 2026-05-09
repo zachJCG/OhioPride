@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0F2233" />
+
+    <!-- PWA / Android -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0F2233" />
+    <meta name="application-name" content="Ohio Pride PAC" />
+    <meta name="apple-mobile-web-app-title" content="Ohio Pride" />
+    <meta name="msapplication-TileColor" content="#0F2233" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- Social preview image -->
+    <meta property="og:image" content="https://ohiopride.org/og-image.png" />
+    <meta property="og:image:secure_url" content="https://ohiopride.org/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Ohio Pride PAC — Endorse. Mobilize. Fight for Ohio." />
+    <meta name="twitter:image" content="https://ohiopride.org/og-image.png" />
+    <meta name="twitter:image:alt" content="Ohio Pride PAC — Endorse. Mobilize. Fight for Ohio." />
+    <title>Donors | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <section class="subpage-hero">
+      <div class="container">
+        <div class="section-label">Admin</div>
+        <h1 class="section-title">Donors</h1>
+        <p class="subpage-hero-sub">
+          Founding members, ActBlue contributions, and tier progress.
+        </p>
+      </div>
+    </section>
+
+    <div class="admin-meta-bar">
+      <div class="container">
+        <div class="admin-crumbs">
+          <a href="/admin/dashboard">Dashboard</a>
+          <span class="admin-crumb-sep">/</span>
+          <span>Donors</span>
+        </div>
+        <div class="admin-meta-actions">
+          <span class="admin-meta-user">
+            Signed in as <strong id="adminEmail">&hellip;</strong>
+          </span>
+          <button type="button" class="admin-signout-btn" id="signOutBtn">Sign Out</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="admin-loading" id="loading">Loading&hellip;</div>
+
+        <div class="admin-panel" id="panel" hidden>
+          <div class="admin-panel-empty">
+            <div class="admin-panel-empty-eyebrow">Coming Soon</div>
+            <h2>Donor Roster</h2>
+            <p>
+              The donor admin view is being wired up. Once connected to the
+              <code>founding_members</code> table, this panel will surface
+              every contribution with tier, recurrence, public-listing
+              consent, vetting status, and ActBlue receipt id.
+            </p>
+            <p class="admin-panel-empty-meta">
+              Public roster: <a href="/founding-members">/founding-members</a>
+              &middot; ActBlue sync runs hourly via
+              <code>netlify/functions/actblue-sync.mjs</code>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="site-footer"></div>
+
+    <script src="/js/site-template.js" defer></script>
+    <script src="/js/ohiopride-data.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-auth.js"></script>
+  </body>
+</html>

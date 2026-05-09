@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0F2233" />
+
+    <!-- PWA / Android -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0F2233" />
+    <meta name="application-name" content="Ohio Pride PAC" />
+    <meta name="apple-mobile-web-app-title" content="Ohio Pride" />
+    <meta name="msapplication-TileColor" content="#0F2233" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- Social preview image -->
+    <meta property="og:image" content="https://ohiopride.org/og-image.png" />
+    <meta property="og:image:secure_url" content="https://ohiopride.org/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Ohio Pride PAC — Endorse. Mobilize. Fight for Ohio." />
+    <meta name="twitter:image" content="https://ohiopride.org/og-image.png" />
+    <meta name="twitter:image:alt" content="Ohio Pride PAC — Endorse. Mobilize. Fight for Ohio." />
+    <title>Admin Dashboard | Ohio Pride PAC</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+
+    <style>
+      body { background: var(--dark-bg); }
+
+      .admin-meta-bar {
+        background: var(--bg-light);
+        border-top: 1px solid var(--border-light);
+        border-bottom: 1px solid var(--border-light);
+      }
+      .admin-meta-bar .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 0;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .admin-meta-user {
+        font-family: "Montserrat", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .admin-meta-user strong {
+        color: var(--text-white);
+        font-weight: 700;
+        margin-left: 6px;
+      }
+      .admin-signout-btn {
+        font-family: "Montserrat", sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        background: transparent;
+        color: var(--text-light);
+        border: 1.5px solid var(--border-medium);
+        border-radius: 4px;
+        padding: 8px 14px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .admin-signout-btn:hover {
+        color: var(--text-white);
+        border-color: var(--text-white);
+      }
+
+      .admin-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .admin-card {
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 28px 26px 26px;
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+      .admin-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: var(--pride-gradient);
+        opacity: 0.85;
+      }
+      .admin-card:hover {
+        border-color: var(--border-medium);
+        background: var(--bg-white);
+        transform: translateY(-2px);
+      }
+
+      .admin-card-eyebrow {
+        font-family: "Montserrat", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        color: var(--text-accent);
+        margin: 8px 0 10px;
+      }
+      .admin-card-title {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 22px;
+        color: var(--text-white);
+        margin: 0 0 10px;
+        letter-spacing: -0.01em;
+      }
+      .admin-card-desc {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0 0 18px;
+      }
+      .admin-card-cta {
+        margin-top: auto;
+        font-family: "Montserrat", sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+        color: var(--text-white);
+      }
+      .admin-card-cta::after {
+        content: " \2192";
+        color: var(--text-accent);
+        transition: transform 0.2s;
+        display: inline-block;
+      }
+      .admin-card:hover .admin-card-cta::after {
+        transform: translateX(4px);
+      }
+
+      .admin-loading {
+        text-align: center;
+        padding: 80px 0;
+        color: var(--text-muted);
+        font-family: "Montserrat", sans-serif;
+        font-size: 13px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <section class="subpage-hero">
+      <div class="container">
+        <div class="section-label">Admin</div>
+        <h1 class="section-title">Dashboard</h1>
+        <p class="subpage-hero-sub">
+          Manage volunteers, endorsement applications, and donor records for Ohio Pride PAC.
+        </p>
+      </div>
+    </section>
+
+    <div class="admin-meta-bar">
+      <div class="container">
+        <div class="admin-meta-user">
+          Signed in as <strong id="adminEmail">&hellip;</strong>
+        </div>
+        <button type="button" class="admin-signout-btn" id="signOutBtn">Sign Out</button>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="admin-loading" id="loading">Loading&hellip;</div>
+
+        <div class="admin-card-grid" id="cards" hidden>
+          <a class="admin-card" href="/admin/volunteers">
+            <div class="admin-card-eyebrow">Field</div>
+            <h2 class="admin-card-title">Volunteers</h2>
+            <p class="admin-card-desc">
+              Review volunteer signups, role interests, and county coverage.
+              Coordinate outreach and assign captains.
+            </p>
+            <span class="admin-card-cta">Open Volunteers</span>
+          </a>
+
+          <a class="admin-card" href="/admin/endorsements">
+            <div class="admin-card-eyebrow">Candidates</div>
+            <h2 class="admin-card-title">Endorsements</h2>
+            <p class="admin-card-desc">
+              Triage candidate endorsement applications, run screenings, and
+              publish endorsement decisions.
+            </p>
+            <span class="admin-card-cta">Open Endorsements</span>
+          </a>
+
+          <a class="admin-card" href="/admin/donors">
+            <div class="admin-card-eyebrow">Finance</div>
+            <h2 class="admin-card-title">Donors</h2>
+            <p class="admin-card-desc">
+              Review founding members, ActBlue contributions, and tier
+              progress. Manage public roster visibility.
+            </p>
+            <span class="admin-card-cta">Open Donors</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div id="site-footer"></div>
+
+    <script src="/js/site-template.js" defer></script>
+    <script src="/js/ohiopride-data.js" defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const CONFIG = {
+        SUPABASE_URL: 'https://dkdxefzhttkmjhdbkvqn.supabase.co',
+        SUPABASE_ANON_KEY:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4',
+        LOGIN_PATH: '/admin/login',
+      };
+
+      const client = window.supabase.createClient(
+        CONFIG.SUPABASE_URL,
+        CONFIG.SUPABASE_ANON_KEY,
+        { auth: { detectSessionInUrl: true, persistSession: true } }
+      );
+
+      (async function gate() {
+        try {
+          const { data: { session } } = await client.auth.getSession();
+          if (!session) {
+            window.location.replace(CONFIG.LOGIN_PATH);
+            return;
+          }
+          document.getElementById('adminEmail').textContent = session.user.email || 'Admin';
+          document.getElementById('loading').hidden = true;
+          document.getElementById('cards').hidden = false;
+        } catch (err) {
+          console.error('Session check failed:', err);
+          window.location.replace(CONFIG.LOGIN_PATH);
+        }
+      })();
+
+      document.getElementById('signOutBtn').addEventListener('click', async () => {
+        try {
+          await client.auth.signOut();
+        } finally {
+          window.location.replace(CONFIG.LOGIN_PATH);
+        }
+      });
+    </script>
+  </body>
+</html>
