@@ -10,7 +10,7 @@ Supabase-backed candidate endorsement workflow. Wired against the live
 | `/endorsement/screening`          | Public         | Multi-step questionnaire. Inserts into `endorsement_applications` as anon. |
 | `/endorsement/screening/thank-you`| Public         | Confirmation page after submit.                          |
 | `/endorsements`                   | Public         | Lists endorsed candidates from `public_endorsements` view. |
-| `/admin/endorsements/login`       | Admin          | Magic-link sign-in via Supabase Auth.                    |
+| `/admin/endorsements/login`       | Admin          | Email + password sign-in via Supabase Auth.              |
 | `/admin/endorsements`             | Admin          | List, filter, sort all applications. Authorized via `is_admin()`. |
 | `/admin/endorsements/detail`      | Admin          | Detail view for one application. Update `status` and `reviewer_notes`. |
 
@@ -28,10 +28,11 @@ Supabase-backed candidate endorsement workflow. Wired against the live
 
 ## One-time Supabase Auth setup
 
-1. **Authentication > URL Configuration > Redirect URLs**: add
-   `https://ohiopride.org/admin/endorsements` (and any preview URL you want
-   magic links to land on, e.g. `https://deploy-preview-XXX--ohiopride.netlify.app/admin/endorsements`).
-2. **Authentication > Providers > Email**: enable magic links if not already on.
+1. **Authentication > Providers > Email**: enable email + password sign-in
+   (and disable "Confirm email" if you want admins to be usable as soon as
+   the account is created).
+2. **Authentication > Users**: create one user per board member with their
+   email and an initial password, then share the credential out-of-band.
 3. **Storage**: create a private bucket named `endorsement-pdfs` (used by the
    Phase 4 PDF generator; the storage RLS policies in the migration kick in
    once the bucket exists).
@@ -46,8 +47,8 @@ values ('newadmin@ohiopride.org', 'manual')
 on conflict (email) do nothing;
 ```
 
-That's it. The next time they sign in via magic link, `is_admin()` returns
-true for their JWT and the dashboard renders.
+That's it. The next time they sign in with their email and password,
+`is_admin()` returns true for their JWT and the dashboard renders.
 
 ## Local / preview verification
 
@@ -57,8 +58,9 @@ true for their JWT and the dashboard renders.
 2. Visit `/endorsement/screening` &mdash; submit a test row. The form
    redirects to `/endorsement/screening/thank-you`.
 3. Visit `/admin/endorsements` &mdash; should redirect to the login page.
-4. Sign in with a seeded admin email. Magic link arrives via Supabase Auth.
-5. After clicking the link, you land back on the list with your test row.
+4. Sign in with a seeded admin email and the password set for that user
+   in Supabase Auth.
+5. After signing in, you land back on the list with your test row.
 6. Open the row, change `status` to `endorsed`, save. Refresh `/endorsements`
    &mdash; the candidate now appears.
 

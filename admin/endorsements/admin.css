@@ -3,16 +3,27 @@
    Brand v1.1
    Loaded by: /admin/endorsements/{login,detail}/index.html and
               /admin/endorsements/index.html
+
+   Brand color, gradient, and typography tokens come from the canonical
+   /css/brand-tokens.css. Admin-only workspace tokens (paper/ink/lines
+   and shadow recipes) are defined locally below.
    ===================================================================== */
 
+@import url('/css/brand-tokens.css');
+
 :root {
-  --navy:          #0F2233;
-  --navy-light:    #1A3A52;
-  --navy-lighter:  #234A66;
-  --cyan:          #73D7EE;
+  /* Aliases onto the canonical brand tokens so admin selectors keep
+     working without redefining brand values. */
+  --navy:          var(--brand-navy);
+  --navy-light:    var(--brand-navy-light);
+  --navy-lighter:  var(--brand-navy-lighter);
+  --cyan:          var(--brand-light-blue);
+  --white:         var(--brand-white);
+  --pride-gradient: var(--brand-pride-gradient);
+
+  /* Workspace surfaces — admin only, no canonical equivalent. */
   --cyan-soft:     rgba(115, 215, 238, 0.18);
   --cyan-edge:     rgba(115, 215, 238, 0.45);
-  --white:         #FFFFFF;
   --paper:         #F7F8FA;
   --paper-2:       #EFF2F5;
   --ink:           #0F2233;
@@ -27,16 +38,6 @@
   --warning:       #B07F00;
   --warning-soft:  #FFF6DC;
 
-  --pride-gradient: linear-gradient(
-    90deg,
-    #E40303 0%,
-    #FF8C00 20%,
-    #FFED00 40%,
-    #008026 60%,
-    #004DFF 80%,
-    #750787 100%
-  );
-
   --radius:    4px;
   --radius-lg: 8px;
   --shadow-card:   0 1px 2px rgba(15, 34, 51, 0.04), 0 8px 24px rgba(15, 34, 51, 0.08);
@@ -47,7 +48,7 @@
 
 body {
   margin: 0;
-  font-family: 'Roboto Slab', Georgia, serif;
+  font-family: var(--brand-font-body);
   font-size: 14px;
   line-height: 1.6;
   color: var(--ink);
@@ -81,24 +82,21 @@ body {
   gap: 16px;
 }
 
-.wordmark {
-  font-family: 'Montserrat', sans-serif;
-  text-decoration: none;
-  letter-spacing: -0.01em;
+/* The wordmark itself is provided by the canonical .ohp-wordmark utility
+   in /css/brand-tokens.css. The wrapper below holds the wordmark anchor
+   plus the "Admin" pill so they sit on the same baseline. */
+.admin-brand {
   display: inline-flex;
-  align-items: baseline;
-  line-height: 1;
+  align-items: center;
+  gap: 0;
 }
-.wordmark-ohio  { font-weight: 400; color: rgba(255,255,255,0.65); font-size: 22px; }
-.wordmark-pride { font-weight: 700; color: var(--white); font-size: 22px; }
-.wordmark-pac   {
-  font-weight: 700; color: var(--cyan); font-size: 11px;
-  text-transform: uppercase; letter-spacing: 2px;
-  margin-left: 7px; align-self: center; padding-top: 2px;
+.admin-wordmark {
+  font-size: 22px;
+  letter-spacing: -0.01em;
 }
 
 .admin-tag {
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--brand-font-display);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -117,7 +115,7 @@ body {
 }
 
 .header-link, .header-btn {
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--brand-font-display);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 1.5px;
@@ -133,7 +131,7 @@ body {
 .header-link:hover, .header-btn:hover { color: var(--cyan); }
 
 .header-user {
-  font-family: 'Roboto Slab', Georgia, serif;
+  font-family: var(--brand-font-body);
   font-size: 12px;
   color: rgba(255,255,255,0.55);
   white-space: nowrap;
@@ -153,7 +151,7 @@ body {
   flex: 0 0 auto;
 }
 .admin-footer .disclaimer {
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--brand-font-display);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 1px;
@@ -166,7 +164,7 @@ body {
    Buttons
    --------------------------------------------------------------------- */
 .btn {
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--brand-font-display);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 1.2px;
@@ -235,7 +233,7 @@ body {
    --------------------------------------------------------------------- */
 .input, .select, .textarea {
   width: 100%;
-  font-family: 'Roboto Slab', Georgia, serif;
+  font-family: var(--brand-font-body);
   font-size: 14px;
   line-height: 1.5;
   color: var(--ink);
@@ -252,7 +250,7 @@ body {
   border-color: var(--cyan);
   box-shadow: 0 0 0 3px var(--cyan-soft);
 }
-.textarea { min-height: 100px; resize: vertical; font-family: 'Roboto Slab', Georgia, serif; }
+.textarea { min-height: 100px; resize: vertical; font-family: var(--brand-font-body); }
 .select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%234A5C6E' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -262,7 +260,7 @@ body {
 }
 
 .label {
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--brand-font-display);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.2px;
@@ -278,7 +276,7 @@ body {
 .badge {
   display: inline-flex;
   align-items: center;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--brand-font-display);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
