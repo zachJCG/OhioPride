@@ -172,3 +172,286 @@ table.admin-table tbody td {
 }
 table.admin-table tbody tr:last-child td { border-bottom: none; }
 table.admin-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+table.admin-table th.admin-num,
+table.admin-table td.admin-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+table.admin-table th.admin-sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+table.admin-table th.admin-sortable:hover { color: var(--text-light); }
+table.admin-table th.admin-sortable .admin-sort-arrow {
+  display: inline-block;
+  margin-left: 6px;
+  opacity: 0;
+  transition: opacity 0.15s, transform 0.15s;
+}
+table.admin-table th.admin-sortable.admin-sort-asc  .admin-sort-arrow,
+table.admin-table th.admin-sortable.admin-sort-desc .admin-sort-arrow {
+  opacity: 1;
+  color: var(--text-accent);
+}
+table.admin-table th.admin-sortable.admin-sort-asc .admin-sort-arrow {
+  transform: rotate(180deg);
+}
+
+table.admin-table td.admin-cell-name {
+  font-weight: 600;
+  color: var(--text-white);
+}
+.admin-cell-sub {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.admin-empty-row {
+  text-align: center;
+  padding: 60px 20px !important;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-style: italic;
+}
+.admin-empty-row.admin-error {
+  color: var(--text-danger, #ff6b6b);
+  font-style: normal;
+}
+.admin-muted { color: var(--text-muted); }
+.admin-link  { color: var(--text-accent); text-decoration: none; }
+.admin-link:hover { text-decoration: underline; }
+
+/* ---------- Stat grid ---------- */
+.admin-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.admin-stat {
+  background: rgba(15, 34, 51, 0.6);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.admin-stat-num {
+  font-family: "Montserrat", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-white);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.admin-stat-label {
+  margin-top: 6px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ---------- Toolbar (search + filters) ---------- */
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.admin-toolbar-spacer { flex: 1 1 0; }
+.admin-result-count {
+  font-family: "Montserrat", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.admin-input {
+  flex: 0 1 auto;
+  min-width: 160px;
+  padding: 9px 12px;
+  font-family: "Roboto Slab", Georgia, serif;
+  font-size: 14px;
+  color: var(--text-white);
+  background: rgba(15, 34, 51, 0.6);
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.admin-input:focus {
+  outline: none;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(115, 215, 238, 0.18);
+}
+input.admin-input[type="search"] { flex: 1 1 240px; }
+select.admin-input {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2373d7ee' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  padding-right: 32px;
+}
+select.admin-input option { background: var(--dark-bg); color: var(--text-white); }
+
+.admin-panel-foot {
+  margin: 18px 4px 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.admin-panel-foot a    { color: var(--text-accent); text-decoration: none; }
+.admin-panel-foot a:hover { text-decoration: underline; }
+.admin-panel-foot code {
+  background: rgba(15, 34, 51, 0.6);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: var(--text-accent);
+}
+
+/* ---------- Pills + interest badges ---------- */
+.admin-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.admin-pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(115, 215, 238, 0.12);
+  color: var(--text-accent);
+  border: 1px solid rgba(115, 215, 238, 0.3);
+  white-space: nowrap;
+}
+.admin-pill-tier {
+  background: rgba(115, 215, 238, 0.08);
+  color: var(--text-white);
+  border-color: rgba(115, 215, 238, 0.4);
+}
+
+/* ---------- Toggle switch ---------- */
+.admin-toggle-col { width: 70px; text-align: center; }
+.admin-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+  cursor: pointer;
+}
+.admin-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.admin-switch-slider {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  transition: background 0.15s;
+}
+.admin-switch-slider::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: var(--text-white, #fff);
+  border-radius: 50%;
+  transition: transform 0.15s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.admin-switch input:checked + .admin-switch-slider {
+  background: var(--text-accent, #73d7ee);
+}
+.admin-switch input:checked + .admin-switch-slider::before {
+  transform: translateX(16px);
+}
+.admin-switch input:disabled + .admin-switch-slider {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* ---------- Status select (volunteer admin) ---------- */
+.admin-status-select {
+  font-family: "Montserrat", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 6px 26px 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-medium);
+  background-color: rgba(15, 34, 51, 0.6);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 10px;
+  color: var(--text-white);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+}
+.admin-status-select:focus { outline: none; border-color: var(--text-accent); }
+.admin-status-select option {
+  background: var(--dark-bg);
+  color: var(--text-white);
+  text-transform: none;
+  letter-spacing: normal;
+}
+.admin-status-new       { background-color: rgba(115, 215, 238, 0.15); border-color: rgba(115, 215, 238, 0.55); color: var(--text-accent); }
+.admin-status-contacted { background-color: rgba(255, 200, 87, 0.12);  border-color: rgba(255, 200, 87, 0.55);  color: #ffc857; }
+.admin-status-assigned  { background-color: rgba(74, 222, 128, 0.12);  border-color: rgba(74, 222, 128, 0.55);  color: #4ade80; }
+.admin-status-inactive  { background-color: rgba(255, 255, 255, 0.05); border-color: var(--border-medium);      color: var(--text-muted); }
+.admin-status-declined  { background-color: rgba(255, 107, 107, 0.12); border-color: rgba(255, 107, 107, 0.55); color: #ff8a8a; }
+
+/* ---------- Toast ---------- */
+.admin-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translate(-50%, 24px);
+  background: var(--bg-white);
+  color: var(--text-white);
+  border: 1px solid var(--border-medium);
+  border-left: 3px solid var(--text-accent);
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 9999;
+  max-width: calc(100vw - 32px);
+}
+.admin-toast.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.admin-toast-success { border-left-color: #4ade80; }
+.admin-toast-error   { border-left-color: #ff6b6b; }
