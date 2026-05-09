@@ -3,6 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0F2233" />
+
+  <!-- PWA / Android -->
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#0F2233" />
+  <meta name="application-name" content="Ohio Pride PAC" />
+  <meta name="apple-mobile-web-app-title" content="Ohio Pride" />
+  <meta name="msapplication-TileColor" content="#0F2233" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+
+  <!-- Social preview image -->
+  <meta property="og:image" content="https://ohiopride.org/og-image.png" />
+  <meta property="og:image:secure_url" content="https://ohiopride.org/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Ohio Pride PAC — Endorse. Mobilize. Fight for Ohio." />
+  <meta name="twitter:image" content="https://ohiopride.org/og-image.png" />
+  <meta name="twitter:image:alt" content="Ohio Pride PAC — Endorse. Mobilize. Fight for Ohio." />
+
   <title>Brand Reference | Ohio Pride PAC</title>
   <meta name="description" content="Logo, color, typography, voice, and digital specs for Ohio Pride PAC. The public-facing companion to the Ohio Pride PAC Brand Guide (v1.1, April 2026)." />
   <link rel="canonical" href="https://www.ohiopride.org/brand" />
@@ -13,18 +41,9 @@
   <meta property="og:description" content="Logo, color, typography, voice, and digital specs for Ohio Pride PAC." />
   <meta property="og:url" content="https://www.ohiopride.org/brand" />
   <meta property="og:site_name" content="Ohio Pride PAC" />
-  <meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Brand Reference | Ohio Pride PAC" />
   <meta name="twitter:description" content="Logo, color, typography, voice, and digital specs for Ohio Pride PAC." />
-  <meta name="twitter:image" content="https://ohiopride.org/assets/social/og-image.png" />
-
-  <!-- Favicons -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png" />
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
-  <meta name="theme-color" content="#0F2233" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -896,24 +915,24 @@
         <h2>Digital specs</h2>
 
         <h3>Favicon system</h3>
-        <p>A bold <strong>OH</strong> monogram on Navy Primary with a thin Progress Pride rainbow stripe. Standard sizes are shipped under <code style="color: var(--brand-light-blue);">/assets/favicon/</code> and referenced from the canonical <code style="color: var(--brand-light-blue);">&lt;head&gt;</code> on every page.</p>
+        <p>A bold <strong>OH</strong> monogram on Navy Primary with a thin Progress Pride rainbow stripe. Standard sizes are shipped at the site root (<code style="color: var(--brand-light-blue);">/favicon.ico</code>, <code style="color: var(--brand-light-blue);">/favicon.svg</code>, <code style="color: var(--brand-light-blue);">/favicon-16x16.png</code>, <code style="color: var(--brand-light-blue);">/favicon-32x32.png</code>, <code style="color: var(--brand-light-blue);">/favicon-48x48.png</code>, <code style="color: var(--brand-light-blue);">/favicon-96x96.png</code>, <code style="color: var(--brand-light-blue);">/apple-touch-icon.png</code>) and referenced from the canonical <code style="color: var(--brand-light-blue);">&lt;head&gt;</code> on every page. Android launcher icons and the maskable variants ship as <code style="color: var(--brand-light-blue);">/android-chrome-{192,512}x{192,512}.png</code> via <code style="color: var(--brand-light-blue);">/site.webmanifest</code>.</p>
         <div class="favicon-row">
           <div class="favicon-tile">
-            <img src="/assets/favicon/favicon-32.png" alt="Ohio Pride PAC favicon, 32 by 32 pixels" width="32" height="32" />
+            <img src="/favicon-32x32.png" alt="Ohio Pride PAC favicon, 32 by 32 pixels" width="32" height="32" />
             <span>32×32</span>
           </div>
           <div class="favicon-tile">
-            <img src="/assets/favicon/favicon-16.png" alt="Ohio Pride PAC favicon, 16 by 16 pixels" width="16" height="16" />
+            <img src="/favicon-16x16.png" alt="Ohio Pride PAC favicon, 16 by 16 pixels" width="16" height="16" />
             <span>16×16</span>
           </div>
           <div class="favicon-tile">
-            <img src="/assets/favicon/apple-touch-icon.png" alt="Ohio Pride PAC apple-touch-icon, 180 by 180 pixels" width="60" height="60" style="border-radius: 12px;" />
+            <img src="/apple-touch-icon.png" alt="Ohio Pride PAC apple-touch-icon, 180 by 180 pixels" width="60" height="60" style="border-radius: 12px;" />
             <span>180×180</span>
           </div>
         </div>
 
         <h3>Open Graph image</h3>
-        <p>Default share image for social cards lives at <code style="color: var(--brand-light-blue);">/assets/social/og-image.png</code> and is referenced from the <code style="color: var(--brand-light-blue);">&lt;head&gt;</code> on every page via <code style="color: var(--brand-light-blue);">og:image</code> and <code style="color: var(--brand-light-blue);">twitter:image</code>.</p>
+        <p>Default share image for social cards lives at <code style="color: var(--brand-light-blue);">/og-image.png</code> (1200×630) and is referenced from the <code style="color: var(--brand-light-blue);">&lt;head&gt;</code> on every page via <code style="color: var(--brand-light-blue);">og:image</code> and <code style="color: var(--brand-light-blue);">twitter:image</code>.</p>
 
         <h3>Theme color</h3>
         <p>Mobile browser chrome uses Navy Primary via <code style="color: var(--brand-light-blue);">&lt;meta name="theme-color" content="#0F2233"&gt;</code>.</p>
