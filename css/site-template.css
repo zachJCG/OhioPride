@@ -180,9 +180,9 @@
 
 .ohp-nav-submenu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(-4px);
+  transform: translateX(-50%) translateY(6px);
   min-width: 180px;
   background: rgba(15, 34, 51, 0.98);
   border: 1px solid var(--ohp-border);
@@ -197,13 +197,21 @@
   transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
   z-index: 1001;
 }
+.ohp-nav-submenu::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
 .ohp-nav-group:hover > .ohp-nav-submenu,
 .ohp-nav-group:focus-within > .ohp-nav-submenu,
 .ohp-nav-group.open > .ohp-nav-submenu {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(10px);
 }
 .ohp-nav-submenu li { width: 100%; }
 .ohp-nav-submenu a {

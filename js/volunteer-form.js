@@ -78,7 +78,9 @@
   // --------------------------------------------------------------------
   // Step rendering
   // --------------------------------------------------------------------
-  function showStep(n) {
+  function showStep(n, opts) {
+    var isInitial = opts && opts.initial;
+
     for (var i = 1; i <= TOTAL_STEPS; i++) {
       var stepEl = form.querySelector('[data-step="' + i + '"]');
       if (stepEl) stepEl.hidden = (i !== n);
@@ -95,18 +97,17 @@
 
     clearError();
 
-    // Move focus to the step heading for screen readers
-    var heading = form.querySelector('[data-step="' + n + '"] .vform-step-title');
-    if (heading) {
-      heading.setAttribute('tabindex', '-1');
-      // Defer focus so the browser has time to render the step
-      setTimeout(function () { heading.focus({ preventScroll: true }); }, 30);
-    }
+    if (!isInitial) {
+      var heading = form.querySelector('[data-step="' + n + '"] .vform-step-title');
+      if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        setTimeout(function () { heading.focus({ preventScroll: true }); }, 30);
+      }
 
-    // Smooth scroll the form into view (without yanking the page)
-    var rect = form.getBoundingClientRect();
-    if (rect.top < -20 || rect.top > window.innerHeight * 0.4) {
-      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var rect = form.getBoundingClientRect();
+      if (rect.top < -20 || rect.top > window.innerHeight * 0.4) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     currentStep = n;
@@ -284,5 +285,5 @@
   }
 
   // Init
-  showStep(1);
+  showStep(1, { initial: true });
 })();

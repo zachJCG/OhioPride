@@ -330,9 +330,23 @@
     if (el) el.innerHTML = publicWordmarkHtml(opts);
   };
 
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  function scrollToTopIfNoHash() {
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render);
+    document.addEventListener('DOMContentLoaded', function () {
+      render();
+      scrollToTopIfNoHash();
+    });
   } else {
     render();
+    scrollToTopIfNoHash();
   }
+  window.addEventListener('pageshow', scrollToTopIfNoHash);
 })();
