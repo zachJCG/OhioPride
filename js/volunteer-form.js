@@ -93,7 +93,7 @@
 
     backBtn.hidden   = (n === 1);
     nextBtn.hidden   = (n === TOTAL_STEPS);
-    submitBtn.hidden = (n !== TOTAL_STEPS);
+    submitBtn.hidden = (n !== TOTAL_STEPS) || !isFormComplete();
 
     clearError();
 
@@ -154,6 +154,22 @@
     }
 
     return true;
+  }
+
+  function isFormComplete() {
+    var fn = val('first_name');
+    var ln = val('last_name');
+    var em = val('email');
+    if (!fn || !ln || !em || !isValidEmail(em)) return false;
+
+    var zip = val('zip');
+    if (zip && !/^\d{5}(-\d{4})?$/.test(zip)) return false;
+
+    return true;
+  }
+
+  function refreshSubmitVisibility() {
+    submitBtn.hidden = (currentStep !== TOTAL_STEPS) || !isFormComplete();
   }
 
   function focusFirstEmpty(names) {
@@ -283,6 +299,9 @@
       priorWrap.hidden = !priorToggle.checked;
     });
   }
+
+  form.addEventListener('input', refreshSubmitVisibility);
+  form.addEventListener('change', refreshSubmitVisibility);
 
   // Init
   showStep(1, { initial: true });
