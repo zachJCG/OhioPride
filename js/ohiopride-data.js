@@ -163,6 +163,28 @@
             .map(function (p) { return '<p>' + escapeHtml(p) + '</p>'; })
             .join('');
           var bioId = 'bio-' + i;
+          var hasBio = bioParagraphs.length > 0;
+
+          // Toggle button only renders when there is a bio to show. The
+          // bio wrapper uses an inner `.board-card-bio-inner` grid child
+          // so `grid-template-rows: 0fr → 1fr` can animate against the
+          // natural content height.
+          var toggleHtml = hasBio
+            ? (
+                '<button type="button" class="board-card-toggle" aria-expanded="false" aria-controls="' + bioId + '">' +
+                  '<span class="toggle-label">Read bio</span>' +
+                  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+                '</button>'
+              )
+            : '';
+
+          var bioBlockHtml = hasBio
+            ? (
+                '<div class="board-card-bio" id="' + bioId + '">' +
+                  '<div class="board-card-bio-inner">' + bioHtml + '</div>' +
+                '</div>'
+              )
+            : '';
 
           card.innerHTML =
             '<div class="board-card-avatar">' +
@@ -174,11 +196,8 @@
               '<div class="board-card-name">' + escapeHtml(m.name) + '</div>' +
               '<div class="board-card-role">' + escapeHtml(m.role || 'Board Member') + '</div>' +
             '</div>' +
-            '<button type="button" class="board-card-toggle" aria-expanded="false" aria-controls="' + bioId + '">' +
-              '<span class="toggle-label">Read bio</span>' +
-              '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
-            '</button>' +
-            '<div class="board-card-bio" id="' + bioId + '">' + bioHtml + '</div>';
+            toggleHtml +
+            bioBlockHtml;
 
           grid.appendChild(card);
         });
