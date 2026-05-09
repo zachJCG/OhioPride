@@ -404,10 +404,10 @@
       }
       .scorecard-grades {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(7, 1fr);
         gap: 0.5rem;
         margin: 0 auto 1.5rem;
-        max-width: 520px;
+        max-width: 580px;
       }
       .scorecard-grade {
         text-align: center;
@@ -444,12 +444,13 @@
       @media (max-width: 700px) {
         .scorecard-callout { padding: 0 1rem; }
         .scorecard-card { padding: 1.5rem 1.25rem; }
-        /* 2 rows × 3 cells gives every label room to breathe instead of
-           squeezing six cells into a viewport where "F" falls off the edge. */
+        /* 4 cells per row (4 + 3) gives every label room to breathe instead
+           of squeezing seven cells into a viewport where "F" falls off
+           the edge. */
         .scorecard-grades {
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(4, 1fr);
           gap: 0.5rem;
-          max-width: 360px;
+          max-width: 420px;
         }
         .scorecard-grade { padding: 0.7rem 0.25rem; }
         .scorecard-grade .grade-letter { font-size: 1.05rem; }
@@ -613,13 +614,14 @@
         <h2>Every Ohio Legislator, Graded on Equality</h2>
         <p>
           We score all 132 members of the Ohio General Assembly on their
-          LGBTQ+ voting records, bill sponsorships, and public statements.
+          LGBTQ+ floor votes, committee votes, and bill sponsorships.
           Find your state senator and representative, see their grade, and
           share it with your community.
         </p>
         <div class="scorecard-grades" aria-hidden="true">
           <div class="scorecard-grade"><span class="grade-letter" style="color:#16a34a">A+</span><span class="grade-label">Champion</span></div>
           <div class="scorecard-grade"><span class="grade-letter" style="color:#22c55e">A</span><span class="grade-label">Strong Ally</span></div>
+          <div class="scorecard-grade"><span class="grade-letter" style="color:#65a30d">A-</span><span class="grade-label">Reliable Ally</span></div>
           <div class="scorecard-grade"><span class="grade-letter" style="color:#84cc16">B</span><span class="grade-label">Supportive</span></div>
           <div class="scorecard-grade"><span class="grade-letter" style="color:#eab308">C</span><span class="grade-label">Mixed</span></div>
           <div class="scorecard-grade"><span class="grade-letter" style="color:#f97316">D</span><span class="grade-label">Unfriendly</span></div>
