@@ -265,6 +265,41 @@
   to = "/admin/endorsements/detail/index.html"
   status = 200
 
+[[redirects]]
+  from = "/admin/board"
+  to = "/admin/board/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/bills"
+  to = "/admin/bills/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/legislators"
+  to = "/admin/legislators/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/news"
+  to = "/admin/news/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/launch"
+  to = "/admin/launch/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/users"
+  to = "/admin/users/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/settings"
+  to = "/admin/settings/index.html"
+  status = 200
+
 # Legacy redirects
 [[redirects]]
   from = "/gala"
