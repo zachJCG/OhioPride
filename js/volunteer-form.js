@@ -89,9 +89,11 @@
     progressPct.textContent = pct + '%';
     progressFill.style.width = pct + '%';
 
+    // "Sign me up" stays hidden until the progress bar reaches 100%.
+    var atFinish = (pct >= 100);
     backBtn.hidden   = (n === 1);
-    nextBtn.hidden   = (n === TOTAL_STEPS);
-    submitBtn.hidden = (n !== TOTAL_STEPS);
+    nextBtn.hidden   = atFinish;
+    submitBtn.hidden = !atFinish;
 
     clearError();
 
@@ -165,6 +167,14 @@
   // --------------------------------------------------------------------
   // Build the JSON payload the function expects
   // --------------------------------------------------------------------
+  function resolvePronouns() {
+    var dropdown = val('pronouns');
+    if (dropdown === 'other') {
+      return val('pronouns_other') || null;
+    }
+    return dropdown || null;
+  }
+
   function buildPayload() {
     return {
       website: val('website') || '',  // honeypot — backend silently drops if filled
@@ -172,8 +182,8 @@
       first_name: val('first_name'),
       last_name:  val('last_name'),
       email:      val('email').toLowerCase(),
-      phone:      val('phone')    || null,
-      pronouns:   val('pronouns') || null,
+      phone:      val('phone') || null,
+      pronouns:   resolvePronouns(),
 
       city:   val('city')   || null,
       county: val('county') || null,
@@ -280,6 +290,20 @@
   if (priorToggle && priorWrap) {
     priorToggle.addEventListener('change', function () {
       priorWrap.hidden = !priorToggle.checked;
+    });
+  }
+
+  // Show write-in pronouns input only when the dropdown is set to "other"
+  var pronounsSelect = document.getElementById('pronouns');
+  var pronounsOtherWrap = document.getElementById('pronounsOtherWrap');
+  if (pronounsSelect && pronounsOtherWrap) {
+    pronounsSelect.addEventListener('change', function () {
+      var isOther = pronounsSelect.value === 'other';
+      pronounsOtherWrap.hidden = !isOther;
+      if (isOther) {
+        var input = document.getElementById('pronounsOther');
+        if (input) setTimeout(function () { input.focus(); }, 30);
+      }
     });
   }
 
