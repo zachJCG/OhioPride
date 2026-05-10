@@ -9,240 +9,230 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/site-template.css" />
     <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+
+    <style>
+      .vol-table-wrap { background: rgba(15, 34, 51, 0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 16px 8px; }
+      .vol-table tbody tr { cursor: pointer; }
+      .vol-table tbody tr:hover { background: rgba(115, 215, 238, 0.06); }
+      .vol-drawer-toggle-wrap { display: flex; gap: 8px; align-items: center; }
+    </style>
   </head>
-  <body>
-    <div id="site-header"></div>
 
-    <section class="subpage-hero">
-      <div class="container">
-        <div class="section-label">Admin</div>
-        <h1 class="section-title">Volunteers</h1>
-        <p class="subpage-hero-sub">
-          Review volunteer signups and role interests across all 88 counties.
-        </p>
-      </div>
-    </section>
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="volunteers"
+      data-page-eyebrow="Field"
+      data-page-title="Volunteers"
+      data-page-sub="Triage signups, assign captains, and track county coverage."
+    ></div>
 
-    <div class="admin-meta-bar">
-      <div class="container">
-        <div class="admin-crumbs">
-          <a href="/admin/dashboard">Dashboard</a>
-          <span class="admin-crumb-sep">/</span>
-          <span>Volunteers</span>
-        </div>
-        <div class="admin-meta-actions">
-          <span class="admin-meta-user">
-            Signed in as <strong id="adminEmail">&hellip;</strong>
-          </span>
-          <button type="button" class="admin-signout-btn" id="signOutBtn">Sign Out</button>
-        </div>
-      </div>
-    </div>
-
-    <section class="section">
-      <div class="container">
-        <div class="admin-loading" id="loading">Loading&hellip;</div>
-
-        <div class="admin-panel" id="panel" hidden>
-          <div class="admin-stat-grid" id="statGrid">
-            <div class="admin-stat">
-              <div class="admin-stat-num" id="statTotal">0</div>
-              <div class="admin-stat-label">Total</div>
-            </div>
-            <div class="admin-stat">
-              <div class="admin-stat-num" id="statNew">0</div>
-              <div class="admin-stat-label">New</div>
-            </div>
-            <div class="admin-stat">
-              <div class="admin-stat-num" id="statContacted">0</div>
-              <div class="admin-stat-label">Contacted</div>
-            </div>
-            <div class="admin-stat">
-              <div class="admin-stat-num" id="statAssigned">0</div>
-              <div class="admin-stat-label">Assigned</div>
-            </div>
-            <div class="admin-stat">
-              <div class="admin-stat-num" id="statCounties">0</div>
-              <div class="admin-stat-label">Counties</div>
-            </div>
-          </div>
-
-          <div class="admin-toolbar">
-            <input
-              type="search"
-              class="admin-input"
-              id="filterSearch"
-              placeholder="Search name, email, city&hellip;"
-              autocomplete="off"
-            />
-            <select class="admin-input" id="filterStatus">
-              <option value="">All statuses</option>
-              <option value="new">New</option>
-              <option value="contacted">Contacted</option>
-              <option value="assigned">Assigned</option>
-              <option value="inactive">Inactive</option>
-              <option value="declined">Declined</option>
-            </select>
-            <select class="admin-input" id="filterCounty">
-              <option value="">All counties</option>
-            </select>
-            <select class="admin-input" id="filterInterest">
-              <option value="">All interests</option>
-              <option value="field_canvassing">Field &amp; canvassing</option>
-              <option value="phone_text_banking">Phone &amp; text banking</option>
-              <option value="pride_tabling">Pride tabling</option>
-              <option value="social_amplification">Social amplification</option>
-              <option value="skills_based">Skills-based</option>
-              <option value="house_party_host">House party host</option>
-              <option value="local_captain">Local captain</option>
-              <option value="day_of_logistics">Day-of logistics</option>
-            </select>
-            <span class="admin-toolbar-spacer"></span>
-            <span class="admin-result-count" id="resultCount"></span>
-          </div>
-
-          <div class="admin-table-wrap">
-            <table class="admin-table" id="volunteersTable">
-              <thead>
-                <tr>
-                  <th data-sort="last_name" class="admin-sortable">Name<span class="admin-sort-arrow">&darr;</span></th>
-                  <th>Contact</th>
-                  <th data-sort="county" class="admin-sortable">Location<span class="admin-sort-arrow">&darr;</span></th>
-                  <th>Interests</th>
-                  <th data-sort="time_commitment" class="admin-sortable">Commitment<span class="admin-sort-arrow">&darr;</span></th>
-                  <th data-sort="created_at" class="admin-sortable">Submitted<span class="admin-sort-arrow">&darr;</span></th>
-                  <th data-sort="status" class="admin-sortable">Status<span class="admin-sort-arrow">&darr;</span></th>
-                </tr>
-              </thead>
-              <tbody id="volunteersBody">
-                <tr><td colspan="7" class="admin-empty-row">Loading volunteers&hellip;</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p class="admin-panel-foot">
-            Source of truth: <code>volunteers</code> &middot;
-            Public form: <a href="/volunteer">/volunteer</a> &middot;
-            Status changes save automatically.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <div id="site-footer"></div>
-    <div class="admin-toast" id="toast"></div>
-
-    <script src="/js/site-template.js" defer></script>
-    <script src="/js/ohiopride-data.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/admin/admin-auth.js"></script>
+    <script src="/admin/admin-shell.js"></script>
+
     <script>
       (function () {
         'use strict';
 
         var INTEREST_LABEL = {
-          field_canvassing:   'Field',
-          phone_text_banking: 'Phone/Text',
-          pride_tabling:      'Tabling',
+          field_canvassing:    'Field & canvassing',
+          phone_text_banking:  'Phone & text banking',
+          pride_tabling:       'Pride tabling',
+          social_amplification:'Social amplification',
+          skills_based:        'Skills-based',
+          house_party_host:    'House party host',
+          local_captain:       'Local captain',
+          day_of_logistics:    'Day-of logistics'
+        };
+        var INTEREST_SHORT = {
+          field_canvassing:    'Field',
+          phone_text_banking:  'Phone/Text',
+          pride_tabling:       'Tabling',
           social_amplification:'Social',
-          skills_based:       'Skills',
-          house_party_host:   'House Party',
-          local_captain:      'Captain',
-          day_of_logistics:   'Logistics'
+          skills_based:        'Skills',
+          house_party_host:    'House Party',
+          local_captain:       'Captain',
+          day_of_logistics:    'Logistics'
         };
-
+        var SKILL_LABEL = {
+          writing:'Writing', graphic_design:'Graphic Design', photography:'Photography',
+          videography:'Videography', legal:'Legal', data_analysis:'Data Analysis',
+          web_development:'Web Development', accounting_finance:'Accounting & Finance',
+          event_planning:'Event Planning', public_speaking:'Public Speaking',
+          fundraising:'Fundraising', social_media:'Social Media', asl:'ASL',
+          spanish:'Spanish', other_language:'Other Language'
+        };
+        var AVAIL_LABEL = {
+          weekday_days:'Weekday days', weekday_evenings:'Weekday evenings', weekends:'Weekends'
+        };
         var TIME_LABEL = {
-          one_time:  'One-time',
-          monthly:   'A few hrs/mo',
-          weekly:    'A few hrs/wk',
-          surge_only:'Surge only'
+          one_time:'One-time', monthly:'A few hrs/mo', weekly:'A few hrs/wk', surge_only:'Surge only'
         };
-
-        var STATUS_OPTIONS = ['new', 'contacted', 'assigned', 'inactive', 'declined'];
+        var STATUS_OPTIONS = ['new','contacted','assigned','inactive','declined'];
         var STATUS_LABEL = {
-          new:       'New',
-          contacted: 'Contacted',
-          assigned:  'Assigned',
-          inactive:  'Inactive',
-          declined:  'Declined'
+          new:'New', contacted:'Contacted', assigned:'Assigned',
+          inactive:'Inactive', declined:'Declined'
         };
 
         var state = {
           rows: [],
           filtered: [],
           sortKey: 'created_at',
-          sortDir: 'desc'
+          sortDir: 'desc',
+          client: null,
+          canWrite: false,
+          activeId: null
         };
 
-        function $(id) { return document.getElementById(id); }
+        // ---------------------------------------------------------------
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var detail   = ev.detail || {};
+          state.client = detail.client;
+          state.canWrite = detail.can('volunteers','write');
 
-        function fmtDate(iso) {
-          if (!iso) return '';
-          var d = new Date(iso);
-          if (isNaN(d.getTime())) return '';
-          var diff = (Date.now() - d.getTime()) / 1000;
-          if (diff < 60)        return 'Just now';
-          if (diff < 3600)      return Math.floor(diff / 60) + 'm ago';
-          if (diff < 86400)     return Math.floor(diff / 3600) + 'h ago';
-          if (diff < 86400 * 7) return Math.floor(diff / 86400) + 'd ago';
-          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        }
+          var actions = document.getElementById('shellPageActions');
+          actions.innerHTML =
+            '<a class="shell-btn shell-btn-outline" href="/volunteer" target="_blank" rel="noopener">View public form</a>' +
+            '<button type="button" class="shell-btn shell-btn-primary" id="exportCsv">Export CSV</button>';
 
-        function escapeHtml(s) {
-          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          document.getElementById('shellBody').innerHTML = pageHtml();
+
+          loadVolunteers().then(function (rows) {
+            state.rows = rows;
+            populateCountyFilter();
+            renderStats();
+            applyFilters();
+            // Deep-link: open the drawer if ?id= is on the URL
+            var qid = new URLSearchParams(location.search).get('id');
+            if (qid) {
+              var match = rows.find(function (r) { return r.id === qid; });
+              if (match) openVolunteerDrawer(match);
+            }
+          }).catch(function (err) {
+            console.error('volunteers load failed', err);
+            document.getElementById('volBody').innerHTML =
+              '<tr><td colspan="7" class="admin-empty-row admin-error">' +
+              'Could not load volunteers. Your role may not include this module.' +
+              '</td></tr>';
           });
+
+          bindEvents();
+        });
+
+        // ---------------------------------------------------------------
+        function pageHtml() {
+          return [
+            '<div class="admin-stat-grid">',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statTotal">0</div><div class="admin-stat-label">Total</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statNew">0</div><div class="admin-stat-label">New</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statContacted">0</div><div class="admin-stat-label">Contacted</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statAssigned">0</div><div class="admin-stat-label">Assigned</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statCounties">0</div><div class="admin-stat-label">Counties</div></div>',
+            '</div>',
+
+            '<div class="admin-toolbar">',
+              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search name, email, city..." autocomplete="off" />',
+              '<select class="admin-input" id="filterStatus">',
+                '<option value="">All statuses</option>',
+                '<option value="new">New</option>',
+                '<option value="contacted">Contacted</option>',
+                '<option value="assigned">Assigned</option>',
+                '<option value="inactive">Inactive</option>',
+                '<option value="declined">Declined</option>',
+              '</select>',
+              '<select class="admin-input" id="filterCounty"><option value="">All counties</option></select>',
+              '<select class="admin-input" id="filterInterest">',
+                '<option value="">All interests</option>',
+                Object.keys(INTEREST_LABEL).map(function (k) {
+                  return '<option value="' + k + '">' + INTEREST_LABEL[k] + '</option>';
+                }).join(''),
+              '</select>',
+              '<span class="admin-toolbar-spacer"></span>',
+              '<span class="admin-result-count" id="resultCount"></span>',
+            '</div>',
+
+            '<div class="vol-table-wrap">',
+              '<div class="admin-table-wrap" style="border:none;">',
+                '<table class="admin-table vol-table" id="volTable">',
+                  '<thead><tr>',
+                    '<th data-sort="last_name" class="admin-sortable">Name<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th>Contact</th>',
+                    '<th data-sort="county" class="admin-sortable">Location<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th>Interests</th>',
+                    '<th data-sort="time_commitment" class="admin-sortable">Commitment<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th data-sort="created_at" class="admin-sortable">Submitted<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th data-sort="status" class="admin-sortable">Status<span class="admin-sort-arrow">&darr;</span></th>',
+                  '</tr></thead>',
+                  '<tbody id="volBody"><tr><td colspan="7" class="admin-empty-row">Loading volunteers...</td></tr></tbody>',
+                '</table>',
+              '</div>',
+            '</div>'
+          ].join('');
         }
 
-        function toast(msg, kind) {
-          var el = $('toast');
-          el.textContent = msg;
-          el.className = 'admin-toast visible' + (kind ? ' admin-toast-' + kind : '');
-          clearTimeout(toast._t);
-          toast._t = setTimeout(function () { el.classList.remove('visible'); }, 3200);
+        // ---------------------------------------------------------------
+        function loadVolunteers() {
+          return state.client
+            .from('volunteers')
+            .select(
+              'id, created_at, first_name, last_name, email, phone, pronouns, ' +
+              'city, county, zip, registered_voter, interests, skills, availability, ' +
+              'time_commitment, prior_campaign_experience, prior_campaign_notes, ' +
+              'is_founding_member, referral_source, additional_notes, ' +
+              'email_optin, sms_optin, status'
+            )
+            .order('created_at', { ascending: false })
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              return resp.data || [];
+            });
         }
 
+        function updateStatus(id, status) {
+          return state.client
+            .from('volunteers')
+            .update({ status: status })
+            .eq('id', id)
+            .then(function (r) { if (r.error) throw r.error; });
+        }
+
+        // ---------------------------------------------------------------
+        // Stats / filters / sort
+        // ---------------------------------------------------------------
         function populateCountyFilter() {
-          var counties = {};
-          for (var i = 0; i < state.rows.length; i++) {
-            var c = state.rows[i].county;
-            if (c) counties[c] = (counties[c] || 0) + 1;
-          }
-          var sorted = Object.keys(counties).sort();
-          var sel = $('filterCounty');
-          // Keep the "All" option, replace the rest
+          var counts = {};
+          state.rows.forEach(function (r) {
+            if (r.county) counts[r.county] = (counts[r.county] || 0) + 1;
+          });
+          var sel = document.getElementById('filterCounty');
           while (sel.options.length > 1) sel.remove(1);
-          sorted.forEach(function (c) {
+          Object.keys(counts).sort().forEach(function (c) {
             var opt = document.createElement('option');
             opt.value = c;
-            opt.textContent = c + ' (' + counties[c] + ')';
+            opt.textContent = c + ' (' + counts[c] + ')';
             sel.appendChild(opt);
           });
         }
-
         function renderStats() {
-          var counts = { total: state.rows.length, new: 0, contacted: 0, assigned: 0 };
+          var c = { total: state.rows.length, new: 0, contacted: 0, assigned: 0 };
           var counties = {};
-          for (var i = 0; i < state.rows.length; i++) {
-            var r = state.rows[i];
-            if (r.status === 'new')       counts.new++;
-            if (r.status === 'contacted') counts.contacted++;
-            if (r.status === 'assigned')  counts.assigned++;
+          state.rows.forEach(function (r) {
+            if (r.status && c[r.status] != null) c[r.status]++;
             if (r.county) counties[r.county] = true;
-          }
-          $('statTotal').textContent     = counts.total.toLocaleString();
-          $('statNew').textContent       = counts.new.toLocaleString();
-          $('statContacted').textContent = counts.contacted.toLocaleString();
-          $('statAssigned').textContent  = counts.assigned.toLocaleString();
+          });
+          $('statTotal').textContent     = c.total.toLocaleString();
+          $('statNew').textContent       = c.new.toLocaleString();
+          $('statContacted').textContent = c.contacted.toLocaleString();
+          $('statAssigned').textContent  = c.assigned.toLocaleString();
           $('statCounties').textContent  = Object.keys(counties).length;
         }
-
         function applyFilters() {
           var q       = $('filterSearch').value.trim().toLowerCase();
           var status  = $('filterStatus').value;
@@ -254,62 +244,38 @@
             if (county && r.county !== county) return false;
             if (interest && (r.interests || []).indexOf(interest) === -1) return false;
             if (q) {
-              var hay = (
-                (r.first_name || '') + ' ' +
-                (r.last_name || '') + ' ' +
-                (r.email || '') + ' ' +
-                (r.city || '') + ' ' +
-                (r.county || '')
-              ).toLowerCase();
+              var hay = ((r.first_name||'') + ' ' + (r.last_name||'') + ' ' +
+                         (r.email||'') + ' ' + (r.city||'') + ' ' + (r.county||'')).toLowerCase();
               if (hay.indexOf(q) === -1) return false;
             }
             return true;
           });
-
           applySort();
         }
-
         function applySort() {
-          var key = state.sortKey;
-          var dir = state.sortDir === 'asc' ? 1 : -1;
-
+          var key = state.sortKey, dir = state.sortDir === 'asc' ? 1 : -1;
           state.filtered.sort(function (a, b) {
-            var av = a[key];
-            var bv = b[key];
-            if (key === 'created_at') {
-              return ((new Date(av || 0)) - (new Date(bv || 0))) * dir;
-            }
-            return String(av || '').localeCompare(String(bv || ''), undefined, { sensitivity: 'base' }) * dir;
+            var av = a[key], bv = b[key];
+            if (key === 'created_at') return ((new Date(av||0)) - (new Date(bv||0))) * dir;
+            return String(av||'').localeCompare(String(bv||''), undefined, { sensitivity:'base' }) * dir;
           });
-
           renderRows();
           renderSortHeaders();
         }
-
         function renderSortHeaders() {
-          var ths = document.querySelectorAll('#volunteersTable thead th[data-sort]');
-          for (var i = 0; i < ths.length; i++) {
-            var th = ths[i];
-            th.classList.remove('admin-sort-asc', 'admin-sort-desc');
+          document.querySelectorAll('#volTable thead th[data-sort]').forEach(function (th) {
+            th.classList.remove('admin-sort-asc','admin-sort-desc');
             if (th.dataset.sort === state.sortKey) {
               th.classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
             }
-          }
+          });
         }
 
-        function statusSelectHtml(id, current) {
-          var opts = STATUS_OPTIONS.map(function (s) {
-            return '<option value="' + s + '"' + (s === current ? ' selected' : '') + '>' +
-              STATUS_LABEL[s] + '</option>';
-          }).join('');
-          return (
-            '<select class="admin-status-select admin-status-' + escapeHtml(current || 'new') +
-              '" data-status-select data-id="' + escapeHtml(id) + '">' + opts + '</select>'
-          );
-        }
-
+        // ---------------------------------------------------------------
+        // Table rows
+        // ---------------------------------------------------------------
         function renderRows() {
-          var body = $('volunteersBody');
+          var body = $('volBody');
           $('resultCount').textContent =
             state.filtered.length === state.rows.length
               ? state.rows.length + ' total'
@@ -323,117 +289,165 @@
             return;
           }
 
-          var html = '';
-          for (var i = 0; i < state.filtered.length; i++) {
-            var r = state.filtered[i];
-
-            var nameMain = escapeHtml((r.first_name || '') + ' ' + (r.last_name || '')).trim() || '—';
-            var pronouns = r.pronouns
-              ? '<span class="admin-cell-sub">' + escapeHtml(r.pronouns) + '</span>'
-              : '';
+          body.innerHTML = state.filtered.map(function (r) {
+            var nameMain = escapeHtml((r.first_name||'') + ' ' + (r.last_name||'')).trim() || '&mdash;';
+            var pronouns = r.pronouns ? '<span class="admin-cell-sub">' + escapeHtml(r.pronouns) + '</span>' : '';
 
             var emailHtml = r.email
-              ? '<a href="mailto:' + escapeHtml(r.email) + '" class="admin-link">' + escapeHtml(r.email) + '</a>'
+              ? '<a href="mailto:' + escapeAttr(r.email) + '" class="admin-link" onclick="event.stopPropagation()">' + escapeHtml(r.email) + '</a>'
               : '<span class="admin-muted">&mdash;</span>';
-            var phoneHtml = r.phone
-              ? '<span class="admin-cell-sub">' + escapeHtml(r.phone) + '</span>'
-              : '';
+            var phoneHtml = r.phone ? '<span class="admin-cell-sub">' + escapeHtml(r.phone) + '</span>' : '';
 
             var loc = [r.city, r.county ? r.county + ' Co.' : ''].filter(Boolean).join(', ');
             var locHtml = loc ? escapeHtml(loc) : '<span class="admin-muted">&mdash;</span>';
             if (r.zip) locHtml += '<span class="admin-cell-sub">ZIP ' + escapeHtml(r.zip) + '</span>';
 
             var interests = (r.interests || []).map(function (k) {
-              return '<span class="admin-pill">' + escapeHtml(INTEREST_LABEL[k] || k) + '</span>';
-            }).join(' ');
-            if (!interests) interests = '<span class="admin-muted">&mdash;</span>';
+              return '<span class="admin-pill">' + escapeHtml(INTEREST_SHORT[k] || k) + '</span>';
+            }).join(' ') || '<span class="admin-muted">&mdash;</span>';
 
-            var commitment = TIME_LABEL[r.time_commitment] || r.time_commitment || '—';
+            var commitment = TIME_LABEL[r.time_commitment] || r.time_commitment || '&mdash;';
             commitment = escapeHtml(commitment);
             if (r.registered_voter) {
               commitment += '<span class="admin-cell-sub">Voter: ' + escapeHtml(r.registered_voter) + '</span>';
             }
 
-            html +=
-              '<tr data-id="' + escapeHtml(r.id) + '">' +
-                '<td class="admin-cell-name">' + nameMain + pronouns + '</td>' +
-                '<td>' + emailHtml + phoneHtml + '</td>' +
-                '<td>' + locHtml + '</td>' +
-                '<td><div class="admin-pill-row">' + interests + '</div></td>' +
-                '<td>' + commitment + '</td>' +
-                '<td>' + escapeHtml(fmtDate(r.created_at)) + '</td>' +
-                '<td>' + statusSelectHtml(r.id, r.status || 'new') + '</td>' +
-              '</tr>';
+            return '<tr data-id="' + escapeAttr(r.id) + '">' +
+              '<td class="admin-cell-name">' + nameMain + pronouns + '</td>' +
+              '<td>' + emailHtml + phoneHtml + '</td>' +
+              '<td>' + locHtml + '</td>' +
+              '<td><div class="admin-pill-row">' + interests + '</div></td>' +
+              '<td>' + commitment + '</td>' +
+              '<td>' + escapeHtml(fmtDate(r.created_at)) + '</td>' +
+              '<td>' + statusSelectHtml(r.id, r.status || 'new') + '</td>' +
+            '</tr>';
+          }).join('');
+        }
+
+        function statusSelectHtml(id, current) {
+          var opts = STATUS_OPTIONS.map(function (s) {
+            return '<option value="' + s + '"' + (s===current ? ' selected' : '') + '>' + STATUS_LABEL[s] + '</option>';
+          }).join('');
+          var disabled = state.canWrite ? '' : ' disabled';
+          return '<select class="admin-status-select admin-status-' + escapeAttr(current||'new') +
+                 '" data-status-select data-id="' + escapeAttr(id) + '" onclick="event.stopPropagation()"' + disabled + '>' + opts + '</select>';
+        }
+
+        // ---------------------------------------------------------------
+        // Detail drawer
+        // ---------------------------------------------------------------
+        function openVolunteerDrawer(r) {
+          state.activeId = r.id;
+
+          var interests = (r.interests || []).map(function (k) { return INTEREST_LABEL[k] || k; });
+          var skills    = (r.skills    || []).map(function (k) { return SKILL_LABEL[k]    || k; });
+          var avail     = (r.availability || []).map(function (k) { return AVAIL_LABEL[k] || k; });
+
+          function pill(arr) {
+            if (!arr.length) return '<span class="admin-muted">None selected</span>';
+            return '<div class="admin-pill-row">' + arr.map(function (x) {
+              return '<span class="admin-pill">' + escapeHtml(x) + '</span>';
+            }).join('') + '</div>';
           }
-          body.innerHTML = html;
-        }
+          function row(label, value) {
+            return '<dt>' + escapeHtml(label) + '</dt><dd>' + (value || '<span class="admin-muted">&mdash;</span>') + '</dd>';
+          }
+          function val(v) { return v ? escapeHtml(v) : ''; }
 
-        async function loadVolunteers(client) {
-          var resp = await client
-            .from('volunteers')
-            .select(
-              'id, created_at, first_name, last_name, email, phone, pronouns, ' +
-              'city, county, zip, registered_voter, interests, skills, availability, ' +
-              'time_commitment, prior_campaign_experience, is_founding_member, ' +
-              'referral_source, additional_notes, status'
-            )
-            .order('created_at', { ascending: false });
+          var body =
+            '<div class="shell-drawer-section">' +
+              '<h4>Contact</h4>' +
+              '<dl>' +
+                row('Email', r.email ? '<a href="mailto:' + escapeAttr(r.email) + '">' + escapeHtml(r.email) + '</a>' : '') +
+                row('Phone', val(r.phone)) +
+                row('Pronouns', val(r.pronouns)) +
+              '</dl>' +
+            '</div>' +
+            '<div class="shell-drawer-section">' +
+              '<h4>Location</h4>' +
+              '<dl>' +
+                row('City',   val(r.city)) +
+                row('County', val(r.county)) +
+                row('ZIP',    val(r.zip)) +
+                row('Registered voter', val(r.registered_voter)) +
+              '</dl>' +
+            '</div>' +
+            '<div class="shell-drawer-section">' +
+              '<h4>How they want to help</h4>' +
+              '<dl>' +
+                row('Interests',   pill(interests)) +
+                row('Skills',      pill(skills)) +
+                row('Availability', pill(avail)) +
+                row('Commitment',  val(TIME_LABEL[r.time_commitment] || r.time_commitment)) +
+                row('Prior campaign', r.prior_campaign_experience
+                    ? (r.prior_campaign_notes ? escapeHtml(r.prior_campaign_notes) : 'Yes')
+                    : 'No') +
+              '</dl>' +
+            '</div>' +
+            '<div class="shell-drawer-section">' +
+              '<h4>Wrap-up</h4>' +
+              '<dl>' +
+                row('Founding member', r.is_founding_member ? 'Yes' : 'No') +
+                row('Referral source', val(r.referral_source)) +
+                row('Email opt-in',    r.email_optin ? 'Yes' : 'No') +
+                row('SMS opt-in',      r.sms_optin   ? 'Yes' : 'No') +
+                row('Notes',           val(r.additional_notes)) +
+                row('Submitted',       val(new Date(r.created_at).toLocaleString())) +
+                row('Status',          '<strong>' + escapeHtml(STATUS_LABEL[r.status]||r.status) + '</strong>') +
+              '</dl>' +
+            '</div>';
 
-          if (resp.error) throw resp.error;
-          return resp.data || [];
-        }
+          var foot = state.canWrite
+            ? '<a class="shell-btn shell-btn-outline" href="mailto:' + escapeAttr(r.email || '') + '">Email volunteer</a>' +
+              '<button type="button" class="shell-btn shell-btn-primary" data-drawer-close>Done</button>'
+            : '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>';
 
-        async function updateStatus(client, id, status) {
-          var resp = await client
-            .from('volunteers')
-            .update({ status: status })
-            .eq('id', id);
-          if (resp.error) throw resp.error;
-        }
-
-        document.addEventListener('admin-auth-ready', function () {
-          var client = window.AdminAuth && window.AdminAuth.client;
-          if (!client) return;
-
-          loadVolunteers(client).then(function (rows) {
-            state.rows = rows;
-            populateCountyFilter();
-            renderStats();
-            applyFilters();
-          }).catch(function (err) {
-            console.error('Failed to load volunteers:', err);
-            $('volunteersBody').innerHTML =
-              '<tr><td colspan="7" class="admin-empty-row admin-error">' +
-              'Could not load volunteers. Your account may not be authorized for this view.' +
-              '</td></tr>';
+          window.AdminShell.openDrawer({
+            eyebrow: r.county ? (r.county + ' County') : 'Volunteer',
+            title: ((r.first_name||'') + ' ' + (r.last_name||'')).trim() || 'Volunteer',
+            bodyHtml: body,
+            footHtml: foot
           });
+        }
 
-          var debounceT;
+        // ---------------------------------------------------------------
+        // Events
+        // ---------------------------------------------------------------
+        function bindEvents() {
+          var debT;
           $('filterSearch').addEventListener('input', function () {
-            clearTimeout(debounceT);
-            debounceT = setTimeout(applyFilters, 150);
+            clearTimeout(debT); debT = setTimeout(applyFilters, 150);
           });
           $('filterStatus').addEventListener('change', applyFilters);
           $('filterCounty').addEventListener('change', applyFilters);
           $('filterInterest').addEventListener('change', applyFilters);
 
-          var sortableHeaders = document.querySelectorAll('#volunteersTable thead th[data-sort]');
-          for (var i = 0; i < sortableHeaders.length; i++) {
-            sortableHeaders[i].addEventListener('click', function (ev) {
+          document.querySelectorAll('#volTable thead th[data-sort]').forEach(function (th) {
+            th.addEventListener('click', function (ev) {
               var key = ev.currentTarget.dataset.sort;
-              if (state.sortKey === key) {
-                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
-              } else {
-                state.sortKey = key;
-                state.sortDir = key === 'created_at' ? 'desc' : 'asc';
-              }
+              if (state.sortKey === key) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              else { state.sortKey = key; state.sortDir = key === 'created_at' ? 'desc' : 'asc'; }
               applySort();
             });
-          }
+          });
 
-          $('volunteersBody').addEventListener('change', function (ev) {
+          var body = $('volBody');
+          body.addEventListener('click', function (ev) {
+            var tr  = ev.target.closest('tr[data-id]');
+            if (!tr) return;
+            var sel = ev.target.closest('select');
+            if (sel) return; // status select handled separately
+            var id = tr.dataset.id;
+            var row = state.rows.find(function (r) { return r.id === id; });
+            if (row) openVolunteerDrawer(row);
+          });
+          body.addEventListener('change', function (ev) {
             var sel = ev.target;
-            if (!sel || !sel.dataset || !sel.dataset.statusSelect) return;
+            if (!sel || !sel.dataset || sel.dataset.statusSelect == null) return;
+            if (!state.canWrite) {
+              window.AdminShell.toast('Your role does not include write access.', 'error');
+              return;
+            }
             var id = sel.dataset.id;
             var newStatus = sel.value;
             var prev = null;
@@ -445,22 +459,75 @@
               }
             }
             sel.disabled = true;
-            updateStatus(client, id, newStatus).then(function () {
+            updateStatus(id, newStatus).then(function () {
               sel.className = 'admin-status-select admin-status-' + newStatus;
               renderStats();
-              toast('Status set to ' + STATUS_LABEL[newStatus] + '.', 'success');
+              window.AdminShell.toast('Status set to ' + STATUS_LABEL[newStatus] + '.', 'success');
             }).catch(function (err) {
-              console.error('Status update failed:', err);
+              console.error('status update failed', err);
               for (var j = 0; j < state.rows.length; j++) {
                 if (state.rows[j].id === id) { state.rows[j].status = prev; break; }
               }
               sel.value = prev || 'new';
-              toast('Could not update status. Please try again.', 'error');
-            }).finally(function () {
-              sel.disabled = false;
-            });
+              window.AdminShell.toast('Could not update status.', 'error');
+            }).finally(function () { sel.disabled = false; });
           });
-        });
+
+          document.getElementById('exportCsv').addEventListener('click', exportCsv);
+        }
+
+        function exportCsv() {
+          if (state.filtered.length === 0) {
+            window.AdminShell.toast('Nothing to export with the current filters.', 'error');
+            return;
+          }
+          var cols = [
+            'created_at','first_name','last_name','email','phone','pronouns',
+            'city','county','zip','registered_voter',
+            'interests','skills','availability','time_commitment',
+            'prior_campaign_experience','is_founding_member','referral_source',
+            'email_optin','sms_optin','status'
+          ];
+          var lines = [cols.join(',')];
+          state.filtered.forEach(function (r) {
+            lines.push(cols.map(function (c) {
+              var v = r[c];
+              if (Array.isArray(v)) v = v.join('; ');
+              if (typeof v === 'boolean') v = v ? 'true' : 'false';
+              if (v == null) v = '';
+              v = String(v).replace(/"/g, '""');
+              return /[,"\n]/.test(v) ? '"' + v + '"' : v;
+            }).join(','));
+          });
+          var blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'ohio-pride-volunteers-' + new Date().toISOString().slice(0,10) + '.csv';
+          document.body.appendChild(a); a.click(); a.remove();
+          URL.revokeObjectURL(url);
+          window.AdminShell.toast('Exported ' + state.filtered.length + ' volunteers.', 'success');
+        }
+
+        // Helpers
+        function $(id) { return document.getElementById(id); }
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          var diff = (Date.now() - d.getTime()) / 1000;
+          if (diff < 60)        return 'Just now';
+          if (diff < 3600)      return Math.floor(diff/60) + 'm ago';
+          if (diff < 86400)     return Math.floor(diff/3600) + 'h ago';
+          if (diff < 86400 * 7) return Math.floor(diff/86400) + 'd ago';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
       })();
     </script>
   </body>

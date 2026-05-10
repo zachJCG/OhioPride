@@ -3,257 +3,401 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard | Ohio Pride PAC</title>
+    <title>Dashboard | Ohio Pride PAC Admin</title>
     <meta name="robots" content="noindex,nofollow" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/site-template.css" />
-
-    <style>
-      body { background: var(--dark-bg); }
-
-      .admin-meta-bar {
-        background: var(--bg-light);
-        border-top: 1px solid var(--border-light);
-        border-bottom: 1px solid var(--border-light);
-      }
-      .admin-meta-bar .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 14px 0;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-      .admin-meta-user {
-        font-family: "Montserrat", sans-serif;
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: var(--text-muted);
-      }
-      .admin-meta-user strong {
-        color: var(--text-white);
-        font-weight: 700;
-        margin-left: 6px;
-      }
-      .admin-signout-btn {
-        font-family: "Montserrat", sans-serif;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 1.2px;
-        text-transform: uppercase;
-        background: transparent;
-        color: var(--text-light);
-        border: 1.5px solid var(--border-medium);
-        border-radius: 4px;
-        padding: 8px 14px;
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-      .admin-signout-btn:hover {
-        color: var(--text-white);
-        border-color: var(--text-white);
-      }
-
-      .admin-card-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 24px;
-        max-width: 1100px;
-        margin: 0 auto;
-      }
-
-      .admin-card {
-        display: flex;
-        flex-direction: column;
-        background: var(--bg-light);
-        border: 1px solid var(--border-light);
-        border-radius: 12px;
-        padding: 28px 26px 26px;
-        text-decoration: none;
-        color: inherit;
-        transition: border-color 0.2s, background 0.2s, transform 0.2s;
-        position: relative;
-        overflow: hidden;
-      }
-      .admin-card::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 4px;
-        background: var(--pride-gradient);
-        opacity: 0.85;
-      }
-      .admin-card:hover {
-        border-color: var(--border-medium);
-        background: var(--bg-white);
-        transform: translateY(-2px);
-      }
-
-      .admin-card-eyebrow {
-        font-family: "Montserrat", sans-serif;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 1.6px;
-        text-transform: uppercase;
-        color: var(--text-accent);
-        margin: 8px 0 10px;
-      }
-      .admin-card-title {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 700;
-        font-size: 22px;
-        color: var(--text-white);
-        margin: 0 0 10px;
-        letter-spacing: -0.01em;
-      }
-      .admin-card-desc {
-        font-size: 14px;
-        color: var(--text-secondary);
-        line-height: 1.6;
-        margin: 0 0 18px;
-      }
-      .admin-card-cta {
-        margin-top: auto;
-        font-family: "Montserrat", sans-serif;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 1.4px;
-        text-transform: uppercase;
-        color: var(--text-white);
-      }
-      .admin-card-cta::after {
-        content: " \2192";
-        color: var(--text-accent);
-        transition: transform 0.2s;
-        display: inline-block;
-      }
-      .admin-card:hover .admin-card-cta::after {
-        transform: translateX(4px);
-      }
-
-      .admin-loading {
-        text-align: center;
-        padding: 80px 0;
-        color: var(--text-muted);
-        font-family: "Montserrat", sans-serif;
-        font-size: 13px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-      }
-    </style>
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
   </head>
-  <body>
-    <div id="site-header"></div>
 
-    <section class="subpage-hero">
-      <div class="container">
-        <div class="section-label">Admin</div>
-        <h1 class="section-title">Dashboard</h1>
-        <p class="subpage-hero-sub">
-          Manage volunteers, endorsement applications, and donor records for Ohio Pride PAC.
-        </p>
-      </div>
-    </section>
-
-    <div class="admin-meta-bar">
-      <div class="container">
-        <div class="admin-meta-user">
-          Signed in as <strong id="adminEmail">&hellip;</strong>
-        </div>
-        <button type="button" class="admin-signout-btn" id="signOutBtn">Sign Out</button>
-      </div>
-    </div>
-
-    <section class="section">
-      <div class="container">
-        <div class="admin-loading" id="loading">Loading&hellip;</div>
-
-        <div class="admin-card-grid" id="cards" hidden>
-          <a class="admin-card" href="/admin/volunteers">
-            <div class="admin-card-eyebrow">Field</div>
-            <h2 class="admin-card-title">Volunteers</h2>
-            <p class="admin-card-desc">
-              Review volunteer signups, role interests, and county coverage.
-              Coordinate outreach and assign captains.
-            </p>
-            <span class="admin-card-cta">Open Volunteers</span>
-          </a>
-
-          <a class="admin-card" href="/admin/endorsements">
-            <div class="admin-card-eyebrow">Candidates</div>
-            <h2 class="admin-card-title">Endorsements</h2>
-            <p class="admin-card-desc">
-              Triage candidate endorsement applications, run screenings, and
-              publish endorsement decisions.
-            </p>
-            <span class="admin-card-cta">Open Endorsements</span>
-          </a>
-
-          <a class="admin-card" href="/admin/donors">
-            <div class="admin-card-eyebrow">Finance</div>
-            <h2 class="admin-card-title">Donors</h2>
-            <p class="admin-card-desc">
-              Review founding members, ActBlue contributions, and tier
-              progress. Manage public roster visibility.
-            </p>
-            <span class="admin-card-cta">Open Donors</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <div id="site-footer"></div>
-
-    <script src="/js/site-template.js" defer></script>
-    <script src="/js/ohiopride-data.js" defer></script>
+  <body class="admin-shell">
+    <!-- Shell root: admin-shell.js injects sidebar + topbar + page head here. -->
+    <div
+      id="shell-root"
+      data-active-nav="dashboard"
+      data-page-eyebrow="Overview"
+      data-page-title="Dashboard"
+      data-page-sub="Pulse on volunteers, endorsements, founding members, and active legislation."
+    ></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+
     <script>
-      const CONFIG = {
-        SUPABASE_URL: 'https://dkdxefzhttkmjhdbkvqn.supabase.co',
-        SUPABASE_ANON_KEY:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4',
-        LOGIN_PATH: '/admin/login',
-      };
+      (function () {
+        'use strict';
 
-      const client = window.supabase.createClient(
-        CONFIG.SUPABASE_URL,
-        CONFIG.SUPABASE_ANON_KEY,
-        { auth: { detectSessionInUrl: true, persistSession: true } }
-      );
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var detail = ev.detail || {};
+          var client = detail.client;
+          var user   = detail.user || {};
+          var can    = detail.can || function () { return false; };
 
-      (async function gate() {
-        try {
-          const { data: { session } } = await client.auth.getSession();
-          if (!session) {
-            window.location.replace(CONFIG.LOGIN_PATH);
+          // -----------------------------------------------------------
+          // Inject page-action button (top-right)
+          // -----------------------------------------------------------
+          var actions = document.getElementById('shellPageActions');
+          actions.innerHTML =
+            '<a class="shell-btn shell-btn-outline" href="https://ohiopride.org" target="_blank" rel="noopener">View site</a>' +
+            (can('volunteers','read')
+              ? '<a class="shell-btn shell-btn-primary" href="/admin/volunteers">Manage Volunteers</a>'
+              : '');
+
+          // -----------------------------------------------------------
+          // Render initial skeleton
+          // -----------------------------------------------------------
+          var body = document.getElementById('shellBody');
+          body.innerHTML = skeletonHtml(user, can);
+
+          loadDashboard(detail.session.access_token).then(function (data) {
+            renderHello(user, data);
+            renderKpis(data, can);
+            renderPipeline(data, can);
+            renderActivity(data);
+            renderCoverage(data);
+            renderQuickActions(can);
+          }).catch(function (err) {
+            console.error('dashboard load failed', err);
+            body.innerHTML =
+              '<div class="shell-widget"><div class="shell-widget-empty">' +
+              'Could not load dashboard data. ' +
+              'Check your sign-in or refresh the page.' +
+              '</div></div>';
+          });
+        });
+
+        // ---------------------------------------------------------------
+        // Static skeleton — placeholders fill in once data arrives
+        // ---------------------------------------------------------------
+        function skeletonHtml(user, can) {
+          var html = '';
+
+          // Greeting hello card
+          html += '<section class="shell-section">';
+          html +=   '<div class="shell-hello" id="helloCard">';
+          html +=     '<div class="shell-hello-text">';
+          html +=       '<div class="shell-hello-greeting">' + greetingTime() + '</div>';
+          html +=       '<h2 class="shell-hello-name" id="helloName">Welcome back</h2>';
+          html +=       '<p class="shell-hello-tip" id="helloTip">Loading the latest...</p>';
+          html +=     '</div>';
+          html +=     '<div class="shell-hello-stats" id="helloStats"></div>';
+          html +=   '</div>';
+          html += '</section>';
+
+          // KPI row
+          html += '<section class="shell-section" id="kpiRow"></section>';
+
+          // Pipeline + Quick Actions
+          html += '<section class="shell-section">';
+          if (can('endorsements','read')) {
+            html += widget('endorsementPipeline', 'is-half', 'Endorsement pipeline', '/admin/endorsements');
+          } else {
+            html += widget('endorsementPipeline', 'is-half', 'Endorsement pipeline');
+          }
+          html +=   widget('quickActions', 'is-half', 'Quick actions');
+          html += '</section>';
+
+          // Activity feed + County coverage
+          html += '<section class="shell-section">';
+          html +=   widget('recentActivity', 'is-wide', 'Recent activity', null);
+          html +=   widget('countyCoverage', 'is-third', 'Top counties', can('volunteers','read') ? '/admin/volunteers' : null);
+          html += '</section>';
+
+          return html;
+        }
+
+        function widget(id, sizeClass, title, viewAllHref) {
+          return [
+            '<div class="shell-widget ' + sizeClass + '" id="', id, '">',
+              '<div class="shell-widget-head">',
+                '<h3 class="shell-widget-title">', escapeHtml(title), '</h3>',
+                viewAllHref ? '<a class="shell-widget-link" href="' + viewAllHref + '">View all</a>' : '',
+              '</div>',
+              '<div class="shell-widget-body"><div class="shell-widget-empty">Loading...</div></div>',
+            '</div>'
+          ].join('');
+        }
+
+        function greetingTime() {
+          var h = new Date().getHours();
+          if (h < 5)  return 'Late night';
+          if (h < 12) return 'Good morning';
+          if (h < 17) return 'Good afternoon';
+          if (h < 21) return 'Good evening';
+          return 'Good night';
+        }
+
+        // ---------------------------------------------------------------
+        // Data fetch
+        // ---------------------------------------------------------------
+        function loadDashboard(token) {
+          return fetch('/.netlify/functions/admin-dashboard', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          }).then(function (res) {
+            if (!res.ok) throw new Error('http_' + res.status);
+            return res.json();
+          }).then(function (body) {
+            if (!body.ok) throw new Error(body.error || 'unknown');
+            return body;
+          });
+        }
+
+        // ---------------------------------------------------------------
+        // Hello / greeting
+        // ---------------------------------------------------------------
+        function renderHello(user, data) {
+          var name = (user.full_name || '').split(' ')[0] || 'Friend';
+          document.getElementById('helloName').textContent =
+            greetingTime() + ', ' + name + '.';
+
+          var newVols = data.kpis.volunteers_new_7d || 0;
+          var openEnd = data.kpis.endorsements_open || 0;
+          var fmCount = data.kpis.founding_members || 0;
+          var fmTgt   = data.kpis.founding_target || 1969;
+          var tipParts = [];
+          if (newVols) tipParts.push('<strong>' + newVols + ' new volunteers</strong> joined this week.');
+          if (openEnd) tipParts.push('<strong>' + openEnd + ' endorsement application' + (openEnd === 1 ? '' : 's') + '</strong> awaiting review.');
+          if (fmCount) tipParts.push('Founding member roster: <strong>' + fmCount + ' of ' + fmTgt + '</strong>.');
+          document.getElementById('helloTip').innerHTML =
+            tipParts.length ? tipParts.join(' ') : 'No new activity in the last 24 hours.';
+
+          var stats = [
+            { num: data.kpis.volunteers_total,  label: 'Volunteers' },
+            { num: data.kpis.endorsements_total, label: 'Endorsement applications' },
+            { num: data.kpis.bills_active,      label: 'Active bills' }
+          ];
+          document.getElementById('helloStats').innerHTML =
+            stats.map(function (s) {
+              return '<div><span class="shell-hello-stat-num">' + (s.num || 0) +
+                     '</span><span class="shell-hello-stat-label">' + escapeHtml(s.label) + '</span></div>';
+            }).join('');
+        }
+
+        // ---------------------------------------------------------------
+        // KPI cards
+        // ---------------------------------------------------------------
+        function renderKpis(data, can) {
+          var k = data.kpis;
+          var cards = [];
+
+          if (can('volunteers','read')) {
+            cards.push({
+              label: 'Volunteers',
+              value: k.volunteers_total,
+              foot:  trendText(k.volunteers_new_7d, 'this week'),
+              trend: k.volunteers_new_7d > 0 ? 'up' : 'flat',
+              icon:  iconUsers()
+            });
+          }
+          if (can('endorsements','read')) {
+            cards.push({
+              label: 'Endorsement queue',
+              value: k.endorsements_open,
+              foot:  k.endorsements_total + ' total applications',
+              trend: 'flat',
+              icon:  iconStar()
+            });
+          }
+          if (can('donors','read')) {
+            cards.push({
+              label: 'Founding members',
+              value: k.founding_members + ' / ' + k.founding_target,
+              foot:  (k.founding_progress_pct || 0) + '% to 1969',
+              trend: 'up',
+              icon:  iconHeart()
+            });
+          }
+          if (can('bills','read')) {
+            cards.push({
+              label: 'Active bills',
+              value: k.bills_active,
+              foot:  k.bills_total + ' tracked',
+              trend: 'flat',
+              icon:  iconGavel()
+            });
+          }
+          if (cards.length === 0) {
+            cards.push({
+              label: 'Welcome',
+              value: '0',
+              foot:  'No modules assigned to your role yet.',
+              trend: 'flat',
+              icon:  iconUsers()
+            });
+          }
+
+          var html = cards.map(function (c) {
+            return [
+              '<div class="kpi-card">',
+                '<div class="kpi-card-head">',
+                  '<span class="kpi-card-label">', escapeHtml(c.label), '</span>',
+                  c.icon,
+                '</div>',
+                '<div class="kpi-card-value">', escapeHtml(String(c.value)), '</div>',
+                '<div class="kpi-card-foot kpi-trend-', c.trend, '">', escapeHtml(c.foot), '</div>',
+              '</div>'
+            ].join('');
+          }).join('');
+          document.getElementById('kpiRow').innerHTML = html;
+        }
+
+        function trendText(n, suffix) {
+          if (!n) return 'No change ' + suffix;
+          return '+' + n + ' ' + suffix;
+        }
+
+        // ---------------------------------------------------------------
+        // Endorsement pipeline widget
+        // ---------------------------------------------------------------
+        function renderPipeline(data, can) {
+          var w = document.getElementById('endorsementPipeline');
+          if (!w) return;
+          var body = w.querySelector('.shell-widget-body');
+
+          if (!can('endorsements','read')) {
+            body.innerHTML = '<div class="shell-widget-empty">Your role does not include endorsements.</div>';
             return;
           }
-          document.getElementById('adminEmail').textContent = session.user.email || 'Admin';
-          document.getElementById('loading').hidden = true;
-          document.getElementById('cards').hidden = false;
-        } catch (err) {
-          console.error('Session check failed:', err);
-          window.location.replace(CONFIG.LOGIN_PATH);
+          var p = data.pipeline || {};
+          var cells = [
+            { status: 'submitted',    label: 'Submitted',    num: p.submitted    || 0 },
+            { status: 'under_review', label: 'Under review', num: p.under_review || 0 },
+            { status: 'endorsed',     label: 'Endorsed',     num: p.endorsed     || 0 },
+            { status: 'declined',     label: 'Declined',     num: p.declined     || 0 },
+            { status: 'withdrawn',    label: 'Withdrawn',    num: p.withdrawn    || 0 }
+          ];
+          body.innerHTML =
+            '<div class="shell-pipeline">' +
+            cells.map(function (c) {
+              return '<div class="shell-pipeline-cell" data-status="' + c.status + '">' +
+                       '<div class="shell-pipeline-num">' + c.num + '</div>' +
+                       '<div class="shell-pipeline-label">' + escapeHtml(c.label) + '</div>' +
+                     '</div>';
+            }).join('') +
+            '</div>';
         }
-      })();
 
-      document.getElementById('signOutBtn').addEventListener('click', async () => {
-        try {
-          await client.auth.signOut();
-        } finally {
-          window.location.replace(CONFIG.LOGIN_PATH);
+        // ---------------------------------------------------------------
+        // Quick actions
+        // ---------------------------------------------------------------
+        function renderQuickActions(can) {
+          var w = document.getElementById('quickActions');
+          if (!w) return;
+          var body = w.querySelector('.shell-widget-body');
+
+          var actions = [];
+          if (can('volunteers','read'))   actions.push({ href: '/admin/volunteers',         label: 'Triage volunteers',       sub: 'Filter new signups',     icon: iconUsers() });
+          if (can('endorsements','read')) actions.push({ href: '/admin/endorsements',       label: 'Review endorsements',     sub: 'Open the queue',         icon: iconStar() });
+          if (can('donors','read'))       actions.push({ href: '/admin/donors',             label: 'Donor roster',            sub: 'Founding members list',  icon: iconHeart() });
+          if (can('news','write'))        actions.push({ href: '/admin/news',               label: 'Post a statement',        sub: 'Draft + publish',        icon: iconMegaphone() });
+          if (can('bills','read'))        actions.push({ href: '/admin/bills',              label: 'Bills tracker',           sub: 'Roll calls + sponsors',  icon: iconGavel() });
+          if (can('users','manage_users')) actions.push({ href: '/admin/users',             label: 'Manage admin users',      sub: 'Invite + assign roles',  icon: iconKey() });
+
+          // External anchors regardless of role
+          actions.push({ href: 'https://ohiopride.org/volunteer', label: 'Volunteer form (public)', sub: 'Open the live form', icon: iconExternal() });
+
+          if (actions.length === 0) {
+            body.innerHTML = '<div class="shell-widget-empty">No actions available for your role yet.</div>';
+            return;
+          }
+          body.innerHTML =
+            '<div class="shell-actions-grid">' +
+            actions.map(function (a) {
+              var attrs = /^https?:/i.test(a.href) ? ' target="_blank" rel="noopener"' : '';
+              return '<a class="shell-action" href="' + escapeAttr(a.href) + '"' + attrs + '>' +
+                       a.icon +
+                       '<span>' + escapeHtml(a.label) + '</span>' +
+                       '<span class="shell-action-sub">' + escapeHtml(a.sub) + '</span>' +
+                     '</a>';
+            }).join('') +
+            '</div>';
         }
-      });
+
+        // ---------------------------------------------------------------
+        // Recent activity feed
+        // ---------------------------------------------------------------
+        function renderActivity(data) {
+          var w = document.getElementById('recentActivity');
+          if (!w) return;
+          var body = w.querySelector('.shell-widget-body');
+          var rows = (data.recent || []).slice(0, 8);
+          if (rows.length === 0) {
+            body.innerHTML = '<div class="shell-widget-empty">Quiet day. New volunteer signups, donor contributions, and endorsement applications will show up here.</div>';
+            return;
+          }
+          body.innerHTML =
+            '<div class="shell-feed">' +
+            rows.map(function (r) {
+              var line =
+                '<div class="shell-feed-row" data-kind="' + escapeAttr(r.kind || 'note') + '">' +
+                  '<span class="shell-feed-dot"></span>' +
+                  '<div class="shell-feed-meta">' +
+                     '<strong>' + escapeHtml(r.label || '') + '</strong>' +
+                     (r.sub ? '<div style="color:rgba(255,255,255,0.55);font-size:12px;margin-top:2px">' + escapeHtml(r.sub) + '</div>' : '') +
+                  '</div>' +
+                  '<span class="shell-feed-time">' + escapeHtml(r.when || '') + '</span>' +
+                '</div>';
+              return r.href ? '<a href="' + escapeAttr(r.href) + '" style="text-decoration:none;color:inherit">' + line + '</a>' : line;
+            }).join('') +
+            '</div>';
+        }
+
+        // ---------------------------------------------------------------
+        // County coverage widget
+        // ---------------------------------------------------------------
+        function renderCoverage(data) {
+          var w = document.getElementById('countyCoverage');
+          if (!w) return;
+          var body = w.querySelector('.shell-widget-body');
+          var rows = data.top_counties || [];
+          if (rows.length === 0) {
+            body.innerHTML = '<div class="shell-widget-empty">No volunteer counties yet.</div>';
+            return;
+          }
+          var max = rows[0].count || 1;
+          body.innerHTML =
+            '<div class="shell-coverage">' +
+            rows.map(function (r) {
+              var pct = Math.max(6, Math.round((r.count / max) * 100));
+              return '<div class="shell-coverage-row">' +
+                       '<span class="shell-coverage-name">' + escapeHtml(r.county) + '</span>' +
+                       '<div class="shell-coverage-bar"><div class="shell-coverage-bar-fill" style="width:' + pct + '%"></div></div>' +
+                       '<span class="shell-coverage-num">' + r.count + '</span>' +
+                     '</div>';
+            }).join('') +
+            '</div>' +
+            '<div style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.4)">' +
+              (data.kpis.counties_covered || rows.length) + ' of 88 Ohio counties with at least one volunteer.' +
+            '</div>';
+        }
+
+        // ---------------------------------------------------------------
+        // Helpers
+        // ---------------------------------------------------------------
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+
+        // Inline KPI/action SVGs (so we don't depend on icon font CDN)
+        function iconUsers()     { return '<svg class="kpi-card-icon shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 19c.5-3.4 3.4-5.5 6.5-5.5s6 2.1 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 13.5c2.4 0 4.4 1.4 5 3.5"/></svg>'; }
+        function iconStar()      { return '<svg class="kpi-card-icon shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 14.5 9 21 9.7 16 14 17.5 20.5 12 17 6.5 20.5 8 14 3 9.7 9.5 9 12 3"/></svg>'; }
+        function iconHeart()     { return '<svg class="kpi-card-icon shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>'; }
+        function iconGavel()     { return '<svg class="kpi-card-icon shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m14 4 6 6"/><path d="m11 7 6 6"/><path d="m5 13 6 6"/><path d="m8 10 6 6"/><path d="M14.5 14.5 4 21"/></svg>'; }
+        function iconMegaphone() { return '<svg class="shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2c0 .55.45 1 1 1h2l5 4V6L6 10H4c-.55 0-1 .45-1 1z"/><path d="M14 7c1.5 1 2.5 2.7 2.5 5s-1 4-2.5 5"/></svg>'; }
+        function iconKey()       { return '<svg class="shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="3.5"/><path d="m11 11 9-9"/><path d="m17 5 2 2"/><path d="m14 8 2 2"/></svg>'; }
+        function iconExternal()  { return '<svg class="shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>'; }
+      })();
     </script>
   </body>
 </html>
