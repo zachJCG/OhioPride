@@ -266,6 +266,16 @@
   status = 200
 
 [[redirects]]
+  from = "/admin/issues"
+  to = "/admin/issues/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/scorecard"
+  to = "/admin/scorecard/index.html"
+  status = 200
+
+[[redirects]]
   from = "/admin/board"
   to = "/admin/board/index.html"
   status = 200

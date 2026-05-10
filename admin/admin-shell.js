@@ -69,8 +69,8 @@
       group: 'Program',
       items: [
         { id: 'endorsements', href: '/admin/endorsements', label: 'Endorsements', icon: 'star',       permission: ['endorsements','read'] },
-        { id: 'bills',        href: '/admin/bills',        label: 'Bills',        icon: 'gavel',      permission: ['bills','read'] },
-        { id: 'legislators',  href: '/admin/legislators',  label: 'Legislators',  icon: 'capitol',    permission: ['legislators','read'] },
+        { id: 'bills',        href: '/admin/issues',       label: 'Bills',        icon: 'gavel',      permission: ['bills','read'] },
+        { id: 'legislators',  href: '/admin/scorecard',    label: 'Legislators',  icon: 'capitol',    permission: ['legislators','read'] },
       ]
     },
     {

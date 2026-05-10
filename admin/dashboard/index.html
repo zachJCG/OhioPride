@@ -298,7 +298,8 @@
           if (can('endorsements','read')) actions.push({ href: '/admin/endorsements',       label: 'Review endorsements',     sub: 'Open the queue',         icon: iconStar() });
           if (can('donors','read'))       actions.push({ href: '/admin/donors',             label: 'Donor roster',            sub: 'Founding members list',  icon: iconHeart() });
           if (can('news','write'))        actions.push({ href: '/admin/news',               label: 'Post a statement',        sub: 'Draft + publish',        icon: iconMegaphone() });
-          if (can('bills','read'))        actions.push({ href: '/admin/bills',              label: 'Bills tracker',           sub: 'Roll calls + sponsors',  icon: iconGavel() });
+          if (can('bills','read'))        actions.push({ href: '/admin/issues',             label: 'Bills tracker',           sub: 'Edit bills + pipeline',  icon: iconGavel() });
+          if (can('legislators','read'))  actions.push({ href: '/admin/scorecard',          label: 'Scorecard editor',        sub: 'Roll calls + scores',    icon: iconGavel() });
           if (can('users','manage_users')) actions.push({ href: '/admin/users',             label: 'Manage admin users',      sub: 'Invite + assign roles',  icon: iconKey() });
 
           // External anchors regardless of role
