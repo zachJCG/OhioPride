@@ -457,8 +457,24 @@
                 </div>
                 <div class="vform-field">
                   <label for="pronouns">Pronouns <span class="vform-optional">optional</span></label>
-                  <input id="pronouns" name="pronouns" type="text" maxlength="60" placeholder="e.g. she/her" />
+                  <select id="pronouns" name="pronouns">
+                    <option value="">Select pronouns</option>
+                    <option value="she/her">she/her</option>
+                    <option value="he/him">he/him</option>
+                    <option value="they/them">they/them</option>
+                    <option value="she/they">she/they</option>
+                    <option value="he/they">he/they</option>
+                    <option value="any pronouns">any pronouns</option>
+                    <option value="ask me">ask me</option>
+                    <option value="prefer not to say">prefer not to say</option>
+                    <option value="other">other (write in below)</option>
+                  </select>
                 </div>
+              </div>
+
+              <div class="vform-field" id="pronounsOtherWrap" hidden>
+                <label for="pronounsOther">Your pronouns <span class="vform-optional">optional</span></label>
+                <input id="pronounsOther" name="pronouns_other" type="text" maxlength="60" placeholder="e.g. xe/xem" />
               </div>
             </div>
 
