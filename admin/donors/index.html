@@ -22,6 +22,8 @@
       .donors-table tbody tr { cursor: pointer; }
       .donors-table tbody tr:hover { background: rgba(115, 215, 238, 0.06); }
       .admin-pill-tier { background: rgba(115, 215, 238, 0.12); color: var(--color-light-blue); border: 1px solid rgba(115, 215, 238, 0.3); }
+      .admin-pill-refcode { background: rgba(255, 196, 0, 0.10); color: #ffd86b; border: 1px solid rgba(255, 196, 0, 0.30); padding: 2px 8px; border-radius: 999px; font-size: 11px; font-family: "Roboto Slab", serif; letter-spacing: 0.2px; }
+      .admin-pill-payment { background: rgba(140, 200, 140, 0.10); color: #b9e1b9; border: 1px solid rgba(140, 200, 140, 0.30); padding: 2px 8px; border-radius: 999px; font-size: 11px; }
     </style>
   </head>
 
@@ -56,6 +58,29 @@
           return 'Supporter';
         }
 
+        var COLUMNS = [
+          'id', 'full_name', 'display_name', 'email', 'phone',
+          'amount_cents', 'recurrence',
+          'recurring_amount_cents', 'recurring_type', 'recurring_duration', 'initial_recurring_at',
+          'actblue_contribution_id', 'actblue_receipt_id', 'contributed_at',
+          'is_public', 'is_vetted', 'founding_number', 'display_order',
+          'address_line1', 'city', 'state', 'zip', 'country',
+          'county', 'county_name', 'county_fips',
+          'occupation', 'employer',
+          'employer_address_line1', 'employer_city', 'employer_state', 'employer_zip', 'employer_country',
+          'refcode', 'refcode_2',
+          'contribution_form_url', 'form_owner_email', 'form_branding_name', 'recipient_committee',
+          'payment_method', 'card_type',
+          'actblue_fee_cents', 'stripe_fee_text',
+          'via_mobile', 'is_actblue_express', 'is_refunded', 'is_cancelled_recurring',
+          'recurring_upsell_shown', 'recurring_upsell_succeeded',
+          'text_message_opt_in',
+          'elected_office', 'jurisdiction',
+          'notes'
+        ];
+
+        var COLSPAN = 12;
+
         var state = {
           rows: [], filtered: [],
           sortKey: 'founding_number', sortDir: 'asc',
@@ -76,12 +101,13 @@
 
           loadDonors().then(function (rows) {
             state.rows = rows;
+            populateRefcodeFilter();
             renderStats();
             applyFilters();
           }).catch(function (err) {
             console.error('donors load failed', err);
             document.getElementById('donorsBody').innerHTML =
-              '<tr><td colspan="9" class="admin-empty-row admin-error">' +
+              '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
               'Could not load donors. Your role may not include this module.' +
               '</td></tr>';
           });
@@ -99,10 +125,11 @@
             '</div>',
 
             '<div class="admin-toolbar">',
-              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search name, email, ActBlue id..." autocomplete="off" />',
+              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search name, email, address, employer, ActBlue id, refcode..." autocomplete="off" />',
               '<select class="admin-input" id="filterTier"><option value="">All tiers</option>',
                 TIER_ORDER.map(function (k) { return '<option value="' + k + '">' + k + '</option>'; }).join(''),
               '</select>',
+              '<select class="admin-input" id="filterRefcode"><option value="">All refcodes</option></select>',
               '<select class="admin-input" id="filterPublic">',
                 '<option value="">Public &amp; private</option>',
                 '<option value="public">On public roster</option>',
@@ -126,12 +153,15 @@
                     '<th>Email</th>',
                     '<th data-sort="amount_cents" class="admin-sortable admin-num">Amount<span class="admin-sort-arrow">&darr;</span></th>',
                     '<th>Tier</th>',
+                    '<th>Refcode</th>',
+                    '<th>Payment</th>',
                     '<th data-sort="contributed_at" class="admin-sortable">Contributed<span class="admin-sort-arrow">&darr;</span></th>',
                     '<th>City / County</th>',
+                    '<th>Occupation / Employer</th>',
                     '<th class="admin-toggle-col">Public</th>',
                     '<th class="admin-toggle-col">Vetted</th>',
                   '</tr></thead>',
-                  '<tbody id="donorsBody"><tr><td colspan="9" class="admin-empty-row">Loading donors...</td></tr></tbody>',
+                  '<tbody id="donorsBody"><tr><td colspan="' + COLSPAN + '" class="admin-empty-row">Loading donors...</td></tr></tbody>',
                 '</table>',
               '</div>',
             '</div>'
@@ -142,11 +172,7 @@
         function loadDonors() {
           return state.client
             .from('founding_members')
-            .select(
-              'id, full_name, display_name, email, amount_cents, recurrence, ' +
-              'actblue_contribution_id, actblue_receipt_id, contributed_at, ' +
-              'is_public, is_vetted, founding_number, city, county'
-            )
+            .select(COLUMNS.join(', '))
             .order('founding_number', { ascending: true, nullsFirst: false })
             .then(function (resp) {
               if (resp.error) throw resp.error;
@@ -161,6 +187,19 @@
           var update = {}; update[field] = value;
           return state.client.from('founding_members').update(update).eq('id', id)
             .then(function (r) { if (r.error) throw r.error; });
+        }
+
+        function populateRefcodeFilter() {
+          var seen = {};
+          var codes = [];
+          for (var i = 0; i < state.rows.length; i++) {
+            var c = state.rows[i].refcode;
+            if (c && !seen[c]) { seen[c] = true; codes.push(c); }
+          }
+          codes.sort();
+          var sel = $('filterRefcode');
+          sel.innerHTML = '<option value="">All refcodes</option>' +
+            codes.map(function (c) { return '<option value="' + escapeAttr(c) + '">' + escapeHtml(c) + '</option>'; }).join('');
         }
 
         // ---------------------------------------------------------------
@@ -180,19 +219,26 @@
         function applyFilters() {
           var q       = $('filterSearch').value.trim().toLowerCase();
           var tier    = $('filterTier').value;
+          var refcode = $('filterRefcode').value;
           var pub     = $('filterPublic').value;
           var vet     = $('filterVetted').value;
 
           state.filtered = state.rows.filter(function (r) {
-            if (tier && r._tier !== tier) return false;
+            if (tier    && r._tier   !== tier)    return false;
+            if (refcode && r.refcode !== refcode) return false;
             if (pub === 'public'  && !(r.is_public && r.is_vetted)) return false;
             if (pub === 'private' &&   r.is_public && r.is_vetted)  return false;
             if (vet === 'vetted'   && !r.is_vetted) return false;
             if (vet === 'unvetted' &&  r.is_vetted) return false;
             if (q) {
-              var hay = ((r.full_name||'') + ' ' + (r.display_name||'') + ' ' +
-                         (r.email||'') + ' ' + (r.actblue_receipt_id||'') + ' ' +
-                         (r.actblue_contribution_id||'')).toLowerCase();
+              var hay = (
+                (r.full_name||'') + ' ' + (r.display_name||'') + ' ' +
+                (r.email||'') + ' ' + (r.phone||'') + ' ' +
+                (r.address_line1||'') + ' ' + (r.city||'') + ' ' + (r.zip||'') + ' ' +
+                (r.occupation||'') + ' ' + (r.employer||'') + ' ' +
+                (r.refcode||'') + ' ' + (r.refcode_2||'') + ' ' +
+                (r.actblue_receipt_id||'') + ' ' + (r.actblue_contribution_id||'')
+              ).toLowerCase();
               if (hay.indexOf(q) === -1) return false;
             }
             return true;
@@ -235,15 +281,20 @@
             var msg = state.rows.length === 0
               ? 'No founding members yet. ActBlue sync will populate this list as donations come in.'
               : 'No donors match the current filters.';
-            body.innerHTML = '<tr><td colspan="9" class="admin-empty-row">' + msg + '</td></tr>';
+            body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">' + msg + '</td></tr>';
             return;
           }
 
           body.innerHTML = state.filtered.map(function (r) {
-            var nameMain = escapeHtml(r.full_name || '—');
-            var displayLabel = r.display_name && r.display_name !== r.full_name
-              ? '<span class="admin-cell-sub">Public: ' + escapeHtml(r.display_name) + '</span>'
-              : '';
+            var nameMain = escapeHtml(r.full_name || r.display_name || '—');
+            var subParts = '';
+            if (r.display_name && r.display_name !== r.full_name) {
+              subParts += '<span class="admin-cell-sub">Public: ' + escapeHtml(r.display_name) + '</span>';
+            }
+            if (r.elected_office) {
+              subParts += '<span class="admin-cell-sub">' + escapeHtml(r.elected_office) +
+                (r.jurisdiction ? ' &middot; ' + escapeHtml(r.jurisdiction) : '') + '</span>';
+            }
             var foundingNum = r.founding_number ? '#' + r.founding_number : '<span class="admin-muted">&mdash;</span>';
             var emailHtml = r.email
               ? '<a href="mailto:' + escapeAttr(r.email) + '" class="admin-link" onclick="event.stopPropagation()">' + escapeHtml(r.email) + '</a>'
@@ -251,20 +302,51 @@
             var amount = fmtMoney(r.amount_cents);
             if (r.recurrence === 'monthly') amount += '<span class="admin-cell-sub">/mo</span>';
             var tierBadge = '<span class="admin-pill admin-pill-tier">' + escapeHtml(r._tier) + '</span>';
-            var loc = [r.city, r.county ? r.county + ' Co.' : ''].filter(Boolean).join(', ');
-            loc = loc ? escapeHtml(loc) : '<span class="admin-muted">&mdash;</span>';
+
+            var refcodeCell = r.refcode
+              ? '<span class="admin-pill-refcode">' + escapeHtml(r.refcode) + '</span>'
+              : '<span class="admin-muted">&mdash;</span>';
+
+            var paymentCell;
+            if (r.payment_method || r.card_type) {
+              paymentCell = '<span class="admin-pill-payment">' +
+                escapeHtml(r.payment_method || r.card_type || '') + '</span>';
+              if (r.card_type && r.payment_method && r.card_type !== r.payment_method) {
+                paymentCell += '<span class="admin-cell-sub">' + escapeHtml(r.card_type) + '</span>';
+              }
+            } else {
+              paymentCell = '<span class="admin-muted">&mdash;</span>';
+            }
+
+            var countyDisplay = r.county || (r.county_name ? r.county_name.replace(/ County$/, '') : '');
+            var locParts = [r.city, countyDisplay ? countyDisplay + ' Co.' : ''].filter(Boolean).join(', ');
+            var loc = locParts ? escapeHtml(locParts) : '<span class="admin-muted">&mdash;</span>';
+            if (r.zip) loc += '<span class="admin-cell-sub">ZIP ' + escapeHtml(r.zip) + '</span>';
             if (r.actblue_receipt_id) {
               loc += '<span class="admin-cell-sub">ActBlue ' + escapeHtml(r.actblue_receipt_id) + '</span>';
             }
 
+            var occEmp;
+            if (r.occupation || r.employer) {
+              occEmp = escapeHtml(r.occupation || '');
+              if (r.employer) {
+                occEmp += '<span class="admin-cell-sub">' + escapeHtml(r.employer) + '</span>';
+              }
+            } else {
+              occEmp = '<span class="admin-muted">&mdash;</span>';
+            }
+
             return '<tr data-id="' + escapeAttr(r.id) + '">' +
               '<td class="admin-num">' + foundingNum + '</td>' +
-              '<td class="admin-cell-name">' + nameMain + displayLabel + '</td>' +
+              '<td class="admin-cell-name">' + nameMain + subParts + '</td>' +
               '<td>' + emailHtml + '</td>' +
               '<td class="admin-num">' + amount + '</td>' +
               '<td>' + tierBadge + '</td>' +
+              '<td>' + refcodeCell + '</td>' +
+              '<td>' + paymentCell + '</td>' +
               '<td>' + escapeHtml(fmtDate(r.contributed_at)) + '</td>' +
               '<td>' + loc + '</td>' +
+              '<td>' + occEmp + '</td>' +
               '<td class="admin-toggle-col">' + toggleHtml(r.id, 'is_public', r.is_public) + '</td>' +
               '<td class="admin-toggle-col">' + toggleHtml(r.id, 'is_vetted', r.is_vetted) + '</td>' +
             '</tr>';
@@ -281,30 +363,82 @@
 
         // ---------------------------------------------------------------
         function openDonorDrawer(r) {
-          function row(label, value) {
-            return '<dt>' + escapeHtml(label) + '</dt><dd>' + (value || '<span class="admin-muted">&mdash;</span>') + '</dd>';
+          function rowFor(label, value) {
+            var rendered = value == null || value === '' ? '<span class="admin-muted">&mdash;</span>' : value;
+            return '<dt>' + escapeHtml(label) + '</dt><dd>' + rendered + '</dd>';
           }
-          function v(x) { return x ? escapeHtml(x) : ''; }
+          function v(x) { return x == null || x === '' ? '' : escapeHtml(String(x)); }
+          function vBool(x) { return x == null ? '' : (x ? 'Yes' : 'No'); }
+          function vMoney(c) { return c == null ? '' : fmtMoney(c); }
+
+          var contribution = [
+            rowFor('Amount', '<strong>' + fmtMoney(r.amount_cents) + (r.recurrence === 'monthly' ? '/mo' : '') + '</strong>'),
+            rowFor('Tier', '<span class="admin-pill admin-pill-tier">' + escapeHtml(r._tier) + '</span>'),
+            rowFor('Contributed', v(fmtDateTime(r.contributed_at))),
+            rowFor('Recurrence', r.recurrence === 'monthly' ? 'Monthly' : 'One-time'),
+            rowFor('Recurring amount', vMoney(r.recurring_amount_cents)),
+            rowFor('Recurring type', v(r.recurring_type)),
+            rowFor('Recurring duration', v(r.recurring_duration)),
+            rowFor('Initial recurring at', v(fmtDateTime(r.initial_recurring_at))),
+            rowFor('Refcode', v(r.refcode)),
+            rowFor('Refcode 2', v(r.refcode_2)),
+            rowFor('ActBlue order', v(r.actblue_receipt_id)),
+            rowFor('ActBlue lineitem', v(r.actblue_contribution_id)),
+            rowFor('Form URL', r.contribution_form_url ? '<a class="admin-link" href="' + escapeAttr(r.contribution_form_url) + '" target="_blank" rel="noopener">' + escapeHtml(r.contribution_form_url) + '</a>' : ''),
+            rowFor('Form owner email', v(r.form_owner_email)),
+            rowFor('Form branding', v(r.form_branding_name)),
+            rowFor('Recipient committee', v(r.recipient_committee))
+          ].join('');
+
+          var donor = [
+            rowFor('Founding number', r.founding_number ? '<strong>#' + r.founding_number + '</strong>' : ''),
+            rowFor('Full name', v(r.full_name)),
+            rowFor('Display name', v(r.display_name)),
+            rowFor('Email', r.email ? '<a href="mailto:' + escapeAttr(r.email) + '">' + escapeHtml(r.email) + '</a>' : ''),
+            rowFor('Phone', v(r.phone)),
+            rowFor('Address', v(r.address_line1)),
+            rowFor('City', v(r.city)),
+            rowFor('State', v(r.state)),
+            rowFor('ZIP', v(r.zip)),
+            rowFor('County', v(r.county || (r.county_name ? r.county_name.replace(/ County$/, '') : ''))),
+            rowFor('Country', v(r.country)),
+            rowFor('Occupation', v(r.occupation)),
+            rowFor('Employer', v(r.employer)),
+            rowFor('Employer address', v(r.employer_address_line1)),
+            rowFor('Employer city', v(r.employer_city)),
+            rowFor('Employer state', v(r.employer_state)),
+            rowFor('Employer ZIP', v(r.employer_zip)),
+            rowFor('Employer country', v(r.employer_country)),
+            rowFor('Elected office', v(r.elected_office)),
+            rowFor('Jurisdiction', v(r.jurisdiction))
+          ].join('');
+
+          var paymentFlags = [
+            rowFor('Payment method', v(r.payment_method)),
+            rowFor('Card type', v(r.card_type)),
+            rowFor('ActBlue fee', vMoney(r.actblue_fee_cents)),
+            rowFor('Stripe fee', v(r.stripe_fee_text)),
+            rowFor('Via mobile', vBool(r.via_mobile)),
+            rowFor('ActBlue Express', vBool(r.is_actblue_express)),
+            rowFor('Refunded', vBool(r.is_refunded)),
+            rowFor('Cancelled recurring', vBool(r.is_cancelled_recurring)),
+            rowFor('Recurring upsell shown', vBool(r.recurring_upsell_shown)),
+            rowFor('Recurring upsell succeeded', vBool(r.recurring_upsell_succeeded)),
+            rowFor('Text opt-in', v(r.text_message_opt_in)),
+            rowFor('Display order', r.display_order != null ? String(r.display_order) : ''),
+            rowFor('On public roster', r.is_public ? 'Yes' : 'No'),
+            rowFor('Vetted', r.is_vetted ? 'Yes' : 'No')
+          ].join('');
+
+          var notes = r.notes
+            ? '<div class="shell-drawer-section"><h4>Internal notes</h4><pre style="white-space:pre-wrap;font-family:inherit;margin:0;">' + escapeHtml(r.notes) + '</pre></div>'
+            : '';
 
           var body =
-            '<div class="shell-drawer-section"><h4>Identity</h4><dl>' +
-              row('Founding number', r.founding_number ? '<strong>#' + r.founding_number + '</strong>' : '') +
-              row('Full name',  v(r.full_name)) +
-              row('Display name', v(r.display_name)) +
-              row('Email', r.email ? '<a href="mailto:' + escapeAttr(r.email) + '">' + escapeHtml(r.email) + '</a>' : '') +
-            '</dl></div>' +
-            '<div class="shell-drawer-section"><h4>Contribution</h4><dl>' +
-              row('Amount', '<strong>' + fmtMoney(r.amount_cents) + (r.recurrence === "monthly" ? "/mo" : "") + '</strong>') +
-              row('Tier', '<span class="admin-pill admin-pill-tier">' + escapeHtml(r._tier) + '</span>') +
-              row('Contributed', v(fmtDate(r.contributed_at))) +
-              row('ActBlue receipt', v(r.actblue_receipt_id)) +
-              row('ActBlue contribution', v(r.actblue_contribution_id)) +
-            '</dl></div>' +
-            '<div class="shell-drawer-section"><h4>Roster</h4><dl>' +
-              row('On public roster', r.is_public ? 'Yes' : 'No') +
-              row('Vetted', r.is_vetted ? 'Yes' : 'No') +
-              row('Location', [r.city, r.county ? r.county + ' Co.' : ''].filter(Boolean).map(escapeHtml).join(', ')) +
-            '</dl></div>';
+            '<div class="shell-drawer-section"><h4>Contribution</h4><dl>' + contribution + '</dl></div>' +
+            '<div class="shell-drawer-section"><h4>Donor</h4><dl>' + donor + '</dl></div>' +
+            '<div class="shell-drawer-section"><h4>Payment &amp; flags</h4><dl>' + paymentFlags + '</dl></div>' +
+            notes;
 
           var foot = '<a class="shell-btn shell-btn-outline" href="mailto:' + escapeAttr(r.email || '') + '">Email donor</a>' +
             '<button type="button" class="shell-btn shell-btn-primary" data-drawer-close>Done</button>';
@@ -321,9 +455,10 @@
         function bindEvents() {
           var debT;
           $('filterSearch').addEventListener('input', function () { clearTimeout(debT); debT = setTimeout(applyFilters, 150); });
-          $('filterTier').addEventListener('change',   applyFilters);
-          $('filterPublic').addEventListener('change', applyFilters);
-          $('filterVetted').addEventListener('change', applyFilters);
+          $('filterTier').addEventListener('change',    applyFilters);
+          $('filterRefcode').addEventListener('change', applyFilters);
+          $('filterPublic').addEventListener('change',  applyFilters);
+          $('filterVetted').addEventListener('change',  applyFilters);
 
           document.querySelectorAll('#donorsTable thead th[data-sort]').forEach(function (th) {
             th.addEventListener('click', function (ev) {
@@ -380,7 +515,20 @@
             window.AdminShell.toast('Nothing to export with the current filters.', 'error');
             return;
           }
-          var cols = ['founding_number','full_name','display_name','email','amount_cents','recurrence','_tier','contributed_at','city','county','is_public','is_vetted','actblue_receipt_id','actblue_contribution_id'];
+          var cols = [
+            'founding_number','full_name','display_name','email','phone',
+            'amount_cents','recurrence','_tier','contributed_at',
+            'refcode','refcode_2','payment_method','card_type',
+            'address_line1','city','state','zip','county','county_name',
+            'occupation','employer',
+            'employer_address_line1','employer_city','employer_state','employer_zip',
+            'actblue_fee_cents','stripe_fee_text',
+            'via_mobile','is_actblue_express','is_refunded','is_cancelled_recurring',
+            'recurring_amount_cents','recurring_type','recurring_duration',
+            'text_message_opt_in','elected_office','jurisdiction',
+            'is_public','is_vetted',
+            'actblue_receipt_id','actblue_contribution_id'
+          ];
           var lines = [cols.join(',')];
           state.filtered.forEach(function (r) {
             lines.push(cols.map(function (c) {
@@ -415,6 +563,12 @@
           var d = new Date(iso);
           if (isNaN(d.getTime())) return '';
           return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        function fmtDateTime(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
         }
         function escapeHtml(s) {
           return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
