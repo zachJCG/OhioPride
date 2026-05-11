@@ -278,6 +278,15 @@
         animation: vformFadeIn 0.35s ease-out;
       }
       .vform-step[hidden] { display: none; }
+      /* Author rules below (.vform-field, .btn, etc.) set explicit display values
+         that override the UA `[hidden] { display: none }`. Restore it here. */
+      .vform-field[hidden],
+      .vform-row[hidden],
+      .vform-fieldset[hidden],
+      .vform-nav[hidden],
+      .vform-submit[hidden],
+      .intern-card[hidden],
+      [hidden] { display: none !important; }
       @keyframes vformFadeIn {
         from { opacity: 0; transform: translateY(6px); }
         to { opacity: 1; transform: translateY(0); }
