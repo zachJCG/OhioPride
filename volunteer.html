@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Volunteer | Ohio Pride</title>
+    <title>Volunteer or Intern | Ohio Pride</title>
     <meta
       name="description"
-      content="Volunteer with Ohio Pride. Endorsements, voter mobilization, and statewide advocacy take people in every county. Tell us how you want to help."
+      content="Volunteer or apply for a Summer/Fall 2026 internship with Ohio Pride. Endorsements, voter mobilization, and statewide advocacy take people in every county."
     />
     <link rel="canonical" href="https://www.ohiopride.org/volunteer" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Volunteer | Ohio Pride" />
-    <meta property="og:description" content="Volunteer with Ohio Pride. Endorsements, voter mobilization, and statewide advocacy take people in every county. Tell us how you want to help." />
+    <meta property="og:title" content="Volunteer or Intern | Ohio Pride" />
+    <meta property="og:description" content="Volunteer or apply for a Summer/Fall 2026 internship with Ohio Pride." />
     <meta property="og:url" content="https://www.ohiopride.org/volunteer" />
     <meta property="og:site_name" content="Ohio Pride" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Volunteer | Ohio Pride" />
-    <meta name="twitter:description" content="Volunteer with Ohio Pride. Endorsements, voter mobilization, and statewide advocacy take people in every county. Tell us how you want to help." />
+    <meta name="twitter:title" content="Volunteer or Intern | Ohio Pride" />
+    <meta name="twitter:description" content="Volunteer or apply for a Summer/Fall 2026 internship with Ohio Pride." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,12 +30,12 @@
     <style>
       body { background: var(--dark-bg); }
 
-      /* --- Volunteer page intro layout --- */
+      /* --- Intro layout --- */
       .volunteer-intro { max-width: 760px; margin: 0 auto; }
       .volunteer-intro p { color: var(--text-secondary); font-size: 17px; line-height: 1.75; margin-bottom: 18px; }
       .volunteer-intro p:last-child { margin-bottom: 0; }
 
-      /* --- Role grid (above the form) --- */
+      /* --- Volunteer role grid --- */
       .role-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -56,12 +56,139 @@
       }
       .role-card-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
 
-      /* --- Form section background --- */
-      .volunteer-form-section { background: var(--bg-light); }
+      /* ===========================================================
+         Internship showcase
+         =========================================================== */
+      .intern-section { background: var(--bg-light); }
+      .intern-intro { max-width: 760px; margin: 0 auto 32px; }
+      .intern-intro p { color: var(--text-secondary); font-size: 16px; line-height: 1.7; margin-bottom: 12px; }
+      .intern-meta {
+        display: flex; flex-wrap: wrap; gap: 8px;
+        max-width: 760px; margin: 0 auto 28px;
+      }
+      .intern-meta-pill {
+        font-family: "Montserrat", sans-serif;
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 1.4px; text-transform: uppercase;
+        padding: 6px 12px;
+        background: rgba(115, 215, 238, 0.1);
+        color: var(--color-light-blue);
+        border: 1px solid rgba(115, 215, 238, 0.3);
+        border-radius: 999px;
+      }
+      .intern-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 18px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .intern-card {
+        position: relative;
+        background: var(--bg-white);
+        border: 1px solid var(--border-medium);
+        border-radius: 12px;
+        padding: 24px 24px 88px;
+        display: flex; flex-direction: column;
+        min-height: 320px;
+        transition: border-color 0.2s, transform 0.2s;
+      }
+      .intern-card:hover { border-color: var(--color-light-blue); transform: translateY(-2px); }
+      .intern-card-num {
+        font-family: "Montserrat", sans-serif;
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 1.6px; text-transform: uppercase;
+        color: var(--color-light-blue);
+        margin-bottom: 6px;
+      }
+      .intern-card h3 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700; font-size: 19px;
+        color: var(--text-white);
+        margin: 0 0 10px;
+        line-height: 1.25;
+      }
+      .intern-card-tag {
+        font-style: italic;
+        color: var(--text-muted);
+        font-size: 14px;
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+      .intern-card dl {
+        margin: 0 0 14px;
+        display: grid;
+        grid-template-columns: 90px 1fr;
+        gap: 4px 12px;
+        font-size: 13px;
+      }
+      .intern-card dt {
+        font-family: "Montserrat", sans-serif;
+        font-size: 10px; font-weight: 700;
+        letter-spacing: 1.4px; text-transform: uppercase;
+        color: var(--text-muted);
+        align-self: start; padding-top: 2px;
+      }
+      .intern-card dd {
+        margin: 0;
+        color: var(--text-light);
+        line-height: 1.5;
+      }
+      .intern-card-foot {
+        position: absolute;
+        left: 24px; right: 24px; bottom: 20px;
+        display: flex; gap: 10px; align-items: center;
+      }
+      .intern-card .btn {
+        flex: 1 1 auto;
+        text-align: center;
+      }
+      .intern-card-detail {
+        font-family: "Montserrat", sans-serif;
+        font-size: 12px; font-weight: 600;
+        color: var(--text-muted);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px 8px;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .intern-card-detail:hover { color: var(--text-white); }
 
-      /* --- Form shell --- */
+      /* Expanded responsibilities/qualifications block (toggle) */
+      .intern-card-more {
+        margin-top: 4px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border-light);
+      }
+      .intern-card-more h4 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 1.6px; text-transform: uppercase;
+        color: var(--color-light-blue);
+        margin: 14px 0 6px;
+      }
+      .intern-card-more h4:first-child { margin-top: 0; }
+      .intern-card-more p { margin: 0 0 8px; font-size: 13.5px; color: var(--text-light); line-height: 1.55; }
+      .intern-card-more ul {
+        margin: 0 0 8px; padding-left: 18px;
+        color: var(--text-light); font-size: 13.5px; line-height: 1.55;
+      }
+      .intern-card-more li { margin-bottom: 4px; }
+
+      .intern-card.is-expanded { padding-bottom: 24px; }
+      .intern-card.is-expanded .intern-card-foot {
+        position: static;
+        margin-top: 18px;
+      }
+
+      /* ===========================================================
+         Form section
+         =========================================================== */
+      .volunteer-form-section { background: var(--bg-darker, #07101b); }
       .volunteer-form-shell {
-        max-width: 720px;
+        max-width: 760px;
         margin: 0 auto;
         background: var(--bg-white);
         border: 1px solid var(--border-medium);
@@ -74,8 +201,48 @@
       }
       .volunteer-form-shell .lede {
         color: var(--text-secondary); font-size: 15px; line-height: 1.7;
+        margin-bottom: 24px;
+      }
+
+      /* --- Path tabs (Volunteer / Intern) --- */
+      .vform-paths {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        background: rgba(15, 34, 51, 0.6);
+        padding: 6px;
+        border-radius: 10px;
         margin-bottom: 28px;
       }
+      .vform-path {
+        background: none;
+        border: 1px solid transparent;
+        border-radius: 7px;
+        padding: 12px 14px;
+        cursor: pointer;
+        text-align: left;
+        color: var(--text-secondary);
+        transition: all 0.18s;
+      }
+      .vform-path:hover { color: var(--text-white); }
+      .vform-path.is-active {
+        background: rgba(115, 215, 238, 0.12);
+        border-color: var(--color-light-blue);
+        color: var(--text-white);
+      }
+      .vform-path-title {
+        display: block;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700; font-size: 14px;
+        margin-bottom: 2px;
+        letter-spacing: 0.2px;
+      }
+      .vform-path-sub {
+        display: block;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .vform-path.is-active .vform-path-sub { color: var(--text-light); }
 
       /* --- Progress indicator --- */
       .vform-progress { margin-bottom: 28px; }
@@ -138,15 +305,17 @@
         color: var(--text-white);
         letter-spacing: 0.2px;
       }
+      .vform-help { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
       .vform-optional {
         color: var(--text-muted); font-weight: 400;
         font-size: 12px; margin-left: 4px;
       }
 
-      /* --- Inputs / textareas / selects --- */
       .vform-field input[type="text"],
       .vform-field input[type="email"],
       .vform-field input[type="tel"],
+      .vform-field input[type="url"],
+      .vform-field input[type="number"],
       .vform-field select,
       .vform-field textarea {
         width: 100%;
@@ -169,9 +338,13 @@
         border-color: var(--color-light-blue);
         background: rgba(15, 34, 51, 0.85);
       }
+      .vform-field input.is-invalid,
+      .vform-field select.is-invalid,
+      .vform-field textarea.is-invalid {
+        border-color: var(--text-danger, #ff8b8b);
+      }
       .vform-field textarea { resize: vertical; min-height: 80px; }
 
-      /* Select chevron (since we removed native appearance) */
       .vform-field select {
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2373d7ee' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
         background-repeat: no-repeat;
@@ -184,14 +357,12 @@
         color: var(--text-white);
       }
 
-      /* --- Fieldsets --- */
       .vform-fieldset {
         border: none; padding: 0; margin: 0 0 20px;
         display: flex; flex-direction: column; gap: 10px;
       }
       .vform-fieldset legend { padding: 0; margin-bottom: 4px; }
 
-      /* --- Card-style checkboxes (Step 3 interests) --- */
       .vform-card-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -224,10 +395,7 @@
         line-height: 1.45;
       }
 
-      /* --- Chip-style checkboxes (Step 4 skills + availability) --- */
-      .vform-chip-grid {
-        display: flex; flex-wrap: wrap; gap: 8px;
-      }
+      .vform-chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
       .vform-chip {
         display: inline-flex; align-items: center;
         padding: 9px 16px;
@@ -247,7 +415,6 @@
         color: var(--text-white);
       }
 
-      /* --- Radio cards (registered voter, time commitment) --- */
       .vform-radio-group { display: flex; flex-direction: column; gap: 8px; }
       .vform-radio-row { flex-direction: row; flex-wrap: wrap; gap: 10px; }
       .vform-radio {
@@ -269,7 +436,6 @@
       }
       .vform-radio-row .vform-radio { flex: 1 1 auto; min-width: 90px; justify-content: center; }
 
-      /* --- Inline checkbox lines (consent, prior experience) --- */
       .vform-checkbox-line {
         display: flex; align-items: flex-start; gap: 10px;
         padding: 10px 0;
@@ -286,13 +452,13 @@
       .vform-consent { padding: 16px; border: 1px solid var(--border-light); border-radius: 8px; background: rgba(15, 34, 51, 0.4); }
       .vform-consent legend { padding: 0 8px; }
 
-      /* --- Honeypot (hidden from humans) --- */
+      /* Honeypot (hidden from humans) */
       .vform-honeypot {
         position: absolute; left: -9999px; width: 1px; height: 1px;
         opacity: 0; pointer-events: none;
       }
 
-      /* --- Error banner --- */
+      /* Error / success banners */
       .vform-error {
         margin: 16px 0;
         padding: 12px 16px;
@@ -304,7 +470,7 @@
         line-height: 1.5;
       }
 
-      /* --- Nav buttons --- */
+      /* Nav buttons */
       .vform-nav {
         display: flex; gap: 12px;
         margin-top: 32px;
@@ -320,7 +486,7 @@
         .vform-nav .btn { width: 100%; margin: 0 !important; }
       }
 
-      /* --- Success state --- */
+      /* Success state */
       .vform-success {
         text-align: center;
         padding: 24px 8px;
@@ -335,10 +501,7 @@
         color: white; font-size: 32px; font-weight: 700;
         line-height: 1;
       }
-      .vform-success h2 {
-        font-size: 28px; margin-bottom: 12px;
-        outline: none;
-      }
+      .vform-success h2 { font-size: 28px; margin-bottom: 12px; outline: none; }
       .vform-success p {
         color: var(--text-secondary);
         font-size: 16px; line-height: 1.7;
@@ -351,7 +514,6 @@
       }
       .vform-success-actions .btn { min-width: 200px; }
 
-      /* --- Mobile padding tweak --- */
       @media (max-width: 640px) {
         .volunteer-form-shell {
           padding: 28px 20px 24px;
@@ -359,6 +521,7 @@
         }
         .volunteer-form-shell h2 { font-size: 22px; }
         .vform-step-title { font-size: 19px; }
+        .vform-paths { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -371,7 +534,7 @@
         <div class="section-label">Get Involved</div>
         <h1 class="section-title">Power statewide. Built by people who show up.</h1>
         <p class="subpage-hero-sub">
-          Ohio Pride needs volunteers in all 88 counties. Tell us how you want to help, and we will plug you in.
+          Ohio Pride needs volunteers and interns in all 88 counties. Tell us how you want to help, and we will plug you in.
         </p>
       </div>
     </section>
@@ -401,14 +564,54 @@
       </div>
     </section>
 
+    <!-- Internships & Fellowships -->
+    <section class="section intern-section" id="internships">
+      <div class="container">
+        <div class="section-label">Internships and Fellowships</div>
+        <h2 class="section-title">Summer and Fall 2026 team positions</h2>
+
+        <div class="intern-intro">
+          <p>
+            Five team positions at Ohio's first statewide LGBTQ+ political action committee. Summer 2026 placements are filling now with immediate start dates available. All positions are unpaid academic-credit placements; the PAC signs your university's learning agreement and the supervisor of record completes midterm and final evaluations. Mileage is reimbursed at the IRS standard rate for required in-person travel.
+          </p>
+        </div>
+        <div class="intern-meta" aria-label="Program highlights">
+          <span class="intern-meta-pill">Academic credit</span>
+          <span class="intern-meta-pill">Summer 2026 rolling</span>
+          <span class="intern-meta-pill">Fall 2026 priority July 15</span>
+          <span class="intern-meta-pill">8 to 15 hrs/week</span>
+        </div>
+
+        <div class="intern-grid" id="internGrid"><!-- cards injected by JS --></div>
+
+        <p style="text-align:center;margin-top:28px;color:var(--text-muted);font-size:13px;">
+          Department chairs and faculty internship coordinators can email
+          <a href="mailto:zach@ohiopride.org" style="color:var(--text-accent);">zach@ohiopride.org</a>
+          to discuss learning agreements, evaluation protocols, or approved-site-list inclusion.
+        </p>
+      </div>
+    </section>
+
     <!-- Form -->
     <section class="section volunteer-form-section">
       <div class="container">
         <div class="volunteer-form-shell" id="volunteer-form-container">
-          <h2>Sign up to volunteer</h2>
-          <p class="lede">
+          <h2 id="vformHeading">Sign up to volunteer</h2>
+          <p class="lede" id="vformLede">
             Five quick steps. Tell us who you are, where you live, and how you want to help. We will follow up within a few days with a way to plug in.
           </p>
+
+          <!-- Path tabs: Volunteer vs Intern -->
+          <div class="vform-paths" role="tablist" aria-label="Application type">
+            <button type="button" class="vform-path is-active" data-path="volunteer" role="tab" aria-selected="true">
+              <span class="vform-path-title">Volunteer</span>
+              <span class="vform-path-sub">Field, phones, events, skills</span>
+            </button>
+            <button type="button" class="vform-path" data-path="internship" role="tab" aria-selected="false">
+              <span class="vform-path-title">Intern or Fellow</span>
+              <span class="vform-path-sub">Summer / Fall 2026 team positions</span>
+            </button>
+          </div>
 
           <!-- Progress indicator -->
           <div class="vform-progress" id="vformProgress">
@@ -423,13 +626,17 @@
 
           <!-- Form -->
           <form id="volunteerForm" novalidate>
+            <input type="hidden" name="application_type" id="applicationType" value="volunteer" />
+
             <!-- Honeypot -->
             <label class="vform-honeypot" aria-hidden="true">
               Leave this empty
               <input type="text" name="website" tabindex="-1" autocomplete="off" />
             </label>
 
-            <!-- Step 1: About You -->
+            <!-- =========================================================
+                 STEP 1: About you  (shared)
+                 ========================================================= -->
             <div class="vform-step" data-step="1">
               <h3 class="vform-step-title">About you</h3>
               <p class="vform-step-sub">Just the basics, so we can reach you.</p>
@@ -478,7 +685,9 @@
               </div>
             </div>
 
-            <!-- Step 2: Where You Live -->
+            <!-- =========================================================
+                 STEP 2: Where you live  (shared)
+                 ========================================================= -->
             <div class="vform-step" data-step="2" hidden>
               <h3 class="vform-step-title">Where you live</h3>
               <p class="vform-step-sub">So we can connect you with the right local crew.</p>
@@ -523,7 +732,7 @@
                 <input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="e.g. 43215" />
               </div>
 
-              <fieldset class="vform-fieldset">
+              <fieldset class="vform-fieldset" data-volunteer-only>
                 <legend>Are you registered to vote in Ohio? <span class="vform-optional">optional</span></legend>
                 <div class="vform-radio-group vform-radio-row">
                   <label class="vform-radio"><input type="radio" name="registered_voter" value="yes" /><span>Yes</span></label>
@@ -533,8 +742,10 @@
               </fieldset>
             </div>
 
-            <!-- Step 3: How You Want to Help -->
-            <div class="vform-step" data-step="3" hidden>
+            <!-- =========================================================
+                 STEP 3a: Volunteer interests
+                 ========================================================= -->
+            <div class="vform-step" data-step="3" data-path="volunteer" hidden>
               <h3 class="vform-step-title">How you want to help</h3>
               <p class="vform-step-sub">Pick anything that sounds like you. You can always change this later.</p>
 
@@ -574,8 +785,56 @@
               </div>
             </div>
 
-            <!-- Step 4: Skills & Availability -->
-            <div class="vform-step" data-step="4" hidden>
+            <!-- =========================================================
+                 STEP 3b: Intern position + program
+                 ========================================================= -->
+            <div class="vform-step" data-step="3" data-path="internship" hidden>
+              <h3 class="vform-step-title">Position and program</h3>
+              <p class="vform-step-sub">Pick the position you are applying for and the term you want.</p>
+
+              <div class="vform-field">
+                <label for="internPosition">Position</label>
+                <select id="internPosition" name="position" required>
+                  <option value="">Select a position</option>
+                  <option value="chief_of_staff">Chief of Staff (Cincinnati, hybrid)</option>
+                  <option value="graphics_social_media">Graphics and Social Media (Remote)</option>
+                  <option value="volunteer_coordinator">Volunteer Coordinator (Statewide, hybrid)</option>
+                  <option value="legislative_director">Legislative Director (Columbus preferred)</option>
+                  <option value="policy_aide">Policy Aide (Cincinnati, in person)</option>
+                </select>
+                <span class="vform-help">Not sure? Reread the role cards above.</span>
+              </div>
+
+              <fieldset class="vform-fieldset">
+                <legend>Term</legend>
+                <div class="vform-radio-group vform-radio-row">
+                  <label class="vform-radio"><input type="radio" name="term" value="summer_2026" required /><span>Summer 2026</span></label>
+                  <label class="vform-radio"><input type="radio" name="term" value="fall_2026" /><span>Fall 2026</span></label>
+                  <label class="vform-radio"><input type="radio" name="term" value="either" /><span>Either</span></label>
+                </div>
+              </fieldset>
+
+              <div class="vform-row vform-row-2">
+                <div class="vform-field">
+                  <label for="weeklyHours">Hours per week <span class="vform-optional">optional</span></label>
+                  <input id="weeklyHours" name="weekly_hours" type="number" min="1" max="40" inputmode="numeric" placeholder="e.g. 12" />
+                </div>
+                <div class="vform-field">
+                  <label for="creditHours">Credit hours <span class="vform-optional">optional</span></label>
+                  <input id="creditHours" name="credit_hours" type="number" min="0" max="12" step="0.5" inputmode="decimal" placeholder="e.g. 3" />
+                </div>
+              </div>
+
+              <div class="vform-field">
+                <label for="startDatePref">Earliest start date <span class="vform-optional">optional</span></label>
+                <input id="startDatePref" name="start_date_pref" type="text" maxlength="80" placeholder="e.g. ASAP, June 1, after spring finals" />
+              </div>
+            </div>
+
+            <!-- =========================================================
+                 STEP 4a: Volunteer skills + availability
+                 ========================================================= -->
+            <div class="vform-step" data-step="4" data-path="volunteer" hidden>
               <h3 class="vform-step-title">Skills and availability</h3>
               <p class="vform-step-sub">Tell us what you bring and when you can show up.</p>
 
@@ -630,8 +889,47 @@
               </div>
             </div>
 
-            <!-- Step 5: Wrap Up -->
-            <div class="vform-step" data-step="5" hidden>
+            <!-- =========================================================
+                 STEP 4b: Intern academic background
+                 ========================================================= -->
+            <div class="vform-step" data-step="4" data-path="internship" hidden>
+              <h3 class="vform-step-title">Academic background</h3>
+              <p class="vform-step-sub">So we can sign your learning agreement and route to the right faculty contact.</p>
+
+              <div class="vform-field">
+                <label for="institution">Home institution</label>
+                <input id="institution" name="institution" type="text" maxlength="120" placeholder="e.g. Ohio State University, University of Cincinnati" />
+              </div>
+
+              <div class="vform-row vform-row-2">
+                <div class="vform-field">
+                  <label for="programMajor">Program / major <span class="vform-optional">optional</span></label>
+                  <input id="programMajor" name="program_major" type="text" maxlength="120" placeholder="e.g. Political Science" />
+                </div>
+                <div class="vform-field">
+                  <label for="classYear">Class year <span class="vform-optional">optional</span></label>
+                  <input id="classYear" name="class_year" type="text" maxlength="60" placeholder="e.g. Senior, JD candidate, MPA 1L" />
+                </div>
+              </div>
+
+              <div class="vform-row vform-row-2">
+                <div class="vform-field">
+                  <label for="facultyName">Faculty internship coordinator <span class="vform-optional">optional</span></label>
+                  <input id="facultyName" name="faculty_sponsor_name" type="text" maxlength="120" placeholder="Name" />
+                </div>
+                <div class="vform-field">
+                  <label for="facultyEmail">Coordinator email <span class="vform-optional">optional</span></label>
+                  <input id="facultyEmail" name="faculty_sponsor_email" type="email" maxlength="320" />
+                </div>
+              </div>
+
+              <div class="vform-help">If you do not have an internship coordinator yet, leave both blank. We can help once we are in touch.</div>
+            </div>
+
+            <!-- =========================================================
+                 STEP 5a: Volunteer wrap-up
+                 ========================================================= -->
+            <div class="vform-step" data-step="5" data-path="volunteer" hidden>
               <h3 class="vform-step-title">Wrap up</h3>
               <p class="vform-step-sub">One last screen. Then we will be in touch.</p>
 
@@ -663,6 +961,56 @@
               </fieldset>
             </div>
 
+            <!-- =========================================================
+                 STEP 5b: Intern materials + statement
+                 ========================================================= -->
+            <div class="vform-step" data-step="5" data-path="internship" hidden>
+              <h3 class="vform-step-title">Statement and materials</h3>
+              <p class="vform-step-sub">A short note about why this role, and a link to your resume. Then submit.</p>
+
+              <div class="vform-field">
+                <label for="statementOfInterest">Brief statement of interest</label>
+                <textarea id="statementOfInterest" name="statement_of_interest" required maxlength="2000" rows="5"
+                  placeholder="Two or three paragraphs is plenty. Why this role, what you bring, what you want to learn."></textarea>
+                <span class="vform-help">Required. We read every one.</span>
+              </div>
+
+              <div class="vform-field">
+                <label for="resumeUrl">Resume link <span class="vform-optional">recommended</span></label>
+                <input id="resumeUrl" name="resume_url" type="url" maxlength="500" placeholder="Google Drive, Dropbox, LinkedIn, etc." />
+                <span class="vform-help">Make sure the link is shared so anyone can view.</span>
+              </div>
+
+              <div class="vform-field">
+                <label for="portfolioUrl">Portfolio link <span class="vform-optional">optional</span></label>
+                <input id="portfolioUrl" name="portfolio_url" type="url" maxlength="500" placeholder="Especially helpful for Graphics & Social Media applicants" />
+              </div>
+
+              <div class="vform-field">
+                <label for="priorExperience">Prior political / advocacy / nonprofit experience <span class="vform-optional">optional</span></label>
+                <textarea id="priorExperience" name="prior_experience" maxlength="1000" rows="3"
+                  placeholder="Campaigns, advocacy orgs, community work, student government, etc."></textarea>
+              </div>
+
+              <div class="vform-field">
+                <label for="whyOhioPride">Why Ohio Pride specifically? <span class="vform-optional">optional</span></label>
+                <textarea id="whyOhioPride" name="why_ohio_pride" maxlength="1000" rows="3"></textarea>
+              </div>
+
+              <div class="vform-field">
+                <label for="referralSourceIntern">How did you hear about us? <span class="vform-optional">optional</span></label>
+                <input id="referralSourceIntern" name="referral_source_intern" type="text" maxlength="200" placeholder="Faculty, a friend, social, etc." />
+              </div>
+
+              <fieldset class="vform-fieldset vform-consent">
+                <legend>Stay in the loop</legend>
+                <label class="vform-checkbox-line">
+                  <input type="checkbox" name="intern_email_optin" checked />
+                  <span>Email me program updates and a confirmation receipt</span>
+                </label>
+              </fieldset>
+            </div>
+
             <!-- Error banner -->
             <div class="vform-error" id="vformError" role="alert" hidden></div>
 
@@ -678,7 +1026,7 @@
           <div class="vform-success" id="vformSuccess" hidden>
             <div class="vform-success-icon" aria-hidden="true">&check;</div>
             <h2 id="vformSuccessHeading">You are in.</h2>
-            <p>Thanks for signing up to volunteer with Ohio Pride. We will be in touch within a few days with concrete ways to plug in.</p>
+            <p id="vformSuccessMsg">Thanks for signing up to volunteer with Ohio Pride. We will be in touch within a few days with concrete ways to plug in.</p>
             <p>While you wait, two other ways to fight for a pro-equality Ohio:</p>
             <div class="vform-success-actions">
               <a href="/donate/founding-member" class="btn btn-primary">Become a Founding Member</a>
@@ -704,6 +1052,7 @@
     <script src="/js/main.js" defer></script>
     <script src="/js/enhancements.js" defer></script>
     <script src="/js/site-template.js" defer></script>
+    <script src="/js/intern-positions.js" defer></script>
     <script src="/js/volunteer-form.js" defer></script>
   </body>
 </html>
