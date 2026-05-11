@@ -149,7 +149,17 @@ async function handleVolunteer(supabase, req, body) {
 
   if (error) {
     console.error('volunteer-submit (volunteer) insert failed:', error);
-    return jsonResponse(500, { ok: false, error: 'insert_failed' });
+    return jsonResponse(500, {
+      ok: false,
+      error: 'insert_failed',
+      // Safe to surface — Supabase error shape only includes a code + message,
+      // never service-role credentials. Helps the admin debug when the live
+      // function is returning insert_failed without exposing secrets.
+      code: error.code || null,
+      message: error.message || null,
+      hint:    error.hint    || null,
+      details: error.details || null,
+    });
   }
   return jsonResponse(200, { ok: true, id: data?.id || null, kind: 'volunteer' });
 }
@@ -226,7 +236,14 @@ async function handleInternship(supabase, req, body) {
 
   if (error) {
     console.error('volunteer-submit (intern) insert failed:', error);
-    return jsonResponse(500, { ok: false, error: 'insert_failed' });
+    return jsonResponse(500, {
+      ok: false,
+      error: 'insert_failed',
+      code: error.code || null,
+      message: error.message || null,
+      hint:    error.hint    || null,
+      details: error.details || null,
+    });
   }
   return jsonResponse(200, { ok: true, id: data?.id || null, kind: 'internship' });
 }

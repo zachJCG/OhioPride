@@ -118,11 +118,17 @@
     progressPct.textContent  = pct + '%';
     progressFill.style.width = pct + '%';
 
-    var atFinish = (pct >= 100);
+    // Hard rule: submit is ONLY visible on the absolute last step.
+    // Belt-and-suspenders: toggle both the `hidden` attribute AND the
+    // inline `display` style so no stale CSS can override [hidden].
+    var atFinish = (n === TOTAL_STEPS);
     backBtn.hidden   = (n === 1);
+    backBtn.style.display   = (n === 1)   ? 'none' : '';
     nextBtn.hidden   = atFinish;
+    nextBtn.style.display   = atFinish    ? 'none' : '';
     submitBtn.hidden = !atFinish;
-    submitBtn.textContent = state.path === 'internship' ? 'Submit application' : 'Sign me up';
+    submitBtn.style.display = atFinish    ? ''     : 'none';
+    submitBtn.textContent = 'Submit';
 
     clearError();
 
@@ -339,8 +345,7 @@
     submitBtn.disabled = true;
     backBtn.disabled = true;
     var originalLabel = submitBtn.textContent;
-    submitBtn.textContent = state.path === 'internship'
-      ? 'Submitting application...' : 'Signing you up...';
+    submitBtn.textContent = 'Submitting...';
 
     var payload = state.path === 'internship'
       ? buildInternPayload()
