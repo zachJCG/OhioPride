@@ -9,44 +9,222 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/site-template.css" />
     <link rel="stylesheet" href="/admin/admin-shared.css" />
-    <link rel="stylesheet" href="/admin/admin-shell.css" />
-
     <style>
-      .donors-table-wrap { background: rgba(15, 34, 51, 0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 16px 8px; }
-      .donors-table tbody tr { cursor: pointer; }
-      .donors-table tbody tr:hover { background: rgba(115, 215, 238, 0.06); }
-      .admin-pill-tier { background: rgba(115, 215, 238, 0.12); color: var(--color-light-blue); border: 1px solid rgba(115, 215, 238, 0.3); }
+      /* Local enhancements layered on top of admin-shared.css */
+      .admin-expand-btn {
+        background: transparent;
+        border: 1px solid var(--color-border, #d3d6dc);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        line-height: 1;
+        padding: 4px 8px;
+        cursor: pointer;
+        color: var(--color-text-muted, #555);
+      }
+      .admin-expand-btn:hover { background: rgba(0,0,0,0.04); }
+      .admin-expand-btn[aria-expanded="true"] { background: rgba(15, 34, 51, 0.08); }
+      tr.admin-detail-row > td {
+        background: #fafbfc;
+        border-top: 0;
+        padding: 12px 16px 16px;
+      }
+      .admin-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 10px 18px;
+      }
+      .admin-detail-grid dt {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6c7480;
+        margin: 0;
+      }
+      .admin-detail-grid dd {
+        margin: 0 0 2px;
+        font-size: 0.92rem;
+        color: #1a1f29;
+        word-break: break-word;
+      }
+      .admin-detail-section-title {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #0F2233;
+        margin: 14px 0 6px;
+        font-weight: 700;
+      }
+      .admin-detail-section-title:first-child { margin-top: 0; }
+      .admin-pill-refcode {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.78rem;
+        background: rgba(115, 215, 238, 0.18);
+        color: #0F2233;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .admin-pill-payment {
+        font-size: 0.78rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #eef2f6;
+        color: #1a1f29;
+      }
+      td.admin-cell-tight { white-space: nowrap; }
     </style>
   </head>
+  <body>
+    <div id="site-header"></div>
 
-  <body class="admin-shell">
-    <div
-      id="shell-root"
-      data-active-nav="donors"
-      data-page-eyebrow="Money"
-      data-page-title="Donors"
-      data-page-sub="Founding members, ActBlue contributions, and tier progress."
-    ></div>
+    <section class="subpage-hero">
+      <div class="container">
+        <div class="section-label">Admin</div>
+        <h1 class="section-title">Donors</h1>
+        <p class="subpage-hero-sub">
+          Founding members, ActBlue contributions, and tier progress.
+        </p>
+      </div>
+    </section>
 
+    <div class="admin-meta-bar">
+      <div class="container">
+        <div class="admin-crumbs">
+          <a href="/admin/dashboard">Dashboard</a>
+          <span class="admin-crumb-sep">/</span>
+          <span>Donors</span>
+        </div>
+        <div class="admin-meta-actions">
+          <span class="admin-meta-user">
+            Signed in as <strong id="adminEmail">&hellip;</strong>
+          </span>
+          <button type="button" class="admin-signout-btn" id="signOutBtn">Sign Out</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="admin-loading" id="loading">Loading&hellip;</div>
+
+        <div class="admin-panel" id="panel" hidden>
+          <div class="admin-stat-grid" id="statGrid">
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statMembers">0</div>
+              <div class="admin-stat-label">Members</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statRaised">$0</div>
+              <div class="admin-stat-label">Total Raised</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statPublic">0</div>
+              <div class="admin-stat-label">On Public Roster</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statProgress">0%</div>
+              <div class="admin-stat-label">Toward 1,969</div>
+            </div>
+          </div>
+
+          <div class="admin-toolbar">
+            <input
+              type="search"
+              class="admin-input"
+              id="filterSearch"
+              placeholder="Search name, email, address, employer, ActBlue id, refcode&hellip;"
+              autocomplete="off"
+            />
+            <select class="admin-input" id="filterTier">
+              <option value="">All tiers</option>
+            </select>
+            <select class="admin-input" id="filterRefcode">
+              <option value="">All refcodes</option>
+            </select>
+            <select class="admin-input" id="filterPublic">
+              <option value="">Public &amp; private</option>
+              <option value="public">On public roster</option>
+              <option value="private">Hidden from roster</option>
+            </select>
+            <select class="admin-input" id="filterVetted">
+              <option value="">All vetting states</option>
+              <option value="vetted">Vetted</option>
+              <option value="unvetted">Awaiting vetting</option>
+            </select>
+            <span class="admin-toolbar-spacer"></span>
+            <span class="admin-result-count" id="resultCount"></span>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="donorsTable">
+              <thead>
+                <tr>
+                  <th class="admin-toggle-col" aria-label="Expand"></th>
+                  <th data-sort="founding_number" class="admin-sortable">#<span class="admin-sort-arrow">&darr;</span></th>
+                  <th data-sort="full_name" class="admin-sortable">Name<span class="admin-sort-arrow">&darr;</span></th>
+                  <th>Email</th>
+                  <th data-sort="amount_cents" class="admin-sortable admin-num">Amount<span class="admin-sort-arrow">&darr;</span></th>
+                  <th>Tier</th>
+                  <th>Refcode</th>
+                  <th>Payment</th>
+                  <th data-sort="contributed_at" class="admin-sortable">Contributed<span class="admin-sort-arrow">&darr;</span></th>
+                  <th>City / County</th>
+                  <th>Occupation / Employer</th>
+                  <th class="admin-toggle-col">Public</th>
+                  <th class="admin-toggle-col">Vetted</th>
+                </tr>
+              </thead>
+              <tbody id="donorsBody">
+                <tr><td colspan="13" class="admin-empty-row">Loading donors&hellip;</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="admin-panel-foot">
+            Source of truth: <code>founding_members</code> &middot;
+            ActBlue sync runs hourly via
+            <code>netlify/functions/actblue-sync.mjs</code> &middot;
+            Public roster: <a href="/founding-members">/founding-members</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div id="site-footer"></div>
+    <div class="admin-toast" id="toast"></div>
+
+    <script src="/js/site-template.js" defer></script>
+    <script src="/js/ohiopride-data.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/admin/admin-shell.js"></script>
-
+    <script src="/admin/admin-auth.js"></script>
     <script>
       (function () {
         'use strict';
 
-        var TIER_ORDER = [
-          'Founders Circle','Leadership','Champion','Advocate',
-          'Stonewall Sustainer','Ally','Friend','Supporter'
+        var COLSPAN = 13;
+
+        var TIERS = [
+          { key: 'Founders Circle',     min: 250000 },
+          { key: 'Leadership',          min: 100000 },
+          { key: 'Champion',            min:  50000 },
+          { key: 'Advocate',            min:  25000 },
+          { key: 'Stonewall Sustainer', recurrence: 'monthly', min: 1969 },
+          { key: 'Ally',                min:  10000 },
+          { key: 'Friend',              min:   5000 },
+          { key: 'Supporter',           min:      0 }
         ];
+
+        var TIER_ORDER = TIERS.map(function (t) { return t.key; });
+
         function tierFor(cents, recurrence) {
-          if (recurrence === 'monthly' && cents >= 1969 && cents < 5000) return 'Stonewall Sustainer';
+          if (recurrence === 'monthly' && cents >= 1969 && cents < 5000) {
+            return 'Stonewall Sustainer';
+          }
           if (cents >= 250000) return 'Founders Circle';
           if (cents >= 100000) return 'Leadership';
           if (cents >=  50000) return 'Champion';
@@ -57,113 +235,89 @@
         }
 
         var state = {
-          rows: [], filtered: [],
-          sortKey: 'founding_number', sortDir: 'asc',
-          client: null, canWrite: false
+          rows: [],
+          filtered: [],
+          sortKey: 'founding_number',
+          sortDir: 'asc',
+          pendingToggles: 0,
+          expanded: Object.create(null)
         };
 
-        document.addEventListener('admin-shell-ready', function (ev) {
-          var detail = ev.detail || {};
-          state.client = detail.client;
-          state.canWrite = detail.can('donors','write');
+        function $(id) { return document.getElementById(id); }
 
-          var actions = document.getElementById('shellPageActions');
-          actions.innerHTML =
-            '<a class="shell-btn shell-btn-outline" href="/founding-members" target="_blank" rel="noopener">View public roster</a>' +
-            '<button type="button" class="shell-btn shell-btn-primary" id="exportCsv">Export CSV</button>';
-
-          document.getElementById('shellBody').innerHTML = pageHtml();
-
-          loadDonors().then(function (rows) {
-            state.rows = rows;
-            renderStats();
-            applyFilters();
-          }).catch(function (err) {
-            console.error('donors load failed', err);
-            document.getElementById('donorsBody').innerHTML =
-              '<tr><td colspan="9" class="admin-empty-row admin-error">' +
-              'Could not load donors. Your role may not include this module.' +
-              '</td></tr>';
+        function fmtMoney(cents) {
+          var dollars = (cents || 0) / 100;
+          return dollars.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: dollars % 1 === 0 ? 0 : 2
           });
-
-          bindEvents();
-        });
-
-        function pageHtml() {
-          return [
-            '<div class="admin-stat-grid">',
-              '<div class="admin-stat"><div class="admin-stat-num" id="statMembers">0</div><div class="admin-stat-label">Members</div></div>',
-              '<div class="admin-stat"><div class="admin-stat-num" id="statRaised">$0</div><div class="admin-stat-label">Total Raised</div></div>',
-              '<div class="admin-stat"><div class="admin-stat-num" id="statPublic">0</div><div class="admin-stat-label">On Public Roster</div></div>',
-              '<div class="admin-stat"><div class="admin-stat-num" id="statProgress">0%</div><div class="admin-stat-label">Toward 1,969</div></div>',
-            '</div>',
-
-            '<div class="admin-toolbar">',
-              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search name, email, ActBlue id..." autocomplete="off" />',
-              '<select class="admin-input" id="filterTier"><option value="">All tiers</option>',
-                TIER_ORDER.map(function (k) { return '<option value="' + k + '">' + k + '</option>'; }).join(''),
-              '</select>',
-              '<select class="admin-input" id="filterPublic">',
-                '<option value="">Public &amp; private</option>',
-                '<option value="public">On public roster</option>',
-                '<option value="private">Hidden from roster</option>',
-              '</select>',
-              '<select class="admin-input" id="filterVetted">',
-                '<option value="">All vetting states</option>',
-                '<option value="vetted">Vetted</option>',
-                '<option value="unvetted">Awaiting vetting</option>',
-              '</select>',
-              '<span class="admin-toolbar-spacer"></span>',
-              '<span class="admin-result-count" id="resultCount"></span>',
-            '</div>',
-
-            '<div class="donors-table-wrap">',
-              '<div class="admin-table-wrap" style="border:none;">',
-                '<table class="admin-table donors-table" id="donorsTable">',
-                  '<thead><tr>',
-                    '<th data-sort="founding_number" class="admin-sortable">#<span class="admin-sort-arrow">&darr;</span></th>',
-                    '<th data-sort="full_name" class="admin-sortable">Name<span class="admin-sort-arrow">&darr;</span></th>',
-                    '<th>Email</th>',
-                    '<th data-sort="amount_cents" class="admin-sortable admin-num">Amount<span class="admin-sort-arrow">&darr;</span></th>',
-                    '<th>Tier</th>',
-                    '<th data-sort="contributed_at" class="admin-sortable">Contributed<span class="admin-sort-arrow">&darr;</span></th>',
-                    '<th>City / County</th>',
-                    '<th class="admin-toggle-col">Public</th>',
-                    '<th class="admin-toggle-col">Vetted</th>',
-                  '</tr></thead>',
-                  '<tbody id="donorsBody"><tr><td colspan="9" class="admin-empty-row">Loading donors...</td></tr></tbody>',
-                '</table>',
-              '</div>',
-            '</div>'
-          ].join('');
         }
 
-        // ---------------------------------------------------------------
-        function loadDonors() {
-          return state.client
-            .from('founding_members')
-            .select(
-              'id, full_name, display_name, email, amount_cents, recurrence, ' +
-              'actblue_contribution_id, actblue_receipt_id, contributed_at, ' +
-              'is_public, is_vetted, founding_number, city, county'
-            )
-            .order('founding_number', { ascending: true, nullsFirst: false })
-            .then(function (resp) {
-              if (resp.error) throw resp.error;
-              var rows = resp.data || [];
-              for (var i = 0; i < rows.length; i++) {
-                rows[i]._tier = tierFor(rows[i].amount_cents, rows[i].recurrence);
-              }
-              return rows;
-            });
-        }
-        function toggleField(id, field, value) {
-          var update = {}; update[field] = value;
-          return state.client.from('founding_members').update(update).eq('id', id)
-            .then(function (r) { if (r.error) throw r.error; });
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
 
-        // ---------------------------------------------------------------
+        function fmtDateTime(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric',
+            hour: 'numeric', minute: '2-digit'
+          });
+        }
+
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+
+        function dashIfEmpty(s) {
+          var v = (s == null ? '' : String(s)).trim();
+          return v ? escapeHtml(v) : '<span class="admin-muted">&mdash;</span>';
+        }
+
+        function toast(msg, kind) {
+          var el = $('toast');
+          el.textContent = msg;
+          el.className = 'admin-toast visible' + (kind ? ' admin-toast-' + kind : '');
+          clearTimeout(toast._t);
+          toast._t = setTimeout(function () { el.classList.remove('visible'); }, 3200);
+        }
+
+        function populateTierFilter() {
+          var sel = $('filterTier');
+          TIER_ORDER.forEach(function (key) {
+            var opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = key;
+            sel.appendChild(opt);
+          });
+        }
+
+        function populateRefcodeFilter() {
+          var sel = $('filterRefcode');
+          // Clear all existing options except the placeholder
+          while (sel.options.length > 1) sel.remove(1);
+          var seen = Object.create(null);
+          state.rows.forEach(function (r) {
+            if (r.refcode && !seen[r.refcode]) {
+              seen[r.refcode] = true;
+            }
+          });
+          Object.keys(seen).sort().forEach(function (rc) {
+            var opt = document.createElement('option');
+            opt.value = rc;
+            opt.textContent = rc;
+            sel.appendChild(opt);
+          });
+        }
+
         function renderStats() {
           var totalMembers = state.rows.length;
           var totalCents = state.rows.reduce(function (s, r) { return s + (r.amount_cents || 0); }, 0);
@@ -178,50 +332,163 @@
         }
 
         function applyFilters() {
-          var q       = $('filterSearch').value.trim().toLowerCase();
-          var tier    = $('filterTier').value;
-          var pub     = $('filterPublic').value;
-          var vet     = $('filterVetted').value;
+          var q  = $('filterSearch').value.trim().toLowerCase();
+          var tier = $('filterTier').value;
+          var refcode = $('filterRefcode').value;
+          var pub  = $('filterPublic').value;
+          var vet  = $('filterVetted').value;
 
           state.filtered = state.rows.filter(function (r) {
             if (tier && r._tier !== tier) return false;
+            if (refcode && r.refcode !== refcode) return false;
             if (pub === 'public'  && !(r.is_public && r.is_vetted)) return false;
             if (pub === 'private' &&   r.is_public && r.is_vetted)  return false;
             if (vet === 'vetted'   && !r.is_vetted) return false;
             if (vet === 'unvetted' &&  r.is_vetted) return false;
             if (q) {
-              var hay = ((r.full_name||'') + ' ' + (r.display_name||'') + ' ' +
-                         (r.email||'') + ' ' + (r.actblue_receipt_id||'') + ' ' +
-                         (r.actblue_contribution_id||'')).toLowerCase();
+              var hay = (
+                (r.full_name || '') + ' ' +
+                (r.display_name || '') + ' ' +
+                (r.email || '') + ' ' +
+                (r.phone || '') + ' ' +
+                (r.address_line1 || '') + ' ' +
+                (r.city || '') + ' ' +
+                (r.zip || '') + ' ' +
+                (r.occupation || '') + ' ' +
+                (r.employer || '') + ' ' +
+                (r.refcode || '') + ' ' +
+                (r.actblue_receipt_id || '') + ' ' +
+                (r.actblue_contribution_id || '')
+              ).toLowerCase();
               if (hay.indexOf(q) === -1) return false;
             }
             return true;
           });
+
           applySort();
         }
 
         function applySort() {
-          var key = state.sortKey, dir = state.sortDir === 'asc' ? 1 : -1;
+          var key = state.sortKey;
+          var dir = state.sortDir === 'asc' ? 1 : -1;
+
           state.filtered.sort(function (a, b) {
-            var av = a[key], bv = b[key];
-            if (key === 'contributed_at') return ((new Date(av||0)) - (new Date(bv||0))) * dir;
+            var av = a[key];
+            var bv = b[key];
+            if (key === 'contributed_at') {
+              return ((new Date(av || 0)) - (new Date(bv || 0))) * dir;
+            }
             if (key === 'founding_number' || key === 'amount_cents') {
               var an = av == null ? Number.POSITIVE_INFINITY : Number(av);
               var bn = bv == null ? Number.POSITIVE_INFINITY : Number(bv);
               return (an - bn) * dir;
             }
-            return String(av || '').localeCompare(String(bv || ''), undefined, { sensitivity:'base' }) * dir;
+            return String(av || '').localeCompare(String(bv || ''), undefined, { sensitivity: 'base' }) * dir;
           });
+
           renderRows();
           renderSortHeaders();
         }
+
         function renderSortHeaders() {
-          document.querySelectorAll('#donorsTable thead th[data-sort]').forEach(function (th) {
-            th.classList.remove('admin-sort-asc','admin-sort-desc');
+          var ths = document.querySelectorAll('#donorsTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            var th = ths[i];
+            th.classList.remove('admin-sort-asc', 'admin-sort-desc');
             if (th.dataset.sort === state.sortKey) {
               th.classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
             }
-          });
+          }
+        }
+
+        function detailRowHtml(r) {
+          var sections = [];
+
+          // --- Contribution
+          var contribItems = [
+            ['Lineitem ID',          r.actblue_contribution_id],
+            ['Order Number',         r.actblue_receipt_id],
+            ['Paid At',              fmtDateTime(r.contributed_at)],
+            ['Amount',               r.amount_cents != null ? fmtMoney(r.amount_cents) : ''],
+            ['Recurrence',           r.recurrence === 'monthly' ? 'Monthly' : 'One-time'],
+            ['Recurring Amount',     r.recurring_amount_cents != null ? fmtMoney(r.recurring_amount_cents) : ''],
+            ['Recurring Type',       r.recurring_type],
+            ['Recurring Duration',   r.recurring_duration],
+            ['Initial Recurring At', fmtDateTime(r.initial_recurring_at)],
+            ['Refcode',              r.refcode],
+            ['Refcode 2',            r.refcode_2],
+            ['Form URL',             r.contribution_form_url],
+            ['Form Owner Email',     r.form_owner_email],
+            ['Form Branding',        r.form_branding_name],
+            ['Recipient Committee',  r.recipient_committee]
+          ];
+
+          // --- Donor
+          var donorItems = [
+            ['Full Name',     r.full_name],
+            ['Display Name',  r.display_name],
+            ['Email',         r.email],
+            ['Phone',         r.phone],
+            ['Address',       r.address_line1],
+            ['City',          r.city],
+            ['State',         r.state],
+            ['ZIP',           r.zip],
+            ['County',        r.county || r.county_name],
+            ['Country',       r.country],
+            ['Occupation',    r.occupation],
+            ['Employer',      r.employer],
+            ['Employer Addr', r.employer_address_line1],
+            ['Employer City', r.employer_city],
+            ['Employer State',r.employer_state],
+            ['Employer ZIP',  r.employer_zip],
+            ['Employer Country', r.employer_country],
+            ['Elected Office', r.elected_office],
+            ['Jurisdiction',   r.jurisdiction]
+          ];
+
+          // --- Payment + fees
+          var paymentItems = [
+            ['Payment Method',       r.payment_method],
+            ['Card Type',            r.card_type],
+            ['ActBlue Fee',          r.actblue_fee_cents != null ? fmtMoney(r.actblue_fee_cents) : ''],
+            ['Stripe Fee',           r.stripe_fee_text],
+            ['Via Mobile',           r.via_mobile == null ? '' : (r.via_mobile ? 'Yes' : 'No')],
+            ['ActBlue Express',      r.is_actblue_express == null ? '' : (r.is_actblue_express ? 'Yes' : 'No')],
+            ['Refunded',             r.is_refunded == null ? '' : (r.is_refunded ? 'Yes' : 'No')],
+            ['Cancelled Recurring',  r.is_cancelled_recurring == null ? '' : (r.is_cancelled_recurring ? 'Yes' : 'No')],
+            ['Recurring Upsell Shown',     r.recurring_upsell_shown == null ? '' : (r.recurring_upsell_shown ? 'Yes' : 'No')],
+            ['Recurring Upsell Succeeded', r.recurring_upsell_succeeded == null ? '' : (r.recurring_upsell_succeeded ? 'Yes' : 'No')],
+            ['Text Message Opt-In',  r.text_message_opt_in],
+            ['Founding Number',      r.founding_number],
+            ['Display Order',        r.display_order]
+          ];
+
+          function renderItems(items) {
+            var html = '<dl class="admin-detail-grid">';
+            for (var i = 0; i < items.length; i++) {
+              var label = items[i][0];
+              var val = items[i][1];
+              if (val === '' || val == null) continue;
+              html += '<div><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(String(val)) + '</dd></div>';
+            }
+            html += '</dl>';
+            return html;
+          }
+
+          sections.push('<div class="admin-detail-section-title">Contribution</div>' + renderItems(contribItems));
+          sections.push('<div class="admin-detail-section-title">Donor</div>' + renderItems(donorItems));
+          sections.push('<div class="admin-detail-section-title">Payment &amp; Flags</div>' + renderItems(paymentItems));
+
+          if (r.notes) {
+            sections.push(
+              '<div class="admin-detail-section-title">Internal Notes</div>' +
+              '<div style="white-space:pre-wrap;font-size:0.9rem;color:#333;">' + escapeHtml(r.notes) + '</div>'
+            );
+          }
+
+          return '<tr class="admin-detail-row" data-detail-for="' + escapeHtml(r.id) + '">' +
+                   '<td colspan="' + COLSPAN + '">' + sections.join('') + '</td>' +
+                 '</tr>';
         }
 
         function renderRows() {
@@ -235,193 +502,226 @@
             var msg = state.rows.length === 0
               ? 'No founding members yet. ActBlue sync will populate this list as donations come in.'
               : 'No donors match the current filters.';
-            body.innerHTML = '<tr><td colspan="9" class="admin-empty-row">' + msg + '</td></tr>';
+            body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">' + msg + '</td></tr>';
             return;
           }
 
-          body.innerHTML = state.filtered.map(function (r) {
-            var nameMain = escapeHtml(r.full_name || '—');
+          var html = '';
+          for (var i = 0; i < state.filtered.length; i++) {
+            var r = state.filtered[i];
+            var nameMain = escapeHtml(r.full_name || r.display_name || '—');
             var displayLabel = r.display_name && r.display_name !== r.full_name
               ? '<span class="admin-cell-sub">Public: ' + escapeHtml(r.display_name) + '</span>'
               : '';
+            if (r.elected_office) {
+              displayLabel += '<span class="admin-cell-sub">' + escapeHtml(r.elected_office) +
+                (r.jurisdiction ? ' &middot; ' + escapeHtml(r.jurisdiction) : '') + '</span>';
+            }
             var foundingNum = r.founding_number ? '#' + r.founding_number : '<span class="admin-muted">&mdash;</span>';
             var emailHtml = r.email
-              ? '<a href="mailto:' + escapeAttr(r.email) + '" class="admin-link" onclick="event.stopPropagation()">' + escapeHtml(r.email) + '</a>'
+              ? '<a href="mailto:' + escapeHtml(r.email) + '" class="admin-link">' + escapeHtml(r.email) + '</a>'
               : '<span class="admin-muted">&mdash;</span>';
             var amount = fmtMoney(r.amount_cents);
             if (r.recurrence === 'monthly') amount += '<span class="admin-cell-sub">/mo</span>';
             var tierBadge = '<span class="admin-pill admin-pill-tier">' + escapeHtml(r._tier) + '</span>';
-            var loc = [r.city, r.county ? r.county + ' Co.' : ''].filter(Boolean).join(', ');
-            loc = loc ? escapeHtml(loc) : '<span class="admin-muted">&mdash;</span>';
+            var refcodeCell = r.refcode
+              ? '<span class="admin-pill-refcode">' + escapeHtml(r.refcode) + '</span>'
+              : '<span class="admin-muted">&mdash;</span>';
+            var paymentCell = '';
+            if (r.payment_method || r.card_type) {
+              paymentCell = '<span class="admin-pill-payment">' +
+                escapeHtml(r.payment_method || r.card_type || '') + '</span>';
+              if (r.card_type && r.payment_method && r.card_type !== r.payment_method) {
+                paymentCell += '<span class="admin-cell-sub">' + escapeHtml(r.card_type) + '</span>';
+              }
+            } else {
+              paymentCell = '<span class="admin-muted">&mdash;</span>';
+            }
+            var loc = [r.city, (r.county || r.county_name) ? (r.county || (r.county_name || '').replace(/ County$/, '')) + ' Co.' : ''].filter(Boolean).join(', ');
+            if (!loc) loc = '<span class="admin-muted">&mdash;</span>';
+            else loc = escapeHtml(loc);
+            if (r.zip) loc += '<span class="admin-cell-sub">ZIP ' + escapeHtml(r.zip) + '</span>';
             if (r.actblue_receipt_id) {
               loc += '<span class="admin-cell-sub">ActBlue ' + escapeHtml(r.actblue_receipt_id) + '</span>';
             }
+            var occEmp = '';
+            if (r.occupation || r.employer) {
+              occEmp = escapeHtml(r.occupation || '');
+              if (r.employer) {
+                occEmp += (occEmp ? '<span class="admin-cell-sub">' : '<span class="admin-cell-sub">') +
+                  escapeHtml(r.employer) + '</span>';
+              }
+            } else {
+              occEmp = '<span class="admin-muted">&mdash;</span>';
+            }
+            var isExpanded = !!state.expanded[r.id];
+            var expandBtn =
+              '<button type="button" class="admin-expand-btn" data-expand="' + escapeHtml(r.id) + '" ' +
+                'aria-expanded="' + (isExpanded ? 'true' : 'false') + '" ' +
+                'title="' + (isExpanded ? 'Hide details' : 'Show all donor details') + '">' +
+                (isExpanded ? '&minus;' : '+') +
+              '</button>';
 
-            return '<tr data-id="' + escapeAttr(r.id) + '">' +
-              '<td class="admin-num">' + foundingNum + '</td>' +
-              '<td class="admin-cell-name">' + nameMain + displayLabel + '</td>' +
-              '<td>' + emailHtml + '</td>' +
-              '<td class="admin-num">' + amount + '</td>' +
-              '<td>' + tierBadge + '</td>' +
-              '<td>' + escapeHtml(fmtDate(r.contributed_at)) + '</td>' +
-              '<td>' + loc + '</td>' +
-              '<td class="admin-toggle-col">' + toggleHtml(r.id, 'is_public', r.is_public) + '</td>' +
-              '<td class="admin-toggle-col">' + toggleHtml(r.id, 'is_vetted', r.is_vetted) + '</td>' +
-            '</tr>';
-          }).join('');
-        }
-        function toggleHtml(id, field, on) {
-          var disabled = state.canWrite ? '' : ' disabled';
-          return '<label class="admin-switch" onclick="event.stopPropagation()">' +
-            '<input type="checkbox" data-toggle="' + field + '" data-id="' + escapeAttr(id) + '"' +
-            (on ? ' checked' : '') + disabled + ' />' +
-            '<span class="admin-switch-slider"></span>' +
-          '</label>';
-        }
+            html +=
+              '<tr data-id="' + escapeHtml(r.id) + '">' +
+                '<td class="admin-toggle-col">' + expandBtn + '</td>' +
+                '<td class="admin-num">' + foundingNum + '</td>' +
+                '<td class="admin-cell-name">' + nameMain + displayLabel + '</td>' +
+                '<td>' + emailHtml + '</td>' +
+                '<td class="admin-num">' + amount + '</td>' +
+                '<td>' + tierBadge + '</td>' +
+                '<td>' + refcodeCell + '</td>' +
+                '<td>' + paymentCell + '</td>' +
+                '<td class="admin-cell-tight">' + escapeHtml(fmtDate(r.contributed_at)) + '</td>' +
+                '<td>' + loc + '</td>' +
+                '<td>' + occEmp + '</td>' +
+                '<td class="admin-toggle-col">' + toggleHtml(r.id, 'is_public', r.is_public) + '</td>' +
+                '<td class="admin-toggle-col">' + toggleHtml(r.id, 'is_vetted', r.is_vetted) + '</td>' +
+              '</tr>';
 
-        // ---------------------------------------------------------------
-        function openDonorDrawer(r) {
-          function row(label, value) {
-            return '<dt>' + escapeHtml(label) + '</dt><dd>' + (value || '<span class="admin-muted">&mdash;</span>') + '</dd>';
+            if (isExpanded) {
+              html += detailRowHtml(r);
+            }
           }
-          function v(x) { return x ? escapeHtml(x) : ''; }
-
-          var body =
-            '<div class="shell-drawer-section"><h4>Identity</h4><dl>' +
-              row('Founding number', r.founding_number ? '<strong>#' + r.founding_number + '</strong>' : '') +
-              row('Full name',  v(r.full_name)) +
-              row('Display name', v(r.display_name)) +
-              row('Email', r.email ? '<a href="mailto:' + escapeAttr(r.email) + '">' + escapeHtml(r.email) + '</a>' : '') +
-            '</dl></div>' +
-            '<div class="shell-drawer-section"><h4>Contribution</h4><dl>' +
-              row('Amount', '<strong>' + fmtMoney(r.amount_cents) + (r.recurrence === "monthly" ? "/mo" : "") + '</strong>') +
-              row('Tier', '<span class="admin-pill admin-pill-tier">' + escapeHtml(r._tier) + '</span>') +
-              row('Contributed', v(fmtDate(r.contributed_at))) +
-              row('ActBlue receipt', v(r.actblue_receipt_id)) +
-              row('ActBlue contribution', v(r.actblue_contribution_id)) +
-            '</dl></div>' +
-            '<div class="shell-drawer-section"><h4>Roster</h4><dl>' +
-              row('On public roster', r.is_public ? 'Yes' : 'No') +
-              row('Vetted', r.is_vetted ? 'Yes' : 'No') +
-              row('Location', [r.city, r.county ? r.county + ' Co.' : ''].filter(Boolean).map(escapeHtml).join(', ')) +
-            '</dl></div>';
-
-          var foot = '<a class="shell-btn shell-btn-outline" href="mailto:' + escapeAttr(r.email || '') + '">Email donor</a>' +
-            '<button type="button" class="shell-btn shell-btn-primary" data-drawer-close>Done</button>';
-
-          window.AdminShell.openDrawer({
-            eyebrow: r._tier,
-            title: r.full_name || 'Donor',
-            bodyHtml: body,
-            footHtml: foot
-          });
+          body.innerHTML = html;
         }
 
-        // ---------------------------------------------------------------
-        function bindEvents() {
-          var debT;
-          $('filterSearch').addEventListener('input', function () { clearTimeout(debT); debT = setTimeout(applyFilters, 150); });
-          $('filterTier').addEventListener('change',   applyFilters);
+        function toggleHtml(id, field, on) {
+          return (
+            '<label class="admin-switch">' +
+              '<input type="checkbox" data-toggle="' + field + '" data-id="' + escapeHtml(id) + '"' + (on ? ' checked' : '') + ' />' +
+              '<span class="admin-switch-slider"></span>' +
+            '</label>'
+          );
+        }
+
+        async function loadDonors(client) {
+          var resp = await client
+            .from('founding_members')
+            .select([
+              'id', 'full_name', 'display_name', 'email', 'phone',
+              'amount_cents', 'recurrence',
+              'recurring_amount_cents', 'recurring_type', 'recurring_duration', 'initial_recurring_at',
+              'actblue_contribution_id', 'actblue_receipt_id', 'contributed_at',
+              'is_public', 'is_vetted', 'founding_number', 'display_order',
+              'address_line1', 'city', 'state', 'zip', 'country',
+              'county', 'county_name', 'county_fips',
+              'occupation', 'employer',
+              'employer_address_line1', 'employer_city', 'employer_state', 'employer_zip', 'employer_country',
+              'refcode', 'refcode_2',
+              'contribution_form_url', 'form_owner_email', 'form_branding_name', 'recipient_committee',
+              'payment_method', 'card_type',
+              'actblue_fee_cents', 'stripe_fee_text',
+              'via_mobile', 'is_actblue_express', 'is_refunded', 'is_cancelled_recurring',
+              'recurring_upsell_shown', 'recurring_upsell_succeeded',
+              'text_message_opt_in',
+              'elected_office', 'jurisdiction', 'public_quote',
+              'notes'
+            ].join(', '))
+            .order('founding_number', { ascending: true, nullsFirst: false });
+
+          if (resp.error) throw resp.error;
+
+          var rows = resp.data || [];
+          for (var i = 0; i < rows.length; i++) {
+            rows[i]._tier = tierFor(rows[i].amount_cents, rows[i].recurrence);
+          }
+          return rows;
+        }
+
+        async function toggleField(client, id, field, value) {
+          state.pendingToggles++;
+          var update = {};
+          update[field] = value;
+          var resp = await client
+            .from('founding_members')
+            .update(update)
+            .eq('id', id);
+          state.pendingToggles--;
+          if (resp.error) throw resp.error;
+        }
+
+        document.addEventListener('admin-auth-ready', function (e) {
+          var client = window.AdminAuth && window.AdminAuth.client;
+          if (!client) return;
+
+          populateTierFilter();
+
+          loadDonors(client).then(function (rows) {
+            state.rows = rows;
+            populateRefcodeFilter();
+            renderStats();
+            applyFilters();
+          }).catch(function (err) {
+            console.error('Failed to load donors:', err);
+            $('donorsBody').innerHTML =
+              '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
+              'Could not load donors. Your account may not be authorized for this view.' +
+              '</td></tr>';
+          });
+
+          var debounceT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debounceT);
+            debounceT = setTimeout(applyFilters, 150);
+          });
+          $('filterTier').addEventListener('change', applyFilters);
+          $('filterRefcode').addEventListener('change', applyFilters);
           $('filterPublic').addEventListener('change', applyFilters);
           $('filterVetted').addEventListener('change', applyFilters);
 
-          document.querySelectorAll('#donorsTable thead th[data-sort]').forEach(function (th) {
-            th.addEventListener('click', function (ev) {
+          var sortableHeaders = document.querySelectorAll('#donorsTable thead th[data-sort]');
+          for (var i = 0; i < sortableHeaders.length; i++) {
+            sortableHeaders[i].addEventListener('click', function (ev) {
               var key = ev.currentTarget.dataset.sort;
-              if (state.sortKey === key) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
-              else { state.sortKey = key; state.sortDir = key === 'contributed_at' || key === 'amount_cents' ? 'desc' : 'asc'; }
+              if (state.sortKey === key) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              } else {
+                state.sortKey = key;
+                state.sortDir = key === 'contributed_at' || key === 'amount_cents' ? 'desc' : 'asc';
+              }
               applySort();
             });
+          }
+
+          $('donorsBody').addEventListener('click', function (ev) {
+            var btn = ev.target.closest && ev.target.closest('[data-expand]');
+            if (!btn) return;
+            ev.preventDefault();
+            var id = btn.dataset.expand;
+            state.expanded[id] = !state.expanded[id];
+            renderRows();
           });
 
-          var body = $('donorsBody');
-          body.addEventListener('click', function (ev) {
-            var tr  = ev.target.closest('tr[data-id]');
-            if (!tr) return;
-            var input = ev.target.closest('input,a,label');
-            if (input) return;
-            var id = tr.dataset.id;
-            var row = state.rows.find(function (r) { return r.id === id; });
-            if (row) openDonorDrawer(row);
-          });
-          body.addEventListener('change', function (ev) {
+          $('donorsBody').addEventListener('change', function (ev) {
             var input = ev.target;
             if (!input || input.tagName !== 'INPUT' || !input.dataset.toggle) return;
-            if (!state.canWrite) {
-              window.AdminShell.toast('Your role does not include write access.', 'error');
-              input.checked = !input.checked;
-              return;
-            }
             var id = input.dataset.id;
             var field = input.dataset.toggle;
             var value = input.checked;
             input.disabled = true;
-            toggleField(id, field, value).then(function () {
+            toggleField(client, id, field, value).then(function () {
               for (var i = 0; i < state.rows.length; i++) {
-                if (state.rows[i].id === id) { state.rows[i][field] = value; break; }
+                if (state.rows[i].id === id) {
+                  state.rows[i][field] = value;
+                  break;
+                }
               }
               renderStats();
-              window.AdminShell.toast(
-                (field === 'is_public' ? 'Public roster' : 'Vetting') + (value ? ' enabled.' : ' disabled.'),
+              toast(
+                (field === 'is_public' ? 'Public roster' : 'Vetting') +
+                  (value ? ' enabled.' : ' disabled.'),
                 'success'
               );
             }).catch(function (err) {
               console.error('Toggle failed:', err);
               input.checked = !value;
-              window.AdminShell.toast('Could not update. Please try again.', 'error');
-            }).finally(function () { input.disabled = false; });
+              toast('Could not update. Please try again.', 'error');
+            }).finally(function () {
+              input.disabled = false;
+            });
           });
-
-          document.getElementById('exportCsv').addEventListener('click', exportCsv);
-        }
-
-        function exportCsv() {
-          if (state.filtered.length === 0) {
-            window.AdminShell.toast('Nothing to export with the current filters.', 'error');
-            return;
-          }
-          var cols = ['founding_number','full_name','display_name','email','amount_cents','recurrence','_tier','contributed_at','city','county','is_public','is_vetted','actblue_receipt_id','actblue_contribution_id'];
-          var lines = [cols.join(',')];
-          state.filtered.forEach(function (r) {
-            lines.push(cols.map(function (c) {
-              var v = r[c];
-              if (typeof v === 'boolean') v = v ? 'true' : 'false';
-              if (v == null) v = '';
-              v = String(v).replace(/"/g, '""');
-              return /[,"\n]/.test(v) ? '"' + v + '"' : v;
-            }).join(','));
-          });
-          var blob = new Blob([lines.join('\n')], { type: 'text/csv' });
-          var url = URL.createObjectURL(blob);
-          var a = document.createElement('a');
-          a.href = url;
-          a.download = 'ohio-pride-donors-' + new Date().toISOString().slice(0,10) + '.csv';
-          document.body.appendChild(a); a.click(); a.remove();
-          URL.revokeObjectURL(url);
-          window.AdminShell.toast('Exported ' + state.filtered.length + ' donors.', 'success');
-        }
-
-        // Helpers
-        function $(id) { return document.getElementById(id); }
-        function fmtMoney(cents) {
-          var dollars = (cents || 0) / 100;
-          return dollars.toLocaleString('en-US', {
-            style: 'currency', currency: 'USD',
-            maximumFractionDigits: dollars % 1 === 0 ? 0 : 2
-          });
-        }
-        function fmtDate(iso) {
-          if (!iso) return '';
-          var d = new Date(iso);
-          if (isNaN(d.getTime())) return '';
-          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-        function escapeHtml(s) {
-          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
-          });
-        }
-        function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+        });
       })();
     </script>
   </body>
