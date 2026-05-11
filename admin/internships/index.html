@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Internships | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+
+    <style>
+      .intern-table-wrap { background: rgba(15, 34, 51, 0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 16px 8px; }
+      .intern-table tbody tr { cursor: pointer; }
+      .intern-table tbody tr:hover { background: rgba(115, 215, 238, 0.06); }
+      .intern-resume-link { display: inline-block; margin-right: 8px; }
+      .admin-pill-position { background: rgba(115, 215, 238, 0.12); color: var(--color-light-blue); border: 1px solid rgba(115, 215, 238, 0.3); }
+    </style>
+  </head>
+
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="internships"
+      data-page-eyebrow="Field"
+      data-page-title="Internships"
+      data-page-sub="Summer / Fall 2026 applications. Triage, interview, and assign."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+
+    <script>
+      (function () {
+        'use strict';
+
+        var POSITION_LABEL = {
+          chief_of_staff:        'Chief of Staff',
+          graphics_social_media: 'Graphics & Social',
+          volunteer_coordinator: 'Volunteer Coordinator',
+          legislative_director:  'Legislative Director',
+          policy_aide:           'Policy Aide'
+        };
+        var TERM_LABEL = {
+          summer_2026: 'Summer 2026',
+          fall_2026:   'Fall 2026',
+          either:      'Summer or Fall'
+        };
+        var STATUS_OPTIONS = ['new','contacted','interviewing','offered','hired','declined','withdrawn'];
+        var STATUS_LABEL = {
+          new:'New', contacted:'Contacted', interviewing:'Interviewing',
+          offered:'Offered', hired:'Hired', declined:'Declined', withdrawn:'Withdrawn'
+        };
+
+        var state = {
+          rows: [], filtered: [],
+          sortKey: 'created_at', sortDir: 'desc',
+          client: null, canWrite: false, activeId: null
+        };
+
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var detail = ev.detail || {};
+          state.client = detail.client;
+          // Internships reuse the volunteers permission module by default.
+          state.canWrite = detail.can('internships','write') || detail.can('volunteers','write');
+
+          var actions = document.getElementById('shellPageActions');
+          actions.innerHTML =
+            '<a class="shell-btn shell-btn-outline" href="/volunteer#internships" target="_blank" rel="noopener">View public listing</a>' +
+            '<button type="button" class="shell-btn shell-btn-primary" id="exportCsv">Export CSV</button>';
+
+          document.getElementById('shellBody').innerHTML = pageHtml();
+
+          loadApplications().then(function (rows) {
+            state.rows = rows;
+            renderStats();
+            applyFilters();
+            var qid = new URLSearchParams(location.search).get('id');
+            if (qid) {
+              var match = rows.find(function (r) { return r.id === qid; });
+              if (match) openDrawer(match);
+            }
+          }).catch(function (err) {
+            console.error('intern apps load failed', err);
+            document.getElementById('internBody').innerHTML =
+              '<tr><td colspan="7" class="admin-empty-row admin-error">' +
+              'Could not load intern applications. Your role may not include this module.' +
+              '</td></tr>';
+          });
+
+          bindEvents();
+        });
+
+        function pageHtml() {
+          return [
+            '<div class="admin-stat-grid">',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statTotal">0</div><div class="admin-stat-label">Total</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statNew">0</div><div class="admin-stat-label">New</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statInterviewing">0</div><div class="admin-stat-label">Interviewing</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statOffered">0</div><div class="admin-stat-label">Offered</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statHired">0</div><div class="admin-stat-label">Hired</div></div>',
+            '</div>',
+
+            '<div class="admin-toolbar">',
+              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search name, email, school..." autocomplete="off" />',
+              '<select class="admin-input" id="filterStatus">',
+                '<option value="">All statuses</option>',
+                STATUS_OPTIONS.map(function (s) {
+                  return '<option value="' + s + '">' + STATUS_LABEL[s] + '</option>';
+                }).join(''),
+              '</select>',
+              '<select class="admin-input" id="filterPosition">',
+                '<option value="">All positions</option>',
+                Object.keys(POSITION_LABEL).map(function (k) {
+                  return '<option value="' + k + '">' + POSITION_LABEL[k] + '</option>';
+                }).join(''),
+              '</select>',
+              '<select class="admin-input" id="filterTerm">',
+                '<option value="">All terms</option>',
+                Object.keys(TERM_LABEL).map(function (k) {
+                  return '<option value="' + k + '">' + TERM_LABEL[k] + '</option>';
+                }).join(''),
+              '</select>',
+              '<span class="admin-toolbar-spacer"></span>',
+              '<span class="admin-result-count" id="resultCount"></span>',
+            '</div>',
+
+            '<div class="intern-table-wrap">',
+              '<div class="admin-table-wrap" style="border:none;">',
+                '<table class="admin-table intern-table" id="internTable">',
+                  '<thead><tr>',
+                    '<th data-sort="last_name" class="admin-sortable">Applicant<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th data-sort="position" class="admin-sortable">Position<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th data-sort="term" class="admin-sortable">Term<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th>Institution</th>',
+                    '<th>Materials</th>',
+                    '<th data-sort="created_at" class="admin-sortable">Submitted<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th data-sort="status" class="admin-sortable">Status<span class="admin-sort-arrow">&darr;</span></th>',
+                  '</tr></thead>',
+                  '<tbody id="internBody"><tr><td colspan="7" class="admin-empty-row">Loading applications...</td></tr></tbody>',
+                '</table>',
+              '</div>',
+            '</div>'
+          ].join('');
+        }
+
+        // ---------------------------------------------------------------
+        function loadApplications() {
+          return state.client
+            .from('intern_applications')
+            .select(
+              'id, created_at, first_name, last_name, email, phone, pronouns, ' +
+              'city, county, zip, position, term, start_date_pref, weekly_hours, credit_hours, ' +
+              'institution, program_major, class_year, faculty_sponsor_name, faculty_sponsor_email, ' +
+              'resume_url, portfolio_url, statement_of_interest, prior_experience, why_ohio_pride, ' +
+              'referral_source, is_founding_member, email_optin, status'
+            )
+            .order('created_at', { ascending: false })
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              return resp.data || [];
+            });
+        }
+
+        function updateStatus(id, status) {
+          return state.client
+            .from('intern_applications')
+            .update({ status: status })
+            .eq('id', id)
+            .then(function (r) { if (r.error) throw r.error; });
+        }
+
+        // ---------------------------------------------------------------
+        function renderStats() {
+          var c = { total: state.rows.length, new: 0, interviewing: 0, offered: 0, hired: 0 };
+          state.rows.forEach(function (r) {
+            if (r.status && c[r.status] != null) c[r.status]++;
+          });
+          $('statTotal').textContent        = c.total.toLocaleString();
+          $('statNew').textContent          = c.new.toLocaleString();
+          $('statInterviewing').textContent = c.interviewing.toLocaleString();
+          $('statOffered').textContent      = c.offered.toLocaleString();
+          $('statHired').textContent        = c.hired.toLocaleString();
+        }
+        function applyFilters() {
+          var q       = $('filterSearch').value.trim().toLowerCase();
+          var status  = $('filterStatus').value;
+          var pos     = $('filterPosition').value;
+          var term    = $('filterTerm').value;
+
+          state.filtered = state.rows.filter(function (r) {
+            if (status && r.status !== status) return false;
+            if (pos    && r.position !== pos) return false;
+            if (term   && r.term !== term && r.term !== 'either') return false;
+            if (q) {
+              var hay = ((r.first_name||'') + ' ' + (r.last_name||'') + ' ' +
+                         (r.email||'') + ' ' + (r.institution||'') + ' ' +
+                         (r.program_major||'')).toLowerCase();
+              if (hay.indexOf(q) === -1) return false;
+            }
+            return true;
+          });
+          applySort();
+        }
+        function applySort() {
+          var key = state.sortKey, dir = state.sortDir === 'asc' ? 1 : -1;
+          state.filtered.sort(function (a, b) {
+            var av = a[key], bv = b[key];
+            if (key === 'created_at') return ((new Date(av||0)) - (new Date(bv||0))) * dir;
+            return String(av||'').localeCompare(String(bv||''), undefined, { sensitivity:'base' }) * dir;
+          });
+          renderRows();
+          renderSortHeaders();
+        }
+        function renderSortHeaders() {
+          document.querySelectorAll('#internTable thead th[data-sort]').forEach(function (th) {
+            th.classList.remove('admin-sort-asc','admin-sort-desc');
+            if (th.dataset.sort === state.sortKey) {
+              th.classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
+            }
+          });
+        }
+
+        function renderRows() {
+          var body = $('internBody');
+          $('resultCount').textContent =
+            state.filtered.length === state.rows.length
+              ? state.rows.length + ' total'
+              : state.filtered.length + ' of ' + state.rows.length;
+
+          if (state.filtered.length === 0) {
+            var msg = state.rows.length === 0
+              ? 'No intern applications yet. Submissions from /volunteer (intern path) will appear here.'
+              : 'No applications match the current filters.';
+            body.innerHTML = '<tr><td colspan="7" class="admin-empty-row">' + msg + '</td></tr>';
+            return;
+          }
+
+          body.innerHTML = state.filtered.map(function (r) {
+            var nameMain = escapeHtml((r.first_name||'') + ' ' + (r.last_name||'')).trim() || '&mdash;';
+            var pronouns = r.pronouns ? '<span class="admin-cell-sub">' + escapeHtml(r.pronouns) + '</span>' : '';
+            var emailHtml = r.email
+              ? '<span class="admin-cell-sub"><a href="mailto:' + escapeAttr(r.email) + '" class="admin-link" onclick="event.stopPropagation()">' + escapeHtml(r.email) + '</a></span>'
+              : '';
+            var pos = '<span class="admin-pill admin-pill-position">' + escapeHtml(POSITION_LABEL[r.position] || r.position) + '</span>';
+            var term = escapeHtml(TERM_LABEL[r.term] || r.term || '—');
+            var inst = r.institution ? escapeHtml(r.institution) : '<span class="admin-muted">&mdash;</span>';
+            if (r.program_major) inst += '<span class="admin-cell-sub">' + escapeHtml(r.program_major) + '</span>';
+            var mat = '';
+            if (r.resume_url)    mat += '<a class="admin-link intern-resume-link" href="' + escapeAttr(r.resume_url)    + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Resume</a>';
+            if (r.portfolio_url) mat += '<a class="admin-link intern-resume-link" href="' + escapeAttr(r.portfolio_url) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Portfolio</a>';
+            if (!mat) mat = '<span class="admin-muted">&mdash;</span>';
+
+            return '<tr data-id="' + escapeAttr(r.id) + '">' +
+              '<td class="admin-cell-name">' + nameMain + emailHtml + pronouns + '</td>' +
+              '<td>' + pos + '</td>' +
+              '<td>' + term + '</td>' +
+              '<td>' + inst + '</td>' +
+              '<td>' + mat + '</td>' +
+              '<td>' + escapeHtml(fmtDate(r.created_at)) + '</td>' +
+              '<td>' + statusSelectHtml(r.id, r.status || 'new') + '</td>' +
+            '</tr>';
+          }).join('');
+        }
+        function statusSelectHtml(id, current) {
+          var opts = STATUS_OPTIONS.map(function (s) {
+            return '<option value="' + s + '"' + (s===current ? ' selected' : '') + '>' + STATUS_LABEL[s] + '</option>';
+          }).join('');
+          var disabled = state.canWrite ? '' : ' disabled';
+          return '<select class="admin-status-select admin-status-' + escapeAttr(current||'new') +
+                 '" data-status-select data-id="' + escapeAttr(id) + '" onclick="event.stopPropagation()"' + disabled + '>' + opts + '</select>';
+        }
+
+        // ---------------------------------------------------------------
+        function openDrawer(r) {
+          state.activeId = r.id;
+          function row(label, value) {
+            return '<dt>' + escapeHtml(label) + '</dt><dd>' + (value || '<span class="admin-muted">&mdash;</span>') + '</dd>';
+          }
+          function v(x) { return x ? escapeHtml(x) : ''; }
+          function pre(x) {
+            return x ? '<div style="white-space:pre-wrap;color:var(--text-light);font-size:14px;line-height:1.6">' + escapeHtml(x) + '</div>' : '';
+          }
+          function link(url, label) {
+            if (!url) return '';
+            return '<a class="admin-link" href="' + escapeAttr(url) + '" target="_blank" rel="noopener">' + escapeHtml(label) + ' &rarr;</a>';
+          }
+
+          var body =
+            '<div class="shell-drawer-section"><h4>Contact</h4><dl>' +
+              row('Email', r.email ? '<a href="mailto:' + escapeAttr(r.email) + '">' + escapeHtml(r.email) + '</a>' : '') +
+              row('Phone', v(r.phone)) +
+              row('Pronouns', v(r.pronouns)) +
+              row('Location', [r.city, r.county ? r.county + ' Co.' : '', r.zip].filter(Boolean).map(escapeHtml).join(', ')) +
+            '</dl></div>' +
+
+            '<div class="shell-drawer-section"><h4>Position</h4><dl>' +
+              row('Applied for', '<strong>' + escapeHtml(POSITION_LABEL[r.position] || r.position) + '</strong>') +
+              row('Term', escapeHtml(TERM_LABEL[r.term] || r.term)) +
+              row('Earliest start', v(r.start_date_pref)) +
+              row('Hours / week', r.weekly_hours ? r.weekly_hours + ' hrs' : '') +
+              row('Credit hours', r.credit_hours != null ? String(r.credit_hours) : '') +
+            '</dl></div>' +
+
+            '<div class="shell-drawer-section"><h4>Academic</h4><dl>' +
+              row('Institution', v(r.institution)) +
+              row('Program / major', v(r.program_major)) +
+              row('Class year', v(r.class_year)) +
+              row('Faculty coordinator', r.faculty_sponsor_name
+                ? escapeHtml(r.faculty_sponsor_name) +
+                  (r.faculty_sponsor_email
+                    ? ' &middot; <a href="mailto:' + escapeAttr(r.faculty_sponsor_email) + '">' + escapeHtml(r.faculty_sponsor_email) + '</a>'
+                    : '')
+                : '') +
+            '</dl></div>' +
+
+            '<div class="shell-drawer-section"><h4>Materials</h4><dl>' +
+              row('Resume',    link(r.resume_url, 'Open resume')) +
+              row('Portfolio', link(r.portfolio_url, 'Open portfolio')) +
+            '</dl></div>' +
+
+            '<div class="shell-drawer-section"><h4>Statement of interest</h4>' +
+              (pre(r.statement_of_interest) || '<span class="admin-muted">No statement provided</span>') +
+            '</div>' +
+
+            (r.prior_experience
+              ? '<div class="shell-drawer-section"><h4>Prior experience</h4>' + pre(r.prior_experience) + '</div>' : '') +
+            (r.why_ohio_pride
+              ? '<div class="shell-drawer-section"><h4>Why Ohio Pride</h4>' + pre(r.why_ohio_pride) + '</div>' : '') +
+
+            '<div class="shell-drawer-section"><h4>Wrap-up</h4><dl>' +
+              row('Referral source', v(r.referral_source)) +
+              row('Founding member', r.is_founding_member ? 'Yes' : 'No') +
+              row('Email opt-in', r.email_optin ? 'Yes' : 'No') +
+              row('Submitted', v(new Date(r.created_at).toLocaleString())) +
+              row('Status', '<strong>' + escapeHtml(STATUS_LABEL[r.status]||r.status) + '</strong>') +
+            '</dl></div>';
+
+          var foot = state.canWrite
+            ? '<a class="shell-btn shell-btn-outline" href="mailto:' + escapeAttr(r.email || '') + '">Email applicant</a>' +
+              '<button type="button" class="shell-btn shell-btn-primary" data-drawer-close>Done</button>'
+            : '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>';
+
+          window.AdminShell.openDrawer({
+            eyebrow: POSITION_LABEL[r.position] || 'Internship',
+            title: ((r.first_name||'') + ' ' + (r.last_name||'')).trim() || 'Applicant',
+            bodyHtml: body,
+            footHtml: foot
+          });
+        }
+
+        // ---------------------------------------------------------------
+        function bindEvents() {
+          var debT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debT); debT = setTimeout(applyFilters, 150);
+          });
+          $('filterStatus').addEventListener('change', applyFilters);
+          $('filterPosition').addEventListener('change', applyFilters);
+          $('filterTerm').addEventListener('change', applyFilters);
+
+          document.querySelectorAll('#internTable thead th[data-sort]').forEach(function (th) {
+            th.addEventListener('click', function (ev) {
+              var key = ev.currentTarget.dataset.sort;
+              if (state.sortKey === key) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              else { state.sortKey = key; state.sortDir = key === 'created_at' ? 'desc' : 'asc'; }
+              applySort();
+            });
+          });
+
+          var body = $('internBody');
+          body.addEventListener('click', function (ev) {
+            var tr = ev.target.closest('tr[data-id]');
+            if (!tr) return;
+            var sel = ev.target.closest('select');
+            var anchor = ev.target.closest('a');
+            if (sel || anchor) return;
+            var id = tr.dataset.id;
+            var row = state.rows.find(function (r) { return r.id === id; });
+            if (row) openDrawer(row);
+          });
+          body.addEventListener('change', function (ev) {
+            var sel = ev.target;
+            if (!sel || !sel.dataset || sel.dataset.statusSelect == null) return;
+            if (!state.canWrite) {
+              window.AdminShell.toast('Your role does not include write access.', 'error');
+              return;
+            }
+            var id = sel.dataset.id;
+            var newStatus = sel.value;
+            var prev = null;
+            for (var i = 0; i < state.rows.length; i++) {
+              if (state.rows[i].id === id) { prev = state.rows[i].status || 'new'; state.rows[i].status = newStatus; break; }
+            }
+            sel.disabled = true;
+            updateStatus(id, newStatus).then(function () {
+              sel.className = 'admin-status-select admin-status-' + newStatus;
+              renderStats();
+              window.AdminShell.toast('Status set to ' + STATUS_LABEL[newStatus] + '.', 'success');
+            }).catch(function (err) {
+              console.error('status update failed', err);
+              for (var j = 0; j < state.rows.length; j++) {
+                if (state.rows[j].id === id) { state.rows[j].status = prev; break; }
+              }
+              sel.value = prev || 'new';
+              window.AdminShell.toast('Could not update status.', 'error');
+            }).finally(function () { sel.disabled = false; });
+          });
+
+          document.getElementById('exportCsv').addEventListener('click', exportCsv);
+        }
+
+        function exportCsv() {
+          if (state.filtered.length === 0) {
+            window.AdminShell.toast('Nothing to export with the current filters.', 'error');
+            return;
+          }
+          var cols = [
+            'created_at','first_name','last_name','email','phone','pronouns',
+            'city','county','zip',
+            'position','term','start_date_pref','weekly_hours','credit_hours',
+            'institution','program_major','class_year',
+            'faculty_sponsor_name','faculty_sponsor_email',
+            'resume_url','portfolio_url','statement_of_interest','prior_experience','why_ohio_pride',
+            'referral_source','is_founding_member','email_optin','status'
+          ];
+          var lines = [cols.join(',')];
+          state.filtered.forEach(function (r) {
+            lines.push(cols.map(function (c) {
+              var v = r[c];
+              if (typeof v === 'boolean') v = v ? 'true' : 'false';
+              if (v == null) v = '';
+              v = String(v).replace(/"/g, '""');
+              return /[,"\n]/.test(v) ? '"' + v + '"' : v;
+            }).join(','));
+          });
+          var blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'ohio-pride-internships-' + new Date().toISOString().slice(0,10) + '.csv';
+          document.body.appendChild(a); a.click(); a.remove();
+          URL.revokeObjectURL(url);
+          window.AdminShell.toast('Exported ' + state.filtered.length + ' applications.', 'success');
+        }
+
+        // Helpers
+        function $(id) { return document.getElementById(id); }
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          var diff = (Date.now() - d.getTime()) / 1000;
+          if (diff < 60)        return 'Just now';
+          if (diff < 3600)      return Math.floor(diff/60) + 'm ago';
+          if (diff < 86400)     return Math.floor(diff/3600) + 'h ago';
+          if (diff < 86400 * 7) return Math.floor(diff/86400) + 'd ago';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+      })();
+    </script>
+  </body>
+</html>

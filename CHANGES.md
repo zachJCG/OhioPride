@@ -1,260 +1,113 @@
-# Round 3 PR Bundle — 2026-04-27
+# Ohio Pride PAC :: Volunteer + Internships PR Bundle
 
-Drop-in changes for the [zachJCG/OhioPride](https://github.com/zachJCG/OhioPride) repo. Unpack at the repo root and let Claude Code wire the PR. Every change is additive or idempotent — nothing here deletes or replaces existing migrations.
+Generated 2026-05-11. Drop these files into your `OhioPride` checkout, then let Claude Code wire the PR.
 
-## What's in this PR
+## What this PR does
 
-1. **Donor tracker** — store ZIP and derive county from a Supabase lookup table, set explicit `display_order` so the public list reads Zach, Jesse, Nicole, Matt.
-2. **Issues + Scorecard wiring** — close the audit gap. `/js/bill-data.js`, `/js/scorecard-data.js`, and `/js/voting-records.js` are still loaded for first-paint, but new shim scripts upgrade them with live Supabase data on page load.
-3. **Founding-members tier cards** — Stonewall Sustainer / Founding Member / Pride Builder / Founding Circle / Founding Patron tier-legend cards on `/founding-members` become real ActBlue links pulled from Supabase.
-4. **Mobile filter buttons** — defensive CSS fix for `/issues` and `/scorecard` filter pills (touch-action, tap-target, no overlap with mobile-donate-fab).
-5. **Project memory** — `CLAUDE.md` at repo root captures the source-of-truth notes so future sessions don't waste time on Drive deadlocks.
+1. **Rebuilds `/volunteer`** as a single page with two paths in one form:
+   - **Volunteer** (5 steps: about / location / interests / skills + availability / wrap-up)
+   - **Intern or Fellow** (5 steps: about / location / position + term / academic / statement + materials)
+2. **The submit button is hidden until the progress bar reaches 100%** (the very last step). It's labeled "Sign me up" on the volunteer path and "Submit application" on the intern path.
+3. **Adds an Internships showcase section** above the form with the five 2026 positions from `ohiopride team positions.pdf`. Each card has Show Details + Apply. Apply switches the form into intern mode, pre-selects the position, and scrolls down.
+4. **Single endpoint, two destinations:** `/.netlify/functions/volunteer-submit` now routes by `application_type`:
+   - `"volunteer"` -> `public.volunteers` (UPSERT on `email`)
+   - `"internship"` -> `public.intern_applications` (UPSERT on `(email, position)`)
+5. **New admin module `/admin/internships`** — same look + interactions as `/admin/volunteers` (stat cards, filters, sortable table, status select, side-drawer detail, CSV export).
+6. **Rebuilds `/admin/donors`** on the modern admin shell (sidebar, top bar, drawer, toast). Same data, same toggles, same behavior — just the new chrome.
+7. **Schema:**
+   - `supabase/migrations/20260511000000_intern_applications.sql` — new table + RLS + indexes + admin view.
+   - `supabase/migrations/20260511000100_internships_role_permissions.sql` — adds the `internships` module to `super_admin`, `volunteer_lead`, and read-only to `board_member` / `treasurer` / `endorsements_chair` / `comms_lead` / `legislative_lead`.
+8. **Adds a deep-link `/internships`** that lands users on the intern path of the form. `/apply/<position>` pre-selects the role.
 
 ## Files in this bundle
 
 ```
 ohiopride-pr-bundle/
-├── CLAUDE.md                                           ← copy to repo root
-├── CHANGES.md                                          ← this file
-├── supabase/
-│   ├── migrations/
-│   │   ├── 20260427000000_ohio_zip_county.sql         ← new
-│   │   ├── 20260427000001_founding_members_county_from_zip.sql ← new
-│   │   ├── 20260427000002_legislators_and_sponsorships.sql     ← new
-│   │   ├── 20260427000002_legislative_scorecard.sql   ← DELETE before commit
-│   │   └── 20260427000003_founding_tiers_actblue_url.sql       ← new
-│   └── seed/
-│       └── 20260427_current_donor_reorder.sql         ← run once after migrations
-├── netlify/functions/
-│   ├── bills.mjs                                      ← new
-│   ├── scorecard.mjs                                  ← new
-│   ├── zip-county-lookup.mjs                          ← new
-│   └── founding-member-tiers.mjs                      ← REPLACES existing (adds actblue_url)
-├── js/
-│   ├── bill-data-supabase.js                          ← new
-│   └── scorecard-data-supabase.js                     ← new
-├── css/
-│   └── round-3-mobile-and-tier-cta.css                ← append to css/style.css
-└── patches/
-    └── ohiopride-data.js.loadFoundingMemberTiers.patch
+  CHANGES.md                                          (this file)
+  volunteer.html                                      (overhauled)
+  netlify.toml.patch                                  (additions only)
+  js/
+    volunteer-form.js                                 (rewritten — branching paths)
+    intern-positions.js                               (NEW — position catalog + showcase)
+  netlify/functions/
+    volunteer-submit.mjs                              (rewritten — routes by application_type)
+  admin/
+    admin-shell.js                                    (patched — adds Internships nav + briefcase icon)
+    volunteers/index.html                             (UNCHANGED — included for reference)
+    internships/index.html                            (NEW — modeled on volunteers)
+    donors/index.html                                 (rewritten on admin shell)
+  supabase/migrations/
+    20260510000000_volunteers.sql                     (UNCHANGED — included for reference)
+    20260511000000_intern_applications.sql            (NEW)
+    20260511000100_internships_role_permissions.sql   (NEW)
+  scripts/
+    validate-shape.mjs                                (offline shape sanity test)
+    run-function-locally.mjs                          (in-memory function smoke test)
+    smoke-test-volunteer-submit.mjs                   (live end-to-end smoke after deploy)
 ```
 
-> The file `20260427000002_legislative_scorecard.sql` is a no-op stub. Delete it before committing — the real migration is `..._legislators_and_sponsorships.sql` at the same timestamp prefix. (Build env couldn't delete it.)
+## How to apply
 
-## Apply order
-
-Migrations: run in filename order. Supabase will pick them up automatically.
-
-```
-20260427000000_ohio_zip_county.sql
-20260427000001_founding_members_county_from_zip.sql
-20260427000002_legislators_and_sponsorships.sql
-20260427000003_founding_tiers_actblue_url.sql
-```
-
-After migrations land, run the donor reorder seed once:
-
-```
-psql $SUPABASE_DB_URL -f supabase/seed/20260427_current_donor_reorder.sql
-```
-
-Then deploy the Netlify functions and JS/CSS changes.
-
-## Manual edits required
-
-### 1. `founding-members.html` — wire the new CSS
-
-At the bottom of the existing `<link rel="stylesheet" href="/css/style.css" />` block, append the new CSS file:
-
-```html
-<link rel="stylesheet" href="/css/style.css" />
-<link rel="stylesheet" href="/css/round-3-mobile-and-tier-cta.css" />
-```
-
-(Or, simpler: cat `css/round-3-mobile-and-tier-cta.css` onto the end of `css/style.css` and skip the new link.)
-
-### 2. `js/ohiopride-data.js` — apply the patch
-
-Apply `patches/ohiopride-data.js.loadFoundingMemberTiers.patch`. It only touches the `loadFoundingMemberTiers` function, replacing the inner `<div class="tier-legend-card">` template with one that emits a real `<a>` when `actblue_url` is present (which it will be, after migration `..._founding_tiers_actblue_url.sql` runs).
+Inside your `OhioPride` checkout:
 
 ```bash
-git apply patches/ohiopride-data.js.loadFoundingMemberTiers.patch
+# 1. Copy files over the existing tree.
+rsync -a path/to/ohiopride-pr-bundle/{volunteer.html,js,admin,netlify,supabase} ./
+
+# 2. Patch netlify.toml by hand using netlify.toml.patch (just three new
+#    [[redirects]] blocks — keep all your existing rules in place).
+
+# 3. Apply the new migrations to Supabase.
+#    Either via the Supabase CLI:
+#      supabase db push
+#    or by pasting both new migration files into the SQL editor in order:
+#      20260511000000_intern_applications.sql
+#      20260511000100_internships_role_permissions.sql
+
+# 4. Sanity check from the bundle (no network):
+node scripts/validate-shape.mjs        # 22 shape checks
+node scripts/run-function-locally.mjs  # 13 in-memory function checks
+
+# 5. After deploying, run the live end-to-end test:
+ENDPOINT=https://www.ohiopride.org/.netlify/functions/volunteer-submit \
+SUPABASE_URL=https://dkdxefzhttkmjhdbkvqn.supabase.co \
+SUPABASE_SERVICE_ROLE_KEY=<service_role_key> \
+node scripts/smoke-test-volunteer-submit.mjs --cleanup
 ```
 
-### 3. `issues.html` — load the Supabase shim
+## Why submit was failing before
 
-Add **after** the existing `bill-data.js` script tag (do not replace it — the static seed renders first paint):
+Most likely one of:
+1. Migration `20260510000000_volunteers.sql` not yet applied in prod (table doesn't exist) — function returns 500, fetch() rejects, generic error banner shows.
+2. `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` missing or wrong on Netlify — function returns 500.
+3. RLS denying the service-role insert (the migration is correct, but only after it runs).
 
-```html
-<script src="/js/bill-data.js"></script>
-<script src="/js/bill-pipeline.js"></script>
-<script src="/js/bill-data-supabase.js" defer></script>   <!-- NEW -->
+This PR doesn't change the original volunteer write path other than to add a discriminator. If `volunteers` was working before, it still does. If the intern path returns 500, check that `20260511000000_intern_applications.sql` was applied.
+
+## Tests I ran in-bundle
+
+```
+[scripts/validate-shape.mjs]
+  ALL SHAPE CHECKS PASSED  (22/22)
+
+[scripts/run-function-locally.mjs]
+  Volunteer happy path                  ok=true kind=volunteer, illegal interest filtered, upsert on email
+  Intern happy path                     ok=true kind=internship, position+term routed, upsert on (email,position)
+  Intern path missing position          400 position_required
+  Volunteer path bad email              400 valid_email_required
+  Intern path bad URL                   400 invalid_url
+  Honeypot                              200 ok kind=honeypot, no DB write
+  ALL FUNCTION CHECKS PASSED  (13/13)
 ```
 
-Inside the inline `<script>` block at the bottom of `issues.html`, expose `applyFilters` on `window` so the shim can re-render after upgrading data:
+## What I did NOT touch
 
-```diff
--      function applyFilters() {
-+      window.applyFilters = function applyFilters() {
-         var filtered = BILLS.filter((b) => {
-            ...
-         });
-         renderBills(filtered);
-         updateStats(filtered);
--      }
-+      };
-```
+- `/admin/endorsements` still uses its own light-theme stylesheet (`admin/endorsements/admin.css`) and the older `admin-auth.js` flow. It is the only remaining admin page outside the new shell. Migrating it is straightforward but more disruptive — its detail page is large (849 lines). Recommend a follow-up PR. Until then it lives at the same URL and works as before.
+- `/admin/login` is intentionally outside the shell.
+- The existing `volunteers` table, RLS policies, and indexes are untouched. The original volunteer columns are unchanged.
 
-(Same change for any per-bill detail pages under `/issues/<slug>.html` if they read `BILLS`.)
+## Breakage check
 
-### 4. `scorecard.html` — load the Supabase shim
-
-```html
-<script src="/js/bill-data.js"></script>
-<script src="/js/scorecard-data.js"></script>
-<script src="/js/voting-records.js"></script>
-<script src="/js/scorecard-data-supabase.js" defer></script>  <!-- NEW -->
-<script src="/js/bill-data-supabase.js" defer></script>       <!-- NEW -->
-```
-
-Inside the page's render closure, expose a refresh hook:
-
-```js
-window.OhioPrideRefreshScorecard = function () {
-  // Whatever your existing render-all-from-state function is named.
-  applyFilters();
-};
-```
-
-If the page already calls `applyFilters` after every UI change, just expose that:
-
-```js
-window.applyFilters = applyFilters;
-```
-
-## Database schema additions
-
-### Tables
-- `public.ohio_zip_county` — HUD Q1 2023 ZIP↔county crosswalk (1,359 ZIPs, 88 counties, 2,056 ZIP-county pairs)
-- `public.legislators` — replaces `HOUSE_MEMBERS` + `SENATE_MEMBERS` arrays
-- `public.legislator_sponsorships` — replaces `LEGISLATOR_SPONSORSHIPS` map
-- `public.bill_pipeline_steps` — replaces `BILLS[i].pipelineDates`
-
-### Columns added
-- `founding_members.zip` (TEXT, normalised to 5 digits by trigger)
-- `founding_members.county_name` (TEXT, derived from ZIP)
-- `founding_members.county_fips` (TEXT)
-- `founding_members.display_order` (INT, controls public list ordering)
-- `bills` gets the issues-page denorm fields: `nickname`, `official_title`, `status_label`, `status_color`, `categories`, `category_labels`, `sponsors_text`, `last_action`, `next_date`, `house_vote`, `chamber`, `current_step`, `url`, `legislature_url`, `text_url`
-- `founding_member_tiers.actblue_url`
-
-### Views / functions
-- `public.ohio_zip_primary_county` (view) — one row per ZIP, primary county only
-- `public.county_for_zip(text)` — normalises input, returns county name
-- `public.normalize_zip(text)` — returns 5-digit ZIP or NULL
-- `public.legislator_scorecard` (view) — composite score + grade per legislator
-- Trigger `trg_founding_members_set_county` — keeps `county_name` in sync with `zip`
-
-## Donor reorder applied
-
-Per the request, this is the public order after running the seed:
-
-| Order | Name              | ZIP   | County     | Amount  |
-|-------|-------------------|-------|------------|---------|
-| 1     | Zachary V Smith   | 45202 | Hamilton   | $25.00  |
-| 2     | Jesse Shepherd    | 45248 | Hamilton   | $25.00  |
-| 3     | Nicole Green      | 45420 | Montgomery | $19.69  |
-| 4     | Matthew Joseph    | 45420 | Montgomery | $100.00 |
-
-The seed matches by `LOWER(full_name) LIKE '...%'` so suffixes/middle initials don't break it. If a name doesn't match exactly, run:
-
-```sql
-SELECT id, full_name, zip, county_name, amount_cents
-FROM public.founding_members
-ORDER BY contributed_at;
-```
-
-then update the four UPDATEs in the seed file with the right `WHERE` clause.
-
-## Backfill (one-time, after schema migrations)
-
-The trigger handles new rows. To backfill existing rows that have a usps zip but no county yet, the migration `20260427000001_founding_members_county_from_zip.sql` runs the backfill at the bottom. No extra step required.
-
-If you want to seed the `legislators` and `legislator_sponsorships` tables from the existing JS files, run:
-
-```bash
-node scripts/seed-legislators-from-js.mjs
-```
-
-(Script not included in this bundle — happy to generate it if you want a one-shot importer rather than typing the data into the new tables by hand.)
-
-## Verification
-
-After deploy, sanity checks:
-
-```sql
--- ZIP -> county
-SELECT public.county_for_zip('45420');  -- 'Montgomery County'
-SELECT public.county_for_zip('45202');  -- 'Hamilton County'
-
--- Donor list
-SELECT display_order, full_name, zip, county_name, amount_cents
-FROM   public.founding_members
-WHERE  display_order IS NOT NULL
-ORDER  BY display_order;
-
--- Tiers expose ActBlue URLs
-SELECT slug, name, actblue_url
-FROM   public.founding_member_tiers
-ORDER  BY display_order;
-
--- Functions return data
--- (browser)
-fetch('/.netlify/functions/bills').then(r => r.json()).then(console.log);
-fetch('/.netlify/functions/scorecard').then(r => r.json()).then(console.log);
-fetch('/.netlify/functions/zip-county-lookup?zip=45420').then(r => r.json()).then(console.log);
-```
-
-Mobile sanity checks (test on a real iPhone if possible):
-- /issues — every filter pill registers a tap on first try
-- /scorecard — chamber/party/grade pills filter without delay
-- /founding-members — each tier-legend card opens ActBlue
-- The mobile-donate-fab no longer covers the bottom filter row
-
-## Things deliberately not done in this PR
-
-- No batch backfill of legislators/sponsorships into Supabase. The static JS keeps the page functional in the meantime; a separate import script can land the editorial data in a follow-up PR.
-- `/js/bill-data.js` and `/js/scorecard-data.js` aren't deleted yet. They're still loaded as the first-paint fallback. Once Supabase is the source of truth and tested, a follow-up can shrink those files to a `// see /.netlify/functions/...` stub.
-- No changes to `/donate/founding-member.html`. Its tier buttons already have ActBlue URLs hardcoded. The migration `..._founding_tiers_actblue_url.sql` mirrors the same URLs into Supabase so the data layer is canonical, but the page keeps its inline buttons as a working fallback.
-
-## Rollback
-
-Each migration is idempotent and additive. To roll back the Round 3 work:
-
-```sql
--- 1. Revert ohiopride-data.js patch (git revert the commit)
-
--- 2. Drop new schema (DESTRUCTIVE; only run if you're sure)
-DROP VIEW  IF EXISTS public.legislator_scorecard;
-DROP TABLE IF EXISTS public.legislator_sponsorships;
-DROP TABLE IF EXISTS public.legislators;
-DROP TABLE IF EXISTS public.bill_pipeline_steps;
-
-ALTER TABLE public.founding_member_tiers DROP COLUMN IF EXISTS actblue_url;
-
-DROP TRIGGER IF EXISTS trg_founding_members_set_county ON public.founding_members;
-DROP FUNCTION IF EXISTS public.fn_founding_members_set_county();
-DROP FUNCTION IF EXISTS public.normalize_zip(text);
-DROP FUNCTION IF EXISTS public.county_for_zip(text);
-
-ALTER TABLE public.founding_members
-  DROP COLUMN IF EXISTS zip,
-  DROP COLUMN IF EXISTS county_name,
-  DROP COLUMN IF EXISTS county_fips,
-  DROP COLUMN IF EXISTS display_order;
-
-DROP VIEW  IF EXISTS public.ohio_zip_primary_county;
-DROP TABLE IF EXISTS public.ohio_zip_county;
-```
-
-ActBlue URLs in the seed are exact mirrors of the URLs already on `/donate/founding-member.html`, so removing them doesn't lose anything that isn't already in the HTML.
+- The volunteer payload sent by the new `js/volunteer-form.js` is a strict superset of what the old function expected (it adds `application_type: "volunteer"` to the body). The function ignores unknown fields, so old callers (if any) still work.
+- The new `volunteer-submit.mjs` returns the same `{ ok, id }` shape it always did, plus a new `kind` field. Existing client code that ignores extra keys is unaffected.
+- `admin-shell.js` only added one nav item and one icon; no removals.

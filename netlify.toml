@@ -296,8 +296,23 @@
   status = 200
 
 [[redirects]]
+  from = "/admin/internships"
+  to = "/admin/internships/index.html"
+  status = 200
+
+[[redirects]]
   from = "/admin/settings"
   to = "/admin/settings/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/internships"
+  to = "/volunteer.html?path=internship"
+  status = 200
+
+[[redirects]]
+  from = "/apply/:position"
+  to = "/volunteer.html?path=internship&position=:position"
   status = 200
 
 # Legacy redirects
