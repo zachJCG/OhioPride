@@ -1,0 +1,24 @@
+--- netlify.toml  (current)
++++ netlify.toml  (patched — add to your existing file in this order)
+
+# Append AFTER the existing /admin/users redirect block (or anywhere in the
+# admin redirects section). Keep all existing rules; only ADD the two below.
+
+# Admin: internships
+[[redirects]]
+  from = "/admin/internships"
+  to = "/admin/internships/index.html"
+  status = 200
+
+# Public: internships deep-link to the volunteer page in intern mode
+[[redirects]]
+  from = "/internships"
+  to = "/volunteer.html?path=internship"
+  status = 200
+
+# Optional: pre-select a specific position via /apply/<position>
+# (paths matching ALLOWED_POSITIONS in volunteer-submit.mjs)
+[[redirects]]
+  from = "/apply/:position"
+  to = "/volunteer.html?path=internship&position=:position"
+  status = 200
