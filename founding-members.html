@@ -6,7 +6,7 @@
     <title>Founding Members | Ohio Pride PAC</title>
     <meta
       name="description"
-      content="Meet the first 1,969 Ohioans building LGBTQ+ political power. Search by county, tier, or elected office."
+      content="Meet the first 1,969 Ohioans building LGBTQ+ political power. Live directory grouped by tier."
     />
     <link rel="canonical" href="https://www.ohiopride.org/founding-members" />
     <meta property="og:type" content="website" />
@@ -85,8 +85,108 @@
       /* PROGRESS BAR */
       .goal-block { max-width: 720px; margin: 2.25rem auto 0; }
 
-      /* TIER CHIPS */
-      .tier-chips-section { padding: 2rem 0 1rem; }
+      /* GEOGRAPHY SUMMARY STRIP */
+      .geo-strip {
+        max-width: 880px;
+        margin: 0 auto 1.5rem;
+        padding: 1rem 1.25rem;
+        background: rgba(19, 45, 68, 0.55);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 12px;
+        text-align: center;
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 1rem;
+        line-height: 1.55;
+        position: relative;
+        overflow: hidden;
+      }
+      .geo-strip::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 3px;
+        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
+      }
+      .geo-strip .primary { color: var(--text-white, #fff); font-weight: 600; }
+      .geo-strip .secondary { color: var(--text-light, #c5d2dd); font-weight: 400; }
+
+      /* COUNTY LEADERBOARD */
+      .county-leaderboard {
+        max-width: 720px;
+        margin: 0 auto 2.5rem;
+        background: rgba(19, 45, 68, 0.55);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 14px;
+        padding: 1.25rem 1.5rem 1.4rem;
+      }
+      .county-leaderboard-title {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-accent, #73d7ee);
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+      .county-leaderboard-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+      }
+      .county-leaderboard-row {
+        display: grid;
+        grid-template-columns: 2rem 1fr auto auto;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.6rem 0.8rem;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 8px;
+      }
+      .county-leaderboard-row .rank {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--text-accent, #73d7ee);
+        text-align: center;
+      }
+      .county-leaderboard-row .name {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-white, #fff);
+        font-size: 0.98rem;
+      }
+      .county-leaderboard-row .count {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        color: var(--text-white, #fff);
+        font-size: 0.92rem;
+        text-align: right;
+        white-space: nowrap;
+      }
+      .county-leaderboard-row .count .monthly {
+        color: var(--text-light, #c5d2dd);
+        font-weight: 400;
+        font-size: 0.82rem;
+        margin-left: 0.35rem;
+      }
+      .county-leaderboard-row .pct {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.82rem;
+        min-width: 3.25rem;
+        text-align: right;
+      }
+      .county-leaderboard-row.skeleton .name,
+      .county-leaderboard-row.skeleton .count,
+      .county-leaderboard-row.skeleton .pct {
+        color: transparent;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 4px;
+      }
+
+      /* TIER CHIPS (kept as legend that anchor-links into the directory) */
+      .tier-chips-section { padding: 0.5rem 0 1rem; }
       .tier-chips-section h2 {
         font-family: "Montserrat", sans-serif;
         font-size: 1.35rem;
@@ -116,15 +216,13 @@
         border-radius: 12px;
         padding: 1rem 1rem;
         text-align: center;
-        cursor: pointer;
-        transition: transform 0.15s ease, border-color 0.2s ease, background-color 0.2s ease;
         position: relative;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        transition: transform 0.15s ease, border-color 0.2s ease;
       }
       .tier-chip:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.35); }
-      .tier-chip[aria-pressed="true"] {
-        border-color: var(--text-white, #fff);
-        background: rgba(255,255,255,0.06);
-      }
       .tier-chip .dot {
         display: inline-block;
         width: 10px; height: 10px;
@@ -152,403 +250,164 @@
         opacity: 0.8;
       }
 
-      .cta-row { text-align: center; margin: 2rem 0 1.5rem; }
+      .cta-row { text-align: center; margin: 2rem 0 2.5rem; }
 
-      /* ENDORSED BY STRIP */
-      .endorsed-strip {
-        max-width: 1080px;
-        margin: 1rem auto 0;
-        background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 12px;
-        padding: 1rem 1.25rem;
-      }
-      .endorsed-strip .label {
+      /* DIRECTORY TITLE */
+      .directory-title {
         font-family: "Montserrat", sans-serif;
-        font-weight: 700;
-        font-size: 0.78rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--text-light, #c5d2dd);
-        margin-bottom: 0.5rem;
-      }
-      .endorsed-strip .roster {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem 1rem;
-      }
-      .endorsed-strip a {
-        font-family: "Roboto Slab", serif;
         color: var(--text-white, #fff);
-        text-decoration: none;
-        font-size: 0.95rem;
-        border-bottom: 1px dotted rgba(255,255,255,0.3);
-        padding-bottom: 1px;
-      }
-      .endorsed-strip a:hover { border-bottom-color: var(--text-white, #fff); }
-
-      /* DIRECTORY CONTROLS */
-      .directory-controls {
-        display: grid;
-        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr);
-        gap: 0.75rem;
-        max-width: 1080px;
-        margin: 0 auto 1rem;
-        align-items: stretch;
-      }
-      .directory-controls input,
-      .directory-controls select {
-        width: 100%;
-        min-height: 44px;
-        background: rgba(19, 45, 68, 0.7);
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        color: var(--text-white, #fff);
-        font-family: "Roboto Slab", serif;
-        font-size: 0.95rem;
-        padding: 0.7rem 0.9rem;
-        border-radius: 10px;
-        outline: none;
-        appearance: none;
-        -webkit-appearance: none;
-      }
-      .directory-controls select {
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23c5d2dd' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");
-        background-repeat: no-repeat;
-        background-position: right 0.85rem center;
-        padding-right: 2.2rem;
-      }
-      .directory-controls input:focus,
-      .directory-controls select:focus {
-        border-color: var(--color-blue, #2c8df0);
-        box-shadow: 0 0 0 3px rgba(44,141,240,0.22);
-      }
-      .directory-controls input::placeholder { color: rgba(255,255,255,0.5); }
-
-      /* Elected-only toggle styled as a proper pressable pill that matches
-         the height of the inputs/selects and visually flips when checked. */
-      .toggle-elected {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.55rem;
-        width: 100%;
-        min-height: 44px;
-        background: rgba(19, 45, 68, 0.7);
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 10px;
-        padding: 0.55rem 0.9rem;
-        cursor: pointer;
-        user-select: none;
-        font-family: "Roboto Slab", serif;
-        color: var(--text-white, #fff);
-        font-size: 0.9rem;
-        line-height: 1.2;
-        white-space: nowrap;
-        transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
-      }
-      .toggle-elected:hover { border-color: rgba(255,255,255,0.35); }
-      .toggle-elected:focus-within {
-        border-color: var(--color-blue, #2c8df0);
-        box-shadow: 0 0 0 3px rgba(44,141,240,0.25);
-      }
-      .toggle-elected:has(input:checked) {
-        border-color: #7fb6ff;
-        background: rgba(44, 141, 240, 0.18);
-        color: #eaf3ff;
-      }
-      .toggle-elected input {
-        flex: none;
-        width: 18px;
-        height: 18px;
-        margin: 0;
-        accent-color: var(--color-blue, #2c8df0);
-        cursor: pointer;
+        text-align: center;
+        margin: 0 0 1.5rem;
+        font-size: 1.5rem;
       }
 
-      .result-meta {
-        max-width: 1080px;
-        margin: 0.25rem auto 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light, #c5d2dd);
-        font-size: 0.9rem;
-      }
-      .result-meta .clear {
-        background: none;
-        border: none;
-        color: var(--color-blue, #2c8df0);
-        cursor: pointer;
-        font-family: "Roboto Slab", serif;
-        font-size: 0.9rem;
-        padding: 0;
-      }
-      .result-meta .clear:hover { text-decoration: underline; }
-
-      /* MEMBER GRID */
-      .member-grid {
-        max-width: 1080px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 1rem;
-        align-items: stretch;
-      }
-      /* Cards share a fixed slot order so every card has the same lines in the
-         same place: name -> role (elected) -> location -> tier -> [quote] -> joined.
-         Slots that have no data render empty but reserve no space (.is-empty),
-         so the joined line still anchors to the bottom via margin-top:auto. */
-      .member-card {
-        position: relative;
-        background: rgba(19, 45, 68, 0.55);
+      /* TIER-GROUPED DIRECTORY */
+      .tier-directory { max-width: 880px; margin: 0 auto; }
+      .tier-group {
+        background: rgba(19, 45, 68, 0.45);
         border: 1px solid var(--dark-bg-light, #1a3a52);
         border-radius: 14px;
-        padding: 1.1rem 1.1rem 1rem;
-        padding-right: 3.2rem; /* keep text from colliding with #N badge */
+        padding: 1.1rem 1.25rem 1.3rem 1.4rem;
+        margin-bottom: 1.5rem;
+        position: relative;
         overflow: hidden;
-        content-visibility: auto;
-        contain-intrinsic-size: auto 220px;
-        transition: transform 0.15s ease, border-color 0.2s ease;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        min-height: 11rem;
+        scroll-margin-top: 1rem;
       }
-      .member-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.25); }
-      .member-card::before {
+      .tier-group::before {
         content: "";
         position: absolute;
         top: 0; left: 0; bottom: 0;
         width: 4px;
-        background: var(--tier-color, var(--pride-gradient, linear-gradient(180deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff)));
+        background: var(--tier-color, var(--pride-gradient));
       }
-      .member-card .pos {
-        position: absolute;
-        top: 0.7rem;
-        right: 0.85rem;
+      .tier-group-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-bottom: 0.85rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        flex-wrap: wrap;
+      }
+      .tier-group-header .tier-name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--text-white, #fff);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+      .tier-group-header .tier-name .dot {
+        width: 10px; height: 10px;
+        border-radius: 50%;
+      }
+      .tier-group-header .tier-meta {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.88rem;
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.85rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .tier-group-header .tier-count {
         font-family: "Montserrat", sans-serif;
         font-size: 0.72rem;
-        color: var(--text-light, #c5d2dd);
-        letter-spacing: 0.05em;
-      }
-      .member-card .name-row {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        min-height: 1.6rem;
-      }
-      .member-card .name {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.05rem;
-        font-weight: 700;
-        color: var(--text-white, #fff);
-        line-height: 1.25;
-        /* Clamp to 2 lines so a long name can't push the rest of the card around. */
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        word-break: break-word;
-      }
-      .member-card .elected-pin {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.62rem;
-        font-weight: 700;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        background: rgba(44, 141, 240, 0.15);
-        color: #7fb6ff;
-        border: 1px solid rgba(127, 182, 255, 0.4);
-        padding: 0.18rem 0.45rem;
-        border-radius: 999px;
-        flex-shrink: 0;
-      }
-      .member-card .role {
-        font-family: "Roboto Slab", serif;
-        color: #c8dcf2;
-        font-size: 0.85rem;
-        margin-top: 0.35rem;
-        line-height: 1.3;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .member-card .role.is-empty { display: none; }
-      .member-card .loc {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.85rem;
         color: var(--text-light, #c5d2dd);
-        margin-top: 0.35rem;
-        line-height: 1.3;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
-      .member-card .loc.is-fallback { opacity: 0.55; }
-      .member-card .meta {
+      .member-row {
         display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-top: 0.7rem;
-        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.7rem 0.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       }
-      .member-card .tier-tag {
+      .member-row:last-child { border-bottom: none; }
+      .member-row .who {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        min-width: 0;
+      }
+      .member-row .display-name {
+        font-family: "Roboto Slab", serif;
+        font-size: 1rem;
+        color: var(--text-white, #fff);
+        line-height: 1.3;
+        word-break: break-word;
+      }
+      .elected-office-pill {
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
         font-family: "Montserrat", sans-serif;
-        font-size: 0.7rem;
+        font-size: 0.66rem;
         font-weight: 700;
-        letter-spacing: 0.04em;
-        color: var(--text-white, #fff);
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 999px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        background: rgba(115, 215, 238, 0.12);
+        color: var(--text-accent, #73d7ee);
+        border: 1px solid rgba(115, 215, 238, 0.45);
         padding: 0.2rem 0.6rem;
+        border-radius: 999px;
+        align-self: flex-start;
         max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
-      .member-card .tier-tag .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-      .member-card .quote {
-        margin-top: 0.7rem;
+      .member-row .where {
         font-family: "Roboto Slab", serif;
-        font-size: 0.85rem;
+        font-size: 0.88rem;
+        color: var(--text-light, #c5d2dd);
+        text-align: right;
+        flex-shrink: 0;
+        opacity: 0.85;
+        white-space: nowrap;
+      }
+      .tier-group .tier-empty {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.88rem;
         color: var(--text-light, #c5d2dd);
         font-style: italic;
-        line-height: 1.4;
-        border-left: 2px solid rgba(255,255,255,0.15);
-        padding-left: 0.6rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        padding: 0.6rem 0.2rem;
       }
-      .member-card .joined {
-        margin-top: auto;
-        padding-top: 0.85rem;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.7rem;
-        color: var(--text-light, #c5d2dd);
-        opacity: 0.8;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+      .member-row.skeleton .display-name {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.08);
+        color: transparent;
+        border-radius: 4px;
+        width: 10rem;
+      }
+      .member-row.skeleton .where {
+        background: rgba(255, 255, 255, 0.06);
+        color: transparent;
+        border-radius: 4px;
+        width: 5rem;
       }
 
-      /* PLACEHOLDER CARDS */
-      .member-card.placeholder {
-        background: repeating-linear-gradient(
-          135deg,
-          rgba(255,255,255,0.02),
-          rgba(255,255,255,0.02) 10px,
-          rgba(255,255,255,0.04) 10px,
-          rgba(255,255,255,0.04) 20px
-        );
-        border-style: dashed;
-        opacity: 0.55;
-      }
-      .member-card.placeholder::before { background: rgba(255,255,255,0.15); }
-      .member-card.placeholder .name { color: var(--text-light, #c5d2dd); }
-
-      .load-more-row { max-width: 1080px; margin: 1.5rem auto 0; text-align: center; }
-      .load-more-row button {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        color: var(--text-white, #fff);
-        font-family: "Montserrat", sans-serif;
-        font-weight: 700;
-        font-size: 0.85rem;
-        letter-spacing: 0.05em;
-        padding: 0.7rem 1.4rem;
-        border-radius: 10px;
-        cursor: pointer;
-      }
-      .load-more-row button:hover { background: rgba(255,255,255,0.1); }
-
-      .no-results {
-        max-width: 600px;
-        margin: 2rem auto;
-        text-align: center;
-        padding: 2rem 1.5rem;
-        border: 1px dashed rgba(255,255,255,0.15);
-        border-radius: 12px;
-        background: rgba(19, 45, 68, 0.3);
-      }
-      .no-results h4 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.05rem;
-        color: var(--text-white, #fff);
-        margin-bottom: 0.4rem;
-      }
-      .no-results p {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light, #c5d2dd);
-        font-size: 0.9rem;
-      }
-
-      /* Result-meta: never let the count + clear button collide on narrow widths. */
-      @media (max-width: 480px) {
-        .result-meta {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.35rem;
-        }
-      }
-
-      /* Tablet: drop the directory controls to two columns, search spans full
-         width so it stays readable. */
-      @media (max-width: 900px) {
-        .directory-controls {
-          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        }
-        .directory-controls .field:first-child { grid-column: 1 / -1; }
-      }
-
-      /* Small tablet / large phone: 2-up hero stats reads better than 1-up. */
       @media (max-width: 720px) {
         .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
         .hero-stat { padding: 0.85rem 0.9rem; }
-        .endorsed-strip .roster { gap: 0.45rem 0.9rem; }
         .tier-chips-section h2 { font-size: 1.2rem; }
         .cta-row .btn { width: 100%; max-width: 360px; }
       }
 
-      /* Phone: full-width controls, the toggle becomes its own row. */
       @media (max-width: 600px) {
-        .directory-controls {
-          grid-template-columns: 1fr;
-        }
-        .directory-controls .field:first-child { grid-column: auto; }
+        .member-row { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+        .member-row .where { text-align: left; white-space: normal; }
+        .county-leaderboard-row { grid-template-columns: 2rem 1fr auto; }
+        .county-leaderboard-row .pct { display: none; }
       }
 
-      /* Very narrow phone: collapse hero stats so numbers don't wrap. */
       @media (max-width: 420px) {
         .hero-stats { grid-template-columns: 1fr; }
-        .member-grid { grid-template-columns: 1fr; }
-        .member-card {
-          min-height: 0; /* let single-column cards size to content */
-          padding: 1rem 1rem 0.9rem;
-          padding-right: 3rem;
-        }
-        .member-card .name { font-size: 1rem; }
       }
 
-      /* Reduce motion: respect user's preference. */
       @media (prefers-reduced-motion: reduce) {
-        .member-card,
-        .member-card:hover,
-        .tier-chip,
-        .tier-chip:hover {
+        .tier-chip, .tier-chip:hover {
           transition: none;
           transform: none;
         }
@@ -558,7 +417,6 @@
   <body>
     <div id="site-header"></div>
 
-    <!-- Hero -->
     <header class="subpage-hero">
       <div class="container">
         <div class="section-label">Founding Members</div>
@@ -579,7 +437,7 @@
             <div class="sub">of 88 represented</div>
           </div>
           <div class="hero-stat">
-            <div class="num" id="statNewestName" style="font-size:1.1rem; line-height:1.3;">&mdash;</div>
+            <div class="num" id="statNewestName" style="font-size:1.1rem; line-height:1.3;">.</div>
             <div class="label">Newest Member</div>
             <div class="sub" id="statNewestWhen">Be the next.</div>
           </div>
@@ -598,69 +456,67 @@
       </div>
     </header>
 
-    <!-- Tier chips + CTA -->
     <section class="section">
       <div class="container">
+
+        <div class="geo-strip" id="geoStrip" aria-live="polite">
+          <span class="primary">Loading founding member summary.</span>
+        </div>
+
+        <div class="county-leaderboard" id="countyLeaderboard">
+          <div class="county-leaderboard-title">Top Counties By Founding Members</div>
+          <div class="county-leaderboard-list" id="countyLeaderboardList">
+            <div class="county-leaderboard-row skeleton">
+              <div class="rank">1</div>
+              <div class="name">Loading.</div>
+              <div class="count">0</div>
+              <div class="pct">0%</div>
+            </div>
+            <div class="county-leaderboard-row skeleton">
+              <div class="rank">2</div>
+              <div class="name">Loading.</div>
+              <div class="count">0</div>
+              <div class="pct">0%</div>
+            </div>
+            <div class="county-leaderboard-row skeleton">
+              <div class="rank">3</div>
+              <div class="name">Loading.</div>
+              <div class="count">0</div>
+              <div class="pct">0%</div>
+            </div>
+          </div>
+        </div>
+
         <div class="tier-chips-section">
           <h2>Pick Your Role In The Movement</h2>
           <p class="lede">
-            Every tier counts the same toward 1,969. Tap a chip to filter the directory by role.
+            Every tier counts the same toward 1,969. Tap a tier to jump to its group below.
           </p>
-          <div class="tier-chips" id="tierChips" role="group" aria-label="Filter by tier"></div>
+          <div class="tier-chips" id="tierChips" role="group" aria-label="Tier legend"></div>
         </div>
 
         <div class="cta-row">
           <a href="/donate/founding-member" class="btn btn-pride-shimmer">Become a Founding Member</a>
         </div>
+
       </div>
     </section>
 
-    <!-- Endorsed By + Directory -->
     <section class="section">
       <div class="container">
 
-        <div class="endorsed-strip" id="endorsedStrip" hidden>
-          <div class="label">Founding Members In Office</div>
-          <div class="roster" id="endorsedRoster"></div>
-        </div>
+        <h2 class="directory-title">Member Directory</h2>
 
-        <h2 style="font-family:'Montserrat',sans-serif; color:var(--text-white,#fff); text-align:center; margin: 2rem 0 1rem;">
-          Member Directory
-        </h2>
-
-        <div class="directory-controls">
-          <div class="field">
-            <input type="search" id="searchInput" placeholder="Search by name, city, or county" aria-label="Search members" />
+        <div class="tier-directory" id="tierDirectory" aria-live="polite">
+          <div class="tier-group" style="--tier-color: var(--tier-founding);">
+            <div class="tier-group-header">
+              <div class="tier-name"><span class="dot" style="background: var(--tier-founding);"></span>Founding Member</div>
+              <div class="tier-meta"><span class="tier-price">$25 one-time</span></div>
+            </div>
+            <div class="member-row skeleton"><div class="who"><span class="display-name">Loading members.</span></div><span class="where">Ohio</span></div>
+            <div class="member-row skeleton"><div class="who"><span class="display-name">Loading members.</span></div><span class="where">Ohio</span></div>
+            <div class="member-row skeleton"><div class="who"><span class="display-name">Loading members.</span></div><span class="where">Ohio</span></div>
           </div>
-          <div class="field">
-            <select id="countyFilter" aria-label="Filter by county">
-              <option value="">All Ohio counties</option>
-            </select>
-          </div>
-          <div class="field">
-            <select id="sortSelect" aria-label="Sort members">
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
-              <option value="az">Name A to Z</option>
-              <option value="county">County A to Z</option>
-              <option value="position">By founding number</option>
-            </select>
-          </div>
-          <label class="toggle-elected">
-            <input type="checkbox" id="electedToggle" />
-            Elected officials only
-          </label>
-        </div>
-
-        <div class="result-meta">
-          <div id="resultCount">Loading members&hellip;</div>
-          <button class="clear" id="clearFilters" hidden>Clear filters</button>
-        </div>
-
-        <div class="member-grid" id="memberGrid" aria-live="polite"></div>
-
-        <div class="load-more-row" id="loadMoreRow" hidden>
-          <button id="loadMoreBtn">Show more members</button>
         </div>
 
       </div>
@@ -676,137 +532,36 @@
     <script src="/js/site-template.js" defer></script>
 
     <script>
-      // ============================================================
-      // FOUNDING MEMBERS DIRECTORY
-      // Live source: Supabase view public.founding_members_public.
-      // The static MEMBERS array below is a fallback snapshot used
-      // if the network call fails so the page never blanks.
-      // The render code is data-source agnostic and built to handle
-      // ~2,000 records on mobile.
-      // ============================================================
+      // Live data sources (Supabase REST):
+      //   founding_members_geography_summary  -> one-row summary for the strip
+      //   founding_members_county_leaderboard -> top counties for the leaderboard
+      //   founding_members_public             -> directory grouped by tier
+      // The static MEMBERS array is a fallback snapshot so the page never blanks
+      // if the network call fails.
 
       var SUPABASE_URL = "https://dkdxefzhttkmjhdbkvqn.supabase.co";
       var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4";
 
       var TIERS = [
-        { id: "stonewall-sustainer", name: "Stonewall Sustainer", price: "$19.69 / month", color: "var(--tier-stonewall)" },
-        { id: "founding-member",     name: "Founding Member",     price: "$25 one-time",   color: "var(--tier-founding)" },
-        { id: "pride-builder",       name: "Pride Builder",       price: "$50 / month",    color: "var(--tier-builder)" },
+        { id: "founding-patron",     name: "Founding Patron",     price: "$250+ one-time", color: "var(--tier-patron)" },
         { id: "founding-circle",     name: "Founding Circle",     price: "$100 / month",   color: "var(--tier-circle)" },
-        { id: "founding-patron",     name: "Founding Patron",     price: "$250+ one-time", color: "var(--tier-patron)" }
+        { id: "pride-builder",       name: "Pride Builder",       price: "$50 / month",    color: "var(--tier-builder)" },
+        { id: "stonewall-sustainer", name: "Stonewall Sustainer", price: "$19.69 / month", color: "var(--tier-stonewall)" },
+        { id: "founding-member",     name: "Founding Member",     price: "$25 one-time",   color: "var(--tier-founding)" }
       ];
+      var TIER_DISPLAY_ORDER = TIERS.map(function (t) { return t.id; });
+      var tierMap = TIERS.reduce(function (acc, t) { acc[t.id] = t; return acc; }, {});
 
-      var OHIO_COUNTIES = [
-        "Adams","Allen","Ashland","Ashtabula","Athens","Auglaize","Belmont","Brown","Butler","Carroll",
-        "Champaign","Clark","Clermont","Clinton","Columbiana","Coshocton","Crawford","Cuyahoga","Darke","Defiance",
-        "Delaware","Erie","Fairfield","Fayette","Franklin","Fulton","Gallia","Geauga","Greene","Guernsey",
-        "Hamilton","Hancock","Hardin","Harrison","Henry","Highland","Hocking","Holmes","Huron","Jackson",
-        "Jefferson","Knox","Lake","Lawrence","Licking","Logan","Lorain","Lucas","Madison","Mahoning",
-        "Marion","Medina","Meigs","Mercer","Miami","Monroe","Montgomery","Morgan","Morrow","Muskingum",
-        "Noble","Ottawa","Paulding","Perry","Pickaway","Pike","Portage","Preble","Putnam","Richland",
-        "Ross","Sandusky","Scioto","Seneca","Shelby","Stark","Summit","Trumbull","Tuscarawas","Union",
-        "Van Wert","Vinton","Warren","Washington","Wayne","Williams","Wood","Wyandot"
-      ];
-
-      // ============================================================
-      // MEMBER DATA. Schema:
-      //   id            number   founding member position (1..1969)
-      //   displayName   string   how the name appears publicly
-      //   sortName      string   "Last, First" for A-Z sorting
-      //   city          string|null
-      //   county        string|null  (no "County" suffix)
-      //   tier          string   one of TIERS[].id
-      //   joinedAt      string   ISO date YYYY-MM-DD
-      //   electedOffice string|null  e.g. "City Commissioner"
-      //   jurisdiction  string|null  e.g. "City of Dayton"
-      //   quote         string|null  optional one-liner
-      //   publicConsent boolean       must be true to display
-      // ============================================================
-      // Fallback snapshot (mirrors public.founding_members_public at deploy time).
-      // Live data overwrites this on init() if the fetch succeeds.
+      // Fallback snapshot. Live data overwrites this on init() if the fetch succeeds.
       var MEMBERS = [
-        {
-          id: 1,
-          displayName: "Jesse Shepherd",
-          sortName: "Shepherd, Jesse",
-          city: null,
-          county: "Hamilton",
-          tier: "founding-member",
-          joinedAt: "2026-03-01",
-          electedOffice: null,
-          jurisdiction: null,
-          quote: null,
-          publicConsent: true
-        },
-        {
-          id: 2,
-          displayName: "Nicole Green",
-          sortName: "Green, Nicole",
-          city: null,
-          county: "Montgomery",
-          tier: "stonewall-sustainer",
-          joinedAt: "2026-03-01",
-          electedOffice: null,
-          jurisdiction: null,
-          quote: null,
-          publicConsent: true
-        },
-        {
-          id: 3,
-          displayName: "Zachary Smith",
-          sortName: "Smith, Zachary",
-          city: null,
-          county: "Hamilton",
-          tier: "founding-member",
-          joinedAt: "2026-03-01",
-          electedOffice: null,
-          jurisdiction: null,
-          quote: null,
-          publicConsent: true
-        },
-        {
-          id: 4,
-          displayName: "Matt Joseph",
-          sortName: "Joseph, Matt",
-          city: "Dayton",
-          county: "Montgomery",
-          tier: "founding-member",
-          joinedAt: "2026-04-27",
-          electedOffice: "City Commissioner",
-          jurisdiction: "City of Dayton",
-          quote: null,
-          publicConsent: true
-        },
-        {
-          id: 5,
-          displayName: "Samuel Dorf",
-          sortName: "Dorf, Samuel",
-          city: "Oakwood",
-          county: "Montgomery",
-          tier: "founding-member",
-          joinedAt: "2026-04-27",
-          electedOffice: "City Council",
-          jurisdiction: "City of Oakwood",
-          quote: null,
-          publicConsent: true
-        }
+        { id: 1, displayName: "Zachary Smith", city: null, county: "Hamilton", state: "OH", tier: "founding-member", joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, publicConsent: true },
+        { id: 2, displayName: "Jesse Shepherd", city: null, county: "Hamilton", state: "OH", tier: "founding-member", joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, publicConsent: true },
+        { id: 3, displayName: "Nicole Green", city: null, county: "Montgomery", state: "OH", tier: "stonewall-sustainer", joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, publicConsent: true },
+        { id: 4, displayName: "Matt Joseph", city: "Dayton", county: "Montgomery", state: "OH", tier: "founding-member", joinedAt: "2026-04-27", electedOffice: "City Commissioner", jurisdiction: "City of Dayton", publicConsent: true }
       ];
 
       var FOUNDING_GOAL = 1969;
-      var PAGE_SIZE = 60;
-
-      var state = {
-        search: "",
-        county: "",
-        tiers: new Set(),
-        electedOnly: false,
-        sort: "newest",
-        visibleCount: PAGE_SIZE
-      };
-
-      var tierMap = TIERS.reduce(function (acc, t) { acc[t.id] = t; return acc; }, {});
-      function tierColor(id) { return (tierMap[id] && tierMap[id].color) || "rgba(255,255,255,0.4)"; }
-      function tierName(id)  { return (tierMap[id] && tierMap[id].name)  || id; }
+      var newestWhenTimer = null;
 
       function escapeHtml(s) {
         if (s == null) return "";
@@ -818,20 +573,15 @@
           .replace(/'/g, "&#39;");
       }
 
-      // Accept either a full ISO timestamp ("2026-05-12T13:54:09Z") or a bare
-      // date ("2026-05-12"). Bare dates are anchored at noon so the displayed
-      // month/year doesn't flip across timezones.
+      function pluralize(n, singular, plural) {
+        return n === 1 ? singular : (plural || singular + "s");
+      }
+
       function parseJoinedAt(iso) {
         if (!iso) return null;
         var s = String(iso);
         var d = new Date(s.indexOf("T") === -1 ? s + "T12:00:00" : s);
         return isNaN(d.getTime()) ? null : d;
-      }
-
-      function formatJoined(iso) {
-        var d = parseJoinedAt(iso);
-        if (!d) return "";
-        return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
       }
 
       function relativeTime(iso) {
@@ -860,8 +610,116 @@
         return "Joined " + d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
       }
 
+      function resolveDisplayName(m) {
+        var raw = (m && (m.displayName || m.display_name || m.full_name || m.name));
+        if (typeof raw === "string") {
+          raw = raw.trim();
+          if (raw) return raw;
+        }
+        if (m && m.id) return "Founding Member #" + m.id;
+        return "Anonymous";
+      }
+
+      function formatLocation(m) {
+        var state = (m.state || "OH").toUpperCase();
+        if (state !== "OH") {
+          return (m.city ? m.city + ", " : "") + state;
+        }
+        if (m.city) return m.city;
+        if (m.county) return m.county + " County";
+        return "Ohio";
+      }
+
+      function supabaseFetch(path) {
+        return fetch(SUPABASE_URL + "/rest/v1/" + path, {
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: "Bearer " + SUPABASE_ANON_KEY,
+            Accept: "application/json"
+          }
+        }).then(function (res) {
+          if (!res.ok) throw new Error(path + " " + res.status);
+          return res.json();
+        });
+      }
+
+      // ---------- GEOGRAPHY SUMMARY STRIP ----------
+      function renderGeoStrip(s) {
+        var host = document.getElementById("geoStrip");
+        if (!host || !s) return;
+
+        var total    = Number(s.total_members) || 0;
+        var counties = Number(s.ohio_counties_represented) || 0;
+        var oos      = Number(s.out_of_state_members) || 0;
+        var states   = Number(s.other_states_count) || 0;
+
+        var primary = total.toLocaleString() + " founding "
+          + pluralize(total, "member") + " across "
+          + counties.toLocaleString() + " Ohio "
+          + pluralize(counties, "county", "counties") + ".";
+
+        var html = '<span class="primary">' + escapeHtml(primary) + '</span>';
+        if (oos > 0) {
+          var secondary = " Plus " + oos.toLocaleString() + " "
+            + pluralize(oos, "supporter") + " from "
+            + states.toLocaleString() + " other "
+            + pluralize(states, "state") + ".";
+          html += '<span class="secondary">' + escapeHtml(secondary) + '</span>';
+        }
+        host.innerHTML = html;
+      }
+
+      // ---------- COUNTY LEADERBOARD ----------
+      function formatLeaderboardPct(raw) {
+        if (raw == null || raw === "") return "";
+        var n = Number(raw);
+        if (isNaN(n)) return "";
+        var pct = n <= 1 ? n * 100 : n;
+        return Math.round(pct) + "%";
+      }
+
+      function renderCountyLeaderboard(rows) {
+        var host = document.getElementById("countyLeaderboardList");
+        if (!host) return;
+
+        if (!Array.isArray(rows) || rows.length === 0) {
+          host.innerHTML = ''
+            + '<div class="county-leaderboard-row">'
+            +   '<div class="rank">.</div>'
+            +   '<div class="name">Counties will appear here as founding members join.</div>'
+            +   '<div class="count"></div>'
+            +   '<div class="pct"></div>'
+            + '</div>';
+          return;
+        }
+
+        host.innerHTML = rows.map(function (r, i) {
+          var rank  = r.rank != null ? r.rank : (i + 1);
+          var name  = r.county || "";
+          if (name && name.toLowerCase().indexOf("county") === -1) name += " County";
+          var count = Number(r.member_count) || 0;
+          var monthly = r.monthly_count != null ? Number(r.monthly_count) : 0;
+          var pct = formatLeaderboardPct(r.pct_of_members);
+
+          var monthlyHtml = monthly > 0
+            ? '<span class="monthly">' + escapeHtml(monthly + " monthly") + '</span>'
+            : '';
+
+          return ''
+            + '<div class="county-leaderboard-row">'
+            +   '<div class="rank">' + escapeHtml(String(rank)) + '</div>'
+            +   '<div class="name">' + escapeHtml(name) + '</div>'
+            +   '<div class="count">' + count.toLocaleString() + " " + pluralize(count, "member") + monthlyHtml + '</div>'
+            +   '<div class="pct">' + escapeHtml(pct) + '</div>'
+            + '</div>';
+        }).join("");
+      }
+
+      // ---------- TIER CHIPS (legend that anchor-links into the directory) ----------
       function renderTierChips() {
         var host = document.getElementById("tierChips");
+        if (!host) return;
+
         var counts = {};
         TIERS.forEach(function (t) { counts[t.id] = 0; });
         MEMBERS.forEach(function (m) {
@@ -869,67 +727,24 @@
         });
 
         host.innerHTML = TIERS.map(function (t) {
-          var pressed = state.tiers.has(t.id);
           return ''
-            + '<button type="button" class="tier-chip" data-tier="' + t.id + '" aria-pressed="' + pressed + '">'
+            + '<a class="tier-chip" href="#tier-group-' + t.id + '" data-tier="' + t.id + '">'
             +   '<div class="name"><span class="dot" style="background:' + t.color + '"></span>' + escapeHtml(t.name) + '</div>'
             +   '<div class="price">' + escapeHtml(t.price) + '</div>'
-            +   '<div class="count">' + counts[t.id] + ' member' + (counts[t.id] === 1 ? '' : 's') + '</div>'
-            + '</button>';
-        }).join("");
-
-        host.querySelectorAll(".tier-chip").forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            var t = btn.getAttribute("data-tier");
-            if (state.tiers.has(t)) state.tiers.delete(t); else state.tiers.add(t);
-            btn.setAttribute("aria-pressed", state.tiers.has(t));
-            state.visibleCount = PAGE_SIZE;
-            renderGrid();
-          });
-        });
-      }
-
-      function renderCountyOptions() {
-        var sel = document.getElementById("countyFilter");
-        var present = {};
-        MEMBERS.forEach(function (m) { if (m.publicConsent && m.county) present[m.county] = true; });
-        var html = '<option value="">All Ohio counties</option>';
-        OHIO_COUNTIES.slice().sort().forEach(function (c) {
-          var has = present[c];
-          html += '<option value="' + escapeHtml(c) + '">' + escapeHtml(c)
-                + (has ? '' : ' (no members yet)') + '</option>';
-        });
-        sel.innerHTML = html;
-      }
-
-      function renderEndorsedStrip() {
-        var electeds = MEMBERS.filter(function (m) { return m.publicConsent && m.electedOffice; });
-        var strip = document.getElementById("endorsedStrip");
-        var roster = document.getElementById("endorsedRoster");
-        if (electeds.length === 0) { strip.hidden = true; return; }
-        strip.hidden = false;
-        roster.innerHTML = electeds.map(function (m) {
-          var label = escapeHtml(m.displayName)
-            + ' <span style="color:var(--text-light,#c5d2dd); font-size:0.85em;">('
-            + escapeHtml(m.electedOffice)
-            + (m.jurisdiction ? ', ' + escapeHtml(m.jurisdiction) : '')
-            + ')</span>';
-          return '<a href="#member-' + m.id + '">' + label + '</a>';
+            +   '<div class="count">' + counts[t.id] + ' ' + pluralize(counts[t.id], "member") + '</div>'
+            + '</a>';
         }).join("");
       }
 
-      // Re-render the "Joined X ago" string on a cadence that matches its
-      // precision: every second while we're showing seconds, every minute
-      // for minutes, every hour past that. Re-arms itself on each tick.
-      var newestWhenTimer = null;
+      // ---------- HERO STATS ----------
       function scheduleNewestWhenTick(iso) {
         if (newestWhenTimer) { clearTimeout(newestWhenTimer); newestWhenTimer = null; }
         var d = parseJoinedAt(iso);
         if (!d) return;
         var ageSec = Math.max(0, (Date.now() - d.getTime()) / 1000);
         var delay;
-        if (ageSec < 60)        delay = 1000;
-        else if (ageSec < 3600) delay = 60 * 1000;
+        if (ageSec < 60)         delay = 1000;
+        else if (ageSec < 3600)  delay = 60 * 1000;
         else if (ageSec < 86400) delay = 60 * 60 * 1000;
         else                     delay = 0;
         if (!delay) return;
@@ -945,7 +760,9 @@
         var count = visible.length;
 
         var counties = {};
-        visible.forEach(function (m) { if (m.county) counties[m.county] = true; });
+        visible.forEach(function (m) {
+          if (m.county && (m.state || "OH").toUpperCase() === "OH") counties[m.county] = true;
+        });
         var countyCount = Object.keys(counties).length;
 
         var newest = visible.slice().sort(function (a, b) {
@@ -953,14 +770,18 @@
           return d !== 0 ? d : (b.id || 0) - (a.id || 0);
         })[0];
 
-        document.getElementById("statMembers").textContent = count.toLocaleString();
-        document.getElementById("statCounties").textContent = countyCount;
+        var membersEl = document.getElementById("statMembers");
+        var countiesEl = document.getElementById("statCounties");
+        if (membersEl) membersEl.textContent = count.toLocaleString();
+        if (countiesEl) countiesEl.textContent = countyCount;
+
         if (newest) {
           var displayName = resolveDisplayName(newest);
           var firstName = (displayName.split(" ")[0] || displayName).trim();
-          var label = firstName + (newest.county ? " from " + newest.county + " County" : "");
-          document.getElementById("statNewestName").textContent = label;
-          document.getElementById("statNewestWhen").textContent = relativeTime(newest.joinedAt);
+          var nameEl = document.getElementById("statNewestName");
+          var whenEl = document.getElementById("statNewestWhen");
+          if (nameEl) nameEl.textContent = firstName + (newest.county ? " from " + newest.county + " County" : "");
+          if (whenEl) whenEl.textContent = relativeTime(newest.joinedAt);
           scheduleNewestWhenTick(newest.joinedAt);
         }
 
@@ -971,247 +792,75 @@
         if (text) text.textContent = count.toLocaleString() + " of 1,969 Founding Members";
       }
 
-      function getFiltered() {
-        var q = state.search.trim().toLowerCase();
-        var rows = MEMBERS.filter(function (m) {
-          if (!m.publicConsent) return false;
-          if (state.electedOnly && !m.electedOffice) return false;
-          if (state.county && m.county !== state.county) return false;
-          if (state.tiers.size > 0 && !state.tiers.has(m.tier)) return false;
-          if (q) {
-            var hay = [m.displayName, m.city, m.county, m.electedOffice, m.jurisdiction]
-              .filter(Boolean).join(" ").toLowerCase();
-            if (hay.indexOf(q) === -1) return false;
-          }
-          return true;
-        });
-
-        switch (state.sort) {
-          case "oldest":
-            rows.sort(function (a, b) { return (a.joinedAt || "").localeCompare(b.joinedAt || ""); });
-            break;
-          case "az":
-            rows.sort(function (a, b) { return (a.sortName || a.displayName).localeCompare(b.sortName || b.displayName); });
-            break;
-          case "county":
-            rows.sort(function (a, b) { return (a.county || "zzz").localeCompare(b.county || "zzz"); });
-            break;
-          case "position":
-            rows.sort(function (a, b) { return a.id - b.id; });
-            break;
-          case "newest":
-          default:
-            rows.sort(function (a, b) {
-              var d = (b.joinedAt || "").localeCompare(a.joinedAt || "");
-              return d !== 0 ? d : b.id - a.id;
-            });
-        }
-        return rows;
-      }
-
-      // Resolve the public name for a member with graceful fallbacks.
-      // Order: displayName -> full_name (defensive — view never exposes this,
-      // but adapters from other sources might) -> "Founding Member #N" -> "Anonymous".
-      function resolveDisplayName(m) {
-        var raw = (m && (m.displayName || m.display_name || m.full_name || m.name));
-        if (typeof raw === "string") {
-          raw = raw.trim();
-          if (raw) return raw;
-        }
-        if (m && m.id) return "Founding Member #" + m.id;
-        return "Anonymous";
-      }
-
-      function memberCardHTML(m) {
-        var color = tierColor(m.tier);
-        var hasElected = !!m.electedOffice;
+      // ---------- TIER-GROUPED DIRECTORY ----------
+      function memberRowHTML(m) {
         var displayName = resolveDisplayName(m);
-
-        // Each card has the same five slots, in the same order, so text aligns
-        // across the grid: name -> role (elected only, hidden otherwise) ->
-        // location -> tier tag -> [optional quote] -> joined.
-        var roleText = hasElected
-          ? m.electedOffice + (m.jurisdiction ? ', ' + m.jurisdiction : '')
-          : '';
-        var roleClass = roleText ? 'role' : 'role is-empty';
-
-        var locText, locClass = 'loc';
-        if (m.city || m.county) {
-          locText = [m.city, m.county ? m.county + ' County' : null].filter(Boolean).join(', ');
-        } else {
-          locText = 'Ohio';
-          locClass = 'loc is-fallback';
+        var pill = "";
+        if (m.electedOffice) {
+          var pillText = m.jurisdiction
+            ? m.electedOffice + " / " + m.jurisdiction
+            : m.electedOffice;
+          pill = '<span class="elected-office-pill">' + escapeHtml(pillText) + '</span>';
         }
-
-        var pin = hasElected
-          ? '<span class="elected-pin" title="Elected official">'
-            + '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">'
-            + '<path d="M12 2l2.39 4.84L20 7.27l-3.91 3.81.92 5.39L12 13.93l-5.01 2.54.92-5.39L4 7.27l5.61-.43L12 2z"/>'
-            + '</svg>Elected</span>'
-          : '';
-
-        var quote = m.quote
-          ? '<div class="quote">&ldquo;' + escapeHtml(m.quote) + '&rdquo;</div>'
-          : '';
-
-        var joined = formatJoined(m.joinedAt)
-          ? 'Founding Member since ' + formatJoined(m.joinedAt)
-          : 'Founding Member';
-
-        var ariaLabel = displayName
-          + (hasElected ? ', ' + roleText : '')
-          + ', ' + locText
-          + ', ' + tierName(m.tier);
-
+        var where = formatLocation(m);
         return ''
-          + '<article class="member-card" id="member-' + m.id + '" style="--tier-color:' + color + ';" '
-          +   'aria-label="' + escapeHtml(ariaLabel) + '">'
-          +   '<div class="pos" aria-label="Founding number ' + m.id + '">#' + m.id + '</div>'
-          +   '<div class="name-row">'
-          +     '<div class="name">' + escapeHtml(displayName) + '</div>'
-          +     pin
+          + '<div class="member-row" id="member-' + escapeHtml(String(m.id || "")) + '">'
+          +   '<div class="who">'
+          +     '<span class="display-name">' + escapeHtml(displayName) + '</span>'
+          +     pill
           +   '</div>'
-          +   '<div class="' + roleClass + '">' + escapeHtml(roleText) + '</div>'
-          +   '<div class="' + locClass + '">' + escapeHtml(locText) + '</div>'
-          +   '<div class="meta">'
-          +     '<span class="tier-tag"><span class="dot" style="background:' + color + ';"></span>'
-          +       escapeHtml(tierName(m.tier))
-          +     '</span>'
-          +   '</div>'
-          +   quote
-          +   '<div class="joined">' + escapeHtml(joined) + '</div>'
-          + '</article>';
+          +   '<span class="where">' + escapeHtml(where) + '</span>'
+          + '</div>';
       }
 
-      function placeholderCardHTML(num) {
-        // Mirror the real card's slot order so placeholders align with members.
-        return ''
-          + '<article class="member-card placeholder" aria-hidden="true">'
-          +   '<div class="pos">#' + num + '</div>'
-          +   '<div class="name-row"><div class="name">Reserved for #' + num + '</div></div>'
-          +   '<div class="role is-empty"></div>'
-          +   '<div class="loc is-fallback">Your seat is open.</div>'
-          +   '<div class="meta">'
-          +     '<span class="tier-tag"><span class="dot" style="background:rgba(255,255,255,0.25);"></span>Open</span>'
-          +   '</div>'
-          +   '<div class="joined">Become a Founding Member</div>'
-          + '</article>';
-      }
+      function renderTierDirectory() {
+        var host = document.getElementById("tierDirectory");
+        if (!host) return;
 
-      function renderGrid() {
-        var grid = document.getElementById("memberGrid");
-        var meta = document.getElementById("resultCount");
-        var clearBtn = document.getElementById("clearFilters");
-        var loadMoreRow = document.getElementById("loadMoreRow");
+        var byTier = {};
+        TIERS.forEach(function (t) { byTier[t.id] = []; });
+        MEMBERS.forEach(function (m) {
+          if (!m.publicConsent) return;
+          if (!byTier.hasOwnProperty(m.tier)) byTier[m.tier] = [];
+          byTier[m.tier].push(m);
+        });
 
-        var filtered = getFiltered();
-        var anyFilter = state.search || state.county || state.tiers.size > 0 || state.electedOnly;
-        clearBtn.hidden = !anyFilter;
+        Object.keys(byTier).forEach(function (k) {
+          byTier[k].sort(function (a, b) { return (a.id || 0) - (b.id || 0); });
+        });
 
-        if (filtered.length === 0) {
-          grid.innerHTML = ''
-            + '<div class="no-results" style="grid-column: 1 / -1;">'
-            +   '<h4>No members match those filters yet.</h4>'
-            +   '<p>Try clearing a filter, or be the first from your county to join.</p>'
+        var html = TIER_DISPLAY_ORDER.map(function (id) {
+          var group = byTier[id] || [];
+          if (group.length === 0) return "";
+          var t = tierMap[id];
+          var rows = group.map(memberRowHTML).join("");
+          return ''
+            + '<section class="tier-group" id="tier-group-' + id + '" style="--tier-color:' + t.color + ';">'
+            +   '<div class="tier-group-header">'
+            +     '<div class="tier-name"><span class="dot" style="background:' + t.color + ';"></span>' + escapeHtml(t.name) + '</div>'
+            +     '<div class="tier-meta">'
+            +       '<span class="tier-price">' + escapeHtml(t.price) + '</span>'
+            +       '<span class="tier-count">' + group.length + " " + pluralize(group.length, "member") + '</span>'
+            +     '</div>'
+            +   '</div>'
+            +   rows
+            + '</section>';
+        }).join("");
+
+        if (!html) {
+          html = ''
+            + '<div class="tier-group">'
+            +   '<div class="tier-empty">Founding members will appear here as they join.</div>'
             + '</div>';
-          meta.textContent = '0 members';
-          loadMoreRow.hidden = true;
-          return;
         }
 
-        var visibleCounties = {};
-        filtered.forEach(function (m) { if (m.county) visibleCounties[m.county] = true; });
-        var cText = filtered.length.toLocaleString() + ' member' + (filtered.length === 1 ? '' : 's');
-        var cyCount = Object.keys(visibleCounties).length;
-        if (cyCount > 0) cText += ' across ' + cyCount + ' count' + (cyCount === 1 ? 'y' : 'ies');
-        meta.textContent = cText;
-
-        var slice = filtered.slice(0, state.visibleCount);
-        var html = slice.map(memberCardHTML).join("");
-
-        if (!anyFilter && filtered.length < 12 && state.visibleCount === PAGE_SIZE) {
-          var lastId = Math.max.apply(null, filtered.map(function (m) { return m.id; }));
-          var n = Math.min(8, 12 - filtered.length);
-          for (var i = 1; i <= n; i++) html += placeholderCardHTML(lastId + i);
-        }
-
-        grid.innerHTML = html;
-
-        if (filtered.length > state.visibleCount) {
-          loadMoreRow.hidden = false;
-          document.getElementById("loadMoreBtn").textContent =
-            'Show more members (' + (filtered.length - state.visibleCount).toLocaleString() + ' remaining)';
-        } else {
-          loadMoreRow.hidden = true;
-        }
+        host.innerHTML = html;
       }
 
-      function debounce(fn, wait) {
-        var t;
-        return function () {
-          var args = arguments;
-          clearTimeout(t);
-          t = setTimeout(function () { fn.apply(null, args); }, wait);
-        };
-      }
-
-      function bindControls() {
-        var search = document.getElementById("searchInput");
-        var county = document.getElementById("countyFilter");
-        var sort = document.getElementById("sortSelect");
-        var elected = document.getElementById("electedToggle");
-        var clearBtn = document.getElementById("clearFilters");
-        var loadMore = document.getElementById("loadMoreBtn");
-
-        search.addEventListener("input", debounce(function (e) {
-          state.search = e.target.value;
-          state.visibleCount = PAGE_SIZE;
-          renderGrid();
-        }, 120));
-
-        county.addEventListener("change", function (e) {
-          state.county = e.target.value;
-          state.visibleCount = PAGE_SIZE;
-          renderGrid();
-        });
-
-        sort.addEventListener("change", function (e) {
-          state.sort = e.target.value;
-          renderGrid();
-        });
-
-        elected.addEventListener("change", function (e) {
-          state.electedOnly = e.target.checked;
-          state.visibleCount = PAGE_SIZE;
-          renderGrid();
-        });
-
-        clearBtn.addEventListener("click", function () {
-          state.search = "";
-          state.county = "";
-          state.tiers = new Set();
-          state.electedOnly = false;
-          state.visibleCount = PAGE_SIZE;
-          search.value = "";
-          county.value = "";
-          elected.checked = false;
-          document.querySelectorAll(".tier-chip").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
-          renderGrid();
-        });
-
-        loadMore.addEventListener("click", function () {
-          state.visibleCount += PAGE_SIZE;
-          renderGrid();
-        });
-      }
-
-      // Map a row from the Supabase public view to the page schema.
-      // The view coalesces empty display_name to "Anonymous" already, but we
-      // re-run the fallback chain (display_name -> full_name -> #N -> Anonymous)
-      // so this adapter is safe against future schema drift.
+      // ---------- LIVE FETCH ----------
       function adaptSupabaseRow(row) {
-        var tierName = row.tier || "";
-        var tierSlug = tierName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        var rawTier = row.tier || "";
+        var tierSlug = String(rawTier).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
         if (!tierMap[tierSlug]) tierSlug = "founding-member";
         var foundingNum = row.founding_number || 0;
         var name = resolveDisplayName({
@@ -1219,72 +868,58 @@
           full_name: row.full_name,
           id: foundingNum
         });
-        var parts = name.trim().split(/\s+/);
-        var sortName = parts.length > 1
-          ? parts[parts.length - 1] + ", " + parts.slice(0, -1).join(" ")
-          : name;
-        // Keep the full ISO timestamp so relativeTime() can show
-        // seconds/minutes/hours, not just whole-day buckets.
         var joined = row.contributed_at ? String(row.contributed_at) : "";
         return {
           id: foundingNum,
           displayName: name,
-          sortName: sortName,
           city: row.city || null,
           county: row.county || null,
+          state: row.state || "OH",
           tier: tierSlug,
           joinedAt: joined,
           electedOffice: row.elected_office || null,
           jurisdiction: row.jurisdiction || null,
-          quote: row.public_quote || null,
           publicConsent: true
         };
-      }
-
-      function fetchMembersFromSupabase() {
-        var url = SUPABASE_URL
-          + "/rest/v1/founding_members_public"
-          + "?select=*&order=founding_number.asc";
-        return fetch(url, {
-          headers: {
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: "Bearer " + SUPABASE_ANON_KEY,
-            Accept: "application/json"
-          }
-        }).then(function (res) {
-          if (!res.ok) throw new Error("Supabase fetch failed: " + res.status);
-          return res.json();
-        });
       }
 
       function renderAll() {
         renderHeroStats();
         renderTierChips();
-        renderCountyOptions();
-        renderEndorsedStrip();
-        renderGrid();
+        renderTierDirectory();
       }
 
       function init() {
-        // Paint immediately from the embedded snapshot so the page never blanks.
-        bindControls();
         renderAll();
 
-        // Then refresh from Supabase if reachable.
-        try {
-          fetchMembersFromSupabase()
-            .then(function (rows) {
-              if (Array.isArray(rows) && rows.length > 0) {
-                MEMBERS = rows.map(adaptSupabaseRow);
-                renderAll();
-              }
-            })
-            .catch(function (err) {
-              if (window && window.console) console.warn("Founding members live fetch failed, using snapshot.", err);
-            });
-        } catch (e) {
-          if (window && window.console) console.warn("Founding members fetch threw, using snapshot.", e);
-        }
+        supabaseFetch("founding_members_geography_summary?select=*&limit=1")
+          .then(function (rows) {
+            if (Array.isArray(rows) && rows.length > 0) renderGeoStrip(rows[0]);
+            else throw new Error("empty geography summary");
+          })
+          .catch(function (err) {
+            if (window && window.console) console.warn("Geo summary fetch failed.", err);
+            var host = document.getElementById("geoStrip");
+            if (host) host.innerHTML = '<span class="primary">Building durable LGBTQ+ political power across Ohio.</span>';
+          });
+
+        supabaseFetch("founding_members_county_leaderboard?limit=5")
+          .then(renderCountyLeaderboard)
+          .catch(function (err) {
+            if (window && window.console) console.warn("Leaderboard fetch failed.", err);
+            renderCountyLeaderboard([]);
+          });
+
+        supabaseFetch("founding_members_public?order=tier.asc,founding_number.asc")
+          .then(function (rows) {
+            if (Array.isArray(rows) && rows.length > 0) {
+              MEMBERS = rows.map(adaptSupabaseRow);
+              renderAll();
+            }
+          })
+          .catch(function (err) {
+            if (window && window.console) console.warn("Members fetch failed, using snapshot.", err);
+          });
       }
 
       init();
