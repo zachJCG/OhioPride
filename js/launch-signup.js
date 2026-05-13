@@ -32,7 +32,7 @@
         apikey: SUPABASE_ANON_KEY,
         Authorization: "Bearer " + SUPABASE_ANON_KEY,
         "Content-Type": "application/json",
-        Prefer: "return=minimal,resolution=ignore-duplicates"
+        Prefer: "return=minimal"
       },
       body: JSON.stringify(payload)
     });
@@ -73,7 +73,9 @@
       if (form.hasAttribute("data-netlify")) calls.push(postToNetlify(form));
 
       Promise.allSettled(calls).then(function (results) {
-        var supabaseOk = results[0].status === "fulfilled" && results[0].value && results[0].value.ok;
+        var resp = results[0].status === "fulfilled" ? results[0].value : null;
+        // 201 = new RSVP; 409 = duplicate (email+source already on the list) -> still success.
+        var supabaseOk = !!resp && (resp.ok || resp.status === 409);
         if (!supabaseOk) {
           if (btn) { btn.disabled = false; btn.textContent = originalText || "Count Me In"; }
           window.alert("Something went wrong saving your signup. Please try again or email zach@ohiopride.org directly.");
