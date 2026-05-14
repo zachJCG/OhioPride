@@ -1,0 +1,253 @@
+/* =============================================================================
+ * Mobile-first stylesheet for the founding members surfaces.
+ *
+ * Pages: /founding-members, /donate/founding-member
+ *
+ * Default declarations target 360-414px phones. min-width media queries layer
+ * up to tablet (>= 768px) and desktop (>= 1024px). Desktop output remains
+ * pixel-identical to the prior round-2 build.
+ * ============================================================================= */
+
+/* 1. Global tap-target hardening on touch surfaces -------------------------- */
+@media (max-width: 767.98px) {
+  .btn,
+  .amount-btn,
+  .tier-chip,
+  .tier-card a,
+  .filter-btn,
+  .pill,
+  .stat-filter,
+  .stats-reset,
+  .toggle-elected,
+  .page-nav button,
+  .clear,
+  .lb-toggle-btn,
+  .filter-drawer-toggle {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 77, 255, 0.18);
+  }
+  .amount-btn {
+    min-height: 44px;
+    padding: 12px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* 2. Donate page tier-card body padding (mobile-first) ---------------------- */
+.tier-card-body {
+  padding: 16px 18px 20px;
+}
+@media (min-width: 768px) {
+  .tier-card-body {
+    padding: 20px 24px 24px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .tier-card-header {
+    padding: 16px 18px 14px;
+  }
+  /* Featured tier badge needs breathing room above the card on mobile */
+  .founding-tier-featured {
+    margin-top: 20px;
+  }
+}
+
+/* 3. Body padding-bottom on FAB-enabled pages so content isn't hidden ------- */
+@media (max-width: 767.98px) {
+  body:has(.mobile-donate-fab) {
+    padding-bottom: 80px;
+  }
+}
+
+/* 4. Filter drawer (mobile collapsible filters) ----------------------------- */
+.filter-drawer-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 44px;
+  background: rgba(19, 45, 68, 0.7);
+  border: 1px solid var(--dark-bg-light, #1a3a52);
+  color: var(--text-white, #fff);
+  border-radius: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.filter-drawer-toggle:hover,
+.filter-drawer-toggle:focus-visible {
+  border-color: rgba(127, 182, 255, 0.5);
+  background: rgba(44, 141, 240, 0.12);
+  outline: none;
+}
+.filter-drawer-toggle .filter-count-badge {
+  background: rgba(44, 141, 240, 0.25);
+  border: 1px solid rgba(127, 182, 255, 0.45);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.7rem;
+  color: #eaf3ff;
+}
+.filter-drawer-toggle .chev {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s ease;
+}
+.filter-drawer-toggle[aria-expanded="true"] .chev {
+  transform: rotate(180deg);
+}
+
+.filter-drawer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+.filter-drawer[data-open="false"] {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .filter-drawer-toggle {
+    display: none;
+  }
+  .filter-drawer,
+  .filter-drawer[data-open="false"] {
+    display: contents;
+  }
+}
+
+/* 5. Member card list (mobile alternative to data table) -------------------- */
+.member-card-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+  padding: 0.6rem;
+}
+
+.member-card {
+  background: rgba(19, 45, 68, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 3px solid var(--tier-color, rgba(255, 255, 255, 0.2));
+  border-radius: 10px;
+  padding: 0.85rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: "Roboto Slab", serif;
+  color: var(--text-white, #fff);
+}
+
+.member-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.member-card-name {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--text-white, #fff);
+  line-height: 1.3;
+  min-width: 0;
+  word-break: break-word;
+}
+.member-card .tier-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-white, #fff);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.member-card .tier-tag .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.member-card-location {
+  font-size: 0.85rem;
+  color: var(--text-light, #c5d2dd);
+  line-height: 1.35;
+}
+.member-card-role {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: #c8dcf2;
+  line-height: 1.35;
+}
+.member-card-role .elected-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(44, 141, 240, 0.15);
+  color: #7fb6ff;
+  border: 1px solid rgba(127, 182, 255, 0.4);
+  padding: 0.12rem 0.4rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.member-card-footer {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text-light, #c5d2dd);
+  text-transform: uppercase;
+}
+
+/* Default: cards visible, table hidden. Tablet+: table visible, cards hidden. */
+.member-table-scroll {
+  display: none;
+}
+.member-card-list {
+  display: grid;
+}
+@media (min-width: 768px) {
+  .member-table-scroll {
+    display: block;
+  }
+  .member-card-list {
+    display: none;
+  }
+}
+
+/* 6. Pagination spacing so the donate FAB never overlaps next-page tap ------ */
+@media (max-width: 767.98px) {
+  .pagination-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding-bottom: 96px;
+    text-align: center;
+  }
+  .pagination-row .page-size,
+  .pagination-row .page-nav {
+    justify-content: center;
+  }
+}
