@@ -96,60 +96,56 @@
       }
 
       /* "Claim Your Number" CTA card */
-      .hero-stat--claim {
-        background:
-          linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)),
-          rgba(19, 45, 68, 0.6);
-        padding: 0.9rem 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.55rem;
-      }
+      /* Claim card: matches the .num / .label / .sub rhythm of the other two
+         hero cards so the row reads as a consistent set. */
+      .hero-stat--claim { padding: 0.7rem 0.9rem; }
       .hero-stat--claim .claim-line {
-        display: flex;
+        display: inline-flex;
         align-items: baseline;
         justify-content: center;
-        gap: 0.45rem;
-        flex-wrap: wrap;
+        gap: 0;
+        line-height: 1.1;
       }
-      .hero-stat--claim .claim-hash {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light, #c5d2dd);
-        font-size: 0.95rem;
-      }
+      .hero-stat--claim .claim-hash,
       .hero-stat--claim .claim-num {
         font-family: "Montserrat", sans-serif;
         font-weight: 700;
-        font-size: clamp(1.5rem, 5vw, 2.25rem);
-        line-height: 1;
+        font-size: clamp(1.25rem, 4vw, 2rem);
+        line-height: 1.1;
         background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
       }
+      .hero-stat--claim .claim-hash { margin-right: 0.05em; }
       .hero-stat--claim .claim-sub {
         font-family: "Roboto Slab", serif;
         color: var(--text-light, #c5d2dd);
-        font-size: 0.85rem;
+        font-size: 0.72rem;
+        margin-top: 0.25rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
       }
       .hero-stat--claim .claim-btn {
         display: inline-block;
-        margin-top: 0.25rem;
-        padding: 0.55rem 1.1rem;
+        margin-top: 0.55rem;
+        padding: 0.35rem 0.95rem;
         font-family: "Montserrat", sans-serif;
-        font-weight: 700;
-        font-size: 0.9rem;
-        color: #0b1f33;
-        background: #fff;
+        font-weight: 600;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        color: var(--text-white, #fff);
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.35);
         border-radius: 999px;
         text-decoration: none;
-        transition: transform 0.15s ease, box-shadow 0.2s ease;
+        transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
       }
-      .hero-stat--claim .claim-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      .hero-stat--claim .claim-btn:hover,
+      .hero-stat--claim .claim-btn:focus-visible {
+        border-color: #fff;
+        background: rgba(255,255,255,0.08);
+        color: #fff;
       }
 
       @media (min-width: 768px) {
@@ -191,7 +187,7 @@
         justify-content: space-between;
         gap: 0.5rem;
         font-family: "Montserrat", sans-serif;
-        margin-bottom: 0.9rem;
+        margin-bottom: 2rem; /* clearance for the marker bubble that pops up from the track */
       }
       .stonewall-ladder .ladder-title-left {
         font-weight: 700;
