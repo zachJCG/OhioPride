@@ -584,9 +584,12 @@
       .member-table .col-role { color: #c8dcf2; font-size: 0.9rem; }
       .member-table .col-role.is-empty { color: rgba(255,255,255,0.35); }
       .member-table .col-city,
+      .member-table .col-state,
       .member-table .col-county { color: var(--text-light, #c5d2dd); font-size: 0.9rem; white-space: nowrap; }
       .member-table .col-city.is-fallback,
+      .member-table .col-state.is-fallback,
       .member-table .col-county.is-fallback { opacity: 0.45; }
+      .member-table .col-state { text-transform: uppercase; letter-spacing: 0.04em; font-family: "Montserrat", sans-serif; font-size: 0.82rem; }
       .member-table .col-joined { color: var(--text-light, #c5d2dd); font-size: 0.85rem; white-space: nowrap; }
       .member-table .tier-tag {
         display: inline-flex;
@@ -948,11 +951,12 @@
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Name</th>
-                  <th scope="col">Role</th>
                   <th scope="col">City</th>
+                  <th scope="col">State</th>
                   <th scope="col">County</th>
                   <th scope="col">Tier</th>
                   <th scope="col">Joined</th>
+                  <th scope="col">Office Held</th>
                 </tr>
               </thead>
               <tbody id="memberTbody" aria-live="polite"></tbody>
@@ -1019,16 +1023,17 @@
 
       // Fallback snapshot.
       var MEMBERS = [
-        { id: 1, displayName: "Jesse Shepherd",  sortName: "Shepherd, Jesse",  city: null, county: "Hamilton",   tier: "founding-member",    joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, quote: null, publicConsent: true },
-        { id: 2, displayName: "Nicole Green",    sortName: "Green, Nicole",    city: null, county: "Montgomery", tier: "stonewall-sustainer", joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, quote: null, publicConsent: true },
-        { id: 3, displayName: "Zachary Smith",   sortName: "Smith, Zachary",   city: null, county: "Hamilton",   tier: "founding-member",    joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, quote: null, publicConsent: true },
-        { id: 4, displayName: "Matt Joseph",     sortName: "Joseph, Matt",     city: "Dayton",   county: "Montgomery", tier: "founding-member", joinedAt: "2026-04-27", electedOffice: "City Commissioner", jurisdiction: "City of Dayton",   quote: null, publicConsent: true },
-        { id: 5, displayName: "Samuel Dorf",     sortName: "Dorf, Samuel",     city: "Oakwood",  county: "Montgomery", tier: "founding-member", joinedAt: "2026-04-27", electedOffice: "City Council",      jurisdiction: "City of Oakwood", quote: null, publicConsent: true }
+        { id: 1, displayName: "Jesse Shepherd",  sortName: "Shepherd, Jesse",  city: null,      state: "OH", county: "Hamilton",   tier: "founding-member",    joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, quote: null, publicConsent: true },
+        { id: 2, displayName: "Nicole Green",    sortName: "Green, Nicole",    city: null,      state: "OH", county: "Montgomery", tier: "stonewall-sustainer", joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, quote: null, publicConsent: true },
+        { id: 3, displayName: "Zachary Smith",   sortName: "Smith, Zachary",   city: null,      state: "OH", county: "Hamilton",   tier: "founding-member",    joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, quote: null, publicConsent: true },
+        { id: 4, displayName: "Matt Joseph",     sortName: "Joseph, Matt",     city: "Dayton",  state: "OH", county: "Montgomery", tier: "founding-member", joinedAt: "2026-04-27", electedOffice: "City Commissioner", jurisdiction: "City of Dayton",   quote: null, publicConsent: true },
+        { id: 5, displayName: "Samuel Dorf",     sortName: "Dorf, Samuel",     city: "Oakwood", state: "OH", county: "Montgomery", tier: "founding-member", joinedAt: "2026-04-27", electedOffice: "City Council",      jurisdiction: "City of Oakwood", quote: null, publicConsent: true }
       ];
 
       var FOUNDING_GOAL = 1969;
       var DEFAULT_PAGE_SIZE = 25;
       var TOP_N_PREVIEW = 5;
+      var ELECTED_TOP_N = 10;
       var STORAGE_PREFIX = "ohpfm.v2.";
 
       var state = {
@@ -1205,7 +1210,7 @@
           return;
         }
 
-        var showCount = state.electedExpanded ? electeds.length : Math.min(TOP_N_PREVIEW, electeds.length);
+        var showCount = state.electedExpanded ? electeds.length : Math.min(ELECTED_TOP_N, electeds.length);
         var slice = electeds.slice(0, showCount);
         roster.innerHTML = slice.map(function (m) {
           var label = escapeHtml(m.displayName)
@@ -1216,10 +1221,10 @@
           return '<a href="#member-' + m.id + '">' + label + '</a>';
         }).join("");
 
-        if (electeds.length > TOP_N_PREVIEW) {
+        if (electeds.length > ELECTED_TOP_N) {
           toggle.hidden = false;
           toggle.textContent = state.electedExpanded
-            ? 'Show top ' + TOP_N_PREVIEW
+            ? 'Show top ' + ELECTED_TOP_N
             : 'Show all ' + electeds.length;
           note.textContent = state.electedExpanded
             ? 'Showing all ' + electeds.length + ' elected officials'
@@ -1500,6 +1505,10 @@
         var cityClass = cityText ? 'col-city' : 'col-city is-fallback';
         var cityDisplay = cityText ? escapeHtml(cityText) : '&mdash;';
 
+        var stateText = m.state || '';
+        var stateClass = stateText ? 'col-state' : 'col-state is-fallback';
+        var stateDisplay = stateText ? escapeHtml(stateText) : '&mdash;';
+
         var countyText = m.county ? m.county + ' County' : '';
         var countyClass = countyText ? 'col-county' : 'col-county is-fallback';
         var countyDisplay = countyText ? escapeHtml(countyText) : '&mdash;';
@@ -1522,8 +1531,8 @@
           +       pin
           +     '</span>'
           +   '</td>'
-          +   '<td class="' + roleClass + '">' + roleDisplay + '</td>'
           +   '<td class="' + cityClass + '">' + cityDisplay + '</td>'
+          +   '<td class="' + stateClass + '">' + stateDisplay + '</td>'
           +   '<td class="' + countyClass + '">' + countyDisplay + '</td>'
           +   '<td class="col-tier">'
           +     '<span class="tier-tag"><span class="dot" style="background:' + color + ';"></span>'
@@ -1531,6 +1540,7 @@
           +     '</span>'
           +   '</td>'
           +   '<td class="col-joined">' + escapeHtml(joined) + '</td>'
+          +   '<td class="' + roleClass + '">' + roleDisplay + '</td>'
           + '</tr>';
       }
 
@@ -1638,7 +1648,7 @@
 
         if (filtered.length === 0) {
           tbody.innerHTML = ''
-            + '<tr><td colspan="7">'
+            + '<tr><td colspan="8">'
             +   '<div class="no-results">'
             +     '<h4>No members match those filters yet.</h4>'
             +     '<p>Try clearing a filter, or be the first from your county to join.</p>'
@@ -1768,11 +1778,14 @@
           ? parts[parts.length - 1] + ", " + parts.slice(0, -1).join(" ")
           : name;
         var joined = row.contributed_at ? String(row.contributed_at) : "";
+        var stateVal = row.state || row.state_code || row.usps_state || null;
+        if (stateVal) stateVal = String(stateVal).trim().toUpperCase();
         return {
           id: foundingNum,
           displayName: name,
           sortName: sortName,
           city: row.city || null,
+          state: stateVal || (row.county ? "OH" : null),
           county: row.county || null,
           tier: tierSlug,
           joinedAt: joined,
