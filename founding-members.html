@@ -416,6 +416,11 @@
         outline: 2px solid #fff;
         outline-offset: -2px;
       }
+      .county-tile:focus { outline: none; }
+      .county-tile:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+      }
       .county-wall-legend {
         display: flex;
         flex-wrap: wrap;
@@ -1196,7 +1201,7 @@
             <div class="label">Ohio Counties</div>
             <div class="sub">of 88 represented</div>
           </div>
-          <div class="hero-stat hero-stat--claim" id="claimCard">
+          <div class="hero-stat hero-stat--claim">
             <div class="claim-line">
               <span class="claim-hash">#</span><span class="claim-num" id="statNextNumber">1</span>
             </div>
@@ -1815,13 +1820,30 @@
       // because keeping "joined 6 hours ago" current was a chore
       // and provided no real value.)
       // ============================================================
+      var ladderPainted = false;
       function renderStonewallLadder(count) {
         var pct = Math.max(0, Math.min(100, (count / FOUNDING_GOAL) * 100));
         var fill = document.getElementById("ladderFill");
-        if (fill) fill.style.width = pct + "%";
         var marker = document.getElementById("ladderMarker");
-        if (marker) marker.style.left = pct + "%";
         var bubble = document.getElementById("ladderMarkerBubble");
+        // Snap to current position on first paint so we don't animate from 0%.
+        var snap = !ladderPainted;
+        if (fill) {
+          if (snap) fill.style.transition = "none";
+          fill.style.width = pct + "%";
+        }
+        if (marker) {
+          if (snap) marker.style.transition = "none";
+          marker.style.left = pct + "%";
+        }
+        if (snap) {
+          // Re-enable transitions on the next frame so subsequent updates animate.
+          requestAnimationFrame(function () {
+            if (fill) fill.style.transition = "";
+            if (marker) marker.style.transition = "";
+          });
+          ladderPainted = true;
+        }
         if (bubble) bubble.textContent = count.toLocaleString();
         var stops = document.querySelectorAll("#ladderStops li");
         stops.forEach(function (li) {
@@ -1830,6 +1852,9 @@
           else li.classList.remove("hit");
         });
       }
+
+      // Alphabetized once; OHIO_COUNTIES is static for the page lifetime.
+      var COUNTY_WALL_ORDER = OHIO_COUNTIES.slice().sort();
 
       function renderCountyWall(visible) {
         var grid = document.getElementById("countyGrid");
@@ -1841,7 +1866,7 @@
         });
 
         var claimed = 0;
-        var html = OHIO_COUNTIES.slice().sort().map(function (c) {
+        var html = COUNTY_WALL_ORDER.map(function (c) {
           var n = perCounty[c] || 0;
           if (n > 0) claimed++;
           var lit = n > 0 ? " lit" : "";
@@ -1866,18 +1891,15 @@
           btn.addEventListener("click", function () {
             var c = btn.getAttribute("data-county");
             if (!c) return;
-            // Toggle off if already selected
             state.county = (state.county === c) ? "" : c;
+            // Clear city when county changes — matches the leaderboard convention
+            // so the city dropdown can't hold a stale value from a different county.
             state.city = "";
             state.currentPage = 1;
             var sel = document.getElementById("countyFilter");
             if (sel) sel.value = state.county;
             renderAll();
-            var anchor = document.getElementById("memberTable");
-            if (anchor && anchor.scrollIntoView) {
-              try { anchor.scrollIntoView({ behavior: "smooth", block: "start" }); }
-              catch (e) { anchor.scrollIntoView(); }
-            }
+            scrollToDirectory();
           });
         });
       }
