@@ -1,166 +1,99 @@
-# Ohio Pride PAC — ActBlue Report Backfill (2026-05-11)
+# Founding Members Page — Hero Redesign
 
-Bundle covers the ActBlue Custom Report `ohio-pride-pac-214738-custom-report-all-2026-04-12-2026-05-11.csv` (27 contributions, **$1,369.69** total). Every contribution in the report is marked **`is_public = true`** and **`is_vetted = true`** per Director instruction.
+**Bundle:** `20260514-founding-members-hero-redesign`
+**Touches:** `founding-members.html` only (single file, all CSS + JS inline as the page already does)
 
-## What's in this bundle
+## What changed and why
+
+The old hero had three cards: Members, Counties, and **Newest Member**. The Newest Member card showed a name plus a relative time ("Joined 6 hours ago"). That third card was a maintenance tax — it required a self-updating timer for fresh joins and got stale-looking the moment activity slowed down. It also told visitors nothing actionable.
+
+This patch retires that card and reuses the visual real estate to do two more useful jobs: pull people toward the donate flow, and make the geographic and numerical progress feel alive without needing time-based updates.
+
+### 1. New hero card (replaces "Newest Member")
+
+**Before:** `Newest Member — David from Franklin Cou... — Joined 6 hours ago`
+
+**After:** A "**Claim Your Number**" CTA card.
 
 ```
-supabase/migrations/20260511000000_actblue_report_backfill.sql
-admin/donors/index.html
+   #85    Is Still Unclaimed
+        [ Claim It ]
+```
+
+- The number auto-derives from `count + 1` (capped at 1,969).
+- The pill button links straight to `/donate/founding-member`.
+- The number renders in the Pride gradient.
+- No timers, no relative-time formatting, nothing to keep current.
+
+### 2. Stonewall Ladder (new — directly under the progress bar)
+
+A milestone track that nods to the 1969 Stonewall Riots. Five stops:
+
+```
+   1         169        500        969       1,969
+  First     Spark     Quarter    Halfway   Stonewall
+```
+
+- A white marker bubble sits at the current count, riding on top of the existing Pride-gradient fill.
+- Milestones we've passed turn from grey to Pride gradient.
+- Self-updating from `count / 1,969`. No content management required.
+
+### 3. County Tile Wall (new — between the tier CTA and the insights grid)
+
+All **88 Ohio counties** rendered as a tile grid (4 cols on phone → 11 cols on desktop). Counties with at least one founding member get a Pride-gradient border and show the member count. Unclaimed counties stay dimmed and read as "waiting for its first member."
+
+- Tap any tile to filter the roster below by that county and smooth-scroll to the table. Tap again to clear.
+- The summary line reads: `**16** of 88 counties claimed · **72** still waiting`.
+- Reinforces the "16 of 88" hero stat in a way that gets visibly more satisfying as the map fills in.
+- Complements (does not duplicate) the existing County Leaderboard panel — leaderboard is "top counties by member count," tile wall is "every county on the map at once."
+
+## JS changes
+
+- **Removed:** `scheduleNewestWhenTick`, `newestWhenTimer`, and the `statNewestName` / `statNewestWhen` writes in `renderHeroStats`.
+- **Added:**
+  - `LADDER_MILESTONES = [1, 169, 500, 969, 1969]`
+  - `renderStonewallLadder(count)`
+  - `renderCountyWall(visibleMembers)` — also wires click handlers that update `state.county`, sync `#countyFilter`, call `renderAll()`, and smooth-scroll to `#memberTable`.
+- `renderHeroStats` now also writes `#statNextNumber` and calls the two new renderers.
+
+## CSS changes (all inline `<style>` in the head, same as the existing file)
+
+- Removed `.hero-stat:nth-child(3) { grid-area: newest; }` and the `#statNewestName` ellipsis rules.
+- Added `.hero-stat--claim` and child styles for the gradient number + pill button.
+- Added `.stonewall-ladder`, `.ladder-track`, `.ladder-fill`, `.ladder-marker`, `.ladder-marker-bubble`, `.ladder-stops` styles (about 130 lines).
+- Added `.county-wall-section`, `.county-grid`, `.county-tile` (with Pride-gradient border via mask compositing) and legend swatches (about 110 lines).
+
+## Files in this bundle
+
+```
+founding-members.html   ← drop-in replacement for the file at repo root
+CHANGES.md              ← this file
 ```
 
 ## How to apply
 
-Unzip inside your local Git checkout of `OhioPride` so the files land at the repo paths shown above, then let Claude Code raise the PR.
+1. Replace `founding-members.html` at the repo root with the version in this bundle.
+2. Commit on a feature branch, e.g. `feat/founding-hero-redesign`.
+3. Open a PR. No data layer, Supabase, or Netlify function changes required.
 
-```bash
-cd ~/path/to/OhioPride
-unzip /path/to/ohiopride-pr-bundle.zip -d .
-git checkout -b 20260511-actblue-report-backfill
-git add supabase/migrations/20260511000000_actblue_report_backfill.sql admin/donors/index.html
-git commit -m "ActBlue report backfill (4/12–5/11) + admin/donors expanded view"
-git push -u origin 20260511-actblue-report-backfill
-```
+## What this does NOT touch
 
-Netlify will preview-deploy the branch. The Supabase branching integration will run the migration against the preview branch DB before merge.
+- No Supabase migrations.
+- No Netlify functions.
+- No other pages.
+- No data shapes — still consumes `founding_members_public` exactly as before.
 
-## Migration: 20260511000000_actblue_report_backfill.sql
+## Visual sanity check (using current snapshot of 84 members in 16 counties)
 
-### Schema changes
+| Element                | Value                                                |
+|------------------------|------------------------------------------------------|
+| Hero card 1            | `84` Founding Members of 1,969                       |
+| Hero card 2            | `16` Ohio Counties of 88 represented                 |
+| Hero card 3 (new)      | `#85` Is Still Unclaimed [Claim It]                  |
+| Progress bar           | 4.27% filled                                         |
+| Stonewall Ladder       | Marker at 4.27%, milestone "1" lit, others dim       |
+| County Tile Wall       | 16 tiles lit with Pride border, 72 dimmed; summary: "16 of 88 counties claimed · 72 still waiting" |
 
-Adds 32 new columns to `public.founding_members` to capture the full ActBlue report payload. All `add column if not exists` so it's safe to re-run.
+## Reversibility
 
-| Column | Type | Purpose |
-| --- | --- | --- |
-| `address_line1` | text | Donor street address |
-| `state` | text | Donor state (US two-letter) |
-| `country` | text | Donor country |
-| `occupation` | text | Donor occupation |
-| `employer` | text | Donor employer |
-| `phone` | text | Donor phone |
-| `employer_address_line1` | text | Employer street |
-| `employer_city` | text | |
-| `employer_state` | text | |
-| `employer_zip` | text | |
-| `employer_country` | text | |
-| `refcode` | text | ActBlue refcode (e.g. `website_founding_member`) |
-| `refcode_2` | text | Secondary refcode |
-| `contribution_form_url` | text | Form URL |
-| `form_owner_email` | text | |
-| `form_branding_name` | text | |
-| `recipient_committee` | text | Filed name on receipts |
-| `payment_method` | text | Apple Pay / Google Pay / Card |
-| `card_type` | text | VISA / MasterCard / Discover / Amex |
-| `actblue_fee_cents` | integer | ActBlue fee in cents |
-| `stripe_fee_text` | text | Raw Stripe fee string (`$0.78`) |
-| `via_mobile` | boolean | |
-| `is_actblue_express` | boolean | |
-| `is_refunded` | boolean | |
-| `is_cancelled_recurring` | boolean | |
-| `recurring_upsell_shown` | boolean | |
-| `recurring_upsell_succeeded` | boolean | |
-| `recurring_amount_cents` | integer | |
-| `recurring_type` | text | e.g. `monthly` |
-| `recurring_duration` | text | e.g. `unlimited` |
-| `initial_recurring_at` | timestamptz | |
-| `text_message_opt_in` | text | `opt_in` / `opt_out` / `unknown` |
-
-### Data changes
-
-1. Reconciles the four pre-seeded rows (Jesse Shepherd, Nicole Green, Matthew Joseph, Samuel Dorf) to their ActBlue Lineitem IDs by name + amount + recurrence so the unique-key upsert below targets the existing rows.
-2. Upserts all 27 ActBlue lineitems by `actblue_contribution_id` with full donor + payment + recurrence detail. **All marked `is_public = true, is_vetted = true`.**
-3. Re-touches `zip` on every backfilled row to force the existing `fn_founding_members_set_county` trigger to fill `county_name` / `county_fips`.
-4. Mirrors `county_name` into the legacy `county` column (strips trailing " County") where it's null, so both legacy and new code paths read the correct value.
-5. Assigns sequential `display_order` to any public+vetted row missing one, ordered by `contributed_at`. Existing 1–4 (Zach, Jesse, Nicole, Matt) are preserved.
-6. Assigns sequential `founding_number` to any public+vetted row missing one.
-7. Appends a `notes` line recording the backfill source on the 23 newly-inserted rows.
-
-### Idempotency
-
-* Column adds use `if not exists`.
-* The 4 pre-seed reconciliation `update`s are guarded by `actblue_contribution_id is null` so they never overwrite already-attached IDs.
-* The 27-row upsert uses `on conflict (actblue_contribution_id) do update set ...`.
-* Display order / founding number assignment only runs against rows with `null` values, preserving any previously-assigned numbers.
-* Notes append is scoped to the 23 newly-inserted IDs so re-running it would re-append — if you re-run this migration after merge, delete or comment out section 7.
-
-### What stays in the existing schema
-
-* The `founding_members_public` view (PII-free projection) is untouched.
-* The 88-county `county` check constraint is untouched.
-* The `founding_member_tier(cents, recurrence, refcode)` function is untouched.
-* RLS policy stays the same: `service_role` writes, anon reads via the view only.
-
-## Admin UI: `admin/donors/index.html`
-
-Self-contained replacement for the admin Donors page that surfaces every new column.
-
-### What changed
-
-* New columns in the table: **Refcode**, **Payment**, **Occupation / Employer**. ZIP and ActBlue order number are now shown as sub-text under City / County.
-* Each row has a **`+` expand button** that reveals a full Donor Detail block grouped into three sections:
-  * **Contribution** — lineitem id, order number, paid-at, amount, full recurring metadata, refcodes, form details
-  * **Donor** — full name, display name, email, phone, address, occupation, employer, employer address, elected office + jurisdiction
-  * **Payment & Flags** — payment method, card type, ActBlue + Stripe fees, mobile/Express flags, refund + cancellation flags, recurring-upsell flags, text-opt-in, founding number, display order
-* New **Refcode** filter dropdown auto-populated from the data so you can isolate `founding_member` vs `founding_patron` vs `donate_100` etc.
-* Search now matches address, phone, employer, occupation, and refcode in addition to the original fields.
-* Stats grid logic preserved (Members / Total Raised / On Public Roster / Toward 1,969).
-* Public + Vetted toggles preserved.
-
-### What didn't change
-
-* Auth, RLS, and the `founding_members_public` view are all untouched.
-* No new dependencies; same `@supabase/supabase-js@2` script tag.
-* No CSS file changes — the small set of expand-button + detail-grid rules is scoped inline at the top of `admin/donors/index.html`.
-
-## Quick verification after applying
-
-```sql
--- Should return 27 rows
-select count(*) from public.founding_members
-where actblue_contribution_id is not null;
-
--- Should return 0 unmatched ZIPs
-select full_name, zip, county, county_name
-from public.founding_members
-where actblue_contribution_id is not null
-  and (county is null or county_name is null);
-
--- Public roster size after this migration
-select count(*) from public.founding_members_public;
-
--- Tier breakdown
-select public.founding_member_tier(amount_cents, recurrence) as tier, count(*)
-from public.founding_members
-where actblue_contribution_id is not null
-group by 1 order by 2 desc;
-```
-
-Expected tier counts for the 27-row report (using current cut-offs):
-
-| Tier | Count |
-| --- | ---: |
-| Founding Patron / Advocate ($250) | 2 (Brian Sharp, Karen Brownlee) |
-| Leadership ($100) | 3 (Matt Joseph, Martin Gehres, Jeffrey Lox) |
-| Friend ($50) | 1 (Kyle Brown) |
-| Founding Member ($25) | 20 |
-| Stonewall Sustainer ($19.69/mo) | 1 (Nicole Green) |
-
-Total raised in this batch: **$1,369.69**.
-
-## Elected officials flagged
-
-The migration sets `elected_office` + `jurisdiction` for any donor who currently holds office, so the public roster can show an elected-official badge:
-
-* Matthew Joseph — City Commissioner, City of Dayton
-* Samuel Dorf — City Council, City of Oakwood
-* Ross Widenor — City Council President, City of Munroe Falls
-* Nickie J. Antonio — State Senator, Ohio Senate
-* Martin Gehres — Clerk of Court, City of Dayton
-
-Brian Sharp donated $250 but his Land Bank seat is an appointment rather than an elected office, so `elected_office` is left null. Flip it on in the admin UI if you want him badged.
-
-## Risks / things to know
-
-* Matthew Joseph's row currently reads `$25 one-time` from seed migration `20260427000500_matt_joseph_back_to_founding_member.sql`. The ActBlue report shows **$100 one-time** on 4/27. The upsert overwrites him with the real ActBlue value. If that conflicts with anything you've publicly communicated, flip his `is_public` off and edit before re-publishing.
-* The new columns are populated only for the 27 rows from this report. Pre-existing rows (Zach Smith, others) will have NULL in the new fields until the next ActBlue sync touches them.
-* The admin Donors page now SELECTs ~50 columns. Still well within Supabase's per-row size limit, but the wire payload is bigger — keep an eye if the table grows past a few thousand rows.
+This change is contained to one file. If anything looks wrong in preview, revert that one file. No data side effects.
