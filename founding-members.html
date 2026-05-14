@@ -526,7 +526,6 @@
         font-family: "Roboto Slab", serif;
         color: var(--text-white, #fff);
         font-size: 0.92rem;
-        min-width: 720px;
       }
       .member-table thead th {
         position: sticky;
@@ -762,11 +761,111 @@
         .page-nav { justify-content: center; }
       }
 
+      /* ============================================================
+         MOBILE TABLE: stacked rows so all 8 fields show on phones
+         without horizontal scroll and without hiding data.
+         ============================================================ */
+      @media (max-width: 760px) {
+        .member-table-scroll { overflow-x: visible; }
+        .member-table thead { display: none; }
+        .member-table,
+        .member-table tbody,
+        .member-table tbody tr { display: block; width: 100%; }
+
+        .member-table tbody tr {
+          position: relative;
+          padding: 0.7rem 0.9rem 0.75rem 1rem;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .member-table tbody tr::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0.55rem;
+          bottom: 0.55rem;
+          width: 3px;
+          border-radius: 2px;
+          background: var(--tier-color, rgba(255,255,255,0.2));
+        }
+        .member-table tbody tr:last-child { border-bottom: none; }
+
+        .member-table td {
+          display: inline;
+          padding: 0;
+          border: none;
+          font-size: 0.85rem;
+          line-height: 1.5;
+          color: var(--text-light, #c5d2dd);
+          white-space: normal;
+        }
+        /* Drop the desktop tier stripe on Name; we use the row stripe instead. */
+        .member-table .col-name::before { display: none; }
+        /* Suppress em-dash placeholders on mobile -- empty fields just collapse. */
+        .member-table .col-city.is-fallback,
+        .member-table .col-state.is-fallback,
+        .member-table .col-county.is-fallback,
+        .member-table .col-role.is-empty { display: none; }
+
+        /* Line 1: # + Name (+ elected pin inside col-name) */
+        .member-table .col-pos {
+          font-family: "Montserrat", sans-serif;
+          font-weight: 700;
+          color: var(--text-light, #c5d2dd);
+          margin-right: 0.45rem;
+        }
+        .member-table .col-name {
+          font-family: "Montserrat", sans-serif;
+          font-weight: 700;
+          color: var(--text-white, #fff);
+          font-size: 0.96rem;
+        }
+
+        /* Line 2: City, State · County */
+        .member-table .col-city { display: block; margin-top: 0.2rem; }
+        .member-table .col-state {
+          margin-left: 0.3rem;
+          font-family: "Montserrat", sans-serif;
+          font-size: 0.78rem;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          opacity: 0.85;
+        }
+        .member-table .col-county { margin-left: 0.4rem; }
+        .member-table .col-county::before {
+          content: "· ";
+          margin-right: 0.1rem;
+          opacity: 0.5;
+        }
+
+        /* Line 3: Tier + Joined */
+        .member-table .col-tier { display: block; margin-top: 0.3rem; }
+        .member-table .col-joined {
+          margin-left: 0.45rem;
+          font-size: 0.78rem;
+          opacity: 0.85;
+        }
+        .member-table .col-joined::before {
+          content: "· ";
+          margin-right: 0.1rem;
+          opacity: 0.5;
+        }
+
+        /* Line 4: Office Held (only renders if present) */
+        .member-table .col-role {
+          display: block;
+          margin-top: 0.25rem;
+          color: #c8dcf2;
+          font-style: italic;
+          font-size: 0.85rem;
+        }
+      }
+
       @media (max-width: 420px) {
         .hero-stats { grid-template-columns: 1fr; }
         .lb-row { grid-template-columns: 1.4rem 1fr auto; }
-        .member-table { font-size: 0.85rem; }
-        .member-table td, .member-table thead th { padding: 0.55rem 0.6rem; }
+        .member-table tbody tr { padding: 0.6rem 0.8rem 0.65rem 0.95rem; }
+        .member-table td { font-size: 0.82rem; }
+        .member-table .col-name { font-size: 0.92rem; }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -1339,8 +1438,6 @@
       }
 
       function initCollapsiblePanels() {
-        var isMobile = window.matchMedia("(max-width: 720px)").matches;
-
         var panels = [
           { panelId: "electedPanel",      btnId: "electedToggleBtn" },
           { panelId: "leaderboardPanel",  btnId: "leaderboardToggleBtn" }
@@ -1349,12 +1446,7 @@
         panels.forEach(function (p) {
           var stored = null;
           try { stored = localStorage.getItem(STORAGE_PREFIX + p.panelId); } catch (e) {}
-          var expanded;
-          if (stored === "1" || stored === "0") {
-            expanded = (stored === "1");
-          } else {
-            expanded = !isMobile;
-          }
+          var expanded = (stored === "0") ? false : true;
           setPanelExpanded(p.panelId, p.btnId, expanded, false);
 
           document.getElementById(p.btnId).addEventListener("click", function () {
@@ -1523,9 +1615,9 @@
         var joined = formatJoined(m.joinedAt) || '';
 
         return ''
-          + '<tr id="member-' + m.id + '" data-tier="' + escapeHtml(m.tier || '') + '">'
+          + '<tr id="member-' + m.id + '" data-tier="' + escapeHtml(m.tier || '') + '" style="--tier-color:' + color + ';">'
           +   '<td class="col-pos">#' + m.id + '</td>'
-          +   '<td class="col-name" style="--tier-color:' + color + ';">'
+          +   '<td class="col-name">'
           +     '<span class="name-stack">'
           +       '<span>' + escapeHtml(displayName) + '</span>'
           +       pin
