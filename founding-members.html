@@ -1742,6 +1742,7 @@
             renderCityOptions();
             renderLeaderboard();
             renderTable();
+            syncCountyWallPressed();
             scrollToDirectory();
           });
         });
@@ -1851,6 +1852,17 @@
 
       // Alphabetized once; OHIO_COUNTIES is static for the page lifetime.
       var COUNTY_WALL_ORDER = OHIO_COUNTIES.slice().sort();
+
+      // Sync aria-pressed on the county-wall tiles to current state.county.
+      // Used by handlers that change state.county without going through
+      // renderAll() (countyFilter dropdown, leaderboard, clear filters).
+      function syncCountyWallPressed() {
+        var tiles = document.querySelectorAll("#countyGrid .county-tile");
+        tiles.forEach(function (btn) {
+          var c = btn.getAttribute("data-county");
+          btn.setAttribute("aria-pressed", c === state.county ? "true" : "false");
+        });
+      }
 
       function renderCountyWall(visible) {
         var grid = document.getElementById("countyGrid");
@@ -2296,6 +2308,7 @@
           renderCityOptions();
           renderLeaderboard();
           renderTable();
+          syncCountyWallPressed();
         });
 
         city.addEventListener("change", function (e) {
@@ -2331,6 +2344,7 @@
           renderCityOptions();
           renderLeaderboard();
           renderTable();
+          syncCountyWallPressed();
         });
 
         if (pageSizeSel) {
