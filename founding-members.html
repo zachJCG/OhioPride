@@ -6,7 +6,7 @@
     <title>Founding Members | Ohio Pride PAC</title>
     <meta
       name="description"
-      content="Meet the first 1,969 Ohioans building LGBTQ+ political power. Search by county, tier, or elected office."
+      content="Meet the first 1,969 Ohioans building LGBTQ+ political power. Search by county, tier, city, or elected office. Live county leaderboard."
     />
     <link rel="canonical" href="https://www.ohiopride.org/founding-members" />
     <meta property="og:type" content="website" />
@@ -37,7 +37,9 @@
 
       body { background: var(--dark-bg, #0b1f33); }
 
-      /* HERO STATS */
+      /* ============================================================
+         HERO STATS
+         ============================================================ */
       .hero-stats {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -82,10 +84,11 @@
         margin-top: 0.4rem;
       }
 
-      /* PROGRESS BAR */
       .goal-block { max-width: 720px; margin: 2.25rem auto 0; }
 
-      /* TIER CHIPS */
+      /* ============================================================
+         TIER CHIPS
+         ============================================================ */
       .tier-chips-section { padding: 2rem 0 1rem; }
       .tier-chips-section h2 {
         font-family: "Montserrat", sans-serif;
@@ -154,46 +157,247 @@
 
       .cta-row { text-align: center; margin: 2rem 0 1.5rem; }
 
-      /* ENDORSED BY STRIP */
-      .endorsed-strip {
+      /* ============================================================
+         TWO-COLUMN LAYOUT: ELECTED + LEADERBOARD
+         Desktop: side by side. Mobile: stacked, both collapsed by default.
+         ============================================================ */
+      .insights-grid {
         max-width: 1080px;
         margin: 1rem auto 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1rem;
+        align-items: stretch;
+      }
+      .insight-panel {
         background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
         border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 12px;
-        padding: 1rem 1.25rem;
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
-      .endorsed-strip .label {
+      .insight-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.9rem 1.1rem;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        width: 100%;
+        text-align: left;
+        color: inherit;
+        font: inherit;
+      }
+      .insight-panel-header:focus-visible {
+        outline: 2px solid var(--color-blue, #2c8df0);
+        outline-offset: -2px;
+      }
+      .insight-panel-header .h-left {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        min-width: 0;
+      }
+      .insight-panel-header .h-title {
         font-family: "Montserrat", sans-serif;
         font-weight: 700;
-        font-size: 0.78rem;
-        letter-spacing: 0.08em;
+        font-size: 0.82rem;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
         color: var(--text-light, #c5d2dd);
-        margin-bottom: 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
-      .endorsed-strip .roster {
+      .insight-panel-header .h-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.8rem;
+        height: 1.5rem;
+        padding: 0 0.45rem;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.72rem;
+        color: #fff;
+        background: rgba(44, 141, 240, 0.25);
+        border: 1px solid rgba(127, 182, 255, 0.45);
+        border-radius: 999px;
+        flex-shrink: 0;
+      }
+      .insight-panel-header .chev {
+        flex-shrink: 0;
+        width: 14px;
+        height: 14px;
+        color: var(--text-light, #c5d2dd);
+        transition: transform 0.2s ease;
+      }
+      .insight-panel[aria-expanded="false"] .chev { transform: rotate(-90deg); }
+      .insight-panel[aria-expanded="false"] .insight-panel-body { display: none; }
+      .insight-panel-body {
+        padding: 0.25rem 1.1rem 1.1rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .endorsed-roster {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem 1rem;
+        gap: 0.55rem 1rem;
+        padding-top: 0.7rem;
       }
-      .endorsed-strip a {
+      .endorsed-roster a {
         font-family: "Roboto Slab", serif;
         color: var(--text-white, #fff);
         text-decoration: none;
         font-size: 0.95rem;
         border-bottom: 1px dotted rgba(255,255,255,0.3);
         padding-bottom: 1px;
+        line-height: 1.35;
       }
-      .endorsed-strip a:hover { border-bottom-color: var(--text-white, #fff); }
+      .endorsed-roster a:hover { border-bottom-color: var(--text-white, #fff); }
+      .endorsed-roster .role-suffix {
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.85em;
+      }
+      .endorsed-empty {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.9rem;
+        opacity: 0.8;
+        padding: 0.6rem 0;
+      }
 
-      /* DIRECTORY CONTROLS */
+      .lb-list {
+        list-style: none;
+        margin: 0.6rem 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      .lb-row {
+        display: grid;
+        grid-template-columns: 1.6rem 1fr auto;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.5rem 0.65rem;
+        background: rgba(19, 45, 68, 0.45);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 10px;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+        text-align: left;
+        width: 100%;
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+      }
+      .lb-row:hover {
+        border-color: rgba(127, 182, 255, 0.4);
+        background: rgba(44, 141, 240, 0.08);
+      }
+      .lb-row:focus-visible {
+        outline: 2px solid var(--color-blue, #2c8df0);
+        outline-offset: 2px;
+      }
+      .lb-row.is-active {
+        border-color: rgba(127, 182, 255, 0.6);
+        background: rgba(44, 141, 240, 0.16);
+      }
+      .lb-rank {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        color: var(--text-light, #c5d2dd);
+      }
+      .lb-list li:nth-child(1) .lb-rank { color: #ffb300; }
+      .lb-list li:nth-child(2) .lb-rank { color: #c5d2dd; }
+      .lb-list li:nth-child(3) .lb-rank { color: #d18a4a; }
+      .lb-county {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-white, #fff);
+        font-size: 0.95rem;
+        line-height: 1.25;
+        min-width: 0;
+      }
+      .lb-county-name {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .lb-bar {
+        display: block;
+        margin-top: 0.3rem;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.07);
+        overflow: hidden;
+      }
+      .lb-bar-fill {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
+      }
+      .lb-count {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.88rem;
+        color: var(--text-white, #fff);
+        white-space: nowrap;
+        text-align: right;
+      }
+      .lb-pct {
+        display: block;
+        font-weight: 400;
+        font-size: 0.7rem;
+        color: var(--text-light, #c5d2dd);
+        text-align: right;
+        margin-top: 0.1rem;
+      }
+      .lb-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.6rem;
+        margin-top: 0.75rem;
+        padding-top: 0.65rem;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.82rem;
+      }
+      .lb-toggle-btn {
+        background: none;
+        border: none;
+        color: var(--color-blue, #2c8df0);
+        cursor: pointer;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.85rem;
+        padding: 0;
+      }
+      .lb-toggle-btn:hover { text-decoration: underline; }
+      .lb-empty {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.9rem;
+        opacity: 0.8;
+        padding: 0.6rem 0;
+        list-style: none;
+      }
+
+      /* ============================================================
+         DIRECTORY CONTROLS
+         ============================================================ */
       .directory-controls {
         display: grid;
-        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr);
-        gap: 0.75rem;
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr);
+        gap: 0.6rem;
         max-width: 1080px;
-        margin: 0 auto 1rem;
+        margin: 0 auto 0.75rem;
         align-items: stretch;
       }
       .directory-controls input,
@@ -217,6 +421,10 @@
         background-position: right 0.85rem center;
         padding-right: 2.2rem;
       }
+      .directory-controls select:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
       .directory-controls input:focus,
       .directory-controls select:focus {
         border-color: var(--color-blue, #2c8df0);
@@ -224,8 +432,6 @@
       }
       .directory-controls input::placeholder { color: rgba(255,255,255,0.5); }
 
-      /* Elected-only toggle styled as a proper pressable pill that matches
-         the height of the inputs/selects and visually flips when checked. */
       .toggle-elected {
         display: flex;
         align-items: center;
@@ -265,6 +471,43 @@
         cursor: pointer;
       }
 
+      .quick-filter-row {
+        max-width: 1080px;
+        margin: 0 auto 0.6rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .quick-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(19, 45, 68, 0.55);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        color: var(--text-white, #fff);
+        font-family: "Roboto Slab", serif;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.85rem;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+      }
+      .quick-chip:hover { border-color: rgba(255,255,255,0.35); }
+      .quick-chip:focus-visible {
+        outline: 2px solid var(--color-blue, #2c8df0);
+        outline-offset: 2px;
+      }
+      .quick-chip[aria-pressed="true"] {
+        border-color: #7fb6ff;
+        background: rgba(44, 141, 240, 0.18);
+        color: #eaf3ff;
+      }
+      .quick-chip .chip-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--text-light, #c5d2dd);
+      }
+      .quick-chip[aria-pressed="true"] .chip-dot { background: #7fb6ff; }
+
       .result-meta {
         max-width: 1080px;
         margin: 0.25rem auto 1rem;
@@ -286,8 +529,25 @@
         padding: 0;
       }
       .result-meta .clear:hover { text-decoration: underline; }
+      .active-filter-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: rgba(44, 141, 240, 0.18);
+        border: 1px solid rgba(127, 182, 255, 0.45);
+        color: #eaf3ff;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+        padding: 0.18rem 0.55rem;
+        border-radius: 999px;
+        margin-left: 0.5rem;
+        text-transform: uppercase;
+      }
 
-      /* MEMBER GRID */
+      /* ============================================================
+         MEMBER GRID
+         ============================================================ */
       .member-grid {
         max-width: 1080px;
         margin: 0 auto;
@@ -296,17 +556,13 @@
         gap: 1rem;
         align-items: stretch;
       }
-      /* Cards share a fixed slot order so every card has the same lines in the
-         same place: name -> role (elected) -> location -> tier -> [quote] -> joined.
-         Slots that have no data render empty but reserve no space (.is-empty),
-         so the joined line still anchors to the bottom via margin-top:auto. */
       .member-card {
         position: relative;
         background: rgba(19, 45, 68, 0.55);
         border: 1px solid var(--dark-bg-light, #1a3a52);
         border-radius: 14px;
         padding: 1.1rem 1.1rem 1rem;
-        padding-right: 3.2rem; /* keep text from colliding with #N badge */
+        padding-right: 3.2rem;
         overflow: hidden;
         content-visibility: auto;
         contain-intrinsic-size: auto 220px;
@@ -346,7 +602,6 @@
         font-weight: 700;
         color: var(--text-white, #fff);
         line-height: 1.25;
-        /* Clamp to 2 lines so a long name can't push the rest of the card around. */
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -445,7 +700,6 @@
         text-transform: uppercase;
       }
 
-      /* PLACEHOLDER CARDS */
       .member-card.placeholder {
         background: repeating-linear-gradient(
           135deg,
@@ -496,59 +750,63 @@
         font-size: 0.9rem;
       }
 
-      /* Result-meta: never let the count + clear button collide on narrow widths. */
+      /* ============================================================
+         RESPONSIVE BREAKPOINTS
+         ============================================================ */
       @media (max-width: 480px) {
         .result-meta {
           flex-direction: column;
           align-items: flex-start;
           gap: 0.35rem;
         }
+        .active-filter-pill { margin-left: 0; }
       }
 
-      /* Tablet: drop the directory controls to two columns, search spans full
-         width so it stays readable. */
       @media (max-width: 900px) {
         .directory-controls {
           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         }
         .directory-controls .field:first-child { grid-column: 1 / -1; }
+        .insights-grid { grid-template-columns: 1fr; }
       }
 
-      /* Small tablet / large phone: 2-up hero stats reads better than 1-up. */
       @media (max-width: 720px) {
         .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
         .hero-stat { padding: 0.85rem 0.9rem; }
-        .endorsed-strip .roster { gap: 0.45rem 0.9rem; }
         .tier-chips-section h2 { font-size: 1.2rem; }
         .cta-row .btn { width: 100%; max-width: 360px; }
+        .insight-panel-header { padding: 0.8rem 1rem; }
+        .insight-panel-body { padding: 0 1rem 1rem; }
       }
 
-      /* Phone: full-width controls, the toggle becomes its own row. */
       @media (max-width: 600px) {
         .directory-controls {
           grid-template-columns: 1fr;
         }
         .directory-controls .field:first-child { grid-column: auto; }
+        .quick-filter-row { gap: 0.35rem; }
+        .quick-chip { font-size: 0.8rem; padding: 0.35rem 0.7rem; }
       }
 
-      /* Very narrow phone: collapse hero stats so numbers don't wrap. */
       @media (max-width: 420px) {
         .hero-stats { grid-template-columns: 1fr; }
         .member-grid { grid-template-columns: 1fr; }
         .member-card {
-          min-height: 0; /* let single-column cards size to content */
+          min-height: 0;
           padding: 1rem 1rem 0.9rem;
           padding-right: 3rem;
         }
         .member-card .name { font-size: 1rem; }
+        .lb-row { grid-template-columns: 1.4rem 1fr auto; }
       }
 
-      /* Reduce motion: respect user's preference. */
       @media (prefers-reduced-motion: reduce) {
         .member-card,
         .member-card:hover,
         .tier-chip,
-        .tier-chip:hover {
+        .tier-chip:hover,
+        .insight-panel .chev,
+        .lb-row {
           transition: none;
           transform: none;
         }
@@ -558,7 +816,7 @@
   <body>
     <div id="site-header"></div>
 
-    <!-- Hero -->
+    <!-- ============ HERO ============ -->
     <header class="subpage-hero">
       <div class="container">
         <div class="section-label">Founding Members</div>
@@ -598,7 +856,7 @@
       </div>
     </header>
 
-    <!-- Tier chips + CTA -->
+    <!-- ============ TIER CHIPS + CTA ============ -->
     <section class="section">
       <div class="container">
         <div class="tier-chips-section">
@@ -615,16 +873,63 @@
       </div>
     </section>
 
-    <!-- Endorsed By + Directory -->
+    <!-- ============ INSIGHTS GRID: ELECTED + COUNTY LEADERBOARD ============ -->
     <section class="section">
       <div class="container">
+        <div class="insights-grid">
 
-        <div class="endorsed-strip" id="endorsedStrip" hidden>
-          <div class="label">Founding Members In Office</div>
-          <div class="roster" id="endorsedRoster"></div>
+          <!-- Founding Members In Office (collapsible) -->
+          <div class="insight-panel" id="electedPanel" aria-expanded="true">
+            <button
+              type="button"
+              class="insight-panel-header"
+              id="electedToggleBtn"
+              aria-controls="electedPanelBody"
+              aria-expanded="true"
+            >
+              <span class="h-left">
+                <span class="h-title">Founding Members In Office</span>
+                <span class="h-badge" id="electedCountBadge">0</span>
+              </span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="insight-panel-body" id="electedPanelBody">
+              <div class="endorsed-roster" id="endorsedRoster"></div>
+            </div>
+          </div>
+
+          <!-- County Leaderboard -->
+          <div class="insight-panel" id="leaderboardPanel" aria-expanded="true">
+            <button
+              type="button"
+              class="insight-panel-header"
+              id="leaderboardToggleBtn"
+              aria-controls="leaderboardBody"
+              aria-expanded="true"
+            >
+              <span class="h-left">
+                <span class="h-title">County Leaderboard</span>
+                <span class="h-badge" id="leaderboardCountBadge">0</span>
+              </span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="insight-panel-body" id="leaderboardBody">
+              <ol class="lb-list" id="lbList" aria-label="Counties ranked by founding member count"></ol>
+              <div class="lb-footer">
+                <span id="lbCoverage">0 of 88 counties represented</span>
+                <button type="button" class="lb-toggle-btn" id="lbToggleBtn" hidden>Show all 88</button>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <h2 style="font-family:'Montserrat',sans-serif; color:var(--text-white,#fff); text-align:center; margin: 2rem 0 1rem;">
+        <!-- ============ DIRECTORY ============ -->
+        <h2 style="font-family:'Montserrat',sans-serif; color:var(--text-white,#fff); text-align:center; margin: 2.5rem 0 1rem;">
           Member Directory
         </h2>
 
@@ -638,18 +943,40 @@
             </select>
           </div>
           <div class="field">
+            <select id="cityFilter" aria-label="Filter by city">
+              <option value="">All cities</option>
+            </select>
+          </div>
+          <div class="field">
             <select id="sortSelect" aria-label="Sort members">
               <option value="newest">Newest first</option>
               <option value="oldest">Oldest first</option>
               <option value="az">Name A to Z</option>
               <option value="county">County A to Z</option>
+              <option value="city">City A to Z</option>
               <option value="position">By founding number</option>
+              <option value="tier">By tier weight</option>
             </select>
           </div>
           <label class="toggle-elected">
             <input type="checkbox" id="electedToggle" />
             Elected officials only
           </label>
+        </div>
+
+        <div class="quick-filter-row" id="quickFilterRow" role="group" aria-label="Quick filters">
+          <button type="button" class="quick-chip" data-quick="week" aria-pressed="false">
+            <span class="chip-dot"></span> Joined this week
+          </button>
+          <button type="button" class="quick-chip" data-quick="month" aria-pressed="false">
+            <span class="chip-dot"></span> Joined this month
+          </button>
+          <button type="button" class="quick-chip" data-quick="quote" aria-pressed="false">
+            <span class="chip-dot"></span> Has a quote
+          </button>
+          <button type="button" class="quick-chip" data-quick="recurring" aria-pressed="false">
+            <span class="chip-dot"></span> Recurring donors
+          </button>
         </div>
 
         <div class="result-meta">
@@ -677,23 +1004,20 @@
 
     <script>
       // ============================================================
-      // FOUNDING MEMBERS DIRECTORY
+      // FOUNDING MEMBERS DIRECTORY (v2)
       // Live source: Supabase view public.founding_members_public.
-      // The static MEMBERS array below is a fallback snapshot used
-      // if the network call fails so the page never blanks.
-      // The render code is data-source agnostic and built to handle
-      // ~2,000 records on mobile.
+      // The static MEMBERS array below is a fallback snapshot.
       // ============================================================
 
       var SUPABASE_URL = "https://dkdxefzhttkmjhdbkvqn.supabase.co";
       var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4";
 
       var TIERS = [
-        { id: "stonewall-sustainer", name: "Stonewall Sustainer", price: "$19.69 / month", color: "var(--tier-stonewall)" },
-        { id: "founding-member",     name: "Founding Member",     price: "$25 one-time",   color: "var(--tier-founding)" },
-        { id: "pride-builder",       name: "Pride Builder",       price: "$50 / month",    color: "var(--tier-builder)" },
-        { id: "founding-circle",     name: "Founding Circle",     price: "$100 / month",   color: "var(--tier-circle)" },
-        { id: "founding-patron",     name: "Founding Patron",     price: "$250+ one-time", color: "var(--tier-patron)" }
+        { id: "stonewall-sustainer", name: "Stonewall Sustainer", price: "$19.69 / month", color: "var(--tier-stonewall)", weight: 2 },
+        { id: "founding-member",     name: "Founding Member",     price: "$25 one-time",   color: "var(--tier-founding)",  weight: 1 },
+        { id: "pride-builder",       name: "Pride Builder",       price: "$50 / month",    color: "var(--tier-builder)",   weight: 3 },
+        { id: "founding-circle",     name: "Founding Circle",     price: "$100 / month",   color: "var(--tier-circle)",    weight: 4 },
+        { id: "founding-patron",     name: "Founding Patron",     price: "$250+ one-time", color: "var(--tier-patron)",    weight: 5 }
       ];
 
       var OHIO_COUNTIES = [
@@ -708,105 +1032,35 @@
         "Van Wert","Vinton","Warren","Washington","Wayne","Williams","Wood","Wyandot"
       ];
 
-      // ============================================================
-      // MEMBER DATA. Schema:
-      //   id            number   founding member position (1..1969)
-      //   displayName   string   how the name appears publicly
-      //   sortName      string   "Last, First" for A-Z sorting
-      //   city          string|null
-      //   county        string|null  (no "County" suffix)
-      //   tier          string   one of TIERS[].id
-      //   joinedAt      string   ISO date YYYY-MM-DD
-      //   electedOffice string|null  e.g. "City Commissioner"
-      //   jurisdiction  string|null  e.g. "City of Dayton"
-      //   quote         string|null  optional one-liner
-      //   publicConsent boolean       must be true to display
-      // ============================================================
-      // Fallback snapshot (mirrors public.founding_members_public at deploy time).
-      // Live data overwrites this on init() if the fetch succeeds.
+      // Fallback snapshot.
       var MEMBERS = [
-        {
-          id: 1,
-          displayName: "Jesse Shepherd",
-          sortName: "Shepherd, Jesse",
-          city: null,
-          county: "Hamilton",
-          tier: "founding-member",
-          joinedAt: "2026-03-01",
-          electedOffice: null,
-          jurisdiction: null,
-          quote: null,
-          publicConsent: true
-        },
-        {
-          id: 2,
-          displayName: "Nicole Green",
-          sortName: "Green, Nicole",
-          city: null,
-          county: "Montgomery",
-          tier: "stonewall-sustainer",
-          joinedAt: "2026-03-01",
-          electedOffice: null,
-          jurisdiction: null,
-          quote: null,
-          publicConsent: true
-        },
-        {
-          id: 3,
-          displayName: "Zachary Smith",
-          sortName: "Smith, Zachary",
-          city: null,
-          county: "Hamilton",
-          tier: "founding-member",
-          joinedAt: "2026-03-01",
-          electedOffice: null,
-          jurisdiction: null,
-          quote: null,
-          publicConsent: true
-        },
-        {
-          id: 4,
-          displayName: "Matt Joseph",
-          sortName: "Joseph, Matt",
-          city: "Dayton",
-          county: "Montgomery",
-          tier: "founding-member",
-          joinedAt: "2026-04-27",
-          electedOffice: "City Commissioner",
-          jurisdiction: "City of Dayton",
-          quote: null,
-          publicConsent: true
-        },
-        {
-          id: 5,
-          displayName: "Samuel Dorf",
-          sortName: "Dorf, Samuel",
-          city: "Oakwood",
-          county: "Montgomery",
-          tier: "founding-member",
-          joinedAt: "2026-04-27",
-          electedOffice: "City Council",
-          jurisdiction: "City of Oakwood",
-          quote: null,
-          publicConsent: true
-        }
+        { id: 1, displayName: "Jesse Shepherd",  sortName: "Shepherd, Jesse",  city: null, county: "Hamilton",   tier: "founding-member",    joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, quote: null, publicConsent: true },
+        { id: 2, displayName: "Nicole Green",    sortName: "Green, Nicole",    city: null, county: "Montgomery", tier: "stonewall-sustainer", joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, quote: null, publicConsent: true },
+        { id: 3, displayName: "Zachary Smith",   sortName: "Smith, Zachary",   city: null, county: "Hamilton",   tier: "founding-member",    joinedAt: "2026-03-01", electedOffice: null, jurisdiction: null, quote: null, publicConsent: true },
+        { id: 4, displayName: "Matt Joseph",     sortName: "Joseph, Matt",     city: "Dayton",   county: "Montgomery", tier: "founding-member", joinedAt: "2026-04-27", electedOffice: "City Commissioner", jurisdiction: "City of Dayton",   quote: null, publicConsent: true },
+        { id: 5, displayName: "Samuel Dorf",     sortName: "Dorf, Samuel",     city: "Oakwood",  county: "Montgomery", tier: "founding-member", joinedAt: "2026-04-27", electedOffice: "City Council",      jurisdiction: "City of Oakwood", quote: null, publicConsent: true }
       ];
 
       var FOUNDING_GOAL = 1969;
       var PAGE_SIZE = 60;
+      var STORAGE_PREFIX = "ohpfm.v2.";
 
       var state = {
         search: "",
         county: "",
+        city: "",
         tiers: new Set(),
         electedOnly: false,
+        quickFilters: new Set(),
         sort: "newest",
-        visibleCount: PAGE_SIZE
+        visibleCount: PAGE_SIZE,
+        leaderboardExpanded: false
       };
 
       var tierMap = TIERS.reduce(function (acc, t) { acc[t.id] = t; return acc; }, {});
-      function tierColor(id) { return (tierMap[id] && tierMap[id].color) || "rgba(255,255,255,0.4)"; }
-      function tierName(id)  { return (tierMap[id] && tierMap[id].name)  || id; }
+      function tierColor(id)  { return (tierMap[id] && tierMap[id].color) || "rgba(255,255,255,0.4)"; }
+      function tierName(id)   { return (tierMap[id] && tierMap[id].name)  || id; }
+      function tierWeight(id) { return (tierMap[id] && tierMap[id].weight) || 0; }
 
       function escapeHtml(s) {
         if (s == null) return "";
@@ -818,9 +1072,6 @@
           .replace(/'/g, "&#39;");
       }
 
-      // Accept either a full ISO timestamp ("2026-05-12T13:54:09Z") or a bare
-      // date ("2026-05-12"). Bare dates are anchored at noon so the displayed
-      // month/year doesn't flip across timezones.
       function parseJoinedAt(iso) {
         if (!iso) return null;
         var s = String(iso);
@@ -860,6 +1111,30 @@
         return "Joined " + d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
       }
 
+      function daysSince(iso) {
+        var d = parseJoinedAt(iso);
+        if (!d) return Infinity;
+        return Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
+      }
+
+      function resolveDisplayName(m) {
+        var raw = (m && (m.displayName || m.display_name || m.full_name || m.name));
+        if (typeof raw === "string") {
+          raw = raw.trim();
+          if (raw) return raw;
+        }
+        if (m && m.id) return "Founding Member #" + m.id;
+        return "Anonymous";
+      }
+
+      function slugifyTier(name) {
+        var slug = String(name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        return tierMap[slug] ? slug : "founding-member";
+      }
+
+      // ============================================================
+      // TIER CHIPS
+      // ============================================================
       function renderTierChips() {
         var host = document.getElementById("tierChips");
         var counts = {};
@@ -889,6 +1164,9 @@
         });
       }
 
+      // ============================================================
+      // COUNTY + CITY FILTER OPTIONS
+      // ============================================================
       function renderCountyOptions() {
         var sel = document.getElementById("countyFilter");
         var present = {};
@@ -896,21 +1174,53 @@
         var html = '<option value="">All Ohio counties</option>';
         OHIO_COUNTIES.slice().sort().forEach(function (c) {
           var has = present[c];
-          html += '<option value="' + escapeHtml(c) + '">' + escapeHtml(c)
-                + (has ? '' : ' (no members yet)') + '</option>';
+          html += '<option value="' + escapeHtml(c) + '"' + (state.county === c ? ' selected' : '') + '>'
+                + escapeHtml(c) + (has ? '' : ' (no members yet)')
+                + '</option>';
         });
         sel.innerHTML = html;
       }
 
-      function renderEndorsedStrip() {
-        var electeds = MEMBERS.filter(function (m) { return m.publicConsent && m.electedOffice; });
-        var strip = document.getElementById("endorsedStrip");
+      function renderCityOptions() {
+        var sel = document.getElementById("cityFilter");
+        var cities = {};
+        MEMBERS.forEach(function (m) {
+          if (!m.publicConsent || !m.city) return;
+          if (state.county && m.county !== state.county) return;
+          cities[m.city] = true;
+        });
+        var list = Object.keys(cities).sort(function (a, b) {
+          return a.localeCompare(b);
+        });
+        var html = '<option value="">All cities</option>';
+        list.forEach(function (c) {
+          html += '<option value="' + escapeHtml(c) + '"' + (state.city === c ? ' selected' : '') + '>'
+                + escapeHtml(c) + '</option>';
+        });
+        sel.innerHTML = html;
+        sel.disabled = list.length === 0;
+      }
+
+      // ============================================================
+      // ELECTED OFFICIALS PANEL (collapsible)
+      // ============================================================
+      function renderElectedPanel() {
+        var electeds = MEMBERS
+          .filter(function (m) { return m.publicConsent && m.electedOffice; })
+          .sort(function (a, b) {
+            return (a.sortName || a.displayName || "").localeCompare(b.sortName || b.displayName || "");
+          });
         var roster = document.getElementById("endorsedRoster");
-        if (electeds.length === 0) { strip.hidden = true; return; }
-        strip.hidden = false;
+        var badge = document.getElementById("electedCountBadge");
+        badge.textContent = electeds.length;
+
+        if (electeds.length === 0) {
+          roster.innerHTML = '<div class="endorsed-empty">No founding members are currently in elected office. Be the first to change that.</div>';
+          return;
+        }
         roster.innerHTML = electeds.map(function (m) {
           var label = escapeHtml(m.displayName)
-            + ' <span style="color:var(--text-light,#c5d2dd); font-size:0.85em;">('
+            + ' <span class="role-suffix">('
             + escapeHtml(m.electedOffice)
             + (m.jurisdiction ? ', ' + escapeHtml(m.jurisdiction) : '')
             + ')</span>';
@@ -918,9 +1228,150 @@
         }).join("");
       }
 
-      // Re-render the "Joined X ago" string on a cadence that matches its
-      // precision: every second while we're showing seconds, every minute
-      // for minutes, every hour past that. Re-arms itself on each tick.
+      // ============================================================
+      // COUNTY LEADERBOARD
+      // ============================================================
+      function computeLeaderboard() {
+        var counts = {};
+        MEMBERS.forEach(function (m) {
+          if (!m.publicConsent || !m.county) return;
+          counts[m.county] = (counts[m.county] || 0) + 1;
+        });
+        var rows = Object.keys(counts).map(function (county) {
+          return { county: county, count: counts[county] };
+        });
+        rows.sort(function (a, b) {
+          if (b.count !== a.count) return b.count - a.count;
+          return a.county.localeCompare(b.county);
+        });
+        return rows;
+      }
+
+      function renderLeaderboard() {
+        var rows = computeLeaderboard();
+        var listEl = document.getElementById("lbList");
+        var badge = document.getElementById("leaderboardCountBadge");
+        var coverage = document.getElementById("lbCoverage");
+        var toggle = document.getElementById("lbToggleBtn");
+
+        badge.textContent = rows.length;
+        coverage.textContent = rows.length + ' of 88 counties represented';
+
+        if (rows.length === 0) {
+          listEl.innerHTML = '<li class="lb-empty">No counties yet. Be the first to put your county on the map.</li>';
+          toggle.hidden = true;
+          return;
+        }
+
+        var max = rows[0].count || 1;
+        var showCount = state.leaderboardExpanded ? rows.length : Math.min(10, rows.length);
+        var slice = rows.slice(0, showCount);
+
+        listEl.innerHTML = slice.map(function (r, i) {
+          var pct = Math.max(8, Math.round((r.count / max) * 100));
+          var isActive = state.county === r.county;
+          return ''
+            + '<li>'
+            +   '<button type="button" class="lb-row' + (isActive ? ' is-active' : '') + '" '
+            +     'data-county="' + escapeHtml(r.county) + '" '
+            +     'aria-pressed="' + isActive + '" '
+            +     'aria-label="Filter directory by ' + escapeHtml(r.county) + ' County, ' + r.count + ' members">'
+            +     '<span class="lb-rank">' + (i + 1) + '</span>'
+            +     '<span class="lb-county">'
+            +       '<span class="lb-county-name">' + escapeHtml(r.county) + ' County</span>'
+            +       '<span class="lb-bar"><span class="lb-bar-fill" style="width:' + pct + '%;"></span></span>'
+            +     '</span>'
+            +     '<span class="lb-count">'
+            +       r.count
+            +       '<span class="lb-pct">' + (r.count === 1 ? 'member' : 'members') + '</span>'
+            +     '</span>'
+            +   '</button>'
+            + '</li>';
+        }).join("");
+
+        if (rows.length > 10) {
+          toggle.hidden = false;
+          toggle.textContent = state.leaderboardExpanded
+            ? 'Show top 10'
+            : 'Show all ' + rows.length;
+        } else {
+          toggle.hidden = true;
+        }
+
+        listEl.querySelectorAll(".lb-row").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var c = btn.getAttribute("data-county");
+            state.county = (state.county === c) ? "" : c;
+            state.city = "";
+            state.visibleCount = PAGE_SIZE;
+            var countySel = document.getElementById("countyFilter");
+            if (countySel) countySel.value = state.county;
+            renderCityOptions();
+            renderLeaderboard();
+            renderGrid();
+            scrollToDirectory();
+          });
+        });
+      }
+
+      function scrollToDirectory() {
+        var grid = document.getElementById("memberGrid");
+        if (grid && typeof grid.scrollIntoView === "function") {
+          grid.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+
+      // ============================================================
+      // COLLAPSIBLE PANELS
+      // ============================================================
+      function setPanelExpanded(panelId, btnId, expanded, persist) {
+        var panel = document.getElementById(panelId);
+        var btn = document.getElementById(btnId);
+        panel.setAttribute("aria-expanded", expanded ? "true" : "false");
+        btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+        if (persist) {
+          try { localStorage.setItem(STORAGE_PREFIX + panelId, expanded ? "1" : "0"); } catch (e) {}
+        }
+      }
+
+      function initCollapsiblePanels() {
+        var isMobile = window.matchMedia("(max-width: 720px)").matches;
+
+        var panels = [
+          { panelId: "electedPanel",      btnId: "electedToggleBtn" },
+          { panelId: "leaderboardPanel",  btnId: "leaderboardToggleBtn" }
+        ];
+
+        panels.forEach(function (p) {
+          var stored = null;
+          try { stored = localStorage.getItem(STORAGE_PREFIX + p.panelId); } catch (e) {}
+          var expanded;
+          if (stored === "1" || stored === "0") {
+            expanded = (stored === "1");
+          } else {
+            expanded = !isMobile;
+          }
+          setPanelExpanded(p.panelId, p.btnId, expanded, false);
+
+          document.getElementById(p.btnId).addEventListener("click", function () {
+            var panel = document.getElementById(p.panelId);
+            var nowExpanded = panel.getAttribute("aria-expanded") !== "true";
+            setPanelExpanded(p.panelId, p.btnId, nowExpanded, true);
+          });
+        });
+
+        var lbToggle = document.getElementById("lbToggleBtn");
+        if (lbToggle) {
+          lbToggle.addEventListener("click", function () {
+            state.leaderboardExpanded = !state.leaderboardExpanded;
+            renderLeaderboard();
+          });
+        }
+      }
+
+      // ============================================================
+      // HERO STATS
+      // ============================================================
       var newestWhenTimer = null;
       function scheduleNewestWhenTick(iso) {
         if (newestWhenTimer) { clearTimeout(newestWhenTimer); newestWhenTimer = null; }
@@ -928,8 +1379,8 @@
         if (!d) return;
         var ageSec = Math.max(0, (Date.now() - d.getTime()) / 1000);
         var delay;
-        if (ageSec < 60)        delay = 1000;
-        else if (ageSec < 3600) delay = 60 * 1000;
+        if (ageSec < 60)         delay = 1000;
+        else if (ageSec < 3600)  delay = 60 * 1000;
         else if (ageSec < 86400) delay = 60 * 60 * 1000;
         else                     delay = 0;
         if (!delay) return;
@@ -971,13 +1422,29 @@
         if (text) text.textContent = count.toLocaleString() + " of 1,969 Founding Members";
       }
 
+      // ============================================================
+      // FILTER + SORT
+      // ============================================================
       function getFiltered() {
         var q = state.search.trim().toLowerCase();
+        var weekFilter = state.quickFilters.has("week");
+        var monthFilter = state.quickFilters.has("month");
+        var quoteFilter = state.quickFilters.has("quote");
+        var recurringFilter = state.quickFilters.has("recurring");
+
         var rows = MEMBERS.filter(function (m) {
           if (!m.publicConsent) return false;
           if (state.electedOnly && !m.electedOffice) return false;
           if (state.county && m.county !== state.county) return false;
+          if (state.city && m.city !== state.city) return false;
           if (state.tiers.size > 0 && !state.tiers.has(m.tier)) return false;
+          if (quoteFilter && !m.quote) return false;
+          if (recurringFilter) {
+            var isRecurring = m.tier === "stonewall-sustainer" || m.tier === "pride-builder" || m.tier === "founding-circle";
+            if (!isRecurring) return false;
+          }
+          if (weekFilter && daysSince(m.joinedAt) > 7) return false;
+          if (monthFilter && daysSince(m.joinedAt) > 30) return false;
           if (q) {
             var hay = [m.displayName, m.city, m.county, m.electedOffice, m.jurisdiction]
               .filter(Boolean).join(" ").toLowerCase();
@@ -996,8 +1463,18 @@
           case "county":
             rows.sort(function (a, b) { return (a.county || "zzz").localeCompare(b.county || "zzz"); });
             break;
+          case "city":
+            rows.sort(function (a, b) { return (a.city || "zzz").localeCompare(b.city || "zzz"); });
+            break;
           case "position":
             rows.sort(function (a, b) { return a.id - b.id; });
+            break;
+          case "tier":
+            rows.sort(function (a, b) {
+              var diff = tierWeight(b.tier) - tierWeight(a.tier);
+              if (diff !== 0) return diff;
+              return (b.joinedAt || "").localeCompare(a.joinedAt || "");
+            });
             break;
           case "newest":
           default:
@@ -1009,27 +1486,14 @@
         return rows;
       }
 
-      // Resolve the public name for a member with graceful fallbacks.
-      // Order: displayName -> full_name (defensive — view never exposes this,
-      // but adapters from other sources might) -> "Founding Member #N" -> "Anonymous".
-      function resolveDisplayName(m) {
-        var raw = (m && (m.displayName || m.display_name || m.full_name || m.name));
-        if (typeof raw === "string") {
-          raw = raw.trim();
-          if (raw) return raw;
-        }
-        if (m && m.id) return "Founding Member #" + m.id;
-        return "Anonymous";
-      }
-
+      // ============================================================
+      // MEMBER CARD
+      // ============================================================
       function memberCardHTML(m) {
         var color = tierColor(m.tier);
         var hasElected = !!m.electedOffice;
         var displayName = resolveDisplayName(m);
 
-        // Each card has the same five slots, in the same order, so text aligns
-        // across the grid: name -> role (elected only, hidden otherwise) ->
-        // location -> tier tag -> [optional quote] -> joined.
         var roleText = hasElected
           ? m.electedOffice + (m.jurisdiction ? ', ' + m.jurisdiction : '')
           : '';
@@ -1084,7 +1548,6 @@
       }
 
       function placeholderCardHTML(num) {
-        // Mirror the real card's slot order so placeholders align with members.
         return ''
           + '<article class="member-card placeholder" aria-hidden="true">'
           +   '<div class="pos">#' + num + '</div>'
@@ -1098,6 +1561,20 @@
           + '</article>';
       }
 
+      function activeFilterPill() {
+        var bits = [];
+        if (state.county) bits.push(state.county);
+        if (state.city) bits.push(state.city);
+        if (state.electedOnly) bits.push("Elected");
+        if (state.quickFilters.has("week")) bits.push("This week");
+        if (state.quickFilters.has("month")) bits.push("This month");
+        if (state.quickFilters.has("quote")) bits.push("Has quote");
+        if (state.quickFilters.has("recurring")) bits.push("Recurring");
+        state.tiers.forEach(function (t) { bits.push(tierName(t)); });
+        if (bits.length === 0) return "";
+        return ' <span class="active-filter-pill">' + escapeHtml(bits.join(" · ")) + '</span>';
+      }
+
       function renderGrid() {
         var grid = document.getElementById("memberGrid");
         var meta = document.getElementById("resultCount");
@@ -1105,7 +1582,7 @@
         var loadMoreRow = document.getElementById("loadMoreRow");
 
         var filtered = getFiltered();
-        var anyFilter = state.search || state.county || state.tiers.size > 0 || state.electedOnly;
+        var anyFilter = state.search || state.county || state.city || state.tiers.size > 0 || state.electedOnly || state.quickFilters.size > 0;
         clearBtn.hidden = !anyFilter;
 
         if (filtered.length === 0) {
@@ -1114,7 +1591,7 @@
             +   '<h4>No members match those filters yet.</h4>'
             +   '<p>Try clearing a filter, or be the first from your county to join.</p>'
             + '</div>';
-          meta.textContent = '0 members';
+          meta.innerHTML = '0 members' + activeFilterPill();
           loadMoreRow.hidden = true;
           return;
         }
@@ -1124,7 +1601,7 @@
         var cText = filtered.length.toLocaleString() + ' member' + (filtered.length === 1 ? '' : 's');
         var cyCount = Object.keys(visibleCounties).length;
         if (cyCount > 0) cText += ' across ' + cyCount + ' count' + (cyCount === 1 ? 'y' : 'ies');
-        meta.textContent = cText;
+        meta.innerHTML = escapeHtml(cText) + activeFilterPill();
 
         var slice = filtered.slice(0, state.visibleCount);
         var html = slice.map(memberCardHTML).join("");
@@ -1146,6 +1623,9 @@
         }
       }
 
+      // ============================================================
+      // CONTROL BINDINGS
+      // ============================================================
       function debounce(fn, wait) {
         var t;
         return function () {
@@ -1158,6 +1638,7 @@
       function bindControls() {
         var search = document.getElementById("searchInput");
         var county = document.getElementById("countyFilter");
+        var city = document.getElementById("cityFilter");
         var sort = document.getElementById("sortSelect");
         var elected = document.getElementById("electedToggle");
         var clearBtn = document.getElementById("clearFilters");
@@ -1171,6 +1652,15 @@
 
         county.addEventListener("change", function (e) {
           state.county = e.target.value;
+          state.city = "";
+          state.visibleCount = PAGE_SIZE;
+          renderCityOptions();
+          renderLeaderboard();
+          renderGrid();
+        });
+
+        city.addEventListener("change", function (e) {
+          state.city = e.target.value;
           state.visibleCount = PAGE_SIZE;
           renderGrid();
         });
@@ -1186,16 +1676,33 @@
           renderGrid();
         });
 
+        document.querySelectorAll(".quick-chip").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var key = btn.getAttribute("data-quick");
+            if (state.quickFilters.has(key)) state.quickFilters.delete(key);
+            else state.quickFilters.add(key);
+            btn.setAttribute("aria-pressed", state.quickFilters.has(key));
+            state.visibleCount = PAGE_SIZE;
+            renderGrid();
+          });
+        });
+
         clearBtn.addEventListener("click", function () {
           state.search = "";
           state.county = "";
+          state.city = "";
           state.tiers = new Set();
           state.electedOnly = false;
+          state.quickFilters = new Set();
           state.visibleCount = PAGE_SIZE;
           search.value = "";
           county.value = "";
+          city.value = "";
           elected.checked = false;
           document.querySelectorAll(".tier-chip").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+          document.querySelectorAll(".quick-chip").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+          renderCityOptions();
+          renderLeaderboard();
           renderGrid();
         });
 
@@ -1205,14 +1712,11 @@
         });
       }
 
-      // Map a row from the Supabase public view to the page schema.
-      // The view coalesces empty display_name to "Anonymous" already, but we
-      // re-run the fallback chain (display_name -> full_name -> #N -> Anonymous)
-      // so this adapter is safe against future schema drift.
+      // ============================================================
+      // SUPABASE ADAPTER
+      // ============================================================
       function adaptSupabaseRow(row) {
-        var tierName = row.tier || "";
-        var tierSlug = tierName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-        if (!tierMap[tierSlug]) tierSlug = "founding-member";
+        var tierSlug = slugifyTier(row.tier);
         var foundingNum = row.founding_number || 0;
         var name = resolveDisplayName({
           displayName: row.display_name,
@@ -1223,8 +1727,6 @@
         var sortName = parts.length > 1
           ? parts[parts.length - 1] + ", " + parts.slice(0, -1).join(" ")
           : name;
-        // Keep the full ISO timestamp so relativeTime() can show
-        // seconds/minutes/hours, not just whole-day buckets.
         var joined = row.contributed_at ? String(row.contributed_at) : "";
         return {
           id: foundingNum,
@@ -1261,16 +1763,17 @@
         renderHeroStats();
         renderTierChips();
         renderCountyOptions();
-        renderEndorsedStrip();
+        renderCityOptions();
+        renderElectedPanel();
+        renderLeaderboard();
         renderGrid();
       }
 
       function init() {
-        // Paint immediately from the embedded snapshot so the page never blanks.
         bindControls();
+        initCollapsiblePanels();
         renderAll();
 
-        // Then refresh from Supabase if reachable.
         try {
           fetchMembersFromSupabase()
             .then(function (rows) {
