@@ -328,20 +328,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .lb-bar {
-        display: block;
-        margin-top: 0.3rem;
-        height: 4px;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.07);
-        overflow: hidden;
-      }
-      .lb-bar-fill {
-        display: block;
-        height: 100%;
-        border-radius: 999px;
-        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
-      }
       .lb-count {
         font-family: "Montserrat", sans-serif;
         font-weight: 700;
@@ -394,7 +380,7 @@
          ============================================================ */
       .directory-controls {
         display: grid;
-        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr);
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
         gap: 0.6rem;
         max-width: 1080px;
         margin: 0 auto 0.75rem;
@@ -471,42 +457,16 @@
         cursor: pointer;
       }
 
-      .quick-filter-row {
+      .elected-row {
         max-width: 1080px;
         margin: 0 auto 0.6rem;
         display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-      }
-      .quick-chip {
-        display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
-        background: rgba(19, 45, 68, 0.55);
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        color: var(--text-white, #fff);
-        font-family: "Roboto Slab", serif;
-        font-size: 0.85rem;
-        padding: 0.4rem 0.85rem;
-        border-radius: 999px;
-        cursor: pointer;
-        transition: border-color 0.15s ease, background-color 0.15s ease;
       }
-      .quick-chip:hover { border-color: rgba(255,255,255,0.35); }
-      .quick-chip:focus-visible {
-        outline: 2px solid var(--color-blue, #2c8df0);
-        outline-offset: 2px;
+      .elected-row .toggle-elected {
+        max-width: 240px;
+        flex: 0 0 auto;
       }
-      .quick-chip[aria-pressed="true"] {
-        border-color: #7fb6ff;
-        background: rgba(44, 141, 240, 0.18);
-        color: #eaf3ff;
-      }
-      .quick-chip .chip-dot {
-        width: 6px; height: 6px; border-radius: 50%;
-        background: var(--text-light, #c5d2dd);
-      }
-      .quick-chip[aria-pressed="true"] .chip-dot { background: #7fb6ff; }
 
       .result-meta {
         max-width: 1080px;
@@ -546,117 +506,89 @@
       }
 
       /* ============================================================
-         MEMBER GRID
+         MEMBER TABLE
          ============================================================ */
-      .member-grid {
+      .member-table-wrap {
         max-width: 1080px;
         margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 1rem;
-        align-items: stretch;
-      }
-      .member-card {
-        position: relative;
-        background: rgba(19, 45, 68, 0.55);
+        background: rgba(19, 45, 68, 0.45);
         border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 14px;
-        padding: 1.1rem 1.1rem 1rem;
-        padding-right: 3.2rem;
+        border-radius: 12px;
         overflow: hidden;
-        content-visibility: auto;
-        contain-intrinsic-size: auto 220px;
-        transition: transform 0.15s ease, border-color 0.2s ease;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        min-height: 11rem;
       }
-      .member-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.25); }
-      .member-card::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; bottom: 0;
-        width: 4px;
-        background: var(--tier-color, var(--pride-gradient, linear-gradient(180deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff)));
+      .member-table-scroll {
+        width: 100%;
+        overflow-x: auto;
       }
-      .member-card .pos {
-        position: absolute;
-        top: 0.7rem;
-        right: 0.85rem;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.72rem;
-        color: var(--text-light, #c5d2dd);
-        letter-spacing: 0.05em;
-      }
-      .member-card .name-row {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        min-height: 1.6rem;
-      }
-      .member-card .name {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.05rem;
-        font-weight: 700;
+      .member-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "Roboto Slab", serif;
         color: var(--text-white, #fff);
-        line-height: 1.25;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        word-break: break-word;
+        font-size: 0.92rem;
+        min-width: 720px;
       }
-      .member-card .elected-pin {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
+      .member-table thead th {
+        position: sticky;
+        top: 0;
+        background: rgba(11, 31, 51, 0.95);
         font-family: "Montserrat", sans-serif;
-        font-size: 0.62rem;
         font-weight: 700;
+        font-size: 0.72rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        background: rgba(44, 141, 240, 0.15);
-        color: #7fb6ff;
-        border: 1px solid rgba(127, 182, 255, 0.4);
-        padding: 0.18rem 0.45rem;
-        border-radius: 999px;
-        flex-shrink: 0;
-      }
-      .member-card .role {
-        font-family: "Roboto Slab", serif;
-        color: #c8dcf2;
-        font-size: 0.85rem;
-        margin-top: 0.35rem;
-        line-height: 1.3;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .member-card .role.is-empty { display: none; }
-      .member-card .loc {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.85rem;
         color: var(--text-light, #c5d2dd);
-        margin-top: 0.35rem;
-        line-height: 1.3;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        text-align: left;
+        padding: 0.7rem 0.85rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        white-space: nowrap;
       }
-      .member-card .loc.is-fallback { opacity: 0.55; }
-      .member-card .meta {
-        display: flex;
+      .member-table tbody tr {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        transition: background-color 0.12s ease;
+      }
+      .member-table tbody tr:hover { background: rgba(44, 141, 240, 0.06); }
+      .member-table tbody tr:last-child { border-bottom: none; }
+      .member-table td {
+        padding: 0.65rem 0.85rem;
+        vertical-align: middle;
+        line-height: 1.35;
+      }
+      .member-table .col-pos {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        color: var(--text-light, #c5d2dd);
+        white-space: nowrap;
+        width: 1%;
+      }
+      .member-table .col-name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        color: var(--text-white, #fff);
+        position: relative;
+      }
+      .member-table .col-name .name-stack {
+        display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        margin-top: 0.7rem;
+        gap: 0.45rem;
         flex-wrap: wrap;
       }
-      .member-card .tier-tag {
+      .member-table .col-name::before {
+        content: "";
+        position: absolute;
+        top: 0; bottom: 0; left: 0;
+        width: 3px;
+        background: var(--tier-color, rgba(255,255,255,0.2));
+      }
+      .member-table .col-role { color: #c8dcf2; font-size: 0.9rem; }
+      .member-table .col-role.is-empty { color: rgba(255,255,255,0.35); }
+      .member-table .col-city,
+      .member-table .col-county { color: var(--text-light, #c5d2dd); font-size: 0.9rem; white-space: nowrap; }
+      .member-table .col-city.is-fallback,
+      .member-table .col-county.is-fallback { opacity: 0.45; }
+      .member-table .col-joined { color: var(--text-light, #c5d2dd); font-size: 0.85rem; white-space: nowrap; }
+      .member-table .tier-tag {
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
@@ -668,66 +600,104 @@
         background: rgba(255,255,255,0.04);
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 999px;
-        padding: 0.2rem 0.6rem;
-        max-width: 100%;
+        padding: 0.18rem 0.55rem;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
-      .member-card .tier-tag .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-      .member-card .quote {
-        margin-top: 0.7rem;
-        font-family: "Roboto Slab", serif;
-        font-size: 0.85rem;
-        color: var(--text-light, #c5d2dd);
-        font-style: italic;
-        line-height: 1.4;
-        border-left: 2px solid rgba(255,255,255,0.15);
-        padding-left: 0.6rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .member-card .joined {
-        margin-top: auto;
-        padding-top: 0.85rem;
+      .member-table .tier-tag .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+      .member-table .elected-pin {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
         font-family: "Montserrat", sans-serif;
-        font-size: 0.7rem;
-        color: var(--text-light, #c5d2dd);
-        opacity: 0.8;
-        letter-spacing: 0.04em;
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
+        background: rgba(44, 141, 240, 0.15);
+        color: #7fb6ff;
+        border: 1px solid rgba(127, 182, 255, 0.4);
+        padding: 0.12rem 0.4rem;
+        border-radius: 999px;
+        white-space: nowrap;
       }
 
-      .member-card.placeholder {
-        background: repeating-linear-gradient(
-          135deg,
-          rgba(255,255,255,0.02),
-          rgba(255,255,255,0.02) 10px,
-          rgba(255,255,255,0.04) 10px,
-          rgba(255,255,255,0.04) 20px
-        );
-        border-style: dashed;
-        opacity: 0.55;
+      /* ============================================================
+         PAGINATION
+         ============================================================ */
+      .pagination-row {
+        max-width: 1080px;
+        margin: 1rem auto 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.8rem;
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.88rem;
       }
-      .member-card.placeholder::before { background: rgba(255,255,255,0.15); }
-      .member-card.placeholder .name { color: var(--text-light, #c5d2dd); }
-
-      .load-more-row { max-width: 1080px; margin: 1.5rem auto 0; text-align: center; }
-      .load-more-row button {
-        background: rgba(255,255,255,0.05);
+      .page-size {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .page-size select {
+        background: rgba(19, 45, 68, 0.7);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        color: var(--text-white, #fff);
+        font-family: "Roboto Slab", serif;
+        font-size: 0.9rem;
+        padding: 0.35rem 1.9rem 0.35rem 0.6rem;
+        border-radius: 8px;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23c5d2dd' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+        min-height: 32px;
+      }
+      .page-size select:focus {
+        border-color: var(--color-blue, #2c8df0);
+        box-shadow: 0 0 0 3px rgba(44,141,240,0.22);
+      }
+      .page-nav {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        flex-wrap: wrap;
+      }
+      .page-nav button {
+        min-width: 32px;
+        min-height: 32px;
+        padding: 0 0.55rem;
+        background: rgba(19, 45, 68, 0.55);
         border: 1px solid var(--dark-bg-light, #1a3a52);
         color: var(--text-white, #fff);
         font-family: "Montserrat", sans-serif;
         font-weight: 700;
-        font-size: 0.85rem;
-        letter-spacing: 0.05em;
-        padding: 0.7rem 1.4rem;
-        border-radius: 10px;
+        font-size: 0.82rem;
+        border-radius: 8px;
         cursor: pointer;
+        transition: border-color 0.12s ease, background-color 0.12s ease;
       }
-      .load-more-row button:hover { background: rgba(255,255,255,0.1); }
+      .page-nav button:hover:not(:disabled) {
+        border-color: rgba(127, 182, 255, 0.5);
+        background: rgba(44, 141, 240, 0.1);
+      }
+      .page-nav button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .page-nav button[aria-current="page"] {
+        border-color: #7fb6ff;
+        background: rgba(44, 141, 240, 0.22);
+        color: #eaf3ff;
+      }
+      .page-nav .ellipsis {
+        color: var(--text-light, #c5d2dd);
+        padding: 0 0.25rem;
+      }
 
       .no-results {
         max-width: 600px;
@@ -777,6 +747,7 @@
         .cta-row .btn { width: 100%; max-width: 360px; }
         .insight-panel-header { padding: 0.8rem 1rem; }
         .insight-panel-body { padding: 0 1rem 1rem; }
+        .elected-row .toggle-elected { max-width: 100%; flex: 1 1 auto; }
       }
 
       @media (max-width: 600px) {
@@ -784,29 +755,23 @@
           grid-template-columns: 1fr;
         }
         .directory-controls .field:first-child { grid-column: auto; }
-        .quick-filter-row { gap: 0.35rem; }
-        .quick-chip { font-size: 0.8rem; padding: 0.35rem 0.7rem; }
+        .pagination-row { flex-direction: column; align-items: stretch; }
+        .page-nav { justify-content: center; }
       }
 
       @media (max-width: 420px) {
         .hero-stats { grid-template-columns: 1fr; }
-        .member-grid { grid-template-columns: 1fr; }
-        .member-card {
-          min-height: 0;
-          padding: 1rem 1rem 0.9rem;
-          padding-right: 3rem;
-        }
-        .member-card .name { font-size: 1rem; }
         .lb-row { grid-template-columns: 1.4rem 1fr auto; }
+        .member-table { font-size: 0.85rem; }
+        .member-table td, .member-table thead th { padding: 0.55rem 0.6rem; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .member-card,
-        .member-card:hover,
         .tier-chip,
         .tier-chip:hover,
         .insight-panel .chev,
-        .lb-row {
+        .lb-row,
+        .member-table tbody tr {
           transition: none;
           transform: none;
         }
@@ -897,6 +862,10 @@
             </button>
             <div class="insight-panel-body" id="electedPanelBody">
               <div class="endorsed-roster" id="endorsedRoster"></div>
+              <div class="lb-footer">
+                <span id="electedFooterNote"></span>
+                <button type="button" class="lb-toggle-btn" id="electedToggleMoreBtn" hidden>Show more</button>
+              </div>
             </div>
           </div>
 
@@ -921,7 +890,7 @@
               <ol class="lb-list" id="lbList" aria-label="Counties ranked by founding member count"></ol>
               <div class="lb-footer">
                 <span id="lbCoverage">0 of 88 counties represented</span>
-                <button type="button" class="lb-toggle-btn" id="lbToggleBtn" hidden>Show all 88</button>
+                <button type="button" class="lb-toggle-btn" id="lbToggleBtn" hidden>Show more</button>
               </div>
             </div>
           </div>
@@ -958,25 +927,13 @@
               <option value="tier">By tier weight</option>
             </select>
           </div>
+        </div>
+
+        <div class="elected-row">
           <label class="toggle-elected">
             <input type="checkbox" id="electedToggle" />
             Elected officials only
           </label>
-        </div>
-
-        <div class="quick-filter-row" id="quickFilterRow" role="group" aria-label="Quick filters">
-          <button type="button" class="quick-chip" data-quick="week" aria-pressed="false">
-            <span class="chip-dot"></span> Joined this week
-          </button>
-          <button type="button" class="quick-chip" data-quick="month" aria-pressed="false">
-            <span class="chip-dot"></span> Joined this month
-          </button>
-          <button type="button" class="quick-chip" data-quick="quote" aria-pressed="false">
-            <span class="chip-dot"></span> Has a quote
-          </button>
-          <button type="button" class="quick-chip" data-quick="recurring" aria-pressed="false">
-            <span class="chip-dot"></span> Recurring donors
-          </button>
         </div>
 
         <div class="result-meta">
@@ -984,10 +941,38 @@
           <button class="clear" id="clearFilters" hidden>Clear filters</button>
         </div>
 
-        <div class="member-grid" id="memberGrid" aria-live="polite"></div>
+        <div class="member-table-wrap">
+          <div class="member-table-scroll">
+            <table class="member-table" id="memberTable">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">City</th>
+                  <th scope="col">County</th>
+                  <th scope="col">Tier</th>
+                  <th scope="col">Joined</th>
+                </tr>
+              </thead>
+              <tbody id="memberTbody" aria-live="polite"></tbody>
+            </table>
+          </div>
+        </div>
 
-        <div class="load-more-row" id="loadMoreRow" hidden>
-          <button id="loadMoreBtn">Show more members</button>
+        <div class="pagination-row" id="paginationRow" hidden>
+          <div class="page-size">
+            <label for="pageSizeSelect">Show</label>
+            <select id="pageSizeSelect" aria-label="Members per page">
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="250">250</option>
+              <option value="all">All</option>
+            </select>
+            <span id="pageRangeLabel"></span>
+          </div>
+          <nav class="page-nav" id="pageNav" aria-label="Pagination"></nav>
         </div>
 
       </div>
@@ -1042,7 +1027,8 @@
       ];
 
       var FOUNDING_GOAL = 1969;
-      var PAGE_SIZE = 60;
+      var DEFAULT_PAGE_SIZE = 25;
+      var TOP_N_PREVIEW = 5;
       var STORAGE_PREFIX = "ohpfm.v2.";
 
       var state = {
@@ -1051,10 +1037,11 @@
         city: "",
         tiers: new Set(),
         electedOnly: false,
-        quickFilters: new Set(),
         sort: "newest",
-        visibleCount: PAGE_SIZE,
-        leaderboardExpanded: false
+        pageSize: DEFAULT_PAGE_SIZE,
+        currentPage: 1,
+        leaderboardExpanded: false,
+        electedExpanded: false
       };
 
       var tierMap = TIERS.reduce(function (acc, t) { acc[t.id] = t; return acc; }, {});
@@ -1111,12 +1098,6 @@
         return "Joined " + d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
       }
 
-      function daysSince(iso) {
-        var d = parseJoinedAt(iso);
-        if (!d) return Infinity;
-        return Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
-      }
-
       function resolveDisplayName(m) {
         var raw = (m && (m.displayName || m.display_name || m.full_name || m.name));
         if (typeof raw === "string") {
@@ -1158,8 +1139,8 @@
             var t = btn.getAttribute("data-tier");
             if (state.tiers.has(t)) state.tiers.delete(t); else state.tiers.add(t);
             btn.setAttribute("aria-pressed", state.tiers.has(t));
-            state.visibleCount = PAGE_SIZE;
-            renderGrid();
+            state.currentPage = 1;
+            renderTable();
           });
         });
       }
@@ -1208,17 +1189,25 @@
         var electeds = MEMBERS
           .filter(function (m) { return m.publicConsent && m.electedOffice; })
           .sort(function (a, b) {
-            return (a.sortName || a.displayName || "").localeCompare(b.sortName || b.displayName || "");
+            var d = (b.joinedAt || "").localeCompare(a.joinedAt || "");
+            return d !== 0 ? d : (b.id || 0) - (a.id || 0);
           });
         var roster = document.getElementById("endorsedRoster");
         var badge = document.getElementById("electedCountBadge");
+        var note = document.getElementById("electedFooterNote");
+        var toggle = document.getElementById("electedToggleMoreBtn");
         badge.textContent = electeds.length;
 
         if (electeds.length === 0) {
           roster.innerHTML = '<div class="endorsed-empty">No founding members are currently in elected office. Be the first to change that.</div>';
+          note.textContent = "";
+          toggle.hidden = true;
           return;
         }
-        roster.innerHTML = electeds.map(function (m) {
+
+        var showCount = state.electedExpanded ? electeds.length : Math.min(TOP_N_PREVIEW, electeds.length);
+        var slice = electeds.slice(0, showCount);
+        roster.innerHTML = slice.map(function (m) {
           var label = escapeHtml(m.displayName)
             + ' <span class="role-suffix">('
             + escapeHtml(m.electedOffice)
@@ -1226,6 +1215,19 @@
             + ')</span>';
           return '<a href="#member-' + m.id + '">' + label + '</a>';
         }).join("");
+
+        if (electeds.length > TOP_N_PREVIEW) {
+          toggle.hidden = false;
+          toggle.textContent = state.electedExpanded
+            ? 'Show top ' + TOP_N_PREVIEW
+            : 'Show all ' + electeds.length;
+          note.textContent = state.electedExpanded
+            ? 'Showing all ' + electeds.length + ' elected officials'
+            : 'Showing latest ' + showCount + ' of ' + electeds.length;
+        } else {
+          toggle.hidden = true;
+          note.textContent = '';
+        }
       }
 
       // ============================================================
@@ -1263,12 +1265,10 @@
           return;
         }
 
-        var max = rows[0].count || 1;
-        var showCount = state.leaderboardExpanded ? rows.length : Math.min(10, rows.length);
+        var showCount = state.leaderboardExpanded ? rows.length : Math.min(TOP_N_PREVIEW, rows.length);
         var slice = rows.slice(0, showCount);
 
         listEl.innerHTML = slice.map(function (r, i) {
-          var pct = Math.max(8, Math.round((r.count / max) * 100));
           var isActive = state.county === r.county;
           return ''
             + '<li>'
@@ -1279,7 +1279,6 @@
             +     '<span class="lb-rank">' + (i + 1) + '</span>'
             +     '<span class="lb-county">'
             +       '<span class="lb-county-name">' + escapeHtml(r.county) + ' County</span>'
-            +       '<span class="lb-bar"><span class="lb-bar-fill" style="width:' + pct + '%;"></span></span>'
             +     '</span>'
             +     '<span class="lb-count">'
             +       r.count
@@ -1289,10 +1288,10 @@
             + '</li>';
         }).join("");
 
-        if (rows.length > 10) {
+        if (rows.length > TOP_N_PREVIEW) {
           toggle.hidden = false;
           toggle.textContent = state.leaderboardExpanded
-            ? 'Show top 10'
+            ? 'Show top ' + TOP_N_PREVIEW
             : 'Show all ' + rows.length;
         } else {
           toggle.hidden = true;
@@ -1303,21 +1302,21 @@
             var c = btn.getAttribute("data-county");
             state.county = (state.county === c) ? "" : c;
             state.city = "";
-            state.visibleCount = PAGE_SIZE;
+            state.currentPage = 1;
             var countySel = document.getElementById("countyFilter");
             if (countySel) countySel.value = state.county;
             renderCityOptions();
             renderLeaderboard();
-            renderGrid();
+            renderTable();
             scrollToDirectory();
           });
         });
       }
 
       function scrollToDirectory() {
-        var grid = document.getElementById("memberGrid");
-        if (grid && typeof grid.scrollIntoView === "function") {
-          grid.scrollIntoView({ behavior: "smooth", block: "start" });
+        var t = document.getElementById("memberTable");
+        if (t && typeof t.scrollIntoView === "function") {
+          t.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       }
 
@@ -1365,6 +1364,14 @@
           lbToggle.addEventListener("click", function () {
             state.leaderboardExpanded = !state.leaderboardExpanded;
             renderLeaderboard();
+          });
+        }
+
+        var electedMore = document.getElementById("electedToggleMoreBtn");
+        if (electedMore) {
+          electedMore.addEventListener("click", function () {
+            state.electedExpanded = !state.electedExpanded;
+            renderElectedPanel();
           });
         }
       }
@@ -1427,10 +1434,6 @@
       // ============================================================
       function getFiltered() {
         var q = state.search.trim().toLowerCase();
-        var weekFilter = state.quickFilters.has("week");
-        var monthFilter = state.quickFilters.has("month");
-        var quoteFilter = state.quickFilters.has("quote");
-        var recurringFilter = state.quickFilters.has("recurring");
 
         var rows = MEMBERS.filter(function (m) {
           if (!m.publicConsent) return false;
@@ -1438,13 +1441,6 @@
           if (state.county && m.county !== state.county) return false;
           if (state.city && m.city !== state.city) return false;
           if (state.tiers.size > 0 && !state.tiers.has(m.tier)) return false;
-          if (quoteFilter && !m.quote) return false;
-          if (recurringFilter) {
-            var isRecurring = m.tier === "stonewall-sustainer" || m.tier === "pride-builder" || m.tier === "founding-circle";
-            if (!isRecurring) return false;
-          }
-          if (weekFilter && daysSince(m.joinedAt) > 7) return false;
-          if (monthFilter && daysSince(m.joinedAt) > 30) return false;
           if (q) {
             var hay = [m.displayName, m.city, m.county, m.electedOffice, m.jurisdiction]
               .filter(Boolean).join(" ").toLowerCase();
@@ -1487,9 +1483,9 @@
       }
 
       // ============================================================
-      // MEMBER CARD
+      // MEMBER TABLE ROW
       // ============================================================
-      function memberCardHTML(m) {
+      function memberRowHTML(m) {
         var color = tierColor(m.tier);
         var hasElected = !!m.electedOffice;
         var displayName = resolveDisplayName(m);
@@ -1497,68 +1493,45 @@
         var roleText = hasElected
           ? m.electedOffice + (m.jurisdiction ? ', ' + m.jurisdiction : '')
           : '';
-        var roleClass = roleText ? 'role' : 'role is-empty';
+        var roleClass = roleText ? 'col-role' : 'col-role is-empty';
+        var roleDisplay = roleText ? escapeHtml(roleText) : '&mdash;';
 
-        var locText, locClass = 'loc';
-        if (m.city || m.county) {
-          locText = [m.city, m.county ? m.county + ' County' : null].filter(Boolean).join(', ');
-        } else {
-          locText = 'Ohio';
-          locClass = 'loc is-fallback';
-        }
+        var cityText = m.city || '';
+        var cityClass = cityText ? 'col-city' : 'col-city is-fallback';
+        var cityDisplay = cityText ? escapeHtml(cityText) : '&mdash;';
+
+        var countyText = m.county ? m.county + ' County' : '';
+        var countyClass = countyText ? 'col-county' : 'col-county is-fallback';
+        var countyDisplay = countyText ? escapeHtml(countyText) : '&mdash;';
 
         var pin = hasElected
           ? '<span class="elected-pin" title="Elected official">'
-            + '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">'
+            + '<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">'
             + '<path d="M12 2l2.39 4.84L20 7.27l-3.91 3.81.92 5.39L12 13.93l-5.01 2.54.92-5.39L4 7.27l5.61-.43L12 2z"/>'
             + '</svg>Elected</span>'
           : '';
 
-        var quote = m.quote
-          ? '<div class="quote">&ldquo;' + escapeHtml(m.quote) + '&rdquo;</div>'
-          : '';
-
-        var joined = formatJoined(m.joinedAt)
-          ? 'Founding Member since ' + formatJoined(m.joinedAt)
-          : 'Founding Member';
-
-        var ariaLabel = displayName
-          + (hasElected ? ', ' + roleText : '')
-          + ', ' + locText
-          + ', ' + tierName(m.tier);
+        var joined = formatJoined(m.joinedAt) || '';
 
         return ''
-          + '<article class="member-card" id="member-' + m.id + '" style="--tier-color:' + color + ';" '
-          +   'aria-label="' + escapeHtml(ariaLabel) + '">'
-          +   '<div class="pos" aria-label="Founding number ' + m.id + '">#' + m.id + '</div>'
-          +   '<div class="name-row">'
-          +     '<div class="name">' + escapeHtml(displayName) + '</div>'
-          +     pin
-          +   '</div>'
-          +   '<div class="' + roleClass + '">' + escapeHtml(roleText) + '</div>'
-          +   '<div class="' + locClass + '">' + escapeHtml(locText) + '</div>'
-          +   '<div class="meta">'
+          + '<tr id="member-' + m.id + '" data-tier="' + escapeHtml(m.tier || '') + '">'
+          +   '<td class="col-pos">#' + m.id + '</td>'
+          +   '<td class="col-name" style="--tier-color:' + color + ';">'
+          +     '<span class="name-stack">'
+          +       '<span>' + escapeHtml(displayName) + '</span>'
+          +       pin
+          +     '</span>'
+          +   '</td>'
+          +   '<td class="' + roleClass + '">' + roleDisplay + '</td>'
+          +   '<td class="' + cityClass + '">' + cityDisplay + '</td>'
+          +   '<td class="' + countyClass + '">' + countyDisplay + '</td>'
+          +   '<td class="col-tier">'
           +     '<span class="tier-tag"><span class="dot" style="background:' + color + ';"></span>'
           +       escapeHtml(tierName(m.tier))
           +     '</span>'
-          +   '</div>'
-          +   quote
-          +   '<div class="joined">' + escapeHtml(joined) + '</div>'
-          + '</article>';
-      }
-
-      function placeholderCardHTML(num) {
-        return ''
-          + '<article class="member-card placeholder" aria-hidden="true">'
-          +   '<div class="pos">#' + num + '</div>'
-          +   '<div class="name-row"><div class="name">Reserved for #' + num + '</div></div>'
-          +   '<div class="role is-empty"></div>'
-          +   '<div class="loc is-fallback">Your seat is open.</div>'
-          +   '<div class="meta">'
-          +     '<span class="tier-tag"><span class="dot" style="background:rgba(255,255,255,0.25);"></span>Open</span>'
-          +   '</div>'
-          +   '<div class="joined">Become a Founding Member</div>'
-          + '</article>';
+          +   '</td>'
+          +   '<td class="col-joined">' + escapeHtml(joined) + '</td>'
+          + '</tr>';
       }
 
       function activeFilterPill() {
@@ -1566,35 +1539,118 @@
         if (state.county) bits.push(state.county);
         if (state.city) bits.push(state.city);
         if (state.electedOnly) bits.push("Elected");
-        if (state.quickFilters.has("week")) bits.push("This week");
-        if (state.quickFilters.has("month")) bits.push("This month");
-        if (state.quickFilters.has("quote")) bits.push("Has quote");
-        if (state.quickFilters.has("recurring")) bits.push("Recurring");
         state.tiers.forEach(function (t) { bits.push(tierName(t)); });
         if (bits.length === 0) return "";
         return ' <span class="active-filter-pill">' + escapeHtml(bits.join(" · ")) + '</span>';
       }
 
-      function renderGrid() {
-        var grid = document.getElementById("memberGrid");
+      function totalPages(filteredLen) {
+        if (state.pageSize === Infinity) return 1;
+        return Math.max(1, Math.ceil(filteredLen / state.pageSize));
+      }
+
+      function buildPageList(current, total) {
+        var pages = [];
+        if (total <= 7) {
+          for (var i = 1; i <= total; i++) pages.push(i);
+          return pages;
+        }
+        pages.push(1);
+        var start = Math.max(2, current - 1);
+        var end = Math.min(total - 1, current + 1);
+        if (start > 2) pages.push("…");
+        for (var j = start; j <= end; j++) pages.push(j);
+        if (end < total - 1) pages.push("…");
+        pages.push(total);
+        return pages;
+      }
+
+      function renderPagination(filteredLen) {
+        var row = document.getElementById("paginationRow");
+        var nav = document.getElementById("pageNav");
+        var label = document.getElementById("pageRangeLabel");
+        var sizeSel = document.getElementById("pageSizeSelect");
+
+        if (filteredLen === 0) {
+          row.hidden = true;
+          return;
+        }
+        row.hidden = false;
+
+        if (state.pageSize === Infinity) {
+          label.textContent = 'of ' + filteredLen.toLocaleString();
+        } else {
+          var startIdx = (state.currentPage - 1) * state.pageSize;
+          var endIdx = Math.min(filteredLen, startIdx + state.pageSize);
+          label.textContent = (startIdx + 1).toLocaleString()
+            + '–' + endIdx.toLocaleString()
+            + ' of ' + filteredLen.toLocaleString();
+        }
+
+        if (sizeSel) {
+          sizeSel.value = state.pageSize === Infinity ? "all" : String(state.pageSize);
+        }
+
+        var total = totalPages(filteredLen);
+        if (total <= 1) {
+          nav.innerHTML = "";
+          return;
+        }
+
+        var current = state.currentPage;
+        var parts = [];
+        parts.push('<button type="button" data-page="prev" aria-label="Previous page"' + (current === 1 ? ' disabled' : '') + '>‹</button>');
+        var pages = buildPageList(current, total);
+        pages.forEach(function (p) {
+          if (p === "…") {
+            parts.push('<span class="ellipsis" aria-hidden="true">…</span>');
+          } else {
+            parts.push(''
+              + '<button type="button" data-page="' + p + '"'
+              + (p === current ? ' aria-current="page"' : '')
+              + ' aria-label="Page ' + p + '">' + p + '</button>'
+            );
+          }
+        });
+        parts.push('<button type="button" data-page="next" aria-label="Next page"' + (current === total ? ' disabled' : '') + '>›</button>');
+        nav.innerHTML = parts.join("");
+
+        nav.querySelectorAll("button[data-page]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var p = btn.getAttribute("data-page");
+            if (p === "prev") state.currentPage = Math.max(1, state.currentPage - 1);
+            else if (p === "next") state.currentPage = Math.min(total, state.currentPage + 1);
+            else state.currentPage = parseInt(p, 10) || 1;
+            renderTable();
+            scrollToDirectory();
+          });
+        });
+      }
+
+      function renderTable() {
+        var tbody = document.getElementById("memberTbody");
         var meta = document.getElementById("resultCount");
         var clearBtn = document.getElementById("clearFilters");
-        var loadMoreRow = document.getElementById("loadMoreRow");
 
         var filtered = getFiltered();
-        var anyFilter = state.search || state.county || state.city || state.tiers.size > 0 || state.electedOnly || state.quickFilters.size > 0;
+        var anyFilter = state.search || state.county || state.city || state.tiers.size > 0 || state.electedOnly;
         clearBtn.hidden = !anyFilter;
 
         if (filtered.length === 0) {
-          grid.innerHTML = ''
-            + '<div class="no-results" style="grid-column: 1 / -1;">'
-            +   '<h4>No members match those filters yet.</h4>'
-            +   '<p>Try clearing a filter, or be the first from your county to join.</p>'
-            + '</div>';
+          tbody.innerHTML = ''
+            + '<tr><td colspan="7">'
+            +   '<div class="no-results">'
+            +     '<h4>No members match those filters yet.</h4>'
+            +     '<p>Try clearing a filter, or be the first from your county to join.</p>'
+            +   '</div>'
+            + '</td></tr>';
           meta.innerHTML = '0 members' + activeFilterPill();
-          loadMoreRow.hidden = true;
+          renderPagination(0);
           return;
         }
+
+        var total = totalPages(filtered.length);
+        if (state.currentPage > total) state.currentPage = total;
 
         var visibleCounties = {};
         filtered.forEach(function (m) { if (m.county) visibleCounties[m.county] = true; });
@@ -1603,24 +1659,15 @@
         if (cyCount > 0) cText += ' across ' + cyCount + ' count' + (cyCount === 1 ? 'y' : 'ies');
         meta.innerHTML = escapeHtml(cText) + activeFilterPill();
 
-        var slice = filtered.slice(0, state.visibleCount);
-        var html = slice.map(memberCardHTML).join("");
-
-        if (!anyFilter && filtered.length < 12 && state.visibleCount === PAGE_SIZE) {
-          var lastId = Math.max.apply(null, filtered.map(function (m) { return m.id; }));
-          var n = Math.min(8, 12 - filtered.length);
-          for (var i = 1; i <= n; i++) html += placeholderCardHTML(lastId + i);
-        }
-
-        grid.innerHTML = html;
-
-        if (filtered.length > state.visibleCount) {
-          loadMoreRow.hidden = false;
-          document.getElementById("loadMoreBtn").textContent =
-            'Show more members (' + (filtered.length - state.visibleCount).toLocaleString() + ' remaining)';
+        var slice;
+        if (state.pageSize === Infinity) {
+          slice = filtered;
         } else {
-          loadMoreRow.hidden = true;
+          var startIdx = (state.currentPage - 1) * state.pageSize;
+          slice = filtered.slice(startIdx, startIdx + state.pageSize);
         }
+        tbody.innerHTML = slice.map(memberRowHTML).join("");
+        renderPagination(filtered.length);
       }
 
       // ============================================================
@@ -1642,49 +1689,39 @@
         var sort = document.getElementById("sortSelect");
         var elected = document.getElementById("electedToggle");
         var clearBtn = document.getElementById("clearFilters");
-        var loadMore = document.getElementById("loadMoreBtn");
+        var pageSizeSel = document.getElementById("pageSizeSelect");
 
         search.addEventListener("input", debounce(function (e) {
           state.search = e.target.value;
-          state.visibleCount = PAGE_SIZE;
-          renderGrid();
+          state.currentPage = 1;
+          renderTable();
         }, 120));
 
         county.addEventListener("change", function (e) {
           state.county = e.target.value;
           state.city = "";
-          state.visibleCount = PAGE_SIZE;
+          state.currentPage = 1;
           renderCityOptions();
           renderLeaderboard();
-          renderGrid();
+          renderTable();
         });
 
         city.addEventListener("change", function (e) {
           state.city = e.target.value;
-          state.visibleCount = PAGE_SIZE;
-          renderGrid();
+          state.currentPage = 1;
+          renderTable();
         });
 
         sort.addEventListener("change", function (e) {
           state.sort = e.target.value;
-          renderGrid();
+          state.currentPage = 1;
+          renderTable();
         });
 
         elected.addEventListener("change", function (e) {
           state.electedOnly = e.target.checked;
-          state.visibleCount = PAGE_SIZE;
-          renderGrid();
-        });
-
-        document.querySelectorAll(".quick-chip").forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            var key = btn.getAttribute("data-quick");
-            if (state.quickFilters.has(key)) state.quickFilters.delete(key);
-            else state.quickFilters.add(key);
-            btn.setAttribute("aria-pressed", state.quickFilters.has(key));
-            state.visibleCount = PAGE_SIZE;
-            renderGrid();
-          });
+          state.currentPage = 1;
+          renderTable();
         });
 
         clearBtn.addEventListener("click", function () {
@@ -1693,23 +1730,26 @@
           state.city = "";
           state.tiers = new Set();
           state.electedOnly = false;
-          state.quickFilters = new Set();
-          state.visibleCount = PAGE_SIZE;
+          state.currentPage = 1;
           search.value = "";
           county.value = "";
           city.value = "";
           elected.checked = false;
           document.querySelectorAll(".tier-chip").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
-          document.querySelectorAll(".quick-chip").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
           renderCityOptions();
           renderLeaderboard();
-          renderGrid();
+          renderTable();
         });
 
-        loadMore.addEventListener("click", function () {
-          state.visibleCount += PAGE_SIZE;
-          renderGrid();
-        });
+        if (pageSizeSel) {
+          pageSizeSel.value = state.pageSize === Infinity ? "all" : String(state.pageSize);
+          pageSizeSel.addEventListener("change", function (e) {
+            var v = e.target.value;
+            state.pageSize = (v === "all") ? Infinity : parseInt(v, 10) || DEFAULT_PAGE_SIZE;
+            state.currentPage = 1;
+            renderTable();
+          });
+        }
       }
 
       // ============================================================
@@ -1766,7 +1806,7 @@
         renderCityOptions();
         renderElectedPanel();
         renderLeaderboard();
-        renderGrid();
+        renderTable();
       }
 
       function init() {
