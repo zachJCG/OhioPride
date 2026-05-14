@@ -1196,12 +1196,12 @@
             <div class="label">Ohio Counties</div>
             <div class="sub">of 88 represented</div>
           </div>
-          <div class="hero-stat hero-stat--claim" aria-live="polite">
+          <div class="hero-stat hero-stat--claim" id="claimCard">
             <div class="claim-line">
               <span class="claim-hash">#</span><span class="claim-num" id="statNextNumber">1</span>
             </div>
-            <div class="claim-sub">Is still unclaimed</div>
-            <a href="/donate/founding-member" class="claim-btn" aria-label="Become the next founding member">Claim It</a>
+            <div class="claim-sub" id="claimSub">Is still unclaimed</div>
+            <a href="/donate/founding-member" class="claim-btn" id="claimBtn" aria-label="Become the next founding member">Claim It</a>
           </div>
         </div>
 
@@ -1269,7 +1269,7 @@
             <strong id="cwClaimed">0</strong> of 88 counties claimed &middot;
             <strong id="cwUnclaimed">88</strong> still waiting
           </div>
-          <div class="county-grid" id="countyGrid" role="list" aria-label="All 88 Ohio counties"></div>
+          <div class="county-grid" id="countyGrid" aria-label="All 88 Ohio counties"></div>
           <div class="county-wall-legend">
             <span><span class="swatch lit"></span>Claimed</span>
             <span><span class="swatch dim"></span>Waiting for its first member</span>
@@ -1529,32 +1529,6 @@
         var d = parseJoinedAt(iso);
         if (!d) return "";
         return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-      }
-
-      function relativeTime(iso) {
-        var d = parseJoinedAt(iso);
-        if (!d) return "";
-        var diffMs = Date.now() - d.getTime();
-        if (diffMs < 0) diffMs = 0;
-        var hasTime = String(iso).indexOf("T") !== -1;
-        var seconds = Math.floor(diffMs / 1000);
-        var minutes = Math.floor(seconds / 60);
-        var hours   = Math.floor(minutes / 60);
-        var days    = Math.floor(hours / 24);
-        if (hasTime) {
-          if (seconds < 5)  return "Joined just now";
-          if (seconds < 60) return "Joined " + seconds + " seconds ago";
-          if (minutes < 60) return "Joined " + minutes + " minute" + (minutes === 1 ? "" : "s") + " ago";
-          if (hours   < 24) return "Joined " + hours   + " hour"   + (hours   === 1 ? "" : "s") + " ago";
-        }
-        if (days < 1) return "Joined today";
-        if (days === 1) return "Joined yesterday";
-        if (days < 7) return "Joined " + days + " days ago";
-        if (days < 30) {
-          var w = Math.floor(days / 7);
-          return "Joined " + w + " week" + (w === 1 ? "" : "s") + " ago";
-        }
-        return "Joined " + d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
       }
 
       function resolveDisplayName(m) {
@@ -1841,8 +1815,6 @@
       // because keeping "joined 6 hours ago" current was a chore
       // and provided no real value.)
       // ============================================================
-      var LADDER_MILESTONES = [1, 169, 500, 969, 1969];
-
       function renderStonewallLadder(count) {
         var pct = Math.max(0, Math.min(100, (count / FOUNDING_GOAL) * 100));
         var fill = document.getElementById("ladderFill");
@@ -1921,9 +1893,14 @@
         document.getElementById("statMembers").textContent = count.toLocaleString();
         document.getElementById("statCounties").textContent = countyCount;
 
-        var nextNumber = Math.min(count + 1, FOUNDING_GOAL);
+        var atGoal = count >= FOUNDING_GOAL;
+        var nextNumber = atGoal ? FOUNDING_GOAL : count + 1;
         var statNext = document.getElementById("statNextNumber");
         if (statNext) statNext.textContent = nextNumber.toLocaleString();
+        var claimSub = document.getElementById("claimSub");
+        var claimBtn = document.getElementById("claimBtn");
+        if (claimSub) claimSub.textContent = atGoal ? "Goal reached. Thank you." : "Is still unclaimed";
+        if (claimBtn) claimBtn.style.display = atGoal ? "none" : "";
 
         var pct = Math.min(100, (count / FOUNDING_GOAL) * 100);
         var bar = document.getElementById("goalFill");
