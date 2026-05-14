@@ -526,7 +526,6 @@
         font-family: "Roboto Slab", serif;
         color: var(--text-white, #fff);
         font-size: 0.92rem;
-        min-width: 720px;
       }
       .member-table thead th {
         position: sticky;
@@ -762,11 +761,40 @@
         .page-nav { justify-content: center; }
       }
 
+      @media (max-width: 760px) {
+        .member-table-scroll { overflow-x: visible; }
+        .member-table { font-size: 0.88rem; }
+        .member-table td,
+        .member-table thead th { padding: 0.5rem 0.55rem; }
+        /* Hide State (4), Tier (6), Joined (7), Office Held (8) -- the
+           elected pin still appears in the Name cell so users keep the
+           "is this person elected" signal at a glance. */
+        .member-table thead th:nth-child(4),
+        .member-table tbody td:nth-child(4),
+        .member-table thead th:nth-child(6),
+        .member-table tbody td:nth-child(6),
+        .member-table thead th:nth-child(7),
+        .member-table tbody td:nth-child(7),
+        .member-table thead th:nth-child(8),
+        .member-table tbody td:nth-child(8) {
+          display: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        /* Drop County too on phones so it's just #, Name, City. */
+        .member-table thead th:nth-child(5),
+        .member-table tbody td:nth-child(5) {
+          display: none;
+        }
+        .member-table td,
+        .member-table thead th { padding: 0.45rem 0.5rem; }
+      }
+
       @media (max-width: 420px) {
         .hero-stats { grid-template-columns: 1fr; }
         .lb-row { grid-template-columns: 1.4rem 1fr auto; }
-        .member-table { font-size: 0.85rem; }
-        .member-table td, .member-table thead th { padding: 0.55rem 0.6rem; }
+        .member-table { font-size: 0.82rem; }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -1339,8 +1367,6 @@
       }
 
       function initCollapsiblePanels() {
-        var isMobile = window.matchMedia("(max-width: 720px)").matches;
-
         var panels = [
           { panelId: "electedPanel",      btnId: "electedToggleBtn" },
           { panelId: "leaderboardPanel",  btnId: "leaderboardToggleBtn" }
@@ -1349,12 +1375,7 @@
         panels.forEach(function (p) {
           var stored = null;
           try { stored = localStorage.getItem(STORAGE_PREFIX + p.panelId); } catch (e) {}
-          var expanded;
-          if (stored === "1" || stored === "0") {
-            expanded = (stored === "1");
-          } else {
-            expanded = !isMobile;
-          }
+          var expanded = (stored === "0") ? false : true;
           setPanelExpanded(p.panelId, p.btnId, expanded, false);
 
           document.getElementById(p.btnId).addEventListener("click", function () {
