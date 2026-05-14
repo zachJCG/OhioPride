@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/site-template.css" />
     <link rel="stylesheet" href="/css/round-3-mobile-and-tier-cta.css" />
+    <link rel="stylesheet" href="/css/founding-members-mobile.css" />
     <style>
       :root {
         --tier-stonewall: #ff5a36;
@@ -38,23 +39,31 @@
       body { background: var(--dark-bg, #0b1f33); }
 
       /* ============================================================
-         HERO STATS
+         HERO STATS — mobile-first: Members + Counties on row 1,
+         Newest Member spans row 2. Tablet+: revert to 3-column row.
          ============================================================ */
       .hero-stats {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "members counties"
+          "newest  newest";
+        gap: 0.6rem;
         max-width: 880px;
-        margin: 1.5rem auto 0;
+        margin: 1.25rem auto 0;
       }
+      .hero-stat:nth-child(1) { grid-area: members; }
+      .hero-stat:nth-child(2) { grid-area: counties; }
+      .hero-stat:nth-child(3) { grid-area: newest; }
       .hero-stat {
         background: rgba(19, 45, 68, 0.55);
         border: 1px solid var(--dark-bg-light, #1a3a52);
         border-radius: 12px;
-        padding: 1rem 1.25rem;
+        padding: 0.7rem 0.9rem;
         text-align: center;
         position: relative;
         overflow: hidden;
+        min-width: 0;
       }
       .hero-stat::before {
         content: "";
@@ -65,14 +74,14 @@
       .hero-stat .num {
         font-family: "Montserrat", sans-serif;
         font-weight: 700;
-        font-size: clamp(1.5rem, 4vw, 2rem);
+        font-size: clamp(1.25rem, 4vw, 2rem);
         color: var(--text-white, #fff);
         line-height: 1.1;
       }
       .hero-stat .label {
         font-family: "Roboto Slab", serif;
         color: var(--text-light, #c5d2dd);
-        font-size: 0.78rem;
+        font-size: 0.72rem;
         margin-top: 0.25rem;
         letter-spacing: 0.04em;
         text-transform: uppercase;
@@ -80,8 +89,28 @@
       .hero-stat .sub {
         font-family: "Roboto Slab", serif;
         color: var(--text-light, #c5d2dd);
-        font-size: 0.85rem;
-        margin-top: 0.4rem;
+        font-size: 0.8rem;
+        margin-top: 0.35rem;
+      }
+      /* Truncate long names on small screens */
+      #statNewestName {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      @media (min-width: 768px) {
+        .hero-stats {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-areas: "members counties newest";
+          gap: 1rem;
+          margin-top: 1.5rem;
+        }
+        .hero-stat {
+          padding: 1rem 1.25rem;
+        }
+        .hero-stat .label { font-size: 0.78rem; }
+        .hero-stat .sub { font-size: 0.85rem; }
       }
 
       .goal-block { max-width: 720px; margin: 2.25rem auto 0; }
@@ -108,8 +137,8 @@
       }
       .tier-chips {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 0.75rem;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
         max-width: 1080px;
         margin: 0 auto;
       }
@@ -117,11 +146,12 @@
         background: rgba(19, 45, 68, 0.55);
         border: 1px solid var(--dark-bg-light, #1a3a52);
         border-radius: 12px;
-        padding: 1rem 1rem;
+        padding: 0.75rem;
         text-align: center;
         cursor: pointer;
         transition: transform 0.15s ease, border-color 0.2s ease, background-color 0.2s ease;
         position: relative;
+        min-height: 44px;
       }
       .tier-chip:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.35); }
       .tier-chip[aria-pressed="true"] {
@@ -138,21 +168,36 @@
       .tier-chip .name {
         font-family: "Montserrat", sans-serif;
         font-weight: 700;
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         color: var(--text-white, #fff);
       }
       .tier-chip .price {
         font-family: "Roboto Slab", serif;
         color: var(--text-light, #c5d2dd);
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         margin-top: 0.3rem;
       }
       .tier-chip .count {
         font-family: "Montserrat", sans-serif;
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         color: var(--text-light, #c5d2dd);
         margin-top: 0.4rem;
         opacity: 0.8;
+      }
+      @media (max-width: 479px) {
+        .tier-chip .count { display: none; }
+      }
+      @media (min-width: 768px) {
+        .tier-chips {
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 0.75rem;
+        }
+        .tier-chip {
+          padding: 1rem;
+        }
+        .tier-chip .name { font-size: 0.95rem; }
+        .tier-chip .price { font-size: 0.8rem; }
+        .tier-chip .count { font-size: 0.72rem; }
       }
 
       .cta-row { text-align: center; margin: 2rem 0 1.5rem; }
@@ -376,15 +421,30 @@
       }
 
       /* ============================================================
-         DIRECTORY CONTROLS
+         DIRECTORY CONTROLS — mobile-first
+         Default: full-width search + "Filters" toggle button, with
+         a collapsible drawer holding the 3 selects + elected toggle.
+         Tablet+: revert to 4-column grid + separate elected row.
          ============================================================ */
       .directory-controls {
         display: grid;
-        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: 1fr;
         gap: 0.6rem;
         max-width: 1080px;
         margin: 0 auto 0.75rem;
         align-items: stretch;
+      }
+      @media (min-width: 768px) {
+        .directory-controls {
+          grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+        }
+        /* On desktop the drawer becomes a transparent wrapper so its
+           children align into the 4-column grid. The elected toggle
+           wraps onto its own row beneath. */
+        .directory-controls .elected-row {
+          grid-column: 1 / -1;
+          margin: 0 0 0.6rem;
+        }
       }
       .directory-controls input,
       .directory-controls select {
@@ -724,49 +784,52 @@
       }
 
       /* ============================================================
-         RESPONSIVE BREAKPOINTS
+         RESPONSIVE BREAKPOINTS — mobile-first
+         Defaults above target phones; layer up via min-width queries.
          ============================================================ */
-      @media (max-width: 480px) {
-        .result-meta {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.35rem;
-        }
-        .active-filter-pill { margin-left: 0; }
+
+      /* Result-meta wraps cleanly on small screens */
+      .result-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+      }
+      .active-filter-pill { margin-left: 0; }
+
+      /* Insights grid stacks by default; side-by-side on tablet+ */
+      .insights-grid {
+        grid-template-columns: 1fr;
       }
 
-      @media (max-width: 900px) {
-        .directory-controls {
+      /* Section heading + CTA tuned for phones */
+      .tier-chips-section h2 { font-size: 1.2rem; }
+      .tier-chips-section .lede { font-size: 0.9rem; }
+      .cta-row .btn { width: 100%; max-width: 360px; }
+      .insight-panel-header { padding: 0.8rem 1rem; }
+      .insight-panel-body { padding: 0 1rem 1rem; }
+      .elected-row .toggle-elected { max-width: 100%; flex: 1 1 auto; }
+
+      /* Phone-only narrowing for leaderboard rows */
+      @media (max-width: 420px) {
+        .lb-row { grid-template-columns: 1.4rem 1fr auto; }
+      }
+
+      @media (min-width: 768px) {
+        .insights-grid {
           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         }
-        .directory-controls .field:first-child { grid-column: 1 / -1; }
-        .insights-grid { grid-template-columns: 1fr; }
-      }
-
-      @media (max-width: 720px) {
-        .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
-        .hero-stat { padding: 0.85rem 0.9rem; }
-        .tier-chips-section h2 { font-size: 1.2rem; }
-        .cta-row .btn { width: 100%; max-width: 360px; }
-        .insight-panel-header { padding: 0.8rem 1rem; }
-        .insight-panel-body { padding: 0 1rem 1rem; }
-        .elected-row .toggle-elected { max-width: 100%; flex: 1 1 auto; }
-      }
-
-      @media (max-width: 600px) {
-        .directory-controls {
-          grid-template-columns: 1fr;
+        .tier-chips-section h2 { font-size: 1.35rem; }
+        .tier-chips-section .lede { font-size: 0.95rem; }
+        .result-meta {
+          flex-direction: row;
+          align-items: center;
+          gap: 1rem;
         }
-        .directory-controls .field:first-child { grid-column: auto; }
-        .pagination-row { flex-direction: column; align-items: stretch; }
-        .page-nav { justify-content: center; }
-      }
-
-      @media (max-width: 420px) {
-        .hero-stats { grid-template-columns: 1fr; }
-        .lb-row { grid-template-columns: 1.4rem 1fr auto; }
-        .member-table { font-size: 0.85rem; }
-        .member-table td, .member-table thead th { padding: 0.55rem 0.6rem; }
+        .active-filter-pill { margin-left: 0.5rem; }
+        .cta-row .btn { width: auto; }
+        .insight-panel-header { padding: 0.9rem 1.1rem; }
+        .insight-panel-body { padding: 0.25rem 1.1rem 1.1rem; }
+        .elected-row .toggle-elected { max-width: 240px; flex: 0 0 auto; }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -774,7 +837,8 @@
         .tier-chip:hover,
         .insight-panel .chev,
         .lb-row,
-        .member-table tbody tr {
+        .member-table tbody tr,
+        .member-card {
           transition: none;
           transform: none;
         }
@@ -805,7 +869,7 @@
             <div class="sub">of 88 represented</div>
           </div>
           <div class="hero-stat">
-            <div class="num" id="statNewestName" style="font-size:1.1rem; line-height:1.3;">&mdash;</div>
+            <div class="num" id="statNewestName" style="font-size:1.1rem; line-height:1.3; min-width:0;">&mdash;</div>
             <div class="label">Newest Member</div>
             <div class="sub" id="statNewestWhen">Be the next.</div>
           </div>
@@ -909,34 +973,50 @@
           <div class="field">
             <input type="search" id="searchInput" placeholder="Search by name, city, or county" aria-label="Search members" />
           </div>
-          <div class="field">
-            <select id="countyFilter" aria-label="Filter by county">
-              <option value="">All Ohio counties</option>
-            </select>
-          </div>
-          <div class="field">
-            <select id="cityFilter" aria-label="Filter by city">
-              <option value="">All cities</option>
-            </select>
-          </div>
-          <div class="field">
-            <select id="sortSelect" aria-label="Sort members">
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
-              <option value="az">Name A to Z</option>
-              <option value="county">County A to Z</option>
-              <option value="city">City A to Z</option>
-              <option value="position">By founding number</option>
-              <option value="tier">By tier weight</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="elected-row">
-          <label class="toggle-elected">
-            <input type="checkbox" id="electedToggle" />
-            Elected officials only
-          </label>
+          <button
+            type="button"
+            class="filter-drawer-toggle"
+            id="filterDrawerToggle"
+            aria-controls="filterDrawer"
+            aria-expanded="false"
+          >
+            <span>Filters</span>
+            <span class="filter-count-badge" id="filterCountBadge" hidden>0</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <div class="filter-drawer" id="filterDrawer" data-open="false">
+            <div class="field">
+              <select id="countyFilter" aria-label="Filter by county">
+                <option value="">All Ohio counties</option>
+              </select>
+            </div>
+            <div class="field">
+              <select id="cityFilter" aria-label="Filter by city">
+                <option value="">All cities</option>
+              </select>
+            </div>
+            <div class="field">
+              <select id="sortSelect" aria-label="Sort members">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="az">Name A to Z</option>
+                <option value="county">County A to Z</option>
+                <option value="city">City A to Z</option>
+                <option value="position">By founding number</option>
+                <option value="tier">By tier weight</option>
+              </select>
+            </div>
+            <div class="elected-row">
+              <label class="toggle-elected">
+                <input type="checkbox" id="electedToggle" />
+                Elected officials only
+              </label>
+            </div>
+          </div>
         </div>
 
         <div class="result-meta">
@@ -962,6 +1042,7 @@
               <tbody id="memberTbody" aria-live="polite"></tbody>
             </table>
           </div>
+          <div class="member-card-list" id="memberCardList" aria-live="polite"></div>
         </div>
 
         <div class="pagination-row" id="paginationRow" hidden>
@@ -1490,6 +1571,55 @@
       // ============================================================
       // MEMBER TABLE ROW
       // ============================================================
+      function padFoundingNumber(n) {
+        var v = String(n == null ? "" : n);
+        return v.length >= 4 ? v : ("0000" + v).slice(-4);
+      }
+
+      function memberCardHTML(m) {
+        var color = tierColor(m.tier);
+        var hasElected = !!m.electedOffice;
+        var displayName = resolveDisplayName(m);
+
+        var locationParts = [];
+        if (m.city)   locationParts.push(escapeHtml(m.city));
+        if (m.county) locationParts.push(escapeHtml(m.county) + ' County');
+        var locationLine = locationParts.length
+          ? locationParts.join(' &middot; ')
+          : '<span style="opacity:0.45;">Location pending</span>';
+
+        var roleHTML = '';
+        if (hasElected) {
+          var roleText = m.electedOffice + (m.jurisdiction ? ', ' + m.jurisdiction : '');
+          roleHTML = ''
+            + '<div class="member-card-role">'
+            +   '<span class="elected-pin">'
+            +     '<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">'
+            +     '<path d="M12 2l2.39 4.84L20 7.27l-3.91 3.81.92 5.39L12 13.93l-5.01 2.54.92-5.39L4 7.27l5.61-.43L12 2z"/>'
+            +     '</svg>Elected'
+            +   '</span>'
+            +   '<span>' + escapeHtml(roleText) + '</span>'
+            + '</div>';
+        }
+
+        var joined = formatJoined(m.joinedAt) || '';
+        var footerBits = ['#' + padFoundingNumber(m.id)];
+        if (joined) footerBits.push('Joined ' + escapeHtml(joined));
+
+        return ''
+          + '<div class="member-card" id="member-' + m.id + '" data-tier="' + escapeHtml(m.tier || '') + '" style="--tier-color:' + color + ';">'
+          +   '<div class="member-card-top">'
+          +     '<div class="member-card-name">' + escapeHtml(displayName) + '</div>'
+          +     '<span class="tier-tag"><span class="dot" style="background:' + color + ';"></span>'
+          +       escapeHtml(tierName(m.tier))
+          +     '</span>'
+          +   '</div>'
+          +   '<div class="member-card-location">' + locationLine + '</div>'
+          +   roleHTML
+          +   '<div class="member-card-footer">' + footerBits.join(' &middot; ') + '</div>'
+          + '</div>';
+      }
+
       function memberRowHTML(m) {
         var color = tierColor(m.tier);
         var hasElected = !!m.electedOffice;
@@ -1639,6 +1769,7 @@
 
       function renderTable() {
         var tbody = document.getElementById("memberTbody");
+        var cardList = document.getElementById("memberCardList");
         var meta = document.getElementById("resultCount");
         var clearBtn = document.getElementById("clearFilters");
 
@@ -1647,15 +1778,16 @@
         clearBtn.hidden = !anyFilter;
 
         if (filtered.length === 0) {
-          tbody.innerHTML = ''
-            + '<tr><td colspan="8">'
-            +   '<div class="no-results">'
-            +     '<h4>No members match those filters yet.</h4>'
-            +     '<p>Try clearing a filter, or be the first from your county to join.</p>'
-            +   '</div>'
-            + '</td></tr>';
+          var emptyHTML = ''
+            + '<div class="no-results">'
+            +   '<h4>No members match those filters yet.</h4>'
+            +   '<p>Try clearing a filter, or be the first from your county to join.</p>'
+            + '</div>';
+          tbody.innerHTML = '<tr><td colspan="8">' + emptyHTML + '</td></tr>';
+          if (cardList) cardList.innerHTML = emptyHTML;
           meta.innerHTML = '0 members' + activeFilterPill();
           renderPagination(0);
+          refreshFilterBadge();
           return;
         }
 
@@ -1677,7 +1809,9 @@
           slice = filtered.slice(startIdx, startIdx + state.pageSize);
         }
         tbody.innerHTML = slice.map(memberRowHTML).join("");
+        if (cardList) cardList.innerHTML = slice.map(memberCardHTML).join("");
         renderPagination(filtered.length);
+        refreshFilterBadge();
       }
 
       // ============================================================
@@ -1690,6 +1824,39 @@
           clearTimeout(t);
           t = setTimeout(function () { fn.apply(null, args); }, wait);
         };
+      }
+
+      function activeFilterCount() {
+        var n = 0;
+        if (state.county) n++;
+        if (state.city) n++;
+        if (state.electedOnly) n++;
+        n += state.tiers.size;
+        return n;
+      }
+
+      function refreshFilterBadge() {
+        var badge = document.getElementById("filterCountBadge");
+        if (!badge) return;
+        var n = activeFilterCount();
+        if (n > 0) {
+          badge.textContent = String(n);
+          badge.hidden = false;
+        } else {
+          badge.hidden = true;
+        }
+      }
+
+      function bindFilterDrawer() {
+        var toggle = document.getElementById("filterDrawerToggle");
+        var drawer = document.getElementById("filterDrawer");
+        if (!toggle || !drawer) return;
+        toggle.addEventListener("click", function () {
+          var open = drawer.getAttribute("data-open") === "true";
+          var next = !open;
+          drawer.setAttribute("data-open", next ? "true" : "false");
+          toggle.setAttribute("aria-expanded", next ? "true" : "false");
+        });
       }
 
       function bindControls() {
@@ -1823,6 +1990,7 @@
       }
 
       function init() {
+        bindFilterDrawer();
         bindControls();
         initCollapsiblePanels();
         renderAll();
