@@ -40,21 +40,23 @@
 
       /* ============================================================
          HERO STATS — mobile-first: Members + Counties on row 1,
-         Newest Member spans row 2. Tablet+: revert to 3-column row.
+         Claim-Your-Number CTA spans row 2. Tablet+: 3-column row.
+         No time-based "newest member" card (it required minute-by-
+         minute updates and added zero strategic value).
          ============================================================ */
       .hero-stats {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-areas:
           "members counties"
-          "newest  newest";
+          "claim   claim";
         gap: 0.6rem;
         max-width: 880px;
         margin: 1.25rem auto 0;
       }
       .hero-stat:nth-child(1) { grid-area: members; }
       .hero-stat:nth-child(2) { grid-area: counties; }
-      .hero-stat:nth-child(3) { grid-area: newest; }
+      .hero-stat:nth-child(3) { grid-area: claim; }
       .hero-stat {
         background: rgba(19, 45, 68, 0.55);
         border: 1px solid var(--dark-bg-light, #1a3a52);
@@ -92,17 +94,68 @@
         font-size: 0.8rem;
         margin-top: 0.35rem;
       }
-      /* Truncate long names on small screens */
-      #statNewestName {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+
+      /* "Claim Your Number" CTA card */
+      .hero-stat--claim {
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)),
+          rgba(19, 45, 68, 0.6);
+        padding: 0.9rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+      }
+      .hero-stat--claim .claim-line {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 0.45rem;
+        flex-wrap: wrap;
+      }
+      .hero-stat--claim .claim-hash {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.95rem;
+      }
+      .hero-stat--claim .claim-num {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: clamp(1.5rem, 5vw, 2.25rem);
+        line-height: 1;
+        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero-stat--claim .claim-sub {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        font-size: 0.85rem;
+      }
+      .hero-stat--claim .claim-btn {
+        display: inline-block;
+        margin-top: 0.25rem;
+        padding: 0.55rem 1.1rem;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #0b1f33;
+        background: #fff;
+        border-radius: 999px;
+        text-decoration: none;
+        transition: transform 0.15s ease, box-shadow 0.2s ease;
+      }
+      .hero-stat--claim .claim-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
       }
 
       @media (min-width: 768px) {
         .hero-stats {
           grid-template-columns: repeat(3, minmax(0, 1fr));
-          grid-template-areas: "members counties newest";
+          grid-template-areas: "members counties claim";
           gap: 1rem;
           margin-top: 1.5rem;
         }
@@ -114,6 +167,281 @@
       }
 
       .goal-block { max-width: 720px; margin: 2.25rem auto 0; }
+
+      /* ============================================================
+         STONEWALL LADDER — milestone track under the progress bar.
+         5 stops nodding at the Stonewall Riots: 1, 169, 500, 969,
+         1,969. Marker bubble shows current count. Static, satisfying,
+         and gets visibly more "lit" as we grow.
+         ============================================================ */
+      .stonewall-ladder {
+        max-width: 720px;
+        margin: 1.5rem auto 0;
+        padding: 1.1rem 1rem 0.85rem;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.005)),
+          rgba(19, 45, 68, 0.45);
+        border: 1px solid var(--dark-bg-light, #1a3a52);
+        border-radius: 14px;
+        position: relative;
+      }
+      .stonewall-ladder .ladder-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-family: "Montserrat", sans-serif;
+        margin-bottom: 0.9rem;
+      }
+      .stonewall-ladder .ladder-title-left {
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-light, #c5d2dd);
+      }
+      .stonewall-ladder .ladder-title-right {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.78rem;
+        color: var(--text-light, #c5d2dd);
+      }
+      .ladder-track-wrap {
+        position: relative;
+        height: 8px;
+        margin: 0 0.55rem;
+      }
+      .ladder-track {
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,0.08);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .ladder-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
+        transition: width 0.6s ease;
+      }
+      .ladder-marker {
+        position: absolute;
+        top: 50%;
+        left: 0%;
+        transform: translate(-50%, -50%);
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(255,255,255,0.15), 0 4px 14px rgba(0,0,0,0.35);
+        transition: left 0.6s ease;
+      }
+      .ladder-marker-bubble {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.2rem 0.5rem;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: #0b1f33;
+        background: #fff;
+        border-radius: 6px;
+        white-space: nowrap;
+      }
+      .ladder-marker-bubble::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 4px solid transparent;
+        border-top-color: #fff;
+      }
+      .ladder-stops {
+        list-style: none;
+        padding: 0;
+        margin: 0.9rem 0 0;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.25rem;
+      }
+      .ladder-stops li {
+        text-align: center;
+        opacity: 0.55;
+        transition: opacity 0.2s ease;
+      }
+      .ladder-stops li.hit { opacity: 1; }
+      .ladder-stops li:first-child { text-align: left; }
+      .ladder-stops li:last-child  { text-align: right; }
+      .ladder-stops .ms-num {
+        display: block;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--text-white, #fff);
+      }
+      .ladder-stops .ms-label {
+        display: block;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-light, #c5d2dd);
+        margin-top: 0.1rem;
+      }
+      .ladder-stops li.hit .ms-num {
+        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      @media (max-width: 479px) {
+        .ladder-stops .ms-label { font-size: 0.6rem; }
+        .ladder-stops .ms-num   { font-size: 0.75rem; }
+      }
+
+      /* ============================================================
+         COUNTY TILE WALL — all 88 Ohio counties.
+         Claimed counties get a Pride gradient border; unclaimed
+         tiles are dimmed, with a "claim me" hint. Click filters the
+         roster below.
+         ============================================================ */
+      .county-wall-section { padding: 0.5rem 0 2rem; }
+      .county-wall-section .wall-head {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .county-wall-section h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.35rem;
+        color: var(--text-white, #fff);
+        margin-bottom: 0.3rem;
+      }
+      .county-wall-section h2 .pride-text {
+        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .county-wall-section .lede {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light, #c5d2dd);
+        max-width: 640px;
+        margin: 0 auto 0.4rem;
+        line-height: 1.55;
+        font-size: 0.92rem;
+      }
+      .county-wall-summary {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.82rem;
+        color: var(--text-light, #c5d2dd);
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .county-wall-summary strong { color: var(--text-white, #fff); }
+      .county-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.4rem;
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+      @media (min-width: 600px)  { .county-grid { grid-template-columns: repeat(6,  minmax(0, 1fr)); } }
+      @media (min-width: 900px)  { .county-grid { grid-template-columns: repeat(8,  minmax(0, 1fr)); } }
+      @media (min-width: 1100px) { .county-grid { grid-template-columns: repeat(11, minmax(0, 1fr)); } }
+      .county-tile {
+        position: relative;
+        padding: 0.5rem 0.35rem;
+        background: rgba(19, 45, 68, 0.45);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 8px;
+        color: var(--text-light, #c5d2dd);
+        font: inherit;
+        cursor: pointer;
+        text-align: center;
+        min-height: 44px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.15rem;
+        transition: transform 0.12s ease, border-color 0.2s ease, background-color 0.2s ease;
+        overflow: hidden;
+      }
+      .county-tile:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255,255,255,0.35);
+      }
+      .county-tile .ct-name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 0.72rem;
+        color: var(--text-white, #fff);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .county-tile .ct-count {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.7rem;
+        opacity: 0.7;
+      }
+      .county-tile.lit {
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)),
+          rgba(19, 45, 68, 0.75);
+        border-color: transparent;
+        background-clip: padding-box;
+      }
+      .county-tile.lit::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 8px;
+        padding: 1px;
+        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+        pointer-events: none;
+      }
+      .county-tile.lit .ct-count {
+        opacity: 1;
+        color: var(--text-white, #fff);
+        font-weight: 700;
+      }
+      .county-tile[aria-pressed="true"] {
+        outline: 2px solid #fff;
+        outline-offset: -2px;
+      }
+      .county-wall-legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.2rem;
+        margin-top: 1rem;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.8rem;
+        color: var(--text-light, #c5d2dd);
+      }
+      .county-wall-legend .swatch {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        margin-right: 0.4rem;
+        vertical-align: middle;
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+      .county-wall-legend .swatch.lit {
+        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
+        border-color: transparent;
+      }
+      .county-wall-legend .swatch.dim {
+        background: rgba(19, 45, 68, 0.6);
+      }
 
       /* ============================================================
          TIER CHIPS
@@ -868,10 +1196,12 @@
             <div class="label">Ohio Counties</div>
             <div class="sub">of 88 represented</div>
           </div>
-          <div class="hero-stat">
-            <div class="num" id="statNewestName" style="font-size:1.1rem; line-height:1.3; min-width:0;">&mdash;</div>
-            <div class="label">Newest Member</div>
-            <div class="sub" id="statNewestWhen">Be the next.</div>
+          <div class="hero-stat hero-stat--claim" aria-live="polite">
+            <div class="claim-line">
+              <span class="claim-hash">#</span><span class="claim-num" id="statNextNumber">1</span>
+            </div>
+            <div class="claim-sub">Is still unclaimed</div>
+            <a href="/donate/founding-member" class="claim-btn" aria-label="Become the next founding member">Claim It</a>
           </div>
         </div>
 
@@ -884,6 +1214,29 @@
             <div class="goal-fill" id="goalFill"></div>
           </div>
           <div class="goal-note" id="progressText">0 of 1,969 Founding Members</div>
+        </div>
+
+        <!-- Stonewall Ladder: milestone track from first member to 1,969 -->
+        <div class="stonewall-ladder" aria-label="Founding member milestones">
+          <div class="ladder-title">
+            <span class="ladder-title-left">The Road To 1,969</span>
+            <span class="ladder-title-right">Stonewall, 1969</span>
+          </div>
+          <div class="ladder-track-wrap">
+            <div class="ladder-track">
+              <div class="ladder-fill" id="ladderFill"></div>
+            </div>
+            <div class="ladder-marker" id="ladderMarker" aria-hidden="true">
+              <span class="ladder-marker-bubble" id="ladderMarkerBubble">0</span>
+            </div>
+          </div>
+          <ol class="ladder-stops" id="ladderStops">
+            <li data-milestone="1"><span class="ms-num">1</span><span class="ms-label">First</span></li>
+            <li data-milestone="169"><span class="ms-num">169</span><span class="ms-label">Spark</span></li>
+            <li data-milestone="500"><span class="ms-num">500</span><span class="ms-label">Quarter</span></li>
+            <li data-milestone="969"><span class="ms-num">969</span><span class="ms-label">Halfway</span></li>
+            <li data-milestone="1969"><span class="ms-num">1,969</span><span class="ms-label">Stonewall</span></li>
+          </ol>
         </div>
       </div>
     </header>
@@ -901,6 +1254,26 @@
 
         <div class="cta-row">
           <a href="/donate/founding-member" class="btn btn-pride-shimmer">Become a Founding Member</a>
+        </div>
+
+        <!-- ============ COUNTY TILE WALL — all 88 counties ============ -->
+        <div class="county-wall-section">
+          <div class="wall-head">
+            <h2>88 Counties. <span class="pride-text">Every One Matters.</span></h2>
+            <p class="lede">
+              Tap a lit-up county to filter the directory. An unlit county is waiting for its first founding member.
+              Could be a friend, a cousin, you.
+            </p>
+          </div>
+          <div class="county-wall-summary" id="countyWallSummary">
+            <strong id="cwClaimed">0</strong> of 88 counties claimed &middot;
+            <strong id="cwUnclaimed">88</strong> still waiting
+          </div>
+          <div class="county-grid" id="countyGrid" role="list" aria-label="All 88 Ohio counties"></div>
+          <div class="county-wall-legend">
+            <span><span class="swatch lit"></span>Claimed</span>
+            <span><span class="swatch dim"></span>Waiting for its first member</span>
+          </div>
         </div>
       </div>
     </section>
@@ -1463,25 +1836,78 @@
       }
 
       // ============================================================
-      // HERO STATS
+      // HERO STATS + STONEWALL LADDER + COUNTY WALL
+      // (No time-based "newest member" — that card was retired
+      // because keeping "joined 6 hours ago" current was a chore
+      // and provided no real value.)
       // ============================================================
-      var newestWhenTimer = null;
-      function scheduleNewestWhenTick(iso) {
-        if (newestWhenTimer) { clearTimeout(newestWhenTimer); newestWhenTimer = null; }
-        var d = parseJoinedAt(iso);
-        if (!d) return;
-        var ageSec = Math.max(0, (Date.now() - d.getTime()) / 1000);
-        var delay;
-        if (ageSec < 60)         delay = 1000;
-        else if (ageSec < 3600)  delay = 60 * 1000;
-        else if (ageSec < 86400) delay = 60 * 60 * 1000;
-        else                     delay = 0;
-        if (!delay) return;
-        newestWhenTimer = setTimeout(function () {
-          var el = document.getElementById("statNewestWhen");
-          if (el) el.textContent = relativeTime(iso);
-          scheduleNewestWhenTick(iso);
-        }, delay);
+      var LADDER_MILESTONES = [1, 169, 500, 969, 1969];
+
+      function renderStonewallLadder(count) {
+        var pct = Math.max(0, Math.min(100, (count / FOUNDING_GOAL) * 100));
+        var fill = document.getElementById("ladderFill");
+        if (fill) fill.style.width = pct + "%";
+        var marker = document.getElementById("ladderMarker");
+        if (marker) marker.style.left = pct + "%";
+        var bubble = document.getElementById("ladderMarkerBubble");
+        if (bubble) bubble.textContent = count.toLocaleString();
+        var stops = document.querySelectorAll("#ladderStops li");
+        stops.forEach(function (li) {
+          var ms = parseInt(li.getAttribute("data-milestone"), 10);
+          if (!isNaN(ms) && count >= ms) li.classList.add("hit");
+          else li.classList.remove("hit");
+        });
+      }
+
+      function renderCountyWall(visible) {
+        var grid = document.getElementById("countyGrid");
+        if (!grid) return;
+
+        var perCounty = {};
+        visible.forEach(function (m) {
+          if (m.county) perCounty[m.county] = (perCounty[m.county] || 0) + 1;
+        });
+
+        var claimed = 0;
+        var html = OHIO_COUNTIES.slice().sort().map(function (c) {
+          var n = perCounty[c] || 0;
+          if (n > 0) claimed++;
+          var lit = n > 0 ? " lit" : "";
+          var pressed = state.county === c ? ' aria-pressed="true"' : ' aria-pressed="false"';
+          var hint = n > 0
+            ? c + " County — " + n + " founding member" + (n === 1 ? "" : "s") + ". Tap to filter."
+            : c + " County — be the first.";
+          return '<button type="button" class="county-tile' + lit + '" data-county="' + escapeHtml(c) + '"' + pressed + ' title="' + escapeHtml(hint) + '">' +
+            '<span class="ct-name">' + escapeHtml(c) + '</span>' +
+            '<span class="ct-count">' + (n > 0 ? n : '&middot;') + '</span>' +
+            '</button>';
+        }).join("");
+        grid.innerHTML = html;
+
+        var cwClaimed = document.getElementById("cwClaimed");
+        var cwUnclaimed = document.getElementById("cwUnclaimed");
+        if (cwClaimed)   cwClaimed.textContent = claimed;
+        if (cwUnclaimed) cwUnclaimed.textContent = (88 - claimed);
+
+        // Wire click → filter roster by county and scroll to table
+        grid.querySelectorAll(".county-tile").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var c = btn.getAttribute("data-county");
+            if (!c) return;
+            // Toggle off if already selected
+            state.county = (state.county === c) ? "" : c;
+            state.city = "";
+            state.currentPage = 1;
+            var sel = document.getElementById("countyFilter");
+            if (sel) sel.value = state.county;
+            renderAll();
+            var anchor = document.getElementById("memberTable");
+            if (anchor && anchor.scrollIntoView) {
+              try { anchor.scrollIntoView({ behavior: "smooth", block: "start" }); }
+              catch (e) { anchor.scrollIntoView(); }
+            }
+          });
+        });
       }
 
       function renderHeroStats() {
@@ -1492,27 +1918,21 @@
         visible.forEach(function (m) { if (m.county) counties[m.county] = true; });
         var countyCount = Object.keys(counties).length;
 
-        var newest = visible.slice().sort(function (a, b) {
-          var d = (b.joinedAt || "").localeCompare(a.joinedAt || "");
-          return d !== 0 ? d : (b.id || 0) - (a.id || 0);
-        })[0];
-
         document.getElementById("statMembers").textContent = count.toLocaleString();
         document.getElementById("statCounties").textContent = countyCount;
-        if (newest) {
-          var displayName = resolveDisplayName(newest);
-          var firstName = (displayName.split(" ")[0] || displayName).trim();
-          var label = firstName + (newest.county ? " from " + newest.county + " County" : "");
-          document.getElementById("statNewestName").textContent = label;
-          document.getElementById("statNewestWhen").textContent = relativeTime(newest.joinedAt);
-          scheduleNewestWhenTick(newest.joinedAt);
-        }
+
+        var nextNumber = Math.min(count + 1, FOUNDING_GOAL);
+        var statNext = document.getElementById("statNextNumber");
+        if (statNext) statNext.textContent = nextNumber.toLocaleString();
 
         var pct = Math.min(100, (count / FOUNDING_GOAL) * 100);
         var bar = document.getElementById("goalFill");
         var text = document.getElementById("progressText");
         if (bar) bar.style.width = pct + "%";
         if (text) text.textContent = count.toLocaleString() + " of 1,969 Founding Members";
+
+        renderStonewallLadder(count);
+        renderCountyWall(visible);
       }
 
       // ============================================================
