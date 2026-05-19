@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pride Road Tour | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+
+    <style>
+      /* Tabs */
+      .pride-tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 18px; }
+      .pride-tab {
+        background: transparent; border: none; color: rgba(255,255,255,0.6);
+        padding: 12px 18px; cursor: pointer; font: 600 13px/1 Montserrat, system-ui;
+        letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 2px solid transparent;
+        display: inline-flex; align-items: center; gap: 8px; transition: color .15s, border-color .15s;
+      }
+      .pride-tab:hover { color: #fff; }
+      .pride-tab.is-active { color: #73D7EE; border-bottom-color: #73D7EE; }
+      .pride-tab-count {
+        background: rgba(115, 215, 238, 0.15); color: #73D7EE;
+        padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700;
+      }
+      .pride-tab.is-active .pride-tab-count { background: #73D7EE; color: #0F2233; }
+
+      /* Assignment table */
+      .pride-table-wrap { background: rgba(15, 34, 51, 0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; }
+      .pride-table tbody tr { cursor: pointer; }
+      .pride-table tbody tr:hover { background: rgba(115, 215, 238, 0.06); }
+      .pride-status-pill {
+        padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.04em; display: inline-block;
+      }
+      .pride-status-confirmed { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+      .pride-status-tentative { background: rgba(234, 179, 8, 0.15); color: #facc15; }
+      .pride-status-declined  { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+      .pride-status-removed   { background: rgba(148, 163, 184, 0.18); color: #94a3b8; }
+      .pride-captain-badge { background: rgba(115, 215, 238, 0.15); color: #73D7EE; font-size: 10px;
+        padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 6px; vertical-align: 2px; }
+
+      /* Event group header */
+      .pride-event-group { margin-bottom: 22px; }
+      .pride-event-head {
+        display: flex; align-items: baseline; justify-content: space-between;
+        padding: 8px 4px 10px; border-bottom: 1px dashed rgba(255,255,255,0.08);
+        margin-bottom: 6px;
+      }
+      .pride-event-head h3 { margin: 0; font: 700 15px Montserrat; color: #fff; }
+      .pride-event-head-meta { font-size: 12px; color: rgba(255,255,255,0.55); }
+      .pride-event-head-meta b { color: #73D7EE; }
+
+      /* Empty state */
+      .pride-empty { padding: 32px 16px; text-align: center; color: rgba(255,255,255,0.45); }
+
+      /* Toolbar */
+      .admin-toolbar select.pride-event-filter { min-width: 220px; }
+
+      /* Action buttons inline */
+      .pride-row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+      .pride-row-actions button {
+        background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.85); padding: 5px 10px; border-radius: 6px;
+        font-size: 11px; font-weight: 600; cursor: pointer; transition: all .12s;
+        text-transform: uppercase; letter-spacing: .03em;
+      }
+      .pride-row-actions button:hover { background: rgba(115, 215, 238, 0.12); border-color: #73D7EE; color: #73D7EE; }
+      .pride-row-actions button.is-current { opacity: .4; pointer-events: none; }
+    </style>
+  </head>
+
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="pride"
+      data-page-eyebrow="Road Tour"
+      data-page-title="Pride Road Tour 2026"
+      data-page-sub="Track event registrations, confirm volunteers, and staff every Pride stop."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script src="/admin/pride/pride.js"></script>
+  </body>
+</html>
