@@ -340,6 +340,28 @@
   to = "/admin/pride/index.html"
   status = 200
 
+# Finance · Budget (one page, URL-aware Revenue/Expense tabs)
+[[redirects]]
+  from = "/admin/finance"
+  to = "/admin/finance/budget"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin/finance/budget/revenue"
+  to = "/admin/finance/budget/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/finance/budget/expense"
+  to = "/admin/finance/budget/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/finance/budget"
+  to = "/admin/finance/budget/index.html"
+  status = 200
+
 [[redirects]]
   from = "/internships"
   to = "/volunteer.html?path=internship"
