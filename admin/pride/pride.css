@@ -39,6 +39,30 @@
 }
 .pride-empty { padding: 32px 16px; text-align: center; color: rgba(255,255,255,0.45); }
 
+/* ---- Attendance categories (Volunteers / Board / Staff / ED) ---- */
+.pride-att-dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  vertical-align: middle; flex: 0 0 auto;
+}
+.pride-att-dots { display: inline-flex; gap: 3px; margin-left: 6px; vertical-align: middle; }
+.pride-att-legend {
+  display: flex; flex-wrap: wrap; gap: 14px; margin: 0 0 16px;
+  padding: 10px 14px; border-radius: 10px;
+  background: rgba(15, 34, 51, 0.6); border: 1px solid rgba(255,255,255,0.06);
+}
+.pride-att-key {
+  display: inline-flex; align-items: center; gap: 7px;
+  font: 600 12px Montserrat, system-ui; color: rgba(255,255,255,0.75);
+}
+.pride-whos-going { display: flex; flex-direction: column; gap: 8px; }
+.pride-whos-going .pride-att-dot { margin-right: 8px; }
+.pride-att-readonly {
+  display: flex; align-items: center; font: 600 12px Montserrat, system-ui;
+  color: rgba(255,255,255,0.75); gap: 0;
+}
+.pride-att-readonly .pride-att-dot { margin-right: 8px; }
+.pride-att-readonly .admin-muted { margin-left: 6px; font-weight: 500; }
+
 /* ---- Week calendar ---- */
 .pride-cal-bar {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
@@ -89,6 +113,34 @@
   display: flex; flex-direction: column; gap: 4px;
 }
 
+.pride-tentative {
+  display: grid; grid-template-columns: 56px repeat(7, 1fr);
+  border-bottom: 1px solid rgba(255,255,255,0.08); min-height: 44px;
+  background: rgba(234, 179, 8, 0.06);
+}
+.pride-tentative .pride-allday-label { color: #facc15; }
+.pride-ev.is-tentative {
+  border-style: dashed; opacity: 0.92;
+}
+.pride-ev-confirm {
+  display: inline-block; margin-top: 4px; cursor: pointer;
+  background: rgba(234, 179, 8, 0.18); color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.4); border-radius: 5px;
+  font: 700 9px Montserrat, system-ui; text-transform: uppercase;
+  letter-spacing: .04em; padding: 2px 7px;
+}
+.pride-ev-confirm:hover { background: rgba(234, 179, 8, 0.3); color: #fde047; }
+
+.shell-btn-danger {
+  background: rgba(239, 68, 68, 0.14); color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+.shell-btn-danger:hover { background: rgba(239, 68, 68, 0.26); color: #fca5a5; }
+.pride-del-warn {
+  flex: 1; min-width: 160px; align-self: center;
+  font: 500 12px Montserrat, system-ui; color: #fca5a5;
+}
+
 .pride-grid {
   display: grid; grid-template-columns: 56px repeat(7, 1fr);
   position: relative; max-height: 620px; overflow-y: auto;
@@ -137,6 +189,9 @@
 }
 .pride-form select option { background: #0F2233; color: #fff; }
 .pride-form .pride-check-inline { flex-direction: row; align-items: center; gap: 8px; }
+.pride-check-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px;
+}
 .pride-drawer-section { margin-bottom: 18px; }
 .pride-drawer-section h4 {
   margin: 0 0 8px; font: 700 12px Montserrat; text-transform: uppercase;

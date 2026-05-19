@@ -35,6 +35,36 @@
     { key: 'removed',   label: 'Removed'   }
   ];
 
+  // Who's-going categories. "volunteers" is derived from the event roster
+  // (any confirmed/tentative assignment); the rest are pride_events flags.
+  // "ed" is the Executive Director ("me") — drives /admin/pride/ED.
+  var ATTENDANCE = [
+    { key: 'volunteers', label: 'Volunteers', color: '#73D7EE', derived: true },
+    { key: 'board',      label: 'Board',      color: '#4ade80', col: 'board_attending' },
+    { key: 'staff',      label: 'Staff',      color: '#fb923c', col: 'staff_attending' },
+    { key: 'ed',         label: 'ED',         color: '#f472b6', col: 'ed_attending' }
+  ];
+
+  // Colored dots for the categories attending an event. `flags` is
+  // { volunteers, board, staff, ed } booleans.
+  function attendanceDots(flags) {
+    flags = flags || {};
+    var dots = ATTENDANCE.filter(function (a) { return flags[a.key]; })
+      .map(function (a) {
+        return '<span class="pride-att-dot" title="' + escAttr(a.label) +
+          '" style="background:' + a.color + '"></span>';
+      }).join('');
+    return dots ? '<span class="pride-att-dots">' + dots + '</span>' : '';
+  }
+
+  // Legend chip row for the attendance categories.
+  function attendanceLegend() {
+    return '<div class="pride-att-legend">' + ATTENDANCE.map(function (a) {
+      return '<span class="pride-att-key"><span class="pride-att-dot" style="background:' +
+        a.color + '"></span>' + esc(a.label) + '</span>';
+    }).join('') + '</div>';
+  }
+
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -119,6 +149,7 @@
     return '<div class="pride-tabs">' +
       tab('events', '/admin/pride/events', 'Events') +
       tab('volunteers', '/admin/pride/volunteers', 'Volunteers') +
+      tab('ed', '/admin/pride/ED', 'ED') +
       '</div>';
   }
 
@@ -146,6 +177,9 @@
     REG_STATUSES: REG_STATUSES,
     ROLE_OPTIONS: ROLE_OPTIONS,
     ASSIGNMENT_STATUSES: ASSIGNMENT_STATUSES,
+    ATTENDANCE: ATTENDANCE,
+    attendanceDots: attendanceDots,
+    attendanceLegend: attendanceLegend,
     esc: esc,
     escAttr: escAttr,
     titleCase: titleCase,
