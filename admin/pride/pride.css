@@ -1,0 +1,164 @@
+/* =========================================================================
+   Ohio Pride PAC :: /admin/pride shared styles
+   Tab bar, week calendar, status pills, and drawer forms shared by
+   /admin/pride/events and /admin/pride/volunteers.
+   ========================================================================= */
+
+/* ---- Tab bar ---- */
+.pride-tabs {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 18px;
+}
+.pride-tab {
+  background: transparent; border: none; color: rgba(255,255,255,0.6);
+  padding: 12px 18px; cursor: pointer; font: 600 13px/1 Montserrat, system-ui;
+  letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 2px solid transparent;
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  transition: color .15s, border-color .15s;
+}
+.pride-tab:hover { color: #fff; }
+.pride-tab.is-active { color: #73D7EE; border-bottom-color: #73D7EE; }
+.pride-tab-count {
+  background: rgba(115, 215, 238, 0.15); color: #73D7EE;
+  padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700;
+}
+.pride-tab.is-active .pride-tab-count { background: #73D7EE; color: #0F2233; }
+
+/* ---- Status pills ---- */
+.pride-status-pill {
+  padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em; display: inline-block;
+}
+.pride-status-confirmed { background: rgba(34, 197, 94, 0.15);  color: #4ade80; }
+.pride-status-tentative { background: rgba(234, 179, 8, 0.15);  color: #facc15; }
+.pride-status-declined  { background: rgba(239, 68, 68, 0.15);  color: #f87171; }
+.pride-status-removed   { background: rgba(148, 163, 184, 0.18); color: #94a3b8; }
+.pride-captain-badge {
+  background: rgba(115, 215, 238, 0.15); color: #73D7EE; font-size: 10px;
+  padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 6px; vertical-align: 2px;
+}
+.pride-empty { padding: 32px 16px; text-align: center; color: rgba(255,255,255,0.45); }
+
+/* ---- Week calendar ---- */
+.pride-cal-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.pride-cal-bar .pride-week-label { font: 700 16px Montserrat; color: #fff; min-width: 220px; }
+.pride-cal-nav {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+  color: #fff; width: 34px; height: 34px; border-radius: 8px; cursor: pointer;
+  font-size: 16px; line-height: 1; display: inline-flex; align-items: center; justify-content: center;
+}
+.pride-cal-nav:hover { background: rgba(115,215,238,0.15); border-color: #73D7EE; }
+.pride-cal-today {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+  color: #fff; padding: 7px 14px; border-radius: 8px; cursor: pointer;
+  font: 600 12px Montserrat; text-transform: uppercase; letter-spacing: .04em;
+}
+.pride-cal-today:hover { background: rgba(115,215,238,0.15); border-color: #73D7EE; }
+
+.pride-cal {
+  background: rgba(15, 34, 51, 0.6); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px; overflow: hidden;
+}
+.pride-cal-head {
+  display: grid; grid-template-columns: 56px repeat(7, 1fr);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.pride-cal-head > div {
+  padding: 10px 6px; text-align: center; font: 600 12px Montserrat;
+  color: rgba(255,255,255,0.6); border-left: 1px solid rgba(255,255,255,0.05);
+}
+.pride-cal-head > div:first-child { border-left: none; }
+.pride-cal-head .pride-col-dow { display: block; text-transform: uppercase; letter-spacing: .05em; }
+.pride-cal-head .pride-col-date { display: block; font-size: 16px; color: #fff; margin-top: 2px; }
+.pride-cal-head .is-today .pride-col-date { color: #73D7EE; }
+
+.pride-allday {
+  display: grid; grid-template-columns: 56px repeat(7, 1fr);
+  border-bottom: 1px solid rgba(255,255,255,0.08); min-height: 44px;
+}
+.pride-allday-label {
+  font: 600 10px Montserrat; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; letter-spacing: .04em;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+}
+.pride-allday-cell {
+  border-left: 1px solid rgba(255,255,255,0.05); padding: 5px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.pride-grid {
+  display: grid; grid-template-columns: 56px repeat(7, 1fr);
+  position: relative; max-height: 620px; overflow-y: auto;
+}
+.pride-hours { display: flex; flex-direction: column; }
+.pride-hour-label {
+  height: 48px; font: 500 10px Roboto Slab, serif; color: rgba(255,255,255,0.35);
+  text-align: right; padding: 2px 6px 0 0; box-sizing: border-box;
+}
+.pride-daycol {
+  border-left: 1px solid rgba(255,255,255,0.05); position: relative;
+}
+.pride-daycol.is-today { background: rgba(115,215,238,0.04); }
+.pride-hour-line {
+  height: 48px; border-bottom: 1px solid rgba(255,255,255,0.045); box-sizing: border-box;
+}
+
+.pride-ev {
+  cursor: pointer; border-radius: 6px; padding: 4px 7px; overflow: hidden;
+  font: 600 11px Montserrat; line-height: 1.25; border: 1px solid transparent;
+}
+.pride-ev small { display: block; font-weight: 500; opacity: .8; font-size: 10px; }
+.pride-ev.is-timed { position: absolute; left: 3px; right: 3px; }
+.pride-ev-pac     { background: rgba(115,215,238,0.16); color: #bdeaf6; border-color: rgba(115,215,238,0.4); }
+.pride-ev-priority{ background: rgba(244, 114, 182, 0.16); color: #f9c8e3; border-color: rgba(244,114,182,0.45); }
+.pride-ev-off     { background: rgba(255,255,255,0.05);   color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.12); }
+.pride-ev:hover   { filter: brightness(1.18); }
+.pride-ev-badge {
+  display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px;
+  border-radius: 4px; margin-top: 3px; background: rgba(0,0,0,0.25);
+}
+
+/* ---- Drawer form ---- */
+.pride-form { display: flex; flex-direction: column; gap: 14px; }
+.pride-form label { display: flex; flex-direction: column; gap: 5px; font: 600 12px Montserrat; color: rgba(255,255,255,0.75); }
+.pride-form .pride-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pride-form input[type="text"],
+.pride-form input[type="date"],
+.pride-form input[type="time"],
+.pride-form input[type="number"],
+.pride-form select,
+.pride-form textarea {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+  color: #fff; border-radius: 8px; padding: 9px 11px; font: 400 13px Montserrat; width: 100%;
+  box-sizing: border-box;
+}
+.pride-form select option { background: #0F2233; color: #fff; }
+.pride-form .pride-check-inline { flex-direction: row; align-items: center; gap: 8px; }
+.pride-drawer-section { margin-bottom: 18px; }
+.pride-drawer-section h4 {
+  margin: 0 0 8px; font: 700 12px Montserrat; text-transform: uppercase;
+  letter-spacing: .05em; color: #73D7EE;
+}
+.pride-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px;
+  border-radius: 999px; font: 600 11px Montserrat; margin: 0 6px 6px 0;
+  background: rgba(115,215,238,0.12); color: #bdeaf6;
+}
+.pride-chip.is-confirmed { background: rgba(34,197,94,0.16); color: #6ee7a8; }
+
+.pride-row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.pride-row-actions button {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.85); padding: 5px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 600; cursor: pointer; transition: all .12s;
+  text-transform: uppercase; letter-spacing: .03em;
+}
+.pride-row-actions button:hover { background: rgba(115, 215, 238, 0.12); border-color: #73D7EE; color: #73D7EE; }
+.pride-row-actions button.is-current { opacity: .4; pointer-events: none; }
+
+.pride-mini-table { width: 100%; border-collapse: collapse; }
+.pride-mini-table td { padding: 7px 4px; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
+.pride-mini-table tr:last-child td { border-bottom: none; }

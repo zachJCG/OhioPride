@@ -326,6 +326,21 @@
   status = 200
 
 [[redirects]]
+  from = "/admin/pride/events"
+  to = "/admin/pride/events/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/pride/volunteers"
+  to = "/admin/pride/volunteers/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/pride"
+  to = "/admin/pride/index.html"
+  status = 200
+
+[[redirects]]
   from = "/internships"
   to = "/volunteer.html?path=internship"
   status = 200
