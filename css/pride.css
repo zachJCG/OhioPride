@@ -95,15 +95,35 @@
   font-size: 0.95rem;
 }
 
-/* ----- Filter chips ----- */
-.pride-filters {
+/* ----- Search + filter toolbar (flat, no bubbles) ----- */
+.pride-sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+.pride-toolbar { margin-bottom: 1rem; }
+.pride-search {
+  width: 100%;
+  background: var(--brand-navy-light);
+  border: 1px solid var(--brand-border-on-navy-medium);
+  border-radius: var(--brand-radius-sm);
+  color: var(--brand-white);
+  font-family: var(--brand-font-body);
+  font-size: 1rem;
+  padding: 0.7rem 0.9rem;
+}
+.pride-search::placeholder { color: var(--brand-text-on-navy-faint); }
+.pride-search:focus {
+  outline: none; border-color: var(--brand-light-blue);
+  box-shadow: var(--brand-focus-ring);
+}
+.pride-filter-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-  margin-bottom: 0.5rem;
+  align-items: flex-end;
+  gap: 0.75rem 1.2rem;
+  margin-top: 0.75rem;
 }
-.pride-filter-group { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.pride-filter-block { display: flex; flex-direction: column; gap: 0.35rem; }
 .pride-filter-label {
   font-family: var(--brand-font-display);
   font-size: 0.72rem;
@@ -111,37 +131,53 @@
   letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--brand-text-on-navy-faint);
-  margin-right: 0.2rem;
 }
-.pride-chip {
+.pride-fbtns { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pride-fbtn {
   font-family: var(--brand-font-display);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  padding: 0.34rem 0.85rem;
-  border-radius: 999px;
-  background: transparent;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--brand-radius-sm);
+  background: var(--brand-navy-light);
   color: var(--brand-text-on-navy-soft);
   border: 1px solid var(--brand-border-on-navy-medium);
   cursor: pointer;
   transition: var(--brand-transition);
 }
-.pride-chip:hover { border-color: var(--brand-light-blue); }
-.pride-chip[aria-pressed="true"] {
+.pride-fbtn:hover { border-color: var(--brand-light-blue); }
+.pride-fbtn[aria-pressed="true"] {
   background: var(--brand-light-blue);
   color: var(--brand-navy);
   border-color: var(--brand-light-blue);
 }
-.pride-chip:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
-.pride-filter-reset {
+.pride-fbtn:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
+.pride-select {
+  font-family: var(--brand-font-display);
+  font-size: 0.9rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--brand-radius-sm);
+  background: var(--brand-navy-light);
+  color: var(--brand-white);
+  border: 1px solid var(--brand-border-on-navy-medium);
+  cursor: pointer;
+}
+.pride-select:focus {
+  outline: none; border-color: var(--brand-light-blue);
+  box-shadow: var(--brand-focus-ring);
+}
+.pride-link-btn {
   background: none;
   border: none;
   color: var(--brand-light-blue);
   font-family: var(--brand-font-display);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   cursor: pointer;
   text-decoration: underline;
-  padding: 0.34rem 0.5rem;
+  padding: 0.45rem 0.2rem;
 }
+.pride-link-btn:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
+.pride-empty { color: var(--brand-text-on-navy-soft); font-size: 0.95rem; }
 .pride-count {
   font-size: 0.85rem;
   color: var(--brand-text-on-navy-dim);
@@ -166,21 +202,27 @@
   margin-bottom: 0.6rem;
   overflow: hidden;
 }
-.pride-event-summary {
+.pride-event-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
-  width: 100%;
-  text-align: left;
+  gap: 0.4rem 0.7rem;
+  padding: 0.95rem 1.1rem 0.35rem;
+}
+.pride-readmore {
+  display: inline-block;
+  margin: 0 1.1rem 0.95rem;
   background: none;
   border: none;
-  color: inherit;
-  padding: 0.95rem 1.1rem;
+  color: var(--brand-light-blue);
+  font-family: var(--brand-font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: underline;
   cursor: pointer;
-  font-family: inherit;
+  padding: 0.2rem 0;
 }
-.pride-event-summary:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
+.pride-readmore:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
 .pride-event-city {
   font-family: var(--brand-font-display);
   font-weight: 700;
@@ -194,21 +236,14 @@
   color: var(--brand-text-on-navy-dim);
   white-space: nowrap;
 }
-.pride-pill {
+.pride-type-label {
   font-family: var(--brand-font-display);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 1.4px;
   text-transform: uppercase;
-  padding: 0.22rem 0.6rem;
-  border-radius: 999px;
+  color: var(--brand-light-blue);
   white-space: nowrap;
-}
-.pride-pill--type { color: var(--brand-light-blue); border: 1px solid var(--brand-light-blue); }
-.pride-pill--priority { background: var(--brand-light-blue); color: var(--brand-navy); }
-.pride-pill--going {
-  background: var(--brand-white);
-  color: var(--brand-navy);
 }
 .pride-event-detail {
   padding: 0 1.1rem 1.1rem;
@@ -266,9 +301,8 @@
 }
 .pride-marker { cursor: pointer; transition: transform 0.15s ease; transform-box: fill-box; transform-origin: center; }
 .pride-marker:hover, .pride-marker:focus-visible { transform: scale(1.3); outline: none; }
-.pride-marker--other { fill: none; stroke: var(--brand-light-blue); stroke-width: 1.5; opacity: 0.5; }
-.pride-marker--past { fill: var(--brand-navy); stroke: var(--brand-light-blue); stroke-width: 1; opacity: 0.8; }
-.pride-marker--upcoming { fill: var(--brand-light-blue); }
+.pride-marker--event { fill: none; stroke: var(--brand-light-blue); stroke-width: 1.5; opacity: 0.65; }
+.pride-marker--event:hover, .pride-marker--event:focus-visible { opacity: 1; }
 .pride-marker--current { fill: var(--brand-light-blue); animation: prideMarkerPulse 2.5s ease-in-out infinite; }
 @keyframes prideMarkerPulse {
   0%, 100% { opacity: 1; }
@@ -290,9 +324,7 @@
   width: 12px; height: 12px; border-radius: 50%; display: inline-block;
 }
 .pride-legend i.l-current { background: var(--brand-light-blue); }
-.pride-legend i.l-upcoming { background: var(--brand-light-blue); opacity: 0.85; }
-.pride-legend i.l-past { background: var(--brand-navy); border: 1px solid var(--brand-light-blue); }
-.pride-legend i.l-other { background: transparent; border: 1px solid var(--brand-light-blue); opacity: 0.6; }
+.pride-legend i.l-event { background: transparent; border: 1px solid var(--brand-light-blue); }
 
 .pride-tooltip {
   position: fixed;
@@ -432,6 +464,13 @@
 .pride-check--top { align-items: flex-start; }
 .pride-check--top input { margin-top: 0.2rem; }
 .pride-toggle-row { margin-bottom: 0.9rem; }
+/* Event picker cards wrap to multiple lines: pin the checkbox to the
+   first text line so the cards stay aligned. */
+.pride-check--event { align-items: flex-start; }
+.pride-check--event input { margin-top: 0.3rem; }
+.pride-check-body { display: block; line-height: 1.55; }
+.pride-check-date { font-weight: 700; color: var(--brand-light-blue); }
+.pride-check--event .pride-type-label { margin-left: 0.15rem; }
 .pride-event-month-head {
   font-family: var(--brand-font-display);
   font-weight: 700;
