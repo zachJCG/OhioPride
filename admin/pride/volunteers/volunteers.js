@@ -37,7 +37,10 @@
 
     document.getElementById('shellPageActions').innerHTML =
       '<a class="shell-btn shell-btn-outline" href="/pride/signup" target="_blank" rel="noopener">View signup form</a>' +
-      '<button type="button" class="shell-btn shell-btn-primary" id="prideVolExport">Export CSV</button>';
+      '<button type="button" class="shell-btn shell-btn-outline" id="prideVolExport">Export CSV</button>' +
+      (state.canWrite
+        ? '<button type="button" class="shell-btn shell-btn-primary" id="prideVolAdd">Add volunteer</button>'
+        : '');
 
     document.getElementById('shellBody').innerHTML = pageHtml();
 
@@ -115,6 +118,16 @@
         renderKpis();
         applyFilters();
       });
+  }
+
+  function reloadVolunteers() {
+    return Promise.all([
+      state.client.from('pride_volunteers').select('*')
+        .order('created_at', { ascending: false })
+        .then(function (r) { if (r.error) throw r.error; state.volunteers = r.data || []; }),
+      state.client.from('pride_event_volunteers_v').select('*')
+        .then(function (r) { if (r.error) throw r.error; indexAssignments(r.data || []); })
+    ]).then(function () { renderKpis(); applyFilters(); });
   }
 
   function statusCounts(vid) {
@@ -203,9 +216,139 @@
       title: ((v.first_name || '') + ' ' + (v.last_name || '')).trim() || 'Volunteer',
       bodyHtml: volDrawerBody(v),
       footHtml:
+        (state.canWrite
+          ? '<button type="button" class="shell-btn shell-btn-danger" id="prideVolDelete">Delete</button>'
+          : '') +
         '<a class="shell-btn shell-btn-outline" href="mailto:' + P.escAttr(v.email || '') + '">Email</a>' +
         '<button type="button" class="shell-btn shell-btn-primary" data-drawer-close>Done</button>'
     });
+    if (state.canWrite) {
+      document.getElementById('prideVolDelete').onclick = function () { confirmDeleteVol(v); };
+    }
+  }
+
+  // ---- add volunteer ----
+  function openAddVolDrawer() {
+    var regionOpts = '<option value="">Preferred region&hellip;</option>' +
+      P.REGIONS.map(function (r) { return '<option value="' + r.value + '">' + r.label + '</option>'; }).join('') +
+      '<option value="Anywhere">Anywhere</option>';
+    var roleChecks = P.ROLE_OPTIONS.map(function (r) {
+      return '<label class="pride-check-inline"><input type="checkbox" name="role" value="' +
+        P.escAttr(r) + '" /> ' + P.esc(P.titleCase(r)) + '</label>';
+    }).join('');
+    var body = [
+      '<form id="prideVolForm" class="pride-form">',
+        '<div class="pride-drawer-section">',
+          '<h4>Volunteer</h4>',
+          '<div class="pride-form-row">',
+            '<label>First name<input type="text" name="first_name" required /></label>',
+            '<label>Last name<input type="text" name="last_name" required /></label>',
+          '</div>',
+          '<label>Email<input type="email" name="email" required /></label>',
+          '<div class="pride-form-row">',
+            '<label>Phone<input type="text" name="phone" /></label>',
+            '<label>City<input type="text" name="city" /></label>',
+          '</div>',
+          '<div class="pride-form-row">',
+            '<label>ZIP<input type="text" name="zip" /></label>',
+            '<label>Region<select name="preferred_region">' + regionOpts + '</select></label>',
+          '</div>',
+        '</div>',
+        '<div class="pride-drawer-section">',
+          '<h4>Wants to</h4>',
+          '<div class="pride-check-grid">' + roleChecks + '</div>',
+        '</div>',
+        '<div class="pride-drawer-section">',
+          '<h4>Logistics</h4>',
+          '<label class="pride-check-inline"><input type="checkbox" name="can_travel" /> Can travel</label>',
+          '<label class="pride-check-inline"><input type="checkbox" name="has_vehicle" /> Has a vehicle</label>',
+          '<label class="pride-check-inline"><input type="checkbox" name="is_vetted" /> Vetted</label>',
+          '<label>Notes<textarea name="notes" rows="3"></textarea></label>',
+        '</div>',
+      '</form>'
+    ].join('');
+    window.AdminShell.openDrawer({
+      eyebrow: 'New volunteer',
+      title: 'Add a road-tour volunteer',
+      bodyHtml: body,
+      footHtml:
+        '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Cancel</button>' +
+        '<button type="button" class="shell-btn shell-btn-primary" id="prideVolCreate">Create volunteer</button>'
+    });
+    document.getElementById('prideVolCreate').onclick = createVolunteer;
+  }
+
+  function createVolunteer() {
+    var form = document.getElementById('prideVolForm');
+    var fd = new FormData(form);
+    var first = (fd.get('first_name') || '').trim();
+    var last = (fd.get('last_name') || '').trim();
+    var email = (fd.get('email') || '').trim();
+    if (!first || !last || !email) {
+      window.AdminShell.toast('First name, last name and email are required.', 'error');
+      return;
+    }
+    var payload = {
+      first_name: first,
+      last_name: last,
+      email: email,
+      phone: (fd.get('phone') || '').trim() || null,
+      city: (fd.get('city') || '').trim() || null,
+      zip: (fd.get('zip') || '').trim() || null,
+      preferred_region: fd.get('preferred_region') || null,
+      roles_interested: fd.getAll('role'),
+      can_travel: fd.get('can_travel') === 'on',
+      has_vehicle: fd.get('has_vehicle') === 'on',
+      is_vetted: fd.get('is_vetted') === 'on',
+      notes: (fd.get('notes') || '').trim() || null,
+      consent_communications: true,
+      source: 'admin_pride_manual'
+    };
+    var btn = document.getElementById('prideVolCreate');
+    btn.disabled = true;
+    state.client.from('pride_volunteers').insert(payload).select().single()
+      .then(function (r) { if (r.error) throw r.error; return reloadVolunteers(); })
+      .then(function () {
+        window.AdminShell.closeDrawer();
+        window.AdminShell.toast('Volunteer added.', 'success');
+      })
+      .catch(function (err) {
+        console.error(err);
+        window.AdminShell.toast(
+          err && err.code === '23505' ? 'A volunteer with that email already exists.'
+            : 'Could not add the volunteer.', 'error');
+        btn.disabled = false;
+      });
+  }
+
+  // ---- delete volunteer (two-step confirm in the drawer footer) ----
+  function confirmDeleteVol(v) {
+    var ft = document.getElementById('shellDrawerFoot');
+    if (!ft) return;
+    var name = ((v.first_name || '') + ' ' + (v.last_name || '')).trim() || 'this volunteer';
+    ft.innerHTML =
+      '<span class="pride-del-warn">Delete ' + P.esc(name) +
+        '? This also removes their event assignments.</span>' +
+      '<button type="button" class="shell-btn shell-btn-outline" id="prideVolDelCancel">Cancel</button>' +
+      '<button type="button" class="shell-btn shell-btn-danger" id="prideVolDelYes">Delete volunteer</button>';
+    document.getElementById('prideVolDelCancel').onclick = function () { openVolDrawer(v); };
+    document.getElementById('prideVolDelYes').onclick = function () { deleteVolunteer(v); };
+  }
+
+  function deleteVolunteer(v) {
+    var btn = document.getElementById('prideVolDelYes');
+    if (btn) btn.disabled = true;
+    state.client.from('pride_volunteers').delete().eq('id', v.id)
+      .then(function (r) { if (r.error) throw r.error; state.activeId = null; return reloadVolunteers(); })
+      .then(function () {
+        window.AdminShell.closeDrawer();
+        window.AdminShell.toast('Volunteer deleted.', 'success');
+      })
+      .catch(function (err) {
+        console.error(err);
+        window.AdminShell.toast('Could not delete the volunteer.', 'error');
+        if (btn) btn.disabled = false;
+      });
   }
 
   function volDrawerBody(v) {
@@ -327,6 +470,7 @@
     document.addEventListener('click', function (ev) {
       var t = ev.target;
       if (t && t.id === 'prideVolExport') { exportCsv(); return; }
+      if (t && t.id === 'prideVolAdd') { openAddVolDrawer(); return; }
 
       var setBtn = t.closest && t.closest('[data-act="set"]');
       if (setBtn) {

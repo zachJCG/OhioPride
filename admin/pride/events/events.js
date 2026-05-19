@@ -21,6 +21,12 @@
   var GRID_END = 22;    // 10 PM
   var HOUR_PX = 48;
 
+  // Set by /admin/pride/ED before this script loads, so that page is
+  // genuinely "a copy of the calendar but just with ED's events".
+  var CFG = window.PRIDE_CAL || {};
+  var EDONLY = CFG.edOnly === true;
+  var ACTIVE_TAB = CFG.tab || 'events';
+
   var state = {
     client: null,
     canWrite: false,
@@ -55,7 +61,8 @@
 
   function pageHtml() {
     return [
-      P.tabBarHtml('events'),
+      P.tabBarHtml(ACTIVE_TAB),
+      P.attendanceLegend(),
       '<div class="admin-stat-grid">',
         '<div class="admin-stat"><div class="admin-stat-num" id="kpiEvents">0</div><div class="admin-stat-label">Events</div></div>',
         '<div class="admin-stat"><div class="admin-stat-num" id="kpiPac">0</div><div class="admin-stat-label">PAC attending</div></div>',
@@ -75,11 +82,16 @@
     ].join('');
   }
 
+  // The ED page is the same calendar scoped to ED-attending events.
+  function applyScope(rows) {
+    return EDONLY ? rows.filter(function (e) { return e.ed_attending; }) : rows;
+  }
+
   function loadAll() {
     return Promise.all([
       state.client.from('pride_events').select('*')
         .order('event_date', { ascending: true })
-        .then(function (r) { if (r.error) throw r.error; state.events = r.data || []; }),
+        .then(function (r) { if (r.error) throw r.error; state.events = applyScope(r.data || []); }),
       state.client.from('pride_event_roster_v').select('*')
         .then(function (r) { if (r.error) throw r.error; (r.data || []).forEach(function (x) { state.rosterById[x.event_id] = x; }); })
     ]).then(function () {
@@ -93,7 +105,7 @@
     return Promise.all([
       state.client.from('pride_events').select('*')
         .order('event_date', { ascending: true })
-        .then(function (r) { if (r.error) throw r.error; state.events = r.data || []; }),
+        .then(function (r) { if (r.error) throw r.error; state.events = applyScope(r.data || []); }),
       state.client.from('pride_event_roster_v').select('*')
         .then(function (r) { if (r.error) throw r.error; state.rosterById = {}; (r.data || []).forEach(function (x) { state.rosterById[x.event_id] = x; }); })
     ]).then(function () { renderKpis(); renderCalendar(); });
@@ -167,10 +179,19 @@
     });
     head += '</div>';
 
-    // ---- all-day strip ----
+    // ---- tentative strip (unconfirmed times park here, above all-day) ----
+    var tentative = '<div class="pride-tentative"><div class="pride-allday-label">Tentative</div>';
+    days.forEach(function (d) {
+      var list = (byDay[dayKey(d)] || []).filter(function (e) { return !e.time_confirmed; });
+      tentative += '<div class="pride-allday-cell">' +
+        list.map(function (e) { return eventChip(e, true); }).join('') + '</div>';
+    });
+    tentative += '</div>';
+
+    // ---- all-day strip (confirmed but no specific start time) ----
     var allday = '<div class="pride-allday"><div class="pride-allday-label">All&nbsp;day</div>';
     days.forEach(function (d) {
-      var list = (byDay[dayKey(d)] || []).filter(function (e) { return !e.start_time_utc; });
+      var list = (byDay[dayKey(d)] || []).filter(function (e) { return e.time_confirmed && !e.start_time_utc; });
       allday += '<div class="pride-allday-cell">' +
         list.map(function (e) { return eventChip(e, false); }).join('') + '</div>';
     });
@@ -187,7 +208,7 @@
     var grid = '<div class="pride-grid">' + hours;
     days.forEach(function (d) {
       var k = dayKey(d);
-      var timed = (byDay[k] || []).filter(function (e) { return e.start_time_utc; });
+      var timed = (byDay[k] || []).filter(function (e) { return e.time_confirmed && e.start_time_utc; });
       grid += '<div class="pride-daycol' + (k === todayKey ? ' is-today' : '') + '">';
       for (var hh = GRID_START; hh <= GRID_END; hh++) grid += '<div class="pride-hour-line"></div>';
       timed.forEach(function (e) { grid += timedEvent(e); });
@@ -195,7 +216,7 @@
     });
     grid += '</div>';
 
-    $('prideCalWrap').innerHTML = '<div class="pride-cal">' + head + allday + grid + '</div>';
+    $('prideCalWrap').innerHTML = '<div class="pride-cal">' + head + tentative + allday + grid + '</div>';
   }
 
   function countsBadge(e) {
@@ -211,12 +232,29 @@
     if (e.pac_attending) return 'pride-ev-pac';
     return 'pride-ev-off';
   }
+  function attendanceFlags(e) {
+    var r = state.rosterById[e.id] || {};
+    return {
+      volunteers: (r.confirmed_count || 0) + (r.tentative_count || 0) > 0,
+      board: !!e.board_attending,
+      staff: !!e.staff_attending,
+      ed: !!e.ed_attending
+    };
+  }
 
-  function eventChip(e) {
-    return '<div class="pride-ev ' + evClass(e) + '" data-ev="' + P.escAttr(e.id) + '">' +
-      P.esc(e.name) +
-      '<small>' + P.esc(e.city) + ' &middot; ' + P.esc(P.eventTypeLabel(e.event_type)) + '</small>' +
-      countsBadge(e) +
+  function eventChip(e, isTentative) {
+    var timeBit = e.start_time_utc
+      ? P.esc(P.fmtTimeET(e.start_time_utc)) + ' &middot; '
+      : '';
+    var confirmBtn = (isTentative && state.canWrite)
+      ? '<button type="button" class="pride-ev-confirm" data-confirm-ev="' +
+          P.escAttr(e.id) + '">Confirm time</button>'
+      : '';
+    return '<div class="pride-ev ' + evClass(e) +
+      (isTentative ? ' is-tentative' : '') + '" data-ev="' + P.escAttr(e.id) + '">' +
+      P.esc(e.name) + P.attendanceDots(attendanceFlags(e)) +
+      '<small>' + timeBit + P.esc(e.city) + ' &middot; ' + P.esc(P.eventTypeLabel(e.event_type)) + '</small>' +
+      countsBadge(e) + confirmBtn +
       '</div>';
   }
 
@@ -231,6 +269,7 @@
     return '<div class="pride-ev is-timed ' + evClass(e) + '" data-ev="' + P.escAttr(e.id) +
       '" style="top:' + top + 'px;height:' + height + 'px">' +
       P.esc(P.fmtTimeET(e.start_time_utc)) + ' ' + P.esc(e.name) +
+      P.attendanceDots(attendanceFlags(e)) +
       '<small>' + P.esc(e.city) + '</small>' + countsBadge(e) +
       '</div>';
   }
@@ -250,13 +289,15 @@
       title: e.name,
       bodyHtml: body,
       footHtml: state.canWrite
-        ? '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>' +
+        ? '<button type="button" class="shell-btn shell-btn-danger" id="prideEvDelete">Delete</button>' +
+          '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>' +
           '<button type="button" class="shell-btn shell-btn-primary" id="prideEvSave">Save changes</button>'
         : '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>'
     });
 
     if (state.canWrite) {
       document.getElementById('prideEvSave').onclick = function () { saveEvent(e.id); };
+      document.getElementById('prideEvDelete').onclick = function () { confirmDeleteEvent(e); };
     }
 
     // pull the roster names lazily
@@ -268,6 +309,26 @@
         if (res.error) { el.innerHTML = '<p class="admin-error">Could not load roster.</p>'; return; }
         el.innerHTML = rosterTable(res.data || []);
       });
+  }
+
+  function whosGoingHtml(e, r, dis) {
+    var volN = (r.confirmed_count || 0) + (r.tentative_count || 0);
+    function dot(c) { return '<span class="pride-att-dot" style="background:' + c + '"></span>'; }
+    function box(col, color, label) {
+      return '<label class="pride-check-inline">' +
+        '<input type="checkbox" name="' + col + '"' + (e[col] ? ' checked' : '') + dis + ' /> ' +
+        dot(color) + label + '</label>';
+    }
+    var V = {};
+    P.ATTENDANCE.forEach(function (a) { V[a.key] = a; });
+    return '<div class="pride-whos-going">' +
+      '<div class="pride-att-readonly">' + dot(V.volunteers.color) +
+        'Volunteers <span class="admin-muted">' +
+        (volN ? volN + ' assigned (from roster)' : 'none assigned yet') + '</span></div>' +
+      box('board_attending', V.board.color, 'Board') +
+      box('staff_attending', V.staff.color, 'Staff') +
+      box('ed_attending',    V.ed.color,    'ED (me)') +
+      '</div>';
   }
 
   function eventDetailHtml(e, r, rosterHtml) {
@@ -307,11 +368,18 @@
             (e.pac_priority ? ' checked' : '') + dis + ' /> Flag as PAC priority</label>',
         '</div>',
         '<div class="pride-drawer-section">',
+          '<h4>Who’s going</h4>',
+          whosGoingHtml(e, r, dis),
+        '</div>',
+        '<div class="pride-drawer-section">',
           '<h4>Times <span class="admin-muted" style="text-transform:none;font-weight:500">(Eastern; leave blank for all-day)</span></h4>',
           '<div class="pride-form-row">',
             '<label>Start<input type="time" name="start_time" value="' + P.escAttr(P.easternTimeInput(e.start_time_utc)) + '"' + dis + ' /></label>',
             '<label>End<input type="time" name="end_time" value="' + P.escAttr(P.easternTimeInput(e.end_time_utc)) + '"' + dis + ' /></label>',
           '</div>',
+          '<label class="pride-check-inline"><input type="checkbox" name="time_confirmed"' +
+            (e.time_confirmed ? ' checked' : '') + dis + ' /> Time confirmed ' +
+            '<span class="admin-muted" style="text-transform:none;font-weight:500">(drop out of Tentative into the schedule)</span></label>',
         '</div>',
         '<div class="pride-drawer-section">',
           '<h4>Notes</h4>',
@@ -356,7 +424,11 @@
       registration_status: fd.get('registration_status'),
       description: (fd.get('description') || '').trim() || null,
       start_time_utc: st ? P.easternToISO(date, st) : null,
-      end_time_utc: en ? P.easternToISO(date, en) : null
+      end_time_utc: en ? P.easternToISO(date, en) : null,
+      time_confirmed: fd.get('time_confirmed') === 'on',
+      board_attending: fd.get('board_attending') === 'on',
+      staff_attending: fd.get('staff_attending') === 'on',
+      ed_attending: fd.get('ed_attending') === 'on'
     };
   }
 
@@ -382,13 +454,57 @@
       });
   }
 
+  // ---- confirm a tentative event's time slot ----
+  function confirmEventTime(id) {
+    if (!state.canWrite) { window.AdminShell.toast('Read-only role.', 'error'); return; }
+    state.client.from('pride_events').update({ time_confirmed: true }).eq('id', id)
+      .then(function (r) { if (r.error) throw r.error; return refreshEvents(); })
+      .then(function () { window.AdminShell.toast('Time confirmed.', 'success'); })
+      .catch(function (err) {
+        console.error(err);
+        window.AdminShell.toast('Could not confirm the time.', 'error');
+      });
+  }
+
+  // ---- delete an event (two-step confirm in the drawer footer) ----
+  function confirmDeleteEvent(e) {
+    var ft = document.getElementById('shellDrawerFoot');
+    if (!ft) return;
+    ft.innerHTML =
+      '<span class="pride-del-warn">Delete &ldquo;' + P.esc(e.name) +
+        '&rdquo;? This also removes its volunteer assignments.</span>' +
+      '<button type="button" class="shell-btn shell-btn-outline" id="prideEvDelCancel">Cancel</button>' +
+      '<button type="button" class="shell-btn shell-btn-danger" id="prideEvDelYes">Delete event</button>';
+    document.getElementById('prideEvDelCancel').onclick = function () { openEventDrawer(e.id); };
+    document.getElementById('prideEvDelYes').onclick = function () { deleteEvent(e); };
+  }
+
+  function deleteEvent(e) {
+    var btn = document.getElementById('prideEvDelYes');
+    if (btn) btn.disabled = true;
+    state.client.from('pride_events').delete().eq('id', e.id)
+      .then(function (r) { if (r.error) throw r.error; return refreshEvents(); })
+      .then(function () {
+        window.AdminShell.closeDrawer();
+        window.AdminShell.toast('Event deleted.', 'success');
+      })
+      .catch(function (err) {
+        console.error(err);
+        window.AdminShell.toast('Could not delete the event.', 'error');
+        if (btn) btn.disabled = false;
+      });
+  }
+
   // ---- add event ----
   function openAddDrawer() {
     var blank = {
       name: '', city: '', region: 'Central', event_date: '',
       event_type: 'festival', venue: '', pac_attending: false,
       pac_role: 'none', pac_priority: false, registration_status: 'tbd',
-      description: '', start_time_utc: null, end_time_utc: null
+      description: '', start_time_utc: null, end_time_utc: null,
+      time_confirmed: false,
+      board_attending: false, staff_attending: false,
+      ed_attending: EDONLY
     };
     window.AdminShell.openDrawer({
       eyebrow: 'New event',
@@ -434,6 +550,8 @@
   // ---- events ----
   function bindEvents() {
     document.addEventListener('click', function (ev) {
+      var confirmBtn = ev.target.closest && ev.target.closest('[data-confirm-ev]');
+      if (confirmBtn) { ev.stopPropagation(); confirmEventTime(confirmBtn.dataset.confirmEv); return; }
       var chip = ev.target.closest && ev.target.closest('[data-ev]');
       if (chip) { openEventDrawer(chip.dataset.ev); return; }
       var t = ev.target;
