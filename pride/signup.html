@@ -146,11 +146,11 @@
         <!-- Section 4 -->
         <fieldset class="pride-fieldset">
           <legend>Logistics</legend>
-          <label class="pride-check pride-toggle-row" style="max-width:none;">
+          <label class="pride-check pride-check--block pride-toggle-row">
             <input type="checkbox" id="pv-can-travel" name="can_travel" />
             Yes, I can travel outside my region.
           </label>
-          <label class="pride-check pride-toggle-row" style="max-width:none;">
+          <label class="pride-check pride-check--block pride-toggle-row">
             <input type="checkbox" id="pv-has-vehicle" name="has_vehicle" />
             Yes, I have a vehicle I can use for the day.
           </label>
@@ -198,7 +198,7 @@
             <label for="pv-notes">Anything else we should know?</label>
             <textarea id="pv-notes" name="notes" maxlength="1000"></textarea>
           </div>
-          <label class="pride-check" style="max-width:none;">
+          <label class="pride-check pride-check--block pride-check--top">
             <input type="checkbox" id="pv-consent" name="consent_communications" required aria-required="true" />
             I agree to receive event-related communications from Ohio Pride PAC
             at the email and phone number above. I understand I can unsubscribe
@@ -206,11 +206,11 @@
           </label>
         </fieldset>
 
-        <p class="pride-disclaimer">Paid for by Ohio Pride PAC. Zachary R. Joseph, Director.</p>
-
-        <button type="submit" class="pride-btn pride-btn--primary" id="pv-submit" disabled>
-          Sign Me Up
-        </button>
+        <div class="pride-form-actions">
+          <button type="submit" class="pride-btn pride-btn--primary" id="pv-submit" disabled>
+            Sign Me Up
+          </button>
+        </div>
       </form>
     </main>
 

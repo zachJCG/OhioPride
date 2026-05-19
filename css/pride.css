@@ -413,7 +413,7 @@
 }
 .pride-check {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
   color: var(--brand-text-on-navy-soft);
@@ -423,9 +423,15 @@
   padding: 0.55rem 0.7rem;
   cursor: pointer;
 }
-.pride-check input { margin-top: 0.2rem; accent-color: var(--brand-light-blue); }
+.pride-check input { flex: none; accent-color: var(--brand-light-blue); }
 .pride-check:focus-within { border-color: var(--brand-light-blue); }
-.pride-toggle-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; }
+/* Standalone (non-grid) check rows span the full form column so they
+   line up with the full-width inputs above them. */
+.pride-check--block { width: 100%; }
+/* Multi-line labels (consent) keep the box at the first line of text. */
+.pride-check--top { align-items: flex-start; }
+.pride-check--top input { margin-top: 0.2rem; }
+.pride-toggle-row { margin-bottom: 0.9rem; }
 .pride-event-month-head {
   font-family: var(--brand-font-display);
   font-weight: 700;
@@ -454,16 +460,10 @@
   margin-bottom: 1.2rem;
   font-size: 0.9rem;
 }
-.pride-disclaimer {
-  background: var(--brand-cream, #f7f3ec);
-  color: var(--brand-navy);
-  font-size: 0.78rem;
-  text-align: center;
-  padding: 0.7rem 1rem;
-  border-radius: var(--brand-radius-sm);
-  margin: 1.4rem 0;
-  font-family: var(--brand-font-display);
-  font-weight: 600;
+.pride-form-actions { margin-top: 0.4rem; }
+.pride-form-actions .pride-btn { width: 100%; }
+@media (min-width: 560px) {
+  .pride-form-actions .pride-btn { width: auto; min-width: 220px; }
 }
 
 /* ----- Confirmation ----- */
