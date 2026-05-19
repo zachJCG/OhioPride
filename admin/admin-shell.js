@@ -54,6 +54,7 @@
       group: 'Workspace',
       items: [
         { id: 'dashboard',    href: '/admin/dashboard',    label: 'Dashboard',    icon: 'home',       permission: ['dashboard','read'] },
+        { id: 'pride',        href: '/admin/pride',        label: 'Pride Road Tour', icon: 'flag',    permission: ['pride','read'] },
       ]
     },
     {
@@ -223,7 +224,7 @@
               };
               state.roles = [{ slug: 'super_admin', label: 'Super Admin' }];
               // Synthesize permissions for the legacy super_admin.
-              ['dashboard','volunteers','endorsements','donors','bills','legislators','news','board','launch','users','settings']
+              ['dashboard','pride','volunteers','endorsements','donors','bills','legislators','news','board','launch','users','settings']
                 .forEach(function (m) {
                   ['read','write','admin','manage_users'].forEach(function (a) {
                     state.permSet.add(m + ':' + a);
