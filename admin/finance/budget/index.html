@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budget | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <style>
+      /* Local enhancements layered on top of admin-shared.css */
+      .fin-tabs {
+        display: flex;
+        gap: 4px;
+        border-bottom: 1px solid var(--color-border, #d3d6dc);
+        margin: 4px 0 18px;
+      }
+      .fin-tab {
+        appearance: none;
+        background: transparent;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        padding: 10px 18px;
+        font: inherit;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #6c7480;
+        cursor: pointer;
+      }
+      .fin-tab:hover { color: #1a1f29; }
+      .fin-tab.is-active { color: #0f2233; border-bottom-color: #0f2233; }
+
+      .fin-net-pos { color: #1f7a3d; }
+      .fin-net-neg { color: #b3261e; }
+
+      .fin-quickadd {
+        display: grid;
+        grid-template-columns: 130px 1.4fr 1.6fr 1fr 120px 130px auto;
+        gap: 8px;
+        align-items: end;
+        background: #fafbfc;
+        border: 1px solid var(--color-border, #d3d6dc);
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 18px;
+      }
+      .fin-quickadd .fin-field { display: flex; flex-direction: column; gap: 4px; }
+      .fin-quickadd label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6c7480;
+        font-weight: 600;
+      }
+      .fin-quickadd .admin-input { width: 100%; }
+      .fin-btn {
+        appearance: none;
+        border: 0;
+        border-radius: 6px;
+        background: #0f2233;
+        color: #fff;
+        font: inherit;
+        font-weight: 600;
+        padding: 9px 16px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .fin-btn:hover { background: #1a3a52; }
+      .fin-btn[disabled] { opacity: 0.55; cursor: progress; }
+      .fin-btn-ghost {
+        background: transparent;
+        color: #6c7480;
+        border: 1px solid var(--color-border, #d3d6dc);
+      }
+      .fin-btn-ghost:hover { background: rgba(0,0,0,0.04); color: #1a1f29; }
+      .fin-btn-danger { background: transparent; color: #b3261e; border: 1px solid #e7c3c0; }
+      .fin-btn-danger:hover { background: #fcecea; }
+      .fin-row-actions { display: flex; gap: 6px; white-space: nowrap; }
+      .fin-row-actions .fin-btn { padding: 5px 10px; font-size: 0.82rem; }
+      td.fin-num, th.fin-num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+      .fin-cat-pill {
+        font-size: 0.78rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #eef2f6;
+        color: #1a1f29;
+      }
+      .fin-sub { display:block; font-size: 0.78rem; color: #6c7480; }
+      @media (max-width: 980px) {
+        .fin-quickadd { grid-template-columns: 1fr 1fr; }
+        .fin-quickadd .fin-field-wide { grid-column: 1 / -1; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <section class="subpage-hero">
+      <div class="container">
+        <div class="section-label">Admin &middot; Finance</div>
+        <h1 class="section-title">Budget</h1>
+        <p class="subpage-hero-sub">
+          A low-key ledger: revenue pulled from the donor database, expenses
+          you can add on the fly.
+        </p>
+      </div>
+    </section>
+
+    <div class="admin-meta-bar">
+      <div class="container">
+        <div class="admin-crumbs">
+          <a href="/admin/dashboard">Dashboard</a>
+          <span class="admin-crumb-sep">/</span>
+          <span>Finance</span>
+          <span class="admin-crumb-sep">/</span>
+          <span>Budget</span>
+        </div>
+        <div class="admin-meta-actions">
+          <span class="admin-meta-user">
+            Signed in as <strong id="adminEmail">&hellip;</strong>
+          </span>
+          <button type="button" class="admin-signout-btn" id="signOutBtn">Sign Out</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="admin-loading" id="loading">Loading&hellip;</div>
+
+        <div class="admin-panel" id="panel" hidden>
+          <div class="admin-stat-grid" id="statGrid">
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statRevenue">$0</div>
+              <div class="admin-stat-label">Total Revenue</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statExpenses">$0</div>
+              <div class="admin-stat-label">Total Expenses</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statNet">$0</div>
+              <div class="admin-stat-label">Net Position</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" id="statMonthNet">$0</div>
+              <div class="admin-stat-label" id="statMonthLabel">This Month</div>
+            </div>
+          </div>
+
+          <div class="fin-tabs" role="tablist">
+            <button type="button" class="fin-tab" id="tabRevenue" role="tab">Revenue</button>
+            <button type="button" class="fin-tab" id="tabExpense" role="tab">Expense</button>
+          </div>
+
+          <!-- ============ REVENUE ============ -->
+          <div id="paneRevenue">
+            <div class="admin-toolbar">
+              <input
+                type="search"
+                class="admin-input"
+                id="revSearch"
+                placeholder="Search donor, refcode, payment&hellip;"
+                autocomplete="off"
+              />
+              <span class="admin-toolbar-spacer"></span>
+              <span class="admin-result-count" id="revCount"></span>
+            </div>
+
+            <div class="admin-table-wrap" style="margin-bottom: 26px;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <th class="fin-num">Contributions</th>
+                    <th class="fin-num">Revenue</th>
+                  </tr>
+                </thead>
+                <tbody id="revMonthlyBody">
+                  <tr><td colspan="3" class="admin-empty-row">Loading&hellip;</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table" id="revTable">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Donor</th>
+                    <th>Refcode</th>
+                    <th>Payment</th>
+                    <th class="fin-num">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="revBody">
+                  <tr><td colspan="5" class="admin-empty-row">Loading donor revenue&hellip;</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="admin-panel-foot">
+              Source of truth: <code>founding_members</code> (fed hourly by
+              <code>netlify/functions/actblue-sync.mjs</code>). Refunded
+              contributions are excluded. Read-only here &mdash; manage donors
+              under <a href="/admin/donors">Donors</a>.
+            </p>
+          </div>
+
+          <!-- ============ EXPENSE ============ -->
+          <div id="paneExpense" hidden>
+            <form class="fin-quickadd" id="expenseForm" autocomplete="off">
+              <div class="fin-field">
+                <label for="exDate">Date</label>
+                <input type="date" class="admin-input" id="exDate" required />
+              </div>
+              <div class="fin-field">
+                <label for="exVendor">Vendor / Payee</label>
+                <input type="text" class="admin-input" id="exVendor"
+                       placeholder="Akron Pride Festival" required />
+              </div>
+              <div class="fin-field fin-field-wide">
+                <label for="exDesc">Description</label>
+                <input type="text" class="admin-input" id="exDesc"
+                       placeholder="Non Profit Vendor Space" />
+              </div>
+              <div class="fin-field">
+                <label for="exCategory">Category</label>
+                <input type="text" class="admin-input" id="exCategory"
+                       list="exCategoryList" placeholder="Vendor / Booth" />
+                <datalist id="exCategoryList">
+                  <option value="Vendor / Booth"></option>
+                  <option value="Printing"></option>
+                  <option value="Travel"></option>
+                  <option value="Software"></option>
+                  <option value="Events"></option>
+                  <option value="Supplies"></option>
+                  <option value="Advertising"></option>
+                  <option value="Professional Fees"></option>
+                  <option value="Bank / Processing"></option>
+                  <option value="General"></option>
+                </datalist>
+              </div>
+              <div class="fin-field">
+                <label for="exAmount">Amount</label>
+                <input type="text" class="admin-input fin-num" id="exAmount"
+                       inputmode="decimal" placeholder="250.00" required />
+              </div>
+              <div class="fin-field">
+                <label for="exMethod">Payment</label>
+                <input type="text" class="admin-input" id="exMethod"
+                       placeholder="Apple Pay (Stripe)" />
+              </div>
+              <div class="fin-field">
+                <label>&nbsp;</label>
+                <button type="submit" class="fin-btn" id="exSubmit">Add expense</button>
+              </div>
+              <input type="hidden" id="exId" />
+              <input type="hidden" id="exReference" />
+              <input type="hidden" id="exNotes" />
+            </form>
+
+            <div class="admin-toolbar">
+              <input
+                type="search"
+                class="admin-input"
+                id="expSearch"
+                placeholder="Search vendor, description, category, reference&hellip;"
+                autocomplete="off"
+              />
+              <span class="admin-toolbar-spacer"></span>
+              <span class="admin-result-count" id="expCount"></span>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table" id="expTable">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Vendor</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Payment</th>
+                    <th class="fin-num">Amount</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="expBody">
+                  <tr><td colspan="7" class="admin-empty-row">No expenses yet. Add one above.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="admin-panel-foot">
+              Source of truth: <code>expenses</code>. Every row is stamped
+              with your sign-in email. Add, edit, or delete anything &mdash;
+              the net position above updates live.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="site-footer"></div>
+    <div class="admin-toast" id="toast"></div>
+
+    <script src="/js/site-template.js" defer></script>
+    <script src="/js/ohiopride-data.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-auth.js"></script>
+    <script>
+      (function () {
+        'use strict';
+
+        var BASE = '/admin/finance/budget';
+
+        var state = {
+          revenue: [],      // founding_members rows (non-refunded)
+          revFiltered: [],
+          expenses: [],
+          expFiltered: [],
+          tab: 'revenue'
+        };
+
+        function $(id) { return document.getElementById(id); }
+
+        function fmtMoney(cents, withCents) {
+          var dollars = (cents || 0) / 100;
+          return dollars.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: withCents ? 2 : (dollars % 1 === 0 ? 0 : 2),
+            maximumFractionDigits: 2
+          });
+        }
+
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function monthKey(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+        }
+
+        function monthLabel(key) {
+          var p = key.split('-');
+          var d = new Date(Date.UTC(Number(p[0]), Number(p[1]) - 1, 1));
+          return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+        }
+
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+
+        function dash(s) {
+          var v = (s == null ? '' : String(s)).trim();
+          return v ? escapeHtml(v) : '<span class="admin-muted">&mdash;</span>';
+        }
+
+        function toast(msg, kind) {
+          var el = $('toast');
+          el.textContent = msg;
+          el.className = 'admin-toast visible' + (kind ? ' admin-toast-' + kind : '');
+          clearTimeout(toast._t);
+          toast._t = setTimeout(function () { el.classList.remove('visible'); }, 3200);
+        }
+
+        function parseCents(str) {
+          if (str == null) return NaN;
+          var n = parseFloat(String(str).replace(/[^0-9.\-]/g, ''));
+          if (isNaN(n) || n < 0) return NaN;
+          return Math.round(n * 100);
+        }
+
+        // -------------------------------------------------------------
+        // Tabs (URL-aware: /admin/finance/budget/revenue|expense)
+        // -------------------------------------------------------------
+        function tabFromPath() {
+          var p = (location.pathname || '').toLowerCase().replace(/\/+$/, '');
+          if (p.indexOf(BASE + '/expense') === 0 || /expense$/.test(p)) return 'expense';
+          return 'revenue';
+        }
+
+        function setTab(tab, push) {
+          state.tab = tab === 'expense' ? 'expense' : 'revenue';
+          $('tabRevenue').classList.toggle('is-active', state.tab === 'revenue');
+          $('tabExpense').classList.toggle('is-active', state.tab === 'expense');
+          $('tabRevenue').setAttribute('aria-selected', state.tab === 'revenue');
+          $('tabExpense').setAttribute('aria-selected', state.tab === 'expense');
+          $('paneRevenue').hidden = state.tab !== 'revenue';
+          $('paneExpense').hidden = state.tab !== 'expense';
+          if (push) {
+            try {
+              history.pushState({ tab: state.tab }, '',
+                BASE + '/' + state.tab);
+            } catch (e) {}
+          }
+        }
+
+        // -------------------------------------------------------------
+        // Summary cards
+        // -------------------------------------------------------------
+        function totalRevenueCents() {
+          return state.revenue.reduce(function (s, r) { return s + (r.amount_cents || 0); }, 0);
+        }
+        function totalExpenseCents() {
+          return state.expenses.reduce(function (s, e) { return s + (e.amount_cents || 0); }, 0);
+        }
+
+        function renderSummary() {
+          var rev = totalRevenueCents();
+          var exp = totalExpenseCents();
+          var net = rev - exp;
+
+          var nowKey = monthKey(new Date().toISOString());
+          var mRev = state.revenue.reduce(function (s, r) {
+            return monthKey(r.contributed_at) === nowKey ? s + (r.amount_cents || 0) : s;
+          }, 0);
+          var mExp = state.expenses.reduce(function (s, e) {
+            return monthKey(e.incurred_on) === nowKey ? s + (e.amount_cents || 0) : s;
+          }, 0);
+          var mNet = mRev - mExp;
+
+          $('statRevenue').textContent  = fmtMoney(rev);
+          $('statExpenses').textContent = fmtMoney(exp);
+
+          var netEl = $('statNet');
+          netEl.textContent = fmtMoney(net);
+          netEl.className = 'admin-stat-num ' + (net < 0 ? 'fin-net-neg' : 'fin-net-pos');
+
+          var mEl = $('statMonthNet');
+          mEl.textContent = fmtMoney(mNet);
+          mEl.className = 'admin-stat-num ' + (mNet < 0 ? 'fin-net-neg' : 'fin-net-pos');
+          $('statMonthLabel').textContent =
+            nowKey ? monthLabel(nowKey) + ' (net)' : 'This Month';
+        }
+
+        // -------------------------------------------------------------
+        // Revenue
+        // -------------------------------------------------------------
+        function applyRevFilter() {
+          var q = $('revSearch').value.trim().toLowerCase();
+          state.revFiltered = !q ? state.revenue.slice() : state.revenue.filter(function (r) {
+            return (
+              (r.full_name || '') + ' ' + (r.display_name || '') + ' ' +
+              (r.refcode || '') + ' ' + (r.payment_method || '')
+            ).toLowerCase().indexOf(q) !== -1;
+          });
+          renderRevenue();
+        }
+
+        function renderRevenue() {
+          var rows = state.revFiltered;
+
+          // Monthly rollup
+          var byMonth = {};
+          state.revenue.forEach(function (r) {
+            var k = monthKey(r.contributed_at);
+            if (!k) return;
+            if (!byMonth[k]) byMonth[k] = { count: 0, cents: 0 };
+            byMonth[k].count++;
+            byMonth[k].cents += (r.amount_cents || 0);
+          });
+          var mKeys = Object.keys(byMonth).sort().reverse();
+          $('revMonthlyBody').innerHTML = mKeys.length
+            ? mKeys.map(function (k) {
+                return '<tr><td>' + escapeHtml(monthLabel(k)) + '</td>' +
+                  '<td class="fin-num">' + byMonth[k].count + '</td>' +
+                  '<td class="fin-num">' + fmtMoney(byMonth[k].cents) + '</td></tr>';
+              }).join('')
+            : '<tr><td colspan="3" class="admin-empty-row">No revenue recorded yet.</td></tr>';
+
+          // Detail list
+          $('revCount').textContent = rows.length === state.revenue.length
+            ? state.revenue.length + ' contributions'
+            : rows.length + ' of ' + state.revenue.length;
+
+          if (!rows.length) {
+            $('revBody').innerHTML =
+              '<tr><td colspan="5" class="admin-empty-row">' +
+              (state.revenue.length ? 'No contributions match your search.'
+                : 'No donor revenue yet. ActBlue sync populates this hourly.') +
+              '</td></tr>';
+            return;
+          }
+
+          $('revBody').innerHTML = rows.map(function (r) {
+            var name = escapeHtml(r.full_name || r.display_name || '—');
+            var amt = fmtMoney(r.amount_cents, true);
+            if (r.recurrence === 'monthly') amt += '<span class="fin-sub">/mo</span>';
+            return '<tr>' +
+              '<td>' + escapeHtml(fmtDate(r.contributed_at)) + '</td>' +
+              '<td>' + name + '</td>' +
+              '<td>' + dash(r.refcode) + '</td>' +
+              '<td>' + dash(r.payment_method) + '</td>' +
+              '<td class="fin-num">' + amt + '</td>' +
+              '</tr>';
+          }).join('');
+        }
+
+        async function loadRevenue(client) {
+          var resp = await client
+            .from('founding_members')
+            .select('id, full_name, display_name, amount_cents, recurrence, ' +
+                    'contributed_at, refcode, payment_method, is_refunded')
+            .order('contributed_at', { ascending: false, nullsFirst: false });
+          if (resp.error) throw resp.error;
+          return (resp.data || []).filter(function (r) { return !r.is_refunded; });
+        }
+
+        // -------------------------------------------------------------
+        // Expenses
+        // -------------------------------------------------------------
+        function applyExpFilter() {
+          var q = $('expSearch').value.trim().toLowerCase();
+          state.expFiltered = !q ? state.expenses.slice() : state.expenses.filter(function (e) {
+            return (
+              (e.vendor || '') + ' ' + (e.description || '') + ' ' +
+              (e.category || '') + ' ' + (e.reference || '') + ' ' +
+              (e.payment_method || '')
+            ).toLowerCase().indexOf(q) !== -1;
+          });
+          renderExpenses();
+        }
+
+        function renderExpenses() {
+          var rows = state.expFiltered;
+          $('expCount').textContent = rows.length === state.expenses.length
+            ? state.expenses.length + ' expenses'
+            : rows.length + ' of ' + state.expenses.length;
+
+          if (!rows.length) {
+            $('expBody').innerHTML =
+              '<tr><td colspan="7" class="admin-empty-row">' +
+              (state.expenses.length ? 'No expenses match your search.'
+                : 'No expenses yet. Add one above.') +
+              '</td></tr>';
+            return;
+          }
+
+          $('expBody').innerHTML = rows.map(function (e) {
+            var desc = e.description ? escapeHtml(e.description) : '<span class="admin-muted">&mdash;</span>';
+            if (e.reference) desc += '<span class="fin-sub">Ref: ' + escapeHtml(e.reference) + '</span>';
+            if (e.notes) desc += '<span class="fin-sub">' + escapeHtml(e.notes) + '</span>';
+            return '<tr data-id="' + escapeHtml(e.id) + '">' +
+              '<td>' + escapeHtml(fmtDate(e.incurred_on)) + '</td>' +
+              '<td>' + escapeHtml(e.vendor || '') + '</td>' +
+              '<td>' + desc + '</td>' +
+              '<td><span class="fin-cat-pill">' + escapeHtml(e.category || 'General') + '</span></td>' +
+              '<td>' + dash(e.payment_method) + '</td>' +
+              '<td class="fin-num">' + fmtMoney(e.amount_cents, true) + '</td>' +
+              '<td><div class="fin-row-actions">' +
+                '<button type="button" class="fin-btn fin-btn-ghost" data-edit="' + escapeHtml(e.id) + '">Edit</button>' +
+                '<button type="button" class="fin-btn fin-btn-danger" data-del="' + escapeHtml(e.id) + '">Delete</button>' +
+              '</div></td>' +
+              '</tr>';
+          }).join('');
+        }
+
+        function resetForm() {
+          $('exId').value = '';
+          $('exReference').value = '';
+          $('exNotes').value = '';
+          $('exVendor').value = '';
+          $('exDesc').value = '';
+          $('exCategory').value = '';
+          $('exAmount').value = '';
+          $('exMethod').value = '';
+          $('exDate').value = new Date().toISOString().slice(0, 10);
+          $('exSubmit').textContent = 'Add expense';
+        }
+
+        function fillForm(e) {
+          $('exId').value = e.id;
+          $('exDate').value = (e.incurred_on || '').slice(0, 10);
+          $('exVendor').value = e.vendor || '';
+          $('exDesc').value = e.description || '';
+          $('exCategory').value = e.category || '';
+          $('exAmount').value = ((e.amount_cents || 0) / 100).toFixed(2);
+          $('exMethod').value = e.payment_method || '';
+          $('exReference').value = e.reference || '';
+          $('exNotes').value = e.notes || '';
+          $('exSubmit').textContent = 'Save changes';
+          $('exVendor').focus();
+        }
+
+        async function loadExpenses(client) {
+          var resp = await client
+            .from('expenses')
+            .select('id, incurred_on, vendor, description, category, amount_cents, ' +
+                    'payment_method, reference, notes, created_by, created_at')
+            .order('incurred_on', { ascending: false })
+            .order('created_at', { ascending: false });
+          if (resp.error) throw resp.error;
+          return resp.data || [];
+        }
+
+        async function submitExpense(client, ev) {
+          ev.preventDefault();
+          var cents = parseCents($('exAmount').value);
+          var vendor = $('exVendor').value.trim();
+          if (!vendor) { toast('Vendor is required.', 'error'); return; }
+          if (isNaN(cents)) { toast('Enter a valid amount.', 'error'); return; }
+
+          var payload = {
+            incurred_on: $('exDate').value || new Date().toISOString().slice(0, 10),
+            vendor: vendor,
+            description: $('exDesc').value.trim() || null,
+            category: $('exCategory').value.trim() || 'General',
+            amount_cents: cents,
+            payment_method: $('exMethod').value.trim() || null,
+            reference: $('exReference').value.trim() || null,
+            notes: $('exNotes').value.trim() || null
+          };
+
+          var id = $('exId').value;
+          var btn = $('exSubmit');
+          btn.disabled = true;
+          try {
+            var resp;
+            if (id) {
+              resp = await client.from('expenses').update(payload).eq('id', id)
+                .select('id, incurred_on, vendor, description, category, amount_cents, ' +
+                        'payment_method, reference, notes, created_by, created_at');
+            } else {
+              resp = await client.from('expenses').insert(payload)
+                .select('id, incurred_on, vendor, description, category, amount_cents, ' +
+                        'payment_method, reference, notes, created_by, created_at');
+            }
+            if (resp.error) throw resp.error;
+            var row = (resp.data && resp.data[0]) || null;
+            if (id) {
+              state.expenses = state.expenses.map(function (e) {
+                return (row && e.id === row.id) ? row : e;
+              });
+              toast('Expense updated.', 'success');
+            } else if (row) {
+              state.expenses.unshift(row);
+              toast('Expense added.', 'success');
+            }
+            state.expenses.sort(function (a, b) {
+              return String(b.incurred_on).localeCompare(String(a.incurred_on)) ||
+                     String(b.created_at).localeCompare(String(a.created_at));
+            });
+            resetForm();
+            applyExpFilter();
+            renderSummary();
+          } catch (err) {
+            console.error('Save expense failed:', err);
+            toast('Could not save. Your account may not have finance access.', 'error');
+          } finally {
+            btn.disabled = false;
+          }
+        }
+
+        async function deleteExpense(client, id) {
+          var e = state.expenses.find(function (x) { return x.id === id; });
+          if (!e) return;
+          if (!window.confirm('Delete this expense?\n\n' +
+              (e.vendor || '') + ' — ' + fmtMoney(e.amount_cents, true))) return;
+          try {
+            var resp = await client.from('expenses').delete().eq('id', id);
+            if (resp.error) throw resp.error;
+            state.expenses = state.expenses.filter(function (x) { return x.id !== id; });
+            if ($('exId').value === id) resetForm();
+            applyExpFilter();
+            renderSummary();
+            toast('Expense deleted.', 'success');
+          } catch (err) {
+            console.error('Delete expense failed:', err);
+            toast('Could not delete. Please try again.', 'error');
+          }
+        }
+
+        // -------------------------------------------------------------
+        // Boot
+        // -------------------------------------------------------------
+        document.addEventListener('admin-auth-ready', function () {
+          var client = window.AdminAuth && window.AdminAuth.client;
+          if (!client) return;
+
+          resetForm();
+          setTab(tabFromPath(), false);
+
+          $('tabRevenue').addEventListener('click', function () { setTab('revenue', true); });
+          $('tabExpense').addEventListener('click', function () { setTab('expense', true); });
+          window.addEventListener('popstate', function () { setTab(tabFromPath(), false); });
+
+          var rt;
+          $('revSearch').addEventListener('input', function () {
+            clearTimeout(rt); rt = setTimeout(applyRevFilter, 150);
+          });
+          var et;
+          $('expSearch').addEventListener('input', function () {
+            clearTimeout(et); et = setTimeout(applyExpFilter, 150);
+          });
+
+          $('expenseForm').addEventListener('submit', function (ev) {
+            submitExpense(client, ev);
+          });
+
+          $('expBody').addEventListener('click', function (ev) {
+            var edit = ev.target.closest && ev.target.closest('[data-edit]');
+            var del = ev.target.closest && ev.target.closest('[data-del]');
+            if (edit) {
+              var e = state.expenses.find(function (x) { return x.id === edit.dataset.edit; });
+              if (e) { fillForm(e); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+            } else if (del) {
+              deleteExpense(client, del.dataset.del);
+            }
+          });
+
+          Promise.allSettled([loadRevenue(client), loadExpenses(client)])
+            .then(function (res) {
+              if (res[0].status === 'fulfilled') {
+                state.revenue = res[0].value;
+              } else {
+                console.error('Revenue load failed:', res[0].reason);
+                $('revBody').innerHTML =
+                  '<tr><td colspan="5" class="admin-empty-row admin-error">' +
+                  'Could not load donor revenue.</td></tr>';
+              }
+              if (res[1].status === 'fulfilled') {
+                state.expenses = res[1].value;
+              } else {
+                console.error('Expense load failed:', res[1].reason);
+                $('expBody').innerHTML =
+                  '<tr><td colspan="7" class="admin-empty-row admin-error">' +
+                  'Could not load expenses. The expenses table may not be migrated yet.</td></tr>';
+              }
+              applyRevFilter();
+              applyExpFilter();
+              renderSummary();
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>

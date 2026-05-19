@@ -71,6 +71,12 @@
       items: [
         { id: 'endorsements', href: '/admin/endorsements', label: 'Endorsements', icon: 'star',       permission: ['endorsements','read'] },
       ]
+    },
+    {
+      group: 'Money',
+      items: [
+        { id: 'finance',      href: '/admin/finance/budget', label: 'Budget',      icon: 'wallet',     permission: ['finance','read'] },
+      ]
     }
   ];
 
@@ -87,6 +93,7 @@
     megaphone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 11v2c0 .55.45 1 1 1h2l5 4V6L6 10H4c-.55 0-1 .45-1 1z"/><path d="M14 7c1.5 1 2.5 2.7 2.5 5s-1 4-2.5 5"/></svg>',
     flag:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/></svg>',
     briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>',
+    wallet:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 13h.01"/><path d="M3 11h18"/></svg>',
     menu:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="4" y1="7"  x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>',
     chev:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>',
     close:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>',
@@ -214,7 +221,7 @@
               };
               state.roles = [{ slug: 'super_admin', label: 'Super Admin' }];
               // Synthesize permissions for the legacy super_admin.
-              ['dashboard','volunteers','endorsements','donors','bills','legislators','news','board','launch','pride','users','settings']
+              ['dashboard','volunteers','endorsements','donors','bills','legislators','news','board','launch','pride','finance','users','settings']
                 .forEach(function (m) {
                   ['read','write','admin','manage_users'].forEach(function (a) {
                     state.permSet.add(m + ':' + a);
