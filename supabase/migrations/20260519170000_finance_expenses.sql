@@ -86,6 +86,10 @@ begin
 end;
 $$;
 
+-- It is only ever invoked as a trigger; do not expose it as a PostgREST
+-- RPC (/rest/v1/rpc/stamp_expense_creator) to anon/authenticated.
+revoke all on function public.stamp_expense_creator() from anon, authenticated, public;
+
 drop trigger if exists trg_expenses_stamp_creator on public.expenses;
 create trigger trg_expenses_stamp_creator
   before insert on public.expenses
@@ -128,11 +132,23 @@ grant select, insert, update, delete on public.expenses to authenticated;
 -- super_admin already short-circuits every module in has_permission(),
 -- but we add explicit rows so the catalog stays complete and the
 -- client-side nav filter (admin-shell.js can()) is consistent.
-insert into public.role_permissions (role_slug, module, action) values
-  ('super_admin','finance','read'),
-  ('super_admin','finance','write'),
-  ('super_admin','finance','admin'),
-  ('treasurer','finance','read'),
-  ('treasurer','finance','write'),
-  ('board_member','finance','read')
-on conflict do nothing;
+--
+-- Guarded: production still runs the legacy admin_emails allowlist and
+-- never had public.role_permissions deployed. is_admin() (which gates
+-- the table above) and the admin-shell legacy permission synthesis both
+-- already cover 'finance', so this block is purely catalog upkeep for
+-- environments where the role system exists.
+do $$
+begin
+  if to_regclass('public.role_permissions') is not null then
+    insert into public.role_permissions (role_slug, module, action) values
+      ('super_admin','finance','read'),
+      ('super_admin','finance','write'),
+      ('super_admin','finance','admin'),
+      ('treasurer','finance','read'),
+      ('treasurer','finance','write'),
+      ('board_member','finance','read')
+    on conflict do nothing;
+  end if;
+end
+$$;
