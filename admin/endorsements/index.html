@@ -1,572 +1,557 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Endorsement Applications | Ohio Pride PAC Admin</title>
-  <meta name="robots" content="noindex,nofollow" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
-  <link rel="stylesheet" href="/css/style.css" />
-  <link rel="stylesheet" href="/css/site-template.css" />
-  <link rel="stylesheet" href="/admin/admin-shared.css" />
-  <link rel="stylesheet" href="/admin/endorsements/admin.css" />
-
-  <style>
-    main {
-      flex: 1;
-      max-width: 1180px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 32px 24px 48px;
-    }
-
-    .page-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .page-eyebrow {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--cyan);
-      margin: 0 0 6px;
-    }
-    .page-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: clamp(24px, 4vw, 32px);
-      font-weight: 800;
-      letter-spacing: -0.01em;
-      color: var(--ink);
-      margin: 0;
-    }
-    .page-stats {
-      display: flex;
-      gap: 24px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--ink-mute);
-    }
-    .page-stats strong {
-      color: var(--ink);
-      font-weight: 800;
-      font-size: 18px;
-      letter-spacing: -0.01em;
-      text-transform: none;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .filters {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-soft);
-      padding: 16px 18px;
-      margin-bottom: 16px;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 12px;
-    }
-    @media (max-width: 720px) {
-      .filters { grid-template-columns: 1fr; }
-    }
-
-    .table-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
-      overflow: hidden;
-    }
-
-    table.applications {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    table.applications thead th {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      background: var(--paper);
-      padding: 14px 16px;
-      text-align: left;
-      border-bottom: 1px solid var(--line);
-      cursor: pointer;
-      user-select: none;
-      white-space: nowrap;
-    }
-    table.applications thead th:hover { color: var(--ink); }
-    table.applications thead th .arrow { display: inline-block; margin-left: 4px; opacity: 0; }
-    table.applications thead th.sort-asc  .arrow,
-    table.applications thead th.sort-desc .arrow { opacity: 1; color: var(--cyan); }
-    table.applications thead th.sort-desc .arrow { transform: rotate(180deg); }
-
-    table.applications tbody tr {
-      border-bottom: 1px solid var(--line-soft);
-      cursor: pointer;
-      transition: background 0.1s;
-    }
-    table.applications tbody tr:hover { background: var(--paper); }
-    table.applications tbody tr:last-child { border-bottom: none; }
-    table.applications tbody td {
-      padding: 14px 16px;
-      font-size: 14px;
-      color: var(--ink);
-      vertical-align: middle;
-    }
-    table.applications tbody td.muted { color: var(--ink-soft); font-size: 13px; }
-    table.applications tbody td.name { font-weight: 600; }
-    table.applications tbody td.name .pronouns {
-      display: block;
-      font-weight: 400;
-      font-size: 12px;
-      color: var(--ink-mute);
-      margin-top: 2px;
-    }
-    table.applications tbody td.chevron {
-      color: var(--ink-mute);
-      width: 24px;
-      text-align: right;
-      padding-right: 18px;
-    }
-
-    .empty-state, .loading-state {
-      padding: 80px 24px;
-      text-align: center;
-      color: var(--ink-soft);
-    }
-    .empty-state h2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--ink);
-      margin: 0 0 8px;
-    }
-    .empty-state p { font-size: 14px; margin: 0; }
-
-    .auth-blocker {
-      max-width: 480px;
-      margin: 80px auto;
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 36px;
-      box-shadow: var(--shadow-card);
-      text-align: center;
-    }
-    .auth-blocker h2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 22px;
-      margin: 0 0 12px;
-    }
-    .auth-blocker p { color: var(--ink-soft); margin: 0 0 24px; }
-
-    /* Mobile: collapse table to cards */
-    @media (max-width: 640px) {
-      table.applications thead { display: none; }
-      table.applications tbody tr {
-        display: block;
-        padding: 14px 16px;
-        border-bottom: 1px solid var(--line-soft);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Endorsements | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+    <style>
+      .admin-pill-status {
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 2px 10px;
+        border-radius: 999px;
       }
-      table.applications tbody td {
-        display: block;
-        padding: 2px 0;
-      }
-      table.applications tbody td.chevron { display: none; }
-      table.applications tbody td.name { font-size: 16px; margin-bottom: 4px; }
-      table.applications tbody td:before {
-        content: attr(data-label);
+      .admin-pill-st-submitted    { background: rgba(115,215,238,0.18); color: #0b6c83; }
+      .admin-pill-st-under_review { background: rgba(255,200,87,0.20);   color: #8a6d1f; }
+      .admin-pill-st-endorsed     { background: rgba(74,222,128,0.20);   color: #1e7e45; }
+      .admin-pill-st-declined     { background: rgba(255,107,107,0.18);  color: #c0392b; }
+      .admin-pill-st-withdrawn    { background: #eef2f6;                 color: #6c7480; }
+      td.admin-cell-tight { white-space: nowrap; }
+
+      /* Drawer detail — rendered inside the dark slideout panel (#0e2237) */
+      .endo-sec-title {
         font-family: 'Montserrat', sans-serif;
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: 1px;
+        font-size: 0.72rem;
         text-transform: uppercase;
-        color: var(--ink-mute);
-        margin-right: 6px;
+        letter-spacing: 0.08em;
+        color: var(--text-accent, #73d7ee);
+        margin: 22px 0 10px;
+        font-weight: 700;
       }
-      table.applications tbody td.name:before { display: none; }
-    }
-  </style>
-</head>
-<body>
-  <div id="site-header"></div>
+      .endo-sec-title:first-child { margin-top: 0; }
+      .endo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px 18px;
+      }
+      .endo-grid dt {
+        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em;
+        color: rgba(255,255,255,0.45); margin: 0 0 2px;
+      }
+      .endo-grid dd {
+        margin: 0 0 4px; font-size: 0.92rem; word-break: break-word;
+        color: rgba(255,255,255,0.88);
+      }
+      .endo-q { margin: 0 0 14px; }
+      .endo-q-text {
+        font-size: 0.9rem; line-height: 1.5; margin: 0 0 6px;
+        color: rgba(255,255,255,0.85);
+      }
+      .endo-q-num { font-weight: 800; color: var(--text-accent, #73d7ee); margin-right: 4px; }
+      .endo-ans {
+        display: inline-block; font-size: 0.7rem; font-weight: 700;
+        letter-spacing: 0.06em; text-transform: uppercase;
+        padding: 2px 10px; border-radius: 999px; margin-bottom: 6px;
+      }
+      .endo-ans.yes { background: rgba(74,222,128,0.22);  color: #6ee7a0; }
+      .endo-ans.no  { background: rgba(255,107,107,0.22); color: #ff9b9b; }
+      .endo-ans.na  { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.55); }
+      .endo-explain {
+        font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65);
+        white-space: pre-wrap; margin: 0;
+      }
+      .endo-explain.empty { font-style: italic; color: rgba(255,255,255,0.35); }
+      .endo-prose {
+        font-size: 0.9rem; line-height: 1.65; color: rgba(255,255,255,0.78);
+        white-space: pre-wrap; margin: 0 0 4px;
+        background: rgba(255,255,255,0.04);
+        border-left: 3px solid var(--text-accent, #73d7ee);
+        padding: 12px 14px; border-radius: 6px;
+      }
+      .endo-prose.empty {
+        font-style: italic; color: rgba(255,255,255,0.35);
+        background: rgba(255,255,255,0.04);
+      }
+      .endo-edit-label {
+        display: block; font-size: 0.72rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.05em;
+        color: rgba(255,255,255,0.5); margin: 0 0 6px;
+      }
+      .endo-edit-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+      .endo-edit-row select { min-width: 180px; }
+      #endoNotes {
+        width: 100%; min-height: 90px; resize: vertical; margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body class="admin-shell">
+    <div id="shell-root"
+         data-active-nav="endorsements"
+         data-page-eyebrow="Program"
+         data-page-title="Endorsements"
+         data-page-sub="Screen candidate applications and publish endorsement decisions."></div>
 
-  <section class="subpage-hero">
-    <div class="container">
-      <div class="section-label">Admin &middot; Screening Committee</div>
-      <h1 class="section-title">Endorsement Applications</h1>
-      <p class="subpage-hero-sub">Triage candidate applications, screen, and publish endorsement decisions.</p>
-    </div>
-  </section>
-
-  <div class="admin-meta-bar">
-    <div class="container">
-      <div class="admin-crumbs">
-        <a href="/admin/dashboard">Dashboard</a>
-        <span class="admin-crumb-sep">/</span>
-        <span>Endorsements</span>
-      </div>
-      <div class="admin-meta-actions">
-        <span class="admin-meta-user">Signed in as <strong id="headerUser">&hellip;</strong></span>
-        <button type="button" class="admin-signout-btn" id="btnSignOut">Sign Out</button>
-      </div>
-    </div>
-  </div>
-
-  <main>
-    <div id="appShell" style="display:none;">
-      <div class="page-head">
-        <div class="page-stats" id="pageStats">
-          <div><strong id="statTotal">0</strong>Total</div>
-          <div><strong id="statSubmitted">0</strong>New</div>
-          <div><strong id="statReview">0</strong>In Review</div>
-          <div><strong id="statEndorsed">0</strong>Endorsed</div>
+    <template id="endoTpl">
+      <div class="shell-widget admin-panel">
+        <div class="admin-stat-grid" id="statGrid">
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statTotal">0</div>
+            <div class="admin-stat-label">Applications</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statNew">0</div>
+            <div class="admin-stat-label">New</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statReview">0</div>
+            <div class="admin-stat-label">In Review</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statEndorsed">0</div>
+            <div class="admin-stat-label">Endorsed</div>
+          </div>
         </div>
+
+        <div class="admin-toolbar">
+          <input type="search" class="admin-input" id="filterSearch"
+                 placeholder="Search candidate name or email&hellip;" autocomplete="off" />
+          <select class="admin-input" id="filterStatus">
+            <option value="">All statuses</option>
+            <option value="submitted">Submitted</option>
+            <option value="under_review">Under Review</option>
+            <option value="endorsed">Endorsed</option>
+            <option value="declined">Declined</option>
+            <option value="withdrawn">Withdrawn</option>
+          </select>
+          <input type="search" class="admin-input" id="filterOffice"
+                 placeholder="Filter by office&hellip;" autocomplete="off" />
+          <span class="admin-toolbar-spacer"></span>
+          <span class="admin-result-count" id="resultCount"></span>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="endoTable">
+            <thead>
+              <tr>
+                <th data-sort="candidate_name" class="admin-sortable">Candidate<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="office_sought" class="admin-sortable">Office<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="district" class="admin-sortable">District<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="status" class="admin-sortable">Status<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="created_at" class="admin-sortable">Submitted<span class="admin-sort-arrow">&darr;</span></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="endoBody">
+              <tr><td colspan="6" class="admin-empty-row">Loading applications&hellip;</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="admin-panel-foot">
+          Source of truth: <code>endorsement_applications</code> &middot;
+          Public form: <a href="/endorsement/screening">/endorsement/screening</a> &middot;
+          Published list: <a href="/endorsements">/endorsements</a>
+        </p>
       </div>
+      <div class="admin-toast" id="toast"></div>
+    </template>
 
-      <div class="filters">
-        <input class="input" type="search" id="filterSearch" placeholder="Search by name or email..." autocomplete="off" />
-        <select class="select" id="filterStatus">
-          <option value="">All statuses</option>
-          <option value="submitted">Submitted</option>
-          <option value="under_review">Under Review</option>
-          <option value="endorsed">Endorsed</option>
-          <option value="declined">Declined</option>
-          <option value="withdrawn">Withdrawn</option>
-        </select>
-        <input class="input" type="search" id="filterOffice" placeholder="Filter by office..." autocomplete="off" />
-      </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script>
+      (function () {
+        'use strict';
 
-      <div class="table-card">
-        <table class="applications" id="appsTable">
-          <thead>
-            <tr>
-              <th data-sort="candidate_name">Candidate <span class="arrow">▼</span></th>
-              <th data-sort="office_sought">Office <span class="arrow">▼</span></th>
-              <th data-sort="district">District <span class="arrow">▼</span></th>
-              <th data-sort="status">Status <span class="arrow">▼</span></th>
-              <th data-sort="created_at" class="sort-desc">Submitted <span class="arrow">▼</span></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="appsBody">
-            <tr><td colspan="6"><div class="loading-state"><div class="spinner-large"></div></div></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+        var COLSPAN = 6;
 
-    <div class="auth-blocker" id="authBlocker" style="display:none;">
-      <h2 id="authTitle">Checking access...</h2>
-      <p id="authMsg">Verifying your session.</p>
-      <a href="/admin/login" class="btn btn-primary" id="authAction" style="display:none;">Sign In</a>
-    </div>
-  </main>
+        var STATUS_LABEL = {
+          submitted: 'Submitted',
+          under_review: 'Under Review',
+          endorsed: 'Endorsed',
+          declined: 'Declined',
+          withdrawn: 'Withdrawn'
+        };
 
-  <div id="site-footer"></div>
+        var state = {
+          rows: [],
+          filtered: [],
+          byId: Object.create(null),
+          sortKey: 'created_at',
+          sortDir: 'desc',
+          client: null,
+          drawerId: null
+        };
 
-  <script src="/js/site-template.js" defer></script>
-  <script src="/js/ohiopride-data.js" defer></script>
+        function $(id) { return document.getElementById(id); }
 
-  <div class="toast" id="toast"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    /* ===================================================================
-       CONFIG
-       =================================================================== */
-    const CONFIG = {
-      SUPABASE_URL:      'https://dkdxefzhttkmjhdbkvqn.supabase.co',
-      SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4',
-      LOGIN_PATH:        '/admin/login',
-      DETAIL_PATH:       '/admin/endorsements/detail'
-    };
-
-    const STATUS_LABEL = {
-      submitted: 'Submitted',
-      under_review: 'Under Review',
-      endorsed: 'Endorsed',
-      declined: 'Declined',
-      withdrawn: 'Withdrawn'
-    };
-
-    const $  = (s) => document.querySelector(s);
-    const $$ = (s) => Array.from(document.querySelectorAll(s));
-
-    const state = {
-      rows: [],
-      filtered: [],
-      sortKey: 'created_at',
-      sortDir: 'desc',
-      session: null,
-      user: null
-    };
-
-    const client = window.supabase.createClient(
-      CONFIG.SUPABASE_URL,
-      CONFIG.SUPABASE_ANON_KEY,
-      { auth: { detectSessionInUrl: true, persistSession: true } }
-    );
-
-    /* ===================================================================
-       Toast
-       =================================================================== */
-    function toast(msg, type) {
-      const el = $('#toast');
-      el.textContent = msg;
-      el.className = 'toast visible' + (type ? ' toast-' + type : '');
-      clearTimeout(toast._t);
-      toast._t = setTimeout(() => el.classList.remove('visible'), 3500);
-    }
-
-    /* ===================================================================
-       Auth flow
-       =================================================================== */
-    function showBlocker(title, msg, action) {
-      $('#appShell').style.display = 'none';
-      $('#authBlocker').style.display = 'block';
-      $('#authTitle').textContent = title;
-      $('#authMsg').textContent = msg;
-      const btn = $('#authAction');
-      if (action) {
-        btn.style.display = 'inline-flex';
-        btn.textContent = action.label;
-        btn.href = action.href;
-      } else {
-        btn.style.display = 'none';
-      }
-    }
-
-    async function ensureAuthed() {
-      // Wait briefly for the client to process URL tokens (magic link callback)
-      await new Promise(r => setTimeout(r, 50));
-
-      const { data: { session } } = await client.auth.getSession();
-      if (!session) {
-        window.location.replace(CONFIG.LOGIN_PATH);
-        return null;
-      }
-
-      // Clean up auth tokens from URL hash if present
-      if (window.location.hash && window.location.hash.includes('access_token')) {
-        history.replaceState(null, '', window.location.pathname + window.location.search);
-      }
-
-      state.session = session;
-      state.user = session.user;
-
-      // Verify admin allowlist via RLS-protected SELECT
-      const { data: allow, error } = await client
-        .from('admin_emails')
-        .select('email')
-        .eq('email', session.user.email)
-        .maybeSingle();
-
-      if (error || !allow) {
-        await client.auth.signOut();
-        showBlocker(
-          'Access denied',
-          'Your email is not authorized for the admin dashboard. If you believe this is a mistake, contact the Director.',
-          { label: 'Try a different email', href: CONFIG.LOGIN_PATH }
-        );
-        return null;
-      }
-
-      $('#headerUser').textContent = session.user.email;
-      return session;
-    }
-
-    /* ===================================================================
-       Data
-       =================================================================== */
-    async function loadApplications() {
-      const { data, error } = await client
-        .from('endorsement_applications')
-        .select('id, candidate_name, pronouns, office_sought, district, election_year, status, created_at, updated_at, email')
-        .order('created_at', { ascending: false });
-      if (error) {
-        console.error(error);
-        toast('Failed to load applications.', 'error');
-        return [];
-      }
-      return data || [];
-    }
-
-    /* ===================================================================
-       Stats
-       =================================================================== */
-    function updateStats() {
-      const counts = { total: state.rows.length, submitted: 0, under_review: 0, endorsed: 0 };
-      for (const r of state.rows) {
-        if (r.status === 'submitted')    counts.submitted++;
-        if (r.status === 'under_review') counts.under_review++;
-        if (r.status === 'endorsed')     counts.endorsed++;
-      }
-      $('#statTotal').textContent     = counts.total;
-      $('#statSubmitted').textContent = counts.submitted;
-      $('#statReview').textContent    = counts.under_review;
-      $('#statEndorsed').textContent  = counts.endorsed;
-    }
-
-    /* ===================================================================
-       Filtering and sorting
-       =================================================================== */
-    function applyFilters() {
-      const q     = $('#filterSearch').value.trim().toLowerCase();
-      const stat  = $('#filterStatus').value;
-      const off   = $('#filterOffice').value.trim().toLowerCase();
-
-      state.filtered = state.rows.filter(r => {
-        if (stat && r.status !== stat) return false;
-        if (off && !(r.office_sought || '').toLowerCase().includes(off)) return false;
-        if (q) {
-          const hay = ((r.candidate_name || '') + ' ' + (r.email || '')).toLowerCase();
-          if (!hay.includes(q)) return false;
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
         }
-        return true;
-      });
-      applySort();
-    }
 
-    function applySort() {
-      const key = state.sortKey;
-      const dir = state.sortDir === 'asc' ? 1 : -1;
-      state.filtered.sort((a, b) => {
-        const av = a[key] ?? '';
-        const bv = b[key] ?? '';
-        if (key === 'created_at') {
-          return (new Date(av) - new Date(bv)) * dir;
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          var now = new Date();
+          var diff = (now - d) / 1000;
+          if (diff < 60) return 'Just now';
+          if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+          if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+          if (diff < 86400 * 7) return Math.floor(diff / 86400) + 'd ago';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
-        return String(av).localeCompare(String(bv), undefined, { sensitivity: 'base' }) * dir;
-      });
-      renderRows();
-      renderSortHeaders();
-    }
 
-    function renderSortHeaders() {
-      $$('#appsTable thead th[data-sort]').forEach(th => {
-        th.classList.remove('sort-asc', 'sort-desc');
-        if (th.dataset.sort === state.sortKey) {
-          th.classList.add(state.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+        function fmtDateTime(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
         }
-      });
-    }
 
-    /* ===================================================================
-       Rendering
-       =================================================================== */
-    function fmtDate(iso) {
-      if (!iso) return '';
-      const d = new Date(iso);
-      const now = new Date();
-      const diff = (now - d) / 1000;
-      if (diff < 60)        return 'Just now';
-      if (diff < 3600)      return Math.floor(diff/60) + 'm ago';
-      if (diff < 86400)     return Math.floor(diff/3600) + 'h ago';
-      if (diff < 86400 * 7) return Math.floor(diff/86400) + 'd ago';
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
+        function statusPill(s) {
+          return '<span class="admin-pill-status admin-pill-st-' + escapeHtml(s) + '">' +
+            escapeHtml(STATUS_LABEL[s] || s) + '</span>';
+        }
 
-    function escapeHtml(s) {
-      return String(s ?? '').replace(/[&<>"']/g, c => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-      }[c]));
-    }
-
-    function renderRows() {
-      const body = $('#appsBody');
-      if (state.filtered.length === 0) {
-        const isFiltered = state.rows.length > 0;
-        body.innerHTML = `
-          <tr><td colspan="6">
-            <div class="empty-state">
-              <h2>${isFiltered ? 'No matches' : 'No applications yet'}</h2>
-              <p>${isFiltered ? 'Try clearing your filters.' : 'When a candidate submits the screening form, they\u2019ll appear here.'}</p>
-            </div>
-          </td></tr>`;
-        return;
-      }
-      body.innerHTML = state.filtered.map(r => {
-        const pronouns = r.pronouns ? `<span class="pronouns">${escapeHtml(r.pronouns)}</span>` : '';
-        const dist = r.district || (r.election_year ? r.election_year : '');
-        const badge = `<span class="badge badge-${r.status}">${STATUS_LABEL[r.status] || r.status}</span>`;
-        return `
-          <tr data-id="${escapeHtml(r.id)}">
-            <td class="name" data-label="Candidate">${escapeHtml(r.candidate_name)}${pronouns}</td>
-            <td class="muted" data-label="Office">${escapeHtml(r.office_sought)}</td>
-            <td class="muted" data-label="District">${escapeHtml(dist)}</td>
-            <td data-label="Status">${badge}</td>
-            <td class="muted" data-label="Submitted">${fmtDate(r.created_at)}</td>
-            <td class="chevron">&rsaquo;</td>
-          </tr>`;
-      }).join('');
-    }
-
-    /* ===================================================================
-       Init
-       =================================================================== */
-    (async function init() {
-      const session = await ensureAuthed();
-      if (!session) return;
-
-      $('#appShell').style.display = 'block';
-
-      state.rows = await loadApplications();
-      updateStats();
-      applyFilters();
-
-      // Filter inputs
-      let debounce;
-      const onFilter = () => {
-        clearTimeout(debounce);
-        debounce = setTimeout(applyFilters, 150);
-      };
-      $('#filterSearch').addEventListener('input', onFilter);
-      $('#filterStatus').addEventListener('change', applyFilters);
-      $('#filterOffice').addEventListener('input', onFilter);
-
-      // Sort headers
-      $$('#appsTable thead th[data-sort]').forEach(th => {
-        th.addEventListener('click', () => {
-          const key = th.dataset.sort;
-          if (state.sortKey === key) {
-            state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
-          } else {
-            state.sortKey = key;
-            state.sortDir = 'asc';
+        function toast(msg, kind) {
+          if (window.AdminShell && window.AdminShell.toast) {
+            window.AdminShell.toast(msg, kind);
+            return;
           }
+          var el = $('toast');
+          if (!el) return;
+          el.textContent = msg;
+          el.className = 'admin-toast visible' + (kind ? ' admin-toast-' + kind : '');
+          clearTimeout(toast._t);
+          toast._t = setTimeout(function () { el.classList.remove('visible'); }, 3200);
+        }
+
+        function updateStats() {
+          var c = { total: state.rows.length, submitted: 0, under_review: 0, endorsed: 0 };
+          state.rows.forEach(function (r) {
+            if (r.status === 'submitted') c.submitted++;
+            if (r.status === 'under_review') c.under_review++;
+            if (r.status === 'endorsed') c.endorsed++;
+          });
+          $('statTotal').textContent    = c.total;
+          $('statNew').textContent      = c.submitted;
+          $('statReview').textContent   = c.under_review;
+          $('statEndorsed').textContent = c.endorsed;
+        }
+
+        function applyFilters() {
+          var q = $('filterSearch').value.trim().toLowerCase();
+          var stat = $('filterStatus').value;
+          var off = $('filterOffice').value.trim().toLowerCase();
+
+          state.filtered = state.rows.filter(function (r) {
+            if (stat && r.status !== stat) return false;
+            if (off && (r.office_sought || '').toLowerCase().indexOf(off) === -1) return false;
+            if (q) {
+              var hay = ((r.candidate_name || '') + ' ' + (r.email || '')).toLowerCase();
+              if (hay.indexOf(q) === -1) return false;
+            }
+            return true;
+          });
           applySort();
+        }
+
+        function applySort() {
+          var key = state.sortKey;
+          var dir = state.sortDir === 'asc' ? 1 : -1;
+          state.filtered.sort(function (a, b) {
+            var av = a[key], bv = b[key];
+            if (key === 'created_at') {
+              return ((new Date(av || 0)) - (new Date(bv || 0))) * dir;
+            }
+            return String(av || '').localeCompare(String(bv || ''), undefined, { numeric: true, sensitivity: 'base' }) * dir;
+          });
+          renderRows();
+          renderSortHeaders();
+        }
+
+        function renderSortHeaders() {
+          var ths = document.querySelectorAll('#endoTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            ths[i].classList.remove('admin-sort-asc', 'admin-sort-desc');
+            if (ths[i].dataset.sort === state.sortKey) {
+              ths[i].classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
+            }
+          }
+        }
+
+        function renderRows() {
+          var body = $('endoBody');
+          $('resultCount').textContent =
+            state.filtered.length === state.rows.length
+              ? state.rows.length + ' total'
+              : state.filtered.length + ' of ' + state.rows.length;
+
+          if (state.filtered.length === 0) {
+            var msg = state.rows.length === 0
+              ? 'No applications yet. When a candidate submits the screening form, they appear here.'
+              : 'No applications match the current filters.';
+            body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">' + msg + '</td></tr>';
+            return;
+          }
+
+          var html = '';
+          for (var i = 0; i < state.filtered.length; i++) {
+            var r = state.filtered[i];
+            var pron = r.pronouns
+              ? '<span class="admin-cell-sub">' + escapeHtml(r.pronouns) + '</span>' : '';
+            var dist = r.district || (r.election_year ? String(r.election_year) : '');
+            html +=
+              '<tr data-id="' + escapeHtml(r.id) + '" style="cursor:pointer">' +
+                '<td class="admin-cell-name">' + escapeHtml(r.candidate_name || '—') + pron + '</td>' +
+                '<td>' + (r.office_sought ? escapeHtml(r.office_sought) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td>' + (dist ? escapeHtml(dist) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td>' + statusPill(r.status) + '</td>' +
+                '<td class="admin-cell-tight">' + escapeHtml(fmtDate(r.created_at)) + '</td>' +
+                '<td class="admin-cell-tight"><span class="admin-link">View &rsaquo;</span></td>' +
+              '</tr>';
+          }
+          body.innerHTML = html;
+        }
+
+        // ---- Drawer detail ---------------------------------------------
+        function yn(v) {
+          return v === true ? { c: 'yes', t: 'Yes' }
+               : v === false ? { c: 'no', t: 'No' }
+               : { c: 'na', t: 'No answer' };
+        }
+
+        function qBlock(num, q, ans, exp) {
+          var a = yn(ans);
+          return '<div class="endo-q">' +
+            '<p class="endo-q-text"><span class="endo-q-num">' + num + '.</span>' + escapeHtml(q) + '</p>' +
+            '<span class="endo-ans ' + a.c + '">' + a.t + '</span>' +
+            (exp
+              ? '<p class="endo-explain">' + escapeHtml(exp) + '</p>'
+              : '<p class="endo-explain empty">No explanation provided.</p>') +
+            '</div>';
+        }
+
+        function prose(label, body) {
+          return '<div class="endo-sec-title">' + escapeHtml(label) + '</div>' +
+            (body
+              ? '<p class="endo-prose">' + escapeHtml(body) + '</p>'
+              : '<p class="endo-prose empty">No response provided.</p>');
+        }
+
+        function buildDrawerBody(a) {
+          // Values are escaped by grid() unless wrapped via raw() — only the
+          // anchor links (already built from escaped parts) are raw HTML.
+          function raw(html) { return { __html: html }; }
+          var contact = [
+            ['Email', a.email ? raw('<a class="admin-link" href="mailto:' + escapeHtml(a.email) + '">' + escapeHtml(a.email) + '</a>') : null],
+            ['Phone', a.phone ? raw('<a class="admin-link" href="tel:' + escapeHtml(a.phone) + '">' + escapeHtml(a.phone) + '</a>') : null],
+            ['Website', a.website ? raw('<a class="admin-link" target="_blank" rel="noopener" href="' + escapeHtml(a.website) + '">' + escapeHtml(a.website) + '</a>') : null],
+            ['Party', a.party],
+            ['Office Sought', a.office_sought],
+            ['District', a.district],
+            ['Election Year', a.election_year],
+            ['Committee', a.committee_name],
+            ['Treasurer', a.treasurer_name],
+            ['Out as LGBTQ+', a.is_out === 'yes' ? 'Yes' : a.is_out === 'no' ? 'No' : a.is_out === 'prefer_not_to_say' ? 'Prefer not to say' : null]
+          ];
+          function grid(items) {
+            var html = '<dl class="endo-grid">';
+            for (var i = 0; i < items.length; i++) {
+              var v = items[i][1];
+              if (v === '' || v == null) continue;
+              var cell = (v && typeof v === 'object' && v.__html != null)
+                ? v.__html : escapeHtml(String(v));
+              html += '<div><dt>' + escapeHtml(items[i][0]) + '</dt><dd>' + cell + '</dd></div>';
+            }
+            return html + '</dl>';
+          }
+
+          var positions = [
+            ['Q1', 'Support statewide nondiscrimination protections for LGBTQ+ Ohioans (the Ohio Fairness Act)?', a.q1_nondiscrimination, a.q1_explanation],
+            ['Q2', 'Oppose legislation restricting gender-affirming care or broadly banning gender expression?', a.q2_anti_lgbtq_legislation, a.q2_explanation],
+            ['Q3', 'Support a statewide ban on so-called conversion therapy?', a.q3_conversion_therapy, a.q3_explanation],
+            ['Q4', 'Support inclusive K-12 schools (anti-bullying, no forced outing, accurate information)?', a.q4_inclusive_education, a.q4_explanation],
+            ['Q5', 'Vote against bills that roll back LGBTQ+ rights or create broad religious exemptions?', a.q5_vote_against_rollbacks, a.q5_explanation]
+          ];
+
+          var attest = a.attestation
+            ? '<p class="endo-explain">&#10003; Certified. Signed by ' + escapeHtml(a.signature || 'unsigned') + '.</p>'
+            : '<p class="endo-explain empty">Not certified. Signature: ' + escapeHtml(a.signature || 'none') + '.</p>';
+
+          return '' +
+            '<div class="endo-sec-title">Candidate Information</div>' + grid(contact) +
+            '<div class="endo-sec-title">Core Positions</div>' +
+              positions.map(function (p) { return qBlock(p[0], p[1], p[2], p[3]); }).join('') +
+            prose('Top pro-equality priorities', a.q6_priorities) +
+            prose('Bills they would champion', a.q7_legislation) +
+            prose('Addressing threats to LGBTQ+ safety', a.q8_safety) +
+            prose('How equality connects to other race priorities', a.q9_intersection) +
+            prose('Why they seek Ohio Pride’s endorsement', a.q10_why_endorsement) +
+            prose('Bio', a.bio) +
+            prose('Conflicts disclosure', a.conflicts_disclosure) +
+            '<div class="endo-sec-title">Attestation</div>' + attest +
+            '<div class="endo-sec-title">Audit Trail</div>' +
+            grid([
+              ['Application ID', a.id],
+              ['Submitted', fmtDateTime(a.created_at)],
+              ['Last updated', fmtDateTime(a.updated_at)],
+              ['Reviewed by', a.reviewed_by],
+              ['Reviewed at', fmtDateTime(a.reviewed_at)]
+            ]);
+        }
+
+        function buildDrawerFoot(a) {
+          var opts = ['submitted', 'under_review', 'endorsed', 'declined', 'withdrawn']
+            .map(function (s) {
+              return '<option value="' + s + '"' + (a.status === s ? ' selected' : '') + '>' +
+                STATUS_LABEL[s] + '</option>';
+            }).join('');
+          return '' +
+            '<div style="width:100%">' +
+              '<label class="endo-edit-label" for="endoStatus">Decision status</label>' +
+              '<div class="endo-edit-row">' +
+                '<select class="admin-input" id="endoStatus">' + opts + '</select>' +
+                '<button type="button" class="shell-btn shell-btn-primary" id="endoSave">Save changes</button>' +
+              '</div>' +
+              '<label class="endo-edit-label" for="endoNotes" style="margin-top:14px">Reviewer notes (internal)</label>' +
+              '<textarea class="admin-input" id="endoNotes" placeholder="Notes for the screening committee. Never shared with the candidate or public.">' +
+                escapeHtml(a.reviewer_notes || '') + '</textarea>' +
+              '<p style="margin-top:8px;font-size:0.78rem;color:rgba(255,255,255,0.5)">Setting status to <strong style="color:rgba(255,255,255,0.75)">Endorsed</strong> publishes this candidate on the public endorsements page.</p>' +
+            '</div>';
+        }
+
+        function openDetail(id) {
+          var a = state.byId[id];
+          if (!a || !window.AdminShell || !window.AdminShell.openDrawer) return;
+          state.drawerId = id;
+          var meta = [a.office_sought, a.district, a.election_year].filter(Boolean).join(' · ');
+          window.AdminShell.openDrawer({
+            eyebrow: meta || 'Endorsement application',
+            title: a.candidate_name || 'Application',
+            bodyHtml: buildDrawerBody(a),
+            footHtml: buildDrawerFoot(a)
+          });
+          var saveBtn = document.getElementById('endoSave');
+          if (saveBtn) saveBtn.addEventListener('click', saveDrawer);
+          if (history.replaceState) {
+            history.replaceState(null, '', window.location.pathname + '?id=' + encodeURIComponent(id));
+          }
+        }
+
+        async function saveDrawer() {
+          var id = state.drawerId;
+          var a = state.byId[id];
+          if (!a) return;
+          var sel = document.getElementById('endoStatus');
+          var notes = document.getElementById('endoNotes');
+          var btn = document.getElementById('endoSave');
+          var newStatus = sel.value;
+          var newNotes = notes.value;
+          btn.disabled = true;
+          btn.textContent = 'Saving…';
+          try {
+            var resp = await state.client
+              .from('endorsement_applications')
+              .update({ status: newStatus, reviewer_notes: newNotes })
+              .eq('id', id);
+            if (resp.error) throw resp.error;
+            a.status = newStatus;
+            a.reviewer_notes = newNotes;
+            updateStats();
+            applyFilters();
+            toast('Changes saved.', 'success');
+          } catch (err) {
+            console.error('Save failed:', err);
+            toast('Save failed. Please try again.', 'error');
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Save changes';
+          }
+        }
+
+        async function loadApplications(client) {
+          var resp = await client
+            .from('endorsement_applications')
+            .select('*')
+            .order('created_at', { ascending: false });
+          if (resp.error) throw resp.error;
+          return resp.data || [];
+        }
+
+        document.addEventListener('admin-shell-ready', function (e) {
+          var client = e.detail && e.detail.client;
+          if (!client) return;
+          state.client = client;
+
+          var shellBody = document.getElementById('shellBody');
+          if (shellBody && !document.getElementById('endoTable')) {
+            shellBody.appendChild(document.getElementById('endoTpl').content.cloneNode(true));
+          }
+
+          loadApplications(client).then(function (rows) {
+            state.rows = rows;
+            state.byId = Object.create(null);
+            rows.forEach(function (r) { state.byId[r.id] = r; });
+            updateStats();
+            applyFilters();
+
+            // Deep link: /admin/endorsements?id=<uuid> opens the drawer.
+            var params = new URLSearchParams(window.location.search);
+            var deepId = params.get('id');
+            if (deepId && state.byId[deepId]) openDetail(deepId);
+          }).catch(function (err) {
+            console.error('Failed to load applications:', err);
+            $('endoBody').innerHTML =
+              '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
+              'Could not load applications. Your account may not be authorized for this view.' +
+              '</td></tr>';
+          });
+
+          var debounceT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debounceT);
+            debounceT = setTimeout(applyFilters, 150);
+          });
+          $('filterStatus').addEventListener('change', applyFilters);
+          $('filterOffice').addEventListener('input', function () {
+            clearTimeout(debounceT);
+            debounceT = setTimeout(applyFilters, 150);
+          });
+
+          var ths = document.querySelectorAll('#endoTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            ths[i].addEventListener('click', function (ev) {
+              var key = ev.currentTarget.dataset.sort;
+              if (state.sortKey === key) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              } else {
+                state.sortKey = key;
+                state.sortDir = key === 'created_at' ? 'desc' : 'asc';
+              }
+              applySort();
+            });
+          }
+
+          $('endoBody').addEventListener('click', function (ev) {
+            var tr = ev.target.closest && ev.target.closest('tr[data-id]');
+            if (!tr) return;
+            openDetail(tr.dataset.id);
+          });
         });
-      });
-
-      // Row clicks
-      $('#appsBody').addEventListener('click', (e) => {
-        const tr = e.target.closest('tr[data-id]');
-        if (!tr) return;
-        const id = tr.dataset.id;
-        window.location.href = `${CONFIG.DETAIL_PATH}?id=${encodeURIComponent(id)}`;
-      });
-
-      // Sign out
-      $('#btnSignOut').addEventListener('click', async () => {
-        await client.auth.signOut();
-        window.location.replace(CONFIG.LOGIN_PATH);
-      });
-    })();
-  </script>
-</body>
+      })();
+    </script>
+    <script src="/admin/admin-responsive.js" defer></script>
+  </body>
 </html>

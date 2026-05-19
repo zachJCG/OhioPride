@@ -568,28 +568,15 @@
         }
 
         async function loadDonors(client) {
+          // Select every column the table actually exposes. The previous
+          // build hard-coded a column list that no longer matches the live
+          // `founding_members` schema; PostgREST rejected the request with a
+          // 400 and the page rendered the "could not load" state. `*` keeps
+          // this resilient to schema drift — the renderer already skips any
+          // field that isn't present.
           var resp = await client
             .from('founding_members')
-            .select([
-              'id', 'full_name', 'display_name', 'email', 'phone',
-              'amount_cents', 'recurrence',
-              'recurring_amount_cents', 'recurring_type', 'recurring_duration', 'initial_recurring_at',
-              'actblue_contribution_id', 'actblue_receipt_id', 'contributed_at',
-              'is_public', 'is_vetted', 'founding_number', 'display_order',
-              'address_line1', 'city', 'state', 'zip', 'country',
-              'county', 'county_name', 'county_fips',
-              'occupation', 'employer',
-              'employer_address_line1', 'employer_city', 'employer_state', 'employer_zip', 'employer_country',
-              'refcode', 'refcode_2',
-              'contribution_form_url', 'form_owner_email', 'form_branding_name', 'recipient_committee',
-              'payment_method', 'card_type',
-              'actblue_fee_cents', 'stripe_fee_text',
-              'via_mobile', 'is_actblue_express', 'is_refunded', 'is_cancelled_recurring',
-              'recurring_upsell_shown', 'recurring_upsell_succeeded',
-              'text_message_opt_in',
-              'elected_office', 'jurisdiction', 'public_quote',
-              'notes'
-            ].join(', '))
+            .select('*')
             .order('founding_number', { ascending: true, nullsFirst: false });
 
           if (resp.error) throw resp.error;

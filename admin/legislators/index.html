@@ -1,14 +1,9 @@
 <!doctype html>
-<!--
-  Module stub. Each /admin/<module>/index.html in this bundle uses the same
-  template, swapping `data-active-nav`, `data-page-title`, `data-page-eyebrow`,
-  and the empty-state copy. Wire real data in once the module is built.
--->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Legislators | Ohio Pride PAC Admin</title>
+    <title>Scorecard | Ohio Pride PAC Admin</title>
     <meta name="robots" content="noindex,nofollow" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,24 +12,481 @@
     <link rel="stylesheet" href="/css/site-template.css" />
     <link rel="stylesheet" href="/admin/admin-shared.css" />
     <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+    <style>
+      .admin-expand-btn {
+        background: transparent;
+        border: 1px solid var(--color-border, #d3d6dc);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        line-height: 1;
+        padding: 4px 8px;
+        cursor: pointer;
+        color: var(--color-text-muted, #555);
+      }
+      .admin-expand-btn:hover { background: rgba(0,0,0,0.04); }
+      .admin-expand-btn[aria-expanded="true"] { background: rgba(15, 34, 51, 0.08); }
+      tr.admin-detail-row > td {
+        background: #fafbfc;
+        border-top: 0;
+        padding: 14px 18px 18px;
+      }
+      .admin-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px 18px;
+      }
+      .admin-detail-grid dt {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6c7480;
+        margin: 0;
+      }
+      .admin-detail-grid dd {
+        margin: 0 0 2px;
+        font-size: 0.92rem;
+        color: #1a1f29;
+        word-break: break-word;
+      }
+      .admin-detail-section-title {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #0F2233;
+        margin: 16px 0 6px;
+        font-weight: 700;
+      }
+      .admin-detail-section-title:first-child { margin-top: 0; }
+      .admin-grade {
+        display: inline-block;
+        min-width: 2.1em;
+        text-align: center;
+        font-weight: 800;
+        font-size: 0.95rem;
+        padding: 2px 8px;
+        border-radius: 6px;
+      }
+      .admin-grade-A { background: rgba(74,222,128,0.20);  color: #1e7e45; }
+      .admin-grade-B { background: rgba(132,204,22,0.18);   color: #4d7c0f; }
+      .admin-grade-C { background: rgba(255,200,87,0.20);   color: #8a6d1f; }
+      .admin-grade-D { background: rgba(251,146,60,0.20);   color: #b45309; }
+      .admin-grade-F { background: rgba(255,107,107,0.18);  color: #c0392b; }
+      .admin-grade-NA { background: #eef2f6; color: #6c7480; }
+      .admin-party-D { color: #1d4ed8; font-weight: 700; }
+      .admin-party-R { color: #b91c1c; font-weight: 700; }
+      td.admin-cell-tight { white-space: nowrap; }
+    </style>
   </head>
   <body class="admin-shell">
     <div id="shell-root"
          data-active-nav="legislators"
          data-page-eyebrow="Statehouse"
-         data-page-title="Legislators"
-         data-page-sub="Legislator records, district maps, and contact info."></div>
+         data-page-title="Scorecard"
+         data-page-sub="Ohio General Assembly members, equality grades, and contact info."></div>
+
+    <template id="legTpl">
+      <div class="shell-widget admin-panel">
+        <div class="admin-stat-grid" id="statGrid">
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statTotal">0</div>
+            <div class="admin-stat-label">Members</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statHouse">0</div>
+            <div class="admin-stat-label">House</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statSenate">0</div>
+            <div class="admin-stat-label">Senate</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statGraded">0</div>
+            <div class="admin-stat-label">Graded</div>
+          </div>
+        </div>
+
+        <div class="admin-toolbar">
+          <input type="search" class="admin-input" id="filterSearch"
+                 placeholder="Search name, district, leadership role&hellip;" autocomplete="off" />
+          <select class="admin-input" id="filterChamber">
+            <option value="">Both chambers</option>
+            <option value="house">House</option>
+            <option value="senate">Senate</option>
+          </select>
+          <select class="admin-input" id="filterParty"><option value="">All parties</option></select>
+          <select class="admin-input" id="filterGrade">
+            <option value="">All grades</option>
+            <option value="A">A</option><option value="B">B</option>
+            <option value="C">C</option><option value="D">D</option>
+            <option value="F">F</option><option value="NA">Ungraded</option>
+          </select>
+          <span class="admin-toolbar-spacer"></span>
+          <span class="admin-result-count" id="resultCount"></span>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="legTable">
+            <thead>
+              <tr>
+                <th class="admin-toggle-col" aria-label="Expand"></th>
+                <th data-sort="full_name" class="admin-sortable">Member<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="chamber" class="admin-sortable">Chamber<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="party" class="admin-sortable">Party<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="district" class="admin-sortable admin-num">District<span class="admin-sort-arrow">&darr;</span></th>
+                <th>Leadership</th>
+                <th data-sort="grade" class="admin-sortable">Grade<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="score" class="admin-sortable admin-num">Score<span class="admin-sort-arrow">&darr;</span></th>
+                <th>Contact</th>
+              </tr>
+            </thead>
+            <tbody id="legBody">
+              <tr><td colspan="9" class="admin-empty-row">Loading legislators&hellip;</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="admin-panel-foot">
+          Source of truth: <code>legislators</code> + latest <code>score_snapshots</code> &middot;
+          Public scorecard: <a href="/scorecard.html">/scorecard</a>
+        </p>
+      </div>
+      <div class="admin-toast" id="toast"></div>
+    </template>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/admin/admin-shell.js"></script>
     <script>
-      document.addEventListener('admin-shell-ready', function () {
-        document.getElementById('shellBody').innerHTML =
-          '<div class="shell-widget"><div class="shell-widget-empty">' +
-            '<strong style="display:block;font-size:16px;color:#fff;margin-bottom:8px">Module coming soon</strong>' +
-            'This admin module is reserved in the navigation and gated by your role. ' +
-            'Wire it up by replacing the stub at <code>/admin/legislators/index.html</code>.' +
-          '</div></div>';
-      });
+      (function () {
+        'use strict';
+
+        var COLSPAN = 9;
+        var GRADE_RANK = { A: 5, B: 4, C: 3, D: 2, F: 1 };
+
+        var state = {
+          rows: [],
+          filtered: [],
+          sortKey: 'score',
+          sortDir: 'desc',
+          expanded: Object.create(null)
+        };
+
+        function $(id) { return document.getElementById(id); }
+
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+
+        function titleCase(s) {
+          return String(s || '').replace(/[_-]+/g, ' ')
+            .replace(/\b\w/g, function (m) { return m.toUpperCase(); });
+        }
+
+        function gradeClass(g) {
+          return g && GRADE_RANK[g] ? 'admin-grade-' + g : 'admin-grade-NA';
+        }
+
+        function fmtScore(s) {
+          if (s == null || s === '') return null;
+          var n = Number(s);
+          return isNaN(n) ? null : (Math.round(n * 10) / 10);
+        }
+
+        function populateParty(rows) {
+          var sel = $('filterParty');
+          while (sel.options.length > 1) sel.remove(1);
+          Array.from(new Set(rows.map(function (r) { return r.party; }).filter(Boolean)))
+            .sort().forEach(function (p) {
+              var opt = document.createElement('option');
+              opt.value = p;
+              opt.textContent = p === 'D' ? 'Democratic' : p === 'R' ? 'Republican' : p;
+              sel.appendChild(opt);
+            });
+        }
+
+        function renderStats() {
+          $('statTotal').textContent  = state.rows.length.toLocaleString();
+          $('statHouse').textContent  = state.rows.filter(function (r) { return r.chamber === 'house'; }).length;
+          $('statSenate').textContent = state.rows.filter(function (r) { return r.chamber === 'senate'; }).length;
+          $('statGraded').textContent = state.rows.filter(function (r) { return r.grade; }).length;
+        }
+
+        function applyFilters() {
+          var q = $('filterSearch').value.trim().toLowerCase();
+          var chamber = $('filterChamber').value;
+          var party = $('filterParty').value;
+          var grade = $('filterGrade').value;
+
+          state.filtered = state.rows.filter(function (r) {
+            if (chamber && r.chamber !== chamber) return false;
+            if (party && r.party !== party) return false;
+            if (grade === 'NA' && r.grade) return false;
+            if (grade && grade !== 'NA' && r.grade !== grade) return false;
+            if (q) {
+              var hay = (
+                (r.full_name || '') + ' ' +
+                (r.first_name || '') + ' ' +
+                (r.last_name || '') + ' ' +
+                'district ' + (r.district || '') + ' ' +
+                (r.leadership_role || '')
+              ).toLowerCase();
+              if (hay.indexOf(q) === -1) return false;
+            }
+            return true;
+          });
+          applySort();
+        }
+
+        function applySort() {
+          var key = state.sortKey;
+          var dir = state.sortDir === 'asc' ? 1 : -1;
+          state.filtered.sort(function (a, b) {
+            var av = a[key], bv = b[key];
+            if (key === 'district' || key === 'score') {
+              var an = av == null || av === '' ? -Infinity : Number(av);
+              var bn = bv == null || bv === '' ? -Infinity : Number(bv);
+              return (an - bn) * dir;
+            }
+            if (key === 'grade') {
+              return ((GRADE_RANK[av] || 0) - (GRADE_RANK[bv] || 0)) * dir;
+            }
+            return String(av || '').localeCompare(String(bv || ''), undefined, { sensitivity: 'base' }) * dir;
+          });
+          renderRows();
+          renderSortHeaders();
+        }
+
+        function renderSortHeaders() {
+          var ths = document.querySelectorAll('#legTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            ths[i].classList.remove('admin-sort-asc', 'admin-sort-desc');
+            if (ths[i].dataset.sort === state.sortKey) {
+              ths[i].classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
+            }
+          }
+        }
+
+        function detailRowHtml(r) {
+          var sub = [
+            ['Total Score', r.score != null ? fmtScore(r.score) : null],
+            ['Grade', r.grade || null],
+            ['Floor Votes Score', r.floor_score],
+            ['Committee Score', r.committee_score],
+            ['Sponsorship Score', r.sponsorship_score],
+            ['Public Statements Score', r.public_score],
+            ['Floor Votes Counted', r.floor_votes_counted],
+            ['Committee Votes Counted', r.committee_votes_counted],
+            ['Sponsorships Counted', r.sponsorships_counted],
+            ['Statements Counted', r.statements_counted],
+            ['Last Scored', r.snapshot_at ? new Date(r.snapshot_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : null]
+          ];
+          var ident = [
+            ['Full Name', r.full_name],
+            ['Chamber', titleCase(r.chamber)],
+            ['Party', r.party],
+            ['District', r.district],
+            ['Leadership Role', r.leadership_role],
+            ['Term', [r.term_start_year, r.term_end_year].filter(Boolean).join(' – ')],
+            ['Email', r.contact_email],
+            ['Phone', r.contact_phone]
+          ];
+          function grid(items) {
+            var html = '<dl class="admin-detail-grid">';
+            for (var i = 0; i < items.length; i++) {
+              var v = items[i][1];
+              if (v === '' || v == null) continue;
+              html += '<div><dt>' + escapeHtml(items[i][0]) + '</dt><dd>' + escapeHtml(String(v)) + '</dd></div>';
+            }
+            return html + '</dl>';
+          }
+          var links = [];
+          if (r.official_url) {
+            links.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
+              escapeHtml(r.official_url) + '">Official legislature page &rarr;</a>');
+          }
+          var hasScore = r.grade || r.score != null;
+          var scoreSection = hasScore
+            ? '<div class="admin-detail-section-title">Equality Score</div>' + grid(sub)
+            : '<div class="admin-detail-section-title">Equality Score</div>' +
+              '<p class="admin-muted" style="margin:0 0 6px">No score snapshot recorded yet for this member.</p>';
+
+          return '<tr class="admin-detail-row" data-detail-for="' + escapeHtml(r.id) + '">' +
+                   '<td colspan="' + COLSPAN + '">' +
+                     '<div class="admin-detail-section-title">Member</div>' + grid(ident) +
+                     scoreSection +
+                     (links.length
+                       ? '<div class="admin-detail-section-title">Links</div>' + links.join('')
+                       : '') +
+                   '</td></tr>';
+        }
+
+        function renderRows() {
+          var body = $('legBody');
+          $('resultCount').textContent =
+            state.filtered.length === state.rows.length
+              ? state.rows.length + ' total'
+              : state.filtered.length + ' of ' + state.rows.length;
+
+          if (state.filtered.length === 0) {
+            var msg = state.rows.length === 0
+              ? 'No legislators found.'
+              : 'No legislators match the current filters.';
+            body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">' + msg + '</td></tr>';
+            return;
+          }
+
+          var html = '';
+          for (var i = 0; i < state.filtered.length; i++) {
+            var r = state.filtered[i];
+            var isExpanded = !!state.expanded[r.id];
+            var expandBtn =
+              '<button type="button" class="admin-expand-btn" data-expand="' + escapeHtml(r.id) + '" ' +
+                'aria-expanded="' + (isExpanded ? 'true' : 'false') + '">' +
+                (isExpanded ? '&minus;' : '+') + '</button>';
+            var grade = r.grade || '';
+            var gradeCell = '<span class="admin-grade ' + gradeClass(grade) + '">' +
+              escapeHtml(grade || 'NA') + '</span>';
+            var score = fmtScore(r.score);
+            var scoreCell = score == null
+              ? '<span class="admin-muted">&mdash;</span>'
+              : escapeHtml(String(score));
+            var partyCell = r.party
+              ? '<span class="admin-party-' + escapeHtml(r.party) + '">' + escapeHtml(r.party) + '</span>'
+              : '<span class="admin-muted">&mdash;</span>';
+            var contact = [];
+            if (r.contact_email) {
+              contact.push('<a class="admin-link" href="mailto:' + escapeHtml(r.contact_email) + '">Email</a>');
+            }
+            if (r.official_url) {
+              contact.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
+                escapeHtml(r.official_url) + '">Page</a>');
+            }
+            var contactCell = contact.length ? contact.join(' &middot; ') : '<span class="admin-muted">&mdash;</span>';
+            var lead = r.leadership_role
+              ? escapeHtml(r.leadership_role) : '<span class="admin-muted">&mdash;</span>';
+
+            html +=
+              '<tr data-id="' + escapeHtml(r.id) + '">' +
+                '<td class="admin-toggle-col">' + expandBtn + '</td>' +
+                '<td class="admin-cell-name">' + escapeHtml(r.full_name || '') + '</td>' +
+                '<td>' + escapeHtml(titleCase(r.chamber)) + '</td>' +
+                '<td>' + partyCell + '</td>' +
+                '<td class="admin-num">' + escapeHtml(String(r.district == null ? '' : r.district)) + '</td>' +
+                '<td>' + lead + '</td>' +
+                '<td>' + gradeCell + '</td>' +
+                '<td class="admin-num">' + scoreCell + '</td>' +
+                '<td class="admin-cell-tight">' + contactCell + '</td>' +
+              '</tr>';
+
+            if (isExpanded) html += detailRowHtml(r);
+          }
+          body.innerHTML = html;
+        }
+
+        async function loadLegislators(client) {
+          var legResp = await client
+            .from('legislators')
+            .select('*')
+            .order('chamber', { ascending: true })
+            .order('district', { ascending: true });
+          if (legResp.error) throw legResp.error;
+          var legs = legResp.data || [];
+
+          // score_snapshots is public-read; pull every snapshot newest-first
+          // and keep the latest one per legislator. (The legislator_scorecard
+          // view is unusable — it calls a function over a table that does not
+          // exist — so we read snapshots directly instead.)
+          var snapByLeg = Object.create(null);
+          var snapResp = await client
+            .from('score_snapshots')
+            .select('legislator_id, total_score, grade, floor_score, committee_score, sponsorship_score, public_score, floor_votes_counted, committee_votes_counted, sponsorships_counted, statements_counted, snapshot_at')
+            .order('snapshot_at', { ascending: false });
+          if (!snapResp.error && snapResp.data) {
+            snapResp.data.forEach(function (s) {
+              if (!snapByLeg[s.legislator_id]) snapByLeg[s.legislator_id] = s;
+            });
+          }
+
+          legs.forEach(function (l) {
+            var s = snapByLeg[l.id];
+            if (s) {
+              l.score = s.total_score;
+              l.grade = s.grade;
+              l.floor_score = s.floor_score;
+              l.committee_score = s.committee_score;
+              l.sponsorship_score = s.sponsorship_score;
+              l.public_score = s.public_score;
+              l.floor_votes_counted = s.floor_votes_counted;
+              l.committee_votes_counted = s.committee_votes_counted;
+              l.sponsorships_counted = s.sponsorships_counted;
+              l.statements_counted = s.statements_counted;
+              l.snapshot_at = s.snapshot_at;
+            } else {
+              l.score = null;
+              l.grade = null;
+            }
+          });
+          return legs;
+        }
+
+        document.addEventListener('admin-shell-ready', function (e) {
+          var client = e.detail && e.detail.client;
+          if (!client) return;
+
+          var shellBody = document.getElementById('shellBody');
+          if (shellBody && !document.getElementById('legTable')) {
+            shellBody.appendChild(document.getElementById('legTpl').content.cloneNode(true));
+          }
+
+          loadLegislators(client).then(function (rows) {
+            state.rows = rows;
+            populateParty(rows);
+            renderStats();
+            applyFilters();
+          }).catch(function (err) {
+            console.error('Failed to load legislators:', err);
+            $('legBody').innerHTML =
+              '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
+              'Could not load legislators. Your account may not be authorized for this view.' +
+              '</td></tr>';
+          });
+
+          var debounceT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debounceT);
+            debounceT = setTimeout(applyFilters, 150);
+          });
+          ['filterChamber', 'filterParty', 'filterGrade'].forEach(function (id) {
+            $(id).addEventListener('change', applyFilters);
+          });
+
+          var ths = document.querySelectorAll('#legTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            ths[i].addEventListener('click', function (ev) {
+              var key = ev.currentTarget.dataset.sort;
+              if (state.sortKey === key) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              } else {
+                state.sortKey = key;
+                state.sortDir = (key === 'score' || key === 'grade') ? 'desc' : 'asc';
+              }
+              applySort();
+            });
+          }
+
+          $('legBody').addEventListener('click', function (ev) {
+            var btn = ev.target.closest && ev.target.closest('[data-expand]');
+            if (!btn) return;
+            ev.preventDefault();
+            var id = btn.dataset.expand;
+            state.expanded[id] = !state.expanded[id];
+            renderRows();
+          });
+        });
+      })();
     </script>
+    <script src="/admin/admin-responsive.js" defer></script>
   </body>
 </html>
