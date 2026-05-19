@@ -1,0 +1,490 @@
+/* ==========================================================================
+   OHIO PRIDE PAC — Road Tour 2026 (/pride and /pride/signup)
+   --------------------------------------------------------------------------
+   Page-level styles only. Brand tokens come from /css/brand-tokens.css
+   (imported by site-template.css). Hard brand rules enforced here:
+     - No rainbow fill on type or numerals (solid navy/white only).
+     - Pride gradient used only as thin horizontal accent bars.
+     - Map markers: cyan, navy, outlined-navy only.
+     - No em dashes or en dashes in any rendered copy.
+   ========================================================================== */
+
+.pride-page {
+  background: var(--brand-navy);
+  color: var(--brand-text-on-navy);
+  font-family: var(--brand-font-body);
+  line-height: 1.7;
+}
+.pride-page main { display: block; }
+
+.pride-gradient-bar {
+  height: 8px;
+  width: 100%;
+  background: var(--brand-pride-gradient-h);
+  background-size: 200% 100%;
+}
+
+.pride-wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.25rem; }
+
+/* ----- Hero ----- */
+.pride-hero {
+  background: var(--brand-navy);
+  padding: 4.5rem 1.25rem 3.5rem;
+  text-align: center;
+}
+.pride-hero h1 {
+  font-family: var(--brand-font-display);
+  font-weight: 900;
+  font-size: clamp(2.1rem, 5vw, 3.4rem);
+  color: var(--brand-white);
+  margin: 0 0 0.6rem;
+  line-height: 1.1;
+}
+.pride-hero .pride-subhead {
+  font-family: var(--brand-font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  color: var(--brand-light-blue);
+  margin: 0 0 2rem;
+}
+.pride-btn {
+  display: inline-block;
+  font-family: var(--brand-font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  padding: 0.85rem 1.9rem;
+  border-radius: var(--brand-radius-md);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--brand-transition);
+}
+.pride-btn--primary { background: var(--brand-light-blue); color: var(--brand-navy); }
+.pride-btn--primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.pride-btn--ghost {
+  background: transparent;
+  color: var(--brand-light-blue);
+  border-color: var(--brand-light-blue);
+}
+.pride-btn--ghost:hover { background: rgba(115, 215, 238, 0.12); }
+.pride-btn:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
+.pride-btn[disabled] { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ----- Intro ----- */
+.pride-intro { padding: 3rem 1.25rem; }
+.pride-intro .pride-wrap { max-width: 760px; }
+.pride-intro p {
+  font-size: 1.075rem;
+  color: var(--brand-text-on-navy-soft);
+  margin: 0 0 1.1rem;
+}
+.pride-intro p:last-of-type { margin-bottom: 1.8rem; }
+
+/* ----- Section heads ----- */
+.pride-section { padding: 3rem 1.25rem; }
+.pride-section h2 {
+  font-family: var(--brand-font-display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+  color: var(--brand-white);
+  margin: 0 0 0.4rem;
+}
+.pride-section .pride-section-sub {
+  color: var(--brand-text-on-navy-dim);
+  margin: 0 0 1.6rem;
+  font-size: 0.95rem;
+}
+
+/* ----- Filter chips ----- */
+.pride-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.pride-filter-group { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.pride-filter-label {
+  font-family: var(--brand-font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--brand-text-on-navy-faint);
+  margin-right: 0.2rem;
+}
+.pride-chip {
+  font-family: var(--brand-font-display);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.34rem 0.85rem;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--brand-text-on-navy-soft);
+  border: 1px solid var(--brand-border-on-navy-medium);
+  cursor: pointer;
+  transition: var(--brand-transition);
+}
+.pride-chip:hover { border-color: var(--brand-light-blue); }
+.pride-chip[aria-pressed="true"] {
+  background: var(--brand-light-blue);
+  color: var(--brand-navy);
+  border-color: var(--brand-light-blue);
+}
+.pride-chip:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
+.pride-filter-reset {
+  background: none;
+  border: none;
+  color: var(--brand-light-blue);
+  font-family: var(--brand-font-display);
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.34rem 0.5rem;
+}
+.pride-count {
+  font-size: 0.85rem;
+  color: var(--brand-text-on-navy-dim);
+  margin: 1rem 0 1.4rem;
+}
+
+/* ----- Events list ----- */
+.pride-date-group { margin-bottom: 1.8rem; }
+.pride-date-head {
+  font-family: var(--brand-font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--brand-light-blue);
+  border-bottom: 1px solid var(--brand-border-on-navy-medium);
+  padding-bottom: 0.4rem;
+  margin: 0 0 0.75rem;
+}
+.pride-event {
+  border: 1px solid var(--brand-border-on-navy);
+  border-radius: var(--brand-radius-md);
+  background: var(--brand-navy-light);
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+}
+.pride-event-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0.95rem 1.1rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+.pride-event-summary:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
+.pride-event-city {
+  font-family: var(--brand-font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--brand-white);
+}
+.pride-event-name { color: var(--brand-text-on-navy-soft); font-size: 0.95rem; }
+.pride-event-time {
+  margin-left: auto;
+  font-size: 0.82rem;
+  color: var(--brand-text-on-navy-dim);
+  white-space: nowrap;
+}
+.pride-pill {
+  font-family: var(--brand-font-display);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pride-pill--type { color: var(--brand-light-blue); border: 1px solid var(--brand-light-blue); }
+.pride-pill--priority { background: var(--brand-light-blue); color: var(--brand-navy); }
+.pride-pill--going {
+  background: var(--brand-white);
+  color: var(--brand-navy);
+}
+.pride-event-detail {
+  padding: 0 1.1rem 1.1rem;
+  font-size: 0.92rem;
+  color: var(--brand-text-on-navy-soft);
+  border-top: 1px solid var(--brand-border-on-navy);
+}
+.pride-event-detail[hidden] { display: none; }
+.pride-event-detail p { margin: 0.8rem 0 0; }
+.pride-event-detail a { color: var(--brand-light-blue); }
+.pride-event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin-top: 0.8rem;
+  font-size: 0.82rem;
+  color: var(--brand-text-on-navy-dim);
+}
+
+/* ----- Tour status banner ----- */
+.pride-status {
+  background: var(--brand-navy-lighter);
+  border: 1px solid var(--brand-border-on-navy-medium);
+  border-radius: var(--brand-radius-md);
+  padding: 1.1rem 1.3rem;
+  margin-bottom: 1.6rem;
+}
+.pride-status-row {
+  font-family: var(--brand-font-display);
+  font-weight: 700;
+  color: var(--brand-white);
+  margin: 0 0 0.3rem;
+}
+.pride-status-row .pride-status-key { color: var(--brand-light-blue); }
+.pride-status-msg { margin: 0.4rem 0 0; color: var(--brand-text-on-navy-soft); font-size: 0.92rem; }
+
+/* ----- Ohio map ----- */
+.pride-map-shell {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+}
+.pride-map-figure {
+  background: var(--brand-navy-light);
+  border: 1px solid var(--brand-border-on-navy);
+  border-radius: var(--brand-radius-lg);
+  padding: 1rem;
+}
+.pride-map-svg { width: 100%; height: auto; display: block; }
+.pride-ohio-outline {
+  fill: var(--brand-navy-lighter);
+  stroke: var(--brand-border-on-navy-medium);
+  stroke-width: 1.5;
+}
+.pride-marker { cursor: pointer; transition: transform 0.15s ease; transform-box: fill-box; transform-origin: center; }
+.pride-marker:hover, .pride-marker:focus-visible { transform: scale(1.3); outline: none; }
+.pride-marker--other { fill: none; stroke: var(--brand-light-blue); stroke-width: 1.5; opacity: 0.5; }
+.pride-marker--past { fill: var(--brand-navy); stroke: var(--brand-light-blue); stroke-width: 1; opacity: 0.8; }
+.pride-marker--upcoming { fill: var(--brand-light-blue); }
+.pride-marker--current { fill: var(--brand-light-blue); animation: prideMarkerPulse 2.5s ease-in-out infinite; }
+@keyframes prideMarkerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.pride-marker-focus-ring { outline: none; }
+.pride-marker:focus-visible + .pride-marker-halo { stroke: var(--brand-light-blue); }
+
+.pride-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  margin-top: 0.9rem;
+  font-size: 0.8rem;
+  color: var(--brand-text-on-navy-dim);
+}
+.pride-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.pride-legend i {
+  width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+}
+.pride-legend i.l-current { background: var(--brand-light-blue); }
+.pride-legend i.l-upcoming { background: var(--brand-light-blue); opacity: 0.85; }
+.pride-legend i.l-past { background: var(--brand-navy); border: 1px solid var(--brand-light-blue); }
+.pride-legend i.l-other { background: transparent; border: 1px solid var(--brand-light-blue); opacity: 0.6; }
+
+.pride-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: var(--brand-navy-footer);
+  border: 1px solid var(--brand-light-blue);
+  border-radius: var(--brand-radius-sm);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.8rem;
+  color: var(--brand-white);
+  z-index: 60;
+  max-width: 220px;
+  display: none;
+}
+.pride-tooltip strong { display: block; color: var(--brand-light-blue); }
+
+/* Side panel / bottom sheet for marker click */
+.pride-panel {
+  position: fixed;
+  top: 0; right: 0;
+  height: 100%;
+  width: min(420px, 90vw);
+  background: var(--brand-navy-footer);
+  border-left: 1px solid var(--brand-border-on-navy-medium);
+  padding: 1.6rem 1.4rem;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  z-index: 70;
+  overflow-y: auto;
+}
+.pride-panel.open { transform: translateX(0); }
+.pride-panel h3 { font-family: var(--brand-font-display); color: var(--brand-white); margin: 0 0 0.3rem; }
+.pride-panel .pride-panel-city { color: var(--brand-light-blue); font-weight: 700; }
+.pride-panel p { color: var(--brand-text-on-navy-soft); font-size: 0.92rem; }
+.pride-panel a { color: var(--brand-light-blue); }
+.pride-panel-close {
+  position: absolute; top: 0.9rem; right: 1rem;
+  background: none; border: none; color: var(--brand-text-on-navy-soft);
+  font-size: 1.6rem; line-height: 1; cursor: pointer;
+}
+.pride-panel-close:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
+.pride-panel-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  z-index: 65; display: none;
+}
+.pride-panel-backdrop.open { display: block; }
+
+/* Screen-reader parallel marker list */
+.pride-sr-list { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ----- Signup CTA band ----- */
+.pride-cta-band {
+  background: var(--brand-navy-footer);
+  text-align: center;
+  padding: 3.2rem 1.25rem;
+  border-top: 1px solid var(--brand-border-on-navy);
+}
+.pride-cta-band h2 {
+  font-family: var(--brand-font-display);
+  font-weight: 800;
+  color: var(--brand-white);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  margin: 0 0 0.5rem;
+}
+.pride-cta-band p { color: var(--brand-light-blue); margin: 0 0 1.6rem; }
+
+/* ----- Signup form ----- */
+.pride-form { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+.pride-fieldset {
+  border: 1px solid var(--brand-border-on-navy);
+  border-radius: var(--brand-radius-md);
+  padding: 1.4rem 1.3rem;
+  margin: 0 0 1.4rem;
+  background: var(--brand-navy-light);
+}
+.pride-fieldset legend {
+  font-family: var(--brand-font-display);
+  font-weight: 700;
+  color: var(--brand-light-blue);
+  padding: 0 0.5rem;
+  font-size: 0.95rem;
+}
+.pride-field { margin-bottom: 1rem; }
+.pride-field:last-child { margin-bottom: 0; }
+.pride-field label {
+  display: block;
+  font-family: var(--brand-font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--brand-text-on-navy-soft);
+  margin-bottom: 0.35rem;
+}
+.pride-req { color: var(--brand-light-blue); }
+.pride-field input[type="text"],
+.pride-field input[type="email"],
+.pride-field input[type="tel"],
+.pride-field input[type="number"],
+.pride-field select,
+.pride-field textarea {
+  width: 100%;
+  background: var(--brand-navy);
+  border: 1px solid var(--brand-border-on-navy-medium);
+  border-radius: var(--brand-radius-sm);
+  color: var(--brand-white);
+  font-family: var(--brand-font-body);
+  font-size: 0.95rem;
+  padding: 0.6rem 0.75rem;
+}
+.pride-field textarea { min-height: 84px; resize: vertical; }
+.pride-field input:focus, .pride-field select:focus, .pride-field textarea:focus {
+  outline: none; border-color: var(--brand-light-blue); box-shadow: var(--brand-focus-ring);
+}
+.pride-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.pride-check-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem;
+}
+.pride-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--brand-text-on-navy-soft);
+  background: var(--brand-navy);
+  border: 1px solid var(--brand-border-on-navy);
+  border-radius: var(--brand-radius-sm);
+  padding: 0.55rem 0.7rem;
+  cursor: pointer;
+}
+.pride-check input { margin-top: 0.2rem; accent-color: var(--brand-light-blue); }
+.pride-check:focus-within { border-color: var(--brand-light-blue); }
+.pride-toggle-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.9rem; }
+.pride-event-month-head {
+  font-family: var(--brand-font-display);
+  font-weight: 700;
+  color: var(--brand-light-blue);
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 1rem 0 0.5rem;
+}
+.pride-region-select-link {
+  background: none; border: none; color: var(--brand-light-blue);
+  text-decoration: underline; cursor: pointer; font-size: 0.85rem;
+  font-family: var(--brand-font-display); padding: 0; margin-bottom: 0.6rem;
+}
+.pride-error {
+  color: var(--brand-text-danger);
+  font-size: 0.82rem;
+  margin-top: 0.3rem;
+}
+.pride-form-error {
+  background: rgba(255, 107, 107, 0.12);
+  border: 1px solid var(--brand-text-danger);
+  color: var(--brand-text-danger);
+  border-radius: var(--brand-radius-sm);
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.9rem;
+}
+.pride-disclaimer {
+  background: var(--brand-cream, #f7f3ec);
+  color: var(--brand-navy);
+  font-size: 0.78rem;
+  text-align: center;
+  padding: 0.7rem 1rem;
+  border-radius: var(--brand-radius-sm);
+  margin: 1.4rem 0;
+  font-family: var(--brand-font-display);
+  font-weight: 600;
+}
+
+/* ----- Confirmation ----- */
+.pride-confirm { max-width: 620px; margin: 0 auto; padding: 4rem 1.25rem; text-align: center; }
+.pride-confirm h2 {
+  font-family: var(--brand-font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--brand-white);
+  margin: 0 0 1rem;
+}
+.pride-confirm p { color: var(--brand-text-on-navy-soft); margin: 0 0 2rem; }
+.pride-confirm-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+
+/* ----- Responsive ----- */
+@media (max-width: 640px) {
+  .pride-grid-2 { grid-template-columns: 1fr; }
+  .pride-event-time { margin-left: 0; width: 100%; }
+  .pride-hero { padding: 3rem 1.1rem 2.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pride-marker--current { animation: none; }
+  .pride-btn, .pride-marker, .pride-panel { transition: none; }
+}

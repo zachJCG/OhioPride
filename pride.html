@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ohio Pride Road Tour 2026 | Ohio Pride</title>
+    <meta
+      name="description"
+      content="Find every Pride event Ohio Pride is showing up to this summer, and sign up to march, table, or volunteer."
+    />
+    <link rel="canonical" href="https://www.ohiopride.org/pride" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Ohio Pride Road Tour 2026 | Ohio Pride" />
+    <meta
+      property="og:description"
+      content="Find every Pride event Ohio Pride is showing up to this summer, and sign up to march, table, or volunteer."
+    />
+    <meta property="og:url" content="https://www.ohiopride.org/pride" />
+    <meta property="og:site_name" content="Ohio Pride" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ohio Pride Road Tour 2026 | Ohio Pride" />
+    <meta
+      name="twitter:description"
+      content="Find every Pride event Ohio Pride is showing up to this summer, and sign up to march, table, or volunteer."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Roboto+Slab:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/css/pride.css" />
+  </head>
+  <body class="pride-page">
+    <div id="site-header"></div>
+
+    <main id="main">
+      <div class="pride-gradient-bar" aria-hidden="true"></div>
+
+      <!-- Hero -->
+      <header class="pride-hero">
+        <h1>Ohio Pride Road Tour 2026</h1>
+        <p class="pride-subhead">Endorse. Mobilize. Fight for Ohio.</p>
+        <a class="pride-btn pride-btn--primary" href="/pride/signup">Sign Up to Volunteer</a>
+      </header>
+
+      <!-- Intro -->
+      <section class="pride-intro">
+        <div class="pride-wrap">
+          <p>
+            This summer, Ohio Pride is hitting the road. From the Statehouse on
+            Harvey Milk Day to Akron in August, we are marching, tabling, and
+            organizing at every major Pride in the state.
+          </p>
+          <p>
+            If you can spare a Saturday, we have a place for you. Marchers,
+            drivers, photographers, booth staff, marshals. All of it.
+          </p>
+          <p>
+            Sign up below, pick the events that work for you, and we will get
+            you everything you need.
+          </p>
+          <a class="pride-btn pride-btn--ghost" href="/pride/signup">Sign Up to Volunteer</a>
+        </div>
+      </section>
+
+      <!-- Events list -->
+      <section class="pride-section" id="pride-events-section" aria-labelledby="pride-events-h2">
+        <div class="pride-wrap">
+          <h2 id="pride-events-h2">The Stops</h2>
+          <p class="pride-section-sub">
+            Every public Pride on our 2026 calendar, in order. Tap a stop for details.
+          </p>
+          <div id="pride-events-root" aria-live="polite">
+            <p class="pride-count">Loading the road tour calendar...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tour map -->
+      <section class="pride-section" id="pride-map-section" aria-labelledby="pride-map-h2">
+        <div class="pride-wrap">
+          <h2 id="pride-map-h2">Where We Are</h2>
+          <p class="pride-section-sub">
+            Live tour position across Ohio. Where we have been, where we are,
+            and where we are headed next.
+          </p>
+          <div id="pride-tour-status"></div>
+          <div id="pride-map-root" class="pride-map-shell"></div>
+        </div>
+      </section>
+
+      <!-- Bottom CTA -->
+      <section class="pride-cta-band">
+        <h2>Pick your dates. Pick your role. We'll handle the rest.</h2>
+        <p>Volunteer signups close 72 hours before each event.</p>
+        <a class="pride-btn pride-btn--primary" href="/pride/signup">Sign Up to Volunteer</a>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script src="/js/site-template.js" defer></script>
+    <script src="/js/ohiopride-data.js" defer></script>
+    <script src="/js/pride-events.js" defer></script>
+  </body>
+</html>
