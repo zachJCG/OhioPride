@@ -51,6 +51,16 @@
   status = 200
 
 [[redirects]]
+  from = "/pride"
+  to = "/pride.html"
+  status = 200
+
+[[redirects]]
+  from = "/pride/signup"
+  to = "/pride/signup.html"
+  status = 200
+
+[[redirects]]
   from = "/scorecard"
   to = "/scorecard.html"
   status = 200

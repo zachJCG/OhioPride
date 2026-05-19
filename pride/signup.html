@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up to Volunteer | Ohio Pride Road Tour 2026</title>
+    <meta
+      name="description"
+      content="Volunteer for the Ohio Pride 2026 road tour. Pick the Pride events you want to join and how you want to help."
+    />
+    <link rel="canonical" href="https://www.ohiopride.org/pride/signup" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Sign Up to Volunteer | Ohio Pride Road Tour 2026" />
+    <meta
+      property="og:description"
+      content="Volunteer for the Ohio Pride 2026 road tour. Pick the Pride events you want to join and how you want to help."
+    />
+    <meta property="og:url" content="https://www.ohiopride.org/pride/signup" />
+    <meta property="og:site_name" content="Ohio Pride" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Sign Up to Volunteer | Ohio Pride Road Tour 2026" />
+    <meta
+      name="twitter:description"
+      content="Volunteer for the Ohio Pride 2026 road tour. Pick the Pride events you want to join and how you want to help."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Roboto+Slab:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/css/pride.css" />
+  </head>
+  <body class="pride-page">
+    <div id="site-header"></div>
+
+    <main id="main">
+      <div class="pride-gradient-bar" aria-hidden="true"></div>
+
+      <header class="pride-hero">
+        <h1>Sign Up to Volunteer</h1>
+        <p class="pride-subhead">
+          Tell us where you want to show up. We'll handle logistics, supplies,
+          and ride coordination.
+        </p>
+      </header>
+
+      <!-- Confirmation (revealed after a successful submit) -->
+      <section class="pride-confirm" id="pride-confirm" hidden>
+        <h2>You're in.</h2>
+        <p>
+          We will email you within 72 hours with event details, gear pickup
+          info, and ride coordination. Watch for a note from
+          zach@ohiopride.org.
+        </p>
+        <div class="pride-confirm-actions">
+          <a class="pride-btn pride-btn--primary" href="/pride">Back to the Road Tour</a>
+          <a class="pride-btn pride-btn--ghost" href="/donate/founding-member">Become a Founding Member</a>
+        </div>
+      </section>
+
+      <form class="pride-form" id="pride-volunteer-form" novalidate>
+        <div class="pride-form-error" id="pride-form-error" hidden></div>
+
+        <!-- Honeypot: real people never see or fill this -->
+        <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;">
+          <label for="pv-website">Website</label>
+          <input type="text" id="pv-website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <!-- Section 1 -->
+        <fieldset class="pride-fieldset">
+          <legend>About you</legend>
+          <div class="pride-grid-2">
+            <div class="pride-field">
+              <label for="pv-first">First name <span class="pride-req" aria-hidden="true">*</span></label>
+              <input type="text" id="pv-first" name="first_name" maxlength="100" required aria-required="true" autocomplete="given-name" />
+            </div>
+            <div class="pride-field">
+              <label for="pv-last">Last name <span class="pride-req" aria-hidden="true">*</span></label>
+              <input type="text" id="pv-last" name="last_name" maxlength="100" required aria-required="true" autocomplete="family-name" />
+            </div>
+          </div>
+          <div class="pride-grid-2">
+            <div class="pride-field">
+              <label for="pv-email">Email <span class="pride-req" aria-hidden="true">*</span></label>
+              <input type="email" id="pv-email" name="email" required aria-required="true" autocomplete="email" />
+            </div>
+            <div class="pride-field">
+              <label for="pv-phone">Phone</label>
+              <input type="tel" id="pv-phone" name="phone" autocomplete="tel" placeholder="(614) 555-0123" />
+            </div>
+          </div>
+          <div class="pride-grid-2">
+            <div class="pride-field">
+              <label for="pv-city">City</label>
+              <input type="text" id="pv-city" name="city" maxlength="100" autocomplete="address-level2" />
+            </div>
+            <div class="pride-field">
+              <label for="pv-zip">ZIP</label>
+              <input type="text" id="pv-zip" name="zip" inputmode="numeric" maxlength="10" autocomplete="postal-code" />
+            </div>
+          </div>
+          <div class="pride-field">
+            <label for="pv-region">Preferred region <span class="pride-req" aria-hidden="true">*</span></label>
+            <select id="pv-region" name="preferred_region" required aria-required="true">
+              <option value="">Select a region</option>
+              <option value="NE">Northeast Ohio</option>
+              <option value="NW">Northwest Ohio</option>
+              <option value="SE">Southeast Ohio</option>
+              <option value="SW">Southwest Ohio</option>
+              <option value="Central">Central Ohio</option>
+              <option value="Anywhere">Anywhere in Ohio</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Section 2 -->
+        <fieldset class="pride-fieldset">
+          <legend>Events you want to join</legend>
+          <button type="button" class="pride-region-select-link" id="pv-select-region" hidden>
+            Select all in my region
+          </button>
+          <div id="pv-events" aria-live="polite">
+            <p class="pride-count">Loading events...</p>
+          </div>
+        </fieldset>
+
+        <!-- Section 3 -->
+        <fieldset class="pride-fieldset">
+          <legend>How you want to help</legend>
+          <div class="pride-check-grid">
+            <label class="pride-check"><input type="checkbox" name="roles_interested" value="marcher" /> Marcher</label>
+            <label class="pride-check"><input type="checkbox" name="roles_interested" value="booth_staff" /> Booth staff</label>
+            <label class="pride-check"><input type="checkbox" name="roles_interested" value="driver" /> Driver / transport</label>
+            <label class="pride-check"><input type="checkbox" name="roles_interested" value="photographer" /> Photographer or videographer</label>
+            <label class="pride-check"><input type="checkbox" name="roles_interested" value="marshal" /> Marshal (must complete training)</label>
+            <label class="pride-check"><input type="checkbox" name="roles_interested" value="setup_breakdown" /> Setup and breakdown</label>
+            <label class="pride-check"><input type="checkbox" name="roles_interested" value="wherever_needed" /> Wherever I'm needed</label>
+          </div>
+        </fieldset>
+
+        <!-- Section 4 -->
+        <fieldset class="pride-fieldset">
+          <legend>Logistics</legend>
+          <label class="pride-check pride-toggle-row" style="max-width:none;">
+            <input type="checkbox" id="pv-can-travel" name="can_travel" />
+            Yes, I can travel outside my region.
+          </label>
+          <label class="pride-check pride-toggle-row" style="max-width:none;">
+            <input type="checkbox" id="pv-has-vehicle" name="has_vehicle" />
+            Yes, I have a vehicle I can use for the day.
+          </label>
+          <div class="pride-field" id="pv-capacity-wrap" hidden>
+            <label for="pv-capacity">How many people can you transport?</label>
+            <input type="number" id="pv-capacity" name="vehicle_capacity" min="1" max="12" />
+          </div>
+          <div class="pride-field">
+            <label for="pv-tshirt">T-shirt size</label>
+            <select id="pv-tshirt" name="tshirt_size">
+              <option value="">Select a size</option>
+              <option>XS</option><option>S</option><option>M</option><option>L</option>
+              <option>XL</option><option>2XL</option><option>3XL</option><option>4XL</option>
+            </select>
+          </div>
+          <div class="pride-field">
+            <label for="pv-access">Accessibility needs</label>
+            <textarea id="pv-access" name="accessibility_needs" maxlength="1000"></textarea>
+          </div>
+        </fieldset>
+
+        <!-- Section 5 -->
+        <fieldset class="pride-fieldset">
+          <legend>Emergency contact</legend>
+          <div class="pride-grid-2">
+            <div class="pride-field">
+              <label for="pv-ec-name">Name</label>
+              <input type="text" id="pv-ec-name" name="emergency_contact_name" maxlength="120" />
+            </div>
+            <div class="pride-field">
+              <label for="pv-ec-phone">Phone</label>
+              <input type="tel" id="pv-ec-phone" name="emergency_contact_phone" maxlength="30" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Section 6 -->
+        <fieldset class="pride-fieldset">
+          <legend>Final</legend>
+          <div class="pride-field">
+            <label for="pv-heard">How did you hear about Ohio Pride?</label>
+            <input type="text" id="pv-heard" name="how_heard" maxlength="200" />
+          </div>
+          <div class="pride-field">
+            <label for="pv-notes">Anything else we should know?</label>
+            <textarea id="pv-notes" name="notes" maxlength="1000"></textarea>
+          </div>
+          <label class="pride-check" style="max-width:none;">
+            <input type="checkbox" id="pv-consent" name="consent_communications" required aria-required="true" />
+            I agree to receive event-related communications from Ohio Pride PAC
+            at the email and phone number above. I understand I can unsubscribe
+            at any time.
+          </label>
+        </fieldset>
+
+        <p class="pride-disclaimer">Paid for by Ohio Pride PAC. Zachary R. Joseph, Director.</p>
+
+        <button type="submit" class="pride-btn pride-btn--primary" id="pv-submit" disabled>
+          Sign Me Up
+        </button>
+      </form>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <script src="/js/site-template.js" defer></script>
+    <script src="/js/ohiopride-data.js" defer></script>
+    <script src="/js/pride-signup.js" defer></script>
+  </body>
+</html>
