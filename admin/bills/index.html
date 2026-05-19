@@ -1,8 +1,9 @@
 <!doctype html>
 <!--
-  Module stub. Each /admin/<module>/index.html in this bundle uses the same
-  template, swapping `data-active-nav`, `data-page-title`, `data-page-eyebrow`,
-  and the empty-state copy. Wire real data in once the module is built.
+  /admin/bills — bill tracker CRUD
+  - Lists every bill in public.bills (newest at top).
+  - Add new bill, edit any field, manage per-step pipeline dates.
+  - Writes go through the user's session; RLS enforces (`bills` write perm).
 -->
 <html lang="en">
   <head>
@@ -17,23 +18,390 @@
     <link rel="stylesheet" href="/css/site-template.css" />
     <link rel="stylesheet" href="/admin/admin-shared.css" />
     <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+    <style>
+      .bills-toolbar { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
+      .bills-toolbar input[type="search"] { flex:1 1 220px; min-width:0; padding:9px 12px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; }
+      .bills-toolbar select { padding:9px 12px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; }
+      .bills-table { width:100%; border-collapse:separate; border-spacing:0; }
+      .bills-table th, .bills-table td { text-align:left; padding:10px 12px; border-bottom:1px solid #1a2541; font-size:14px; vertical-align:top; }
+      .bills-table th { font-size:12px; color:#7c8bb0; text-transform:uppercase; letter-spacing:.04em; }
+      .bills-table tr:hover td { background:#0d1730; }
+      .bills-table td .slug { color:#7c8bb0; font-size:12px; display:block; }
+      .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:600; }
+      .pill-anti  { background:#3a0c14; color:#ffb1b8; }
+      .pill-pro   { background:#0c2a18; color:#9be0a8; }
+      .pill-mixed { background:#2a210c; color:#e8c66e; }
+      .bills-form { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+      .bills-form .full { grid-column:1 / -1; }
+      .bills-form label { display:block; font-size:12px; color:#7c8bb0; text-transform:uppercase; letter-spacing:.05em; margin-bottom:5px; }
+      .bills-form input, .bills-form select, .bills-form textarea { width:100%; padding:9px 12px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; font:inherit; }
+      .bills-form textarea { min-height:80px; resize:vertical; }
+      .pipeline-grid { display:grid; grid-template-columns:auto 1fr 1fr; gap:8px 10px; align-items:center; }
+      .pipeline-grid .step-num { font-weight:700; color:#7c8bb0; font-size:13px; }
+      .btn-row { display:flex; gap:8px; margin-top:18px; flex-wrap:wrap; }
+      .btn { padding:9px 16px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; font:inherit; cursor:pointer; }
+      .btn.primary { background:#0F2233; border-color:#73D7EE; color:#73D7EE; font-weight:700; }
+      .btn.danger { color:#ff7080; border-color:#5a1d28; }
+      .btn:disabled { opacity:.5; cursor:not-allowed; }
+      .toast { position:fixed; right:18px; bottom:18px; background:#0b1426; border:1px solid #2a3a55; padding:10px 14px; border-radius:8px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,.4); z-index:9999; max-width:340px; }
+      .toast.error { border-color:#5a1d28; color:#ffb1b8; }
+
+      /* Mobile-friendly table -> stacked cards */
+      @media (max-width: 720px) {
+        .bills-table thead { display:none; }
+        .bills-table, .bills-table tbody, .bills-table tr, .bills-table td { display:block; width:100%; }
+        .bills-table tr { border:1px solid #1a2541; border-radius:10px; margin-bottom:10px; padding:8px 4px; background:#0b1426; }
+        .bills-table td { border:none; padding:6px 12px; }
+        .bills-table td::before { content: attr(data-label); display:block; font-size:11px; color:#7c8bb0; text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
+        .bills-form { grid-template-columns:1fr; }
+        .pipeline-grid { grid-template-columns:auto 1fr; }
+        .pipeline-grid .pl-date { grid-column:2; }
+      }
+    </style>
   </head>
   <body class="admin-shell">
     <div id="shell-root"
          data-active-nav="bills"
          data-page-eyebrow="Statehouse"
          data-page-title="Bills"
-         data-page-sub="Bill tracker. Status, sponsors, and roll calls."></div>
+         data-page-sub="Bill tracker. Status, sponsors, and pipeline."></div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/admin/admin-shell.js"></script>
+    <script src="/admin/admin-responsive.js" defer></script>
     <script>
-      document.addEventListener('admin-shell-ready', function () {
-        document.getElementById('shellBody').innerHTML =
-          '<div class="shell-widget"><div class="shell-widget-empty">' +
-            '<strong style="display:block;font-size:16px;color:#fff;margin-bottom:8px">Module coming soon</strong>' +
-            'This admin module is reserved in the navigation and gated by your role. ' +
-            'Wire it up by replacing the stub at <code>/admin/bills/index.html</code>.' +
-          '</div></div>';
+      document.addEventListener('admin-shell-ready', function (ev) {
+        const client = ev.detail.client;
+        const can = ev.detail.can;
+        const canWrite = can && (can('bills', 'write') || can('bills', 'admin'));
+        const canDelete = can && can('bills', 'admin');
+
+        const root = document.getElementById('shellBody');
+        root.innerHTML = `
+          <div class="shell-widget">
+            <div class="bills-toolbar">
+              <input type="search" id="billsSearch" placeholder="Search by bill #, title, or nickname..." aria-label="Search bills" />
+              <select id="billsGa">
+                <option value="">All GAs</option>
+                <option value="136th">136th GA</option>
+                <option value="135th">135th GA</option>
+              </select>
+              <select id="billsStance">
+                <option value="">All stances</option>
+                <option value="anti">Anti</option>
+                <option value="pro">Pro</option>
+                <option value="mixed">Mixed</option>
+              </select>
+              ${canWrite ? '<button class="btn primary" id="addBillBtn">Add bill</button>' : ''}
+            </div>
+            <div id="billsTableWrap"><p style="color:#7c8bb0">Loading…</p></div>
+          </div>
+        `;
+
+        const wrap = document.getElementById('billsTableWrap');
+        let allBills = [];
+
+        function pillFor(stance) {
+          const s = (stance || 'anti').toLowerCase();
+          return `<span class="pill pill-${s}">${s}</span>`;
+        }
+        function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+        function render(rows) {
+          if (!rows.length) {
+            wrap.innerHTML = '<p style="color:#7c8bb0">No bills match those filters.</p>';
+            return;
+          }
+          wrap.innerHTML = `
+            <table class="bills-table">
+              <thead>
+                <tr>
+                  <th>Bill</th><th>Title</th><th>Stance</th><th>Status</th><th>Pipeline</th><th></th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map(b => `
+                  <tr data-slug="${escapeHtml(b.slug)}">
+                    <td data-label="Bill"><strong>${escapeHtml(b.label || b.slug)}</strong><span class="slug">${escapeHtml(b.slug)} · ${escapeHtml(b.ga||'')}</span></td>
+                    <td data-label="Title"><strong>${escapeHtml(b.title || '')}</strong>${b.nickname ? `<span class="slug">${escapeHtml(b.nickname)}</span>` : ''}</td>
+                    <td data-label="Stance">${pillFor(b.stance)}</td>
+                    <td data-label="Status"><span style="color:${escapeHtml(b.status_color||'#9be0a8')}">${escapeHtml(b.status_label || b.status || '')}</span></td>
+                    <td data-label="Step">${b.current_step == null ? '—' : `Step ${escapeHtml(b.current_step)} of 8`}</td>
+                    <td data-label=""><button class="btn" data-edit="${escapeHtml(b.slug)}">${canWrite ? 'Edit' : 'View'}</button></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        }
+
+        function applyFilters() {
+          const q   = (document.getElementById('billsSearch').value || '').toLowerCase().trim();
+          const ga  = document.getElementById('billsGa').value;
+          const st  = document.getElementById('billsStance').value;
+          render(allBills.filter(b => {
+            if (ga && b.ga !== ga) return false;
+            if (st && (b.stance || '').toLowerCase() !== st) return false;
+            if (!q) return true;
+            return (
+              (b.slug    || '').toLowerCase().includes(q) ||
+              (b.label   || '').toLowerCase().includes(q) ||
+              (b.title   || '').toLowerCase().includes(q) ||
+              (b.nickname|| '').toLowerCase().includes(q)
+            );
+          }));
+        }
+
+        async function load() {
+          const { data, error } = await client
+            .from('bills')
+            .select('*')
+            .order('ga', { ascending: false })
+            .order('display_order', { ascending: true })
+            .order('slug', { ascending: true });
+          if (error) { toast(error.message, true); return; }
+          allBills = data || [];
+          applyFilters();
+        }
+
+        function toast(msg, isErr) {
+          const el = document.createElement('div');
+          el.className = 'toast' + (isErr ? ' error' : '');
+          el.textContent = msg;
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), isErr ? 5000 : 2500);
+        }
+
+        // ---- Edit / create drawer ----
+        function openDrawer(bill) {
+          const drawer = document.getElementById('shellDrawer');
+          const isNew = !bill;
+          bill = bill || {
+            slug: '', label: '', title: '', ga: '136th', stance: 'anti',
+            summary: '', status: '', nickname: '', official_title: '',
+            status_label: '', status_color: '#dc2626',
+            categories: [], category_labels: [],
+            sponsors_text: '', last_action: '', next_date: '', house_vote: '',
+            chamber: 'house', current_step: 0, url: '', legislature_url: '', text_url: '',
+            is_active: true, display_order: 100,
+          };
+
+          const drawerBody = drawer.querySelector('.shell-drawer-body') || drawer.querySelector('[data-drawer-body]') || drawer.querySelector('.shell-drawer-panel');
+          const heading = drawer.querySelector('.shell-drawer-head h2, .shell-drawer-head strong, [data-drawer-title]');
+          if (heading) heading.textContent = isNew ? 'Add a bill' : `Edit ${bill.label || bill.slug}`;
+
+          drawerBody.innerHTML = `
+            <form id="billForm" class="bills-form">
+              <div>
+                <label>Slug (e.g. hb249)</label>
+                <input name="slug" value="${escapeHtml(bill.slug)}" ${isNew ? 'required' : 'readonly'} pattern="[a-z0-9-]+" />
+              </div>
+              <div>
+                <label>Label (e.g. HB 249)</label>
+                <input name="label" value="${escapeHtml(bill.label)}" required />
+              </div>
+              <div class="full">
+                <label>Short title</label>
+                <input name="title" value="${escapeHtml(bill.title)}" required />
+              </div>
+              <div>
+                <label>Nickname / public name</label>
+                <input name="nickname" value="${escapeHtml(bill.nickname || '')}" />
+              </div>
+              <div>
+                <label>Official title</label>
+                <input name="official_title" value="${escapeHtml(bill.official_title || '')}" />
+              </div>
+              <div>
+                <label>GA</label>
+                <select name="ga"><option ${bill.ga==='136th'?'selected':''}>136th</option><option ${bill.ga==='135th'?'selected':''}>135th</option></select>
+              </div>
+              <div>
+                <label>Stance</label>
+                <select name="stance">
+                  <option value="anti"  ${bill.stance==='anti'?'selected':''}>Anti</option>
+                  <option value="pro"   ${bill.stance==='pro'?'selected':''}>Pro</option>
+                  <option value="mixed" ${bill.stance==='mixed'?'selected':''}>Mixed</option>
+                </select>
+              </div>
+              <div>
+                <label>Chamber of origin</label>
+                <select name="chamber">
+                  <option value="house"  ${bill.chamber==='house'?'selected':''}>House</option>
+                  <option value="senate" ${bill.chamber==='senate'?'selected':''}>Senate</option>
+                  <option value="joint"  ${bill.chamber==='joint'?'selected':''}>Joint</option>
+                </select>
+              </div>
+              <div>
+                <label>Current pipeline step (0–8)</label>
+                <input name="current_step" type="number" min="0" max="8" value="${bill.current_step ?? 0}" />
+              </div>
+              <div>
+                <label>Status (machine)</label>
+                <input name="status" value="${escapeHtml(bill.status || '')}" placeholder="e.g. pending-senate" />
+              </div>
+              <div>
+                <label>Status label (display)</label>
+                <input name="status_label" value="${escapeHtml(bill.status_label || '')}" />
+              </div>
+              <div>
+                <label>Status color (#hex)</label>
+                <input name="status_color" value="${escapeHtml(bill.status_color || '')}" />
+              </div>
+              <div>
+                <label>Display order (lower = higher on list)</label>
+                <input name="display_order" type="number" value="${bill.display_order ?? 100}" />
+              </div>
+              <div class="full">
+                <label>Categories (comma separated machine slugs)</label>
+                <input name="categories" value="${escapeHtml((bill.categories||[]).join(', '))}" />
+              </div>
+              <div class="full">
+                <label>Category labels (comma separated, matches categories order)</label>
+                <input name="category_labels" value="${escapeHtml((bill.category_labels||[]).join(', '))}" />
+              </div>
+              <div class="full">
+                <label>Summary</label>
+                <textarea name="summary">${escapeHtml(bill.summary || '')}</textarea>
+              </div>
+              <div class="full">
+                <label>Sponsors (display text)</label>
+                <input name="sponsors_text" value="${escapeHtml(bill.sponsors_text || '')}" />
+              </div>
+              <div>
+                <label>Last action</label>
+                <input name="last_action" value="${escapeHtml(bill.last_action || '')}" />
+              </div>
+              <div>
+                <label>Next date / event</label>
+                <input name="next_date" value="${escapeHtml(bill.next_date || '')}" />
+              </div>
+              <div>
+                <label>House vote text</label>
+                <input name="house_vote" value="${escapeHtml(bill.house_vote || '')}" />
+              </div>
+              <div>
+                <label>Detail URL</label>
+                <input name="url" value="${escapeHtml(bill.url || '')}" />
+              </div>
+              <div>
+                <label>Legislature URL</label>
+                <input name="legislature_url" value="${escapeHtml(bill.legislature_url || '')}" />
+              </div>
+              <div>
+                <label>Bill text URL</label>
+                <input name="text_url" value="${escapeHtml(bill.text_url || '')}" />
+              </div>
+              <div class="full">
+                <label>Pipeline dates (0 = introduced, 8 = signed). Use ISO YYYY-MM-DD or a label.</label>
+                <div class="pipeline-grid" id="pipelineGrid"></div>
+              </div>
+              <div class="full btn-row">
+                ${canWrite ? '<button type="submit" class="btn primary">Save</button>' : ''}
+                <button type="button" class="btn" id="cancelBill">Cancel</button>
+                ${(!isNew && canDelete) ? '<button type="button" class="btn danger" id="deleteBill">Delete bill</button>' : ''}
+              </div>
+            </form>
+          `;
+
+          // Populate pipeline grid
+          const pipelineGrid = document.getElementById('pipelineGrid');
+          const stepLabels = ['Introduced','Committee assigned','Committee vote','Floor vote','Cross chamber','Concurrence','Conference','Signed by governor','Effective'];
+          (async () => {
+            const { data: steps } = await client
+              .from('bill_pipeline_steps')
+              .select('step_index, step_label, happened_on')
+              .eq('bill_slug', bill.slug);
+            const byIdx = {};
+            (steps || []).forEach(s => byIdx[s.step_index] = s);
+            pipelineGrid.innerHTML = stepLabels.map((lbl, i) => {
+              const s = byIdx[i] || {};
+              return `
+                <div class="step-num">${i}</div>
+                <div><input data-step="${i}" data-field="date" type="date" value="${s.happened_on || ''}" /></div>
+                <div class="pl-date"><input data-step="${i}" data-field="label" placeholder="${escapeHtml(lbl)}" value="${escapeHtml(s.step_label || '')}" /></div>
+              `;
+            }).join('');
+          })();
+
+          // Show drawer
+          drawer.setAttribute('aria-hidden', 'false');
+          drawer.classList.add('is-open');
+
+          document.getElementById('cancelBill').addEventListener('click', closeDrawer);
+          const delBtn = document.getElementById('deleteBill');
+          if (delBtn) delBtn.addEventListener('click', () => deleteBill(bill.slug));
+
+          document.getElementById('billForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!canWrite) return;
+            const fd = new FormData(e.target);
+            const payload = Object.fromEntries(fd.entries());
+            payload.categories      = payload.categories      ? payload.categories.split(',').map(s => s.trim()).filter(Boolean) : [];
+            payload.category_labels = payload.category_labels ? payload.category_labels.split(',').map(s => s.trim()).filter(Boolean) : [];
+            if (payload.current_step !== '')  payload.current_step  = parseInt(payload.current_step, 10);
+            if (payload.display_order !== '') payload.display_order = parseInt(payload.display_order, 10);
+            payload.updated_at = new Date().toISOString();
+            const { error } = await client
+              .from('bills')
+              .upsert(payload, { onConflict: 'slug' });
+            if (error) { toast(error.message, true); return; }
+
+            // Save pipeline rows
+            const grid = document.getElementById('pipelineGrid');
+            const dateInputs = grid.querySelectorAll('input[data-field="date"]');
+            const upserts = [];
+            for (const di of dateInputs) {
+              const idx = parseInt(di.dataset.step, 10);
+              const li = grid.querySelector(`input[data-step="${idx}"][data-field="label"]`);
+              const date  = di.value || null;
+              const label = (li && li.value.trim()) || null;
+              if (!date && !label) continue;
+              upserts.push({ bill_slug: payload.slug, step_index: idx, step_label: label, happened_on: date });
+            }
+            if (upserts.length) {
+              const { error: pErr } = await client.from('bill_pipeline_steps').upsert(upserts, { onConflict: 'bill_slug,step_index' });
+              if (pErr) { toast('Pipeline save: ' + pErr.message, true); return; }
+            }
+
+            toast('Saved.');
+            closeDrawer();
+            load();
+          });
+        }
+
+        function closeDrawer() {
+          const drawer = document.getElementById('shellDrawer');
+          drawer.classList.remove('is-open');
+          drawer.setAttribute('aria-hidden', 'true');
+        }
+
+        async function deleteBill(slug) {
+          if (!confirm(`Delete ${slug}? This cannot be undone.`)) return;
+          const { error } = await client.from('bills').delete().eq('slug', slug);
+          if (error) { toast(error.message, true); return; }
+          toast('Deleted.');
+          closeDrawer();
+          load();
+        }
+
+        // ---- Event wiring ----
+        document.getElementById('billsSearch').addEventListener('input', applyFilters);
+        document.getElementById('billsGa').addEventListener('change', applyFilters);
+        document.getElementById('billsStance').addEventListener('change', applyFilters);
+        const addBtn = document.getElementById('addBillBtn');
+        if (addBtn) addBtn.addEventListener('click', () => openDrawer(null));
+
+        wrap.addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-edit]');
+          if (!btn) return;
+          const slug = btn.dataset.edit;
+          const row  = allBills.find(b => b.slug === slug);
+          openDrawer(row);
+        });
+
+        load();
       });
     </script>
   </body>
