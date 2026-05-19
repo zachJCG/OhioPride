@@ -297,6 +297,7 @@
           if (can('volunteers','read'))   actions.push({ href: '/admin/volunteers',         label: 'Triage volunteers',       sub: 'Filter new signups',     icon: iconUsers() });
           if (can('endorsements','read')) actions.push({ href: '/admin/endorsements',       label: 'Review endorsements',     sub: 'Open the queue',         icon: iconStar() });
           if (can('donors','read'))       actions.push({ href: '/admin/donors',             label: 'Donor roster',            sub: 'Founding members list',  icon: iconHeart() });
+          if (can('pride','read'))        actions.push({ href: '/admin/pride',              label: 'Pride Road Tour',         sub: 'Staff every Pride stop', icon: iconFlag() });
           if (can('news','write'))        actions.push({ href: '/admin/news',               label: 'Post a statement',        sub: 'Draft + publish',        icon: iconMegaphone() });
           if (can('bills','read'))        actions.push({ href: '/admin/bills',              label: 'Bills tracker',           sub: 'Roll calls + sponsors',  icon: iconGavel() });
           if (can('users','manage_users')) actions.push({ href: '/admin/users',             label: 'Manage admin users',      sub: 'Invite + assign roles',  icon: iconKey() });
@@ -397,6 +398,7 @@
         function iconMegaphone() { return '<svg class="shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2c0 .55.45 1 1 1h2l5 4V6L6 10H4c-.55 0-1 .45-1 1z"/><path d="M14 7c1.5 1 2.5 2.7 2.5 5s-1 4-2.5 5"/></svg>'; }
         function iconKey()       { return '<svg class="shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="3.5"/><path d="m11 11 9-9"/><path d="m17 5 2 2"/><path d="m14 8 2 2"/></svg>'; }
         function iconExternal()  { return '<svg class="shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>'; }
+        function iconFlag()      { return '<svg class="shell-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/></svg>'; }
       })();
     </script>
   </body>

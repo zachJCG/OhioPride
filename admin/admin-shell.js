@@ -62,7 +62,7 @@
         { id: 'volunteers',   href: '/admin/volunteers',   label: 'Volunteers',   icon: 'users',      permission: ['volunteers','read'] },
         { id: 'internships',  href: '/admin/internships',  label: 'Internships',  icon: 'briefcase',  permission: ['internships','read'] },
         { id: 'donors',       href: '/admin/donors',      label: 'Donors',       icon: 'heart',      permission: ['donors','read'] },
-        { id: 'board',        href: '/admin/board',        label: 'Board',        icon: 'shield',     permission: ['board','read'] },
+        { id: 'pride',        href: '/admin/pride',        label: 'Pride',        icon: 'flag',       permission: ['pride','read'] },
         { id: 'users',        href: '/admin/users',        label: 'Admin Users',  icon: 'key',        permission: ['users','read'] },
       ]
     },
@@ -70,15 +70,6 @@
       group: 'Program',
       items: [
         { id: 'endorsements', href: '/admin/endorsements', label: 'Endorsements', icon: 'star',       permission: ['endorsements','read'] },
-        { id: 'bills',        href: '/admin/bills',        label: 'Bills',        icon: 'gavel',      permission: ['bills','read'] },
-        { id: 'legislators',  href: '/admin/legislators',  label: 'Legislators',  icon: 'capitol',    permission: ['legislators','read'] },
-      ]
-    },
-    {
-      group: 'Comms',
-      items: [
-        { id: 'news',         href: '/admin/news',         label: 'News & Statements', icon: 'megaphone', permission: ['news','read'] },
-        { id: 'launch',       href: '/admin/launch',       label: 'Launch Day',   icon: 'flag',       permission: ['launch','read'] },
       ]
     }
   ];
@@ -223,7 +214,7 @@
               };
               state.roles = [{ slug: 'super_admin', label: 'Super Admin' }];
               // Synthesize permissions for the legacy super_admin.
-              ['dashboard','volunteers','endorsements','donors','bills','legislators','news','board','launch','users','settings']
+              ['dashboard','volunteers','endorsements','donors','bills','legislators','news','board','launch','pride','users','settings']
                 .forEach(function (m) {
                   ['read','write','admin','manage_users'].forEach(function (a) {
                     state.permSet.add(m + ':' + a);
