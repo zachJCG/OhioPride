@@ -1,7 +1,8 @@
 /* ==========================================================================
    pride-signup.js
    Powers /pride/signup: builds the event checkbox grid from
-   /.netlify/functions/pride-events (pac_attending events grouped by month),
+   /.netlify/functions/pride-events (every public event grouped by month;
+   attendance is not confirmed so the list is not gated by pac_attending),
    validates the form client-side, and POSTs to
    /.netlify/functions/pride-volunteer-submit.
    ========================================================================== */
@@ -24,12 +25,17 @@
     interfaith: 'Interfaith', community: 'Community', other: 'Event'
   };
 
-  var ATTENDING = [];
+  var EVENTS = [];
 
   function esc(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+  function showCity(ev) {
+    var name = (ev.name || '').toLowerCase();
+    var city = (ev.city || '').toLowerCase();
+    return city && name.indexOf(city) === -1;
   }
   function parseDate(iso) {
     var p = String(iso).split('-');
@@ -45,13 +51,13 @@
   function renderEvents() {
     var wrap = document.getElementById('pv-events');
     if (!wrap) return;
-    if (!ATTENDING.length) {
+    if (!EVENTS.length) {
       wrap.innerHTML = '<p class="pride-count">Event list is loading. ' +
         'You can still finish the rest of the form.</p>';
       return;
     }
     var byMonth = {};
-    ATTENDING.forEach(function (ev) {
+    EVENTS.forEach(function (ev) {
       var m = parseDate(ev.event_date).getMonth();
       (byMonth[m] = byMonth[m] || []).push(ev);
     });
@@ -62,13 +68,18 @@
         html.push('<div class="pride-check-grid">');
         byMonth[m].forEach(function (ev) {
           html.push(
-            '<label class="pride-check" data-region="' + esc(ev.region) + '">' +
+            '<label class="pride-check pride-check--event" data-region="' +
+              esc(ev.region) + '">' +
             '<input type="checkbox" name="events_interested" value="' +
               esc(ev.slug) + '" />' +
-            '<span>' + esc(fmtDate(ev.event_date)) + ' &middot; ' +
-              '<strong>' + esc(ev.city) + '</strong> ' + esc(ev.name) +
-              ' <span class="pride-pill pride-pill--type">' +
-              esc(TYPE_LABEL[ev.event_type] || 'Event') + '</span></span>' +
+            '<span class="pride-check-body">' +
+              '<span class="pride-check-date">' + esc(fmtDate(ev.event_date)) +
+              '</span> ' +
+              (showCity(ev) ? '<strong>' + esc(ev.city) + '</strong> ' : '') +
+              esc(ev.name) +
+              ' <span class="pride-type-label">' +
+              esc(TYPE_LABEL[ev.event_type] || 'Event') + '</span>' +
+            '</span>' +
             '</label>'
           );
         });
@@ -245,7 +256,7 @@
     .then(function (r) { return r.json(); })
     .then(function (data) {
       if (data && data.ok) {
-        ATTENDING = (data.events || []).filter(function (e) { return e.pac_attending; });
+        EVENTS = data.events || [];
       }
       renderEvents();
       wireRegionSelect();

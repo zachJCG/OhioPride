@@ -666,10 +666,16 @@ on conflict (slug) do update set
   display_order       = excluded.display_order,
   description         = excluded.description;
 
--- Point the tour status at the launch as "current" and Cleveland as "next".
+-- Attendance is NOT confirmed for any Pride yet. The public site must not
+-- claim "We're Going" anywhere; the PAC sets pac_attending per event in
+-- Supabase Studio once a contingent is actually locked in.
+update public.pride_events set pac_attending = false;
+
+-- Tour status: the launch is the PAC's own event so it is a legitimate
+-- "current" anchor, but no Pride stop is a confirmed "next" yet.
 update public.pride_tour_status
 set current_event_id = (select id from public.pride_events where slug = 'columbus-rally-2026-05-22'),
-    next_event_id    = (select id from public.pride_events where slug = 'cleveland-march-2026-06-06'),
-    status_message   = 'Launch week at the Ohio Statehouse. First road stop: Pride in the CLE, June 6.',
+    next_event_id    = null,
+    status_message   = 'Launch week at the Ohio Statehouse. Road tour stops are being confirmed. Check back for updates.',
     updated_at       = now()
 where id = 1;

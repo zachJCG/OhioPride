@@ -18,7 +18,7 @@ import { createClient } from '@supabase/supabase-js';
 const ALLOWED_REGIONS = new Set(['NE', 'NW', 'SE', 'SW', 'Central', 'Anywhere']);
 const ALLOWED_ROLES = new Set([
   'marcher', 'booth_staff', 'driver', 'photographer',
-  'marshal', 'setup_breakdown', 'wherever_needed',
+  'setup_breakdown', 'wherever_needed',
 ]);
 const ALLOWED_TSHIRT = new Set(['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL']);
 const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
