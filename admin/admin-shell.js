@@ -74,6 +74,13 @@
       ]
     },
     {
+      group: 'Legislation',
+      items: [
+        { id: 'bills',        href: '/admin/bills',        label: 'Bills',        icon: 'capitol',    permission: ['bills','read'] },
+        { id: 'legislators',  href: '/admin/legislators',  label: 'Scorecard',    icon: 'gavel',      permission: ['legislators','read'] },
+      ]
+    },
+    {
       group: 'Money',
       items: [
         { id: 'finance',      href: '/admin/finance/budget', label: 'Budget',      icon: 'wallet',     permission: ['finance','read'] },

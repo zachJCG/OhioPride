@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/site-template.css" />
     <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
     <style>
       /* Local enhancements layered on top of admin-shared.css */
       .admin-expand-btn {
@@ -79,40 +81,15 @@
       td.admin-cell-tight { white-space: nowrap; }
     </style>
   </head>
-  <body>
-    <div id="site-header"></div>
+  <body class="admin-shell">
+    <div id="shell-root"
+         data-active-nav="donors"
+         data-page-eyebrow="People"
+         data-page-title="Donors"
+         data-page-sub="Founding members, ActBlue contributions, and tier progress."></div>
 
-    <section class="subpage-hero">
-      <div class="container">
-        <div class="section-label">Admin</div>
-        <h1 class="section-title">Donors</h1>
-        <p class="subpage-hero-sub">
-          Founding members, ActBlue contributions, and tier progress.
-        </p>
-      </div>
-    </section>
-
-    <div class="admin-meta-bar">
-      <div class="container">
-        <div class="admin-crumbs">
-          <a href="/admin/dashboard">Dashboard</a>
-          <span class="admin-crumb-sep">/</span>
-          <span>Donors</span>
-        </div>
-        <div class="admin-meta-actions">
-          <span class="admin-meta-user">
-            Signed in as <strong id="adminEmail">&hellip;</strong>
-          </span>
-          <button type="button" class="admin-signout-btn" id="signOutBtn">Sign Out</button>
-        </div>
-      </div>
-    </div>
-
-    <section class="section">
-      <div class="container">
-        <div class="admin-loading" id="loading">Loading&hellip;</div>
-
-        <div class="admin-panel" id="panel" hidden>
+    <template id="donorsTpl">
+        <div class="shell-widget admin-panel">
           <div class="admin-stat-grid" id="statGrid">
             <div class="admin-stat">
               <div class="admin-stat-num" id="statMembers">0</div>
@@ -192,16 +169,11 @@
             Public roster: <a href="/founding-members">/founding-members</a>
           </p>
         </div>
-      </div>
-    </section>
+        <div class="admin-toast" id="toast"></div>
+    </template>
 
-    <div id="site-footer"></div>
-    <div class="admin-toast" id="toast"></div>
-
-    <script src="/js/site-template.js" defer></script>
-    <script src="/js/ohiopride-data.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/admin/admin-auth.js"></script>
+    <script src="/admin/admin-shell.js"></script>
     <script>
       (function () {
         'use strict';
@@ -641,9 +613,16 @@
           if (resp.error) throw resp.error;
         }
 
-        document.addEventListener('admin-auth-ready', function (e) {
-          var client = window.AdminAuth && window.AdminAuth.client;
+        document.addEventListener('admin-shell-ready', function (e) {
+          var client = e.detail && e.detail.client;
           if (!client) return;
+
+          var shellBody = document.getElementById('shellBody');
+          if (shellBody && !document.getElementById('donorsTable')) {
+            shellBody.appendChild(
+              document.getElementById('donorsTpl').content.cloneNode(true)
+            );
+          }
 
           populateTierFilter();
 
@@ -724,5 +703,6 @@
         });
       })();
     </script>
+    <script src="/admin/admin-responsive.js" defer></script>
   </body>
 </html>
