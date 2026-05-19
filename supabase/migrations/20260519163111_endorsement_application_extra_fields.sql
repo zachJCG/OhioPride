@@ -12,6 +12,12 @@
 --     is left NULL.
 --
 -- Idempotent: safe to re-run.
+--
+-- Re-stamped from 20260508000000 to 20260519163111: the original was
+-- backdated behind already-applied migrations, so version-ordering
+-- runners permanently skipped it and the live DB never gained these
+-- columns. That made every browser endorsement submission fail (the
+-- form inserts these fields as the anon role).
 -- =====================================================================
 
 alter table public.endorsement_applications
