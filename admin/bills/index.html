@@ -1,9 +1,4 @@
 <!doctype html>
-<!--
-  Module stub. Each /admin/<module>/index.html in this bundle uses the same
-  template, swapping `data-active-nav`, `data-page-title`, `data-page-eyebrow`,
-  and the empty-state copy. Wire real data in once the module is built.
--->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,24 +12,453 @@
     <link rel="stylesheet" href="/css/site-template.css" />
     <link rel="stylesheet" href="/admin/admin-shared.css" />
     <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+    <style>
+      .admin-expand-btn {
+        background: transparent;
+        border: 1px solid var(--color-border, #d3d6dc);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        line-height: 1;
+        padding: 4px 8px;
+        cursor: pointer;
+        color: var(--color-text-muted, #555);
+      }
+      .admin-expand-btn:hover { background: rgba(0,0,0,0.04); }
+      .admin-expand-btn[aria-expanded="true"] { background: rgba(15, 34, 51, 0.08); }
+      tr.admin-detail-row > td {
+        background: #fafbfc;
+        border-top: 0;
+        padding: 14px 18px 18px;
+      }
+      .admin-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 10px 18px;
+      }
+      .admin-detail-grid dt {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6c7480;
+        margin: 0;
+      }
+      .admin-detail-grid dd {
+        margin: 0 0 2px;
+        font-size: 0.92rem;
+        color: #1a1f29;
+        word-break: break-word;
+      }
+      .admin-detail-section-title {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #0F2233;
+        margin: 16px 0 6px;
+        font-weight: 700;
+      }
+      .admin-detail-section-title:first-child { margin-top: 0; }
+      .admin-detail-prose {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        color: #2a2f3a;
+        white-space: pre-wrap;
+        margin: 0 0 6px;
+      }
+      .admin-pill-stance-anti  { background: rgba(255,107,107,0.16); color: #c0392b; }
+      .admin-pill-stance-pro   { background: rgba(74,222,128,0.18);  color: #1e7e45; }
+      .admin-pill-stance-mixed { background: rgba(255,200,87,0.18);  color: #8a6d1f; }
+      .admin-pill-status {
+        background: #eef2f6;
+        color: #1a1f29;
+        font-size: 0.78rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      td.admin-cell-tight { white-space: nowrap; }
+      .admin-billnum {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-weight: 700;
+        color: #0F2233;
+      }
+    </style>
   </head>
   <body class="admin-shell">
     <div id="shell-root"
          data-active-nav="bills"
          data-page-eyebrow="Statehouse"
          data-page-title="Bills"
-         data-page-sub="Bill tracker. Status, sponsors, and roll calls."></div>
+         data-page-sub="Tracked legislation &mdash; stance, parliamentary status, and impact."></div>
+
+    <template id="billsTpl">
+      <div class="shell-widget admin-panel">
+        <div class="admin-stat-grid" id="statGrid">
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statTotal">0</div>
+            <div class="admin-stat-label">Tracked Bills</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statAnti">0</div>
+            <div class="admin-stat-label">PAC Opposes</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statPro">0</div>
+            <div class="admin-stat-label">PAC Supports</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statFeatured">0</div>
+            <div class="admin-stat-label">Featured</div>
+          </div>
+        </div>
+
+        <div class="admin-toolbar">
+          <input type="search" class="admin-input" id="filterSearch"
+                 placeholder="Search bill number, title, summary&hellip;" autocomplete="off" />
+          <select class="admin-input" id="filterStance">
+            <option value="">All stances</option>
+            <option value="anti">Opposes</option>
+            <option value="pro">Supports</option>
+            <option value="mixed">Mixed</option>
+          </select>
+          <select class="admin-input" id="filterStatus"><option value="">All statuses</option></select>
+          <select class="admin-input" id="filterCategory"><option value="">All categories</option></select>
+          <select class="admin-input" id="filterChamber">
+            <option value="">Both chambers</option>
+            <option value="house">House</option>
+            <option value="senate">Senate</option>
+          </select>
+          <span class="admin-toolbar-spacer"></span>
+          <span class="admin-result-count" id="resultCount"></span>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="billsTable">
+            <thead>
+              <tr>
+                <th class="admin-toggle-col" aria-label="Expand"></th>
+                <th data-sort="bill_number" class="admin-sortable">Bill<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="title" class="admin-sortable">Title<span class="admin-sort-arrow">&darr;</span></th>
+                <th>Stance</th>
+                <th data-sort="status" class="admin-sortable">Status<span class="admin-sort-arrow">&darr;</span></th>
+                <th>Category</th>
+                <th>Chamber</th>
+                <th data-sort="introduced_on" class="admin-sortable">Introduced<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="last_action_on" class="admin-sortable">Last Action<span class="admin-sort-arrow">&darr;</span></th>
+              </tr>
+            </thead>
+            <tbody id="billsBody">
+              <tr><td colspan="9" class="admin-empty-row">Loading bills&hellip;</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="admin-panel-foot">
+          Source of truth: <code>bills</code> &middot;
+          Public tracker: <a href="/issues.html">/issues</a> &middot;
+          Stance is the PAC's assessment; status is the parliamentary state.
+        </p>
+      </div>
+      <div class="admin-toast" id="toast"></div>
+    </template>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/admin/admin-shell.js"></script>
     <script>
-      document.addEventListener('admin-shell-ready', function () {
-        document.getElementById('shellBody').innerHTML =
-          '<div class="shell-widget"><div class="shell-widget-empty">' +
-            '<strong style="display:block;font-size:16px;color:#fff;margin-bottom:8px">Module coming soon</strong>' +
-            'This admin module is reserved in the navigation and gated by your role. ' +
-            'Wire it up by replacing the stub at <code>/admin/bills/index.html</code>.' +
-          '</div></div>';
-      });
+      (function () {
+        'use strict';
+
+        var COLSPAN = 9;
+
+        var STATUS_LABEL = {
+          introduced: 'Introduced',
+          in_committee: 'In Committee',
+          passed_house: 'Passed House',
+          passed_senate: 'Passed Senate',
+          enacted: 'Enacted',
+          dead: 'Dead'
+        };
+        var STANCE_LABEL = { anti: 'Opposes', pro: 'Supports', mixed: 'Mixed' };
+
+        var state = {
+          rows: [],
+          filtered: [],
+          sortKey: 'last_action_on',
+          sortDir: 'desc',
+          expanded: Object.create(null)
+        };
+
+        function $(id) { return document.getElementById(id); }
+
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+
+        function titleCase(s) {
+          return String(s || '').replace(/[_-]+/g, ' ')
+            .replace(/\b\w/g, function (m) { return m.toUpperCase(); });
+        }
+
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function toast(msg, kind) {
+          var el = $('toast');
+          el.textContent = msg;
+          el.className = 'admin-toast visible' + (kind ? ' admin-toast-' + kind : '');
+          clearTimeout(toast._t);
+          toast._t = setTimeout(function () { el.classList.remove('visible'); }, 3200);
+        }
+
+        function populateSelect(id, values, labelFn) {
+          var sel = $(id);
+          while (sel.options.length > 1) sel.remove(1);
+          values.sort().forEach(function (v) {
+            var opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = labelFn ? labelFn(v) : v;
+            sel.appendChild(opt);
+          });
+        }
+
+        function renderStats() {
+          $('statTotal').textContent    = state.rows.length.toLocaleString();
+          $('statAnti').textContent     = state.rows.filter(function (r) { return r.stance === 'anti'; }).length;
+          $('statPro').textContent      = state.rows.filter(function (r) { return r.stance === 'pro'; }).length;
+          $('statFeatured').textContent = state.rows.filter(function (r) { return r.is_featured; }).length;
+        }
+
+        function applyFilters() {
+          var q = $('filterSearch').value.trim().toLowerCase();
+          var stance = $('filterStance').value;
+          var status = $('filterStatus').value;
+          var cat = $('filterCategory').value;
+          var chamber = $('filterChamber').value;
+
+          state.filtered = state.rows.filter(function (r) {
+            if (stance && r.stance !== stance) return false;
+            if (status && r.status !== status) return false;
+            if (cat && r.category !== cat) return false;
+            if (chamber && r.chamber_of_origin !== chamber) return false;
+            if (q) {
+              var hay = (
+                (r.bill_number || '') + ' ' +
+                (r.title || '') + ' ' +
+                (r.official_title || '') + ' ' +
+                (r.summary || '') + ' ' +
+                (r.what_it_does || '')
+              ).toLowerCase();
+              if (hay.indexOf(q) === -1) return false;
+            }
+            return true;
+          });
+          applySort();
+        }
+
+        function applySort() {
+          var key = state.sortKey;
+          var dir = state.sortDir === 'asc' ? 1 : -1;
+          state.filtered.sort(function (a, b) {
+            var av = a[key], bv = b[key];
+            if (key === 'introduced_on' || key === 'last_action_on') {
+              return ((new Date(av || 0)) - (new Date(bv || 0))) * dir;
+            }
+            return String(av || '').localeCompare(String(bv || ''), undefined, { numeric: true, sensitivity: 'base' }) * dir;
+          });
+          renderRows();
+          renderSortHeaders();
+        }
+
+        function renderSortHeaders() {
+          var ths = document.querySelectorAll('#billsTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            ths[i].classList.remove('admin-sort-asc', 'admin-sort-desc');
+            if (ths[i].dataset.sort === state.sortKey) {
+              ths[i].classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
+            }
+          }
+        }
+
+        function detailRowHtml(r) {
+          var meta = [
+            ['Official Title', r.official_title],
+            ['General Assembly', r.general_assembly],
+            ['Chamber of Origin', titleCase(r.chamber_of_origin)],
+            ['Introduced', fmtDate(r.introduced_on)],
+            ['Last Action', fmtDate(r.last_action_on)],
+            ['Last Action Text', r.last_action_text],
+            ['Next Expected Action', r.next_expected_action],
+            ['Effective Date', fmtDate(r.effective_date)],
+            ['Featured', r.is_featured ? 'Yes' : 'No']
+          ];
+          function grid(items) {
+            var html = '<dl class="admin-detail-grid">';
+            for (var i = 0; i < items.length; i++) {
+              var v = items[i][1];
+              if (v === '' || v == null) continue;
+              html += '<div><dt>' + escapeHtml(items[i][0]) + '</dt><dd>' + escapeHtml(String(v)) + '</dd></div>';
+            }
+            return html + '</dl>';
+          }
+          function prose(label, body) {
+            if (!body) return '';
+            return '<div class="admin-detail-section-title">' + escapeHtml(label) + '</div>' +
+                   '<p class="admin-detail-prose">' + escapeHtml(body) + '</p>';
+          }
+          var links = [];
+          if (r.official_bill_url) {
+            links.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
+              escapeHtml(r.official_bill_url) + '">Official bill page &rarr;</a>');
+          }
+          if (r.bill_text_pdf_url) {
+            links.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
+              escapeHtml(r.bill_text_pdf_url) + '">Bill text PDF &rarr;</a>');
+          }
+          if (r.enacted_text_url) {
+            links.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
+              escapeHtml(r.enacted_text_url) + '">Enacted text &rarr;</a>');
+          }
+
+          var sections =
+            '<div class="admin-detail-section-title">Bill Detail</div>' + grid(meta) +
+            prose('Summary', r.summary) +
+            prose('What It Does', r.what_it_does) +
+            prose('Impact', r.impact) +
+            prose('Equality Impact', r.equality_impact_note) +
+            prose('Legal Risks', r.legal_risks) +
+            (links.length
+              ? '<div class="admin-detail-section-title">Links</div><div style="display:flex;gap:18px;flex-wrap:wrap">' + links.join('') + '</div>'
+              : '');
+
+          return '<tr class="admin-detail-row" data-detail-for="' + escapeHtml(r.id) + '">' +
+                   '<td colspan="' + COLSPAN + '">' + sections + '</td></tr>';
+        }
+
+        function renderRows() {
+          var body = $('billsBody');
+          $('resultCount').textContent =
+            state.filtered.length === state.rows.length
+              ? state.rows.length + ' total'
+              : state.filtered.length + ' of ' + state.rows.length;
+
+          if (state.filtered.length === 0) {
+            var msg = state.rows.length === 0
+              ? 'No bills found. The bill tracker syncs from the statehouse research pipeline.'
+              : 'No bills match the current filters.';
+            body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">' + msg + '</td></tr>';
+            return;
+          }
+
+          var html = '';
+          for (var i = 0; i < state.filtered.length; i++) {
+            var r = state.filtered[i];
+            var isExpanded = !!state.expanded[r.id];
+            var expandBtn =
+              '<button type="button" class="admin-expand-btn" data-expand="' + escapeHtml(r.id) + '" ' +
+                'aria-expanded="' + (isExpanded ? 'true' : 'false') + '">' +
+                (isExpanded ? '&minus;' : '+') + '</button>';
+            var stance = r.stance || '';
+            var stanceCell = stance
+              ? '<span class="admin-pill admin-pill-stance-' + escapeHtml(stance) + '">' +
+                  escapeHtml(STANCE_LABEL[stance] || stance) + '</span>'
+              : '<span class="admin-muted">&mdash;</span>';
+            var featured = r.is_featured
+              ? '<span class="admin-cell-sub">&#9733; Featured</span>' : '';
+            var title = escapeHtml(r.title || '') + featured;
+
+            html +=
+              '<tr data-id="' + escapeHtml(r.id) + '">' +
+                '<td class="admin-toggle-col">' + expandBtn + '</td>' +
+                '<td class="admin-cell-tight"><span class="admin-billnum">' + escapeHtml(r.bill_number || '') + '</span></td>' +
+                '<td class="admin-cell-name">' + title + '</td>' +
+                '<td>' + stanceCell + '</td>' +
+                '<td><span class="admin-pill-status">' + escapeHtml(STATUS_LABEL[r.status] || titleCase(r.status)) + '</span></td>' +
+                '<td>' + (r.category ? escapeHtml(titleCase(r.category)) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td>' + (r.chamber_of_origin ? escapeHtml(titleCase(r.chamber_of_origin)) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td class="admin-cell-tight">' + (fmtDate(r.introduced_on) || '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td class="admin-cell-tight">' + (fmtDate(r.last_action_on) || '<span class="admin-muted">&mdash;</span>') + '</td>' +
+              '</tr>';
+
+            if (isExpanded) html += detailRowHtml(r);
+          }
+          body.innerHTML = html;
+        }
+
+        async function loadBills(client) {
+          var resp = await client
+            .from('bills')
+            .select('*')
+            .order('last_action_on', { ascending: false, nullsFirst: false });
+          if (resp.error) throw resp.error;
+          return resp.data || [];
+        }
+
+        document.addEventListener('admin-shell-ready', function (e) {
+          var client = e.detail && e.detail.client;
+          if (!client) return;
+
+          var shellBody = document.getElementById('shellBody');
+          if (shellBody && !document.getElementById('billsTable')) {
+            shellBody.appendChild(document.getElementById('billsTpl').content.cloneNode(true));
+          }
+
+          loadBills(client).then(function (rows) {
+            state.rows = rows;
+            populateSelect('filterStatus',
+              Array.from(new Set(rows.map(function (r) { return r.status; }).filter(Boolean))),
+              function (v) { return STATUS_LABEL[v] || titleCase(v); });
+            populateSelect('filterCategory',
+              Array.from(new Set(rows.map(function (r) { return r.category; }).filter(Boolean))),
+              titleCase);
+            renderStats();
+            applyFilters();
+          }).catch(function (err) {
+            console.error('Failed to load bills:', err);
+            $('billsBody').innerHTML =
+              '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
+              'Could not load bills. Your account may not be authorized for this view.' +
+              '</td></tr>';
+          });
+
+          var debounceT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debounceT);
+            debounceT = setTimeout(applyFilters, 150);
+          });
+          ['filterStance', 'filterStatus', 'filterCategory', 'filterChamber'].forEach(function (id) {
+            $(id).addEventListener('change', applyFilters);
+          });
+
+          var ths = document.querySelectorAll('#billsTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            ths[i].addEventListener('click', function (ev) {
+              var key = ev.currentTarget.dataset.sort;
+              if (state.sortKey === key) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              } else {
+                state.sortKey = key;
+                state.sortDir = (key === 'introduced_on' || key === 'last_action_on') ? 'desc' : 'asc';
+              }
+              applySort();
+            });
+          }
+
+          $('billsBody').addEventListener('click', function (ev) {
+            var btn = ev.target.closest && ev.target.closest('[data-expand]');
+            if (!btn) return;
+            ev.preventDefault();
+            var id = btn.dataset.expand;
+            state.expanded[id] = !state.expanded[id];
+            renderRows();
+          });
+        });
+      })();
     </script>
+    <script src="/admin/admin-responsive.js" defer></script>
   </body>
 </html>
