@@ -22,6 +22,24 @@
       .vol-table tbody tr { cursor: pointer; }
       .vol-table tbody tr:hover { background: rgba(115, 215, 238, 0.06); }
       .vol-drawer-toggle-wrap { display: flex; gap: 8px; align-items: center; }
+      .vol-pill-pride { background: rgba(243, 119, 173, 0.18); color: #ffb1d3; border-color: rgba(243, 119, 173, 0.55); }
+      .vol-pill-form  { background: rgba(255, 255, 255, 0.06); color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.18); }
+      .vol-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+      .vol-form-grid label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: rgba(255,255,255,0.55); font-family: "Montserrat", sans-serif; }
+      .vol-form-grid label.vol-span-2 { grid-column: 1 / -1; }
+      .vol-form-grid input.admin-input,
+      .vol-form-grid select.admin-input,
+      .vol-form-grid textarea.admin-input { width: 100%; min-width: 0; font-family: "Roboto Slab", Georgia, serif; font-size: 14px; text-transform: none; letter-spacing: 0; color: var(--text-white); }
+      .vol-form-grid textarea.admin-input { min-height: 80px; resize: vertical; }
+      .vol-check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; padding-top: 4px; }
+      .vol-check-grid label { display: inline-flex; align-items: center; gap: 8px; font-family: "Roboto Slab", Georgia, serif; font-size: 13px; color: rgba(255,255,255,0.85); text-transform: none; letter-spacing: 0; }
+      .vol-check-grid input[type="checkbox"] { accent-color: #73d7ee; width: 14px; height: 14px; }
+      .vol-bool-row { display: flex; flex-wrap: wrap; gap: 14px 24px; padding-top: 4px; }
+      .vol-bool-row label { display: inline-flex; align-items: center; gap: 8px; font-family: "Roboto Slab", Georgia, serif; font-size: 13px; color: rgba(255,255,255,0.85); }
+      .vol-bool-row input[type="checkbox"] { accent-color: #73d7ee; width: 14px; height: 14px; }
+      .admin-cell-pride { color: #ffb1d3; }
+      .admin-assignee-select { min-width: 140px; }
+      td.vol-assignee-cell select { width: 100%; min-width: 130px; }
     </style>
   </head>
 
@@ -75,11 +93,21 @@
         var TIME_LABEL = {
           one_time:'One-time', monthly:'A few hrs/mo', weekly:'A few hrs/wk', surge_only:'Surge only'
         };
+        var TIME_OPTIONS = ['one_time','monthly','weekly','surge_only'];
+        var VOTER_OPTIONS = ['yes','no','unsure'];
         var STATUS_OPTIONS = ['new','contacted','assigned','inactive','declined'];
         var STATUS_LABEL = {
           new:'New', contacted:'Contacted', assigned:'Assigned',
           inactive:'Inactive', declined:'Declined'
         };
+
+        // referral_source values to surface as a "Source" filter / pill.
+        // 'pride_signup' is set by the trg_sync_pride_volunteer trigger
+        // whenever someone submits /pride/signup.
+        var SOURCE_KNOWN = [
+          { value: 'pride_signup', label: 'Pride signup' },
+          { value: 'volunteer_form', label: 'Volunteer form' }
+        ];
 
         var state = {
           rows: [],
@@ -88,7 +116,9 @@
           sortDir: 'desc',
           client: null,
           canWrite: false,
-          activeId: null
+          activeId: null,
+          adminUsers: [],          // [{ id, full_name, email, is_active }]
+          adminUserById: {}        // id -> row
         };
 
         // ---------------------------------------------------------------
@@ -104,24 +134,32 @@
 
           document.getElementById('shellBody').innerHTML = pageHtml();
 
-          loadVolunteers().then(function (rows) {
-            state.rows = rows;
-            populateCountyFilter();
-            renderStats();
-            applyFilters();
-            // Deep-link: open the drawer if ?id= is on the URL
-            var qid = new URLSearchParams(location.search).get('id');
-            if (qid) {
-              var match = rows.find(function (r) { return r.id === qid; });
-              if (match) openVolunteerDrawer(match);
-            }
-          }).catch(function (err) {
-            console.error('volunteers load failed', err);
-            document.getElementById('volBody').innerHTML =
-              '<tr><td colspan="7" class="admin-empty-row admin-error">' +
-              'Could not load volunteers. Your role may not include this module.' +
-              '</td></tr>';
-          });
+          Promise.all([loadAdminUsers(), loadVolunteers()])
+            .then(function (results) {
+              state.adminUsers = results[0];
+              state.adminUserById = {};
+              state.adminUsers.forEach(function (u) { state.adminUserById[u.id] = u; });
+
+              state.rows = results[1];
+              populateCountyFilter();
+              populateSourceFilter();
+              populateAssigneeFilter();
+              renderStats();
+              applyFilters();
+
+              // Deep-link: open the drawer if ?id= is on the URL
+              var qid = new URLSearchParams(location.search).get('id');
+              if (qid) {
+                var match = state.rows.find(function (r) { return r.id === qid; });
+                if (match) openVolunteerDrawer(match);
+              }
+            }).catch(function (err) {
+              console.error('volunteers load failed', err);
+              document.getElementById('volBody').innerHTML =
+                '<tr><td colspan="8" class="admin-empty-row admin-error">' +
+                'Could not load volunteers. Your role may not include this module.' +
+                '</td></tr>';
+            });
 
           bindEvents();
         });
@@ -134,6 +172,7 @@
               '<div class="admin-stat"><div class="admin-stat-num" id="statNew">0</div><div class="admin-stat-label">New</div></div>',
               '<div class="admin-stat"><div class="admin-stat-num" id="statContacted">0</div><div class="admin-stat-label">Contacted</div></div>',
               '<div class="admin-stat"><div class="admin-stat-num" id="statAssigned">0</div><div class="admin-stat-label">Assigned</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statPride">0</div><div class="admin-stat-label">Pride signups</div></div>',
               '<div class="admin-stat"><div class="admin-stat-num" id="statCounties">0</div><div class="admin-stat-label">Counties</div></div>',
             '</div>',
 
@@ -147,6 +186,7 @@
                 '<option value="inactive">Inactive</option>',
                 '<option value="declined">Declined</option>',
               '</select>',
+              '<select class="admin-input" id="filterSource"><option value="">All sources</option></select>',
               '<select class="admin-input" id="filterCounty"><option value="">All counties</option></select>',
               '<select class="admin-input" id="filterInterest">',
                 '<option value="">All interests</option>',
@@ -154,6 +194,7 @@
                   return '<option value="' + k + '">' + INTEREST_LABEL[k] + '</option>';
                 }).join(''),
               '</select>',
+              '<select class="admin-input" id="filterAssignee"><option value="">All assignees</option></select>',
               '<span class="admin-toolbar-spacer"></span>',
               '<span class="admin-result-count" id="resultCount"></span>',
             '</div>',
@@ -169,8 +210,9 @@
                     '<th data-sort="time_commitment" class="admin-sortable">Commitment<span class="admin-sort-arrow">&darr;</span></th>',
                     '<th data-sort="created_at" class="admin-sortable">Submitted<span class="admin-sort-arrow">&darr;</span></th>',
                     '<th data-sort="status" class="admin-sortable">Status<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th>Assigned to</th>',
                   '</tr></thead>',
-                  '<tbody id="volBody"><tr><td colspan="7" class="admin-empty-row">Loading volunteers...</td></tr></tbody>',
+                  '<tbody id="volBody"><tr><td colspan="8" class="admin-empty-row">Loading volunteers...</td></tr></tbody>',
                 '</table>',
               '</div>',
             '</div>'
@@ -186,7 +228,7 @@
               'city, county, zip, registered_voter, interests, skills, availability, ' +
               'time_commitment, prior_campaign_experience, prior_campaign_notes, ' +
               'is_founding_member, referral_source, additional_notes, ' +
-              'email_optin, sms_optin, status'
+              'email_optin, sms_optin, status, assigned_to, admin_notes'
             )
             .order('created_at', { ascending: false })
             .then(function (resp) {
@@ -195,12 +237,33 @@
             });
         }
 
-        function updateStatus(id, status) {
+        function loadAdminUsers() {
+          return state.client
+            .from('admin_users')
+            .select('id, email, full_name, is_active')
+            .eq('is_active', true)
+            .order('full_name', { ascending: true })
+            .then(function (resp) {
+              if (resp.error) {
+                // Non-fatal: assignee picker just stays empty.
+                console.warn('admin_users load failed', resp.error);
+                return [];
+              }
+              return resp.data || [];
+            });
+        }
+
+        function updateVolunteer(id, patch) {
           return state.client
             .from('volunteers')
-            .update({ status: status })
+            .update(patch)
             .eq('id', id)
-            .then(function (r) { if (r.error) throw r.error; });
+            .select()
+            .single()
+            .then(function (r) {
+              if (r.error) throw r.error;
+              return r.data;
+            });
         }
 
         // ---------------------------------------------------------------
@@ -220,29 +283,96 @@
             sel.appendChild(opt);
           });
         }
+        function populateSourceFilter() {
+          var counts = {};
+          state.rows.forEach(function (r) {
+            var s = r.referral_source ? String(r.referral_source) : '(none)';
+            counts[s] = (counts[s] || 0) + 1;
+          });
+          var sel = document.getElementById('filterSource');
+          while (sel.options.length > 1) sel.remove(1);
+
+          // Pin known sources to the top with friendly labels...
+          SOURCE_KNOWN.forEach(function (s) {
+            if (counts[s.value]) {
+              var opt = document.createElement('option');
+              opt.value = s.value;
+              opt.textContent = s.label + ' (' + counts[s.value] + ')';
+              sel.appendChild(opt);
+              delete counts[s.value];
+            }
+          });
+          // ...then everything else as raw values.
+          Object.keys(counts).sort().forEach(function (s) {
+            var opt = document.createElement('option');
+            opt.value = s === '(none)' ? '__none__' : s;
+            opt.textContent = (s === '(none)' ? 'No source' : s) + ' (' + counts[s] + ')';
+            sel.appendChild(opt);
+          });
+        }
+        function populateAssigneeFilter() {
+          var sel = document.getElementById('filterAssignee');
+          while (sel.options.length > 1) sel.remove(1);
+          // Unassigned bucket
+          var unassigned = state.rows.filter(function (r) { return !r.assigned_to; }).length;
+          var optU = document.createElement('option');
+          optU.value = '__unassigned__';
+          optU.textContent = 'Unassigned (' + unassigned + ')';
+          sel.appendChild(optU);
+
+          var counts = {};
+          state.rows.forEach(function (r) {
+            if (r.assigned_to) counts[r.assigned_to] = (counts[r.assigned_to] || 0) + 1;
+          });
+          state.adminUsers.forEach(function (u) {
+            var opt = document.createElement('option');
+            opt.value = u.id;
+            opt.textContent = (u.full_name || u.email) + ' (' + (counts[u.id] || 0) + ')';
+            sel.appendChild(opt);
+          });
+        }
         function renderStats() {
           var c = { total: state.rows.length, new: 0, contacted: 0, assigned: 0 };
           var counties = {};
+          var pride = 0;
           state.rows.forEach(function (r) {
             if (r.status && c[r.status] != null) c[r.status]++;
             if (r.county) counties[r.county] = true;
+            if (r.referral_source === 'pride_signup') pride++;
           });
           $('statTotal').textContent     = c.total.toLocaleString();
           $('statNew').textContent       = c.new.toLocaleString();
           $('statContacted').textContent = c.contacted.toLocaleString();
           $('statAssigned').textContent  = c.assigned.toLocaleString();
+          $('statPride').textContent     = pride.toLocaleString();
           $('statCounties').textContent  = Object.keys(counties).length;
         }
         function applyFilters() {
           var q       = $('filterSearch').value.trim().toLowerCase();
           var status  = $('filterStatus').value;
+          var source  = $('filterSource').value;
           var county  = $('filterCounty').value;
           var interest = $('filterInterest').value;
+          var assignee = $('filterAssignee').value;
 
           state.filtered = state.rows.filter(function (r) {
             if (status && r.status !== status) return false;
+            if (source) {
+              if (source === '__none__') {
+                if (r.referral_source) return false;
+              } else if (r.referral_source !== source) {
+                return false;
+              }
+            }
             if (county && r.county !== county) return false;
             if (interest && (r.interests || []).indexOf(interest) === -1) return false;
+            if (assignee) {
+              if (assignee === '__unassigned__') {
+                if (r.assigned_to) return false;
+              } else if (r.assigned_to !== assignee) {
+                return false;
+              }
+            }
             if (q) {
               var hay = ((r.first_name||'') + ' ' + (r.last_name||'') + ' ' +
                          (r.email||'') + ' ' + (r.city||'') + ' ' + (r.county||'')).toLowerCase();
@@ -283,15 +413,17 @@
 
           if (state.filtered.length === 0) {
             var msg = state.rows.length === 0
-              ? 'No volunteer signups yet. Submissions from /volunteer will appear here.'
+              ? 'No volunteer signups yet. Submissions from /volunteer and /pride/signup will appear here.'
               : 'No volunteers match the current filters.';
-            body.innerHTML = '<tr><td colspan="7" class="admin-empty-row">' + msg + '</td></tr>';
+            body.innerHTML = '<tr><td colspan="8" class="admin-empty-row">' + msg + '</td></tr>';
             return;
           }
 
           body.innerHTML = state.filtered.map(function (r) {
             var nameMain = escapeHtml((r.first_name||'') + ' ' + (r.last_name||'')).trim() || '&mdash;';
             var pronouns = r.pronouns ? '<span class="admin-cell-sub">' + escapeHtml(r.pronouns) + '</span>' : '';
+            var srcBadge = sourcePillHtml(r.referral_source);
+            var nameCell = '<span>' + nameMain + (srcBadge ? ' ' + srcBadge : '') + '</span>' + pronouns;
 
             var emailHtml = r.email
               ? '<a href="mailto:' + escapeAttr(r.email) + '" class="admin-link" onclick="event.stopPropagation()">' + escapeHtml(r.email) + '</a>'
@@ -313,15 +445,33 @@
             }
 
             return '<tr data-id="' + escapeAttr(r.id) + '">' +
-              '<td class="admin-cell-name">' + nameMain + pronouns + '</td>' +
+              '<td class="admin-cell-name">' + nameCell + '</td>' +
               '<td>' + emailHtml + phoneHtml + '</td>' +
               '<td>' + locHtml + '</td>' +
               '<td><div class="admin-pill-row">' + interests + '</div></td>' +
               '<td>' + commitment + '</td>' +
               '<td>' + escapeHtml(fmtDate(r.created_at)) + '</td>' +
               '<td>' + statusSelectHtml(r.id, r.status || 'new') + '</td>' +
+              '<td class="vol-assignee-cell">' + assigneeSelectHtml(r.id, r.assigned_to) + '</td>' +
             '</tr>';
           }).join('');
+        }
+
+        function sourcePillHtml(src) {
+          if (!src) return '';
+          if (src === 'pride_signup') {
+            return '<span class="admin-pill vol-pill-pride" title="Submitted via /pride/signup">Pride</span>';
+          }
+          var label = sourceLabel(src);
+          return '<span class="admin-pill vol-pill-form" title="Source: ' + escapeAttr(src) + '">' + escapeHtml(label) + '</span>';
+        }
+
+        function sourceLabel(src) {
+          if (!src) return '';
+          for (var i = 0; i < SOURCE_KNOWN.length; i++) {
+            if (SOURCE_KNOWN[i].value === src) return SOURCE_KNOWN[i].label;
+          }
+          return src;
         }
 
         function statusSelectHtml(id, current) {
@@ -333,20 +483,58 @@
                  '" data-status-select data-id="' + escapeAttr(id) + '" onclick="event.stopPropagation()"' + disabled + '>' + opts + '</select>';
         }
 
+        function assigneeSelectHtml(id, currentId) {
+          if (!state.canWrite && !currentId) {
+            return '<span class="admin-muted">&mdash;</span>';
+          }
+          var opts = ['<option value="">Unassigned</option>'].concat(
+            state.adminUsers.map(function (u) {
+              var label = u.full_name || u.email;
+              return '<option value="' + escapeAttr(u.id) + '"' +
+                (u.id === currentId ? ' selected' : '') + '>' +
+                escapeHtml(label) + '</option>';
+            })
+          );
+          // If the current assignee was deactivated / removed, still show their email.
+          if (currentId && !state.adminUserById[currentId]) {
+            opts.push('<option value="' + escapeAttr(currentId) + '" selected>Former admin</option>');
+          }
+          var disabled = state.canWrite ? '' : ' disabled';
+          return '<select class="admin-input admin-assignee-select" data-assignee-select data-id="' +
+            escapeAttr(id) + '" onclick="event.stopPropagation()"' + disabled + '>' + opts.join('') + '</select>';
+        }
+
         // ---------------------------------------------------------------
-        // Detail drawer
+        // Detail drawer  (editable)
         // ---------------------------------------------------------------
         function openVolunteerDrawer(r) {
           state.activeId = r.id;
 
-          var interests = (r.interests || []).map(function (k) { return INTEREST_LABEL[k] || k; });
-          var skills    = (r.skills    || []).map(function (k) { return SKILL_LABEL[k]    || k; });
-          var avail     = (r.availability || []).map(function (k) { return AVAIL_LABEL[k] || k; });
+          var bodyHtml = state.canWrite ? buildEditBody(r) : buildReadOnlyBody(r);
+          var footHtml = state.canWrite
+            ? '<a class="shell-btn shell-btn-outline" href="mailto:' + escapeAttr(r.email || '') + '">Email volunteer</a>' +
+              '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Cancel</button>' +
+              '<button type="button" class="shell-btn shell-btn-primary" id="volSaveBtn">Save changes</button>'
+            : '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>';
 
-          function pill(arr) {
-            if (!arr.length) return '<span class="admin-muted">None selected</span>';
-            return '<div class="admin-pill-row">' + arr.map(function (x) {
-              return '<span class="admin-pill">' + escapeHtml(x) + '</span>';
+          window.AdminShell.openDrawer({
+            eyebrow: r.county ? (r.county + ' County') : 'Volunteer',
+            title: ((r.first_name||'') + ' ' + (r.last_name||'')).trim() || 'Volunteer',
+            bodyHtml: bodyHtml,
+            footHtml: footHtml
+          });
+
+          if (state.canWrite) {
+            var saveBtn = document.getElementById('volSaveBtn');
+            if (saveBtn) saveBtn.addEventListener('click', function () { saveDrawer(r.id); });
+          }
+        }
+
+        function buildReadOnlyBody(r) {
+          function pill(arr, labels) {
+            if (!arr || !arr.length) return '<span class="admin-muted">None selected</span>';
+            return '<div class="admin-pill-row">' + arr.map(function (k) {
+              return '<span class="admin-pill">' + escapeHtml(labels[k] || k) + '</span>';
             }).join('') + '</div>';
           }
           function row(label, value) {
@@ -354,7 +542,20 @@
           }
           function val(v) { return v ? escapeHtml(v) : ''; }
 
-          var body =
+          var assignee = r.assigned_to && state.adminUserById[r.assigned_to]
+            ? escapeHtml(state.adminUserById[r.assigned_to].full_name || state.adminUserById[r.assigned_to].email)
+            : '';
+
+          return '' +
+            '<div class="shell-drawer-section">' +
+              '<h4>Source</h4>' +
+              '<dl>' +
+                row('Submitted via', sourcePillHtml(r.referral_source) || val(r.referral_source) || 'Volunteer form') +
+                row('Submitted', val(new Date(r.created_at).toLocaleString())) +
+                row('Assigned to', assignee) +
+                row('Status', '<strong>' + escapeHtml(STATUS_LABEL[r.status]||r.status) + '</strong>') +
+              '</dl>' +
+            '</div>' +
             '<div class="shell-drawer-section">' +
               '<h4>Contact</h4>' +
               '<dl>' +
@@ -375,9 +576,9 @@
             '<div class="shell-drawer-section">' +
               '<h4>How they want to help</h4>' +
               '<dl>' +
-                row('Interests',   pill(interests)) +
-                row('Skills',      pill(skills)) +
-                row('Availability', pill(avail)) +
+                row('Interests',   pill(r.interests, INTEREST_LABEL)) +
+                row('Skills',      pill(r.skills, SKILL_LABEL)) +
+                row('Availability', pill(r.availability, AVAIL_LABEL)) +
                 row('Commitment',  val(TIME_LABEL[r.time_commitment] || r.time_commitment)) +
                 row('Prior campaign', r.prior_campaign_experience
                     ? (r.prior_campaign_notes ? escapeHtml(r.prior_campaign_notes) : 'Yes')
@@ -388,25 +589,209 @@
               '<h4>Wrap-up</h4>' +
               '<dl>' +
                 row('Founding member', r.is_founding_member ? 'Yes' : 'No') +
-                row('Referral source', val(r.referral_source)) +
                 row('Email opt-in',    r.email_optin ? 'Yes' : 'No') +
                 row('SMS opt-in',      r.sms_optin   ? 'Yes' : 'No') +
-                row('Notes',           val(r.additional_notes)) +
-                row('Submitted',       val(new Date(r.created_at).toLocaleString())) +
-                row('Status',          '<strong>' + escapeHtml(STATUS_LABEL[r.status]||r.status) + '</strong>') +
+                row('Volunteer notes', val(r.additional_notes)) +
+                row('Admin notes',     val(r.admin_notes)) +
               '</dl>' +
             '</div>';
+        }
 
-          var foot = state.canWrite
-            ? '<a class="shell-btn shell-btn-outline" href="mailto:' + escapeAttr(r.email || '') + '">Email volunteer</a>' +
-              '<button type="button" class="shell-btn shell-btn-primary" data-drawer-close>Done</button>'
-            : '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>';
+        function buildEditBody(r) {
+          var statusOpts = STATUS_OPTIONS.map(function (s) {
+            return '<option value="' + s + '"' + (s === (r.status||'new') ? ' selected' : '') + '>' + STATUS_LABEL[s] + '</option>';
+          }).join('');
 
-          window.AdminShell.openDrawer({
-            eyebrow: r.county ? (r.county + ' County') : 'Volunteer',
-            title: ((r.first_name||'') + ' ' + (r.last_name||'')).trim() || 'Volunteer',
-            bodyHtml: body,
-            footHtml: foot
+          var voterOpts = ['<option value="">&mdash;</option>'].concat(VOTER_OPTIONS.map(function (v) {
+            return '<option value="' + v + '"' + (v === r.registered_voter ? ' selected' : '') + '>' + v + '</option>';
+          })).join('');
+
+          var timeOpts = ['<option value="">&mdash;</option>'].concat(TIME_OPTIONS.map(function (t) {
+            return '<option value="' + t + '"' + (t === r.time_commitment ? ' selected' : '') + '>' + TIME_LABEL[t] + '</option>';
+          })).join('');
+
+          var assigneeOpts = ['<option value="">Unassigned</option>'].concat(
+            state.adminUsers.map(function (u) {
+              var label = u.full_name || u.email;
+              return '<option value="' + escapeAttr(u.id) + '"' +
+                (u.id === r.assigned_to ? ' selected' : '') + '>' +
+                escapeHtml(label) + '</option>';
+            })
+          );
+          if (r.assigned_to && !state.adminUserById[r.assigned_to]) {
+            assigneeOpts.push('<option value="' + escapeAttr(r.assigned_to) + '" selected>Former admin</option>');
+          }
+
+          var interestChecks = Object.keys(INTEREST_LABEL).map(function (k) {
+            var checked = (r.interests || []).indexOf(k) !== -1 ? ' checked' : '';
+            return '<label><input type="checkbox" data-arr="interests" value="' + k + '"' + checked + '> ' + escapeHtml(INTEREST_LABEL[k]) + '</label>';
+          }).join('');
+
+          var skillChecks = Object.keys(SKILL_LABEL).map(function (k) {
+            var checked = (r.skills || []).indexOf(k) !== -1 ? ' checked' : '';
+            return '<label><input type="checkbox" data-arr="skills" value="' + k + '"' + checked + '> ' + escapeHtml(SKILL_LABEL[k]) + '</label>';
+          }).join('');
+
+          var availChecks = Object.keys(AVAIL_LABEL).map(function (k) {
+            var checked = (r.availability || []).indexOf(k) !== -1 ? ' checked' : '';
+            return '<label><input type="checkbox" data-arr="availability" value="' + k + '"' + checked + '> ' + escapeHtml(AVAIL_LABEL[k]) + '</label>';
+          }).join('');
+
+          var srcPill = sourcePillHtml(r.referral_source);
+          var submittedStamp = '<span class="admin-cell-sub" style="font-size:12px">Submitted ' +
+            escapeHtml(new Date(r.created_at).toLocaleString()) + '</span>';
+
+          return '' +
+            '<form id="volEditForm" autocomplete="off">' +
+              '<div class="shell-drawer-section">' +
+                '<h4>Assignment</h4>' +
+                '<div class="vol-form-grid">' +
+                  '<label>Status' +
+                    '<select class="admin-input" name="status">' + statusOpts + '</select>' +
+                  '</label>' +
+                  '<label>Assigned to' +
+                    '<select class="admin-input" name="assigned_to">' + assigneeOpts.join('') + '</select>' +
+                  '</label>' +
+                  '<label class="vol-span-2">Admin notes (internal)' +
+                    '<textarea class="admin-input" name="admin_notes" placeholder="Follow-up notes for staff. Not shown to the volunteer.">' +
+                      escapeHtml(r.admin_notes || '') + '</textarea>' +
+                  '</label>' +
+                '</div>' +
+                '<div style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">' +
+                  (srcPill || '<span class="admin-muted" style="font-size:12px">No source recorded</span>') +
+                  submittedStamp +
+                '</div>' +
+              '</div>' +
+
+              '<div class="shell-drawer-section">' +
+                '<h4>Contact</h4>' +
+                '<div class="vol-form-grid">' +
+                  '<label>First name<input class="admin-input" name="first_name" value="' + escapeAttr(r.first_name || '') + '" /></label>' +
+                  '<label>Last name<input class="admin-input" name="last_name" value="' + escapeAttr(r.last_name || '') + '" /></label>' +
+                  '<label>Email<input class="admin-input" name="email" type="email" value="' + escapeAttr(r.email || '') + '" /></label>' +
+                  '<label>Phone<input class="admin-input" name="phone" value="' + escapeAttr(r.phone || '') + '" /></label>' +
+                  '<label class="vol-span-2">Pronouns<input class="admin-input" name="pronouns" value="' + escapeAttr(r.pronouns || '') + '" /></label>' +
+                '</div>' +
+              '</div>' +
+
+              '<div class="shell-drawer-section">' +
+                '<h4>Location</h4>' +
+                '<div class="vol-form-grid">' +
+                  '<label>City<input class="admin-input" name="city" value="' + escapeAttr(r.city || '') + '" /></label>' +
+                  '<label>County<input class="admin-input" name="county" value="' + escapeAttr(r.county || '') + '" /></label>' +
+                  '<label>ZIP<input class="admin-input" name="zip" value="' + escapeAttr(r.zip || '') + '" /></label>' +
+                  '<label>Registered voter<select class="admin-input" name="registered_voter">' + voterOpts + '</select></label>' +
+                '</div>' +
+              '</div>' +
+
+              '<div class="shell-drawer-section">' +
+                '<h4>How they want to help</h4>' +
+                '<label style="font-size:11px;letter-spacing:0.6px;text-transform:uppercase;color:rgba(255,255,255,0.55);font-family:Montserrat,sans-serif">Interests</label>' +
+                '<div class="vol-check-grid" data-group="interests">' + interestChecks + '</div>' +
+                '<label style="font-size:11px;letter-spacing:0.6px;text-transform:uppercase;color:rgba(255,255,255,0.55);font-family:Montserrat,sans-serif;margin-top:14px;display:block">Skills</label>' +
+                '<div class="vol-check-grid" data-group="skills">' + skillChecks + '</div>' +
+                '<label style="font-size:11px;letter-spacing:0.6px;text-transform:uppercase;color:rgba(255,255,255,0.55);font-family:Montserrat,sans-serif;margin-top:14px;display:block">Availability</label>' +
+                '<div class="vol-check-grid" data-group="availability">' + availChecks + '</div>' +
+                '<div class="vol-form-grid" style="margin-top:14px">' +
+                  '<label>Commitment<select class="admin-input" name="time_commitment">' + timeOpts + '</select></label>' +
+                  '<label>Referral source<input class="admin-input" name="referral_source" value="' + escapeAttr(r.referral_source || '') + '" /></label>' +
+                  '<label class="vol-span-2">Prior campaign notes<textarea class="admin-input" name="prior_campaign_notes">' +
+                    escapeHtml(r.prior_campaign_notes || '') + '</textarea></label>' +
+                '</div>' +
+                '<div class="vol-bool-row">' +
+                  '<label><input type="checkbox" name="prior_campaign_experience"' + (r.prior_campaign_experience ? ' checked' : '') + '> Prior campaign experience</label>' +
+                  '<label><input type="checkbox" name="is_founding_member"' + (r.is_founding_member ? ' checked' : '') + '> Founding member</label>' +
+                  '<label><input type="checkbox" name="email_optin"' + (r.email_optin ? ' checked' : '') + '> Email opt-in</label>' +
+                  '<label><input type="checkbox" name="sms_optin"' + (r.sms_optin ? ' checked' : '') + '> SMS opt-in</label>' +
+                '</div>' +
+              '</div>' +
+
+              '<div class="shell-drawer-section">' +
+                '<h4>Notes from volunteer</h4>' +
+                '<div class="vol-form-grid">' +
+                  '<label class="vol-span-2">Additional notes<textarea class="admin-input" name="additional_notes">' +
+                    escapeHtml(r.additional_notes || '') + '</textarea></label>' +
+                '</div>' +
+              '</div>' +
+            '</form>';
+        }
+
+        function readDrawerForm() {
+          var form = document.getElementById('volEditForm');
+          if (!form) return null;
+          var fd = new FormData(form);
+
+          function pickArr(group) {
+            var out = [];
+            form.querySelectorAll('div[data-group="' + group + '"] input[type="checkbox"]:checked').forEach(function (el) {
+              out.push(el.value);
+            });
+            return out;
+          }
+          function trimOrNull(v) {
+            v = (v == null ? '' : String(v)).trim();
+            return v.length ? v : null;
+          }
+
+          return {
+            first_name: trimOrNull(fd.get('first_name')) || '',
+            last_name:  trimOrNull(fd.get('last_name')) || '',
+            email:      trimOrNull(fd.get('email')),
+            phone:      trimOrNull(fd.get('phone')),
+            pronouns:   trimOrNull(fd.get('pronouns')),
+            city:       trimOrNull(fd.get('city')),
+            county:     trimOrNull(fd.get('county')),
+            zip:        trimOrNull(fd.get('zip')),
+            registered_voter: trimOrNull(fd.get('registered_voter')),
+            time_commitment:  trimOrNull(fd.get('time_commitment')),
+            referral_source:  trimOrNull(fd.get('referral_source')),
+            prior_campaign_experience: fd.get('prior_campaign_experience') === 'on',
+            prior_campaign_notes:      trimOrNull(fd.get('prior_campaign_notes')),
+            is_founding_member: fd.get('is_founding_member') === 'on',
+            email_optin:        fd.get('email_optin') === 'on',
+            sms_optin:          fd.get('sms_optin') === 'on',
+            additional_notes:   trimOrNull(fd.get('additional_notes')),
+            admin_notes:        trimOrNull(fd.get('admin_notes')),
+            status:             fd.get('status') || 'new',
+            assigned_to:        fd.get('assigned_to') || null,
+            interests:    pickArr('interests'),
+            skills:       pickArr('skills'),
+            availability: pickArr('availability')
+          };
+        }
+
+        function saveDrawer(id) {
+          var patch = readDrawerForm();
+          if (!patch) return;
+          if (!patch.first_name || !patch.last_name || !patch.email) {
+            window.AdminShell.toast('First name, last name and email are required.', 'error');
+            return;
+          }
+
+          var btn = document.getElementById('volSaveBtn');
+          if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+          updateVolunteer(id, patch).then(function (updated) {
+            for (var i = 0; i < state.rows.length; i++) {
+              if (state.rows[i].id === id) {
+                state.rows[i] = Object.assign({}, state.rows[i], updated);
+                break;
+              }
+            }
+            populateCountyFilter();
+            populateSourceFilter();
+            populateAssigneeFilter();
+            renderStats();
+            applyFilters();
+            window.AdminShell.closeDrawer();
+            window.AdminShell.toast('Volunteer saved.', 'success');
+          }).catch(function (err) {
+            console.error('volunteer save failed', err);
+            var msg = err && err.code === '23505'
+              ? 'Another volunteer already has that email.'
+              : 'Could not save changes.';
+            window.AdminShell.toast(msg, 'error');
+            if (btn) { btn.disabled = false; btn.textContent = 'Save changes'; }
           });
         }
 
@@ -419,8 +804,10 @@
             clearTimeout(debT); debT = setTimeout(applyFilters, 150);
           });
           $('filterStatus').addEventListener('change', applyFilters);
+          $('filterSource').addEventListener('change', applyFilters);
           $('filterCounty').addEventListener('change', applyFilters);
           $('filterInterest').addEventListener('change', applyFilters);
+          $('filterAssignee').addEventListener('change', applyFilters);
 
           document.querySelectorAll('#volTable thead th[data-sort]').forEach(function (th) {
             th.addEventListener('click', function (ev) {
@@ -436,44 +823,88 @@
             var tr  = ev.target.closest('tr[data-id]');
             if (!tr) return;
             var sel = ev.target.closest('select');
-            if (sel) return; // status select handled separately
+            if (sel) return; // status / assignee selects handled separately
             var id = tr.dataset.id;
             var row = state.rows.find(function (r) { return r.id === id; });
             if (row) openVolunteerDrawer(row);
           });
           body.addEventListener('change', function (ev) {
             var sel = ev.target;
-            if (!sel || !sel.dataset || sel.dataset.statusSelect == null) return;
-            if (!state.canWrite) {
-              window.AdminShell.toast('Your role does not include write access.', 'error');
+            if (!sel || !sel.dataset) return;
+
+            if (sel.dataset.statusSelect != null) {
+              handleStatusChange(sel);
               return;
             }
-            var id = sel.dataset.id;
-            var newStatus = sel.value;
-            var prev = null;
-            for (var i = 0; i < state.rows.length; i++) {
-              if (state.rows[i].id === id) {
-                prev = state.rows[i].status || 'new';
-                state.rows[i].status = newStatus;
-                break;
-              }
+            if (sel.dataset.assigneeSelect != null) {
+              handleAssigneeChange(sel);
+              return;
             }
-            sel.disabled = true;
-            updateStatus(id, newStatus).then(function () {
-              sel.className = 'admin-status-select admin-status-' + newStatus;
-              renderStats();
-              window.AdminShell.toast('Status set to ' + STATUS_LABEL[newStatus] + '.', 'success');
-            }).catch(function (err) {
-              console.error('status update failed', err);
-              for (var j = 0; j < state.rows.length; j++) {
-                if (state.rows[j].id === id) { state.rows[j].status = prev; break; }
-              }
-              sel.value = prev || 'new';
-              window.AdminShell.toast('Could not update status.', 'error');
-            }).finally(function () { sel.disabled = false; });
           });
 
           document.getElementById('exportCsv').addEventListener('click', exportCsv);
+        }
+
+        function handleStatusChange(sel) {
+          if (!state.canWrite) {
+            window.AdminShell.toast('Your role does not include write access.', 'error');
+            return;
+          }
+          var id = sel.dataset.id;
+          var newStatus = sel.value;
+          var prev = null;
+          for (var i = 0; i < state.rows.length; i++) {
+            if (state.rows[i].id === id) {
+              prev = state.rows[i].status || 'new';
+              state.rows[i].status = newStatus;
+              break;
+            }
+          }
+          sel.disabled = true;
+          updateVolunteer(id, { status: newStatus }).then(function () {
+            sel.className = 'admin-status-select admin-status-' + newStatus;
+            renderStats();
+            window.AdminShell.toast('Status set to ' + STATUS_LABEL[newStatus] + '.', 'success');
+          }).catch(function (err) {
+            console.error('status update failed', err);
+            for (var j = 0; j < state.rows.length; j++) {
+              if (state.rows[j].id === id) { state.rows[j].status = prev; break; }
+            }
+            sel.value = prev || 'new';
+            window.AdminShell.toast('Could not update status.', 'error');
+          }).then(function () { sel.disabled = false; }, function () { sel.disabled = false; });
+        }
+
+        function handleAssigneeChange(sel) {
+          if (!state.canWrite) {
+            window.AdminShell.toast('Your role does not include write access.', 'error');
+            return;
+          }
+          var id = sel.dataset.id;
+          var newId = sel.value || null;
+          var prev = null;
+          for (var i = 0; i < state.rows.length; i++) {
+            if (state.rows[i].id === id) {
+              prev = state.rows[i].assigned_to || null;
+              state.rows[i].assigned_to = newId;
+              break;
+            }
+          }
+          sel.disabled = true;
+          updateVolunteer(id, { assigned_to: newId }).then(function () {
+            var label = newId && state.adminUserById[newId]
+              ? (state.adminUserById[newId].full_name || state.adminUserById[newId].email)
+              : 'unassigned';
+            populateAssigneeFilter();
+            window.AdminShell.toast('Assigned to ' + label + '.', 'success');
+          }).catch(function (err) {
+            console.error('assignee update failed', err);
+            for (var j = 0; j < state.rows.length; j++) {
+              if (state.rows[j].id === id) { state.rows[j].assigned_to = prev; break; }
+            }
+            sel.value = prev || '';
+            window.AdminShell.toast('Could not update assignee.', 'error');
+          }).then(function () { sel.disabled = false; }, function () { sel.disabled = false; });
         }
 
         function exportCsv() {
@@ -486,12 +917,15 @@
             'city','county','zip','registered_voter',
             'interests','skills','availability','time_commitment',
             'prior_campaign_experience','is_founding_member','referral_source',
-            'email_optin','sms_optin','status'
+            'email_optin','sms_optin','status','assigned_to','assigned_to_name','admin_notes','additional_notes'
           ];
           var lines = [cols.join(',')];
           state.filtered.forEach(function (r) {
+            var assignee = r.assigned_to && state.adminUserById[r.assigned_to];
+            var assigneeName = assignee ? (assignee.full_name || assignee.email) : '';
+            var rec = Object.assign({}, r, { assigned_to_name: assigneeName });
             lines.push(cols.map(function (c) {
-              var v = r[c];
+              var v = rec[c];
               if (Array.isArray(v)) v = v.join('; ');
               if (typeof v === 'boolean') v = v ? 'true' : 'false';
               if (v == null) v = '';
