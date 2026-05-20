@@ -1,10 +1,4 @@
 <!doctype html>
-<!--
-  /admin/bills — bill tracker CRUD
-  - Lists every bill in public.bills (newest at top).
-  - Add new bill, edit any field, manage per-step pipeline dates.
-  - Writes go through the user's session; RLS enforces (`bills` write perm).
--->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -20,43 +14,146 @@
     <link rel="stylesheet" href="/admin/admin-shell.css" />
     <link rel="stylesheet" href="/admin/admin-responsive.css" />
     <style>
-      .bills-toolbar { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
-      .bills-toolbar input[type="search"] { flex:1 1 220px; min-width:0; padding:9px 12px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; }
-      .bills-toolbar select { padding:9px 12px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; }
-      .bills-table { width:100%; border-collapse:separate; border-spacing:0; }
-      .bills-table th, .bills-table td { text-align:left; padding:10px 12px; border-bottom:1px solid #1a2541; font-size:14px; vertical-align:top; }
-      .bills-table th { font-size:12px; color:#7c8bb0; text-transform:uppercase; letter-spacing:.04em; }
-      .bills-table tr:hover td { background:#0d1730; }
-      .bills-table td .slug { color:#7c8bb0; font-size:12px; display:block; }
-      .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:600; }
-      .pill-anti  { background:#3a0c14; color:#ffb1b8; }
-      .pill-pro   { background:#0c2a18; color:#9be0a8; }
-      .pill-mixed { background:#2a210c; color:#e8c66e; }
-      .bills-form { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-      .bills-form .full { grid-column:1 / -1; }
-      .bills-form label { display:block; font-size:12px; color:#7c8bb0; text-transform:uppercase; letter-spacing:.05em; margin-bottom:5px; }
-      .bills-form input, .bills-form select, .bills-form textarea { width:100%; padding:9px 12px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; font:inherit; }
-      .bills-form textarea { min-height:80px; resize:vertical; }
-      .pipeline-grid { display:grid; grid-template-columns:auto 1fr 1fr; gap:8px 10px; align-items:center; }
-      .pipeline-grid .step-num { font-weight:700; color:#7c8bb0; font-size:13px; }
-      .btn-row { display:flex; gap:8px; margin-top:18px; flex-wrap:wrap; }
-      .btn { padding:9px 16px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; font:inherit; cursor:pointer; }
-      .btn.primary { background:#0F2233; border-color:#73D7EE; color:#73D7EE; font-weight:700; }
-      .btn.danger { color:#ff7080; border-color:#5a1d28; }
-      .btn:disabled { opacity:.5; cursor:not-allowed; }
-      .toast { position:fixed; right:18px; bottom:18px; background:#0b1426; border:1px solid #2a3a55; padding:10px 14px; border-radius:8px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,.4); z-index:9999; max-width:340px; }
-      .toast.error { border-color:#5a1d28; color:#ffb1b8; }
+      .admin-expand-btn {
+        background: transparent;
+        border: 1px solid var(--color-border, #d3d6dc);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        line-height: 1;
+        padding: 4px 8px;
+        cursor: pointer;
+        color: var(--color-text-muted, #555);
+      }
+      .admin-expand-btn:hover { background: rgba(0,0,0,0.04); }
+      .admin-expand-btn[aria-expanded="true"] { background: rgba(15, 34, 51, 0.08); }
+      tr.admin-detail-row > td {
+        background: #fafbfc;
+        border-top: 0;
+        padding: 14px 18px 18px;
+      }
+      .admin-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 10px 18px;
+      }
+      .admin-detail-grid dt {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6c7480;
+        margin: 0;
+      }
+      .admin-detail-grid dd {
+        margin: 0 0 2px;
+        font-size: 0.92rem;
+        color: #1a1f29;
+        word-break: break-word;
+      }
+      .admin-detail-section-title {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #0F2233;
+        margin: 16px 0 6px;
+        font-weight: 700;
+      }
+      .admin-detail-section-title:first-child { margin-top: 0; }
+      .admin-detail-prose {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        color: #2a2f3a;
+        white-space: pre-wrap;
+        margin: 0 0 6px;
+      }
+      .admin-pill-stance-anti  { background: rgba(255,107,107,0.16); color: #c0392b; }
+      .admin-pill-stance-pro   { background: rgba(74,222,128,0.18);  color: #1e7e45; }
+      .admin-pill-stance-mixed { background: rgba(255,200,87,0.18);  color: #8a6d1f; }
+      .admin-pill-status {
+        background: #eef2f6;
+        color: #1a1f29;
+        font-size: 0.78rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      td.admin-cell-tight { white-space: nowrap; }
+      .admin-billnum {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-weight: 700;
+        color: #0F2233;
+      }
 
-      /* Mobile-friendly table -> stacked cards */
-      @media (max-width: 720px) {
-        .bills-table thead { display:none; }
-        .bills-table, .bills-table tbody, .bills-table tr, .bills-table td { display:block; width:100%; }
-        .bills-table tr { border:1px solid #1a2541; border-radius:10px; margin-bottom:10px; padding:8px 4px; background:#0b1426; }
-        .bills-table td { border:none; padding:6px 12px; }
-        .bills-table td::before { content: attr(data-label); display:block; font-size:11px; color:#7c8bb0; text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
-        .bills-form { grid-template-columns:1fr; }
-        .pipeline-grid { grid-template-columns:auto 1fr; }
-        .pipeline-grid .pl-date { grid-column:2; }
+      /* Bill editor modal */
+      .bill-modal-bg {
+        position: fixed; inset: 0;
+        background: rgba(15, 34, 51, 0.55);
+        display: flex; align-items: flex-start; justify-content: center;
+        padding: 40px 20px;
+        z-index: 80; overflow-y: auto;
+      }
+      .bill-modal-bg[hidden] { display: none; }
+      .bill-modal {
+        background: #fff;
+        width: 100%; max-width: 720px;
+        border-radius: 10px;
+        box-shadow: 0 24px 64px rgba(15, 34, 51, 0.35);
+        overflow: hidden;
+        font-family: 'Roboto Slab', serif;
+      }
+      .bill-modal-head {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 22px;
+        background: #0F2233; color: #fff;
+      }
+      .bill-modal-head h3 {
+        margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.05rem;
+      }
+      .bill-modal-close {
+        background: transparent; border: 0; color: #fff;
+        font-size: 1.6rem; cursor: pointer; padding: 0 4px;
+      }
+      .bill-modal-body { padding: 20px 22px; }
+      .bill-form-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px 16px;
+        margin-bottom: 14px;
+      }
+      .bill-form-row label {
+        display: flex; flex-direction: column; gap: 5px;
+        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em;
+        color: #6c7480; font-weight: 700;
+      }
+      .bill-form-row .bill-form-wide { grid-column: 1 / -1; }
+      .bill-form-row .bill-form-check {
+        flex-direction: row; align-items: center; gap: 8px;
+        text-transform: none; letter-spacing: 0; font-weight: 500;
+        color: #1a1f29; font-size: 0.92rem;
+      }
+      .bill-form-row input[type="text"],
+      .bill-form-row input[type="url"],
+      .bill-form-row input[type="date"],
+      .bill-form-row select,
+      .bill-form-row textarea {
+        font-family: 'Roboto Slab', serif;
+        font-size: 0.95rem; color: #1a1f29;
+        padding: 8px 10px; border: 1px solid #d3d6dc; border-radius: 6px;
+        background: #fff; text-transform: none; letter-spacing: 0;
+        font-weight: 400;
+      }
+      .bill-form-row textarea { resize: vertical; min-height: 64px; }
+      .bill-form-hint {
+        font-size: 0.72rem; color: #8a8f99; font-weight: 500;
+        text-transform: none; letter-spacing: 0;
+      }
+      .bill-modal-foot {
+        display: flex; align-items: center; gap: 8px;
+        padding: 14px 22px;
+        border-top: 1px solid #e2e6ec; background: #f6f8fa;
+        margin: 16px -22px -20px;
+      }
+      .bill-form-spacer { flex: 1; }
+      @media (max-width: 640px) {
+        .bill-form-row { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -65,343 +162,646 @@
          data-active-nav="bills"
          data-page-eyebrow="Statehouse"
          data-page-title="Bills"
-         data-page-sub="Bill tracker. Status, sponsors, and pipeline."></div>
+         data-page-sub="Tracked legislation &mdash; stance, parliamentary status, and impact."></div>
+
+    <template id="billsTpl">
+      <div class="shell-widget admin-panel">
+        <div class="admin-stat-grid" id="statGrid">
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statTotal">0</div>
+            <div class="admin-stat-label">Tracked Bills</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statAnti">0</div>
+            <div class="admin-stat-label">PAC Opposes</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statPro">0</div>
+            <div class="admin-stat-label">PAC Supports</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statFeatured">0</div>
+            <div class="admin-stat-label">Featured</div>
+          </div>
+        </div>
+
+        <div class="admin-toolbar">
+          <input type="search" class="admin-input" id="filterSearch"
+                 placeholder="Search bill number, title, summary&hellip;" autocomplete="off" />
+          <select class="admin-input" id="filterStance">
+            <option value="">All stances</option>
+            <option value="anti">Opposes</option>
+            <option value="pro">Supports</option>
+            <option value="mixed">Mixed</option>
+          </select>
+          <select class="admin-input" id="filterStatus"><option value="">All statuses</option></select>
+          <select class="admin-input" id="filterCategory"><option value="">All categories</option></select>
+          <select class="admin-input" id="filterChamber">
+            <option value="">Both chambers</option>
+            <option value="house">House</option>
+            <option value="senate">Senate</option>
+          </select>
+          <span class="admin-toolbar-spacer"></span>
+          <span class="admin-result-count" id="resultCount"></span>
+          <button type="button" class="admin-btn admin-btn-primary" id="newBillBtn" style="margin-left:10px;">+ New Bill</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="billsTable">
+            <thead>
+              <tr>
+                <th class="admin-toggle-col" aria-label="Expand"></th>
+                <th data-sort="bill_number" class="admin-sortable">Bill<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="title" class="admin-sortable">Title<span class="admin-sort-arrow">&darr;</span></th>
+                <th>Stance</th>
+                <th data-sort="status" class="admin-sortable">Status<span class="admin-sort-arrow">&darr;</span></th>
+                <th>Category</th>
+                <th>Chamber</th>
+                <th data-sort="introduced_on" class="admin-sortable">Introduced<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="last_action_on" class="admin-sortable">Last Action<span class="admin-sort-arrow">&darr;</span></th>
+                <th aria-label="Actions"></th>
+              </tr>
+            </thead>
+            <tbody id="billsBody">
+              <tr><td colspan="10" class="admin-empty-row">Loading bills&hellip;</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="admin-panel-foot">
+          Source of truth: <code>bills</code> &middot;
+          Public tracker: <a href="/issues.html">/issues</a> &middot;
+          Stance is the PAC's assessment; status is the parliamentary state.
+        </p>
+      </div>
+      <div class="admin-toast" id="toast"></div>
+
+      <!-- =================================================================
+           Bill editor modal. Reused for both new and edit. When the user
+           hits "+ New Bill" we open with billEditId = null and submit an
+           INSERT. When they hit "Edit" on a row we prefill the form and
+           submit an UPDATE. Both flows write through the supabase client
+           with the authenticated user's bills:write permission.
+           ================================================================= -->
+      <div class="bill-modal-bg" id="billModal" hidden role="dialog" aria-modal="true" aria-labelledby="billModalTitle">
+        <div class="bill-modal">
+          <div class="bill-modal-head">
+            <h3 id="billModalTitle">New Bill</h3>
+            <button type="button" class="bill-modal-close" id="billModalClose" aria-label="Close">&times;</button>
+          </div>
+          <form id="billForm" class="bill-modal-body" autocomplete="off">
+            <div class="bill-form-row">
+              <label>Bill number
+                <input type="text" id="bf-bill_number" required placeholder="e.g. HB 249" />
+              </label>
+              <label>Slug (URL stub)
+                <input type="text" id="bf-slug" required placeholder="hb249" pattern="[a-z0-9-]+" />
+                <span class="bill-form-hint">lowercase, no spaces &mdash; this becomes /issues/&lt;slug&gt;</span>
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label class="bill-form-wide">Title
+                <input type="text" id="bf-title" required placeholder="Short editorial title" />
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label>Stance
+                <select id="bf-stance" required>
+                  <option value="anti">Opposes equality</option>
+                  <option value="pro">Supports equality</option>
+                  <option value="mixed">Mixed</option>
+                </select>
+              </label>
+              <label>Status
+                <select id="bf-status" required>
+                  <option value="introduced">Introduced</option>
+                  <option value="in_committee">In Committee</option>
+                  <option value="passed_house">Passed House</option>
+                  <option value="passed_senate">Passed Senate</option>
+                  <option value="enacted">Enacted</option>
+                  <option value="dead">Dead</option>
+                </select>
+              </label>
+              <label>Chamber of origin
+                <select id="bf-chamber_of_origin">
+                  <option value="">&mdash;</option>
+                  <option value="house">House</option>
+                  <option value="senate">Senate</option>
+                  <option value="joint">Joint</option>
+                </select>
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label>General Assembly
+                <select id="bf-ga" required>
+                  <option value="136th">136th</option>
+                  <option value="135th">135th</option>
+                </select>
+              </label>
+              <label>Category
+                <input type="text" id="bf-category" placeholder="e.g. trans_health" />
+              </label>
+              <label class="bill-form-check">
+                <input type="checkbox" id="bf-is_featured" />
+                <span>Featured (pin to top of /issues)</span>
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label>Introduced on
+                <input type="date" id="bf-introduced_on" />
+              </label>
+              <label>Last action on
+                <input type="date" id="bf-last_action_on" />
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label class="bill-form-wide">Summary
+                <textarea id="bf-summary" rows="3" placeholder="One paragraph for /issues and /scorecard reference."></textarea>
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label class="bill-form-wide">What it does
+                <textarea id="bf-what_it_does" rows="3" placeholder="Plain-language explainer."></textarea>
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label class="bill-form-wide">Equality impact
+                <textarea id="bf-equality_impact_note" rows="3" placeholder="How does this affect LGBTQ+ Ohioans?"></textarea>
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label class="bill-form-wide">Legal risks
+                <textarea id="bf-legal_risks" rows="2" placeholder="Constitutional and statutory concerns."></textarea>
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label class="bill-form-wide">Official bill URL
+                <input type="url" id="bf-official_bill_url" placeholder="https://www.legislature.ohio.gov/..." />
+              </label>
+            </div>
+            <div class="bill-form-row">
+              <label class="bill-form-wide">Bill text PDF URL
+                <input type="url" id="bf-bill_text_pdf_url" placeholder="https://search-prod.lis.state.oh.us/..." />
+              </label>
+            </div>
+            <div class="bill-modal-foot">
+              <button type="button" class="admin-btn admin-btn-ghost" id="billDeleteBtn" hidden>Delete</button>
+              <span class="bill-form-spacer"></span>
+              <button type="button" class="admin-btn admin-btn-ghost" id="billCancelBtn">Cancel</button>
+              <button type="submit" class="admin-btn admin-btn-primary" id="billSaveBtn">Save bill</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </template>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/admin/admin-shell.js"></script>
     <script>
-      document.addEventListener('admin-shell-ready', function (ev) {
-        const client = ev.detail.client;
-        const can = ev.detail.can;
-        const canWrite = can && (can('bills', 'write') || can('bills', 'admin'));
-        const canDelete = can && can('bills', 'admin');
+      (function () {
+        'use strict';
 
-        const root = document.getElementById('shellBody');
-        root.innerHTML = `
-          <div class="shell-widget">
-            <div class="bills-toolbar">
-              <input type="search" id="billsSearch" placeholder="Search by bill #, title, or nickname..." aria-label="Search bills" />
-              <select id="billsGa">
-                <option value="">All GAs</option>
-                <option value="136th">136th GA</option>
-                <option value="135th">135th GA</option>
-              </select>
-              <select id="billsStance">
-                <option value="">All stances</option>
-                <option value="anti">Anti</option>
-                <option value="pro">Pro</option>
-                <option value="mixed">Mixed</option>
-              </select>
-              ${canWrite ? '<button class="btn primary" id="addBillBtn">Add bill</button>' : ''}
-            </div>
-            <div id="billsTableWrap"><p style="color:#7c8bb0">Loading…</p></div>
-          </div>
-        `;
+        var COLSPAN = 10;
 
-        const wrap = document.getElementById('billsTableWrap');
-        let allBills = [];
+        var STATUS_LABEL = {
+          introduced: 'Introduced',
+          in_committee: 'In Committee',
+          passed_house: 'Passed House',
+          passed_senate: 'Passed Senate',
+          enacted: 'Enacted',
+          dead: 'Dead'
+        };
+        var STANCE_LABEL = { anti: 'Opposes', pro: 'Supports', mixed: 'Mixed' };
 
-        function pillFor(stance) {
-          const s = (stance || 'anti').toLowerCase();
-          return `<span class="pill pill-${s}">${s}</span>`;
-        }
-        function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+        var state = {
+          rows: [],
+          filtered: [],
+          sortKey: 'last_action_on',
+          sortDir: 'desc',
+          expanded: Object.create(null)
+        };
 
-        function render(rows) {
-          if (!rows.length) {
-            wrap.innerHTML = '<p style="color:#7c8bb0">No bills match those filters.</p>';
-            return;
-          }
-          wrap.innerHTML = `
-            <table class="bills-table">
-              <thead>
-                <tr>
-                  <th>Bill</th><th>Title</th><th>Stance</th><th>Status</th><th>Pipeline</th><th></th>
-                </tr>
-              </thead>
-              <tbody>
-                ${rows.map(b => `
-                  <tr data-slug="${escapeHtml(b.slug)}">
-                    <td data-label="Bill"><strong>${escapeHtml(b.label || b.slug)}</strong><span class="slug">${escapeHtml(b.slug)} · ${escapeHtml(b.ga||'')}</span></td>
-                    <td data-label="Title"><strong>${escapeHtml(b.title || '')}</strong>${b.nickname ? `<span class="slug">${escapeHtml(b.nickname)}</span>` : ''}</td>
-                    <td data-label="Stance">${pillFor(b.stance)}</td>
-                    <td data-label="Status"><span style="color:${escapeHtml(b.status_color||'#9be0a8')}">${escapeHtml(b.status_label || b.status || '')}</span></td>
-                    <td data-label="Step">${b.current_step == null ? '—' : `Step ${escapeHtml(b.current_step)} of 8`}</td>
-                    <td data-label=""><button class="btn" data-edit="${escapeHtml(b.slug)}">${canWrite ? 'Edit' : 'View'}</button></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          `;
-        }
+        function $(id) { return document.getElementById(id); }
 
-        function applyFilters() {
-          const q   = (document.getElementById('billsSearch').value || '').toLowerCase().trim();
-          const ga  = document.getElementById('billsGa').value;
-          const st  = document.getElementById('billsStance').value;
-          render(allBills.filter(b => {
-            if (ga && b.ga !== ga) return false;
-            if (st && (b.stance || '').toLowerCase() !== st) return false;
-            if (!q) return true;
-            return (
-              (b.slug    || '').toLowerCase().includes(q) ||
-              (b.label   || '').toLowerCase().includes(q) ||
-              (b.title   || '').toLowerCase().includes(q) ||
-              (b.nickname|| '').toLowerCase().includes(q)
-            );
-          }));
-        }
-
-        async function load() {
-          const { data, error } = await client
-            .from('bills')
-            .select('*')
-            .order('ga', { ascending: false })
-            .order('display_order', { ascending: true })
-            .order('slug', { ascending: true });
-          if (error) { toast(error.message, true); return; }
-          allBills = data || [];
-          applyFilters();
-        }
-
-        function toast(msg, isErr) {
-          const el = document.createElement('div');
-          el.className = 'toast' + (isErr ? ' error' : '');
-          el.textContent = msg;
-          document.body.appendChild(el);
-          setTimeout(() => el.remove(), isErr ? 5000 : 2500);
-        }
-
-        // ---- Edit / create drawer ----
-        function openDrawer(bill) {
-          const drawer = document.getElementById('shellDrawer');
-          const isNew = !bill;
-          bill = bill || {
-            slug: '', label: '', title: '', ga: '136th', stance: 'anti',
-            summary: '', status: '', nickname: '', official_title: '',
-            status_label: '', status_color: '#dc2626',
-            categories: [], category_labels: [],
-            sponsors_text: '', last_action: '', next_date: '', house_vote: '',
-            chamber: 'house', current_step: 0, url: '', legislature_url: '', text_url: '',
-            is_active: true, display_order: 100,
-          };
-
-          const drawerBody = drawer.querySelector('.shell-drawer-body') || drawer.querySelector('[data-drawer-body]') || drawer.querySelector('.shell-drawer-panel');
-          const heading = drawer.querySelector('.shell-drawer-head h2, .shell-drawer-head strong, [data-drawer-title]');
-          if (heading) heading.textContent = isNew ? 'Add a bill' : `Edit ${bill.label || bill.slug}`;
-
-          drawerBody.innerHTML = `
-            <form id="billForm" class="bills-form">
-              <div>
-                <label>Slug (e.g. hb249)</label>
-                <input name="slug" value="${escapeHtml(bill.slug)}" ${isNew ? 'required' : 'readonly'} pattern="[a-z0-9-]+" />
-              </div>
-              <div>
-                <label>Label (e.g. HB 249)</label>
-                <input name="label" value="${escapeHtml(bill.label)}" required />
-              </div>
-              <div class="full">
-                <label>Short title</label>
-                <input name="title" value="${escapeHtml(bill.title)}" required />
-              </div>
-              <div>
-                <label>Nickname / public name</label>
-                <input name="nickname" value="${escapeHtml(bill.nickname || '')}" />
-              </div>
-              <div>
-                <label>Official title</label>
-                <input name="official_title" value="${escapeHtml(bill.official_title || '')}" />
-              </div>
-              <div>
-                <label>GA</label>
-                <select name="ga"><option ${bill.ga==='136th'?'selected':''}>136th</option><option ${bill.ga==='135th'?'selected':''}>135th</option></select>
-              </div>
-              <div>
-                <label>Stance</label>
-                <select name="stance">
-                  <option value="anti"  ${bill.stance==='anti'?'selected':''}>Anti</option>
-                  <option value="pro"   ${bill.stance==='pro'?'selected':''}>Pro</option>
-                  <option value="mixed" ${bill.stance==='mixed'?'selected':''}>Mixed</option>
-                </select>
-              </div>
-              <div>
-                <label>Chamber of origin</label>
-                <select name="chamber">
-                  <option value="house"  ${bill.chamber==='house'?'selected':''}>House</option>
-                  <option value="senate" ${bill.chamber==='senate'?'selected':''}>Senate</option>
-                  <option value="joint"  ${bill.chamber==='joint'?'selected':''}>Joint</option>
-                </select>
-              </div>
-              <div>
-                <label>Current pipeline step (0–8)</label>
-                <input name="current_step" type="number" min="0" max="8" value="${bill.current_step ?? 0}" />
-              </div>
-              <div>
-                <label>Status (machine)</label>
-                <input name="status" value="${escapeHtml(bill.status || '')}" placeholder="e.g. pending-senate" />
-              </div>
-              <div>
-                <label>Status label (display)</label>
-                <input name="status_label" value="${escapeHtml(bill.status_label || '')}" />
-              </div>
-              <div>
-                <label>Status color (#hex)</label>
-                <input name="status_color" value="${escapeHtml(bill.status_color || '')}" />
-              </div>
-              <div>
-                <label>Display order (lower = higher on list)</label>
-                <input name="display_order" type="number" value="${bill.display_order ?? 100}" />
-              </div>
-              <div class="full">
-                <label>Categories (comma separated machine slugs)</label>
-                <input name="categories" value="${escapeHtml((bill.categories||[]).join(', '))}" />
-              </div>
-              <div class="full">
-                <label>Category labels (comma separated, matches categories order)</label>
-                <input name="category_labels" value="${escapeHtml((bill.category_labels||[]).join(', '))}" />
-              </div>
-              <div class="full">
-                <label>Summary</label>
-                <textarea name="summary">${escapeHtml(bill.summary || '')}</textarea>
-              </div>
-              <div class="full">
-                <label>Sponsors (display text)</label>
-                <input name="sponsors_text" value="${escapeHtml(bill.sponsors_text || '')}" />
-              </div>
-              <div>
-                <label>Last action</label>
-                <input name="last_action" value="${escapeHtml(bill.last_action || '')}" />
-              </div>
-              <div>
-                <label>Next date / event</label>
-                <input name="next_date" value="${escapeHtml(bill.next_date || '')}" />
-              </div>
-              <div>
-                <label>House vote text</label>
-                <input name="house_vote" value="${escapeHtml(bill.house_vote || '')}" />
-              </div>
-              <div>
-                <label>Detail URL</label>
-                <input name="url" value="${escapeHtml(bill.url || '')}" />
-              </div>
-              <div>
-                <label>Legislature URL</label>
-                <input name="legislature_url" value="${escapeHtml(bill.legislature_url || '')}" />
-              </div>
-              <div>
-                <label>Bill text URL</label>
-                <input name="text_url" value="${escapeHtml(bill.text_url || '')}" />
-              </div>
-              <div class="full">
-                <label>Pipeline dates (0 = introduced, 8 = signed). Use ISO YYYY-MM-DD or a label.</label>
-                <div class="pipeline-grid" id="pipelineGrid"></div>
-              </div>
-              <div class="full btn-row">
-                ${canWrite ? '<button type="submit" class="btn primary">Save</button>' : ''}
-                <button type="button" class="btn" id="cancelBill">Cancel</button>
-                ${(!isNew && canDelete) ? '<button type="button" class="btn danger" id="deleteBill">Delete bill</button>' : ''}
-              </div>
-            </form>
-          `;
-
-          // Populate pipeline grid
-          const pipelineGrid = document.getElementById('pipelineGrid');
-          const stepLabels = ['Introduced','Committee assigned','Committee vote','Floor vote','Cross chamber','Concurrence','Conference','Signed by governor','Effective'];
-          (async () => {
-            const { data: steps } = await client
-              .from('bill_pipeline_steps')
-              .select('step_index, step_label, happened_on')
-              .eq('bill_slug', bill.slug);
-            const byIdx = {};
-            (steps || []).forEach(s => byIdx[s.step_index] = s);
-            pipelineGrid.innerHTML = stepLabels.map((lbl, i) => {
-              const s = byIdx[i] || {};
-              return `
-                <div class="step-num">${i}</div>
-                <div><input data-step="${i}" data-field="date" type="date" value="${s.happened_on || ''}" /></div>
-                <div class="pl-date"><input data-step="${i}" data-field="label" placeholder="${escapeHtml(lbl)}" value="${escapeHtml(s.step_label || '')}" /></div>
-              `;
-            }).join('');
-          })();
-
-          // Show drawer
-          drawer.setAttribute('aria-hidden', 'false');
-          drawer.classList.add('is-open');
-
-          document.getElementById('cancelBill').addEventListener('click', closeDrawer);
-          const delBtn = document.getElementById('deleteBill');
-          if (delBtn) delBtn.addEventListener('click', () => deleteBill(bill.slug));
-
-          document.getElementById('billForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!canWrite) return;
-            const fd = new FormData(e.target);
-            const payload = Object.fromEntries(fd.entries());
-            payload.categories      = payload.categories      ? payload.categories.split(',').map(s => s.trim()).filter(Boolean) : [];
-            payload.category_labels = payload.category_labels ? payload.category_labels.split(',').map(s => s.trim()).filter(Boolean) : [];
-            if (payload.current_step !== '')  payload.current_step  = parseInt(payload.current_step, 10);
-            if (payload.display_order !== '') payload.display_order = parseInt(payload.display_order, 10);
-            payload.updated_at = new Date().toISOString();
-            const { error } = await client
-              .from('bills')
-              .upsert(payload, { onConflict: 'slug' });
-            if (error) { toast(error.message, true); return; }
-
-            // Save pipeline rows
-            const grid = document.getElementById('pipelineGrid');
-            const dateInputs = grid.querySelectorAll('input[data-field="date"]');
-            const upserts = [];
-            for (const di of dateInputs) {
-              const idx = parseInt(di.dataset.step, 10);
-              const li = grid.querySelector(`input[data-step="${idx}"][data-field="label"]`);
-              const date  = di.value || null;
-              const label = (li && li.value.trim()) || null;
-              if (!date && !label) continue;
-              upserts.push({ bill_slug: payload.slug, step_index: idx, step_label: label, happened_on: date });
-            }
-            if (upserts.length) {
-              const { error: pErr } = await client.from('bill_pipeline_steps').upsert(upserts, { onConflict: 'bill_slug,step_index' });
-              if (pErr) { toast('Pipeline save: ' + pErr.message, true); return; }
-            }
-
-            toast('Saved.');
-            closeDrawer();
-            load();
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
           });
         }
 
-        function closeDrawer() {
-          const drawer = document.getElementById('shellDrawer');
-          drawer.classList.remove('is-open');
-          drawer.setAttribute('aria-hidden', 'true');
+        function titleCase(s) {
+          return String(s || '').replace(/[_-]+/g, ' ')
+            .replace(/\b\w/g, function (m) { return m.toUpperCase(); });
         }
 
-        async function deleteBill(slug) {
-          if (!confirm(`Delete ${slug}? This cannot be undone.`)) return;
-          const { error } = await client.from('bills').delete().eq('slug', slug);
-          if (error) { toast(error.message, true); return; }
-          toast('Deleted.');
-          closeDrawer();
-          load();
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
 
-        // ---- Event wiring ----
-        document.getElementById('billsSearch').addEventListener('input', applyFilters);
-        document.getElementById('billsGa').addEventListener('change', applyFilters);
-        document.getElementById('billsStance').addEventListener('change', applyFilters);
-        const addBtn = document.getElementById('addBillBtn');
-        if (addBtn) addBtn.addEventListener('click', () => openDrawer(null));
+        function toast(msg, kind) {
+          var el = $('toast');
+          el.textContent = msg;
+          el.className = 'admin-toast visible' + (kind ? ' admin-toast-' + kind : '');
+          clearTimeout(toast._t);
+          toast._t = setTimeout(function () { el.classList.remove('visible'); }, 3200);
+        }
 
-        wrap.addEventListener('click', (e) => {
-          const btn = e.target.closest('button[data-edit]');
-          if (!btn) return;
-          const slug = btn.dataset.edit;
-          const row  = allBills.find(b => b.slug === slug);
-          openDrawer(row);
+        function populateSelect(id, values, labelFn) {
+          var sel = $(id);
+          while (sel.options.length > 1) sel.remove(1);
+          values.sort().forEach(function (v) {
+            var opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = labelFn ? labelFn(v) : v;
+            sel.appendChild(opt);
+          });
+        }
+
+        function renderStats() {
+          $('statTotal').textContent    = state.rows.length.toLocaleString();
+          $('statAnti').textContent     = state.rows.filter(function (r) { return r.stance === 'anti'; }).length;
+          $('statPro').textContent      = state.rows.filter(function (r) { return r.stance === 'pro'; }).length;
+          $('statFeatured').textContent = state.rows.filter(function (r) { return r.is_featured; }).length;
+        }
+
+        function applyFilters() {
+          var q = $('filterSearch').value.trim().toLowerCase();
+          var stance = $('filterStance').value;
+          var status = $('filterStatus').value;
+          var cat = $('filterCategory').value;
+          var chamber = $('filterChamber').value;
+
+          state.filtered = state.rows.filter(function (r) {
+            if (stance && r.stance !== stance) return false;
+            if (status && r.status !== status) return false;
+            if (cat && r.category !== cat) return false;
+            if (chamber && r.chamber_of_origin !== chamber) return false;
+            if (q) {
+              var hay = (
+                (r.bill_number || '') + ' ' +
+                (r.title || '') + ' ' +
+                (r.official_title || '') + ' ' +
+                (r.summary || '') + ' ' +
+                (r.what_it_does || '')
+              ).toLowerCase();
+              if (hay.indexOf(q) === -1) return false;
+            }
+            return true;
+          });
+          applySort();
+        }
+
+        function applySort() {
+          var key = state.sortKey;
+          var dir = state.sortDir === 'asc' ? 1 : -1;
+          state.filtered.sort(function (a, b) {
+            var av = a[key], bv = b[key];
+            if (key === 'introduced_on' || key === 'last_action_on') {
+              return ((new Date(av || 0)) - (new Date(bv || 0))) * dir;
+            }
+            return String(av || '').localeCompare(String(bv || ''), undefined, { numeric: true, sensitivity: 'base' }) * dir;
+          });
+          renderRows();
+          renderSortHeaders();
+        }
+
+        function renderSortHeaders() {
+          var ths = document.querySelectorAll('#billsTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            ths[i].classList.remove('admin-sort-asc', 'admin-sort-desc');
+            if (ths[i].dataset.sort === state.sortKey) {
+              ths[i].classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
+            }
+          }
+        }
+
+        function detailRowHtml(r) {
+          var meta = [
+            ['Official Title', r.official_title],
+            ['General Assembly', r.general_assembly],
+            ['Chamber of Origin', titleCase(r.chamber_of_origin)],
+            ['Introduced', fmtDate(r.introduced_on)],
+            ['Last Action', fmtDate(r.last_action_on)],
+            ['Last Action Text', r.last_action_text],
+            ['Next Expected Action', r.next_expected_action],
+            ['Effective Date', fmtDate(r.effective_date)],
+            ['Featured', r.is_featured ? 'Yes' : 'No']
+          ];
+          function grid(items) {
+            var html = '<dl class="admin-detail-grid">';
+            for (var i = 0; i < items.length; i++) {
+              var v = items[i][1];
+              if (v === '' || v == null) continue;
+              html += '<div><dt>' + escapeHtml(items[i][0]) + '</dt><dd>' + escapeHtml(String(v)) + '</dd></div>';
+            }
+            return html + '</dl>';
+          }
+          function prose(label, body) {
+            if (!body) return '';
+            return '<div class="admin-detail-section-title">' + escapeHtml(label) + '</div>' +
+                   '<p class="admin-detail-prose">' + escapeHtml(body) + '</p>';
+          }
+          var links = [];
+          if (r.official_bill_url) {
+            links.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
+              escapeHtml(r.official_bill_url) + '">Official bill page &rarr;</a>');
+          }
+          if (r.bill_text_pdf_url) {
+            links.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
+              escapeHtml(r.bill_text_pdf_url) + '">Bill text PDF &rarr;</a>');
+          }
+          if (r.enacted_text_url) {
+            links.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
+              escapeHtml(r.enacted_text_url) + '">Enacted text &rarr;</a>');
+          }
+
+          var sections =
+            '<div class="admin-detail-section-title">Bill Detail</div>' + grid(meta) +
+            prose('Summary', r.summary) +
+            prose('What It Does', r.what_it_does) +
+            prose('Impact', r.impact) +
+            prose('Equality Impact', r.equality_impact_note) +
+            prose('Legal Risks', r.legal_risks) +
+            (links.length
+              ? '<div class="admin-detail-section-title">Links</div><div style="display:flex;gap:18px;flex-wrap:wrap">' + links.join('') + '</div>'
+              : '');
+
+          return '<tr class="admin-detail-row" data-detail-for="' + escapeHtml(r.id) + '">' +
+                   '<td colspan="' + COLSPAN + '">' + sections + '</td></tr>';
+        }
+
+        function renderRows() {
+          var body = $('billsBody');
+          $('resultCount').textContent =
+            state.filtered.length === state.rows.length
+              ? state.rows.length + ' total'
+              : state.filtered.length + ' of ' + state.rows.length;
+
+          if (state.filtered.length === 0) {
+            var msg = state.rows.length === 0
+              ? 'No bills found. The bill tracker syncs from the statehouse research pipeline.'
+              : 'No bills match the current filters.';
+            body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">' + msg + '</td></tr>';
+            return;
+          }
+
+          var html = '';
+          for (var i = 0; i < state.filtered.length; i++) {
+            var r = state.filtered[i];
+            var isExpanded = !!state.expanded[r.id];
+            var expandBtn =
+              '<button type="button" class="admin-expand-btn" data-expand="' + escapeHtml(r.id) + '" ' +
+                'aria-expanded="' + (isExpanded ? 'true' : 'false') + '">' +
+                (isExpanded ? '&minus;' : '+') + '</button>';
+            var stance = r.stance || '';
+            var stanceCell = stance
+              ? '<span class="admin-pill admin-pill-stance-' + escapeHtml(stance) + '">' +
+                  escapeHtml(STANCE_LABEL[stance] || stance) + '</span>'
+              : '<span class="admin-muted">&mdash;</span>';
+            var featured = r.is_featured
+              ? '<span class="admin-cell-sub">&#9733; Featured</span>' : '';
+            var title = escapeHtml(r.title || '') + featured;
+
+            html +=
+              '<tr data-id="' + escapeHtml(r.id) + '">' +
+                '<td class="admin-toggle-col">' + expandBtn + '</td>' +
+                '<td class="admin-cell-tight"><span class="admin-billnum">' + escapeHtml(r.bill_number || '') + '</span></td>' +
+                '<td class="admin-cell-name">' + title + '</td>' +
+                '<td>' + stanceCell + '</td>' +
+                '<td><span class="admin-pill-status">' + escapeHtml(STATUS_LABEL[r.status] || titleCase(r.status)) + '</span></td>' +
+                '<td>' + (r.category ? escapeHtml(titleCase(r.category)) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td>' + (r.chamber_of_origin ? escapeHtml(titleCase(r.chamber_of_origin)) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td class="admin-cell-tight">' + (fmtDate(r.introduced_on) || '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td class="admin-cell-tight">' + (fmtDate(r.last_action_on) || '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td class="admin-cell-tight"><button type="button" class="admin-btn admin-btn-ghost" data-edit="' + escapeHtml(r.id) + '">Edit</button></td>' +
+              '</tr>';
+
+            if (isExpanded) html += detailRowHtml(r);
+          }
+          body.innerHTML = html;
+        }
+
+        async function loadBills(client) {
+          var resp = await client
+            .from('bills')
+            .select('*')
+            .order('last_action_on', { ascending: false, nullsFirst: false });
+          if (resp.error) throw resp.error;
+          return resp.data || [];
+        }
+
+        document.addEventListener('admin-shell-ready', function (e) {
+          var client = e.detail && e.detail.client;
+          if (!client) return;
+
+          var shellBody = document.getElementById('shellBody');
+          if (shellBody && !document.getElementById('billsTable')) {
+            shellBody.appendChild(document.getElementById('billsTpl').content.cloneNode(true));
+          }
+
+          loadBills(client).then(function (rows) {
+            state.rows = rows;
+            populateSelect('filterStatus',
+              Array.from(new Set(rows.map(function (r) { return r.status; }).filter(Boolean))),
+              function (v) { return STATUS_LABEL[v] || titleCase(v); });
+            populateSelect('filterCategory',
+              Array.from(new Set(rows.map(function (r) { return r.category; }).filter(Boolean))),
+              titleCase);
+            renderStats();
+            applyFilters();
+          }).catch(function (err) {
+            console.error('Failed to load bills:', err);
+            $('billsBody').innerHTML =
+              '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
+              'Could not load bills. Your account may not be authorized for this view.' +
+              '</td></tr>';
+          });
+
+          var debounceT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debounceT);
+            debounceT = setTimeout(applyFilters, 150);
+          });
+          ['filterStance', 'filterStatus', 'filterCategory', 'filterChamber'].forEach(function (id) {
+            $(id).addEventListener('change', applyFilters);
+          });
+
+          var ths = document.querySelectorAll('#billsTable thead th[data-sort]');
+          for (var i = 0; i < ths.length; i++) {
+            ths[i].addEventListener('click', function (ev) {
+              var key = ev.currentTarget.dataset.sort;
+              if (state.sortKey === key) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              } else {
+                state.sortKey = key;
+                state.sortDir = (key === 'introduced_on' || key === 'last_action_on') ? 'desc' : 'asc';
+              }
+              applySort();
+            });
+          }
+
+          $('billsBody').addEventListener('click', function (ev) {
+            var expandBtn = ev.target.closest && ev.target.closest('[data-expand]');
+            if (expandBtn) {
+              ev.preventDefault();
+              var id = expandBtn.dataset.expand;
+              state.expanded[id] = !state.expanded[id];
+              renderRows();
+              return;
+            }
+            var editBtn = ev.target.closest && ev.target.closest('[data-edit]');
+            if (editBtn) {
+              ev.preventDefault();
+              openBillModal(editBtn.dataset.edit);
+              return;
+            }
+          });
+
+          // ---------------------------------------------------------------
+          // Bill editor modal: open / close / save / delete
+          // ---------------------------------------------------------------
+          var modal = $('billModal');
+          var form  = $('billForm');
+          var FIELDS = [
+            'bill_number','slug','title','stance','status','chamber_of_origin',
+            'ga','category','introduced_on','last_action_on','summary',
+            'what_it_does','equality_impact_note','legal_risks',
+            'official_bill_url','bill_text_pdf_url'
+          ];
+
+          function openBillModal(id) {
+            state.editId = id || null;
+            form.reset();
+            $('billDeleteBtn').hidden = !id;
+            $('billModalTitle').textContent = id ? 'Edit Bill' : 'New Bill';
+            if (id) {
+              var row = state.rows.filter(function (r) { return r.id === id; })[0];
+              if (row) {
+                FIELDS.forEach(function (k) {
+                  var el = $('bf-' + k);
+                  if (!el) return;
+                  var v = row[k];
+                  if (el.type === 'date' && v) v = String(v).slice(0, 10);
+                  el.value = v == null ? '' : v;
+                });
+                $('bf-is_featured').checked = !!row.is_featured;
+                $('bf-slug').readOnly = true; // slug is the join key, do not let edits change it silently
+              }
+            } else {
+              $('bf-ga').value = '136th';
+              $('bf-stance').value = 'anti';
+              $('bf-status').value = 'introduced';
+              $('bf-slug').readOnly = false;
+            }
+            modal.hidden = false;
+            setTimeout(function () {
+              ($('bf-bill_number') || form).focus();
+            }, 30);
+          }
+
+          function closeBillModal() {
+            modal.hidden = true;
+            state.editId = null;
+          }
+
+          $('newBillBtn').addEventListener('click', function () { openBillModal(null); });
+          $('billModalClose').addEventListener('click', closeBillModal);
+          $('billCancelBtn').addEventListener('click', closeBillModal);
+          modal.addEventListener('click', function (ev) {
+            if (ev.target === modal) closeBillModal();
+          });
+
+          // Auto-suggest slug from bill_number when creating a new bill.
+          $('bf-bill_number').addEventListener('input', function () {
+            if (state.editId) return;
+            var current = $('bf-slug').value.trim();
+            if (current && !$('bf-slug').dataset.auto) return;
+            var suggested = this.value.toLowerCase().replace(/\s+/g, '');
+            $('bf-slug').value = suggested;
+            $('bf-slug').dataset.auto = '1';
+          });
+          $('bf-slug').addEventListener('input', function () {
+            delete $('bf-slug').dataset.auto;
+          });
+
+          form.addEventListener('submit', function (ev) {
+            ev.preventDefault();
+            var payload = {};
+            FIELDS.forEach(function (k) {
+              var el = $('bf-' + k);
+              if (!el) return;
+              var v = el.value;
+              if (v === '') v = null;
+              payload[k] = v;
+            });
+            payload.is_featured = $('bf-is_featured').checked;
+
+            // mirror back to legacy public-site columns so /issues stays consistent
+            payload.label   = payload.bill_number || payload.label;
+            payload.chamber = payload.chamber_of_origin || payload.chamber;
+
+            $('billSaveBtn').disabled = true;
+            $('billSaveBtn').textContent = 'Saving…';
+
+            var p;
+            if (state.editId) {
+              p = client.from('bills').update(payload).eq('id', state.editId)
+                    .select().single();
+            } else {
+              p = client.from('bills').insert(payload).select().single();
+            }
+
+            p.then(function (resp) {
+              if (resp.error) throw resp.error;
+              // Update local state without a full reload
+              if (state.editId) {
+                state.rows = state.rows.map(function (r) {
+                  return r.id === state.editId ? resp.data : r;
+                });
+                toast('Bill updated', 'ok');
+              } else {
+                state.rows.unshift(resp.data);
+                toast('Bill created', 'ok');
+              }
+              renderStats();
+              applyFilters();
+              closeBillModal();
+            }).catch(function (err) {
+              console.error(err);
+              toast('Save failed: ' + (err.message || 'unknown'), 'err');
+            }).then(function () {
+              $('billSaveBtn').disabled = false;
+              $('billSaveBtn').textContent = 'Save bill';
+            });
+          });
+
+          $('billDeleteBtn').addEventListener('click', function () {
+            if (!state.editId) return;
+            var row = state.rows.filter(function (r) { return r.id === state.editId; })[0];
+            var label = row ? (row.bill_number || row.slug) : 'this bill';
+            if (!window.confirm('Delete ' + label + '? This removes the bill from /issues and /scorecard.')) return;
+            $('billDeleteBtn').disabled = true;
+            client.from('bills').delete().eq('id', state.editId)
+              .then(function (resp) {
+                if (resp.error) throw resp.error;
+                state.rows = state.rows.filter(function (r) { return r.id !== state.editId; });
+                renderStats();
+                applyFilters();
+                closeBillModal();
+                toast('Bill deleted', 'ok');
+              })
+              .catch(function (err) {
+                console.error(err);
+                toast('Delete failed: ' + (err.message || 'unknown'), 'err');
+              })
+              .then(function () { $('billDeleteBtn').disabled = false; });
+          });
         });
-
-        load();
-      });
+      })();
     </script>
+    <script src="/admin/admin-responsive.js" defer></script>
   </body>
 </html>
