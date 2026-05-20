@@ -56,6 +56,10 @@
         color: #0F2233;
         margin: 16px 0 6px;
         font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
       }
       .admin-detail-section-title:first-child { margin-top: 0; }
       .admin-grade {
@@ -76,6 +80,138 @@
       .admin-party-D { color: #1d4ed8; font-weight: 700; }
       .admin-party-R { color: #b91c1c; font-weight: 700; }
       td.admin-cell-tight { white-space: nowrap; }
+
+      /* Editor-specific styles */
+      .sc-status {
+        display: inline-block;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-weight: 700;
+      }
+      .sc-status-clean    { background: #e6f3ec; color: #1e7e45; }
+      .sc-status-dirty    { background: #fff3c4; color: #8a6d1f; }
+      .sc-status-unpub    { background: #fde2e1; color: #c0392b; }
+      .sc-score-compare {
+        display: flex; gap: 24px; flex-wrap: wrap;
+        background: #fff; border: 1px solid #e2e6ec; border-radius: 8px;
+        padding: 12px 16px; margin-bottom: 14px;
+      }
+      .sc-score-compare > div {
+        display: flex; flex-direction: column; gap: 4px; min-width: 110px;
+      }
+      .sc-score-compare .sc-label {
+        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+        color: #6c7480; font-weight: 700;
+      }
+      .sc-score-compare .sc-value {
+        font-size: 1.4rem; font-weight: 800; color: #0F2233;
+      }
+      .sc-score-compare .sc-value-sub {
+        font-size: 0.85rem; color: #6c7480; font-weight: 500;
+      }
+      .sc-changed-arrow {
+        color: #b45309; font-weight: 700;
+      }
+      .sc-votes-table {
+        width: 100%; border-collapse: collapse; margin: 4px 0 8px;
+        font-size: 0.88rem;
+      }
+      .sc-votes-table th, .sc-votes-table td {
+        text-align: left; padding: 6px 8px;
+        border-bottom: 1px solid #e8ecf1;
+      }
+      .sc-votes-table th {
+        background: #f6f8fa; font-size: 0.74rem;
+        text-transform: uppercase; letter-spacing: 0.05em; color: #6c7480;
+        font-weight: 700;
+      }
+      .sc-votes-table tr:last-child td { border-bottom: 0; }
+      .sc-vote-pill {
+        display: inline-block; min-width: 1.8em; text-align: center;
+        padding: 2px 6px; border-radius: 4px; font-weight: 700;
+        font-size: 0.85rem;
+      }
+      .sc-vote-Y { background: rgba(74,222,128,0.22); color: #1e7e45; }
+      .sc-vote-N { background: rgba(255,107,107,0.20); color: #c0392b; }
+      .sc-vote-NV{ background: #eef2f6; color: #6c7480; }
+      .sc-vote-E { background: #fff3c4; color: #8a6d1f; }
+      .sc-vote-default { font-style: italic; opacity: 0.85; }
+      .sc-vote-exception-marker { color: #b45309; font-weight: 700; margin-left: 4px; }
+      .sc-vote-btn {
+        font-size: 0.78rem; padding: 2px 7px; border: 1px solid #d3d6dc;
+        background: #fff; border-radius: 4px; cursor: pointer; margin-right: 2px;
+        color: #1a1f29;
+      }
+      .sc-vote-btn:hover { background: #f4f6f8; }
+      .sc-vote-btn.is-active { background: #0F2233; color: #fff; border-color: #0F2233; }
+      .sc-vote-btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+      .sc-action-row {
+        display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+      }
+      .sc-pill-action {
+        font-size: 0.82rem; padding: 5px 10px; border-radius: 4px;
+        border: 1px solid #d3d6dc; background: #fff; cursor: pointer;
+        font-weight: 600;
+      }
+      .sc-pill-action:hover { background: #f4f6f8; }
+      .sc-pill-action-primary {
+        background: #0F2233; color: #fff; border-color: #0F2233;
+      }
+      .sc-pill-action-primary:hover { background: #1f3a55; }
+      .sc-pill-action-publish {
+        background: #1e7e45; color: #fff; border-color: #1e7e45;
+      }
+      .sc-pill-action-publish:hover { background: #2a9456; }
+      .sc-pill-action[disabled] { opacity: 0.5; cursor: not-allowed; }
+      .sc-sponsorship-row {
+        display: flex; align-items: center; gap: 10px;
+        padding: 5px 0; border-bottom: 1px solid #eef2f6;
+        font-size: 0.9rem;
+      }
+      .sc-sponsorship-row:last-child { border-bottom: 0; }
+      .sc-sponsorship-row .sc-bill-label {
+        flex: 1; font-weight: 600;
+      }
+      .sc-sponsorship-role-select {
+        font-size: 0.85rem; padding: 2px 4px; border: 1px solid #d3d6dc;
+        border-radius: 4px; background: #fff;
+      }
+      .sc-bills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 4px 18px;
+      }
+      .sc-no-data {
+        font-style: italic; color: #6c7480; font-size: 0.86rem;
+        padding: 8px 0;
+      }
+      .sc-roll-call-modal-bd {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px;
+      }
+      .sc-roll-call-modal-bd label {
+        display: flex; flex-direction: column; gap: 4px;
+        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em;
+        color: #6c7480; font-weight: 700;
+      }
+      .sc-roll-call-modal-bd label.sc-wide { grid-column: 1 / -1; }
+      .sc-roll-call-modal-bd input,
+      .sc-roll-call-modal-bd select,
+      .sc-roll-call-modal-bd textarea {
+        font: inherit; font-size: 0.92rem; padding: 6px 8px;
+        border: 1px solid #d3d6dc; border-radius: 4px;
+        text-transform: none; letter-spacing: 0;
+        color: #1a1f29;
+      }
+      .sc-roll-call-modal-bd textarea { min-height: 60px; resize: vertical; }
+      .sc-publish-banner {
+        background: #fff8e1; border: 1px solid #f1d27a; border-radius: 6px;
+        padding: 10px 14px; margin-bottom: 14px; font-size: 0.9rem;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      }
+      .sc-publish-banner strong { color: #8a6d1f; }
     </style>
   </head>
   <body class="admin-shell">
@@ -83,7 +219,7 @@
          data-active-nav="legislators"
          data-page-eyebrow="Statehouse"
          data-page-title="Scorecard"
-         data-page-sub="Ohio General Assembly members, equality grades, and contact info."></div>
+         data-page-sub="Edit roll calls, sponsorships, and equality grades. Publish to push to /scorecard."></div>
 
     <template id="legTpl">
       <div class="shell-widget admin-panel">
@@ -104,6 +240,18 @@
             <div class="admin-stat-num" id="statGraded">0</div>
             <div class="admin-stat-label">Graded</div>
           </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statUnpub">0</div>
+            <div class="admin-stat-label">Unpublished</div>
+          </div>
+        </div>
+
+        <div id="publishBanner" class="sc-publish-banner" hidden>
+          <span><strong id="publishBannerCount">0</strong> legislators have draft changes that
+            haven&rsquo;t been published to <a href="/scorecard" target="_blank" rel="noopener">/scorecard</a>.</span>
+          <button type="button" class="sc-pill-action sc-pill-action-publish" id="publishAllBtn">
+            Publish all changes
+          </button>
         </div>
 
         <div class="admin-toolbar">
@@ -121,6 +269,12 @@
             <option value="C">C</option><option value="D">D</option>
             <option value="F">F</option><option value="NA">Ungraded</option>
           </select>
+          <select class="admin-input" id="filterPublish">
+            <option value="">All publish states</option>
+            <option value="dirty">Has draft changes</option>
+            <option value="unpub">Never published</option>
+            <option value="clean">Up to date</option>
+          </select>
           <span class="admin-toolbar-spacer"></span>
           <span class="admin-result-count" id="resultCount"></span>
         </div>
@@ -134,9 +288,9 @@
                 <th data-sort="chamber" class="admin-sortable">Chamber<span class="admin-sort-arrow">&darr;</span></th>
                 <th data-sort="party" class="admin-sortable">Party<span class="admin-sort-arrow">&darr;</span></th>
                 <th data-sort="district" class="admin-sortable admin-num">District<span class="admin-sort-arrow">&darr;</span></th>
-                <th>Leadership</th>
                 <th data-sort="grade" class="admin-sortable">Grade<span class="admin-sort-arrow">&darr;</span></th>
                 <th data-sort="score" class="admin-sortable admin-num">Score<span class="admin-sort-arrow">&darr;</span></th>
+                <th>Publish State</th>
                 <th>Contact</th>
               </tr>
             </thead>
@@ -147,11 +301,87 @@
         </div>
 
         <p class="admin-panel-foot">
-          Source of truth: <code>legislators</code> + latest <code>score_snapshots</code> &middot;
-          Public scorecard: <a href="/scorecard.html">/scorecard</a>
+          Editing roll calls / exceptions / sponsorships writes to the draft tables;
+          /scorecard only updates when you publish. Public site:
+          <a href="/scorecard.html" target="_blank" rel="noopener">/scorecard</a>.
         </p>
       </div>
       <div class="admin-toast" id="toast"></div>
+
+      <!-- Add Vote modal -->
+      <div class="shell-drawer" id="voteDrawer" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="shell-drawer-scrim" data-vote-drawer-close></div>
+        <div class="shell-drawer-panel">
+          <div class="shell-drawer-head">
+            <div>
+              <div class="shell-drawer-sub" id="voteDrawerSub">Add roll call</div>
+              <h3 class="shell-drawer-title" id="voteDrawerTitle">New committee or floor vote</h3>
+            </div>
+            <button class="shell-drawer-close" data-vote-drawer-close aria-label="Close">&times;</button>
+          </div>
+          <div class="shell-drawer-body">
+            <form id="voteForm" autocomplete="off">
+              <div class="sc-roll-call-modal-bd">
+                <label class="sc-wide">Bill
+                  <select id="voteBill" required></select>
+                </label>
+                <label>Stage
+                  <select id="voteStage" required>
+                    <option value="committee">Committee report</option>
+                    <option value="pass">Floor passage</option>
+                    <option value="concur">Concurrence</option>
+                    <option value="override">Veto override</option>
+                    <option value="amend">Floor amendment</option>
+                    <option value="introduce">Introduce</option>
+                  </select>
+                </label>
+                <label>Chamber
+                  <select id="voteChamber" required>
+                    <option value="house">House</option>
+                    <option value="senate">Senate</option>
+                  </select>
+                </label>
+                <label>Date
+                  <input id="voteDate" type="date" required />
+                </label>
+                <label>Label / Description
+                  <input id="voteLabel" type="text" required placeholder="e.g. House Passage" />
+                </label>
+                <label>Yeas
+                  <input id="voteYeas" type="number" min="0" value="0" required />
+                </label>
+                <label>Nays
+                  <input id="voteNays" type="number" min="0" value="0" required />
+                </label>
+                <label class="sc-wide">Result text
+                  <input id="voteResult" type="text" required placeholder="e.g. Passed 60-31" />
+                </label>
+                <label>This member's vote
+                  <select id="voteMemberVote">
+                    <option value="">Use party-line default</option>
+                    <option value="Y">Y &mdash; Yes</option>
+                    <option value="N">N &mdash; No</option>
+                    <option value="NV">NV &mdash; Did not vote</option>
+                    <option value="E">E &mdash; Excused</option>
+                  </select>
+                </label>
+                <label>Exception note (optional)
+                  <input id="voteMemberNote" type="text" placeholder="Crossed party line, recorded absent, ..." />
+                </label>
+                <label class="sc-wide">Notes (shared, optional)
+                  <textarea id="voteNotes" placeholder="Editorial note on this roll call (visible to all members)"></textarea>
+                </label>
+              </div>
+            </form>
+          </div>
+          <div class="shell-drawer-foot" id="voteDrawerFoot">
+            <button type="button" class="sc-pill-action" data-vote-drawer-close>Cancel</button>
+            <button type="button" class="sc-pill-action sc-pill-action-primary" id="voteSaveBtn">
+              Save vote
+            </button>
+          </div>
+        </div>
+      </div>
     </template>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -161,14 +391,33 @@
         'use strict';
 
         var COLSPAN = 9;
-        var GRADE_RANK = { A: 5, B: 4, C: 3, D: 2, F: 1 };
+        var GRADE_RANK = { 'A+': 6, A: 5, 'A-': 4.5, B: 4, C: 3, D: 2, F: 1 };
+
+        var STAGE_LABEL = {
+          introduce: 'Introduce', amend: 'Amend', committee: 'Committee',
+          pass: 'Floor passage', concur: 'Concurrence', override: 'Veto override'
+        };
+        var FLOOR_STAGES = ['pass', 'concur', 'override'];
+        var CMTE_STAGES  = ['committee'];
 
         var state = {
           rows: [],
           filtered: [],
           sortKey: 'score',
           sortDir: 'desc',
-          expanded: Object.create(null)
+          expanded: Object.create(null),
+          // Data caches
+          bills: [],
+          rollCalls: [],
+          exceptions: [],
+          sponsorships: [],   // [{ legislator_id, bill_slug, role }]
+          // Computed-state caches
+          computed: Object.create(null), // legislator_id -> computed scorecard
+          published: Object.create(null),// legislator_id -> latest score_snapshots row
+          // The currently-open vote modal context
+          voteContext: null, // { legislator_id, chamber }
+          // Permission flag
+          canWrite: false,
         };
 
         function $(id) { return document.getElementById(id); }
@@ -184,8 +433,11 @@
             .replace(/\b\w/g, function (m) { return m.toUpperCase(); });
         }
 
-        function gradeClass(g) {
-          return g && GRADE_RANK[g] ? 'admin-grade-' + g : 'admin-grade-NA';
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
 
         function fmtScore(s) {
@@ -194,6 +446,61 @@
           return isNaN(n) ? null : (Math.round(n * 10) / 10);
         }
 
+        function gradeClass(g) {
+          var k = g ? String(g).charAt(0).toUpperCase() : '';
+          return GRADE_RANK[g] ? 'admin-grade-' + k : 'admin-grade-NA';
+        }
+
+        function toast(msg, kind) {
+          var el = $('toast');
+          if (!el) return;
+          el.textContent = msg;
+          el.className = 'admin-toast visible' + (kind ? ' admin-toast-' + kind : '');
+          clearTimeout(toast._t);
+          toast._t = setTimeout(function () { el.classList.remove('visible'); }, 3200);
+        }
+
+        // ---------------------------------------------------------------
+        // Default-vote resolver (mirrors public.resolve_legislator_vote)
+        // ---------------------------------------------------------------
+        function defaultVoteFor(party, stance) {
+          if (stance === 'anti') {
+            if (party === 'R') return 'Y';
+            if (party === 'D') return 'N';
+            return 'NV';
+          }
+          if (stance === 'pro') {
+            if (party === 'R') return 'N';
+            if (party === 'D') return 'Y';
+            return 'NV';
+          }
+          return 'NV';
+        }
+
+        function findException(legislatorId, rollCallId, chamber, district) {
+          // exceptions key off (chamber, district, roll_call_id); also support
+          // legislator_id if column exists, for forward-compat with future schema
+          for (var i = 0; i < state.exceptions.length; i++) {
+            var e = state.exceptions[i];
+            if (e.roll_call_id === rollCallId &&
+                e.chamber === chamber &&
+                Number(e.district) === Number(district)) {
+              return e;
+            }
+          }
+          return null;
+        }
+
+        function resolveVote(legislator, rc) {
+          if (!rc || rc.chamber !== legislator.chamber) return '-';
+          var exc = findException(legislator.id, rc.id, legislator.chamber, legislator.district);
+          if (exc) return { vote: exc.vote, exception: exc };
+          return { vote: defaultVoteFor(legislator.party, rc.stance), exception: null };
+        }
+
+        // ---------------------------------------------------------------
+        // Stats / filters / sort
+        // ---------------------------------------------------------------
         function populateParty(rows) {
           var sel = $('filterParty');
           while (sel.options.length > 1) sel.remove(1);
@@ -206,11 +513,39 @@
             });
         }
 
+        function publishState(r) {
+          var snap = state.published[r.id];
+          if (!snap) return 'unpub';
+          var draft = state.computed[r.id];
+          if (!draft) return 'clean';
+          var same =
+            Number(draft.total_score) === Number(snap.total_score) &&
+            draft.grade === snap.grade &&
+            Number(draft.floor_score) === Number(snap.floor_score) &&
+            Number(draft.committee_score) === Number(snap.committee_score) &&
+            Number(draft.sponsorship_score) === Number(snap.sponsorship_score);
+          return same ? 'clean' : 'dirty';
+        }
+
         function renderStats() {
           $('statTotal').textContent  = state.rows.length.toLocaleString();
           $('statHouse').textContent  = state.rows.filter(function (r) { return r.chamber === 'house'; }).length;
           $('statSenate').textContent = state.rows.filter(function (r) { return r.chamber === 'senate'; }).length;
           $('statGraded').textContent = state.rows.filter(function (r) { return r.grade; }).length;
+
+          var unpubCount = state.rows.filter(function (r) {
+            var st = publishState(r);
+            return st === 'dirty' || st === 'unpub';
+          }).length;
+          $('statUnpub').textContent = unpubCount;
+
+          var banner = $('publishBanner');
+          if (unpubCount > 0 && state.canWrite) {
+            $('publishBannerCount').textContent = unpubCount;
+            banner.hidden = false;
+          } else {
+            banner.hidden = true;
+          }
         }
 
         function applyFilters() {
@@ -218,12 +553,17 @@
           var chamber = $('filterChamber').value;
           var party = $('filterParty').value;
           var grade = $('filterGrade').value;
+          var pub = $('filterPublish').value;
 
           state.filtered = state.rows.filter(function (r) {
             if (chamber && r.chamber !== chamber) return false;
             if (party && r.party !== party) return false;
             if (grade === 'NA' && r.grade) return false;
-            if (grade && grade !== 'NA' && r.grade !== grade) return false;
+            if (grade && grade !== 'NA') {
+              var letter = (r.grade || '').charAt(0).toUpperCase();
+              if (letter !== grade) return false;
+            }
+            if (pub && publishState(r) !== pub) return false;
             if (q) {
               var hay = (
                 (r.full_name || '') + ' ' +
@@ -268,20 +608,186 @@
           }
         }
 
+        // ---------------------------------------------------------------
+        // Detail row (the editor for one legislator)
+        // ---------------------------------------------------------------
+        function rollCallsForChamberAndStages(chamber, stages) {
+          return state.rollCalls
+            .filter(function (rc) { return rc.chamber === chamber && stages.indexOf(rc.stage) !== -1; })
+            .sort(function (a, b) {
+              return new Date(b.vote_date || 0) - new Date(a.vote_date || 0);
+            });
+        }
+
+        function votesSectionHtml(legislator, stages, sectionTitle, sectionKey) {
+          var rcs = rollCallsForChamberAndStages(legislator.chamber, stages);
+          if (rcs.length === 0) {
+            return (
+              '<div class="admin-detail-section-title">' + escapeHtml(sectionTitle) +
+                (state.canWrite
+                  ? '<button type="button" class="sc-pill-action" data-add-vote="' +
+                      escapeHtml(legislator.id) + '" data-stages="' + sectionKey + '">+ Add vote</button>'
+                  : '') +
+              '</div>' +
+              '<p class="sc-no-data">No ' + sectionTitle.toLowerCase() + ' recorded yet.</p>'
+            );
+          }
+
+          var rows = '';
+          for (var i = 0; i < rcs.length; i++) {
+            var rc = rcs[i];
+            var resolution = resolveVote(legislator, rc);
+            var v = (typeof resolution === 'string') ? resolution : resolution.vote;
+            var isExc = !(typeof resolution === 'string') && resolution.exception;
+            var deflt = defaultVoteFor(legislator.party, rc.stance);
+
+            var voteCell;
+            if (state.canWrite) {
+              voteCell = '';
+              ['Y','N','NV','E'].forEach(function (opt) {
+                var active = opt === v;
+                voteCell +=
+                  '<button type="button" class="sc-vote-btn' + (active ? ' is-active' : '') + '" ' +
+                  'data-set-vote="' + escapeHtml(rc.id) + '" data-vote="' + opt + '" ' +
+                  'data-leg="' + escapeHtml(legislator.id) + '">' + opt + '</button>';
+              });
+              voteCell +=
+                '<button type="button" class="sc-vote-btn" data-set-vote="' +
+                  escapeHtml(rc.id) + '" data-vote="" ' +
+                  'data-leg="' + escapeHtml(legislator.id) + '" title="Revert to party-line default (' + deflt + ')">' +
+                  '&times;</button>';
+              if (isExc) {
+                voteCell += '<span class="sc-vote-exception-marker" title="Hand-recorded exception">&#9679;</span>';
+              }
+            } else {
+              voteCell =
+                '<span class="sc-vote-pill sc-vote-' + escapeHtml(v) + '">' + escapeHtml(v) + '</span>' +
+                (isExc ? '<span class="sc-vote-exception-marker" title="Hand-recorded exception">&#9679;</span>'
+                       : '<span class="sc-vote-default" title="Party-line default">&nbsp;(default)</span>');
+            }
+
+            rows +=
+              '<tr>' +
+                '<td><strong>' + escapeHtml(rc.bill_label || rc.bill_slug || '') + '</strong> ' +
+                  '<span class="admin-muted">&middot; ' + escapeHtml(rc.bill_title || '') + '</span></td>' +
+                '<td>' + escapeHtml(STAGE_LABEL[rc.stage] || rc.stage) + '</td>' +
+                '<td>' + escapeHtml(fmtDate(rc.vote_date)) + '</td>' +
+                '<td>' + escapeHtml(rc.result || '') + '</td>' +
+                '<td>' + voteCell + '</td>' +
+              '</tr>';
+          }
+
+          return (
+            '<div class="admin-detail-section-title">' + escapeHtml(sectionTitle) +
+              ' <span class="admin-muted" style="font-weight:500">(' + rcs.length + ')</span>' +
+              (state.canWrite
+                ? '<button type="button" class="sc-pill-action" data-add-vote="' +
+                    escapeHtml(legislator.id) + '" data-stages="' + sectionKey + '">+ Add vote</button>'
+                : '') +
+            '</div>' +
+            '<table class="sc-votes-table">' +
+              '<thead><tr>' +
+                '<th>Bill</th><th>Stage</th><th>Date</th><th>Tally</th>' +
+                '<th>' + escapeHtml(legislator.full_name) + '&rsquo;s vote</th>' +
+              '</tr></thead>' +
+              '<tbody>' + rows + '</tbody>' +
+            '</table>'
+          );
+        }
+
+        function sponsorshipsSectionHtml(legislator) {
+          var current = {};
+          state.sponsorships.forEach(function (s) {
+            if (s.legislator_id === legislator.id) current[s.bill_slug] = s.role;
+          });
+          var bills = state.bills.slice().sort(function (a, b) {
+            return (a.display_order || 999) - (b.display_order || 999);
+          });
+
+          var rows = '';
+          bills.forEach(function (b) {
+            var role = current[b.slug] || '';
+            var roleSelect;
+            if (state.canWrite) {
+              roleSelect =
+                '<select class="sc-sponsorship-role-select" ' +
+                'data-set-sponsorship="' + escapeHtml(legislator.id) + '" ' +
+                'data-bill="' + escapeHtml(b.slug) + '">' +
+                '<option value=""'        + (role === ''        ? ' selected' : '') + '>&mdash;</option>' +
+                '<option value="primary"' + (role === 'primary' ? ' selected' : '') + '>Primary</option>' +
+                '<option value="co"'      + (role === 'co'      ? ' selected' : '') + '>Co-sponsor</option>' +
+                '</select>';
+            } else {
+              roleSelect = role
+                ? '<span class="admin-pill">' + escapeHtml(titleCase(role)) + '</span>'
+                : '<span class="admin-muted">&mdash;</span>';
+            }
+            rows +=
+              '<div class="sc-sponsorship-row">' +
+                '<span class="sc-bill-label">' + escapeHtml(b.label) + '</span> ' +
+                '<span class="admin-muted" style="flex:2">' + escapeHtml(b.title) +
+                  ' <em>(' + escapeHtml(b.stance) + ')</em></span>' +
+                roleSelect +
+              '</div>';
+          });
+
+          return (
+            '<div class="admin-detail-section-title">Sponsorships</div>' +
+            (rows ? rows : '<p class="sc-no-data">No bills in the catalog.</p>')
+          );
+        }
+
+        function scoreCompareHtml(legislator) {
+          var draft = state.computed[legislator.id];
+          var snap  = state.published[legislator.id];
+          function cell(label, val) {
+            return '<div><span class="sc-label">' + escapeHtml(label) + '</span>' +
+                   '<span class="sc-value">' + (val == null ? '&mdash;' : escapeHtml(String(val))) + '</span></div>';
+          }
+          function gradePill(g) {
+            if (!g) return '<span class="admin-grade admin-grade-NA">NA</span>';
+            return '<span class="admin-grade ' + gradeClass(g) + '">' + escapeHtml(g) + '</span>';
+          }
+
+          var diffNote = '';
+          if (draft && snap) {
+            if (Number(draft.total_score) !== Number(snap.total_score) || draft.grade !== snap.grade) {
+              diffNote =
+                '<span class="sc-changed-arrow">Draft &ne; published</span>';
+            } else {
+              diffNote = '<span class="admin-muted">Up to date</span>';
+            }
+          } else if (draft && !snap) {
+            diffNote = '<span class="sc-changed-arrow">Never published</span>';
+          }
+
+          return (
+            '<div class="sc-score-compare">' +
+              '<div><span class="sc-label">Draft (live)</span>' +
+                '<span class="sc-value">' + (draft ? draft.total_score : '&mdash;') + ' ' +
+                  gradePill(draft ? draft.grade : null) + '</span>' +
+                (draft
+                  ? '<span class="sc-value-sub">F:' + fmtScore(draft.floor_score) +
+                      ' &middot; C:' + fmtScore(draft.committee_score) +
+                      ' &middot; S:' + fmtScore(draft.sponsorship_score) + '</span>'
+                  : '<span class="sc-value-sub">No evidence yet.</span>') +
+              '</div>' +
+              '<div><span class="sc-label">Published (live site)</span>' +
+                '<span class="sc-value">' + (snap ? snap.total_score : '&mdash;') + ' ' +
+                  gradePill(snap ? snap.grade : null) + '</span>' +
+                (snap
+                  ? '<span class="sc-value-sub">' + fmtDate(snap.snapshot_at) +
+                      (snap.published_by ? ' by ' + escapeHtml(snap.published_by) : '') + '</span>'
+                  : '<span class="sc-value-sub">Never published.</span>') +
+              '</div>' +
+              '<div style="justify-content:center;display:flex;align-items:center;font-weight:700">' +
+                diffNote +
+              '</div>' +
+            '</div>'
+          );
+        }
+
         function detailRowHtml(r) {
-          var sub = [
-            ['Total Score', r.score != null ? fmtScore(r.score) : null],
-            ['Grade', r.grade || null],
-            ['Floor Votes Score', r.floor_score],
-            ['Committee Score', r.committee_score],
-            ['Sponsorship Score', r.sponsorship_score],
-            ['Public Statements Score', r.public_score],
-            ['Floor Votes Counted', r.floor_votes_counted],
-            ['Committee Votes Counted', r.committee_votes_counted],
-            ['Sponsorships Counted', r.sponsorships_counted],
-            ['Statements Counted', r.statements_counted],
-            ['Last Scored', r.snapshot_at ? new Date(r.snapshot_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : null]
-          ];
           var ident = [
             ['Full Name', r.full_name],
             ['Chamber', titleCase(r.chamber)],
@@ -292,36 +798,47 @@
             ['Email', r.contact_email],
             ['Phone', r.contact_phone]
           ];
-          function grid(items) {
-            var html = '<dl class="admin-detail-grid">';
-            for (var i = 0; i < items.length; i++) {
-              var v = items[i][1];
-              if (v === '' || v == null) continue;
-              html += '<div><dt>' + escapeHtml(items[i][0]) + '</dt><dd>' + escapeHtml(String(v)) + '</dd></div>';
-            }
-            return html + '</dl>';
+
+          var identHtml = '<dl class="admin-detail-grid">';
+          for (var i = 0; i < ident.length; i++) {
+            var v = ident[i][1];
+            if (v === '' || v == null) continue;
+            identHtml +=
+              '<div><dt>' + escapeHtml(ident[i][0]) + '</dt>' +
+              '<dd>' + escapeHtml(String(v)) + '</dd></div>';
           }
-          var links = [];
-          if (r.official_url) {
-            links.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
-              escapeHtml(r.official_url) + '">Official legislature page &rarr;</a>');
-          }
-          var hasScore = r.grade || r.score != null;
-          var scoreSection = hasScore
-            ? '<div class="admin-detail-section-title">Equality Score</div>' + grid(sub)
-            : '<div class="admin-detail-section-title">Equality Score</div>' +
-              '<p class="admin-muted" style="margin:0 0 6px">No score snapshot recorded yet for this member.</p>';
+          identHtml += '</dl>';
+
+          var actions =
+            '<div class="sc-action-row">' +
+              (state.canWrite
+                ? '<button type="button" class="sc-pill-action sc-pill-action-publish" ' +
+                    'data-publish-leg="' + escapeHtml(r.id) + '">Publish this legislator</button>'
+                : '') +
+              (r.statehouse_url
+                ? '<a class="sc-pill-action" target="_blank" rel="noopener" href="' +
+                    escapeHtml(r.statehouse_url) + '">Official page &rarr;</a>'
+                : '') +
+              (r.official_url && r.official_url !== r.statehouse_url
+                ? '<a class="sc-pill-action" target="_blank" rel="noopener" href="' +
+                    escapeHtml(r.official_url) + '">Statehouse profile &rarr;</a>'
+                : '') +
+            '</div>';
 
           return '<tr class="admin-detail-row" data-detail-for="' + escapeHtml(r.id) + '">' +
                    '<td colspan="' + COLSPAN + '">' +
-                     '<div class="admin-detail-section-title">Member</div>' + grid(ident) +
-                     scoreSection +
-                     (links.length
-                       ? '<div class="admin-detail-section-title">Links</div>' + links.join('')
-                       : '') +
+                     '<div class="admin-detail-section-title">Member</div>' + identHtml +
+                     scoreCompareHtml(r) +
+                     votesSectionHtml(r, FLOOR_STAGES, 'Floor votes', 'floor') +
+                     votesSectionHtml(r, CMTE_STAGES, 'Committee votes', 'committee') +
+                     sponsorshipsSectionHtml(r) +
+                     actions +
                    '</td></tr>';
         }
 
+        // ---------------------------------------------------------------
+        // Table render
+        // ---------------------------------------------------------------
         function renderRows() {
           var body = $('legBody');
           $('resultCount').textContent =
@@ -345,27 +862,45 @@
               '<button type="button" class="admin-expand-btn" data-expand="' + escapeHtml(r.id) + '" ' +
                 'aria-expanded="' + (isExpanded ? 'true' : 'false') + '">' +
                 (isExpanded ? '&minus;' : '+') + '</button>';
-            var grade = r.grade || '';
+            var draft = state.computed[r.id];
+            var snap  = state.published[r.id];
+
+            var grade = (snap && snap.grade) || (draft && draft.grade) || r.grade || '';
             var gradeCell = '<span class="admin-grade ' + gradeClass(grade) + '">' +
               escapeHtml(grade || 'NA') + '</span>';
-            var score = fmtScore(r.score);
+            var score = (snap && snap.total_score) != null
+              ? snap.total_score
+              : (draft && draft.total_score) != null ? draft.total_score : null;
             var scoreCell = score == null
               ? '<span class="admin-muted">&mdash;</span>'
               : escapeHtml(String(score));
             var partyCell = r.party
               ? '<span class="admin-party-' + escapeHtml(r.party) + '">' + escapeHtml(r.party) + '</span>'
               : '<span class="admin-muted">&mdash;</span>';
+
+            var st = publishState(r);
+            var stPill;
+            if (st === 'clean') {
+              stPill = '<span class="sc-status sc-status-clean">Published</span>';
+            } else if (st === 'dirty') {
+              stPill = '<span class="sc-status sc-status-dirty">Draft changes</span>';
+            } else {
+              stPill = '<span class="sc-status sc-status-unpub">Never published</span>';
+            }
+
             var contact = [];
             if (r.contact_email) {
               contact.push('<a class="admin-link" href="mailto:' + escapeHtml(r.contact_email) + '">Email</a>');
             }
-            if (r.official_url) {
+            if (r.statehouse_url) {
               contact.push('<a class="admin-link" target="_blank" rel="noopener" href="' +
-                escapeHtml(r.official_url) + '">Page</a>');
+                escapeHtml(r.statehouse_url) + '">Page</a>');
             }
             var contactCell = contact.length ? contact.join(' &middot; ') : '<span class="admin-muted">&mdash;</span>';
-            var lead = r.leadership_role
-              ? escapeHtml(r.leadership_role) : '<span class="admin-muted">&mdash;</span>';
+
+            // remember last grade/score for sort
+            r.grade = grade || null;
+            r.score = score;
 
             html +=
               '<tr data-id="' + escapeHtml(r.id) + '">' +
@@ -374,9 +909,9 @@
                 '<td>' + escapeHtml(titleCase(r.chamber)) + '</td>' +
                 '<td>' + partyCell + '</td>' +
                 '<td class="admin-num">' + escapeHtml(String(r.district == null ? '' : r.district)) + '</td>' +
-                '<td>' + lead + '</td>' +
                 '<td>' + gradeCell + '</td>' +
                 '<td class="admin-num">' + scoreCell + '</td>' +
+                '<td>' + stPill + '</td>' +
                 '<td class="admin-cell-tight">' + contactCell + '</td>' +
               '</tr>';
 
@@ -385,80 +920,306 @@
           body.innerHTML = html;
         }
 
-        async function loadLegislators(client) {
-          var legResp = await client
-            .from('legislators')
-            .select('*')
-            .order('chamber', { ascending: true })
-            .order('district', { ascending: true });
-          if (legResp.error) throw legResp.error;
-          var legs = legResp.data || [];
-
-          // score_snapshots is public-read; pull every snapshot newest-first
-          // and keep the latest one per legislator. (The legislator_scorecard
-          // view is unusable — it calls a function over a table that does not
-          // exist — so we read snapshots directly instead.)
-          var snapByLeg = Object.create(null);
-          var snapResp = await client
-            .from('score_snapshots')
-            .select('legislator_id, total_score, grade, floor_score, committee_score, sponsorship_score, public_score, floor_votes_counted, committee_votes_counted, sponsorships_counted, statements_counted, snapshot_at')
-            .order('snapshot_at', { ascending: false });
-          if (!snapResp.error && snapResp.data) {
-            snapResp.data.forEach(function (s) {
-              if (!snapByLeg[s.legislator_id]) snapByLeg[s.legislator_id] = s;
-            });
-          }
-
-          legs.forEach(function (l) {
-            var s = snapByLeg[l.id];
-            if (s) {
-              l.score = s.total_score;
-              l.grade = s.grade;
-              l.floor_score = s.floor_score;
-              l.committee_score = s.committee_score;
-              l.sponsorship_score = s.sponsorship_score;
-              l.public_score = s.public_score;
-              l.floor_votes_counted = s.floor_votes_counted;
-              l.committee_votes_counted = s.committee_votes_counted;
-              l.sponsorships_counted = s.sponsorships_counted;
-              l.statements_counted = s.statements_counted;
-              l.snapshot_at = s.snapshot_at;
-            } else {
-              l.score = null;
-              l.grade = null;
+        // ---------------------------------------------------------------
+        // Data loading
+        // ---------------------------------------------------------------
+        function loadAll(client) {
+          return Promise.all([
+            client.from('legislators').select('*').order('chamber', { ascending: true }).order('district', { ascending: true }),
+            client.from('bills').select('id, slug, label, title, stance, ga, status, summary, display_order, is_active'),
+            client.from('roll_calls').select('id, roll_call_slug, bill_id, bill_slug, bill_label, bill_title, chamber, stage, label, vote_date, result, yeas, nays, stance, ga, notes'),
+            client.from('legislator_vote_exceptions').select('*'),
+            client.from('legislator_sponsorships').select('legislator_id, bill_slug, role'),
+            client.from('score_snapshots').select('*').eq('is_current', true),
+          ]).then(function (results) {
+            var errs = results.map(function (r) { return r.error; }).filter(Boolean);
+            if (errs.length) {
+              // legislators is required; if everything failed, throw
+              if (results[0].error) throw results[0].error;
+              // otherwise warn but proceed
+              console.warn('admin/legislators: partial load errors', errs);
             }
+            state.rows         = results[0].data || [];
+            state.bills        = (results[1].data || []).filter(function (b) { return b.is_active !== false; });
+            state.rollCalls    = results[2].data || [];
+            state.exceptions   = results[3].data || [];
+            state.sponsorships = results[4].data || [];
+            (results[5].data || []).forEach(function (s) { state.published[s.legislator_id] = s; });
+            return state.rows;
           });
-          return legs;
         }
 
+        function recomputeFor(client, legislatorId) {
+          return client.rpc('compute_legislator_scorecard', { p_legislator_id: legislatorId })
+            .then(function (r) {
+              if (r.error) throw r.error;
+              var row = (r.data || [])[0];
+              if (row) state.computed[legislatorId] = row;
+              return row;
+            });
+        }
+
+        function recomputeAll(client) {
+          // Fan out so all expand-states have a draft handy.
+          // For large rosters, only recompute legislators with any underlying
+          // signal (any roll call in their chamber or any sponsorship).
+          var ids = state.rows.map(function (r) { return r.id; });
+          var promises = ids.map(function (id) { return recomputeFor(client, id).catch(function () { return null; }); });
+          return Promise.all(promises);
+        }
+
+        // ---------------------------------------------------------------
+        // Edits
+        // ---------------------------------------------------------------
+        function setVote(client, legislator, rollCallId, voteValue) {
+          // voteValue: 'Y' | 'N' | 'NV' | 'E' | '' (revert to party-line)
+          var rc = state.rollCalls.find(function (x) { return x.id === rollCallId; });
+          if (!rc) return Promise.reject(new Error('roll call not found'));
+
+          if (!voteValue) {
+            // Delete exception row, revert to party-line
+            return client
+              .from('legislator_vote_exceptions')
+              .delete()
+              .eq('roll_call_id', rollCallId)
+              .eq('chamber', legislator.chamber)
+              .eq('district', legislator.district)
+              .then(function (resp) {
+                if (resp.error) throw resp.error;
+                state.exceptions = state.exceptions.filter(function (e) {
+                  return !(e.roll_call_id === rollCallId && e.chamber === legislator.chamber &&
+                           Number(e.district) === Number(legislator.district));
+                });
+              });
+          }
+
+          // Upsert exception
+          return client
+            .from('legislator_vote_exceptions')
+            .upsert(
+              {
+                roll_call_id: rollCallId,
+                roll_call_slug: rc.roll_call_slug,
+                chamber: legislator.chamber,
+                district: legislator.district,
+                vote: voteValue,
+              },
+              { onConflict: 'chamber,district,roll_call_id' }
+            )
+            .select()
+            .single()
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              // refresh local cache
+              var found = false;
+              for (var i = 0; i < state.exceptions.length; i++) {
+                if (state.exceptions[i].roll_call_id === rollCallId &&
+                    state.exceptions[i].chamber === legislator.chamber &&
+                    Number(state.exceptions[i].district) === Number(legislator.district)) {
+                  state.exceptions[i] = resp.data;
+                  found = true;
+                  break;
+                }
+              }
+              if (!found) state.exceptions.push(resp.data);
+            });
+        }
+
+        function setSponsorship(client, legislator, billSlug, role) {
+          var idx = -1;
+          for (var i = 0; i < state.sponsorships.length; i++) {
+            var s = state.sponsorships[i];
+            if (s.legislator_id === legislator.id && s.bill_slug === billSlug) { idx = i; break; }
+          }
+          if (!role) {
+            return client
+              .from('legislator_sponsorships')
+              .delete()
+              .eq('legislator_id', legislator.id)
+              .eq('bill_slug', billSlug)
+              .then(function (resp) {
+                if (resp.error) throw resp.error;
+                if (idx !== -1) state.sponsorships.splice(idx, 1);
+              });
+          }
+          return client
+            .from('legislator_sponsorships')
+            .upsert(
+              { legislator_id: legislator.id, bill_slug: billSlug, role: role },
+              { onConflict: 'legislator_id,bill_slug' }
+            )
+            .select()
+            .single()
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              if (idx !== -1) state.sponsorships[idx] = resp.data;
+              else state.sponsorships.push(resp.data);
+            });
+        }
+
+        function addRollCall(client, payload, memberVote, memberNote, legislator) {
+          // Build a slug if not provided
+          var stageSuffix = payload.stage;
+          var chamberLetter = payload.chamber === 'house' ? 'h' : 's';
+          var slug = payload.bill_slug + '-' + chamberLetter + '-' + stageSuffix;
+          // ensure unique: if exists, append timestamp
+          if (state.rollCalls.some(function (rc) { return rc.roll_call_slug === slug; })) {
+            slug = slug + '-' + Date.now();
+          }
+          var bill = state.bills.find(function (b) { return b.slug === payload.bill_slug; });
+          if (!bill) return Promise.reject(new Error('bill not found'));
+
+          var insertPayload = {
+            roll_call_slug: slug,
+            bill_id: bill.id,
+            bill_slug: bill.slug,
+            bill_label: bill.label,
+            bill_title: bill.title,
+            chamber: payload.chamber,
+            stage: payload.stage,
+            label: payload.label,
+            vote_date: payload.vote_date,
+            result: payload.result,
+            yeas: Number(payload.yeas) || 0,
+            nays: Number(payload.nays) || 0,
+            stance: bill.stance,
+            ga: bill.ga,
+            notes: payload.notes || null,
+          };
+
+          return client.from('roll_calls').insert(insertPayload).select().single()
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              state.rollCalls.push(resp.data);
+              if (!memberVote) return resp.data;
+              return client.from('legislator_vote_exceptions')
+                .insert({
+                  roll_call_id: resp.data.id,
+                  roll_call_slug: resp.data.roll_call_slug,
+                  chamber: legislator.chamber,
+                  district: legislator.district,
+                  vote: memberVote,
+                  notes: memberNote || null,
+                })
+                .select()
+                .single()
+                .then(function (excResp) {
+                  if (excResp.error) throw excResp.error;
+                  state.exceptions.push(excResp.data);
+                  return resp.data;
+                });
+            });
+        }
+
+        function publishLegislator(client, legislatorId) {
+          return client.rpc('publish_scorecard', { p_legislator_id: legislatorId })
+            .then(function (r) {
+              if (r.error) throw r.error;
+              if (r.data) state.published[legislatorId] = r.data;
+              return r.data;
+            });
+        }
+
+        function publishAll(client) {
+          return client.rpc('publish_scorecard_all', {})
+            .then(function (r) {
+              if (r.error) throw r.error;
+              return r.data;
+            });
+        }
+
+        // ---------------------------------------------------------------
+        // Vote modal
+        // ---------------------------------------------------------------
+        function openVoteModal(legislator, stagesHint) {
+          state.voteContext = { legislator_id: legislator.id, chamber: legislator.chamber };
+          var sel = $('voteBill');
+          sel.innerHTML = '';
+          state.bills.slice().sort(function (a, b) {
+            return (a.display_order || 999) - (b.display_order || 999);
+          }).forEach(function (b) {
+            var opt = document.createElement('option');
+            opt.value = b.slug;
+            opt.textContent = b.label + ' — ' + b.title + ' (' + b.stance + ')';
+            sel.appendChild(opt);
+          });
+          $('voteChamber').value = legislator.chamber;
+          $('voteStage').value = stagesHint === 'committee' ? 'committee' : 'pass';
+          $('voteDate').value = new Date().toISOString().slice(0, 10);
+          $('voteLabel').value = '';
+          $('voteYeas').value = 0;
+          $('voteNays').value = 0;
+          $('voteResult').value = '';
+          $('voteMemberVote').value = '';
+          $('voteMemberNote').value = '';
+          $('voteNotes').value = '';
+          $('voteDrawerTitle').textContent =
+            'Add ' + (stagesHint === 'committee' ? 'committee' : 'floor') +
+            ' vote for ' + legislator.full_name;
+          var d = $('voteDrawer');
+          d.classList.add('is-open');
+          d.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeVoteModal() {
+          var d = $('voteDrawer');
+          if (!d) return;
+          d.classList.remove('is-open');
+          d.setAttribute('aria-hidden', 'true');
+          state.voteContext = null;
+        }
+
+        // ---------------------------------------------------------------
+        // Boot
+        // ---------------------------------------------------------------
         document.addEventListener('admin-shell-ready', function (e) {
           var client = e.detail && e.detail.client;
           if (!client) return;
+          var can = (e.detail && e.detail.can) || function () { return false; };
+          state.canWrite = !!can('legislators', 'write');
 
           var shellBody = document.getElementById('shellBody');
           if (shellBody && !document.getElementById('legTable')) {
             shellBody.appendChild(document.getElementById('legTpl').content.cloneNode(true));
           }
 
-          loadLegislators(client).then(function (rows) {
-            state.rows = rows;
-            populateParty(rows);
-            renderStats();
-            applyFilters();
-          }).catch(function (err) {
-            console.error('Failed to load legislators:', err);
-            $('legBody').innerHTML =
-              '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
-              'Could not load legislators. Your account may not be authorized for this view.' +
-              '</td></tr>';
-          });
+          if (!state.canWrite) {
+            var banner = document.createElement('div');
+            banner.className = 'sc-publish-banner';
+            banner.style.background = '#eef2f6';
+            banner.style.borderColor = '#cfd5dd';
+            banner.innerHTML =
+              '<span>Read-only access. Ask the Director for the <strong>legislative_lead</strong> role to edit votes and publish.</span>';
+            var shellBodyEl = document.getElementById('shellBody');
+            shellBodyEl.insertBefore(banner, shellBodyEl.firstChild);
+          }
 
+          loadAll(client)
+            .then(function () {
+              populateParty(state.rows);
+              return recomputeAll(client);
+            })
+            .then(function () {
+              renderStats();
+              applyFilters();
+            })
+            .catch(function (err) {
+              console.error('Failed to load legislators:', err);
+              $('legBody').innerHTML =
+                '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
+                'Could not load legislators: ' + escapeHtml(err.message || 'unknown error') +
+                '</td></tr>';
+            });
+
+          // -------------------------------------------------------------
+          // Filter wiring
+          // -------------------------------------------------------------
           var debounceT;
           $('filterSearch').addEventListener('input', function () {
             clearTimeout(debounceT);
             debounceT = setTimeout(applyFilters, 150);
           });
-          ['filterChamber', 'filterParty', 'filterGrade'].forEach(function (id) {
+          ['filterChamber', 'filterParty', 'filterGrade', 'filterPublish'].forEach(function (id) {
             $(id).addEventListener('change', applyFilters);
           });
 
@@ -476,13 +1237,198 @@
             });
           }
 
+          // -------------------------------------------------------------
+          // Table body event delegation
+          // -------------------------------------------------------------
           $('legBody').addEventListener('click', function (ev) {
-            var btn = ev.target.closest && ev.target.closest('[data-expand]');
-            if (!btn) return;
-            ev.preventDefault();
-            var id = btn.dataset.expand;
-            state.expanded[id] = !state.expanded[id];
-            renderRows();
+            var t = ev.target;
+
+            // Expand toggle
+            var btn = t.closest && t.closest('[data-expand]');
+            if (btn) {
+              ev.preventDefault();
+              var id = btn.dataset.expand;
+              state.expanded[id] = !state.expanded[id];
+              renderRows();
+              return;
+            }
+
+            // Add vote
+            var addBtn = t.closest && t.closest('[data-add-vote]');
+            if (addBtn) {
+              if (!state.canWrite) { toast('Read-only — needs legislators:write', 'err'); return; }
+              var leg = state.rows.find(function (r) { return r.id === addBtn.dataset.addVote; });
+              if (leg) openVoteModal(leg, addBtn.dataset.stages);
+              return;
+            }
+
+            // Set vote on existing roll call
+            var setBtn = t.closest && t.closest('[data-set-vote]');
+            if (setBtn) {
+              if (!state.canWrite) { toast('Read-only — needs legislators:write', 'err'); return; }
+              var legId = setBtn.dataset.leg;
+              var leg2 = state.rows.find(function (r) { return r.id === legId; });
+              if (!leg2) return;
+              var rcId = setBtn.dataset.setVote;
+              var v    = setBtn.dataset.vote;
+              setBtn.disabled = true;
+              setVote(client, leg2, rcId, v)
+                .then(function () { return recomputeFor(client, leg2.id); })
+                .then(function () {
+                  renderStats();
+                  renderRows();
+                  toast(v ? 'Recorded ' + v + ' for ' + leg2.full_name : 'Reverted to party-line', 'ok');
+                })
+                .catch(function (err) {
+                  console.error(err);
+                  toast('Save failed: ' + (err.message || 'unknown'), 'err');
+                })
+                .then(function () { setBtn.disabled = false; });
+              return;
+            }
+
+            // Publish single legislator
+            var pubBtn = t.closest && t.closest('[data-publish-leg]');
+            if (pubBtn) {
+              if (!state.canWrite) { toast('Read-only', 'err'); return; }
+              var legId2 = pubBtn.dataset.publishLeg;
+              var leg3   = state.rows.find(function (r) { return r.id === legId2; });
+              pubBtn.disabled = true;
+              pubBtn.textContent = 'Publishing…';
+              publishLegislator(client, legId2)
+                .then(function () { return recomputeFor(client, legId2); })
+                .then(function () {
+                  renderStats();
+                  renderRows();
+                  toast('Published ' + (leg3 ? leg3.full_name : legId2), 'ok');
+                })
+                .catch(function (err) {
+                  console.error(err);
+                  toast('Publish failed: ' + (err.message || 'unknown'), 'err');
+                })
+                .then(function () {
+                  pubBtn.disabled = false;
+                  pubBtn.textContent = 'Publish this legislator';
+                });
+              return;
+            }
+          });
+
+          // Sponsorship select changes (separate listener for change events)
+          $('legBody').addEventListener('change', function (ev) {
+            var sel = ev.target.closest && ev.target.closest('[data-set-sponsorship]');
+            if (!sel) return;
+            if (!state.canWrite) { toast('Read-only', 'err'); return; }
+            var legId = sel.dataset.setSponsorship;
+            var leg   = state.rows.find(function (r) { return r.id === legId; });
+            if (!leg) return;
+            var billSlug = sel.dataset.bill;
+            var role = sel.value;
+            sel.disabled = true;
+            setSponsorship(client, leg, billSlug, role)
+              .then(function () { return recomputeFor(client, leg.id); })
+              .then(function () {
+                renderStats();
+                renderRows();
+                toast(role ? 'Saved sponsorship' : 'Removed sponsorship', 'ok');
+              })
+              .catch(function (err) {
+                console.error(err);
+                toast('Save failed: ' + (err.message || 'unknown'), 'err');
+              })
+              .then(function () { sel.disabled = false; });
+          });
+
+          // -------------------------------------------------------------
+          // Vote modal events
+          // -------------------------------------------------------------
+          document.body.addEventListener('click', function (ev) {
+            var t = ev.target;
+            if (t.closest && t.closest('[data-vote-drawer-close]')) {
+              ev.preventDefault();
+              closeVoteModal();
+            }
+          });
+
+          $('voteSaveBtn').addEventListener('click', function () {
+            if (!state.voteContext) return;
+            var ctx = state.voteContext;
+            var legislator = state.rows.find(function (r) { return r.id === ctx.legislator_id; });
+            if (!legislator) return;
+
+            var payload = {
+              bill_slug: $('voteBill').value,
+              stage:     $('voteStage').value,
+              chamber:   $('voteChamber').value,
+              vote_date: $('voteDate').value,
+              label:     $('voteLabel').value.trim(),
+              yeas:      $('voteYeas').value,
+              nays:      $('voteNays').value,
+              result:    $('voteResult').value.trim(),
+              notes:     $('voteNotes').value.trim(),
+            };
+            if (!payload.bill_slug || !payload.stage || !payload.chamber ||
+                !payload.vote_date || !payload.label || !payload.result) {
+              toast('Fill out the required fields', 'err');
+              return;
+            }
+            var memberVote = $('voteMemberVote').value || '';
+            var memberNote = $('voteMemberNote').value.trim();
+
+            $('voteSaveBtn').disabled = true;
+            $('voteSaveBtn').textContent = 'Saving…';
+            addRollCall(client, payload, memberVote, memberNote, legislator)
+              .then(function () { return recomputeFor(client, legislator.id); })
+              .then(function () {
+                closeVoteModal();
+                renderStats();
+                renderRows();
+                toast('Saved roll call', 'ok');
+              })
+              .catch(function (err) {
+                console.error(err);
+                toast('Save failed: ' + (err.message || 'unknown'), 'err');
+              })
+              .then(function () {
+                $('voteSaveBtn').disabled = false;
+                $('voteSaveBtn').textContent = 'Save vote';
+              });
+          });
+
+          // -------------------------------------------------------------
+          // Top-level publish-all
+          // -------------------------------------------------------------
+          $('publishAllBtn').addEventListener('click', function () {
+            if (!state.canWrite) return;
+            var btn = $('publishAllBtn');
+            if (!window.confirm('Publish all current draft changes to the public /scorecard?')) return;
+            btn.disabled = true;
+            btn.textContent = 'Publishing…';
+            publishAll(client)
+              .then(function (count) {
+                // Re-load snapshots so the UI reflects the new published state
+                return client.from('score_snapshots').select('*').eq('is_current', true)
+                  .then(function (resp) {
+                    if (!resp.error) {
+                      state.published = Object.create(null);
+                      (resp.data || []).forEach(function (s) { state.published[s.legislator_id] = s; });
+                    }
+                    return count;
+                  });
+              })
+              .then(function (count) {
+                renderStats();
+                renderRows();
+                toast('Published ' + (count || 'all') + ' legislators', 'ok');
+              })
+              .catch(function (err) {
+                console.error(err);
+                toast('Publish failed: ' + (err.message || 'unknown'), 'err');
+              })
+              .then(function () {
+                btn.disabled = false;
+                btn.textContent = 'Publish all changes';
+              });
           });
         });
       })();
