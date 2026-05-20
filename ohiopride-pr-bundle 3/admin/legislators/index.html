@@ -1,0 +1,415 @@
+<!doctype html>
+<!--
+  /admin/legislators — scorecard CRUD
+  - Lists every legislator (house + senate). Live composite score from view.
+  - Edit subscores, party, notes, contact, sponsorships.
+  - Writes go through the user's session; RLS enforces (`legislators` write perm).
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Legislators | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+    <style>
+      .legs-toolbar { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
+      .legs-toolbar input[type="search"] { flex:1 1 220px; min-width:0; padding:9px 12px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; }
+      .legs-toolbar select { padding:9px 12px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; }
+      .legs-table { width:100%; border-collapse:separate; border-spacing:0; }
+      .legs-table th, .legs-table td { text-align:left; padding:10px 12px; border-bottom:1px solid #1a2541; font-size:14px; vertical-align:top; }
+      .legs-table th { font-size:12px; color:#7c8bb0; text-transform:uppercase; letter-spacing:.04em; }
+      .legs-table tr:hover td { background:#0d1730; }
+      .legs-table td .sub { color:#7c8bb0; font-size:12px; display:block; }
+      .grade { display:inline-block; padding:3px 9px; border-radius:6px; font-weight:800; font-size:13px; }
+      .grade-A, .grade-Ap, .grade-Am, .grade-Aplus, .grade-Aminus { background:#0c2a18; color:#9be0a8; }
+      .grade-B { background:#0d2433; color:#73D7EE; }
+      .grade-C { background:#2a210c; color:#e8c66e; }
+      .grade-D { background:#3a1a0c; color:#ffae73; }
+      .grade-F { background:#3a0c14; color:#ffb1b8; }
+      .party-D { color:#73D7EE; }
+      .party-R { color:#ff8a96; }
+      .party-I { color:#cbb4ff; }
+      .legs-form { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+      .legs-form .full { grid-column:1 / -1; }
+      .legs-form .half { grid-column:span 2; }
+      .legs-form label { display:block; font-size:12px; color:#7c8bb0; text-transform:uppercase; letter-spacing:.05em; margin-bottom:5px; }
+      .legs-form input, .legs-form select, .legs-form textarea { width:100%; padding:9px 12px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; font:inherit; }
+      .legs-form textarea { min-height:80px; resize:vertical; }
+      .score-card { display:flex; gap:14px; padding:12px; background:#0a1224; border:1px solid #1a2541; border-radius:10px; margin-bottom:14px; }
+      .score-card .num { font-size:34px; font-weight:800; line-height:1; color:#73D7EE; }
+      .score-card .meta { color:#7c8bb0; font-size:12px; text-transform:uppercase; letter-spacing:.06em; }
+      .btn-row { display:flex; gap:8px; margin-top:18px; flex-wrap:wrap; }
+      .btn { padding:9px 16px; border-radius:8px; border:1px solid #2a3a55; background:#0b1426; color:#fff; font:inherit; cursor:pointer; }
+      .btn.primary { background:#0F2233; border-color:#73D7EE; color:#73D7EE; font-weight:700; }
+      .btn.danger { color:#ff7080; border-color:#5a1d28; }
+      .btn:disabled { opacity:.5; cursor:not-allowed; }
+      .toast { position:fixed; right:18px; bottom:18px; background:#0b1426; border:1px solid #2a3a55; padding:10px 14px; border-radius:8px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,.4); z-index:9999; max-width:340px; }
+      .toast.error { border-color:#5a1d28; color:#ffb1b8; }
+      .sponsorship-row { display:grid; grid-template-columns:1fr 1fr auto; gap:8px; margin-bottom:6px; align-items:center; }
+      .sponsorship-row select, .sponsorship-row input { padding:7px 10px; border-radius:6px; border:1px solid #2a3a55; background:#0b1426; color:#fff; }
+
+      @media (max-width: 720px) {
+        .legs-table thead { display:none; }
+        .legs-table, .legs-table tbody, .legs-table tr, .legs-table td { display:block; width:100%; }
+        .legs-table tr { border:1px solid #1a2541; border-radius:10px; margin-bottom:10px; padding:8px 4px; background:#0b1426; }
+        .legs-table td { border:none; padding:6px 12px; }
+        .legs-table td::before { content: attr(data-label); display:block; font-size:11px; color:#7c8bb0; text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
+        .legs-form { grid-template-columns:1fr; }
+        .legs-form .half { grid-column:auto; }
+        .sponsorship-row { grid-template-columns:1fr 1fr; }
+      }
+    </style>
+  </head>
+  <body class="admin-shell">
+    <div id="shell-root"
+         data-active-nav="legislators"
+         data-page-eyebrow="Statehouse"
+         data-page-title="Legislators"
+         data-page-sub="Scorecard. Subscores, sponsorships, and votes."></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script>
+      document.addEventListener('admin-shell-ready', function (ev) {
+        const client = ev.detail.client;
+        const can = ev.detail.can;
+        const canWrite = can && (can('legislators', 'write') || can('legislators', 'admin'));
+        const canDelete = can && can('legislators', 'admin');
+
+        const root = document.getElementById('shellBody');
+        root.innerHTML = `
+          <div class="shell-widget">
+            <div class="legs-toolbar">
+              <input type="search" id="legsSearch" placeholder="Search by name, district, or party..." aria-label="Search legislators" />
+              <select id="legsChamber">
+                <option value="">Both chambers</option>
+                <option value="house">House</option>
+                <option value="senate">Senate</option>
+              </select>
+              <select id="legsParty">
+                <option value="">All parties</option>
+                <option value="D">Democrats</option>
+                <option value="R">Republicans</option>
+                <option value="I">Independents</option>
+              </select>
+              <select id="legsGrade">
+                <option value="">All grades</option>
+                <option>A+</option><option>A</option><option>A-</option>
+                <option>B</option><option>C</option><option>D</option><option>F</option>
+              </select>
+              ${canWrite ? '<button class="btn primary" id="addLegBtn">Add legislator</button>' : ''}
+            </div>
+            <div id="legsTableWrap"><p style="color:#7c8bb0">Loading…</p></div>
+          </div>
+        `;
+
+        const wrap = document.getElementById('legsTableWrap');
+        let allLegs = [];
+        let allBills = [];
+
+        function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+        function gradeClass(g) { return 'grade-' + (g || '').replace('+','plus').replace('-','minus') || 'grade-F'; }
+
+        function render(rows) {
+          if (!rows.length) {
+            wrap.innerHTML = '<p style="color:#7c8bb0">No legislators match those filters.</p>';
+            return;
+          }
+          wrap.innerHTML = `
+            <table class="legs-table">
+              <thead>
+                <tr>
+                  <th>District</th><th>Name</th><th>Party</th><th>Floor</th><th>Cmte</th><th>Spons</th><th>Score</th><th>Grade</th><th></th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map(l => `
+                  <tr data-id="${escapeHtml(l.legislator_id)}">
+                    <td data-label="District"><strong>${escapeHtml((l.chamber||'').slice(0,1).toUpperCase())} ${escapeHtml(l.district)}</strong><span class="sub">${escapeHtml(l.chamber || '')}</span></td>
+                    <td data-label="Name"><strong>${escapeHtml(l.full_name || '')}</strong></td>
+                    <td data-label="Party"><span class="party-${escapeHtml(l.party || 'I')}">${escapeHtml(l.party || '?')}</span></td>
+                    <td data-label="Floor">${l.floor_subscore ?? 0}</td>
+                    <td data-label="Cmte">${l.committee_subscore ?? 0}</td>
+                    <td data-label="Spons">${l.sponsorship_subscore ?? 0}</td>
+                    <td data-label="Score">${l.composite_score ?? '?'}</td>
+                    <td data-label="Grade"><span class="grade ${gradeClass(l.grade)}">${escapeHtml(l.grade || '?')}</span></td>
+                    <td data-label=""><button class="btn" data-edit="${escapeHtml(l.legislator_id)}">${canWrite ? 'Edit' : 'View'}</button></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        }
+
+        function applyFilters() {
+          const q  = (document.getElementById('legsSearch').value || '').toLowerCase().trim();
+          const ch = document.getElementById('legsChamber').value;
+          const pa = document.getElementById('legsParty').value;
+          const gr = document.getElementById('legsGrade').value;
+          render(allLegs.filter(l => {
+            if (ch && l.chamber !== ch) return false;
+            if (pa && l.party   !== pa) return false;
+            if (gr && l.grade   !== gr) return false;
+            if (!q) return true;
+            return (
+              (l.full_name || '').toLowerCase().includes(q) ||
+              String(l.district || '').includes(q) ||
+              (l.party || '').toLowerCase() === q
+            );
+          }));
+        }
+
+        async function load() {
+          const [legRes, billsRes] = await Promise.all([
+            client.from('legislator_scorecard').select('*').order('chamber').order('district'),
+            client.from('bills').select('slug, label, title').order('ga', { ascending: false }).order('slug'),
+          ]);
+          if (legRes.error)   { toast(legRes.error.message,   true); return; }
+          if (billsRes.error) { toast(billsRes.error.message, true); return; }
+          allLegs  = legRes.data || [];
+          allBills = billsRes.data || [];
+          applyFilters();
+        }
+
+        function toast(msg, isErr) {
+          const el = document.createElement('div');
+          el.className = 'toast' + (isErr ? ' error' : '');
+          el.textContent = msg;
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), isErr ? 5000 : 2500);
+        }
+
+        // ---- Edit / create drawer ----
+        async function openDrawer(leg) {
+          const isNew = !leg;
+          leg = leg || {
+            legislator_id: '', chamber: 'house', district: '', full_name: '',
+            party: 'D', floor_subscore: 0, committee_subscore: 0, sponsorship_subscore: 0,
+            counties: [], headshot_url: '', notes: '',
+            composite_score: 50, grade: 'C',
+          };
+
+          // Pull current sponsorships if editing
+          let sponsorships = [];
+          if (!isNew) {
+            const { data } = await client
+              .from('legislator_sponsorships')
+              .select('bill_slug, role')
+              .eq('legislator_id', leg.legislator_id);
+            sponsorships = data || [];
+          }
+
+          const drawer = document.getElementById('shellDrawer');
+          const drawerBody = drawer.querySelector('.shell-drawer-body') || drawer.querySelector('[data-drawer-body]') || drawer.querySelector('.shell-drawer-panel');
+          const heading = drawer.querySelector('.shell-drawer-head h2, .shell-drawer-head strong, [data-drawer-title]');
+          if (heading) heading.textContent = isNew ? 'Add a legislator' : `Edit ${leg.full_name}`;
+
+          drawerBody.innerHTML = `
+            <div class="score-card">
+              <div>
+                <div class="num" id="liveScore">${leg.composite_score ?? '?'}</div>
+                <div class="meta">Composite</div>
+              </div>
+              <div>
+                <div class="num"><span class="grade ${gradeClass(leg.grade)}" id="liveGrade">${escapeHtml(leg.grade || '?')}</span></div>
+                <div class="meta">Grade</div>
+              </div>
+            </div>
+            <form id="legForm" class="legs-form">
+              <div>
+                <label>ID (e.g. h-1, s-23)</label>
+                <input name="legislator_id" value="${escapeHtml(leg.legislator_id)}" ${isNew ? 'required pattern="(h|s)-[0-9]+"' : 'readonly'} />
+              </div>
+              <div>
+                <label>Chamber</label>
+                <select name="chamber"><option value="house" ${leg.chamber==='house'?'selected':''}>House</option><option value="senate" ${leg.chamber==='senate'?'selected':''}>Senate</option></select>
+              </div>
+              <div>
+                <label>District</label>
+                <input name="district" type="number" value="${leg.district}" required />
+              </div>
+              <div class="half">
+                <label>Full name</label>
+                <input name="full_name" value="${escapeHtml(leg.full_name)}" required />
+              </div>
+              <div>
+                <label>Party</label>
+                <select name="party">
+                  <option value="D" ${leg.party==='D'?'selected':''}>D</option>
+                  <option value="R" ${leg.party==='R'?'selected':''}>R</option>
+                  <option value="I" ${leg.party==='I'?'selected':''}>I</option>
+                </select>
+              </div>
+              <div>
+                <label>Floor subscore (-5 to +5)</label>
+                <input name="floor_subscore" type="number" min="-5" max="5" value="${leg.floor_subscore ?? 0}" />
+              </div>
+              <div>
+                <label>Committee subscore (-5 to +5)</label>
+                <input name="committee_subscore" type="number" min="-5" max="5" value="${leg.committee_subscore ?? 0}" />
+              </div>
+              <div>
+                <label>Sponsorship subscore (-5 to +5)</label>
+                <input name="sponsorship_subscore" type="number" min="-5" max="5" value="${leg.sponsorship_subscore ?? 0}" />
+              </div>
+              <div class="full">
+                <label>Counties (comma separated)</label>
+                <input name="counties" value="${escapeHtml((leg.counties||[]).join(', '))}" />
+              </div>
+              <div class="full">
+                <label>Headshot URL</label>
+                <input name="headshot_url" value="${escapeHtml(leg.headshot_url || '')}" />
+              </div>
+              <div class="full">
+                <label>Editorial notes (shows on scorecard)</label>
+                <textarea name="notes">${escapeHtml(leg.notes || '')}</textarea>
+              </div>
+              <div class="full">
+                <label>Sponsorships (bill + role)</label>
+                <div id="sponsorshipsList">${sponsorships.map(sponsorshipRow).join('')}</div>
+                ${canWrite ? '<button type="button" class="btn" id="addSponsorshipBtn" style="margin-top:8px">+ Add sponsorship</button>' : ''}
+              </div>
+              <div class="full btn-row">
+                ${canWrite ? '<button type="submit" class="btn primary">Save</button>' : ''}
+                <button type="button" class="btn" id="cancelLeg">Cancel</button>
+                ${(!isNew && canDelete) ? '<button type="button" class="btn danger" id="deleteLeg">Delete legislator</button>' : ''}
+              </div>
+            </form>
+          `;
+
+          // Live recompute of score + grade
+          function recompute() {
+            const fd = new FormData(document.getElementById('legForm'));
+            const vf = clamp(-5, 5, Number(fd.get('floor_subscore'))      || 0);
+            const vc = clamp(-5, 5, Number(fd.get('committee_subscore'))  || 0);
+            const ss = clamp(-5, 5, Number(fd.get('sponsorship_subscore'))|| 0);
+            const score = Math.max(0, Math.min(100, Math.round(50 + (vf*4) + (vc*4) + (ss*2))));
+            const grade = score >= 95 ? 'A+' : score >= 88 ? 'A' : score >= 78 ? 'A-' :
+                          score >= 60 ? 'B'  : score >= 38 ? 'C' : score >= 18 ? 'D' : 'F';
+            document.getElementById('liveScore').textContent = score;
+            const g = document.getElementById('liveGrade');
+            g.textContent = grade;
+            g.className = 'grade ' + gradeClass(grade);
+          }
+          function clamp(min, max, v) { return Math.max(min, Math.min(max, v)); }
+          ['floor_subscore','committee_subscore','sponsorship_subscore'].forEach(n => {
+            document.querySelector(`[name="${n}"]`).addEventListener('input', recompute);
+          });
+
+          drawer.setAttribute('aria-hidden', 'false');
+          drawer.classList.add('is-open');
+
+          document.getElementById('cancelLeg').addEventListener('click', closeDrawer);
+          const delBtn = document.getElementById('deleteLeg');
+          if (delBtn) delBtn.addEventListener('click', () => deleteLeg(leg.legislator_id));
+          const addSp = document.getElementById('addSponsorshipBtn');
+          if (addSp) addSp.addEventListener('click', () => {
+            const div = document.createElement('div');
+            div.innerHTML = sponsorshipRow({ bill_slug: '', role: 'co' });
+            document.getElementById('sponsorshipsList').appendChild(div.firstElementChild);
+          });
+
+          document.getElementById('sponsorshipsList').addEventListener('click', (e) => {
+            const rm = e.target.closest('button[data-remove]');
+            if (rm) rm.parentElement.remove();
+          });
+
+          document.getElementById('legForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!canWrite) return;
+            const fd = new FormData(e.target);
+            const payload = Object.fromEntries(fd.entries());
+            payload.id          = payload.legislator_id; // primary key column
+            delete payload.legislator_id;
+            payload.district    = parseInt(payload.district, 10);
+            payload.floor_subscore       = parseInt(payload.floor_subscore, 10) || 0;
+            payload.committee_subscore   = parseInt(payload.committee_subscore, 10) || 0;
+            payload.sponsorship_subscore = parseInt(payload.sponsorship_subscore, 10) || 0;
+            payload.counties    = payload.counties ? payload.counties.split(',').map(s => s.trim()).filter(Boolean) : [];
+            payload.is_active   = true;
+            payload.updated_at  = new Date().toISOString();
+
+            const { error } = await client.from('legislators').upsert(payload, { onConflict: 'id' });
+            if (error) { toast(error.message, true); return; }
+
+            // Save sponsorships
+            const rows = [...document.querySelectorAll('.sponsorship-row')].map(r => ({
+              legislator_id: payload.id,
+              bill_slug:     r.querySelector('[name="bill_slug"]').value,
+              role:          r.querySelector('[name="role"]').value,
+            })).filter(r => r.bill_slug);
+
+            await client.from('legislator_sponsorships').delete().eq('legislator_id', payload.id);
+            if (rows.length) {
+              const { error: spErr } = await client.from('legislator_sponsorships').insert(rows);
+              if (spErr) { toast('Sponsorship save: ' + spErr.message, true); return; }
+            }
+
+            toast('Saved.');
+            closeDrawer();
+            load();
+          });
+        }
+
+        function sponsorshipRow(s) {
+          const opts = allBills.map(b => `<option value="${escapeHtml(b.slug)}" ${b.slug === s.bill_slug ? 'selected' : ''}>${escapeHtml(b.label || b.slug)} — ${escapeHtml((b.title||'').slice(0, 60))}</option>`).join('');
+          return `
+            <div class="sponsorship-row">
+              <select name="bill_slug"><option value="">— pick a bill —</option>${opts}</select>
+              <select name="role">
+                <option value="primary" ${s.role==='primary'?'selected':''}>Primary sponsor</option>
+                <option value="co"      ${s.role==='co'     ?'selected':''}>Co-sponsor</option>
+              </select>
+              <button type="button" class="btn" data-remove>Remove</button>
+            </div>
+          `;
+        }
+
+        function closeDrawer() {
+          const drawer = document.getElementById('shellDrawer');
+          drawer.classList.remove('is-open');
+          drawer.setAttribute('aria-hidden', 'true');
+        }
+
+        async function deleteLeg(id) {
+          if (!confirm(`Delete legislator ${id}? This will also remove their sponsorships.`)) return;
+          const { error } = await client.from('legislators').delete().eq('id', id);
+          if (error) { toast(error.message, true); return; }
+          toast('Deleted.');
+          closeDrawer();
+          load();
+        }
+
+        // ---- Wiring ----
+        document.getElementById('legsSearch').addEventListener('input', applyFilters);
+        document.getElementById('legsChamber').addEventListener('change', applyFilters);
+        document.getElementById('legsParty').addEventListener('change', applyFilters);
+        document.getElementById('legsGrade').addEventListener('change', applyFilters);
+        const addBtn = document.getElementById('addLegBtn');
+        if (addBtn) addBtn.addEventListener('click', () => openDrawer(null));
+
+        wrap.addEventListener('click', async (e) => {
+          const btn = e.target.closest('button[data-edit]');
+          if (!btn) return;
+          const id = btn.dataset.edit;
+          // Pull full row from legislators table (not just view) so we have notes, counties, etc.
+          const { data, error } = await client.from('legislators').select('*').eq('id', id).maybeSingle();
+          if (error) { toast(error.message, true); return; }
+          // Merge composite + grade from the loaded view row for the score card
+          const view = allLegs.find(x => x.legislator_id === id) || {};
+          openDrawer({ ...data, legislator_id: data.id, composite_score: view.composite_score, grade: view.grade });
+        });
+
+        load();
+      });
+    </script>
+  </body>
+</html>
