@@ -293,9 +293,9 @@
             </div>
             <div class="bill-form-row">
               <label>General Assembly
-                <select id="bf-ga" required>
-                  <option value="136th">136th</option>
-                  <option value="135th">135th</option>
+                <select id="bf-general_assembly" required>
+                  <option value="136">136th</option>
+                  <option value="135">135th</option>
                 </select>
               </label>
               <label>Category
@@ -524,7 +524,7 @@
             prose('What It Does', r.what_it_does) +
             prose('Impact', r.impact) +
             prose('Equality Impact', r.equality_impact_note) +
-            prose('Legal Risks', r.legal_risks) +
+            prose('Legal Risks', (r.legal_risks && typeof r.legal_risks === 'object') ? r.legal_risks.note : r.legal_risks) +
             (links.length
               ? '<div class="admin-detail-section-title">Links</div><div style="display:flex;gap:18px;flex-wrap:wrap">' + links.join('') + '</div>'
               : '');
@@ -667,7 +667,7 @@
           var form  = $('billForm');
           var FIELDS = [
             'bill_number','slug','title','stance','status','chamber_of_origin',
-            'ga','category','introduced_on','last_action_on','summary',
+            'general_assembly','category','introduced_on','last_action_on','summary',
             'what_it_does','equality_impact_note','legal_risks',
             'official_bill_url','bill_text_pdf_url'
           ];
@@ -685,13 +685,14 @@
                   if (!el) return;
                   var v = row[k];
                   if (el.type === 'date' && v) v = String(v).slice(0, 10);
+                  if (k === 'legal_risks' && v && typeof v === 'object') v = v.note || '';
                   el.value = v == null ? '' : v;
                 });
                 $('bf-is_featured').checked = !!row.is_featured;
                 $('bf-slug').readOnly = true; // slug is the join key, do not let edits change it silently
               }
             } else {
-              $('bf-ga').value = '136th';
+              $('bf-general_assembly').value = '136';
               $('bf-stance').value = 'anti';
               $('bf-status').value = 'introduced';
               $('bf-slug').readOnly = false;
@@ -735,13 +736,11 @@
               if (!el) return;
               var v = el.value;
               if (v === '') v = null;
+              if (k === 'general_assembly' && v != null) v = parseInt(v, 10);
+              if (k === 'legal_risks' && v != null) v = { note: v };
               payload[k] = v;
             });
             payload.is_featured = $('bf-is_featured').checked;
-
-            // mirror back to legacy public-site columns so /issues stays consistent
-            payload.label   = payload.bill_number || payload.label;
-            payload.chamber = payload.chamber_of_origin || payload.chamber;
 
             $('billSaveBtn').disabled = true;
             $('billSaveBtn').textContent = 'Saving…';
