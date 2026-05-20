@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enacted Legislation Archive | Ohio Pride</title>
+    <meta
+      name="description"
+      content="Archive of LGBTQ+-relevant Ohio legislation that has been signed into law. Track enacted bills from the 136th General Assembly."
+    />
+    <link rel="canonical" href="https://www.ohiopride.org/issues/archive" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Enacted Legislation Archive | Ohio Pride" />
+    <meta property="og:description" content="Archive of LGBTQ+-relevant Ohio legislation that has been signed into law." />
+    <meta property="og:url" content="https://www.ohiopride.org/issues/archive" />
+    <meta property="og:site_name" content="Ohio Pride" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Enacted Legislation Archive | Ohio Pride" />
+    <meta name="twitter:description" content="Archive of LGBTQ+-relevant Ohio legislation that has been signed into law." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/issue-tracker.css" />
+    <link rel="stylesheet" href="/css/bill-pipeline.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+    <main id="main">
+
+    <section class="tracker-hero">
+      <div class="breadcrumb">
+        <a href="/issues">Issue Tracker</a> &nbsp;/&nbsp; Archive
+      </div>
+      <h1>Enacted Legislation Archive</h1>
+      <p>
+        Bills that have been signed into law in the 136th General Assembly
+        (2025&ndash;2026). Active legislation lives on the
+        <a href="/issues">Issue Tracker</a>.
+      </p>
+    </section>
+
+    <div class="tracker-body">
+      <div class="stats-bar-sticky">
+        <div class="stats-bar reveal-stagger">
+          <div class="stat-card">
+            <div class="stat-num" id="statEnacted">1</div>
+            <div class="stat-label">Bills Enacted</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statAnti">1</div>
+            <div class="stat-label">Anti-Equality</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statPro">0</div>
+            <div class="stat-label">Pro-Equality</div>
+          </div>
+          <div class="stat-card stat-card-updated">
+            <div class="stat-updated-date" id="lastUpdatedDate">&mdash;</div>
+            <div class="stat-updated-time" id="lastUpdatedTime">&mdash;</div>
+            <div class="stat-label">Last Updated</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="filter-row">
+          <span class="filter-label">Stance</span>
+          <button class="filter-btn active" data-filter="stance" data-value="all">All</button>
+          <button class="filter-btn stance-anti" data-filter="stance" data-value="anti">Anti-LGBTQ+</button>
+          <button class="filter-btn stance-pro" data-filter="stance" data-value="pro">Pro-LGBTQ+</button>
+          <button class="filter-btn stance-mixed" data-filter="stance" data-value="mixed">Mixed</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Category</span>
+          <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+          <button class="filter-btn" data-filter="category" data-value="anti-trans">Anti-Trans</button>
+          <button class="filter-btn" data-filter="category" data-value="civil-rights">Civil Rights</button>
+          <button class="filter-btn" data-filter="category" data-value="healthcare">Healthcare</button>
+          <button class="filter-btn" data-filter="category" data-value="education">Education / DEI</button>
+          <button class="filter-btn" data-filter="category" data-value="expression">Expression</button>
+          <button class="filter-btn" data-filter="category" data-value="youth">Youth / Family</button>
+          <button class="filter-btn" data-filter="category" data-value="elections">Elections</button>
+          <button class="filter-btn" data-filter="category" data-value="corrections">Corrections</button>
+        </div>
+      </div>
+
+      <div id="billsContainer"></div>
+      <div id="emptyState" class="empty-state" style="display:none;">
+        <h3>No enacted bills match these filters</h3>
+        <p>Try clearing filters above, or head back to the <a href="/issues">active tracker</a>.</p>
+      </div>
+
+      <div class="archive-back-row">
+        <a href="/issues" class="archive-back-link">&larr; Back to active issue tracker</a>
+      </div>
+    </div>
+
+        </main>
+<div id="site-footer"></div>
+
+    <a href="/donate" class="mobile-donate-fab">Donate</a>
+
+    <script src="/js/main.js" defer></script>
+    <script src="/js/bill-data.js"></script>
+    <script src="/js/bill-data-supabase.js" defer></script>
+    <script src="/js/bill-pipeline.js"></script>
+    <script>
+      const catColors = {
+        "Anti-Trans": "#e879f9",
+        "Education / DEI": "#60a5fa",
+        Education: "#60a5fa",
+        Expression: "#fb923c",
+        "Youth / Family": "#2dd4bf",
+        "Elections / Privacy": "#a78bfa",
+        Corrections: "#94a3b8",
+        Healthcare: "#34d399",
+        "Civil Rights": "#38bdf8",
+      };
+
+      const stanceConfig = {
+        anti: { label: "Anti-LGBTQ+ Legislation", color: "anti", icon: "#dc2626" },
+        mixed: { label: "Mixed Legislation", color: "mixed", icon: "#eab308" },
+        pro: { label: "Pro-LGBTQ+ Legislation", color: "pro", icon: "#22c55e" },
+      };
+
+      function billCardHTML(b) {
+        return `
+          <a href="${b.url}" class="bill-card" data-status="${b.status}" data-categories="${b.categories.join(",")}" data-stance="${b.stance || 'anti'}">
+              <div class="bill-card-inner">
+                  <div class="bill-status-bar" style="background:${b.statusColor}"></div>
+                  <div class="bill-content">
+                      <div class="bill-header">
+                          <span class="bill-id">${b.bill}</span>
+                          <div class="bill-badges">
+                              <span class="status-badge" style="background:${b.statusColor}22;color:${b.statusColor};border:1px solid ${b.statusColor}44">${b.statusLabel}</span>
+                              ${b.categoryLabels.map((cl) => `<span class="cat-badge" style="color:${catColors[cl] || "#999"};border-color:${catColors[cl] || "#333"}33">${cl}</span>`).join("")}
+                          </div>
+                      </div>
+                      <div class="bill-title bill-title-link">${b.title}</div>
+                      <div class="bill-subtitle">${b.nickname || ""}</div>
+                      <div id="pipeline-${b.id}"></div>
+                      <div class="bill-desc">${b.description}</div>
+                      <div class="bill-expandable">
+                          <div class="bill-meta">
+                              <span><strong>Sponsors:</strong> ${b.sponsors}</span>
+                              <span><strong>Last Action:</strong> ${b.lastAction}</span>
+                              ${b.nextDate ? `<span class="bill-next-date">${b.nextDate}</span>` : ""}
+                              ${b.houseVote ? `<span><strong>House Vote:</strong> ${b.houseVote}</span>` : ""}
+                          </div>
+                      </div>
+                      <button class="bill-expand-btn" aria-label="Toggle bill details" aria-expanded="false">
+                          <span class="expand-text">Read more</span>
+                          <span class="expand-collapse-text">Show less</span>
+                          <span class="expand-icon" aria-hidden="true">&#9660;</span>
+                      </button>
+                      <div class="bill-card-cta" aria-hidden="true">
+                          <span>View full bill details</span>
+                          <span class="cta-arrow">&rarr;</span>
+                      </div>
+                  </div>
+              </div>
+          </a>`;
+      }
+
+      function renderBills(list) {
+        const wrapper = document.getElementById("billsContainer");
+        const emptyEl = document.getElementById("emptyState");
+        wrapper.innerHTML = "";
+
+        if (!list.length) {
+          if (emptyEl) emptyEl.style.display = "block";
+          return;
+        }
+        if (emptyEl) emptyEl.style.display = "none";
+
+        const groups = { anti: [], mixed: [], pro: [] };
+        list.forEach((b) => {
+          const s = b.stance || "anti";
+          if (groups[s]) groups[s].push(b);
+        });
+
+        const stanceOrder = ["anti", "mixed", "pro"];
+        stanceOrder.forEach((stance) => {
+          const bills = groups[stance].slice().sort((a, b) => {
+            const af = a.featured ? 1 : 0;
+            const bf = b.featured ? 1 : 0;
+            return bf - af;
+          });
+          if (!bills.length) return;
+          const cfg = stanceConfig[stance];
+          const header = document.createElement("div");
+          header.className = "stance-section-header";
+          header.innerHTML = `
+            <span class="stance-indicator ${cfg.color}"></span>
+            <h2>${cfg.label}</h2>
+            <span class="stance-count">(${bills.length} bill${bills.length > 1 ? "s" : ""})</span>
+          `;
+          wrapper.appendChild(header);
+
+          const container = document.createElement("div");
+          container.className = "bills-container";
+          container.style.marginBottom = "2rem";
+          container.innerHTML = bills.map(billCardHTML).join("");
+          wrapper.appendChild(container);
+        });
+
+        list.forEach((b) => {
+          const el = document.getElementById("pipeline-" + b.id);
+          if (el) renderPipeline(el, b.chamber || "house", b.currentStep);
+        });
+
+        wrapper.querySelectorAll(".bill-expand-btn").forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = this.closest(".bill-card");
+            const expanded = card.classList.toggle("expanded");
+            this.setAttribute("aria-expanded", expanded ? "true" : "false");
+          });
+        });
+      }
+
+      function setStat(el, target, animate) {
+        if (!el) return;
+        var prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!animate || prefersReducedMotion) {
+          el.textContent = target;
+          return;
+        }
+        var start = parseInt(el.textContent, 10);
+        if (isNaN(start)) start = 0;
+        if (start === target) { el.textContent = target; return; }
+        var duration = 1100;
+        var startTime = null;
+        function tick(now) {
+          if (startTime === null) startTime = now;
+          var t = Math.min(1, (now - startTime) / duration);
+          var eased = 1 - Math.pow(1 - t, 3);
+          var value = Math.round(start + (target - start) * eased);
+          el.textContent = value;
+          if (t < 1) requestAnimationFrame(tick);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      var statsAnimated = false;
+      function updateStats(filtered, allEnacted) {
+        var elEnacted = document.getElementById("statEnacted");
+        var elAnti = document.getElementById("statAnti");
+        var elPro = document.getElementById("statPro");
+        // Filter-aware totals — match the active stance/category selection
+        var enacted = filtered.length;
+        var anti = filtered.filter(function (b) { return (b.stance || "anti") === "anti"; }).length;
+        var pro = filtered.filter(function (b) { return b.stance === "pro"; }).length;
+        var animate = !statsAnimated;
+        if (animate) {
+          if (elEnacted) elEnacted.textContent = "0";
+          if (elAnti) elAnti.textContent = "0";
+          if (elPro) elPro.textContent = "0";
+        }
+        setStat(elEnacted, enacted, animate);
+        setStat(elAnti, anti, animate);
+        setStat(elPro, pro, animate);
+        statsAnimated = true;
+      }
+
+      const ARCHIVED_BILLS = (typeof BILLS !== "undefined" ? BILLS : []).filter(
+        (b) => b.status === "law"
+      );
+
+      let activeStance = "all", activeCategory = "all";
+
+      window.applyFilters = function applyFilters() {
+        var filtered = ARCHIVED_BILLS.filter((b) => {
+          const stm = activeStance === "all" || (b.stance || "anti") === activeStance;
+          const cm = activeCategory === "all" || b.categories.includes(activeCategory);
+          return stm && cm;
+        });
+        renderBills(filtered);
+        updateStats(filtered);
+      };
+
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const ft = btn.dataset.filter, v = btn.dataset.value;
+          if (ft === "stance") {
+            activeStance = v;
+            document.querySelectorAll('[data-filter="stance"]').forEach((b) => b.classList.remove("active"));
+          } else {
+            activeCategory = v;
+            document.querySelectorAll('[data-filter="category"]').forEach((b) => b.classList.remove("active"));
+          }
+          btn.classList.add("active");
+          applyFilters();
+        });
+      });
+
+      renderBills(ARCHIVED_BILLS);
+      updateStats(ARCHIVED_BILLS);
+
+      if (typeof LAST_UPDATED !== "undefined") {
+        const dateEl = document.getElementById("lastUpdatedDate");
+        const timeEl = document.getElementById("lastUpdatedTime");
+        if (dateEl) dateEl.textContent = LAST_UPDATED.date;
+        if (timeEl) timeEl.textContent = LAST_UPDATED.time;
+      }
+    </script>
+    <script src="/js/site-template.js" defer></script>
+  </body>
+</html>

@@ -1,89 +1,93 @@
-# Ohio Pride PAC — Bills + Scorecard CRUD + Mobile /admin
+# Ohio Pride PAC — Scorecard ↔ Bills reconciliation
+PR bundle prepared 2026-05-20. Target: shippable before Friday.
 
-PR bundle generated 2026-05-19. Drop the contents of this folder into the root of `OhioPride/` (or the patched files into a Git checkout) and open a PR.
+## What this PR does
 
-## What this bundle does
+Locks /scorecard, /admin/legislators, /issues, and /admin/bills onto one shared Supabase source of truth, and gives an intern a usable add/edit UI for new bills. Math stays exactly as published on /methodology.
 
-1. **Seeds Supabase** with the static editorial data the site has been carrying in `/js/bill-data.js`, `/js/scorecard-data.js`, and (by reference) `/js/voting-records.js`:
-   - 25 bills from `bill-data.js` (incl. denorm fields: status_label, status_color, categories, sponsors_text, current_step, urls, etc.)
-   - 132 legislators (House + Senate) with their subscores and notes
-   - 18 sponsorship records from `LEGISLATOR_SPONSORSHIPS`
-   - 59 pipeline-step rows (the `pipelineDates` map per bill)
-   - 1 historical-bill stub (`hb467-135`) needed by sponsorship FKs
+## What was already in place (verified, no change needed)
 
-2. **Opens up admin writes** with RLS policies on `bills`, `bill_pipeline_steps`, `legislators`, `legislator_sponsorships`, `roll_calls`, and `legislator_vote_exceptions`. Anyone with `('bills', 'write')` or `('legislators', 'write')` (or the corresponding `admin`) permission can edit from a browser session. Super admins already have both. Anon read policies are unchanged.
+| Surface | Source | Notes |
+|---|---|---|
+| /scorecard (public) | scorecard.mjs → public.legislator_scorecard view | View prefers most-recent score_snapshots row, falls back to stored subscores. |
+| /issues (public) | bills.mjs → public.bills | Reads via /js/bill-data-supabase.js shim, falls back to static bill-data.js on fetch fail. |
+| /admin/legislators (admin) | compute_legislator_scorecard() + RPC publish_scorecard, publish_scorecard_all | Working publish button. Roll-call/exception/sponsorship upsert + delete already wired. |
+| Scoring math | 50 + Vf×4 + Vc×4 + S×2, clamped 0–100. EVENT_WEIGHTS override 1.25, pass/concur 1.00, committee 0.75, amend 0.50, intro 0.25. Grade bands A+ ≥95, A ≥88, A- ≥78, B ≥60, C ≥38, D ≥18, F ≥0. | Identical across js/scorecard-data.js, js/voting-records.js, public.event_weight(), public.legislator_scorecard view, public.compute_legislator_scorecard(), and /methodology page. |
 
-3. **Replaces the two admin module stubs** with fully wired CRUD:
-   - `/admin/bills` — list, filter (search / GA / stance), add, edit (every column, plus the 9-step pipeline grid), delete.
-   - `/admin/legislators` — list, filter (search / chamber / party / grade), add, edit subscores with **live score + grade recompute**, manage sponsorships, delete.
+## What was broken
 
-4. **Mobile responsiveness pass** on `/admin/*`. A new `admin-responsive.css` overlay adds breakpoints at 1100 / 820 / 600 / 380, converts tables to card stacks, makes the drawer a bottom sheet on phones, increases tap targets, and tightens the topbar. A small `admin-responsive.js` auto-adds `data-label` attributes to existing tables so they stack cleanly without per-page edits. Both files are wired into every `/admin/*` page that uses the shell or shared CSS.
+1. /admin/bills was read-only and referenced columns that do not exist on public.bills (bill_number, chamber_of_origin, introduced_on, last_action_on, is_featured, what_it_does, equality_impact_note, legal_risks, official_bill_url, bill_text_pdf_url, enacted_text_url). Result: sparse grid, no way for the intern to add or edit a bill.
+2. Per-bill /issues/<slug>.html pages loaded only the static /js/bill-data.js. Edits in Supabase never reached the bill detail pages.
 
-## File inventory
+## What this PR ships
 
 ```
-supabase/migrations/
-  20260519010000_seed_bills_and_legislators.sql        (~3,400 lines, idempotent)
-  20260519020000_admin_write_policies_bills_scorecard.sql
+supabase/migrations/20260520120000_bills_admin_alignment.sql
+  - ALTER TABLE public.bills ADD missing admin columns (idempotent)
+  - Backfills bill_number ← label, chamber_of_origin ← chamber,
+    category ← categories[1]
+  - Creates public.bills_canonical view (shared shape for /issues + /admin/bills)
+  - Grants INSERT/UPDATE/DELETE on bills to authenticated (gated by
+    bills:write RLS policy from 20260520020000)
+  - Helper function public.suggest_bill_slug(text)
 
-admin/
-  admin-responsive.css                                 (new)
-  admin-responsive.js                                  (new)
-  bills/index.html                                     (replaces stub)
-  legislators/index.html                               (replaces stub)
+admin/bills/index.html
+  - + New Bill button in toolbar
+  - Edit button on every row
+  - Modal form: slug, bill_number, title, stance, status, chamber_of_origin,
+    GA, category, introduced_on, last_action_on, is_featured, summary,
+    what_it_does, equality_impact_note, legal_risks, official_bill_url,
+    bill_text_pdf_url
+  - Auto-suggests slug from bill_number while creating
+  - Insert / Update / Delete via authenticated supabase client
+  - Mirrors bill_number → label and chamber_of_origin → chamber on save so
+    the public bills.mjs (which reads the legacy columns) sees the new value
 
-scripts/
-  seed-from-static.mjs                                 (regenerates the seed migration from static JS)
-  patch-admin-pages.mjs                                (adds <link>/<script> tags to every admin page)
+issues/<23 files>.html
+  - Append <script src="/js/bill-data-supabase.js" defer></script>
+    right after the existing /js/bill-data.js tag
+  - Affected: hb136, hb155, hb172, hb190, hb196, hb249, hb262, hb300,
+    hb306, hb327, hb457, hb602, hb693, hb796, hb798, hjr4,
+    sb113, sb211, sb274, sb34, sb70, sb71
+  - Skipped (no bill-data binding to upgrade): hb112, hb838, hb96
 
-CHANGES.md  (this file)
+scripts/verify-scorecard-math.sql
+  - Run in Supabase SQL editor after applying migrations to confirm math
+    agrees across the legislators table, compute_legislator_scorecard(),
+    legislator_scorecard view, EVENT_WEIGHTS multipliers, and grade bands
+
+INTERN_RUNBOOK.md
+  - The four-page → four-table map
+  - Daily workflows: add a bill, log a roll call, add a sponsor,
+    publish the scorecard, handle a status change
 ```
 
-The seed SQL was generated by running:
-```
-node scripts/seed-from-static.mjs \
-     --bills js/bill-data.js \
-     --score js/scorecard-data.js \
-     --out   supabase/migrations/20260519010000_seed_bills_and_legislators.sql
-```
+## Deployment order
 
-## How to land this PR
+1. Apply migration:
+   ```
+   supabase db push
+   ```
+   Or paste `supabase/migrations/20260520120000_bills_admin_alignment.sql` into the Supabase SQL editor.
+2. Replace `admin/bills/index.html` and the 23 patched `issues/<slug>.html` files.
+3. Deploy to Netlify (`git push` or trigger a build).
+4. Run `scripts/verify-scorecard-math.sql` in the Supabase SQL editor. Every `ok` column should be `true`.
+5. Smoke test (manual):
+   - Open /admin/bills, click + New Bill, create a throwaway bill (slug `test1`). Confirm it appears at /issues immediately after a hard refresh.
+   - Edit that bill from /admin/bills. Refresh /issues, confirm the title updated.
+   - Delete the bill from /admin/bills. Refresh /issues, confirm it's gone.
+   - Open /admin/legislators, change one subscore, click Publish, refresh /scorecard, confirm the new grade appears.
 
-Inside your Git checkout of `OhioPride`:
+## Risks and dependencies
 
-```bash
-# 1. Copy files in
-cp -R /path/to/this/bundle/admin/* admin/
-cp -R /path/to/this/bundle/supabase/migrations/* supabase/migrations/
-cp -R /path/to/this/bundle/scripts/* scripts/
+- Migration is idempotent. If applied twice nothing breaks, but rerun verify-scorecard-math.sql afterwards.
+- The RLS write policies on `public.bills` were already created in 20260520020000 (`"bills admin write"`). The intern must have a Supabase user with `bills:write` permission.
+- The static `js/scorecard-data.js` still contains baseline numbers from April 2026. The Supabase shim overrides them on page load, so the public scorecard always shows live data. First paint may briefly show the static numbers; that's by design (fail-open).
+- bills.mjs reads the legacy column names (`label`, `chamber`, `last_action`, `text_url`). The admin save flow mirrors `bill_number → label` and `chamber_of_origin → chamber` so the public site stays consistent. We intentionally did not rewrite bills.mjs in this PR to keep blast radius small.
 
-# 2. Wire the responsive overlay into every existing admin page
-node scripts/patch-admin-pages.mjs
+## What I deliberately did not do (post-Friday work)
 
-# 3. Apply migrations
-supabase db push    # or your usual flow
-
-# 4. Commit + open PR
-git add admin/ supabase/ scripts/
-git commit -m "Seed bills + scorecard, admin CRUD, mobile /admin"
-```
-
-## Sanity checks before merging
-
-- `supabase db push` runs both new migrations cleanly. Idempotent — safe to re-run.
-- `/issues` and `/scorecard` continue to render (they already load `bill-data-supabase.js` + `scorecard-data-supabase.js`, which now read from a fully populated DB instead of an empty one).
-- `/admin/bills`: editing HB 249 and changing its `status_label` shows up on `/issues/hb249` within ~5 min (Netlify function cache TTL).
-- `/admin/legislators`: editing Rep. Lett's floor_subscore from 5 to 4 reduces her composite score by 4 points and updates the grade live in the drawer header.
-- Resize a browser window to ~360px on `/admin/donors`: the table should turn into stacked cards with labels.
-
-## Things I didn't change
-
-- `bills.mjs` / `scorecard.mjs` Netlify functions — they already read from Supabase, and the seed gives them rows to read.
-- `bill-data.js` / `scorecard-data.js` / `voting-records.js` — kept in place as static fallback (`bill-data-supabase.js` and friends already overlay them).
-- Roll-call admin UI — not in this PR. The migration grants write perms so it can be wired next. The `legislator_vote_exceptions` table is the bigger lever for hand-correcting crossovers; consider that the higher-value follow-up.
-
-## Risks / dependencies
-
-- The seed assumes the editorial JS data is current. Re-run `scripts/seed-from-static.mjs` whenever `bill-data.js` or `scorecard-data.js` changes (until the admin UI fully replaces that source of truth).
-- The legislator subscore split: the static JS only tracks one combined `v` value. The seed puts it all in `floor_subscore` and leaves `committee_subscore` at 0. The admin UI lets you split it once you have separate evidence.
-- `committee_subscore` defaulting to 0 means composite scores will look ~20 points lower than what the static JS shows for legislators whose `v` was driven by committee votes rather than floor votes. Plan a one-time hand-review pass after seeding.
+- Pipeline step editor in /admin/bills (currentStep, pipeline_dates). Currently static.
+- Bulk import of bills from a CSV. Intern can paste rows but it's one at a time.
+- Replacing 26 hand-coded per-bill /issues/<slug>.html pages with one dynamic /issues/bill.html?slug=… template. Discussed and deferred to keep SEO and OG cards intact.
+- News & Public Statements re-enable. The methodology page already says News was retired in April 2026.

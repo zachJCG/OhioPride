@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading... | Ohio Pride</title>
+    <meta name="description" content="Track this Ohio bill's progress through the legislature. Ohio Pride monitors legislation affecting LGBTQ+ rights." />
+    <link rel="canonical" href="https://www.ohiopride.org/issues/hb249" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bill Tracker | Ohio Pride" />
+    <meta property="og:description" content="Track this Ohio bill's progress through the legislature. Ohio Pride monitors legislation affecting LGBTQ+ rights." />
+    <meta property="og:url" content="https://www.ohiopride.org/issues/hb249" />
+    <meta property="og:site_name" content="Ohio Pride" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Bill Tracker | Ohio Pride" />
+    <meta name="twitter:description" content="Track this Ohio bill's progress through the legislature. Ohio Pride monitors legislation affecting LGBTQ+ rights." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/bill-pipeline.css" />
+    <style>
+      body {
+        background: var(--dark-bg);
+      }
+
+      :root {
+        --card-bg: #132d44;
+        --card-border: #1a3a52;
+        --text-gray: #a0b4c8;
+        --text-dim: #6889a6;
+      }
+
+      .breadcrumb {
+        max-width: 900px;
+        margin: 1.5rem auto 0;
+        padding: 0 2rem;
+        font-size: 0.85rem;
+        color: var(--text-dim);
+      }
+      .breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0.4rem 0.6rem;
+        margin-left: -0.6rem;
+        border-radius: 6px;
+        color: var(--text-gray);
+        text-decoration: none;
+        transition: color 0.15s, background 0.15s;
+      }
+      .breadcrumb a:hover {
+        color: var(--text-white);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .breadcrumb a:focus-visible {
+        outline: 2px solid var(--color-light-blue, #60a5fa);
+        outline-offset: 2px;
+        color: var(--text-white);
+      }
+
+      .bill-hero {
+        max-width: 900px;
+        margin: 1rem auto 0;
+        padding: 0 2rem 2rem;
+        position: relative;
+      }
+      .bill-hero::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: var(--pride-gradient);
+      }
+      .bill-hero .bill-number {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+      }
+      .bill-hero h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 0.25rem;
+        color: var(--text-white);
+      }
+      .bill-hero .nickname {
+        font-size: 1.1rem;
+        color: var(--text-gray);
+        margin-bottom: 0.5rem;
+      }
+      .bill-hero .official-title {
+        font-size: 0.85rem;
+        color: var(--text-dim);
+        font-style: italic;
+        margin-bottom: 1rem;
+      }
+      .bill-hero .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .status-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-family: "Montserrat", sans-serif;
+      }
+      @media (max-width: 768px) {
+        .bill-hero h1 {
+          font-size: 1.6rem;
+        }
+      }
+
+      .detail-section {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .detail-section h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--card-border);
+        color: var(--text-white);
+      }
+      .detail-section p {
+        color: var(--text-gray);
+        margin-bottom: 1rem;
+        line-height: 1.7;
+      }
+      .detail-section ul {
+        color: var(--text-gray);
+        margin: 0 0 1rem 1.5rem;
+      }
+      .detail-section li {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .meta-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 1rem;
+      }
+      .meta-card .meta-label {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+      }
+      .meta-card .meta-value {
+        font-size: 0.95rem;
+        color: var(--text-white);
+      }
+      @media (max-width: 768px) {
+        .meta-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Mobile responsiveness for bill detail */
+      @media (max-width: 768px) {
+        .breadcrumb {
+          padding: 0 1rem;
+          margin-top: 1rem;
+        }
+        .bill-hero {
+          padding: 0 1rem 1.5rem;
+        }
+        .detail-section {
+          padding: 1.5rem 1rem;
+        }
+        .ext-links {
+          flex-direction: column;
+        }
+        .ext-link {
+          width: 100%;
+          justify-content: center;
+        }
+        .cta-bar {
+          padding: 0 1rem;
+        }
+      }
+
+      .timeline-list {
+        position: relative;
+        padding-left: 1.5rem;
+        border-left: 2px solid var(--card-border);
+      }
+      .timeline-item {
+        position: relative;
+        margin-bottom: 1.25rem;
+        padding-left: 1rem;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -1.75rem;
+        top: 0.5rem;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--card-border);
+      }
+      .timeline-item.completed::before {
+        background: #22c55e;
+      }
+      .timeline-item.current::before {
+        background: #f59e0b;
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+      }
+      .timeline-item .tl-date {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        font-weight: 600;
+      }
+      .timeline-item .tl-event {
+        font-size: 0.95rem;
+        color: var(--text-gray);
+      }
+
+      .ext-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+      .ext-link {
+        display: none;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem 1rem;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: var(--text-gray);
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .ext-link:hover {
+        border-color: var(--dark-bg-lighter);
+        color: var(--text-white);
+      }
+
+      .risk-card {
+        background: linear-gradient(
+          135deg,
+          rgba(239, 68, 68, 0.08),
+          rgba(239, 68, 68, 0.02)
+        );
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      .risk-card ul {
+        margin-left: 1.25rem;
+      }
+
+      /* Vote Breakdown */
+      .vote-summary {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .vote-summary-card {
+        flex: 1;
+        text-align: center;
+        padding: 1.25rem;
+        border-radius: 8px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+      }
+      .vote-summary-card.yea {
+        border-color: rgba(239,68,68,0.4);
+        background: rgba(239,68,68,0.08);
+      }
+      .vote-summary-card.nay {
+        border-color: rgba(34,197,94,0.4);
+        background: rgba(34,197,94,0.08);
+      }
+      .vote-summary-card.absent {
+        border-color: rgba(148,163,184,0.3);
+      }
+      .vote-count {
+        font-family: "Montserrat", sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-white);
+      }
+      .vote-summary-card.yea .vote-count { color: #fca5a5; }
+      .vote-summary-card.nay .vote-count { color: #86efac; }
+      .vote-label {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 0.25rem;
+      }
+
+      .vote-list {
+        list-style: none;
+        margin: 1rem 0 0;
+        padding: 0;
+      }
+      .vote-member {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.6rem 0.75rem;
+        border-bottom: 1px solid var(--card-border);
+        gap: 0.75rem;
+      }
+      .vote-member:last-child {
+        border-bottom: none;
+      }
+      .member-name {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+      }
+      @media (max-width: 768px) {
+        .vote-summary {
+          flex-direction: row;
+          gap: 0.5rem;
+        }
+        .vote-summary-card {
+          padding: 0.75rem;
+        }
+        .vote-count {
+          font-size: 1.5rem;
+        }
+        .vote-member {
+          padding: 0.75rem 0.5rem;
+        }
+      }
+
+      .cta-bar {
+        max-width: 900px;
+        margin: 0 auto 3rem;
+        padding: 0 2rem;
+      }
+      .cta-inner {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+      }
+      .cta-inner p {
+        color: var(--text-gray);
+        margin-bottom: 1rem;
+      }
+      .cta-inner a {
+        display: inline-block;
+        padding: 0.6rem 1.5rem;
+        background: var(--color-blue);
+        color: white;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        font-family: "Montserrat", sans-serif;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .cta-inner a:hover {
+        background: #0039cc;
+        transform: translateY(-1px);
+      }
+    </style>
+  <link rel="stylesheet" href="/css/site-template.css">
+  </head>
+  <body>
+<div id="site-header"></div>
+
+    <main id="main">
+    <div class="breadcrumb">
+      <a href="/issues" class="breadcrumb-back">← Back to Issue Tracker</a>
+    </div>
+
+    <div class="bill-hero">
+      <div class="bill-number" id="billNumber"></div>
+      <h1 id="billTitle"></h1>
+      <div class="nickname" id="billNickname"></div>
+      <div class="official-title">
+        Official title: "<span id="billOfficialTitle"></span>"
+      </div>
+      <div class="badge-row">
+        <span class="status-badge" id="statusBadge"></span>
+        <span
+          id="billCategories"
+          style="display: flex; gap: 0.4rem; flex-wrap: wrap"
+        ></span>
+      </div>
+      <div id="detailPipeline"></div>
+    </div>
+
+    <div class="detail-section">
+      <div class="meta-grid">
+        <div class="meta-card">
+          <div class="meta-label">Sponsors</div>
+          <div class="meta-value" id="billSponsors"></div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Last Action</div>
+          <div class="meta-value" id="billLastAction"></div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Next Expected Action</div>
+          <div class="meta-value" id="billNextDate"></div>
+        </div>
+        <div class="meta-card" style="display: none">
+          <div class="meta-label">House Vote</div>
+          <div class="meta-value" id="billHouseVote"></div>
+        </div>
+      </div>
+
+      <div class="ext-links">
+        <a
+          href="#"
+          id="legislatureLink"
+          class="ext-link"
+          target="_blank"
+          rel="noopener"
+          >&#128279; Ohio Legislature Bill Page</a
+        >
+        <a
+          href="#"
+          id="textLink"
+          class="ext-link"
+          target="_blank"
+          rel="noopener"
+          >&#128196; Read Full Bill Text (PDF)</a
+        >
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h2>What This Bill Does</h2>
+      <p>
+        HB 249 creates a new criminal offense of "unlawful adult cabaret
+        performance." The bill's definition of "adult cabaret performance"
+        includes performers who exhibit a
+        <strong>gender identity different from their "biological sex"</strong>
+        using clothing, makeup, prosthetics, or other physical markers.
+        Penalties escalate from misdemeanors to felonies depending on minors'
+        presence and whether the performance is deemed "obscene."
+      </p>
+    </div>
+
+    <div class="detail-section">
+      <h2>Impact on LGBTQIA+ Ohioans</h2>
+      <p>
+        While supporters frame HB 249 as child protection and obscenity policy,
+        the definitional hook — gender identity differing from biological sex —
+        makes LGBTQIA+ presence itself a potential target in public spaces where
+        minors are present. Civil liberties organizations have emphasized the
+        bill's <strong>vagueness and First Amendment risks</strong>, noting its
+        breadth may reach beyond staged drag performance to gender nonconformity
+        in public.
+      </p>
+    </div>
+
+    <div class="detail-section">
+      <h2>Legal &amp; Constitutional Risks</h2>
+      <div class="risk-card">
+        <ul>
+          <li>
+            <strong>First Amendment</strong> — The bill may unconstitutionally
+            restrict protected expression and performance
+          </li>
+          <li>
+            <strong>Vagueness / Overbreadth</strong> — Unclear boundaries of
+            what constitutes a "performance" and venue rules
+          </li>
+          <li>
+            <strong>Selective Enforcement</strong> — The statutory definition
+            explicitly ties "adult cabaret" to gender identity expression,
+            enabling targeted enforcement
+          </li>
+          <li>
+            Similar "drag ban" frameworks in other states have faced sustained
+            litigation on these grounds
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h2>Timeline</h2>
+      <div class="timeline-list">
+        <div class="timeline-item completed">
+          <div class="tl-date">April 29, 2025</div>
+          <div class="tl-event">Introduced in the House</div>
+        </div>
+        <div class="timeline-item completed">
+          <div class="tl-date">May 7, 2025</div>
+          <div class="tl-event">Referred to House Judiciary Committee</div>
+        </div>
+        <div class="timeline-item completed">
+          <div class="tl-date">March 25, 2026</div>
+          <div class="tl-event">Reported from committee — favorable 7–4</div>
+        </div>
+        <div class="timeline-item completed">
+          <div class="tl-date">March 25, 2026</div>
+          <div class="tl-event">Passed the Ohio House 63–32</div>
+        </div>
+        <div class="timeline-item current">
+          <div class="tl-date">March 26, 2026</div>
+          <div class="tl-event">Introduced in the Ohio Senate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h2>House Floor Vote Breakdown</h2>
+      <div class="vote-summary">
+        <div class="vote-summary-card yea">
+          <div class="vote-count">63</div>
+          <div class="vote-label">Yeas</div>
+        </div>
+        <div class="vote-summary-card nay">
+          <div class="vote-count">32</div>
+          <div class="vote-label">Nays</div>
+        </div>
+        <div class="vote-summary-card absent">
+          <div class="vote-count">4</div>
+          <div class="vote-label">Not Voting</div>
+        </div>
+      </div>
+      <p style="margin-top:1rem;">The following representatives voted <strong>Yea</strong> on HB 249.</p>
+      <ul class="vote-list">
+        <li class="vote-member"><span class="member-name">Rep. Abrams, Casey (R-29)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Barhorst, Brian (R-85)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Bird, Ty (R-41)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Brennan, Kevin (R-57)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Callender, Jamie (R-64)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Carruthers, Sara (R-51)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Claggett, Roy (R-87)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Click, Gary (R-88)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Creech, Rodney (R-40)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Cross, Jeff (R-83)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Cutrona, Al (R-59)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Davis, Brian (R-75)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Dean, Bob (R-22)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Demetriou, Theresa (R-35)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Dobos, Dave (R-74)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Edwards, Jay (R-94)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Ferguson, Bob (R-96)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Fowler Arthur, Sarah (R-99)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Ghanbari, Haraz (R-3)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Gross, Kevin (R-46)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Hall, Thomas (R-53)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Hillyer, Brett (R-37)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Holmes, Adam (R-97)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Hoops, Jim (R-81)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. John, Marilyn (R-76)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Johnson, Mark (R-86)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Jones, Don (R-95)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Jordan, Kris (R-67)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Kick, Steve (R-70)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. King, Angela N. (R-84)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Klopfenstein, Tim (R-82)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Lampton, Brian (R-73)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. LaRe, Jeff (R-77)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Lear, Beth (R-61)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Lipps, Scott (R-62)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Loychik, Mike (R-63)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Manchester, Scott (R-54)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Manning, Phil (R-36)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Mathews, Adam (R-56)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. McClain, Robert (R-79)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Merrin, Derek (R-47)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Miller, Kevin (R-69)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Newman, Johnathan (R-80)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Oelslager, Scott (R-48)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Pavliga, Gail (R-72)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Plummer, Phil (R-39)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Powell, Jena (R-52)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Ray, Sharon (R-66)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Riedel, Craig (R-31)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Robinson, Brian (R-60)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Roemer, Bill (R-38)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Santucci, Al (R-34)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Seitz, Bill (R-30)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Stein, Brian (R-93)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Stephens, Brian (R-91)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Stewart, Brian (R-71)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Stoltzfus, Reggie (R-50)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Swearingen, D.J. (R-2)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. White, Andrea (R-43)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Wiggam, Scott (R-1)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Williams, Josh (R-44)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Young, Ron (R-45)</span></li>
+        <li class="vote-member"><span class="member-name">Rep. Baldridge, Brian (R-90)</span></li>
+      </ul>
+    </div>
+
+    <div class="cta-bar">
+      <div class="cta-inner">
+        <p>Help us fight back against anti-LGBTQIA+ legislation in Ohio.</p>
+        <a href="/donate/founding-member">Become a Founding Member →</a>
+      </div>
+    </div>
+    </main>
+
+<div id="site-footer"></div>
+
+    <script>
+      const BILL_ID = "hb249";
+    </script>
+    <script src="/js/main.js" defer></script>
+    <script src="/js/bill-data.js"></script>
+    <script src="/js/bill-data-supabase.js" defer></script>
+    <script src="/js/bill-pipeline.js"></script>
+    <script src="/js/bill-detail.js"></script>
+    <script src="/js/enhancements.js" defer></script>
+    <script src="/js/site-template.js" defer></script>
+  </body>
+</html>
