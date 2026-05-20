@@ -165,139 +165,6 @@
       .goal-block { max-width: 720px; margin: 2.25rem auto 0; }
 
       /* ============================================================
-         STONEWALL LADDER — milestone track under the progress bar.
-         5 stops nodding at the Stonewall Riots: 1, 169, 500, 969,
-         1,969. Marker bubble shows current count. Static, satisfying,
-         and gets visibly more "lit" as we grow.
-         ============================================================ */
-      .stonewall-ladder {
-        max-width: 720px;
-        margin: 1.5rem auto 0;
-        padding: 1.1rem 1rem 0.85rem;
-        background:
-          linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.005)),
-          rgba(19, 45, 68, 0.45);
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 14px;
-        position: relative;
-      }
-      .stonewall-ladder .ladder-title {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 0.5rem;
-        font-family: "Montserrat", sans-serif;
-        margin-bottom: 2rem; /* clearance for the marker bubble that pops up from the track */
-      }
-      .stonewall-ladder .ladder-title-left {
-        font-weight: 700;
-        font-size: 0.78rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--text-light, #c5d2dd);
-      }
-      .stonewall-ladder .ladder-title-right {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.78rem;
-        color: var(--text-light, #c5d2dd);
-      }
-      .ladder-track-wrap {
-        position: relative;
-        height: 8px;
-        margin: 0 0.55rem;
-      }
-      .ladder-track {
-        position: absolute;
-        inset: 0;
-        background: rgba(255,255,255,0.08);
-        border-radius: 999px;
-        overflow: hidden;
-      }
-      .ladder-fill {
-        height: 100%;
-        width: 0%;
-        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
-        transition: width 0.6s ease;
-      }
-      .ladder-marker {
-        position: absolute;
-        top: 50%;
-        left: 0%;
-        transform: translate(-50%, -50%);
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        background: #fff;
-        box-shadow: 0 0 0 4px rgba(255,255,255,0.15), 0 4px 14px rgba(0,0,0,0.35);
-        transition: left 0.6s ease;
-      }
-      .ladder-marker-bubble {
-        position: absolute;
-        bottom: calc(100% + 8px);
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 0.2rem 0.5rem;
-        font-family: "Montserrat", sans-serif;
-        font-weight: 700;
-        font-size: 0.75rem;
-        color: #0b1f33;
-        background: #fff;
-        border-radius: 6px;
-        white-space: nowrap;
-      }
-      .ladder-marker-bubble::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        border: 4px solid transparent;
-        border-top-color: #fff;
-      }
-      .ladder-stops {
-        list-style: none;
-        padding: 0;
-        margin: 0.9rem 0 0;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 0.25rem;
-      }
-      .ladder-stops li {
-        text-align: center;
-        opacity: 0.55;
-        transition: opacity 0.2s ease;
-      }
-      .ladder-stops li.hit { opacity: 1; }
-      .ladder-stops li:first-child { text-align: left; }
-      .ladder-stops li:last-child  { text-align: right; }
-      .ladder-stops .ms-num {
-        display: block;
-        font-family: "Montserrat", sans-serif;
-        font-weight: 700;
-        font-size: 0.85rem;
-        color: var(--text-white, #fff);
-      }
-      .ladder-stops .ms-label {
-        display: block;
-        font-family: "Roboto Slab", serif;
-        font-size: 0.68rem;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: var(--text-light, #c5d2dd);
-        margin-top: 0.1rem;
-      }
-      .ladder-stops li.hit .ms-num {
-        background: var(--pride-gradient, linear-gradient(90deg,#ff5a36,#ffb300,#2bb673,#2c8df0,#a14fff));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
-      @media (max-width: 479px) {
-        .ladder-stops .ms-label { font-size: 0.6rem; }
-        .ladder-stops .ms-num   { font-size: 0.75rem; }
-      }
-
-      /* ============================================================
          COUNTY TILE WALL — all 88 Ohio counties.
          Claimed counties get a Pride gradient border; unclaimed
          tiles are dimmed, with a "claim me" hint. Click filters the
@@ -1217,28 +1084,6 @@
           <div class="goal-note" id="progressText">0 of 1,969 Founding Members</div>
         </div>
 
-        <!-- Stonewall Ladder: milestone track from first member to 1,969 -->
-        <div class="stonewall-ladder" aria-label="Founding member milestones">
-          <div class="ladder-title">
-            <span class="ladder-title-left">The Road To 1,969</span>
-            <span class="ladder-title-right">Stonewall, 1969</span>
-          </div>
-          <div class="ladder-track-wrap">
-            <div class="ladder-track">
-              <div class="ladder-fill" id="ladderFill"></div>
-            </div>
-            <div class="ladder-marker" id="ladderMarker" aria-hidden="true">
-              <span class="ladder-marker-bubble" id="ladderMarkerBubble">0</span>
-            </div>
-          </div>
-          <ol class="ladder-stops" id="ladderStops">
-            <li data-milestone="1"><span class="ms-num">1</span><span class="ms-label">First</span></li>
-            <li data-milestone="169"><span class="ms-num">169</span><span class="ms-label">Spark</span></li>
-            <li data-milestone="500"><span class="ms-num">500</span><span class="ms-label">Quarter</span></li>
-            <li data-milestone="969"><span class="ms-num">969</span><span class="ms-label">Halfway</span></li>
-            <li data-milestone="1969"><span class="ms-num">1,969</span><span class="ms-label">Stonewall</span></li>
-          </ol>
-        </div>
       </div>
     </header>
 
@@ -1812,43 +1657,11 @@
       }
 
       // ============================================================
-      // HERO STATS + STONEWALL LADDER + COUNTY WALL
+      // HERO STATS + COUNTY WALL
       // (No time-based "newest member" — that card was retired
       // because keeping "joined 6 hours ago" current was a chore
       // and provided no real value.)
       // ============================================================
-      var ladderPainted = false;
-      function renderStonewallLadder(count) {
-        var pct = Math.max(0, Math.min(100, (count / FOUNDING_GOAL) * 100));
-        var fill = document.getElementById("ladderFill");
-        var marker = document.getElementById("ladderMarker");
-        var bubble = document.getElementById("ladderMarkerBubble");
-        // Snap to current position on first paint so we don't animate from 0%.
-        var snap = !ladderPainted;
-        if (fill) {
-          if (snap) fill.style.transition = "none";
-          fill.style.width = pct + "%";
-        }
-        if (marker) {
-          if (snap) marker.style.transition = "none";
-          marker.style.left = pct + "%";
-        }
-        if (snap) {
-          // Re-enable transitions on the next frame so subsequent updates animate.
-          requestAnimationFrame(function () {
-            if (fill) fill.style.transition = "";
-            if (marker) marker.style.transition = "";
-          });
-          ladderPainted = true;
-        }
-        if (bubble) bubble.textContent = count.toLocaleString();
-        var stops = document.querySelectorAll("#ladderStops li");
-        stops.forEach(function (li) {
-          var ms = parseInt(li.getAttribute("data-milestone"), 10);
-          if (!isNaN(ms) && count >= ms) li.classList.add("hit");
-          else li.classList.remove("hit");
-        });
-      }
 
       // Alphabetized once; OHIO_COUNTIES is static for the page lifetime.
       var COUNTY_WALL_ORDER = OHIO_COUNTIES.slice().sort();
@@ -1938,7 +1751,6 @@
         if (bar) bar.style.width = pct + "%";
         if (text) text.textContent = count.toLocaleString() + " of 1,969 Founding Members";
 
-        renderStonewallLadder(count);
         renderCountyWall(visible);
       }
 
