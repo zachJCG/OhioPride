@@ -119,19 +119,6 @@
   margin: 1rem 0 1.4rem;
 }
 
-/* ----- Pills ----- */
-.pride-pill {
-  font-family: var(--brand-font-display);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 0.22rem 0.6rem;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-.pride-pill--type { color: var(--brand-light-blue); border: 1px solid var(--brand-light-blue); }
-
 /* ----- Tour date list (rock-band tour styling) ----- */
 .pride-tour-list { margin-top: 0.5rem; }
 
@@ -212,13 +199,6 @@
 
 .pride-td-pills { flex: none; display: flex; flex-direction: column; gap: 0.35rem; }
 
-.pride-td-cta {
-  justify-self: end;
-  margin-right: 0.4rem;
-  padding: 0.7rem 1.6rem;
-  white-space: nowrap;
-}
-
 .pride-td-detail {
   grid-column: 1 / -1;
   padding: 0 0.6rem 1.3rem 5.7rem;
@@ -258,12 +238,6 @@
   .pride-td-day { font-size: 1.5rem; margin-top: 0; }
   .pride-td-info { flex-basis: 100%; }
   .pride-td-pills { flex-direction: row; flex-wrap: wrap; }
-  .pride-td-cta {
-    justify-self: stretch;
-    width: calc(100% - 1.2rem);
-    margin: 0 0.6rem 1.2rem;
-    text-align: center;
-  }
   .pride-td-detail { padding-left: 0.6rem; }
 }
 
@@ -292,13 +266,22 @@
   margin: 0 0 1.4rem;
   background: var(--brand-navy-light);
 }
+/* Float trick: lets the legend behave like a block heading INSIDE the
+   fieldset box (sitting on the lighter-blue background) instead of
+   straddling the top border. Followed by a clearfix on the next sibling. */
 .pride-fieldset legend {
+  float: left;
+  width: 100%;
   font-family: var(--brand-font-display);
   font-weight: 700;
   color: var(--brand-light-blue);
-  padding: 0 0.5rem;
+  padding: 0;
+  margin: 0 0 1rem;
   font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
+.pride-fieldset legend + * { clear: both; }
 .pride-field { margin-bottom: 1rem; }
 .pride-field:last-child { margin-bottom: 0; }
 .pride-field label {
@@ -356,20 +339,6 @@
 .pride-check--top { align-items: flex-start; }
 .pride-check--top input { margin-top: 0.2rem; }
 .pride-toggle-row { margin-bottom: 0.9rem; }
-.pride-event-month-head {
-  font-family: var(--brand-font-display);
-  font-weight: 700;
-  color: var(--brand-light-blue);
-  font-size: 0.82rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin: 1rem 0 0.5rem;
-}
-.pride-region-select-link {
-  background: none; border: none; color: var(--brand-light-blue);
-  text-decoration: underline; cursor: pointer; font-size: 0.85rem;
-  font-family: var(--brand-font-display); padding: 0; margin-bottom: 0.6rem;
-}
 .pride-error {
   color: var(--brand-text-danger);
   font-size: 0.82rem;
