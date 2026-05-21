@@ -1,11 +1,11 @@
 /* ==========================================================================
    pride-events.js
-   Powers /pride: a rock-band-style tour-date list.
+   Powers /pride: a rock-band-style tour-date list, informational only.
 
    Only events the PAC has confirmed it is attending (pac_attending) are
    shown. New stops appear here once an admin marks attendance in
-   /admin/pride. No filters, no map: a flat chronological list of
-   confirmed dates, each with a Sign Up to Work action.
+   /admin/pride. No filters, no map, no per-event signup CTAs: signup is
+   region-based and lives on /pride/signup.
 
    Data: GET /.netlify/functions/pride-events
          -> { ok, events: [...] }
@@ -108,8 +108,6 @@
           '</span>' +
           '<span class="pride-td-pills">' + pills.join('') + '</span>' +
         '</button>' +
-        '<a class="pride-btn pride-btn--primary pride-td-cta" href="' +
-          SIGNUP_URL + '">Sign Up</a>' +
         '<div class="pride-td-detail" id="' + id + '" hidden>' +
           detail.join('') +
         '</div>' +
@@ -126,7 +124,7 @@
           '<p>Tour dates are being locked in. Check back soon, or sign up ' +
           'now and we will route you to the closest confirmed stop.</p>' +
           '<a class="pride-btn pride-btn--primary" href="' + SIGNUP_URL +
-          '">Sign Up to Work an Event</a>' +
+          '">Sign Up to Work Pride</a>' +
         '</div>';
       return;
     }
