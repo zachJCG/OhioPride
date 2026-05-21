@@ -131,7 +131,6 @@
   white-space: nowrap;
 }
 .pride-pill--type { color: var(--brand-light-blue); border: 1px solid var(--brand-light-blue); }
-.pride-pill--priority { background: var(--brand-light-blue); color: var(--brand-navy); }
 
 /* ----- Tour date list (rock-band tour styling) ----- */
 .pride-tour-list { margin-top: 0.5rem; }

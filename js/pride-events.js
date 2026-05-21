@@ -74,9 +74,6 @@
     var sub = subParts.join(' &middot; ');
 
     var pills = [];
-    if (ev.pac_priority) {
-      pills.push('<span class="pride-pill pride-pill--priority">PAC Priority</span>');
-    }
 
     var detail = [];
     if (ev.description) detail.push('<p>' + esc(ev.description) + '</p>');
