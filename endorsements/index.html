@@ -274,6 +274,97 @@
       justify-content: center;
       flex-shrink: 0;
       border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+    .endorse-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .endorse-hero-photo {
+      width: 100%;
+      max-height: 320px;
+      overflow: hidden;
+      background: #0f2233;
+      border-bottom: 1px solid var(--end-card-border);
+    }
+    .endorse-hero-photo img {
+      width: 100%;
+      height: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      object-position: center 15%;
+      display: block;
+    }
+
+    /* ── Expandable full endorsement ───────────────────────────────────── */
+    .endorse-readmore-btn {
+      align-self: flex-start;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      background: rgba(115, 215, 238, 0.12);
+      color: var(--text-accent);
+      border: 1px solid rgba(115, 215, 238, 0.4);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .endorse-readmore-btn:hover {
+      background: rgba(115, 215, 238, 0.2);
+      color: var(--text-white);
+      border-color: var(--text-accent);
+    }
+    .endorse-readmore-btn .chev {
+      display: inline-block;
+      transition: transform 0.25s ease;
+    }
+    .endorse-readmore-btn[aria-expanded="true"] .chev {
+      transform: rotate(180deg);
+    }
+    .endorse-fullstatement {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease;
+    }
+    .endorse-fullstatement > div {
+      overflow: hidden;
+    }
+    .endorse-fullstatement.open {
+      grid-template-rows: 1fr;
+    }
+    .endorse-fullstatement-inner {
+      padding: 1rem 0 0;
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: var(--text-light);
+    }
+    .endorse-fullstatement-inner p {
+      margin: 0 0 0.85rem;
+    }
+    .endorse-fullstatement-inner p:last-child { margin-bottom: 0; }
+    .endorse-fullstatement-inner h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-accent);
+      margin: 1.25rem 0 0.5rem;
+    }
+    .endorse-fullstatement-inner h4:first-child { margin-top: 0.25rem; }
+    @media (prefers-reduced-motion: reduce) {
+      .endorse-fullstatement { transition: none; }
+      .endorse-readmore-btn .chev { transition: none; }
     }
     .endorse-card-headtext { flex: 1; min-width: 0; }
     .endorse-card-name {
@@ -645,6 +736,31 @@
 
     const state = { rows: [], level: 'all', year: '', loadFailed: false };
 
+    // Per-candidate overrides: photo + full endorsement statement (HTML).
+    // Keyed by lowercase candidate_name. Add new entries as endorsements ship.
+    const ENDORSEMENT_OVERRIDES = {
+      'jeff givan': {
+        photo_url: '/assets/endorsements/jeff-givan.jpg',
+        photo_alt: 'Jeff Givan, Democratic nominee for Ohio House District 78',
+        endorsement_full: `
+          <h4>Why we're standing with Jeff</h4>
+          <p>Ohio Pride PAC is proud to make Jeff Givan our first endorsement of the 2026 cycle. Jeff is the Democratic nominee for Ohio House District 78 — Allen County and part of Auglaize — running against House Speaker Matt Huffman, the architect of nearly every anti-LGBTQ bill of the last decade.</p>
+          <p>Jeff and his husband were the second gay couple to marry in rural Allen County. He's a co-founder of the Lima Pride Alliance, and he has spent years building community in a region of Ohio where being out still takes courage. That lived experience is exactly what the Statehouse is missing.</p>
+          <h4>What Jeff is running on</h4>
+          <p>Jeff's platform is built around three commitments that match ours: defending public schools from voucher schemes and book bans, protecting marriage equality at the state level as federal protections come under attack, and expanding access to preventative healthcare — including PrEP, HRT, and mental-health care — for every Ohioan regardless of ZIP code.</p>
+          <h4>Where he stood on our screening</h4>
+          <p>Jeff returned an unqualified yes on all five of our screening commitments: statewide nondiscrimination, opposing anti-LGBTQ legislation, banning conversion therapy, inclusive education, and voting against any rollback of existing equality protections. Our board approved the endorsement unanimously.</p>
+          <h4>How District 78 decides the Statehouse</h4>
+          <p>House Speaker Matt Huffman is term-limited out of the Senate and trying to slide into the House to keep driving the anti-equality agenda. District 78 is the seat that decides whether that succeeds. Flipping it doesn't just elect a fair-minded representative — it removes the Speaker from the chamber that has done the most damage to LGBTQ+ Ohioans.</p>
+          <p>This race is winnable. It needs volunteers in Lima, Wapakoneta, and every small town in between, and it needs donors who understand that a few hundred dollars in a state-rep race goes further than almost any check you'll write in 2026.</p>
+        `
+      }
+    };
+
+    function getOverride(name) {
+      return ENDORSEMENT_OVERRIDES[String(name || '').trim().toLowerCase()] || null;
+    }
+
     function classifyOffice(office) {
       if (!office) return 'local';
       const s = String(office).toLowerCase();
@@ -684,6 +800,7 @@
 
     function renderCard(row) {
       const officeLevel = classifyOffice(row.office_sought);
+      const override = getOverride(row.candidate_name);
       const meta = [];
       if (row.district)      meta.push(escapeHtml(row.district));
       if (row.election_year) meta.push(escapeHtml(row.election_year));
@@ -702,12 +819,30 @@
         ? `<p class="endorse-card-pronouns">${escapeHtml(row.pronouns)}</p>`
         : '';
 
+      const avatarInner = override && override.photo_url
+        ? `<img src="${escapeHtml(override.photo_url)}" alt="${escapeHtml(override.photo_alt || row.candidate_name)}" loading="lazy" />`
+        : escapeHtml(initials(row.candidate_name));
+
+      let readMoreHtml = '';
+      if (override && override.endorsement_full) {
+        const slug = String(row.candidate_name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const panelId = `endorse-full-${slug}`;
+        readMoreHtml = `
+            <button type="button" class="endorse-readmore-btn" aria-expanded="false" aria-controls="${panelId}" data-target="${panelId}">
+              <span class="label">Read full endorsement</span>
+              <span class="chev" aria-hidden="true">&#x25BE;</span>
+            </button>
+            <div class="endorse-fullstatement" id="${panelId}" aria-hidden="true">
+              <div><div class="endorse-fullstatement-inner">${override.endorsement_full}</div></div>
+            </div>`;
+      }
+
       return `
         <article class="endorse-card" data-level="${officeLevel}" data-year="${row.election_year || ''}">
           <div class="endorse-card-stripe" aria-hidden="true"></div>
           <div class="endorse-card-body">
             <div class="endorse-card-head">
-              <div class="endorse-avatar" aria-hidden="true">${escapeHtml(initials(row.candidate_name))}</div>
+              <div class="endorse-avatar" aria-hidden="true">${avatarInner}</div>
               <div class="endorse-card-headtext">
                 <h3 class="endorse-card-name">${escapeHtml(row.candidate_name)}</h3>
                 ${pronouns}
@@ -727,11 +862,28 @@
             </span>
 
             ${bioHtml}
+            ${readMoreHtml}
 
             <div class="endorse-card-foot">${linkHtml}</div>
           </div>
         </article>
       `;
+    }
+
+    function bindReadMore(root) {
+      root.querySelectorAll('.endorse-readmore-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-target');
+          const panel = document.getElementById(id);
+          if (!panel) return;
+          const open = panel.classList.toggle('open');
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+          btn.querySelector('.label').textContent = open
+            ? 'Hide full endorsement'
+            : 'Read full endorsement';
+        });
+      });
     }
 
     function applyFilters() {
@@ -788,6 +940,7 @@
         empty.hidden = true;
         grid.hidden = false;
         grid.innerHTML = filtered.map(renderCard).join('');
+        bindReadMore(grid);
       }
 
       updateChipCounts();
