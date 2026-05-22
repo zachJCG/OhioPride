@@ -171,111 +171,8 @@
         flex-wrap: wrap;
       }
 
-      .launch-countdown {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 0.6rem;
-        margin: 0 auto 1.5rem;
-        max-width: 640px;
-      }
-      .countdown-unit {
-        flex: 1 1 0;
-        min-width: 76px;
-        padding: 1rem 0.6rem 0.85rem;
-        border-radius: 12px;
-        background: rgba(8, 21, 33, 0.75);
-        border: 1px solid rgba(182, 140, 255, 0.35);
-        box-shadow: 0 0 18px rgba(118, 80, 180, 0.12);
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-      .countdown-unit::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 3px;
-        background: var(--pride-gradient);
-        background-size: 200% 100%;
-        opacity: 0.85;
-        animation: countdownShimmer 6s linear infinite;
-      }
-      @keyframes countdownShimmer {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 200% 50%; }
-      }
-      .countdown-unit-seconds {
-        box-shadow: 0 0 22px rgba(255, 105, 180, 0.28);
-      }
-      .countdown-value {
-        display: block;
-        font-family: "Montserrat", sans-serif;
-        font-weight: 700;
-        font-size: clamp(1.75rem, 5vw, 2.5rem);
-        line-height: 1;
-        color: var(--text-white);
-        background: var(--pride-gradient);
-        background-size: 200% 100%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: 0.02em;
-        font-variant-numeric: tabular-nums;
-        animation: countdownHue 8s linear infinite;
-      }
-      @keyframes countdownHue {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 200% 50%; }
-      }
-      .countdown-label {
-        display: block;
-        margin-top: 0.4rem;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.72rem;
-        font-weight: 600;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--text-light);
-      }
-      .countdown-tick {
-        animation: countdownTick 0.55s ease-out;
-      }
-      .countdown-tick-fast {
-        animation: countdownTickFast 0.45s ease-out;
-      }
-      @keyframes countdownTick {
-        0% { transform: translateY(-8px) scale(1.05); opacity: 0.35; }
-        60% { transform: translateY(2px) scale(1); opacity: 1; }
-        100% { transform: translateY(0) scale(1); opacity: 1; }
-      }
-      @keyframes countdownTickFast {
-        0% { transform: translateY(-4px) scale(1.12); opacity: 0.5; filter: drop-shadow(0 0 6px rgba(255, 150, 220, 0.7)); }
-        100% { transform: translateY(0) scale(1); opacity: 1; filter: none; }
-      }
-      .countdown-pulse {
-        animation: countdownPulse 1s ease-out;
-      }
-      @keyframes countdownPulse {
-        0% { box-shadow: 0 0 22px rgba(255, 105, 180, 0.28); }
-        40% { box-shadow: 0 0 34px rgba(118, 80, 180, 0.55); }
-        100% { box-shadow: 0 0 22px rgba(255, 105, 180, 0.28); }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .countdown-tick,
-        .countdown-tick-fast,
-        .countdown-pulse,
-        .countdown-value,
-        .countdown-unit::after { animation: none; }
-      }
-      @media (max-width: 480px) {
-        .launch-countdown { gap: 0.4rem; }
-        .countdown-unit { min-width: 0; padding: 0.7rem 0.3rem 0.55rem; }
-        .countdown-value { font-size: clamp(1.4rem, 6vw, 2rem); }
-        .countdown-label { font-size: 0.6rem; letter-spacing: 0.06em; }
-      }
+      /* Endorsement spotlight uses the same launch-day-card surface;
+         no countdown styles needed post-launch. */
 
       .cards-grid {
         display: grid;
@@ -526,47 +423,26 @@
       </div>
     </section>
 
-    <section class="launch-day-callout">
+    <section class="launch-day-callout endorse-spotlight">
       <div class="launch-day-card reveal">
-        <div class="section-label section-label-light">Save the Date</div>
-        <h2>Join Ohio Pride on Launch Day</h2>
+        <div class="section-label section-label-light">First Endorsement of 2026</div>
+        <h2>We're standing with Jeff Givan for Ohio House.</h2>
         <div class="launch-day-meta">
-          <span>May 22, 2026</span>
-          <span>Ohio Statehouse</span>
-          <span>Columbus, Ohio</span>
-        </div>
-        <div
-          class="launch-countdown"
-          id="launchCountdown"
-          data-target="2026-05-22T12:00:00-04:00"
-          aria-label="Countdown to Ohio Pride Launch Day"
-          aria-live="polite"
-        >
-          <div class="countdown-unit">
-            <span class="countdown-value" id="cdDays">--</span>
-            <span class="countdown-label">Days</span>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-value" id="cdHours">--</span>
-            <span class="countdown-label">Hours</span>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-value" id="cdMinutes">--</span>
-            <span class="countdown-label">Minutes</span>
-          </div>
-          <div class="countdown-unit countdown-unit-seconds">
-            <span class="countdown-value" id="cdSeconds">--</span>
-            <span class="countdown-label">Seconds</span>
-          </div>
+          <span>Ohio House District 78</span>
+          <span>Allen + Auglaize Counties</span>
+          <span>November 2026</span>
         </div>
         <p>
-          We’re officially launching Ohio Pride in public with our founding
-          board, members, and allies from across the state. RSVP now and stand
-          with us from day one.
+          Jeff is a co-founder of the Lima Pride Alliance and the Democratic
+          nominee challenging House Speaker Matt Huffman. He's running to
+          defend public schools, protect marriage equality, and expand
+          access to preventative healthcare. District 78 is the kind of seat
+          that decides whether the Statehouse keeps coming after our community,
+          and we need volunteers in every corner of it.
         </p>
         <div class="launch-day-actions">
-          <a href="/launch-day" class="btn btn-primary">View Event Details</a>
-          <a href="/launch-day" class="btn btn-outline">RSVP Today</a>
+          <a href="/volunteer" class="btn btn-primary">Volunteer for the Campaign</a>
+          <a href="/endorsements" class="btn btn-outline">Read the Endorsement</a>
         </div>
       </div>
     </section>
@@ -694,70 +570,6 @@
       document.addEventListener("DOMContentLoaded", function () {
         OhioPride.loadProgress("#goalFill", "#progressText");
       });
-    </script>
-    <script>
-      (function () {
-        var root = document.getElementById("launchCountdown");
-        if (!root) return;
-        var target = new Date(root.getAttribute("data-target")).getTime();
-        if (isNaN(target)) return;
-
-        var daysEl = document.getElementById("cdDays");
-        var hoursEl = document.getElementById("cdHours");
-        var minutesEl = document.getElementById("cdMinutes");
-        var secondsEl = document.getElementById("cdSeconds");
-        var secondsUnit = secondsEl ? secondsEl.parentNode : null;
-
-        function pad(n) { n = Math.max(0, n); return n < 10 ? "0" + n : "" + n; }
-
-        function setValue(el, next, tickClass) {
-          if (!el) return;
-          if (el.textContent === next) return;
-          el.textContent = next;
-          var cls = tickClass || "countdown-tick";
-          el.classList.remove("countdown-tick", "countdown-tick-fast");
-          void el.offsetWidth;
-          el.classList.add(cls);
-        }
-
-        function pulseUnit(unit) {
-          if (!unit) return;
-          unit.classList.remove("countdown-pulse");
-          void unit.offsetWidth;
-          unit.classList.add("countdown-pulse");
-        }
-
-        function render() {
-          var diff = target - Date.now();
-          if (diff <= 0) {
-            setValue(daysEl, "0");
-            setValue(hoursEl, "00");
-            setValue(minutesEl, "00");
-            setValue(secondsEl, "00");
-            return false;
-          }
-          var totalSeconds = Math.floor(diff / 1000);
-          var days = Math.floor(totalSeconds / 86400);
-          var hours = Math.floor((totalSeconds % 86400) / 3600);
-          var minutes = Math.floor((totalSeconds % 3600) / 60);
-          var seconds = totalSeconds % 60;
-          setValue(daysEl, String(days));
-          setValue(hoursEl, pad(hours));
-          setValue(minutesEl, pad(minutes));
-          var prevSeconds = secondsEl ? secondsEl.textContent : "";
-          setValue(secondsEl, pad(seconds), "countdown-tick-fast");
-          if (seconds === 0 && prevSeconds !== "00" && prevSeconds !== "") {
-            pulseUnit(secondsUnit);
-          }
-          return true;
-        }
-
-        render();
-        var msToNextSecond = 1000 - (Date.now() % 1000);
-        setTimeout(function tick() {
-          if (render()) setTimeout(tick, 1000 - (Date.now() % 1000));
-        }, msToNextSecond);
-      })();
     </script>
     <script src="/js/site-template.js" defer></script>
   </body>
