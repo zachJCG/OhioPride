@@ -96,8 +96,8 @@ assertContainsAll('  function targets both tables', fn, [
   ".from('intern_applications')"
 ]);
 assertContainsAll('  function honours allowed positions', fn, [
-  "'chief_of_staff'", "'graphics_social_media'", "'volunteer_coordinator'",
-  "'legislative_director'", "'policy_aide'"
+  "'chief_of_staff'", "'legislative_internship'", "'volunteer_internship'",
+  "'digital_internship'"
 ]);
 assertContainsAll('  function honours allowed terms', fn, [
   "'summer_2026'","'fall_2026'","'either'"
