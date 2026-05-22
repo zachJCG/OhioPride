@@ -173,6 +173,42 @@
 
       /* Endorsement spotlight uses the same launch-day-card surface;
          no countdown styles needed post-launch. */
+      .endorse-spotlight .launch-day-card {
+        position: relative;
+        border: none;
+        background:
+          linear-gradient(135deg, rgba(19, 45, 68, 0.92), rgba(40, 18, 75, 0.82)) padding-box,
+          conic-gradient(
+            from var(--endorse-angle, 0deg),
+            #e40303,
+            #ff8c00,
+            #ffed00,
+            #008026,
+            #004dff,
+            #750787,
+            #e40303
+          ) border-box;
+        border: 3px solid transparent;
+        animation: endorseRainbowSpin 6s linear infinite;
+      }
+      @property --endorse-angle {
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+      }
+      @keyframes endorseRainbowSpin {
+        to { --endorse-angle: 360deg; }
+      }
+      @supports not (background: conic-gradient(from 0deg, red, blue)) {
+        .endorse-spotlight .launch-day-card {
+          background: linear-gradient(135deg, rgba(19, 45, 68, 0.92), rgba(40, 18, 75, 0.82));
+          border: 3px solid #b68cff;
+          animation: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .endorse-spotlight .launch-day-card { animation: none; }
+      }
 
       .cards-grid {
         display: grid;
@@ -416,7 +452,7 @@
       <div class="hero-divider"></div>
       <div class="hero-buttons">
         <a href="/issues" class="btn btn-primary">Track Legislation</a>
-        <a href="/launch-day" class="btn btn-outline">Launch Day RSVP</a>
+        <a href="/volunteer" class="btn btn-outline">Volunteer with Ohio Pride</a>
         <a href="/donate/founding-member" class="btn btn-pride-shimmer"
           >Become a Founding Member</a
         >
@@ -441,8 +477,7 @@
           and we need volunteers in every corner of it.
         </p>
         <div class="launch-day-actions">
-          <a href="/volunteer" class="btn btn-primary">Volunteer for the Campaign</a>
-          <a href="/endorsements" class="btn btn-outline">Read the Endorsement</a>
+          <a href="/endorsements" class="btn btn-primary">Read the Endorsement</a>
         </div>
       </div>
     </section>
