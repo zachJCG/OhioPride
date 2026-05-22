@@ -77,7 +77,7 @@ const internPayload = {
   phone: '513-555-0101',
   pronouns: 'she/her',
   city: 'Columbus', county: 'Franklin', zip: '43215',
-  position: 'legislative_director',
+  position: 'legislative_internship',
   term: 'summer_2026',
   start_date_pref: 'June 2',
   weekly_hours: 12,
@@ -180,7 +180,7 @@ async function main() {
     pass('  row found');
     eq('  first_name',       i.data.first_name,             internPayload.first_name);
     eq('  email',            i.data.email,                  TEST_EMAIL_INTERN.toLowerCase());
-    eq('  position',         i.data.position,               'legislative_director');
+    eq('  position',         i.data.position,               'legislative_internship');
     eq('  term',             i.data.term,                   'summer_2026');
     eq('  weekly_hours',     i.data.weekly_hours,           12);
     eq('  credit_hours',     Number(i.data.credit_hours),   3);

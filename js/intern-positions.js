@@ -19,104 +19,61 @@
       term: 'Summer / Fall 2026',
       hours: '12 to 15 hrs/week',
       reports: 'Director',
-      responsibilities: [
-        'Manage Director\'s calendar, inbox triage, and meeting prep',
-        'Take minutes, track action items, and follow up across the board',
-        'Build and maintain operating procedures for the PAC',
-        'Coordinate cross-functional projects (events, launches, endorsements)',
-        'Draft internal memos, briefing docs, and after-action reports'
-      ],
-      qualifications: [
+      requirements: [
         'Junior, senior, or graduate student with strong writing chops',
         'Highly organized; thrives on owning the details others miss',
         'Discreet with sensitive information',
+        'Comfortable managing the Director\'s calendar, inbox triage, and meeting prep',
         'Bonus: prior campaign, advocacy, or executive office experience'
       ]
     },
     {
-      id: 'graphics_social_media',
-      title: 'Graphics and Social Media',
-      tagline: 'Build the look and voice of Ohio\'s LGBTQ+ political movement.',
-      location: 'Remote (Ohio)',
-      term: 'Summer / Fall 2026',
-      hours: '8 to 12 hrs/week',
-      reports: 'Director',
-      responsibilities: [
-        'Design social graphics, web assets, and event collateral on brand',
-        'Run a content calendar across Instagram, TikTok, X, LinkedIn',
-        'Produce reels, carousels, and quote cards from PAC news and bills',
-        'Track engagement and report what is working',
-        'Maintain the brand kit and template library'
-      ],
-      qualifications: [
-        'Design portfolio (Figma, Canva, Adobe — any combo)',
-        'Comfortable with copywriting in a confident, plainspoken voice',
-        'Self-starter who can ship without a heavy approval cycle',
-        'Bonus: short-form video editing, motion design, photography'
-      ]
-    },
-    {
-      id: 'volunteer_coordinator',
-      title: 'Volunteer Coordinator',
-      tagline: 'Recruit, deploy, and retain volunteers in all 88 counties.',
-      location: 'Statewide (hybrid)',
+      id: 'legislative_internship',
+      title: 'Legislative Internship',
+      tagline: 'Track every LGBTQ+ bill in the Statehouse. Power the scorecard.',
+      location: 'Columbus preferred (hybrid OK)',
       term: 'Summer / Fall 2026',
       hours: '10 to 15 hrs/week',
       reports: 'Director',
-      responsibilities: [
-        'Triage incoming volunteer signups and route to county captains',
-        'Build phone-banking, canvassing, and tabling shifts in our tools',
-        'Run weekly volunteer office hours and onboarding calls',
-        'Maintain the volunteer roster, retention follow-ups, and thanks',
-        'Help stand up county captains in priority districts'
-      ],
-      qualifications: [
-        'Personable and persistent; comfortable cold-calling new volunteers',
-        'Organized in a CRM or spreadsheet without supervision',
-        'Bonus: prior campaign field, MOVE, NGP VAN, or organizing experience'
-      ]
-    },
-    {
-      id: 'legislative_director',
-      title: 'Legislative Director',
-      tagline: 'Own the scorecard. Track every LGBTQ+ bill in the Statehouse.',
-      location: 'Columbus preferred (hybrid OK)',
-      term: 'Summer / Fall 2026',
-      hours: '12 to 15 hrs/week',
-      reports: 'Director',
-      responsibilities: [
-        'Monitor LSC, OLRC, and committee dockets for relevant legislation',
-        'Maintain the public legislative scorecard and bill tracker',
-        'Draft 1-pagers, floor talking points, and bill summaries',
-        'Build and maintain relationships with friendly Statehouse staff',
-        'Brief the board on key votes and emerging threats'
-      ],
-      qualifications: [
+      requirements: [
         'Polisci, public policy, law, or related background',
         'Reads bills carefully and writes about them clearly',
+        'Comfortable monitoring LSC, OLRC, and committee dockets',
         'Discreet, professional, and unflappable in committee rooms',
         'Bonus: Statehouse, lobbying, or legal-research experience'
       ]
     },
     {
-      id: 'policy_aide',
-      title: 'Policy Aide',
-      tagline: 'Research, write, and turn policy into a campaign asset.',
-      location: 'Cincinnati (in person)',
+      id: 'volunteer_internship',
+      title: 'Volunteer Internship',
+      tagline: 'Recruit, deploy, and retain volunteers in all 88 counties.',
+      location: 'Statewide (hybrid)',
       term: 'Summer / Fall 2026',
-      hours: '10 to 12 hrs/week',
-      reports: 'Legislative Director',
-      responsibilities: [
-        'Research LGBTQ+ policy questions; produce sourced briefs',
-        'Compare Ohio bills to model legislation in peer states',
-        'Help maintain bill detail pages on ohiopride.org',
-        'Support the Legislative Director with hearings and testimony prep',
-        'Draft op-eds and letters to the editor with the comms team'
-      ],
-      qualifications: [
-        'Strong research and writing; cites sources without being told',
-        'Curious about Ohio politics; willing to read long PDFs',
-        'Bonus: prior policy research, journalism, or debate experience'
+      hours: '8 to 15 hrs/week',
+      reports: 'Director',
+      requirements: [
+        'Personable and persistent; comfortable cold-calling new volunteers',
+        'Organized in a CRM or spreadsheet without supervision',
+        'Willing to run field and canvassing shifts (door knocking, lit drops)',
+        'Willing to run phone and text banking from scripts and lists',
+        'Willing to staff Pride tabling and voter registration at June events',
+        'Bonus: prior campaign field, MOVE, NGP VAN, or organizing experience'
+      ]
+    },
+    {
+      id: 'digital_internship',
+      title: 'Digital Internship',
+      tagline: 'Build the look and voice of Ohio\'s LGBTQ+ political movement.',
+      location: 'Remote (Ohio)',
+      term: 'Summer / Fall 2026',
+      hours: '8 to 12 hrs/week',
+      reports: 'Director',
+      requirements: [
+        'Design portfolio (Figma, Canva, Adobe — any combo)',
+        'Comfortable with copywriting in a confident, plainspoken voice',
+        'Self-starter who can ship without a heavy approval cycle',
+        'Drives social amplification: share, repost, and help our content reach voters',
+        'Bonus: short-form video editing, motion design, photography'
       ]
     }
   ];
@@ -141,13 +98,9 @@
             '<dt>Reports to</dt><dd>', escapeHtml(p.reports), '</dd>',
           '</dl>',
           '<div class="intern-card-more" hidden>',
-            '<h4>What you would do</h4>',
-            '<ul>', p.responsibilities.map(function (r) {
+            '<h4>Requirements</h4>',
+            '<ul>', p.requirements.map(function (r) {
               return '<li>' + escapeHtml(r) + '</li>';
-            }).join(''), '</ul>',
-            '<h4>What we look for</h4>',
-            '<ul>', p.qualifications.map(function (q) {
-              return '<li>' + escapeHtml(q) + '</li>';
             }).join(''), '</ul>',
           '</div>',
           '<div class="intern-card-foot">',

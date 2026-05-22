@@ -35,8 +35,8 @@ const ALLOWED_REGISTERED_VOTER = new Set(['yes', 'no', 'unsure']);
 
 // ---------- Intern enums ----------
 const ALLOWED_POSITIONS = new Set([
-  'chief_of_staff', 'graphics_social_media', 'volunteer_coordinator',
-  'legislative_director', 'policy_aide',
+  'chief_of_staff', 'legislative_internship', 'volunteer_internship',
+  'digital_internship',
 ]);
 const ALLOWED_TERMS = new Set(['summer_2026', 'fall_2026', 'either']);
 
