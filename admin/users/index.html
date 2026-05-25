@@ -1,40 +1,520 @@
 <!doctype html>
-<!--
-  Module stub. Each /admin/<module>/index.html in this bundle uses the same
-  template, swapping `data-active-nav`, `data-page-title`, `data-page-eyebrow`,
-  and the empty-state copy. Wire real data in once the module is built.
--->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Users | Ohio Pride PAC Admin</title>
     <meta name="robots" content="noindex,nofollow" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/site-template.css" />
     <link rel="stylesheet" href="/admin/admin-shared.css" />
     <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+
+    <style>
+      .users-wrap { background: rgba(15, 34, 51, 0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 16px 8px; }
+      .users-table tbody tr { cursor: pointer; }
+      .users-table tbody tr:hover { background: rgba(115, 215, 238, 0.06); }
+      .user-roles { display: flex; flex-wrap: wrap; gap: 4px; }
+
+      .user-modal-bg { position: fixed; inset: 0; background: rgba(15, 34, 51, 0.62); display: flex; align-items: flex-start; justify-content: center; padding: 40px 20px; z-index: 80; overflow-y: auto; }
+      .user-modal-bg[hidden] { display: none; }
+      .user-modal { background: #0e2237; border: 1px solid rgba(255,255,255,0.08); width: 100%; max-width: 580px; border-radius: 12px; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5); overflow: hidden; }
+      .user-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; background: rgba(15, 34, 51, 0.8); border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .user-modal-head h3 { margin: 0; font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--text-white); }
+      .user-modal-close { background: transparent; border: 0; color: var(--text-light); font-size: 22px; cursor: pointer; padding: 0 4px; }
+      .user-modal-body { padding: 20px 22px 4px; }
+      .user-form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 16px; margin-bottom: 14px; }
+      .user-form-row label { display: flex; flex-direction: column; gap: 5px; font-family: 'Montserrat', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700; color: var(--text-muted); }
+      .user-form-row .user-form-wide { grid-column: 1 / -1; }
+      .user-form-row input, .user-form-row select, .user-form-row textarea { font-family: 'Roboto Slab', Georgia, serif; font-size: 14px; color: var(--text-white); padding: 10px 12px; border: 1px solid var(--border-medium); border-radius: 6px; background: rgba(15, 34, 51, 0.6); text-transform: none; letter-spacing: 0; font-weight: 400; }
+      .user-form-row input:focus, .user-form-row select:focus { outline: none; border-color: var(--text-accent); box-shadow: 0 0 0 3px rgba(115, 215, 238, 0.18); }
+      .user-modal-foot { display: flex; align-items: center; gap: 8px; padding: 14px 22px; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(15, 34, 51, 0.45); }
+      .user-form-spacer { flex: 1; }
+      .role-checkbox-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 12px; background: rgba(15, 34, 51, 0.4); border: 1px solid var(--border-medium); border-radius: 6px; }
+      .role-checkbox-list label { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 8px; font-size: 12px !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--text-light); font-weight: 500 !important; cursor: pointer; }
+      .role-checkbox-list input[type="checkbox"] { width: 16px; height: 16px; margin: 0; accent-color: var(--text-accent); padding: 0; }
+      .help-text { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+      .user-info-banner { padding: 12px 16px; background: rgba(115, 215, 238, 0.08); border: 1px solid rgba(115, 215, 238, 0.25); border-radius: 8px; color: var(--text-light); font-size: 13px; line-height: 1.55; margin-bottom: 18px; }
+      .user-info-banner code { background: rgba(15, 34, 51, 0.6); padding: 1px 6px; border-radius: 3px; color: var(--text-accent); font-size: 12px; }
+      @media (max-width: 640px) {
+        .user-form-row { grid-template-columns: 1fr; }
+        .role-checkbox-list { grid-template-columns: 1fr; }
+      }
+    </style>
   </head>
+
   <body class="admin-shell">
-    <div id="shell-root"
-         data-active-nav="users"
-         data-page-eyebrow="Access"
-         data-page-title="Admin Users"
-         data-page-sub="Manage who can sign in and what they can see."></div>
+    <div
+      id="shell-root"
+      data-active-nav="users"
+      data-page-eyebrow="Access"
+      data-page-title="Admin Users"
+      data-page-sub="Manage who can sign in, what roles they hold, and who shows up as an assignee."
+    ></div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/admin/admin-shell.js"></script>
+
     <script>
-      document.addEventListener('admin-shell-ready', function () {
-        document.getElementById('shellBody').innerHTML =
-          '<div class="shell-widget"><div class="shell-widget-empty">' +
-            '<strong style="display:block;font-size:16px;color:#fff;margin-bottom:8px">Module coming soon</strong>' +
-            'This admin module is reserved in the navigation and gated by your role. ' +
-            'Wire it up by replacing the stub at <code>/admin/users/index.html</code>.' +
-          '</div></div>';
-      });
+      (function () {
+        'use strict';
+
+        var state = {
+          client: null,
+          users: [],
+          filtered: [],
+          roles: [],            // [{slug, label, description, sort_order}]
+          userRoles: {},        // user_id -> [role_slug]
+          me: null,
+          canManage: false,
+          activeId: null
+        };
+
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var detail = ev.detail || {};
+          state.client = detail.client;
+          state.me = detail.user || null;
+          state.canManage = detail.can('users','manage_users') || detail.can('users','admin');
+
+          var actions = document.getElementById('shellPageActions');
+          actions.innerHTML = state.canManage
+            ? '<button type="button" class="shell-btn shell-btn-primary" id="newUserBtn">Add User</button>'
+            : '';
+
+          document.getElementById('shellBody').innerHTML = pageHtml();
+
+          Promise.all([loadRoles(), loadUsers()])
+            .then(function () { applyFilters(); })
+            .catch(function (err) {
+              console.error('users load failed', err);
+              document.getElementById('usersBody').innerHTML =
+                '<tr><td colspan="6" class="admin-empty-row admin-error">' +
+                'Could not load users. Your role may not include this module.' +
+                '</td></tr>';
+            });
+
+          bindEvents();
+        });
+
+        function pageHtml() {
+          return [
+            '<div class="user-info-banner">',
+              '<strong>How this works.</strong> Rows in this table populate the assignee picker across the admin app ',
+              '(starting with the new <code>Tasks</code> module). Add a teammate here, assign them a role, and they ',
+              'appear as an assignee everywhere a person needs to be picked. ',
+              (state.canManage
+                ? 'Inviting a user sends them a sign-in link; they set their own password on first use.'
+                : 'You don&rsquo;t have permission to invite or edit users — ask a Super Admin.'),
+            '</div>',
+
+            '<div class="admin-stat-grid">',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statTotal">0</div><div class="admin-stat-label">Total Users</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statActive">0</div><div class="admin-stat-label">Active</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statRoles">0</div><div class="admin-stat-label">Roles</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statRecent">0</div><div class="admin-stat-label">Seen This Week</div></div>',
+            '</div>',
+
+            '<div class="admin-toolbar">',
+              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search name, email, title..." autocomplete="off" />',
+              '<select class="admin-input" id="filterRole"><option value="">All roles</option></select>',
+              '<select class="admin-input" id="filterStatus">',
+                '<option value="">All statuses</option>',
+                '<option value="active">Active</option>',
+                '<option value="inactive">Inactive</option>',
+              '</select>',
+              '<span class="admin-toolbar-spacer"></span>',
+              '<span class="admin-result-count" id="resultCount"></span>',
+            '</div>',
+
+            '<div class="users-wrap">',
+              '<div class="admin-table-wrap" style="border:none;">',
+                '<table class="admin-table users-table" id="usersTable">',
+                  '<thead><tr>',
+                    '<th>Name</th>',
+                    '<th>Email</th>',
+                    '<th>Title</th>',
+                    '<th>Roles</th>',
+                    '<th>Last seen</th>',
+                    '<th>Status</th>',
+                  '</tr></thead>',
+                  '<tbody id="usersBody"><tr><td colspan="6" class="admin-empty-row">Loading users...</td></tr></tbody>',
+                '</table>',
+              '</div>',
+            '</div>',
+
+            userModalHtml()
+          ].join('');
+        }
+
+        function userModalHtml() {
+          return [
+            '<div class="user-modal-bg" id="userModal" hidden>',
+              '<div class="user-modal" role="dialog" aria-modal="true">',
+                '<div class="user-modal-head">',
+                  '<h3 id="userModalTitle">Add User</h3>',
+                  '<button type="button" class="user-modal-close" id="userModalClose">&times;</button>',
+                '</div>',
+                '<form id="userForm" autocomplete="off">',
+                  '<div class="user-modal-body">',
+                    '<div class="user-form-row">',
+                      '<label class="user-form-wide">Email',
+                        '<input type="email" name="email" required maxlength="200" />',
+                        '<span class="help-text">Used for sign-in. The system will send them a magic link to set their password.</span>',
+                      '</label>',
+                      '<label>Full name',
+                        '<input type="text" name="full_name" maxlength="160" />',
+                      '</label>',
+                      '<label>Title',
+                        '<input type="text" name="title" maxlength="160" placeholder="e.g. Volunteer Lead" />',
+                      '</label>',
+                      '<label class="user-form-wide">Roles',
+                        '<div class="role-checkbox-list" id="roleCheckboxList"></div>',
+                        '<span class="help-text">Roles determine which modules they can see and whether they can edit.</span>',
+                      '</label>',
+                      '<label class="user-form-wide">',
+                        '<div style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text-light);font-weight:500">',
+                          '<input type="checkbox" name="is_active" checked style="width:16px;height:16px;margin:0;accent-color:var(--text-accent)" />',
+                          'Active &mdash; uncheck to revoke access without deleting the row',
+                        '</div>',
+                      '</label>',
+                      '<label class="user-form-wide">Notes',
+                        '<textarea name="notes" rows="2" placeholder="Internal notes (optional)"></textarea>',
+                      '</label>',
+                    '</div>',
+                  '</div>',
+                  '<div class="user-modal-foot">',
+                    '<span class="user-form-spacer"></span>',
+                    '<button type="button" class="shell-btn shell-btn-outline" id="userFormCancel">Cancel</button>',
+                    '<button type="submit" class="shell-btn shell-btn-primary" id="userFormSave">Save</button>',
+                  '</div>',
+                '</form>',
+              '</div>',
+            '</div>'
+          ].join('');
+        }
+
+        // =================================================================
+        // Data
+        // =================================================================
+        function loadRoles() {
+          return state.client.from('admin_roles')
+            .select('slug, label, description, sort_order')
+            .order('sort_order', { ascending: true })
+            .then(function (r) {
+              if (r.error) throw r.error;
+              state.roles = r.data || [];
+              populateRoleControls();
+            });
+        }
+
+        function loadUsers() {
+          return Promise.all([
+            state.client.from('admin_users')
+              .select('id, email, full_name, title, is_active, created_at, last_seen_at, invited_by, notes')
+              .order('full_name', { ascending: true }),
+            state.client.from('admin_user_roles')
+              .select('user_id, role_slug')
+          ]).then(function (resps) {
+            if (resps[0].error) throw resps[0].error;
+            state.users = resps[0].data || [];
+            state.userRoles = {};
+            (resps[1].data || []).forEach(function (row) {
+              (state.userRoles[row.user_id] = state.userRoles[row.user_id] || []).push(row.role_slug);
+            });
+            renderStats();
+          });
+        }
+
+        function populateRoleControls() {
+          var filter = document.getElementById('filterRole');
+          if (filter) {
+            filter.innerHTML = '<option value="">All roles</option>' +
+              state.roles.map(function (r) {
+                return '<option value="' + r.slug + '">' + escapeHtml(r.label) + '</option>';
+              }).join('');
+          }
+          var box = document.getElementById('roleCheckboxList');
+          if (box) {
+            box.innerHTML = state.roles.map(function (r) {
+              return '<label><input type="checkbox" name="roles" value="' + escapeAttr(r.slug) + '" />' +
+                     escapeHtml(r.label) + '</label>';
+            }).join('');
+          }
+        }
+
+        function saveUser(payload, userId, roleSlugs) {
+          var op = userId
+            ? state.client.from('admin_users').update(payload).eq('id', userId).select('id').single()
+            : state.client.from('admin_users').insert(payload).select('id').single();
+
+          return op.then(function (r) {
+            if (r.error) throw r.error;
+            var savedId = r.data.id;
+            // Sync roles: delete-all + insert
+            return state.client.from('admin_user_roles').delete().eq('user_id', savedId)
+              .then(function () {
+                if (!roleSlugs || roleSlugs.length === 0) return { data: [] };
+                var rows = roleSlugs.map(function (s) {
+                  return { user_id: savedId, role_slug: s, assigned_by: state.me && state.me.email };
+                });
+                return state.client.from('admin_user_roles').insert(rows);
+              })
+              .then(function (rr) {
+                if (rr && rr.error) throw rr.error;
+                return savedId;
+              });
+          });
+        }
+
+        function inviteAuthUser(email, fullName) {
+          // Calls the server-side function with the caller's bearer token.
+          return state.client.auth.getSession().then(function (s) {
+            var jwt = s && s.data && s.data.session && s.data.session.access_token;
+            if (!jwt) throw new Error('No session');
+            return fetch('/.netlify/functions/admin-user-invite', {
+              method: 'POST',
+              headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + jwt },
+              body: JSON.stringify({ email: email, full_name: fullName || null })
+            }).then(function (resp) {
+              return resp.json().then(function (body) {
+                if (!resp.ok || !body.ok) {
+                  throw new Error(body && body.error ? body.error : 'invite_failed');
+                }
+                return body;
+              });
+            });
+          });
+        }
+
+        // =================================================================
+        // Render
+        // =================================================================
+        function renderStats() {
+          var weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+          var counts = { total: state.users.length, active: 0, recent: 0 };
+          state.users.forEach(function (u) {
+            if (u.is_active) counts.active++;
+            if (u.last_seen_at && u.last_seen_at >= weekAgo) counts.recent++;
+          });
+          $('statTotal').textContent  = counts.total;
+          $('statActive').textContent = counts.active;
+          $('statRoles').textContent  = state.roles.length;
+          $('statRecent').textContent = counts.recent;
+        }
+
+        function applyFilters() {
+          var q      = ($('filterSearch') && $('filterSearch').value || '').trim().toLowerCase();
+          var roleF  = ($('filterRole')   && $('filterRole').value)   || '';
+          var stat   = ($('filterStatus') && $('filterStatus').value) || '';
+
+          state.filtered = state.users.filter(function (u) {
+            if (stat === 'active'   && !u.is_active) return false;
+            if (stat === 'inactive' &&  u.is_active) return false;
+            if (roleF) {
+              var rs = state.userRoles[u.id] || [];
+              if (rs.indexOf(roleF) === -1) return false;
+            }
+            if (q) {
+              var hay = ((u.full_name||'') + ' ' + (u.email||'') + ' ' + (u.title||'')).toLowerCase();
+              if (hay.indexOf(q) === -1) return false;
+            }
+            return true;
+          });
+          renderRows();
+        }
+
+        function renderRows() {
+          var body = $('usersBody');
+          $('resultCount').textContent =
+            state.filtered.length === state.users.length
+              ? state.users.length + ' total'
+              : state.filtered.length + ' of ' + state.users.length;
+
+          if (state.filtered.length === 0) {
+            body.innerHTML = '<tr><td colspan="6" class="admin-empty-row">' +
+                             (state.users.length === 0
+                               ? 'No users yet. Click “Add User” to invite the first one.'
+                               : 'No users match the current filters.') +
+                             '</td></tr>';
+            return;
+          }
+
+          body.innerHTML = state.filtered.map(function (u) {
+            var name = u.full_name || humanize(u.email);
+            var roles = (state.userRoles[u.id] || []).map(function (slug) {
+              var lbl = (state.roles.find(function (x) { return x.slug === slug; }) || {}).label || slug;
+              return '<span class="admin-pill">' + escapeHtml(lbl) + '</span>';
+            }).join('');
+            if (!roles) roles = '<span class="admin-muted">— No role —</span>';
+            var lastSeen = u.last_seen_at ? fmtDate(u.last_seen_at) : '<span class="admin-muted">never</span>';
+            var statusPill = u.is_active
+              ? '<span class="admin-pill" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.5)">Active</span>'
+              : '<span class="admin-pill" style="background:rgba(255,255,255,0.05);color:var(--text-muted);border-color:var(--border-medium)">Inactive</span>';
+
+            return '<tr data-id="' + escapeAttr(u.id) + '">' +
+              '<td class="admin-cell-name">' + escapeHtml(name) + '</td>' +
+              '<td><span class="admin-cell-sub" style="margin-top:0;font-size:13px;color:var(--text-light)">' + escapeHtml(u.email) + '</span></td>' +
+              '<td>' + (u.title ? escapeHtml(u.title) : '<span class="admin-muted">—</span>') + '</td>' +
+              '<td><div class="user-roles">' + roles + '</div></td>' +
+              '<td>' + lastSeen + '</td>' +
+              '<td>' + statusPill + '</td>' +
+            '</tr>';
+          }).join('');
+        }
+
+        // =================================================================
+        // Modal
+        // =================================================================
+        function openUserModal(existing) {
+          var modal = $('userModal');
+          var form  = $('userForm');
+          $('userModalTitle').textContent = existing ? 'Edit User' : 'Add User';
+          form.reset();
+          form.dataset.userId = existing ? existing.id : '';
+          form.elements.email.disabled = !!existing;     // can't change PK
+
+          if (existing) {
+            form.elements.email.value     = existing.email || '';
+            form.elements.full_name.value = existing.full_name || '';
+            form.elements.title.value     = existing.title || '';
+            form.elements.is_active.checked = !!existing.is_active;
+            form.elements.notes.value     = existing.notes || '';
+            var rs = state.userRoles[existing.id] || [];
+            form.querySelectorAll('input[name="roles"]').forEach(function (cb) {
+              cb.checked = rs.indexOf(cb.value) !== -1;
+            });
+          } else {
+            form.elements.is_active.checked = true;
+            form.querySelectorAll('input[name="roles"]').forEach(function (cb) { cb.checked = false; });
+          }
+          modal.hidden = false;
+          setTimeout(function () { try { (existing ? form.elements.full_name : form.elements.email).focus(); } catch (e) {} }, 50);
+        }
+
+        function closeUserModal() { $('userModal').hidden = true; }
+
+        function handleUserFormSubmit(ev) {
+          ev.preventDefault();
+          if (!state.canManage) {
+            window.AdminShell.toast('Your role can’t manage users.', 'error');
+            return;
+          }
+          var form = ev.target;
+          var btn  = $('userFormSave');
+          var userId = form.dataset.userId || null;
+
+          var email     = (form.elements.email.value || '').trim().toLowerCase();
+          var full_name = (form.elements.full_name.value || '').trim() || null;
+          var title     = (form.elements.title.value || '').trim() || null;
+          var is_active = !!form.elements.is_active.checked;
+          var notes     = (form.elements.notes.value || '').trim() || null;
+          var roles     = Array.prototype.slice
+            .call(form.querySelectorAll('input[name="roles"]:checked'))
+            .map(function (cb) { return cb.value; });
+
+          if (!email) return;
+
+          var payload = userId
+            ? { full_name: full_name, title: title, is_active: is_active, notes: notes }
+            : { email: email, full_name: full_name, title: title, is_active: is_active, notes: notes, invited_by: state.me && state.me.email };
+
+          btn.disabled = true; btn.textContent = 'Saving...';
+
+          saveUser(payload, userId, roles)
+            .then(function (savedId) {
+              if (!userId) {
+                // New user: also fire the invite flow if the function is wired up.
+                return inviteAuthUser(email, full_name).then(function (resp) {
+                  if (resp && resp.invite_sent) {
+                    window.AdminShell.toast('User added and invite email sent.', 'success');
+                  } else {
+                    window.AdminShell.toast('User added.', 'success');
+                  }
+                }, function (err) {
+                  console.warn('invite step failed (admin_users row was saved):', err);
+                  window.AdminShell.toast('User added (auth invite not sent — see console).', 'success');
+                });
+              }
+              window.AdminShell.toast('User updated.', 'success');
+            })
+            .then(loadUsers)
+            .then(function () { closeUserModal(); applyFilters(); })
+            .catch(function (err) {
+              console.error('save user failed', err);
+              window.AdminShell.toast('Could not save user. ' + (err.message || ''), 'error');
+            })
+            .finally(function () { btn.disabled = false; btn.textContent = 'Save'; });
+        }
+
+        // =================================================================
+        // Events
+        // =================================================================
+        function bindEvents() {
+          var debT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debT); debT = setTimeout(applyFilters, 150);
+          });
+          $('filterRole').addEventListener('change', applyFilters);
+          $('filterStatus').addEventListener('change', applyFilters);
+
+          var newBtn = $('newUserBtn');
+          if (newBtn) newBtn.addEventListener('click', function () { openUserModal(null); });
+
+          $('userFormCancel').addEventListener('click', closeUserModal);
+          $('userModalClose').addEventListener('click', closeUserModal);
+          $('userForm').addEventListener('submit', handleUserFormSubmit);
+          $('userModal').addEventListener('click', function (ev) {
+            if (ev.target.id === 'userModal') closeUserModal();
+          });
+
+          $('usersBody').addEventListener('click', function (ev) {
+            var tr = ev.target.closest('tr[data-id]');
+            if (!tr) return;
+            if (!state.canManage) {
+              window.AdminShell.toast('Your role is read-only here.', 'error');
+              return;
+            }
+            var u = state.users.find(function (x) { return x.id === tr.dataset.id; });
+            if (u) openUserModal(u);
+          });
+        }
+
+        // =================================================================
+        // Helpers
+        // =================================================================
+        function $(id) { return document.getElementById(id); }
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+        function humanize(email) {
+          if (!email) return 'Admin';
+          return String(email).split('@')[0]
+            .split(/[._-]/)
+            .map(function (p) { return p ? p[0].toUpperCase() + p.slice(1) : ''; })
+            .join(' ');
+        }
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso); if (isNaN(d.getTime())) return '';
+          var diff = (Date.now() - d.getTime()) / 1000;
+          if (diff < 60)    return 'just now';
+          if (diff < 3600)  return Math.floor(diff/60)   + 'm ago';
+          if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+          if (diff < 86400 * 7) return Math.floor(diff/86400) + 'd ago';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+      })();
     </script>
   </body>
 </html>

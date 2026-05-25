@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tasks | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+
+    <style>
+      .tasks-board-wrap { background: rgba(15, 34, 51, 0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 16px 8px; }
+      .tasks-table tbody tr { cursor: pointer; }
+      .tasks-table tbody tr:hover { background: rgba(115, 215, 238, 0.06); }
+      .tasks-table td.task-title-cell { font-weight: 600; color: var(--text-white); max-width: 360px; }
+      .tasks-table .task-wbs { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 3px; letter-spacing: 0.04em; }
+      .tasks-table .task-desc-snippet { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-weight: 400; }
+      .tasks-table td.task-overdue strong { color: #ff8a8a; }
+
+      /* Status pills */
+      .admin-status-not_started { background-color: rgba(255, 255, 255, 0.08); border-color: var(--border-medium);    color: var(--text-muted); }
+      .admin-status-in_progress { background-color: rgba(115, 215, 238, 0.15); border-color: rgba(115, 215, 238, 0.55); color: var(--text-accent); }
+      .admin-status-blocked     { background-color: rgba(255, 107, 107, 0.12); border-color: rgba(255, 107, 107, 0.55); color: #ff8a8a; }
+      .admin-status-in_review   { background-color: rgba(255, 200, 87, 0.12);  border-color: rgba(255, 200, 87, 0.55);  color: #ffc857; }
+      .admin-status-done        { background-color: rgba(74, 222, 128, 0.12);  border-color: rgba(74, 222, 128, 0.55);  color: #4ade80; }
+      .admin-status-cancelled   { background-color: rgba(255, 255, 255, 0.05); border-color: var(--border-medium);    color: var(--text-muted); }
+
+      /* Priority pill */
+      .priority-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; border-radius: 999px; border: 1px solid transparent; }
+      .priority-low      { background: rgba(255,255,255,0.05); color: var(--text-muted); border-color: var(--border-medium); }
+      .priority-normal   { background: rgba(115, 215, 238, 0.10); color: var(--text-accent); border-color: rgba(115, 215, 238, 0.3); }
+      .priority-high     { background: rgba(255, 200, 87, 0.12); color: #ffc857; border-color: rgba(255, 200, 87, 0.5); }
+      .priority-urgent   { background: rgba(255, 107, 107, 0.14); color: #ff8a8a; border-color: rgba(255, 107, 107, 0.5); }
+
+      .assignee-cell { display: flex; align-items: center; gap: 8px; }
+      .assignee-avatar { width: 26px; height: 26px; border-radius: 50%; background: rgba(115, 215, 238, 0.18); color: var(--text-accent); display: inline-flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; flex: 0 0 26px; }
+      .assignee-name { font-size: 13px; color: var(--text-light); }
+
+      /* Modal — create/edit task */
+      .task-modal-bg {
+        position: fixed; inset: 0;
+        background: rgba(15, 34, 51, 0.62);
+        display: flex; align-items: flex-start; justify-content: center;
+        padding: 40px 20px; z-index: 80; overflow-y: auto;
+      }
+      .task-modal-bg[hidden] { display: none; }
+      .task-modal {
+        background: #0e2237; border: 1px solid rgba(255,255,255,0.08);
+        width: 100%; max-width: 680px;
+        border-radius: 12px; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+      .task-modal-head {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 22px;
+        background: rgba(15, 34, 51, 0.8);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+      .task-modal-head h3 {
+        margin: 0; font-family: 'Montserrat', sans-serif; font-size: 16px; color: var(--text-white);
+      }
+      .task-modal-close {
+        background: transparent; border: 0; color: var(--text-light);
+        font-size: 22px; cursor: pointer; padding: 0 4px;
+      }
+      .task-modal-body { padding: 20px 22px 4px; }
+      .task-form-row {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 16px;
+        margin-bottom: 14px;
+      }
+      .task-form-row label {
+        display: flex; flex-direction: column; gap: 5px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700;
+        color: var(--text-muted);
+      }
+      .task-form-row .task-form-wide { grid-column: 1 / -1; }
+      .task-form-row input[type="text"],
+      .task-form-row input[type="date"],
+      .task-form-row input[type="number"],
+      .task-form-row select,
+      .task-form-row textarea {
+        font-family: 'Roboto Slab', Georgia, serif;
+        font-size: 14px; color: var(--text-white);
+        padding: 10px 12px; border: 1px solid var(--border-medium); border-radius: 6px;
+        background: rgba(15, 34, 51, 0.6);
+        text-transform: none; letter-spacing: 0; font-weight: 400;
+      }
+      .task-form-row input:focus, .task-form-row select:focus, .task-form-row textarea:focus {
+        outline: none; border-color: var(--text-accent);
+        box-shadow: 0 0 0 3px rgba(115, 215, 238, 0.18);
+      }
+      .task-form-row textarea { resize: vertical; min-height: 92px; }
+      .task-form-hint {
+        font-size: 11px; color: var(--text-muted); font-weight: 500;
+        text-transform: none; letter-spacing: 0; margin-top: 2px;
+      }
+      .task-modal-foot {
+        display: flex; align-items: center; gap: 8px;
+        padding: 14px 22px;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        background: rgba(15, 34, 51, 0.45);
+      }
+      .task-form-spacer { flex: 1; }
+      @media (max-width: 640px) {
+        .task-form-row { grid-template-columns: 1fr; }
+      }
+
+      /* Drawer-specific styling */
+      .task-comment { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .task-comment:last-child { border-bottom: none; }
+      .task-comment-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+      .task-comment-author { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; color: var(--text-white); }
+      .task-comment-when { font-size: 11px; color: var(--text-muted); }
+      .task-comment-body { font-size: 13px; line-height: 1.55; color: var(--text-light); white-space: pre-wrap; }
+      .task-comment-form { margin-top: 12px; }
+      .task-comment-form textarea {
+        width: 100%; min-height: 70px; resize: vertical;
+        padding: 10px 12px; border: 1px solid var(--border-medium); border-radius: 6px;
+        background: rgba(15, 34, 51, 0.6); color: var(--text-white);
+        font-family: 'Roboto Slab', serif; font-size: 13px;
+      }
+      .task-comment-form .form-actions { margin-top: 8px; display: flex; justify-content: flex-end; gap: 8px; }
+      .task-activity-item { display: flex; gap: 10px; padding: 6px 0; font-size: 12px; color: var(--text-muted); }
+      .task-activity-item strong { color: var(--text-light); font-weight: 600; }
+      .task-activity-item .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-accent); margin-top: 6px; flex: 0 0 6px; opacity: 0.6; }
+
+      .tasks-tab-row { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .tasks-tab {
+        background: transparent; border: 0; padding: 10px 16px;
+        font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700;
+        letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted);
+        cursor: pointer; border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+      }
+      .tasks-tab:hover { color: var(--text-light); }
+      .tasks-tab.is-active { color: var(--text-accent); border-bottom-color: var(--text-accent); }
+      .tasks-tab .tasks-tab-count { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: rgba(255,255,255,0.08); font-size: 11px; color: var(--text-light); }
+      .tasks-tab.is-active .tasks-tab-count { background: rgba(115, 215, 238, 0.18); color: var(--text-accent); }
+    </style>
+  </head>
+
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="tasks"
+      data-page-eyebrow="Workspace"
+      data-page-title="Tasks"
+      data-page-sub="Work breakdown for the team &mdash; create, assign, and track the work everyone&rsquo;s doing."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+
+    <script>
+      (function () {
+        'use strict';
+
+        var STATUS_OPTIONS = ['not_started','in_progress','blocked','in_review','done','cancelled'];
+        var STATUS_LABEL = {
+          not_started:'Not Started', in_progress:'In Progress', blocked:'Blocked',
+          in_review:'In Review',    done:'Done',                cancelled:'Cancelled'
+        };
+        var PRIORITY_OPTIONS = ['low','normal','high','urgent'];
+        var PRIORITY_LABEL   = { low:'Low', normal:'Normal', high:'High', urgent:'Urgent' };
+
+        var state = {
+          client: null,
+          rows: [],
+          filtered: [],
+          users: [],            // [{id, full_name, email, title, is_active}]
+          me: null,
+          canWrite: false,
+          sortKey: 'due_date',
+          sortDir: 'asc',
+          tab: 'open',          // open | mine | all | done
+          activeId: null
+        };
+
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var detail = ev.detail || {};
+          state.client = detail.client;
+          state.me     = detail.user || null;
+          state.canWrite = detail.can('tasks','write');
+
+          var actions = document.getElementById('shellPageActions');
+          actions.innerHTML =
+            '<button type="button" class="shell-btn shell-btn-outline" id="exportCsv">Export CSV</button>' +
+            (state.canWrite
+              ? '<button type="button" class="shell-btn shell-btn-primary" id="newTaskBtn">New Task</button>'
+              : '');
+
+          document.getElementById('shellBody').innerHTML = pageHtml();
+
+          Promise.all([loadUsers(), loadTasks()])
+            .then(function () {
+              renderStats();
+              applyFilters();
+              var qid = new URLSearchParams(location.search).get('id');
+              if (qid) {
+                var match = state.rows.find(function (r) { return r.id === qid; });
+                if (match) openDrawer(match);
+              }
+            })
+            .catch(function (err) {
+              console.error('tasks load failed', err);
+              document.getElementById('tasksBody').innerHTML =
+                '<tr><td colspan="7" class="admin-empty-row admin-error">' +
+                'Could not load tasks. Your role may not include this module.' +
+                '</td></tr>';
+            });
+
+          bindEvents();
+        });
+
+        // -----------------------------------------------------------------
+        function pageHtml() {
+          return [
+            '<div class="admin-stat-grid">',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statTotal">0</div><div class="admin-stat-label">Total Tasks</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statOpen">0</div><div class="admin-stat-label">Open</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statInProgress">0</div><div class="admin-stat-label">In Progress</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statOverdue">0</div><div class="admin-stat-label">Overdue</div></div>',
+              '<div class="admin-stat"><div class="admin-stat-num" id="statMine">0</div><div class="admin-stat-label">Mine</div></div>',
+            '</div>',
+
+            '<div class="tasks-tab-row" role="tablist">',
+              '<button type="button" class="tasks-tab is-active" data-tab="open">Open <span class="tasks-tab-count" id="tabCountOpen">0</span></button>',
+              '<button type="button" class="tasks-tab" data-tab="mine">Assigned to me <span class="tasks-tab-count" id="tabCountMine">0</span></button>',
+              '<button type="button" class="tasks-tab" data-tab="all">All <span class="tasks-tab-count" id="tabCountAll">0</span></button>',
+              '<button type="button" class="tasks-tab" data-tab="done">Done <span class="tasks-tab-count" id="tabCountDone">0</span></button>',
+            '</div>',
+
+            '<div class="admin-toolbar">',
+              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search title, WBS, description..." autocomplete="off" />',
+              '<select class="admin-input" id="filterAssignee"><option value="">All assignees</option></select>',
+              '<select class="admin-input" id="filterPriority">',
+                '<option value="">All priorities</option>',
+                PRIORITY_OPTIONS.map(function (p) {
+                  return '<option value="' + p + '">' + PRIORITY_LABEL[p] + '</option>';
+                }).join(''),
+              '</select>',
+              '<span class="admin-toolbar-spacer"></span>',
+              '<span class="admin-result-count" id="resultCount"></span>',
+            '</div>',
+
+            '<div class="tasks-board-wrap">',
+              '<div class="admin-table-wrap" style="border:none;">',
+                '<table class="admin-table tasks-table" id="tasksTable">',
+                  '<thead><tr>',
+                    '<th data-sort="title" class="admin-sortable">Task<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th data-sort="assignee_name" class="admin-sortable">Assignee<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th data-sort="priority" class="admin-sortable">Priority<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th data-sort="due_date" class="admin-sortable">Due<span class="admin-sort-arrow">&darr;</span></th>',
+                    '<th data-sort="status" class="admin-sortable">Status<span class="admin-sort-arrow">&darr;</span></th>',
+                  '</tr></thead>',
+                  '<tbody id="tasksBody"><tr><td colspan="5" class="admin-empty-row">Loading tasks...</td></tr></tbody>',
+                '</table>',
+              '</div>',
+            '</div>',
+
+            taskModalHtml()
+          ].join('');
+        }
+
+        function taskModalHtml() {
+          return [
+            '<div class="task-modal-bg" id="taskModal" hidden>',
+              '<div class="task-modal" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">',
+                '<div class="task-modal-head">',
+                  '<h3 id="taskModalTitle">New Task</h3>',
+                  '<button type="button" class="task-modal-close" id="taskModalClose" aria-label="Close">&times;</button>',
+                '</div>',
+                '<form id="taskForm" autocomplete="off">',
+                  '<div class="task-modal-body">',
+                    '<div class="task-form-row">',
+                      '<label class="task-form-wide">Title',
+                        '<input type="text" name="title" required maxlength="200" />',
+                      '</label>',
+                      '<label>WBS Code',
+                        '<input type="text" name="wbs_code" maxlength="40" placeholder="e.g. 2.3.1" />',
+                        '<span class="task-form-hint">Optional. Use to roll up to the parent work-breakdown.</span>',
+                      '</label>',
+                      '<label>Priority',
+                        '<select name="priority">',
+                          PRIORITY_OPTIONS.map(function (p) {
+                            return '<option value="' + p + '"' + (p==='normal'?' selected':'') + '>' + PRIORITY_LABEL[p] + '</option>';
+                          }).join(''),
+                        '</select>',
+                      '</label>',
+                      '<label>Assignee',
+                        '<select name="assignee_id"><option value="">— Unassigned —</option></select>',
+                      '</label>',
+                      '<label>Status',
+                        '<select name="status">',
+                          STATUS_OPTIONS.map(function (s) {
+                            return '<option value="' + s + '"' + (s==='not_started'?' selected':'') + '>' + STATUS_LABEL[s] + '</option>';
+                          }).join(''),
+                        '</select>',
+                      '</label>',
+                      '<label>Start Date',
+                        '<input type="date" name="start_date" />',
+                      '</label>',
+                      '<label>Due Date',
+                        '<input type="date" name="due_date" />',
+                      '</label>',
+                      '<label class="task-form-wide">Description',
+                        '<textarea name="description" rows="4" placeholder="What needs to happen?"></textarea>',
+                      '</label>',
+                    '</div>',
+                  '</div>',
+                  '<div class="task-modal-foot">',
+                    '<span class="task-form-spacer"></span>',
+                    '<button type="button" class="shell-btn shell-btn-outline" id="taskFormCancel">Cancel</button>',
+                    '<button type="submit" class="shell-btn shell-btn-primary" id="taskFormSave">Save Task</button>',
+                  '</div>',
+                '</form>',
+              '</div>',
+            '</div>'
+          ].join('');
+        }
+
+        // =================================================================
+        // Data
+        // =================================================================
+        function loadTasks() {
+          return state.client
+            .from('tasks')
+            .select(
+              'id, title, description, status, priority, wbs_code, parent_task_id, ' +
+              'assignee_id, created_by, start_date, due_date, estimated_hours, tags, ' +
+              'created_at, updated_at, completed_at, ' +
+              'assignee:admin_users!assignee_id ( id, email, full_name, title ), ' +
+              'creator:admin_users!created_by  ( id, email, full_name )'
+            )
+            .order('created_at', { ascending: false })
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              state.rows = (resp.data || []).map(function (r) {
+                r.assignee_name = r.assignee ? (r.assignee.full_name || r.assignee.email) : null;
+                return r;
+              });
+              return state.rows;
+            });
+        }
+
+        function loadUsers() {
+          return state.client
+            .from('admin_users')
+            .select('id, email, full_name, title, is_active')
+            .eq('is_active', true)
+            .order('full_name', { ascending: true })
+            .then(function (resp) {
+              if (resp.error) {
+                console.warn('admin_users load failed', resp.error);
+                state.users = [];
+                return;
+              }
+              state.users = resp.data || [];
+              populateAssigneeFilters();
+            });
+        }
+
+        function populateAssigneeFilters() {
+          var filterSel = document.getElementById('filterAssignee');
+          var formSel   = document.querySelector('#taskForm select[name="assignee_id"]');
+          if (!filterSel) return;
+          var optsHtml = state.users.map(function (u) {
+            var label = (u.full_name || u.email) + (u.title ? ' — ' + u.title : '');
+            return '<option value="' + escapeAttr(u.id) + '">' + escapeHtml(label) + '</option>';
+          }).join('');
+          filterSel.innerHTML = '<option value="">All assignees</option>' +
+                                '<option value="__unassigned">Unassigned</option>' +
+                                optsHtml;
+          if (formSel) {
+            formSel.innerHTML = '<option value="">— Unassigned —</option>' + optsHtml;
+          }
+        }
+
+        function saveTask(payload, taskId) {
+          if (taskId) {
+            return state.client.from('tasks').update(payload).eq('id', taskId)
+              .select('id').single()
+              .then(function (r) { if (r.error) throw r.error; return r.data; });
+          }
+          if (state.me && state.me.id) payload.created_by = state.me.id;
+          return state.client.from('tasks').insert(payload)
+            .select('id').single()
+            .then(function (r) { if (r.error) throw r.error; return r.data; });
+        }
+
+        function updateTaskField(id, field, value) {
+          var patch = {}; patch[field] = value;
+          return state.client.from('tasks').update(patch).eq('id', id)
+            .then(function (r) { if (r.error) throw r.error; });
+        }
+
+        function deleteTask(id) {
+          return state.client.from('tasks').delete().eq('id', id)
+            .then(function (r) { if (r.error) throw r.error; });
+        }
+
+        function logActivity(taskId, action, detail) {
+          if (!state.me || !state.me.id) return Promise.resolve();
+          return state.client.from('task_activity').insert({
+            task_id:  taskId,
+            actor_id: state.me.id,
+            action:   action,
+            detail:   detail || {}
+          }).then(function () {}, function (e) { console.warn('activity log failed', e); });
+        }
+
+        function loadTaskDetail(id) {
+          return Promise.all([
+            state.client.from('task_comments')
+              .select('id, body, created_at, author:admin_users!author_id ( id, email, full_name )')
+              .eq('task_id', id).order('created_at', { ascending: true }),
+            state.client.from('task_activity')
+              .select('id, action, detail, created_at, actor:admin_users!actor_id ( id, email, full_name )')
+              .eq('task_id', id).order('created_at', { ascending: false }).limit(20)
+          ]).then(function (resps) {
+            return {
+              comments: (resps[0] && resps[0].data) || [],
+              activity: (resps[1] && resps[1].data) || []
+            };
+          });
+        }
+
+        function postComment(taskId, body) {
+          var payload = { task_id: taskId, body: body };
+          if (state.me && state.me.id) payload.author_id = state.me.id;
+          return state.client.from('task_comments').insert(payload).select('id').single()
+            .then(function (r) {
+              if (r.error) throw r.error;
+              return logActivity(taskId, 'comment', { preview: body.slice(0, 60) });
+            });
+        }
+
+        // =================================================================
+        // Render
+        // =================================================================
+        function renderStats() {
+          var c = { total: state.rows.length, open: 0, in_progress: 0, overdue: 0, mine: 0, done: 0 };
+          var today = todayISO();
+          var myId = state.me && state.me.id;
+          state.rows.forEach(function (r) {
+            var open = r.status !== 'done' && r.status !== 'cancelled';
+            if (open) c.open++;
+            if (r.status === 'in_progress') c.in_progress++;
+            if (r.status === 'done') c.done++;
+            if (open && r.due_date && r.due_date < today) c.overdue++;
+            if (myId && r.assignee_id === myId && open) c.mine++;
+          });
+          $('statTotal').textContent       = c.total.toLocaleString();
+          $('statOpen').textContent        = c.open.toLocaleString();
+          $('statInProgress').textContent  = c.in_progress.toLocaleString();
+          $('statOverdue').textContent     = c.overdue.toLocaleString();
+          $('statMine').textContent        = c.mine.toLocaleString();
+          $('tabCountOpen').textContent    = c.open;
+          $('tabCountMine').textContent    = c.mine;
+          $('tabCountAll').textContent     = c.total;
+          $('tabCountDone').textContent    = c.done;
+        }
+
+        function applyFilters() {
+          var q       = $('filterSearch').value.trim().toLowerCase();
+          var assn    = $('filterAssignee').value;
+          var pri     = $('filterPriority').value;
+          var today   = todayISO();
+          var myId    = state.me && state.me.id;
+          var tab     = state.tab;
+
+          state.filtered = state.rows.filter(function (r) {
+            if (tab === 'open' && (r.status === 'done' || r.status === 'cancelled')) return false;
+            if (tab === 'done' && r.status !== 'done') return false;
+            if (tab === 'mine' && r.assignee_id !== myId) return false;
+
+            if (assn === '__unassigned' && r.assignee_id) return false;
+            if (assn && assn !== '__unassigned' && r.assignee_id !== assn) return false;
+            if (pri && r.priority !== pri) return false;
+            if (q) {
+              var hay = ((r.title||'') + ' ' + (r.wbs_code||'') + ' ' +
+                         (r.description||'') + ' ' + (r.assignee_name||'')).toLowerCase();
+              if (hay.indexOf(q) === -1) return false;
+            }
+            return true;
+          });
+          applySort(today);
+        }
+
+        function applySort(today) {
+          var key = state.sortKey, dir = state.sortDir === 'asc' ? 1 : -1;
+          var priorityOrder = { urgent: 0, high: 1, normal: 2, low: 3 };
+          state.filtered.sort(function (a, b) {
+            var av = a[key], bv = b[key];
+            if (key === 'priority') return ((priorityOrder[av] ?? 9) - (priorityOrder[bv] ?? 9)) * dir;
+            if (key === 'due_date') {
+              if (!av && !bv) return 0;
+              if (!av) return 1;
+              if (!bv) return -1;
+              return (av < bv ? -1 : av > bv ? 1 : 0) * dir;
+            }
+            return String(av||'').localeCompare(String(bv||''), undefined, { sensitivity: 'base' }) * dir;
+          });
+          renderRows(today || todayISO());
+          renderSortHeaders();
+        }
+
+        function renderSortHeaders() {
+          document.querySelectorAll('#tasksTable thead th[data-sort]').forEach(function (th) {
+            th.classList.remove('admin-sort-asc','admin-sort-desc');
+            if (th.dataset.sort === state.sortKey) {
+              th.classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
+            }
+          });
+        }
+
+        function renderRows(today) {
+          var body = $('tasksBody');
+          $('resultCount').textContent =
+            state.filtered.length === state.rows.length
+              ? state.rows.length + ' total'
+              : state.filtered.length + ' of ' + state.rows.length;
+
+          if (state.filtered.length === 0) {
+            var msg = state.rows.length === 0
+              ? 'No tasks yet. Click “New Task” to capture work.'
+              : 'No tasks match the current filters.';
+            body.innerHTML = '<tr><td colspan="5" class="admin-empty-row">' + msg + '</td></tr>';
+            return;
+          }
+
+          body.innerHTML = state.filtered.map(function (r) {
+            var wbs = r.wbs_code
+              ? '<span class="task-wbs">WBS&nbsp;' + escapeHtml(r.wbs_code) + '</span>'
+              : '';
+            var title = '<div class="task-title-cell">' + wbs + escapeHtml(r.title || '') +
+                        (r.description
+                          ? '<div class="task-desc-snippet">' + escapeHtml(snippet(r.description, 90)) + '</div>'
+                          : '') +
+                        '</div>';
+
+            var assignee;
+            if (r.assignee) {
+              assignee = '<div class="assignee-cell">' +
+                          '<span class="assignee-avatar">' + escapeHtml(initialsFor(r.assignee.full_name, r.assignee.email)) + '</span>' +
+                          '<span class="assignee-name">' + escapeHtml(r.assignee.full_name || r.assignee.email) + '</span>' +
+                         '</div>';
+            } else {
+              assignee = '<span class="admin-muted">— Unassigned —</span>';
+            }
+
+            var priority = '<span class="priority-pill priority-' + escapeAttr(r.priority) + '">' +
+                           escapeHtml(PRIORITY_LABEL[r.priority] || r.priority) + '</span>';
+
+            var due = '<span class="admin-muted">—</span>';
+            var dueClass = '';
+            if (r.due_date) {
+              var overdue = r.due_date < today && r.status !== 'done' && r.status !== 'cancelled';
+              dueClass = overdue ? ' task-overdue' : '';
+              due = overdue
+                ? '<strong>' + escapeHtml(fmtDueDate(r.due_date)) + '</strong>'
+                : escapeHtml(fmtDueDate(r.due_date));
+            }
+
+            return '<tr data-id="' + escapeAttr(r.id) + '">' +
+              '<td>' + title + '</td>' +
+              '<td>' + assignee + '</td>' +
+              '<td>' + priority + '</td>' +
+              '<td class="' + dueClass + '">' + due + '</td>' +
+              '<td>' + statusSelectHtml(r.id, r.status || 'not_started') + '</td>' +
+            '</tr>';
+          }).join('');
+        }
+
+        function statusSelectHtml(id, current) {
+          var opts = STATUS_OPTIONS.map(function (s) {
+            return '<option value="' + s + '"' + (s===current ? ' selected' : '') + '>' + STATUS_LABEL[s] + '</option>';
+          }).join('');
+          var disabled = state.canWrite ? '' : ' disabled';
+          return '<select class="admin-status-select admin-status-' + escapeAttr(current||'not_started') +
+                 '" data-status-select data-id="' + escapeAttr(id) + '" onclick="event.stopPropagation()"' + disabled + '>' + opts + '</select>';
+        }
+
+        // =================================================================
+        // Drawer (detail view)
+        // =================================================================
+        function openDrawer(r) {
+          state.activeId = r.id;
+          renderDrawer(r, { comments: [], activity: [] });
+
+          loadTaskDetail(r.id).then(function (detail) {
+            // re-fetch in case the row changed
+            var fresh = state.rows.find(function (x) { return x.id === r.id; }) || r;
+            renderDrawer(fresh, detail);
+          });
+        }
+
+        function renderDrawer(r, detail) {
+          function row(label, value) {
+            return '<dt>' + escapeHtml(label) + '</dt><dd>' + (value || '<span class="admin-muted">&mdash;</span>') + '</dd>';
+          }
+          function v(x) { return x ? escapeHtml(x) : ''; }
+
+          var assigneeBlock = r.assignee
+            ? escapeHtml(r.assignee.full_name || r.assignee.email)
+            : '<span class="admin-muted">Unassigned</span>';
+          var creator = r.creator
+            ? escapeHtml(r.creator.full_name || r.creator.email)
+            : '<span class="admin-muted">—</span>';
+
+          var commentsHtml = (detail.comments || []).map(function (c) {
+            var who = c.author ? (c.author.full_name || c.author.email) : 'Unknown';
+            return '<div class="task-comment">' +
+                     '<div class="task-comment-head">' +
+                       '<span class="task-comment-author">' + escapeHtml(who) + '</span>' +
+                       '<span class="task-comment-when">' + escapeHtml(fmtDate(c.created_at)) + '</span>' +
+                     '</div>' +
+                     '<div class="task-comment-body">' + escapeHtml(c.body) + '</div>' +
+                   '</div>';
+          }).join('');
+          if (!commentsHtml) commentsHtml = '<span class="admin-muted">No comments yet.</span>';
+
+          var activityHtml = (detail.activity || []).map(function (a) {
+            var who = a.actor ? (a.actor.full_name || a.actor.email) : 'Someone';
+            var label;
+            switch (a.action) {
+              case 'created':       label = 'created the task'; break;
+              case 'status_change':
+                var toKey = (a.detail||{}).to;
+                label = 'changed status to ' + (STATUS_LABEL[toKey] || toKey || '?');
+                break;
+              case 'assign':        label = 'updated the assignee'; break;
+              case 'edit':          label = 'edited the task'; break;
+              case 'comment':       label = 'added a comment'; break;
+              default:              label = a.action;
+            }
+            return '<div class="task-activity-item"><span class="dot"></span><div><strong>' +
+              escapeHtml(who) + '</strong> ' + escapeHtml(label) +
+              ' <span class="admin-muted">· ' + escapeHtml(fmtDate(a.created_at)) + '</span></div></div>';
+          }).join('');
+          if (!activityHtml) activityHtml = '<span class="admin-muted">No activity yet.</span>';
+
+          var body =
+            (r.description
+              ? '<div class="shell-drawer-section"><h4>Description</h4>' +
+                '<div style="white-space:pre-wrap;color:var(--text-light);font-size:14px;line-height:1.6">' +
+                escapeHtml(r.description) + '</div></div>'
+              : '') +
+
+            '<div class="shell-drawer-section"><h4>Details</h4><dl>' +
+              row('WBS code',  r.wbs_code ? '<code style="font-family:ui-monospace,Menlo,monospace;background:rgba(15,34,51,0.6);padding:2px 6px;border-radius:4px;color:var(--text-accent)">' + escapeHtml(r.wbs_code) + '</code>' : '') +
+              row('Status',    '<span class="admin-pill admin-status-' + escapeAttr(r.status) + '">' + escapeHtml(STATUS_LABEL[r.status] || r.status) + '</span>') +
+              row('Priority',  '<span class="priority-pill priority-' + escapeAttr(r.priority) + '">' + escapeHtml(PRIORITY_LABEL[r.priority] || r.priority) + '</span>') +
+              row('Assignee',  assigneeBlock) +
+              row('Created by', creator) +
+              row('Start',     v(r.start_date)) +
+              row('Due',       v(r.due_date)) +
+              row('Estimated', r.estimated_hours != null ? escapeHtml(r.estimated_hours + ' hrs') : '') +
+              row('Created',   escapeHtml(new Date(r.created_at).toLocaleString())) +
+              row('Updated',   escapeHtml(new Date(r.updated_at).toLocaleString())) +
+              (r.completed_at ? row('Completed', escapeHtml(new Date(r.completed_at).toLocaleString())) : '') +
+            '</dl></div>' +
+
+            '<div class="shell-drawer-section"><h4>Comments</h4>' +
+              '<div id="taskCommentsList">' + commentsHtml + '</div>' +
+              (state.canWrite
+                ? '<form class="task-comment-form" id="newCommentForm">' +
+                    '<textarea name="body" placeholder="Add a comment..." required></textarea>' +
+                    '<div class="form-actions">' +
+                      '<button type="submit" class="shell-btn shell-btn-primary" id="postCommentBtn">Post</button>' +
+                    '</div>' +
+                  '</form>'
+                : '') +
+            '</div>' +
+
+            '<div class="shell-drawer-section"><h4>Activity</h4>' + activityHtml + '</div>';
+
+          var foot = '';
+          if (state.canWrite) {
+            foot =
+              '<button type="button" class="shell-btn shell-btn-ghost" data-task-delete data-id="' + escapeAttr(r.id) + '" style="color:#ff8a8a">Delete</button>' +
+              '<span style="flex:1"></span>' +
+              '<button type="button" class="shell-btn shell-btn-outline" data-task-edit data-id="' + escapeAttr(r.id) + '">Edit</button>' +
+              '<button type="button" class="shell-btn shell-btn-primary" data-drawer-close>Close</button>';
+          } else {
+            foot = '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>';
+          }
+
+          window.AdminShell.openDrawer({
+            eyebrow: r.wbs_code ? 'WBS ' + r.wbs_code : 'Task',
+            title:   r.title || 'Untitled task',
+            bodyHtml: body,
+            footHtml: foot
+          });
+
+          // Bind drawer-specific events
+          var commentForm = document.getElementById('newCommentForm');
+          if (commentForm) {
+            commentForm.addEventListener('submit', function (ev) {
+              ev.preventDefault();
+              var btn = document.getElementById('postCommentBtn');
+              var ta  = commentForm.querySelector('textarea[name="body"]');
+              var body = (ta.value || '').trim();
+              if (!body) return;
+              btn.disabled = true;
+              postComment(r.id, body).then(function () {
+                ta.value = '';
+                return loadTaskDetail(r.id);
+              }).then(function (det) {
+                var fresh = state.rows.find(function (x) { return x.id === r.id; }) || r;
+                renderDrawer(fresh, det);
+                window.AdminShell.toast('Comment added.', 'success');
+              }).catch(function (err) {
+                console.error('comment failed', err);
+                window.AdminShell.toast('Could not post comment.', 'error');
+              }).finally(function () { btn.disabled = false; });
+            });
+          }
+        }
+
+        // =================================================================
+        // Modal (create / edit)
+        // =================================================================
+        function openTaskModal(existing) {
+          var modal = $('taskModal');
+          var form  = $('taskForm');
+          $('taskModalTitle').textContent = existing ? 'Edit Task' : 'New Task';
+          form.reset();
+          form.dataset.taskId = existing ? existing.id : '';
+          if (existing) {
+            form.elements.title.value         = existing.title || '';
+            form.elements.description.value   = existing.description || '';
+            form.elements.wbs_code.value      = existing.wbs_code || '';
+            form.elements.priority.value      = existing.priority || 'normal';
+            form.elements.status.value        = existing.status || 'not_started';
+            form.elements.assignee_id.value   = existing.assignee_id || '';
+            form.elements.start_date.value    = existing.start_date || '';
+            form.elements.due_date.value      = existing.due_date || '';
+          }
+          modal.hidden = false;
+          setTimeout(function () { try { form.elements.title.focus(); } catch (e) {} }, 50);
+        }
+        function closeTaskModal() {
+          $('taskModal').hidden = true;
+        }
+
+        function handleTaskFormSubmit(ev) {
+          ev.preventDefault();
+          var form = ev.target;
+          var btn  = $('taskFormSave');
+          var taskId = form.dataset.taskId || null;
+          var payload = {
+            title:       form.elements.title.value.trim(),
+            description: form.elements.description.value.trim() || null,
+            wbs_code:    form.elements.wbs_code.value.trim() || null,
+            priority:    form.elements.priority.value,
+            status:      form.elements.status.value,
+            assignee_id: form.elements.assignee_id.value || null,
+            start_date:  form.elements.start_date.value || null,
+            due_date:    form.elements.due_date.value   || null,
+          };
+          if (!payload.title) return;
+          btn.disabled = true; btn.textContent = 'Saving...';
+
+          var existing = taskId ? state.rows.find(function (x) { return x.id === taskId; }) : null;
+
+          saveTask(payload, taskId).then(function (saved) {
+            var savedId = saved.id;
+            var promises = [];
+            if (!taskId) {
+              promises.push(logActivity(savedId, 'created', { title: payload.title }));
+            } else if (existing) {
+              if (existing.status !== payload.status) {
+                promises.push(logActivity(savedId, 'status_change', { from: existing.status, to: payload.status }));
+              }
+              if (existing.assignee_id !== payload.assignee_id) {
+                promises.push(logActivity(savedId, 'assign', { to: payload.assignee_id }));
+              }
+            }
+            return Promise.all(promises).then(function () { return savedId; });
+          }).then(function (savedId) {
+            return loadTasks().then(function () { return savedId; });
+          }).then(function (savedId) {
+            window.AdminShell.toast(taskId ? 'Task updated.' : 'Task created.', 'success');
+            closeTaskModal();
+            renderStats();
+            applyFilters();
+            // Re-open drawer if we were editing.
+            if (taskId) {
+              var fresh = state.rows.find(function (x) { return x.id === savedId; });
+              if (fresh) openDrawer(fresh);
+            }
+          }).catch(function (err) {
+            console.error('save task failed', err);
+            window.AdminShell.toast('Could not save task. ' + (err.message || ''), 'error');
+          }).finally(function () {
+            btn.disabled = false; btn.textContent = 'Save Task';
+          });
+        }
+
+        // =================================================================
+        // Events
+        // =================================================================
+        function bindEvents() {
+          var debT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debT); debT = setTimeout(applyFilters, 150);
+          });
+          $('filterAssignee').addEventListener('change', applyFilters);
+          $('filterPriority').addEventListener('change', applyFilters);
+
+          document.querySelectorAll('.tasks-tab').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              document.querySelectorAll('.tasks-tab').forEach(function (b) { b.classList.remove('is-active'); });
+              btn.classList.add('is-active');
+              state.tab = btn.dataset.tab;
+              applyFilters();
+            });
+          });
+
+          document.querySelectorAll('#tasksTable thead th[data-sort]').forEach(function (th) {
+            th.addEventListener('click', function (ev) {
+              var key = ev.currentTarget.dataset.sort;
+              if (state.sortKey === key) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              else { state.sortKey = key; state.sortDir = key === 'due_date' ? 'asc' : 'asc'; }
+              applySort();
+            });
+          });
+
+          var body = $('tasksBody');
+          body.addEventListener('click', function (ev) {
+            var tr = ev.target.closest('tr[data-id]');
+            if (!tr) return;
+            if (ev.target.closest('select') || ev.target.closest('a')) return;
+            var row = state.rows.find(function (r) { return r.id === tr.dataset.id; });
+            if (row) openDrawer(row);
+          });
+          body.addEventListener('change', function (ev) {
+            var sel = ev.target;
+            if (!sel || !sel.dataset || sel.dataset.statusSelect == null) return;
+            if (!state.canWrite) {
+              window.AdminShell.toast('Your role does not include write access.', 'error');
+              return;
+            }
+            var id = sel.dataset.id;
+            var newStatus = sel.value;
+            var row = state.rows.find(function (r) { return r.id === id; });
+            var prev = row ? row.status : null;
+            if (row) row.status = newStatus;
+            sel.disabled = true;
+            updateTaskField(id, 'status', newStatus).then(function () {
+              logActivity(id, 'status_change', { from: prev, to: newStatus });
+              sel.className = 'admin-status-select admin-status-' + newStatus;
+              renderStats();
+              applyFilters();
+              window.AdminShell.toast('Status updated to ' + STATUS_LABEL[newStatus] + '.', 'success');
+            }).catch(function (err) {
+              console.error('status update failed', err);
+              if (row) row.status = prev;
+              sel.value = prev || 'not_started';
+              window.AdminShell.toast('Could not update status.', 'error');
+            }).finally(function () { sel.disabled = false; });
+          });
+
+          var newBtn = $('newTaskBtn');
+          if (newBtn) newBtn.addEventListener('click', function () { openTaskModal(null); });
+
+          $('taskFormCancel').addEventListener('click', closeTaskModal);
+          $('taskModalClose').addEventListener('click', closeTaskModal);
+          $('taskForm').addEventListener('submit', handleTaskFormSubmit);
+          $('taskModal').addEventListener('click', function (ev) {
+            if (ev.target.id === 'taskModal') closeTaskModal();
+          });
+
+          // Drawer-level delegated buttons (delete / edit)
+          document.addEventListener('click', function (ev) {
+            var del  = ev.target.closest('[data-task-delete]');
+            var edit = ev.target.closest('[data-task-edit]');
+            if (del) {
+              var id = del.dataset.id;
+              if (!state.canWrite) return;
+              if (!window.confirm('Delete this task? This cannot be undone.')) return;
+              deleteTask(id).then(function () {
+                return loadTasks();
+              }).then(function () {
+                window.AdminShell.closeDrawer();
+                renderStats(); applyFilters();
+                window.AdminShell.toast('Task deleted.', 'success');
+              }).catch(function (err) {
+                console.error('delete failed', err);
+                window.AdminShell.toast('Could not delete task.', 'error');
+              });
+            } else if (edit) {
+              var id2 = edit.dataset.id;
+              var row = state.rows.find(function (r) { return r.id === id2; });
+              if (row) { window.AdminShell.closeDrawer(); openTaskModal(row); }
+            }
+          });
+
+          $('exportCsv').addEventListener('click', exportCsv);
+        }
+
+        function exportCsv() {
+          if (state.filtered.length === 0) {
+            window.AdminShell.toast('Nothing to export with the current filters.', 'error');
+            return;
+          }
+          var cols = ['created_at','wbs_code','title','assignee_name','status','priority','start_date','due_date','description'];
+          var lines = [cols.join(',')];
+          state.filtered.forEach(function (r) {
+            lines.push(cols.map(function (c) {
+              var v = r[c];
+              if (v == null) v = '';
+              v = String(v).replace(/"/g, '""');
+              return /[,"\n]/.test(v) ? '"' + v + '"' : v;
+            }).join(','));
+          });
+          var blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+          var url  = URL.createObjectURL(blob);
+          var a    = document.createElement('a');
+          a.href = url;
+          a.download = 'ohio-pride-tasks-' + new Date().toISOString().slice(0,10) + '.csv';
+          document.body.appendChild(a); a.click(); a.remove();
+          URL.revokeObjectURL(url);
+          window.AdminShell.toast('Exported ' + state.filtered.length + ' tasks.', 'success');
+        }
+
+        // =================================================================
+        // Helpers
+        // =================================================================
+        function $(id) { return document.getElementById(id); }
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+        function snippet(s, n) { s = String(s||''); return s.length <= n ? s : s.slice(0, n - 1) + '…'; }
+        function todayISO() {
+          var d = new Date();
+          return d.getFullYear() + '-' +
+                 String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                 String(d.getDate()).padStart(2, '0');
+        }
+        function fmtDueDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso + 'T00:00:00');
+          if (isNaN(d.getTime())) return iso;
+          var today = new Date();
+          today.setHours(0,0,0,0);
+          var diff = Math.round((d.getTime() - today.getTime()) / 86400000);
+          if (diff === 0)  return 'Today';
+          if (diff === 1)  return 'Tomorrow';
+          if (diff === -1) return 'Yesterday';
+          if (diff > 0 && diff < 7)   return 'In ' + diff + 'd';
+          if (diff < 0 && diff > -30) return Math.abs(diff) + 'd late';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          var diff = (Date.now() - d.getTime()) / 1000;
+          if (diff < 60)        return 'just now';
+          if (diff < 3600)      return Math.floor(diff/60) + 'm ago';
+          if (diff < 86400)     return Math.floor(diff/3600) + 'h ago';
+          if (diff < 86400 * 7) return Math.floor(diff/86400) + 'd ago';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        function initialsFor(name, email) {
+          var src = (name || email || '').replace(/[^\p{Letter}\s]/gu, ' ').trim();
+          if (!src) return '?';
+          var parts = src.split(/\s+/).slice(0, 2);
+          return parts.map(function (p) { return p[0] ? p[0].toUpperCase() : ''; }).join('') || '?';
+        }
+      })();
+    </script>
+  </body>
+</html>
