@@ -260,6 +260,11 @@
   status = 200
 
 [[redirects]]
+  from = "/admin/tasks"
+  to = "/admin/tasks/index.html"
+  status = 200
+
+[[redirects]]
   from = "/admin/volunteers"
   to = "/admin/volunteers/index.html"
   status = 200
