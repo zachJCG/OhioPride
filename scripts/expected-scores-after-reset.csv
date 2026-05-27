@@ -1,0 +1,133 @@
+chamber,district,party,full_name,floor_subscore_raw,committee_subscore_raw,sponsorship_subscore_raw,floor_subscore,committee_subscore,sponsorship_subscore,composite_score,grade
+house,1,D,Dontavius L. Jarrells,9.25,4.5,3,5,4,3,92,A
+house,2,D,Latyna M. Humphrey,9.25,4.5,0,5,4,0,86,A-
+house,3,D,Ismail Mohamed,9.25,4.5,0,5,4,0,86,A-
+house,4,D,Beryl Brown Piccolantonio,9.25,4.5,2,5,4,2,90,A
+house,5,D,Meredith R. Lawson-Rowe,9.25,4.5,0,5,4,0,86,A-
+house,6,D,Christine Cockley,9.25,4.5,0,5,4,0,86,A-
+house,7,D,C. Allison Russo,9.25,4.5,0,5,4,0,86,A-
+house,8,D,Anita Somani,9.25,4.5,1,5,4,1,88,A
+house,9,D,Munira Abdullahi,9.25,4.5,1,5,4,1,88,A
+house,10,D,Mark Sigrist,9.25,4.5,0,5,4,0,86,A-
+house,11,D,Crystal Lett,9.25,4.5,4,5,4,4,94,A
+house,12,R,Brian Stewart,-9.25,-4.5,-2,-5,-4,-2,10,F
+house,13,D,Tristan Rader,9.25,4.5,3,5,4,3,92,A
+house,14,D,Sean P. Brennan,9.25,4.5,0,5,4,0,86,A-
+house,15,D,Chris Glassburn,9.25,4.5,0,5,4,0,86,A-
+house,16,D,Bride Rose Sweeney,9.25,4.5,1,5,4,1,88,A
+house,17,R,Michael D. Dovilla,-9.25,-4.5,0,-5,-4,0,14,F
+house,18,D,Juanita O. Brent,9.25,4.5,0,5,4,0,86,A-
+house,19,D,Phillip M. Robinson Jr.,9.25,4.5,0,5,4,0,86,A-
+house,20,D,Terrence Upchurch,9.25,4.5,0,5,4,0,86,A-
+house,21,D,Eric Synenberg,9.25,4.5,0,5,4,0,86,A-
+house,22,D,Darnell T. Brewer,9.25,4.5,1,5,4,1,88,A
+house,23,D,Daniel P. Troy,9.25,4.5,0,5,4,0,86,A-
+house,24,D,Dani Isaacsohn,9.25,4.5,0,5,4,0,86,A-
+house,25,D,Cecil Thomas,9.25,4.5,0,5,4,0,86,A-
+house,26,D,Ashley Bryant Bailey,9.25,4.5,0,5,4,0,86,A-
+house,27,D,Rachel B. Baker,9.25,4.5,0,5,4,0,86,A-
+house,28,D,Karen Brownlee,9.25,4.5,5,5,4,5,96,A+
+house,29,R,Cindy Abrams,-9.25,-4.5,0,-5,-4,0,14,F
+house,30,R,Mike Odioso,-9.25,-4.5,0,-5,-4,0,14,F
+house,31,R,Bill Roemer,-9.25,-4.5,0,-5,-4,0,14,F
+house,32,R,Jack K. Daniels,-9.25,-4.5,0,-5,-4,0,14,F
+house,33,D,Veronica R. Sims,9.25,4.5,0,5,4,0,86,A-
+house,34,D,Derrick Hall,9.25,4.5,0,5,4,0,86,A-
+house,35,R,Steve Demetriou,-9.25,-4.5,0,-5,-4,0,14,F
+house,36,R,Andrea White,-7.25,-4.5,0,-5,-4,0,14,F
+house,37,R,Tom Young,-9.25,-4.5,-1,-5,-4,-1,12,F
+house,38,D,Desiree Tims,9.25,4.5,0,5,4,0,86,A-
+house,39,R,Phil Plummer,-9.25,-4.5,0,-5,-4,0,14,F
+house,40,R,Rodney Creech,-9.25,-4.5,-2,-5,-4,-2,10,F
+house,41,D,Erika White,9.25,4.5,0,5,4,0,86,A-
+house,42,D,Elgin Rogers Jr.,9.25,4.5,0,5,4,0,86,A-
+house,43,D,Michele Grim,9.25,4.5,2,5,4,2,90,A
+house,44,R,Josh Williams,-9.25,-4.5,-7,-5,-4,-5,4,F
+house,45,R,Jennifer Gross,-9.25,-4.5,0,-5,-4,0,14,F
+house,46,R,Thomas Hall,-9.25,-4.5,0,-5,-4,0,14,F
+house,47,R,Diane Mullins,-9.25,-4.5,0,-5,-4,0,14,F
+house,48,R,Scott Oelslager,-9.25,-4.5,0,-5,-4,0,14,F
+house,49,R,Jim Thomas,-9.25,-4.5,0,-5,-4,0,14,F
+house,50,R,Matthew Kishman,-9.25,-4.5,0,-5,-4,0,14,F
+house,51,R,Jodi Salvo,-9.25,-4.5,0,-5,-4,0,14,F
+house,52,R,Gayle Manning,-7.25,-4.5,0,-5,-4,0,14,F
+house,53,D,Joseph A. Miller III,9.25,4.5,1,5,4,1,88,A
+house,54,R,Kellie Deeter,-9.25,-4.5,0,-5,-4,0,14,F
+house,55,R,Michelle Teska,-9.25,-4.5,0,-5,-4,0,14,F
+house,56,R,Adam Mathews,-9.25,-4.5,0,-5,-4,0,14,F
+house,57,R,Jamie Callender,3.25,-4.5,0,3,-4,0,46,C
+house,58,D,Lauren McNally,9.25,4.5,0,5,4,0,86,A-
+house,59,R,Tex Fischer,-9.25,-4.5,0,-5,-4,0,14,F
+house,60,R,Brian Lorenz,-9.25,-4.5,0,-5,-4,0,14,F
+house,61,R,Beth Lear,-9.25,-4.5,-4,-5,-4,-4,6,F
+house,62,R,Jean Schmidt,-9.25,-4.5,0,-5,-4,0,14,F
+house,63,R,Adam C. Bird,-9.25,-4.5,0,-5,-4,0,14,F
+house,64,R,Nick Santucci,-9.25,-4.5,0,-5,-4,0,14,F
+house,65,R,David Thomas,-9.25,-4.5,0,-5,-4,0,14,F
+house,66,R,Sharon A. Ray,-9.25,-4.5,0,-5,-4,0,14,F
+house,67,R,Melanie Miller,-9.25,-4.5,0,-5,-4,0,14,F
+house,68,R,Thaddeus J. Claggett,-9.25,-4.5,0,-5,-4,0,14,F
+house,69,R,Kevin D. Miller,-9.25,-4.5,0,-5,-4,0,14,F
+house,70,R,Brian Lampton,-9.25,-4.5,0,-5,-4,0,14,F
+house,71,R,Levi Dean,-9.25,-4.5,0,-5,-4,0,14,F
+house,72,R,Heidi Workman,-9.25,-4.5,0,-5,-4,0,14,F
+house,73,R,Jeff LaRe,-9.25,-4.5,0,-5,-4,0,14,F
+house,74,R,Bernard Willis,-9.25,-4.5,0,-5,-4,0,14,F
+house,75,R,Haraz N. Ghanbari,-9.25,-4.5,0,-5,-4,0,14,F
+house,76,R,Marilyn John,-9.25,-4.5,0,-5,-4,0,14,F
+house,77,R,Meredith Craig,-9.25,-4.5,0,-5,-4,0,14,F
+house,78,R,Matt Huffman,-9.25,-4.5,0,-5,-4,0,14,F
+house,79,R,Monica Robb Blasdel,-9.25,-4.5,0,-5,-4,0,14,F
+house,80,R,Johnathan Newman,-9.25,-4.5,-4,-5,-4,-4,6,F
+house,81,R,James M. Hoops,-9.25,-4.5,0,-5,-4,0,14,F
+house,82,R,Roy Klopfenstein,-9.25,-4.5,0,-5,-4,0,14,F
+house,83,R,Ty D. Mathews,-9.25,-4.5,0,-5,-4,0,14,F
+house,84,R,Angela N. King,-9.25,-4.5,-3,-5,-4,-3,8,F
+house,85,R,Tim Barhorst,-9.25,-4.5,0,-5,-4,0,14,F
+house,86,R,Tracy M. Richardson,-9.25,-4.5,0,-5,-4,0,14,F
+house,87,R,Riordan T. McClain,-9.25,-4.5,0,-5,-4,0,14,F
+house,88,R,Gary Click,-9.25,-4.5,-4,-5,-4,-4,6,F
+house,89,R,D. J. Swearingen,-9.25,-4.5,0,-5,-4,0,14,F
+house,90,R,Justin Pizzulli,-9.25,-4.5,0,-5,-4,0,14,F
+house,91,R,Bob Peterson,-9.25,-4.5,0,-5,-4,0,14,F
+house,92,R,Mark Johnson,-9.25,-4.5,0,-5,-4,0,14,F
+house,93,R,Jason Stephens,-9.25,-4.5,0,-5,-4,0,14,F
+house,94,R,Kevin Ritter,-9.25,-4.5,-2,-5,-4,-2,10,F
+house,95,R,Ty Moore,-9.25,-4.5,0,-5,-4,0,14,F
+house,96,R,Ron Ferguson,-9.25,-4.5,0,-5,-4,0,14,F
+house,97,R,Adam Holmes,-9.25,-4.5,0,-5,-4,0,14,F
+house,98,R,Mark Hiner,-9.25,-4.5,0,-5,-4,0,14,F
+house,99,R,Sarah Fowler Arthur,-9.25,-4.5,0,-5,-4,0,14,F
+senate,1,R,Rob McColley,-9.25,-4.5,0,-5,-4,0,14,F
+senate,2,R,Theresa Gavarone,-9.25,-4.5,0,-5,-4,0,14,F
+senate,3,R,Michele Reynolds,-9.25,-4.5,0,-5,-4,0,14,F
+senate,4,R,George F. Lang,-9.25,-4.5,0,-5,-4,0,14,F
+senate,5,R,Stephen A. Huffman,-9.25,-4.5,0,-5,-4,0,14,F
+senate,6,D,Willis E. Blackshear Jr.,9.25,4.5,0,5,4,0,86,A-
+senate,7,R,Steve Wilson,-9.25,-4.5,0,-5,-4,0,14,F
+senate,8,R,Louis W. Blessing III,-3.25,-4.5,0,-3,-4,0,22,D
+senate,9,D,Catherine D. Ingram,9.25,4.5,1,5,4,1,88,A
+senate,10,R,Kyle Koehler,-9.25,-4.5,0,-5,-4,0,14,F
+senate,11,D,Paula Hicks-Hudson,9.25,4.5,0,5,4,0,86,A-
+senate,12,R,Susan Manchester,-9.25,-4.5,0,-5,-4,0,14,F
+senate,13,R,Nathan H. Manning,-4.75,-4.5,0,-5,-4,0,14,F
+senate,14,R,Terry Johnson,-9.25,-4.5,-2,-5,-4,-2,10,F
+senate,15,D,Hearcel F. Craig,9.25,4.5,1,5,4,1,88,A
+senate,16,D,Beth Liston,9.25,4.5,1,5,4,1,88,A
+senate,17,R,Shane Wilkin,-9.25,-4.5,0,-5,-4,0,14,F
+senate,18,R,Jerry C. Cirino,-9.25,-4.5,-4,-5,-4,-4,6,F
+senate,19,R,Andrew O. Brenner,-9.25,-4.5,-5,-5,-4,-5,4,F
+senate,20,R,Tim Schaffer,-9.25,-4.5,-2,-5,-4,-2,10,F
+senate,21,D,Kent Smith,9.25,4.5,0,5,4,0,86,A-
+senate,22,R,Mark Romanchuk,-9.25,-4.5,0,-5,-4,0,14,F
+senate,23,D,Nickie J. Antonio,9.25,4.5,6,5,4,5,96,A+
+senate,24,R,Thomas F. Patton,-5.25,-4.5,0,-5,-4,0,14,F
+senate,25,D,William P. DeMora,9.25,4.5,0,5,4,0,86,A-
+senate,26,R,Bill Reineke,-9.25,-4.5,0,-5,-4,0,14,F
+senate,27,R,Kristina D. Roegner,-9.25,-4.5,0,-5,-4,0,14,F
+senate,28,D,Casey Weinstein,9.25,4.5,0,5,4,0,86,A-
+senate,29,R,Jane M. Timken,-9.25,-4.5,0,-5,-4,0,14,F
+senate,30,R,Brian M. Chavez,-9.25,-4.5,0,-5,-4,0,14,F
+senate,31,R,Al Landis,-9.25,-4.5,0,-5,-4,0,14,F
+senate,32,R,Sandra O'Brien,-9.25,-4.5,0,-5,-4,0,14,F
+senate,33,R,Al Cutrona,-9.25,-4.5,0,-5,-4,0,14,F
