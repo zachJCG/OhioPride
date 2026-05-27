@@ -74,11 +74,17 @@ truncate table public.score_snapshots            restart identity cascade;
 -- public.bills carries several NOT NULL columns (bill_number, title,
 -- category, status, chamber_of_origin) that are owned by the bills-admin
 -- workflow, not by this migration.
+--
+-- Special case: hb306 (Ohio Hate Crimes Act) was carrying stance='mixed' in
+-- the catalog, which makes the scorecard resolver ignore every Democratic
+-- primary/co-sponsorship of it. The Hate Crimes Act is unambiguously
+-- pro-equality on our scorecard, so we force stance='pro' here. Same for
+-- the other scorecard-only bills below.
 -- =============================================================================
 update public.bills as b
-   set label      = coalesce(b.label, v.label),
+   set stance     = v.stance,
+       label      = coalesce(b.label, v.label),
        ga         = coalesce(b.ga,    v.ga),
-       stance     = coalesce(b.stance, v.stance),
        is_active  = true,
        updated_at = now()
   from (values
@@ -88,7 +94,8 @@ update public.bills as b
     ('sb53',       'SB 53',          '136th', 'anti'),
     ('sb1-135',    'SB 1 (135th)',   '135th', 'anti'),
     ('sb34-135',   'SB 34 (135th)',  '135th', 'pro'),
-    ('hb602-135',  'HB 602 (135th)', '135th', 'anti')
+    ('hb602-135',  'HB 602 (135th)', '135th', 'anti'),
+    ('hb306',      'HB 306',         '136th', 'pro')
   ) as v(slug, label, ga, stance)
  where b.slug = v.slug;
 
