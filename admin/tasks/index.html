@@ -340,8 +340,8 @@
               'id, title, description, status, priority, wbs_code, parent_task_id, ' +
               'assignee_id, created_by, start_date, due_date, estimated_hours, tags, ' +
               'created_at, updated_at, completed_at, ' +
-              'assignee:admin_users!assignee_id ( id, email, full_name, title ), ' +
-              'creator:admin_users!created_by  ( id, email, full_name )'
+              'assignee:admin_users!tasks_assignee_id_fkey ( id, email, full_name, title ), ' +
+              'creator:admin_users!tasks_created_by_fkey  ( id, email, full_name )'
             )
             .order('created_at', { ascending: false })
             .then(function (resp) {
@@ -428,10 +428,10 @@
         function loadTaskDetail(id) {
           return Promise.all([
             state.client.from('task_comments')
-              .select('id, body, created_at, author:admin_users!author_id ( id, email, full_name )')
+              .select('id, body, created_at, author:admin_users!task_comments_author_id_fkey ( id, email, full_name )')
               .eq('task_id', id).order('created_at', { ascending: true }),
             state.client.from('task_activity')
-              .select('id, action, detail, created_at, actor:admin_users!actor_id ( id, email, full_name )')
+              .select('id, action, detail, created_at, actor:admin_users!task_activity_actor_id_fkey ( id, email, full_name )')
               .eq('task_id', id).order('created_at', { ascending: false }).limit(20)
           ]).then(function (resps) {
             return {
