@@ -362,8 +362,13 @@
             .order('full_name', { ascending: true })
             .then(function (resp) {
               if (resp.error) {
-                console.warn('admin_users load failed', resp.error);
+                console.error('admin_users load failed', resp.error);
                 state.users = [];
+                populateAssigneeFilters();
+                window.AdminShell.toast(
+                  'Couldn’t load the user list. Assignee picker will be empty. (' + (resp.error.message || resp.error.code || 'unknown') + ')',
+                  'error'
+                );
                 return;
               }
               state.users = resp.data || [];
