@@ -14,20 +14,29 @@
     <link rel="stylesheet" href="/admin/admin-shell.css" />
     <link rel="stylesheet" href="/admin/admin-responsive.css" />
     <style>
+      /* =====================================================================
+         Scorecard admin — dark theme (matches admin-shell)
+         All colors derive from --text-* / --border-* tokens in style.css so
+         the page reads as part of the admin app, not the (legacy) light skin.
+         Grade tile colors match the methodology page at /methodology exactly.
+         ===================================================================== */
+
       .admin-expand-btn {
-        background: transparent;
-        border: 1px solid var(--color-border, #d3d6dc);
+        background: rgba(15, 34, 51, 0.6);
+        border: 1px solid var(--border-medium);
         border-radius: 6px;
         font-size: 0.85rem;
         line-height: 1;
         padding: 4px 8px;
         cursor: pointer;
-        color: var(--color-text-muted, #555);
+        color: var(--text-light);
       }
-      .admin-expand-btn:hover { background: rgba(0,0,0,0.04); }
-      .admin-expand-btn[aria-expanded="true"] { background: rgba(15, 34, 51, 0.08); }
+      .admin-expand-btn:hover { background: rgba(255, 255, 255, 0.05); }
+      .admin-expand-btn[aria-expanded="true"] { background: rgba(115, 215, 238, 0.12); border-color: rgba(115, 215, 238, 0.45); color: var(--text-accent); }
+
       tr.admin-detail-row > td {
-        background: #fafbfc;
+        background: rgba(15, 34, 51, 0.45);
+        color: var(--text-light);
         border-top: 0;
         padding: 14px 18px 18px;
       }
@@ -40,20 +49,20 @@
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        color: #6c7480;
+        color: var(--text-muted);
         margin: 0;
       }
       .admin-detail-grid dd {
         margin: 0 0 2px;
         font-size: 0.92rem;
-        color: #1a1f29;
+        color: var(--text-white);
         word-break: break-word;
       }
       .admin-detail-section-title {
         font-size: 0.78rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: #0F2233;
+        color: var(--text-accent);
         margin: 16px 0 6px;
         font-weight: 700;
         display: flex;
@@ -62,23 +71,31 @@
         gap: 10px;
       }
       .admin-detail-section-title:first-child { margin-top: 0; }
+
+      /* Grade pills — values match /methodology (Champion/Strong ally/etc.).
+         A composite >= 95 = A+, >= 88 = A, >= 78 = A-, >= 60 = B, >= 38 = C,
+         >= 18 = D, < 18 = F. Mirrors compute_legislator_score() exactly. */
       .admin-grade {
         display: inline-block;
-        min-width: 2.1em;
+        min-width: 2.4em;
         text-align: center;
         font-weight: 800;
         font-size: 0.95rem;
         padding: 2px 8px;
         border-radius: 6px;
+        border: 1px solid transparent;
       }
-      .admin-grade-A { background: rgba(74,222,128,0.20);  color: #1e7e45; }
-      .admin-grade-B { background: rgba(132,204,22,0.18);   color: #4d7c0f; }
-      .admin-grade-C { background: rgba(255,200,87,0.20);   color: #8a6d1f; }
-      .admin-grade-D { background: rgba(251,146,60,0.20);   color: #b45309; }
-      .admin-grade-F { background: rgba(255,107,107,0.18);  color: #c0392b; }
-      .admin-grade-NA { background: #eef2f6; color: #6c7480; }
-      .admin-party-D { color: #1d4ed8; font-weight: 700; }
-      .admin-party-R { color: #b91c1c; font-weight: 700; }
+      .admin-grade-Aplus  { background: rgba(22, 163, 74, 0.18);  color: #4ade80; border-color: rgba(22, 163, 74, 0.50); }
+      .admin-grade-A      { background: rgba(34, 197, 94, 0.16);  color: #34d399; border-color: rgba(34, 197, 94, 0.45); }
+      .admin-grade-Aminus { background: rgba(101, 163, 13, 0.18); color: #a3e635; border-color: rgba(101, 163, 13, 0.45); }
+      .admin-grade-B      { background: rgba(132, 204, 22, 0.18); color: #bef264; border-color: rgba(132, 204, 22, 0.45); }
+      .admin-grade-C      { background: rgba(234, 179, 8, 0.18);  color: #facc15; border-color: rgba(234, 179, 8, 0.45); }
+      .admin-grade-D      { background: rgba(249, 115, 22, 0.18); color: #fb923c; border-color: rgba(249, 115, 22, 0.45); }
+      .admin-grade-F      { background: rgba(220, 38, 38, 0.18);  color: #ff8a8a; border-color: rgba(220, 38, 38, 0.50); }
+      .admin-grade-NA     { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border-color: var(--border-medium); }
+
+      .admin-party-D { color: #93c5fd; font-weight: 700; }
+      .admin-party-R { color: #fca5a5; font-weight: 700; }
       td.admin-cell-tight { white-space: nowrap; }
 
       /* Editor-specific styles */
@@ -90,13 +107,17 @@
         padding: 2px 8px;
         border-radius: 999px;
         font-weight: 700;
+        border: 1px solid transparent;
       }
-      .sc-status-clean    { background: #e6f3ec; color: #1e7e45; }
-      .sc-status-dirty    { background: #fff3c4; color: #8a6d1f; }
-      .sc-status-unpub    { background: #fde2e1; color: #c0392b; }
+      .sc-status-clean { background: rgba(74, 222, 128, 0.14); color: #4ade80; border-color: rgba(74, 222, 128, 0.45); }
+      .sc-status-dirty { background: rgba(255, 200, 87, 0.14); color: #ffc857; border-color: rgba(255, 200, 87, 0.45); }
+      .sc-status-unpub { background: rgba(255, 107, 107, 0.14); color: #ff8a8a; border-color: rgba(255, 107, 107, 0.45); }
+
       .sc-score-compare {
         display: flex; gap: 24px; flex-wrap: wrap;
-        background: #fff; border: 1px solid #e2e6ec; border-radius: 8px;
+        background: rgba(15, 34, 51, 0.6);
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
         padding: 12px 16px; margin-bottom: 14px;
       }
       .sc-score-compare > div {
@@ -104,114 +125,184 @@
       }
       .sc-score-compare .sc-label {
         font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
-        color: #6c7480; font-weight: 700;
+        color: var(--text-muted); font-weight: 700;
       }
       .sc-score-compare .sc-value {
-        font-size: 1.4rem; font-weight: 800; color: #0F2233;
+        font-size: 1.4rem; font-weight: 800; color: var(--text-white);
       }
       .sc-score-compare .sc-value-sub {
-        font-size: 0.85rem; color: #6c7480; font-weight: 500;
+        font-size: 0.85rem; color: var(--text-muted); font-weight: 500;
       }
-      .sc-changed-arrow {
-        color: #b45309; font-weight: 700;
-      }
+      .sc-changed-arrow { color: #ffc857; font-weight: 700; }
+
       .sc-votes-table {
         width: 100%; border-collapse: collapse; margin: 4px 0 8px;
         font-size: 0.88rem;
+        color: var(--text-light);
       }
       .sc-votes-table th, .sc-votes-table td {
         text-align: left; padding: 6px 8px;
-        border-bottom: 1px solid #e8ecf1;
+        border-bottom: 1px solid var(--border-light);
       }
       .sc-votes-table th {
-        background: #f6f8fa; font-size: 0.74rem;
-        text-transform: uppercase; letter-spacing: 0.05em; color: #6c7480;
+        background: rgba(15, 34, 51, 0.7);
+        font-size: 0.74rem;
+        text-transform: uppercase; letter-spacing: 0.05em;
+        color: var(--text-muted);
         font-weight: 700;
       }
       .sc-votes-table tr:last-child td { border-bottom: 0; }
+      .sc-votes-table td strong { color: var(--text-white); }
+
       .sc-vote-pill {
         display: inline-block; min-width: 1.8em; text-align: center;
         padding: 2px 6px; border-radius: 4px; font-weight: 700;
         font-size: 0.85rem;
+        border: 1px solid transparent;
       }
-      .sc-vote-Y { background: rgba(74,222,128,0.22); color: #1e7e45; }
-      .sc-vote-N { background: rgba(255,107,107,0.20); color: #c0392b; }
-      .sc-vote-NV{ background: #eef2f6; color: #6c7480; }
-      .sc-vote-E { background: #fff3c4; color: #8a6d1f; }
-      .sc-vote-default { font-style: italic; opacity: 0.85; }
-      .sc-vote-exception-marker { color: #b45309; font-weight: 700; margin-left: 4px; }
+      .sc-vote-Y  { background: rgba(74, 222, 128, 0.18); color: #4ade80; border-color: rgba(74, 222, 128, 0.45); }
+      .sc-vote-N  { background: rgba(255, 107, 107, 0.18); color: #ff8a8a; border-color: rgba(255, 107, 107, 0.45); }
+      .sc-vote-NV { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border-color: var(--border-medium); }
+      .sc-vote-E  { background: rgba(255, 200, 87, 0.14); color: #ffc857; border-color: rgba(255, 200, 87, 0.45); }
+      .sc-vote-default { font-style: italic; opacity: 0.7; color: var(--text-muted); }
+      .sc-vote-exception-marker { color: #ffc857; font-weight: 700; margin-left: 4px; }
+
       .sc-vote-btn {
-        font-size: 0.78rem; padding: 2px 7px; border: 1px solid #d3d6dc;
-        background: #fff; border-radius: 4px; cursor: pointer; margin-right: 2px;
-        color: #1a1f29;
+        font-size: 0.78rem; padding: 3px 8px; border: 1px solid var(--border-medium);
+        background: rgba(15, 34, 51, 0.6); border-radius: 4px; cursor: pointer;
+        margin-right: 2px; color: var(--text-light);
       }
-      .sc-vote-btn:hover { background: #f4f6f8; }
-      .sc-vote-btn.is-active { background: #0F2233; color: #fff; border-color: #0F2233; }
+      .sc-vote-btn:hover { background: rgba(255, 255, 255, 0.06); color: var(--text-white); }
+      .sc-vote-btn.is-active { background: var(--text-accent); color: #0a1b2a; border-color: var(--text-accent); }
       .sc-vote-btn[disabled] { opacity: 0.5; cursor: not-allowed; }
-      .sc-action-row {
-        display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
-      }
+
+      .sc-action-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
       .sc-pill-action {
         font-size: 0.82rem; padding: 5px 10px; border-radius: 4px;
-        border: 1px solid #d3d6dc; background: #fff; cursor: pointer;
-        font-weight: 600;
+        border: 1px solid var(--border-medium); background: rgba(15, 34, 51, 0.6);
+        color: var(--text-light); cursor: pointer; font-weight: 600;
+        text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
       }
-      .sc-pill-action:hover { background: #f4f6f8; }
-      .sc-pill-action-primary {
-        background: #0F2233; color: #fff; border-color: #0F2233;
-      }
-      .sc-pill-action-primary:hover { background: #1f3a55; }
-      .sc-pill-action-publish {
-        background: #1e7e45; color: #fff; border-color: #1e7e45;
-      }
-      .sc-pill-action-publish:hover { background: #2a9456; }
+      .sc-pill-action:hover { background: rgba(255, 255, 255, 0.06); color: var(--text-white); }
+      .sc-pill-action-primary  { background: var(--text-accent); color: #0a1b2a; border-color: var(--text-accent); }
+      .sc-pill-action-primary:hover { background: #8de4f2; color: #0a1b2a; }
+      .sc-pill-action-publish  { background: #4ade80; color: #0a1b2a; border-color: #4ade80; }
+      .sc-pill-action-publish:hover { background: #5fe89a; color: #0a1b2a; }
       .sc-pill-action[disabled] { opacity: 0.5; cursor: not-allowed; }
+
       .sc-sponsorship-row {
         display: flex; align-items: center; gap: 10px;
-        padding: 5px 0; border-bottom: 1px solid #eef2f6;
-        font-size: 0.9rem;
+        padding: 6px 0; border-bottom: 1px solid var(--border-light);
+        font-size: 0.9rem; color: var(--text-light);
       }
       .sc-sponsorship-row:last-child { border-bottom: 0; }
-      .sc-sponsorship-row .sc-bill-label {
-        flex: 1; font-weight: 600;
-      }
+      .sc-sponsorship-row .sc-bill-label { flex: 1; font-weight: 600; color: var(--text-white); }
       .sc-sponsorship-role-select {
-        font-size: 0.85rem; padding: 2px 4px; border: 1px solid #d3d6dc;
-        border-radius: 4px; background: #fff;
+        font-size: 0.85rem; padding: 4px 8px; border: 1px solid var(--border-medium);
+        border-radius: 4px; background: rgba(15, 34, 51, 0.6); color: var(--text-white);
       }
-      .sc-bills-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 4px 18px;
-      }
-      .sc-no-data {
-        font-style: italic; color: #6c7480; font-size: 0.86rem;
-        padding: 8px 0;
-      }
+
+      .sc-bills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px 18px; }
+
+      .sc-no-data { font-style: italic; color: var(--text-muted); font-size: 0.86rem; padding: 8px 0; }
+
+      /* Vote drawer form (lives inside the dark shell-drawer-panel). */
       .sc-roll-call-modal-bd {
         display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px;
       }
       .sc-roll-call-modal-bd label {
         display: flex; flex-direction: column; gap: 4px;
         font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em;
-        color: #6c7480; font-weight: 700;
+        color: var(--text-muted); font-weight: 700;
       }
       .sc-roll-call-modal-bd label.sc-wide { grid-column: 1 / -1; }
       .sc-roll-call-modal-bd input,
       .sc-roll-call-modal-bd select,
       .sc-roll-call-modal-bd textarea {
-        font: inherit; font-size: 0.92rem; padding: 6px 8px;
-        border: 1px solid #d3d6dc; border-radius: 4px;
+        font: inherit; font-size: 0.92rem; padding: 8px 10px;
+        border: 1px solid var(--border-medium); border-radius: 6px;
         text-transform: none; letter-spacing: 0;
-        color: #1a1f29;
+        color: var(--text-white);
+        background: rgba(15, 34, 51, 0.6);
+      }
+      .sc-roll-call-modal-bd input:focus,
+      .sc-roll-call-modal-bd select:focus,
+      .sc-roll-call-modal-bd textarea:focus {
+        outline: none; border-color: var(--text-accent);
+        box-shadow: 0 0 0 3px rgba(115, 215, 238, 0.18);
       }
       .sc-roll-call-modal-bd textarea { min-height: 60px; resize: vertical; }
+      .sc-roll-call-modal-bd select option { background: var(--dark-bg); color: var(--text-white); }
+
       .sc-publish-banner {
-        background: #fff8e1; border: 1px solid #f1d27a; border-radius: 6px;
+        background: rgba(255, 200, 87, 0.10);
+        border: 1px solid rgba(255, 200, 87, 0.45);
+        border-radius: 6px;
         padding: 10px 14px; margin-bottom: 14px; font-size: 0.9rem;
+        color: var(--text-light);
         display: flex; align-items: center; justify-content: space-between; gap: 12px;
       }
-      .sc-publish-banner strong { color: #8a6d1f; }
+      .sc-publish-banner strong { color: #ffc857; }
+      .sc-publish-banner a { color: var(--text-accent); }
+
+      /* Methodology summary callout */
+      .sc-method-callout {
+        background: rgba(15, 34, 51, 0.55);
+        border: 1px solid var(--border-light);
+        border-left: 3px solid var(--text-accent);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 0 0 18px;
+        color: var(--text-light);
+      }
+      .sc-method-callout > summary {
+        list-style: none;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-accent);
+        outline: none;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .sc-method-callout > summary::-webkit-details-marker { display: none; }
+      .sc-method-callout > summary::after {
+        content: '+';
+        margin-left: auto;
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--text-muted);
+      }
+      .sc-method-callout[open] > summary::after { content: '\2212'; }
+      .sc-method-body { margin-top: 12px; font-size: 13px; line-height: 1.55; }
+      .sc-method-formula {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        background: rgba(15, 34, 51, 0.8);
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin: 10px 0;
+        color: var(--text-white);
+        font-size: 13px;
+      }
+      .sc-method-formula .sc-fm-token { color: var(--text-accent); font-weight: 700; }
+      .sc-method-grades {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 6px 10px; margin-top: 10px;
+      }
+      .sc-method-grade-row {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 12px; color: var(--text-light);
+      }
+      .sc-method-grade-row .admin-grade { min-width: 2.4em; font-size: 0.78rem; padding: 1px 7px; }
+      .sc-method-grade-row .sc-mg-range { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+      .sc-method-grade-row .sc-mg-label { margin-left: auto; color: var(--text-muted); }
+      .sc-method-callout a {
+        color: var(--text-accent); text-decoration: none; font-weight: 600;
+      }
+      .sc-method-callout a:hover { text-decoration: underline; }
     </style>
   </head>
   <body class="admin-shell">
@@ -253,6 +344,27 @@
             Publish all changes
           </button>
         </div>
+
+        <details class="sc-method-callout">
+          <summary>Grading methodology &mdash; how Floor / Committee / Sponsorship roll up to a grade</summary>
+          <div class="sc-method-body">
+            <p>Three editorial subscores, each clamped to <strong>&minus;5 &hellip; +5</strong>, feed one composite. The composite is clamped to 0&ndash;100 and the letter grade is applied from a fixed table. Baseline is the same for every member regardless of party, chamber, or caucus.</p>
+            <div class="sc-method-formula">
+              score = clamp(0, 100, round(<span class="sc-fm-token">50</span> + (<span class="sc-fm-token">Vf</span> &times; 4) + (<span class="sc-fm-token">Vc</span> &times; 4) + (<span class="sc-fm-token">S</span> &times; 2)))
+            </div>
+            <p style="margin: 6px 0 0; color: var(--text-muted); font-size: 12px;">Vf = Floor Votes, Vc = Committee Votes, S = Sponsorship. Floor &amp; Committee weight 4&times;; Sponsorship weights 2&times; (sponsorship is a public commitment, not a recorded vote).</p>
+            <div class="sc-method-grades">
+              <div class="sc-method-grade-row"><span class="admin-grade admin-grade-Aplus">A+</span><span class="sc-mg-range">95&ndash;100</span><span class="sc-mg-label">Champion</span></div>
+              <div class="sc-method-grade-row"><span class="admin-grade admin-grade-A">A</span><span class="sc-mg-range">88&ndash;94</span><span class="sc-mg-label">Strong ally</span></div>
+              <div class="sc-method-grade-row"><span class="admin-grade admin-grade-Aminus">A&minus;</span><span class="sc-mg-range">78&ndash;87</span><span class="sc-mg-label">Reliable ally</span></div>
+              <div class="sc-method-grade-row"><span class="admin-grade admin-grade-B">B</span><span class="sc-mg-range">60&ndash;77</span><span class="sc-mg-label">Supportive</span></div>
+              <div class="sc-method-grade-row"><span class="admin-grade admin-grade-C">C</span><span class="sc-mg-range">38&ndash;59</span><span class="sc-mg-label">Mixed record</span></div>
+              <div class="sc-method-grade-row"><span class="admin-grade admin-grade-D">D</span><span class="sc-mg-range">18&ndash;37</span><span class="sc-mg-label">Unfriendly</span></div>
+              <div class="sc-method-grade-row"><span class="admin-grade admin-grade-F">F</span><span class="sc-mg-range">0&ndash;17</span><span class="sc-mg-label">Hostile</span></div>
+            </div>
+            <p style="margin: 12px 0 0; color: var(--text-muted); font-size: 12px;">Full source: <a href="/methodology" target="_blank" rel="noopener">/methodology</a>. The thresholds and formula here match the public page and the <code>compute_legislator_score()</code> function in the database 1:1.</p>
+          </div>
+        </details>
 
         <div class="admin-toolbar">
           <input type="search" class="admin-input" id="filterSearch"
@@ -446,9 +558,20 @@
           return isNaN(n) ? null : (Math.round(n * 10) / 10);
         }
 
+        // Maps the canonical grade strings produced by compute_legislator_score()
+        // (A+, A, A-, B, C, D, F) to CSS classes. Anything outside that set is
+        // treated as ungraded ("NA"). Mirrors the grade table on /methodology.
         function gradeClass(g) {
-          var k = g ? String(g).charAt(0).toUpperCase() : '';
-          return GRADE_RANK[g] ? 'admin-grade-' + k : 'admin-grade-NA';
+          switch (g) {
+            case 'A+': return 'admin-grade-Aplus';
+            case 'A':  return 'admin-grade-A';
+            case 'A-': return 'admin-grade-Aminus';
+            case 'B':  return 'admin-grade-B';
+            case 'C':  return 'admin-grade-C';
+            case 'D':  return 'admin-grade-D';
+            case 'F':  return 'admin-grade-F';
+            default:   return 'admin-grade-NA';
+          }
         }
 
         function toast(msg, kind) {
