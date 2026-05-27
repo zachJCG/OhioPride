@@ -111,7 +111,7 @@
               '(starting with the new <code>Tasks</code> module). Add a teammate here, assign them a role, and they ',
               'appear as an assignee everywhere a person needs to be picked. ',
               (state.canManage
-                ? 'Inviting a user sends them a sign-in link; they set their own password on first use.'
+                ? 'You can also edit their name and email, set or reset their password, or send them a Supabase Auth reset email — all from the row’s edit modal.'
                 : 'You don&rsquo;t have permission to invite or edit users — ask a Super Admin.'),
             '</div>',
 
@@ -167,7 +167,7 @@
                     '<div class="user-form-row">',
                       '<label class="user-form-wide">Email',
                         '<input type="email" name="email" required maxlength="200" />',
-                        '<span class="help-text">Used for sign-in. The system will send them a magic link to set their password.</span>',
+                        '<span class="help-text" id="emailHelp">Used for sign-in. Editable; changes update the Supabase Auth account too.</span>',
                       '</label>',
                       '<label>Full name',
                         '<input type="text" name="full_name" maxlength="160" />',
@@ -185,12 +185,24 @@
                           'Active &mdash; uncheck to revoke access without deleting the row',
                         '</div>',
                       '</label>',
+                      '<label class="user-form-wide" id="passwordField">Password',
+                        '<div style="display:flex;gap:8px;align-items:stretch">',
+                          '<input type="password" name="new_password" minlength="8" maxlength="120" placeholder="Leave blank to keep current" autocomplete="new-password" style="flex:1" />',
+                          '<button type="button" class="shell-btn shell-btn-outline" id="genPasswordBtn" style="padding:8px 12px">Generate</button>',
+                          '<button type="button" class="shell-btn shell-btn-outline" id="showPasswordBtn" style="padding:8px 12px">Show</button>',
+                        '</div>',
+                        '<span class="help-text">Minimum 8 characters. On Save we set this directly in Supabase Auth. Leave blank to leave the existing password untouched.</span>',
+                      '</label>',
+                      '<label class="user-form-wide" id="resetEmailField" hidden>',
+                        '<button type="button" class="shell-btn shell-btn-ghost" id="sendResetBtn" style="justify-content:flex-start;padding:6px 0">Send password-reset email instead &rarr;</button>',
+                      '</label>',
                       '<label class="user-form-wide">Notes',
                         '<textarea name="notes" rows="2" placeholder="Internal notes (optional)"></textarea>',
                       '</label>',
                     '</div>',
                   '</div>',
                   '<div class="user-modal-foot">',
+                    '<button type="button" class="shell-btn shell-btn-ghost" id="userFormDelete" hidden style="color:#ff8a8a">Delete user</button>',
                     '<span class="user-form-spacer"></span>',
                     '<button type="button" class="shell-btn shell-btn-outline" id="userFormCancel">Cancel</button>',
                     '<button type="submit" class="shell-btn shell-btn-primary" id="userFormSave">Save</button>',
@@ -274,24 +286,42 @@
           });
         }
 
-        function inviteAuthUser(email, fullName) {
-          // Calls the server-side function with the caller's bearer token.
+        // Single bridge into the service-role function. Pass the action +
+        // payload; we attach the caller's bearer token.
+        function manageAuthUser(payload) {
           return state.client.auth.getSession().then(function (s) {
             var jwt = s && s.data && s.data.session && s.data.session.access_token;
             if (!jwt) throw new Error('No session');
-            return fetch('/.netlify/functions/admin-user-invite', {
+            return fetch('/.netlify/functions/admin-user-manage', {
               method: 'POST',
               headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + jwt },
-              body: JSON.stringify({ email: email, full_name: fullName || null })
+              body: JSON.stringify(payload)
             }).then(function (resp) {
               return resp.json().then(function (body) {
                 if (!resp.ok || !body.ok) {
-                  throw new Error(body && body.error ? body.error : 'invite_failed');
+                  var err = new Error(body && body.error ? body.error : ('http_' + resp.status));
+                  err.detail = body && body.detail;
+                  throw err;
                 }
                 return body;
               });
             });
           });
+        }
+
+        function deleteAdminUser(userId) {
+          return state.client.from('admin_users').delete().eq('id', userId)
+            .then(function (r) { if (r.error) throw r.error; });
+        }
+
+        function generateTempPassword() {
+          // 14-char strong-ish password. Server enforces >= 8.
+          var pool = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%^&*';
+          var out = '';
+          var values = new Uint32Array(14);
+          (window.crypto || window.msCrypto).getRandomValues(values);
+          for (var i = 0; i < 14; i++) out += pool[values[i] % pool.length];
+          return out;
         }
 
         // =================================================================
@@ -378,8 +408,25 @@
           var form  = $('userForm');
           $('userModalTitle').textContent = existing ? 'Edit User' : 'Add User';
           form.reset();
-          form.dataset.userId = existing ? existing.id : '';
-          form.elements.email.disabled = !!existing;     // can't change PK
+          form.dataset.userId       = existing ? existing.id    : '';
+          form.dataset.originalEmail = existing ? existing.email : '';
+          form.elements.email.disabled = false;          // editable for both add + edit
+          form.elements.new_password.value = '';
+
+          // Show the password-reset shortcut + delete button on edit only.
+          var resetField  = $('resetEmailField');
+          var deleteBtn   = $('userFormDelete');
+          if (resetField) resetField.hidden = !existing;
+          if (deleteBtn)  deleteBtn.hidden  = !existing;
+          if (deleteBtn)  deleteBtn.dataset.userId = existing ? existing.id : '';
+
+          // Password help copy depends on whether we're inviting or editing.
+          var help = $('emailHelp');
+          if (help) {
+            help.textContent = existing
+              ? 'Editable. Changing email updates the Supabase Auth account too.'
+              : 'Used for sign-in. If you leave the password blank we send an invite email instead.';
+          }
 
           if (existing) {
             form.elements.email.value     = existing.email || '';
@@ -395,6 +442,11 @@
             form.elements.is_active.checked = true;
             form.querySelectorAll('input[name="roles"]').forEach(function (cb) { cb.checked = false; });
           }
+          // Reset password visibility toggle on every open.
+          form.elements.new_password.type = 'password';
+          var showBtn = $('showPasswordBtn');
+          if (showBtn) showBtn.textContent = 'Show';
+
           modal.hidden = false;
           setTimeout(function () { try { (existing ? form.elements.full_name : form.elements.email).focus(); } catch (e) {} }, 50);
         }
@@ -410,46 +462,89 @@
           var form = ev.target;
           var btn  = $('userFormSave');
           var userId = form.dataset.userId || null;
+          var originalEmail = (form.dataset.originalEmail || '').toLowerCase();
 
           var email     = (form.elements.email.value || '').trim().toLowerCase();
           var full_name = (form.elements.full_name.value || '').trim() || null;
           var title     = (form.elements.title.value || '').trim() || null;
           var is_active = !!form.elements.is_active.checked;
           var notes     = (form.elements.notes.value || '').trim() || null;
+          var newPassword = form.elements.new_password.value || '';
           var roles     = Array.prototype.slice
             .call(form.querySelectorAll('input[name="roles"]:checked'))
             .map(function (cb) { return cb.value; });
 
           if (!email) return;
-
-          var payload = userId
-            ? { full_name: full_name, title: title, is_active: is_active, notes: notes }
-            : { email: email, full_name: full_name, title: title, is_active: is_active, notes: notes, invited_by: state.me && state.me.email };
+          if (newPassword && newPassword.length < 8) {
+            window.AdminShell.toast('Password must be at least 8 characters.', 'error');
+            return;
+          }
 
           btn.disabled = true; btn.textContent = 'Saving...';
 
-          saveUser(payload, userId, roles)
-            .then(function (savedId) {
-              if (!userId) {
-                // New user: also fire the invite flow if the function is wired up.
-                return inviteAuthUser(email, full_name).then(function (resp) {
-                  if (resp && resp.invite_sent) {
-                    window.AdminShell.toast('User added and invite email sent.', 'success');
-                  } else {
-                    window.AdminShell.toast('User added.', 'success');
+          var emailChanged = !!(userId && originalEmail && email !== originalEmail);
+
+          // Order matters:
+          //   1. If editing, change email first via the server-side function
+          //      (atomically updates auth.users + admin_users.email). After
+          //      this, the unique key on admin_users still resolves under the
+          //      original id — we never recreated the row.
+          //   2. Save the rest of the row + sync roles. For new users, this
+          //      inserts the admin_users row with the chosen email.
+          //   3. For new or existing users, if a password was supplied, set
+          //      it (createUser on first time, updateUserById otherwise).
+          //   4. For new users with NO password, fall back to magic-link
+          //      invite.
+
+          var chain = Promise.resolve();
+
+          if (emailChanged) {
+            chain = chain.then(function () {
+              return manageAuthUser({ action: 'update_email', email: originalEmail, new_email: email });
+            });
+          }
+
+          chain = chain.then(function () {
+            var payload = userId
+              ? { full_name: full_name, title: title, is_active: is_active, notes: notes }
+              : { email: email, full_name: full_name, title: title, is_active: is_active, notes: notes, invited_by: state.me && state.me.email };
+            return saveUser(payload, userId, roles);
+          });
+
+          if (newPassword) {
+            chain = chain.then(function (savedId) {
+              return manageAuthUser({ action: 'set_password', email: email, new_password: newPassword })
+                .then(function () { return savedId; });
+            });
+          } else if (!userId) {
+            chain = chain.then(function (savedId) {
+              return manageAuthUser({ action: 'invite', email: email, full_name: full_name })
+                .then(
+                  function () { return savedId; },
+                  function (err) {
+                    console.warn('invite step failed (row saved):', err);
+                    return savedId;
                   }
-                }, function (err) {
-                  console.warn('invite step failed (admin_users row was saved):', err);
-                  window.AdminShell.toast('User added (auth invite not sent — see console).', 'success');
-                });
-              }
-              window.AdminShell.toast('User updated.', 'success');
+                );
+            });
+          }
+
+          chain
+            .then(function () {
+              var msg;
+              if (!userId)         msg = newPassword ? 'User added with a password.' : 'User added and invite email queued.';
+              else if (emailChanged && newPassword)  msg = 'User updated · email + password changed.';
+              else if (emailChanged) msg = 'User updated · email changed.';
+              else if (newPassword)  msg = 'User updated · password changed.';
+              else                   msg = 'User updated.';
+              window.AdminShell.toast(msg, 'success');
             })
             .then(loadUsers)
             .then(function () { closeUserModal(); applyFilters(); })
             .catch(function (err) {
               console.error('save user failed', err);
-              window.AdminShell.toast('Could not save user. ' + (err.message || ''), 'error');
+              var detail = (err && err.detail) ? (' — ' + err.detail) : '';
+              window.AdminShell.toast('Could not save user. ' + (err.message || '') + detail, 'error');
             })
             .finally(function () { btn.disabled = false; btn.textContent = 'Save'; });
         }
@@ -473,6 +568,69 @@
           $('userForm').addEventListener('submit', handleUserFormSubmit);
           $('userModal').addEventListener('click', function (ev) {
             if (ev.target.id === 'userModal') closeUserModal();
+          });
+
+          // Password generate / show buttons.
+          var genBtn = $('genPasswordBtn');
+          if (genBtn) genBtn.addEventListener('click', function () {
+            var pw = generateTempPassword();
+            var input = $('userForm').elements.new_password;
+            input.type  = 'text';
+            input.value = pw;
+            $('showPasswordBtn').textContent = 'Hide';
+            navigator.clipboard && navigator.clipboard.writeText(pw).then(
+              function () { window.AdminShell.toast('Password generated and copied to clipboard.', 'success'); },
+              function () { window.AdminShell.toast('Password generated. Copy it before closing the modal.', 'success'); }
+            );
+          });
+          var showBtn = $('showPasswordBtn');
+          if (showBtn) showBtn.addEventListener('click', function () {
+            var input = $('userForm').elements.new_password;
+            if (input.type === 'password') { input.type = 'text';     showBtn.textContent = 'Hide'; }
+            else                           { input.type = 'password'; showBtn.textContent = 'Show'; }
+          });
+
+          // Send-reset shortcut for an existing user.
+          var resetBtn = $('sendResetBtn');
+          if (resetBtn) resetBtn.addEventListener('click', function () {
+            var form = $('userForm');
+            var originalEmail = (form.dataset.originalEmail || '').toLowerCase();
+            var currentEmail  = (form.elements.email.value || '').trim().toLowerCase();
+            // If they've edited the email but not saved yet, use the email
+            // already associated with the auth account.
+            var target = originalEmail || currentEmail;
+            if (!target) return;
+            resetBtn.disabled = true;
+            manageAuthUser({ action: 'send_password_reset', email: target })
+              .then(function () { window.AdminShell.toast('Password-reset email sent to ' + target + '.', 'success'); })
+              .catch(function (err) {
+                console.error('reset email failed', err);
+                window.AdminShell.toast('Could not send reset email. ' + (err.message || ''), 'error');
+              })
+              .finally(function () { resetBtn.disabled = false; });
+          });
+
+          // Delete user (cascades roles via FK on delete cascade).
+          var deleteBtn = $('userFormDelete');
+          if (deleteBtn) deleteBtn.addEventListener('click', function () {
+            var userId = deleteBtn.dataset.userId;
+            var form   = $('userForm');
+            var label  = (form.elements.full_name.value || form.elements.email.value || 'this user');
+            if (!userId) return;
+            if (!window.confirm('Delete ' + label + '? This removes their admin row and role assignments. The Supabase Auth account stays — you can revoke that separately.')) return;
+            deleteBtn.disabled = true;
+            deleteAdminUser(userId)
+              .then(loadUsers)
+              .then(function () {
+                closeUserModal();
+                applyFilters();
+                window.AdminShell.toast('User removed.', 'success');
+              })
+              .catch(function (err) {
+                console.error('delete user failed', err);
+                window.AdminShell.toast('Could not delete user. ' + (err.message || ''), 'error');
+              })
+              .finally(function () { deleteBtn.disabled = false; });
           });
 
           $('usersBody').addEventListener('click', function (ev) {

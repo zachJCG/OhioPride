@@ -63,7 +63,7 @@
         { id: 'volunteers',   href: '/admin/volunteers',   label: 'Volunteers',   icon: 'users',      permission: ['volunteers','read'] },
         { id: 'internships',  href: '/admin/internships',  label: 'Internships',  icon: 'briefcase',  permission: ['internships','read'] },
         { id: 'donors',       href: '/admin/donors',      label: 'Donors',       icon: 'heart',      permission: ['donors','read'] },
-        { id: 'pride',        href: '/admin/pride',        label: 'Pride',        icon: 'flag',       permission: ['pride','read'] },
+        { id: 'pride',        href: '/admin/pride',        label: 'Events',       icon: 'flag',       permission: ['pride','read'] },
         { id: 'launch',       href: '/admin/launch-day',   label: 'Launch Day',   icon: 'megaphone',  permission: ['launch','read'] },
         { id: 'users',        href: '/admin/users',        label: 'Admin Users',  icon: 'key',        permission: ['users','read'] },
       ]
