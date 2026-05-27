@@ -37,12 +37,12 @@
 
   // Who's-going categories. "volunteers" is derived from the event roster
   // (any confirmed/tentative assignment); the rest are pride_events flags.
-  // "ed" is the Executive Director ("me") — drives /admin/pride/ED.
+  // "ed" is the Director ("me") — drives /admin/pride/ED.
   var ATTENDANCE = [
     { key: 'volunteers', label: 'Volunteers', color: '#73D7EE', derived: true },
     { key: 'board',      label: 'Board',      color: '#4ade80', col: 'board_attending' },
     { key: 'staff',      label: 'Staff',      color: '#fb923c', col: 'staff_attending' },
-    { key: 'ed',         label: 'ED',         color: '#f472b6', col: 'ed_attending' }
+    { key: 'ed',         label: 'Director',   color: '#f472b6', col: 'ed_attending' }
   ];
 
   // Colored dots for the categories attending an event. `flags` is
@@ -149,7 +149,7 @@
     return '<div class="pride-tabs">' +
       tab('events', '/admin/pride/events', 'Events') +
       tab('volunteers', '/admin/pride/volunteers', 'Volunteers') +
-      tab('ed', '/admin/pride/ED', 'ED') +
+      tab('ed', '/admin/pride/ED', 'Director') +
       '</div>';
   }
 

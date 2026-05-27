@@ -327,7 +327,7 @@
         (volN ? volN + ' assigned (from roster)' : 'none assigned yet') + '</span></div>' +
       box('board_attending', V.board.color, 'Board') +
       box('staff_attending', V.staff.color, 'Staff') +
-      box('ed_attending',    V.ed.color,    'ED (me)') +
+      box('ed_attending',    V.ed.color,    'Director') +
       '</div>';
   }
 
