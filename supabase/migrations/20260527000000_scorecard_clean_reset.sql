@@ -67,25 +67,30 @@ truncate table public.score_snapshots            restart identity cascade;
 -- 2. Bills referenced by sponsorships / roll-calls — make sure they exist.
 -- -----------------------------------------------------------------------------
 -- Every roll_call.bill_slug and every legislator_sponsorships.bill_slug must
--- be present in public.bills. Insert the rows that the public scorecard
--- references but the existing bills catalog may not yet carry. Stance is the
--- editorial position; the resolver uses it to score Y/N votes correctly.
+-- be present in public.bills. All seven scorecard-only bills below are
+-- already present in the bills catalog (seeded in earlier migrations); this
+-- step simply guarantees the editorial fields the resolver reads (label, ga,
+-- stance, is_active) are correct for them. No inserts are attempted because
+-- public.bills carries several NOT NULL columns (bill_number, title,
+-- category, status, chamber_of_origin) that are owned by the bills-admin
+-- workflow, not by this migration.
 -- =============================================================================
-insert into public.bills (slug, label, ga, stance, display_order, is_active)
-values
-  ('hb6',        'HB 6 (135th)',        '135th', 'anti', 220, true),
-  ('hb467-135',  'HB 467 (135th)',      '135th', 'pro',  222, true),
-  ('hb507',      'HB 507 (135th)',      '135th', 'anti', 224, true),
-  ('sb53',       'SB 53',               '136th', 'anti', 226, true),
-  ('sb1-135',    'SB 1 (135th)',        '135th', 'anti', 200, true),
-  ('sb34-135',   'SB 34 (135th)',       '135th', 'pro',  202, true),
-  ('hb602-135',  'HB 602 (135th)',      '135th', 'anti', 204, true)
-on conflict (slug) do update set
-  label         = coalesce(public.bills.label, excluded.label),
-  ga            = coalesce(public.bills.ga,    excluded.ga),
-  stance        = coalesce(public.bills.stance, excluded.stance),
-  is_active     = true,
-  updated_at    = now();
+update public.bills as b
+   set label      = coalesce(b.label, v.label),
+       ga         = coalesce(b.ga,    v.ga),
+       stance     = coalesce(b.stance, v.stance),
+       is_active  = true,
+       updated_at = now()
+  from (values
+    ('hb6',        'HB 6 (135th)',   '135th', 'anti'),
+    ('hb467-135',  'HB 467 (135th)', '135th', 'pro'),
+    ('hb507',      'HB 507 (135th)', '135th', 'anti'),
+    ('sb53',       'SB 53',          '136th', 'anti'),
+    ('sb1-135',    'SB 1 (135th)',   '135th', 'anti'),
+    ('sb34-135',   'SB 34 (135th)',  '135th', 'pro'),
+    ('hb602-135',  'HB 602 (135th)', '135th', 'anti')
+  ) as v(slug, label, ga, stance)
+ where b.slug = v.slug;
 
 
 -- =============================================================================
@@ -444,6 +449,7 @@ where exists (select 1 from public.bills b where b.slug = x.bill_slug);
 -- =============================================================================
 insert into public.score_snapshots (
   legislator_id,
+  methodology_id,
   floor_score, committee_score, sponsorship_score,
   public_score, total_score, grade,
   floor_votes_counted, committee_votes_counted,
@@ -452,6 +458,10 @@ insert into public.score_snapshots (
 )
 select
   l.id,
+  (select id from public.scoring_methodologies
+    where is_current = true
+    order by effective_from desc
+    limit 1),
   s.floor_score, s.committee_score, s.sponsorship_score,
   s.public_score, s.total_score, s.grade,
   s.floor_votes_counted, s.committee_votes_counted,
