@@ -265,7 +265,7 @@
   function buildVolunteerPayload() {
     return {
       application_type: 'volunteer',
-      website: val('website') || '',  // honeypot
+      vform_company_field: val('vform_company_field') || '',  // honeypot
 
       first_name: val('first_name'),
       last_name:  val('last_name'),
@@ -297,7 +297,7 @@
   function buildInternPayload() {
     return {
       application_type: 'internship',
-      website: val('website') || '',  // honeypot
+      vform_company_field: val('vform_company_field') || '',  // honeypot
 
       first_name: val('first_name'),
       last_name:  val('last_name'),

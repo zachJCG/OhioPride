@@ -9,12 +9,13 @@
  *
  * Endpoint:
  *   POST /.netlify/functions/volunteer-submit
- *   body: { application_type: "volunteer" | "internship", website, ... }
+ *   body: { application_type: "volunteer" | "internship", vform_company_field, ... }
  *   -> { ok: true,  id, kind }                            on success
  *   -> { ok: false, error }                                on failure
  *
- * Honeypot: if the hidden 'website' field is filled, we silently return ok
- * without writing anything.
+ * Honeypot: if the hidden 'vform_company_field' field is filled, we silently
+ * return ok without writing anything. (Avoid "website"/"url"/"email" names —
+ * mobile browsers autofill those even with autocomplete="off".)
  * ============================================================================= */
 
 import { createClient } from '@supabase/supabase-js';
@@ -86,7 +87,7 @@ export default async (req, _context) => {
   try { body = await req.json(); }
   catch { return jsonResponse(400, { ok: false, error: 'invalid_json' }); }
 
-  if (body && typeof body.website === 'string' && body.website.trim() !== '') {
+  if (body && typeof body.vform_company_field === 'string' && body.vform_company_field.trim() !== '') {
     return jsonResponse(200, { ok: true, id: null, kind: 'honeypot' });
   }
 

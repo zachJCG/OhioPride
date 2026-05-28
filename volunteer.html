@@ -610,11 +610,21 @@
           <form id="volunteerForm" novalidate>
             <input type="hidden" name="application_type" id="applicationType" value="volunteer" />
 
-            <!-- Honeypot -->
-            <label class="vform-honeypot" aria-hidden="true">
-              Leave this empty
-              <input type="text" name="website" tabindex="-1" autocomplete="off" />
-            </label>
+            <!-- Honeypot. Name avoids "website"/"url"/"email" so mobile
+                 browsers (iOS Safari especially) do not autofill it and
+                 silently trigger the bot check on real applicants. -->
+            <div class="vform-honeypot" aria-hidden="true">
+              <label>
+                Leave this empty
+                <input
+                  type="text"
+                  name="vform_company_field"
+                  tabindex="-1"
+                  autocomplete="off"
+                  aria-hidden="true"
+                />
+              </label>
+            </div>
 
             <!-- =========================================================
                  STEP 1: About you  (shared)
