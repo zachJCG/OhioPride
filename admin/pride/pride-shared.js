@@ -39,7 +39,7 @@
   // (any confirmed/tentative assignment); the rest are pride_events flags.
   // "ed" is the Director ("me") — drives /admin/pride/ED.
   var ATTENDANCE = [
-    { key: 'volunteers', label: 'Volunteers', color: '#73D7EE', derived: true },
+    { key: 'volunteers', label: 'Volunteers', color: '#70D6EC', derived: true },
     { key: 'board',      label: 'Board',      color: '#4ade80', col: 'board_attending' },
     { key: 'staff',      label: 'Staff',      color: '#fb923c', col: 'staff_attending' },
     { key: 'ed',         label: 'Director',   color: '#f472b6', col: 'ed_attending' }

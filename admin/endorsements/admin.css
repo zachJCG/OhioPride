@@ -6,16 +6,16 @@
    ===================================================================== */
 
 :root {
-  --navy:          #0F2233;
+  --navy:          #152233;
   --navy-light:    #1A3A52;
   --navy-lighter:  #234A66;
-  --cyan:          #73D7EE;
-  --cyan-soft:     rgba(115, 215, 238, 0.18);
-  --cyan-edge:     rgba(115, 215, 238, 0.45);
+  --cyan:          #70D6EC;
+  --cyan-soft:     rgba(112, 214, 236, 0.18);
+  --cyan-edge:     rgba(112, 214, 236, 0.45);
   --white:         #FFFFFF;
   --paper:         #F7F8FA;
   --paper-2:       #EFF2F5;
-  --ink:           #0F2233;
+  --ink:           #152233;
   --ink-soft:      #4A5C6E;
   --ink-mute:      #7A8896;
   --line:          #D9DEE4;
@@ -30,7 +30,7 @@
   --pride-gradient: linear-gradient(
     90deg,
     #E40303 0%,
-    #FF8C00 20%,
+    #FFBC00 20%,
     #FFED00 40%,
     #008026 60%,
     #004DFF 80%,

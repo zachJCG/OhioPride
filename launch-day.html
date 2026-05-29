@@ -8,7 +8,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --navy: #0f2233;
+            --navy: #152233;
             --navy-deep: #0a1929;
             --navy-light: #132d44;
             --navy-card: rgba(19,45,68,0.5);
@@ -16,16 +16,16 @@
             --text-soft: rgba(255,255,255,0.85);
             --text-dim: rgba(255,255,255,0.6);
             --text-faint: rgba(255,255,255,0.4);
-            --accent: #73d7ee;
+            --accent: #70D6EC;
             --action-blue: #004dff;
             --purple: #750787;
             --pink: #ffafc8;
             --red: #e40303;
-            --orange: #ff8c00;
+            --orange: #FFBC00;
             --yellow: #ffed00;
             --green: #008026;
             --border: rgba(255,255,255,0.08);
-            --rainbow: linear-gradient(90deg, #e40303 0%, #ff8c00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%, #e40303 100%);
+            --rainbow: linear-gradient(90deg, #e40303 0%, #FFBC00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%, #e40303 100%);
             --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
             --transition: all 0.3s ease;
         }
@@ -43,8 +43,8 @@
         to { opacity: 1; transform: translateY(0); }
     }
     @keyframes glow {
-        0%, 100% { box-shadow: 0 0 20px rgba(115,215,238,0.15); }
-        50% { box-shadow: 0 0 40px rgba(115,215,238,0.35); }
+        0%, 100% { box-shadow: 0 0 20px rgba(112, 214, 236,0.15); }
+        50% { box-shadow: 0 0 40px rgba(112, 214, 236,0.35); }
     }
     @keyframes pulseDot {
         0%, 100% { opacity: 1; transform: scale(1); }
@@ -98,7 +98,7 @@
         transform: translateX(-50%);
         width: 600px;
         height: 600px;
-        background: radial-gradient(circle, rgba(115,215,238,0.12) 0%, rgba(117,7,135,0.06) 40%, transparent 70%);
+        background: radial-gradient(circle, rgba(112, 214, 236,0.12) 0%, rgba(117,7,135,0.06) 40%, transparent 70%);
         border-radius: 50%;
         pointer-events: none;
         z-index: 0;
@@ -109,8 +109,8 @@
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem 1.25rem;
-        background: rgba(115,215,238,0.1);
-        border: 1px solid rgba(115,215,238,0.3);
+        background: rgba(112, 214, 236,0.1);
+        border: 1px solid rgba(112, 214, 236,0.3);
         border-radius: 100px;
         font-family: 'Montserrat', Arial, sans-serif;
         font-size: 0.75rem;
@@ -210,7 +210,7 @@
     }
     .detail-card:hover {
         transform: translateY(-4px);
-        border-color: rgba(115,215,238,0.3);
+        border-color: rgba(112, 214, 236,0.3);
     }
     .detail-card::before {
         content: '';
@@ -354,7 +354,7 @@
     }
     .what-card:hover {
         transform: translateY(-4px);
-        border-color: rgba(115,215,238,0.25);
+        border-color: rgba(112, 214, 236,0.25);
         background: rgba(19,45,68,0.7);
     }
     .what-icon { font-size: 2rem; margin-bottom: 1rem; }
@@ -451,7 +451,7 @@
     .form-group input:focus {
         outline: none;
         border-color: var(--accent);
-        background: rgba(115,215,238,0.05);
+        background: rgba(112, 214, 236,0.05);
     }
     .form-group input::placeholder { color: rgba(255,255,255,0.25); }
     .btn {
@@ -611,7 +611,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
-<meta name="theme-color" content="#0F2233">
+<meta name="theme-color" content="#152233">
 <meta property="og:title" content="Launch Day &mdash; Harvey Milk Day, May 22, 2026 | Ohio Pride">
 <meta property="og:description" content="On Harvey Milk Day, Ohio Pride launches at noon in the Ohio Statehouse Ladies Gallery. Join the founding board, founding members, and allies as we kick off Ohio's first statewide LGBTQ+ PAC.">
 <meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png">
@@ -794,7 +794,7 @@
         if (prefersReduced) return;
         var layer = document.getElementById('confettiLayer');
         if (!layer) return;
-        var colors = ['#e40303', '#ff8c00', '#ffed00', '#008026', '#004dff', '#750787', '#73d7ee', '#ffafc8'];
+        var colors = ['#e40303', '#FFBC00', '#ffed00', '#008026', '#004dff', '#750787', '#70D6EC', '#ffafc8'];
         var pieces = 28;
         for (var i = 0; i < pieces; i++) {
             var p = document.createElement('span');

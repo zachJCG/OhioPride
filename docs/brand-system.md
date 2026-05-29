@@ -74,12 +74,12 @@ files, but new code should reach for the canonical names.
 ### Colors
 
 ```
---brand-navy            #0F2233   primary background
+--brand-navy            #152233   primary background
 --brand-navy-light      #1A3A52
 --brand-navy-lighter    #234A66
 --brand-navy-footer     #0A1929   deeper navy used by the footer band
 
---brand-light-blue      #73D7EE   PAC accent + on-dark accent
+--brand-light-blue      #70D6EC   PAC accent + on-dark accent
 --brand-white           #FFFFFF
 --brand-white-65        rgba(255,255,255,0.65)   "Ohio" in the wordmark
 ```
@@ -127,7 +127,7 @@ markup:
 |--------|--------------|------------------------------|-------|
 | Ohio   | Montserrat 400 | white @ 65% opacity        | |
 | Pride  | Montserrat 700 | pure white                 | |
-| PAC    | Montserrat 700 | Light Blue `#73D7EE`       | uppercase, ~18% size of full wordmark, 2px tracking |
+| PAC    | Montserrat 700 | Light Blue `#70D6EC`       | uppercase, ~18% size of full wordmark, 2px tracking |
 
 The wordmark sits on `--brand-navy`. Mono-white fallback is allowed
 only where color cannot run (printed PDFs, single-color contexts).

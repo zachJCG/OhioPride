@@ -93,7 +93,7 @@ body.admin-shell {
   font-weight: 600;
   letter-spacing: 1.4px;
   text-transform: uppercase;
-  color: rgba(115, 215, 238, 0.85);
+  color: rgba(112, 214, 236, 0.85);
 }
 
 .shell-nav { padding: 14px 10px; flex: 1 1 auto; }
@@ -131,7 +131,7 @@ body.admin-shell {
   color: var(--text-white);
 }
 .shell-nav-item.is-active {
-  background: rgba(115, 215, 238, 0.12);
+  background: rgba(112, 214, 236, 0.12);
   color: var(--text-white);
 }
 .shell-nav-item.is-active::before {
@@ -157,7 +157,7 @@ body.admin-shell {
   font-weight: 700;
   padding: 2px 7px;
   border-radius: 999px;
-  background: rgba(115, 215, 238, 0.18);
+  background: rgba(112, 214, 236, 0.18);
   color: var(--text-accent);
   letter-spacing: 0.4px;
 }
@@ -270,7 +270,7 @@ body.admin-shell {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.9px;
-  color: rgba(115, 215, 238, 0.85);
+  color: rgba(112, 214, 236, 0.85);
 }
 
 .shell-user-pop {
@@ -497,7 +497,7 @@ body.admin-shell {
   flex-shrink: 0;
   background: var(--text-accent);
 }
-.shell-feed-row[data-kind="volunteer"]   .shell-feed-dot { background: #73d7ee; }
+.shell-feed-row[data-kind="volunteer"]   .shell-feed-dot { background: #70D6EC; }
 .shell-feed-row[data-kind="endorsement"] .shell-feed-dot { background: #ffc857; }
 .shell-feed-row[data-kind="donor"]       .shell-feed-dot { background: #4ade80; }
 .shell-feed-row[data-kind="bill"]        .shell-feed-dot { background: #c97df0; }
@@ -540,8 +540,8 @@ body.admin-shell {
   transition: background 0.15s, border-color 0.15s, transform 0.15s;
 }
 .shell-action:hover {
-  background: rgba(115, 215, 238, 0.08);
-  border-color: rgba(115, 215, 238, 0.35);
+  background: rgba(112, 214, 236, 0.08);
+  border-color: rgba(112, 214, 236, 0.35);
   transform: translateY(-1px);
 }
 .shell-action-icon { width: 18px; height: 18px; color: var(--text-accent); }
@@ -589,7 +589,7 @@ body.admin-shell {
   border-left: 3px solid var(--text-accent);
   border-radius: 6px;
 }
-.shell-pipeline-cell[data-status="submitted"]    { border-left-color: #73d7ee; }
+.shell-pipeline-cell[data-status="submitted"]    { border-left-color: #70D6EC; }
 .shell-pipeline-cell[data-status="under_review"] { border-left-color: #ffc857; }
 .shell-pipeline-cell[data-status="endorsed"]     { border-left-color: #4ade80; }
 .shell-pipeline-cell[data-status="declined"]     { border-left-color: #ff8a8a; }
@@ -614,7 +614,7 @@ body.admin-shell {
 /* Greeting card */
 .shell-hello {
   grid-column: span 12;
-  background: linear-gradient(135deg, rgba(115, 215, 238, 0.08) 0%, rgba(201, 125, 240, 0.08) 50%, rgba(255, 200, 87, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(112, 214, 236, 0.08) 0%, rgba(201, 125, 240, 0.08) 50%, rgba(255, 200, 87, 0.08) 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   padding: 28px 30px;
