@@ -17,19 +17,19 @@
 :root {
   /* Progress Pride Palette */
   --color-red: #e40303;
-  --color-orange: #ff8c00;
+  --color-orange: #FFBC00;
   --color-yellow: #ffed00;
   --color-green: #008026;
   --color-blue: #004dff;
   --color-violet: #750787;
   --color-black: #000000;
   --color-brown: #613915;
-  --color-light-blue: #73d7ee;
+  --color-light-blue: #70D6EC;
   --color-pink: #ffafc8;
   --color-white: #ffffff;
 
   /* Extended palette */
-  --dark-bg: #0f2233;
+  --dark-bg: #152233;
   --dark-bg-light: #1a3a52;
   --dark-bg-lighter: #234a66;
 
@@ -45,7 +45,7 @@
      #e40303, --color-green #008026) are brand-correct but fail WCAG AA
      contrast when used as text on the dark background. Use these tokens
      instead for any text, icon, or small UI element that sits on --dark-bg. */
-  --text-accent: #73d7ee;   /* was var(--color-blue),  ~9.6:1 on dark-bg */
+  --text-accent: #70D6EC;   /* was var(--color-blue),  ~9.6:1 on dark-bg */
   --text-danger: #ff6b6b;   /* was var(--color-red),   ~5.8:1 on dark-bg */
   --text-success: #4ade80;  /* was var(--color-green), ~8.9:1 on dark-bg */
   --text-warning: #fbbf24;  /* was #d97706/#c59a00,   ~10.1:1 on dark-bg */
@@ -617,7 +617,7 @@ img {
   background: linear-gradient(
     135deg,
     rgba(0, 77, 255, 0.08),
-    rgba(115, 215, 238, 0.12)
+    rgba(112, 214, 236, 0.12)
   );
   display: flex;
   align-items: center;
@@ -1946,7 +1946,7 @@ img {
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--color-light-blue);
-  background: rgba(115, 215, 238, 0.1);
+  background: rgba(112, 214, 236, 0.1);
   padding: 4px 10px;
   border-radius: 4px;
   margin-bottom: 16px;

@@ -16,8 +16,8 @@
     style.textContent = `
       :root {
         --progress-pride-gradient: linear-gradient(90deg,
-          #000000 0%, #613915 5%, #73d7ee 10%, #ffafc8 15%, #ffffff 20%,
-          #e40303 28%, #ff8c00 38%, #ffed00 48%, #008026 60%, #004dff 72%, #750787 85%,
+          #000000 0%, #613915 5%, #70D6EC 10%, #ffafc8 15%, #ffffff 20%,
+          #e40303 28%, #FFBC00 38%, #ffed00 48%, #008026 60%, #004dff 72%, #750787 85%,
           #e40303 100%);
         --progress-pride-banner-height: 6px;
         --progress-pride-banner-top: var(--nav-height, 72px);

@@ -51,8 +51,10 @@
   function wordmarkSpansHtml(prefix) {
     var p = prefix || 'ohp-logo';
     return (
-      '<span class="' + p + '-ohio">Ohio</span>' +
-      '<span class="' + p + '-pride">Pride</span>' +
+      '<span class="' + p + '-row">' +
+        '<span class="' + p + '-ohio">OHIO</span>' +
+        '<span class="' + p + '-pride">PRIDE</span>' +
+      '</span>' +
       '<span class="' + p + '-pac">PAC</span>'
     );
   }

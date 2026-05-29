@@ -84,7 +84,7 @@
   color: var(--brand-light-blue);
   border-color: var(--brand-light-blue);
 }
-.pride-btn--ghost:hover { background: rgba(115, 215, 238, 0.12); }
+.pride-btn--ghost:hover { background: rgba(112, 214, 236, 0.12); }
 .pride-btn:focus-visible { outline: none; box-shadow: var(--brand-focus-ring); }
 .pride-btn[disabled] { opacity: 0.5; cursor: not-allowed; transform: none; }
 

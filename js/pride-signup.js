@@ -59,7 +59,7 @@
   function confetti() {
     if (window.matchMedia &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var colors = ['#73d7ee', '#ffffff', '#1a3a52'];
+    var colors = ['#70D6EC', '#ffffff', '#1a3a52'];
     var layer = document.createElement('div');
     layer.style.cssText =
       'position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden;';

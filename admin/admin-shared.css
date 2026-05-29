@@ -293,7 +293,7 @@ table.admin-table td.admin-cell-name {
 .admin-input:focus {
   outline: none;
   border-color: var(--text-accent);
-  box-shadow: 0 0 0 3px rgba(115, 215, 238, 0.18);
+  box-shadow: 0 0 0 3px rgba(112, 214, 236, 0.18);
 }
 input.admin-input[type="search"] { flex: 1 1 240px; }
 select.admin-input {
@@ -336,15 +336,15 @@ select.admin-input option { background: var(--dark-bg); color: var(--text-white)
   text-transform: uppercase;
   padding: 3px 9px;
   border-radius: 999px;
-  background: rgba(115, 215, 238, 0.12);
+  background: rgba(112, 214, 236, 0.12);
   color: var(--text-accent);
-  border: 1px solid rgba(115, 215, 238, 0.3);
+  border: 1px solid rgba(112, 214, 236, 0.3);
   white-space: nowrap;
 }
 .admin-pill-tier {
-  background: rgba(115, 215, 238, 0.08);
+  background: rgba(112, 214, 236, 0.08);
   color: var(--text-white);
-  border-color: rgba(115, 215, 238, 0.4);
+  border-color: rgba(112, 214, 236, 0.4);
 }
 
 /* ---------- Toggle switch ---------- */
@@ -382,7 +382,7 @@ select.admin-input option { background: var(--dark-bg); color: var(--text-white)
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 .admin-switch input:checked + .admin-switch-slider {
-  background: var(--text-accent, #73d7ee);
+  background: var(--text-accent, #70D6EC);
 }
 .admin-switch input:checked + .admin-switch-slider::before {
   transform: translateX(16px);
@@ -420,7 +420,7 @@ select.admin-input option { background: var(--dark-bg); color: var(--text-white)
   text-transform: none;
   letter-spacing: normal;
 }
-.admin-status-new       { background-color: rgba(115, 215, 238, 0.15); border-color: rgba(115, 215, 238, 0.55); color: var(--text-accent); }
+.admin-status-new       { background-color: rgba(112, 214, 236, 0.15); border-color: rgba(112, 214, 236, 0.55); color: var(--text-accent); }
 .admin-status-contacted { background-color: rgba(255, 200, 87, 0.12);  border-color: rgba(255, 200, 87, 0.55);  color: #ffc857; }
 .admin-status-assigned  { background-color: rgba(74, 222, 128, 0.12);  border-color: rgba(74, 222, 128, 0.55);  color: #4ade80; }
 .admin-status-inactive  { background-color: rgba(255, 255, 255, 0.05); border-color: var(--border-medium);      color: var(--text-muted); }
