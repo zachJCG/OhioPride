@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brand Reference | Ohio Pride PAC</title>
+  <meta name="description" content="Logo, color, typography, voice, and digital specs for Ohio Pride PAC. The public-facing companion to the Ohio Pride PAC Brand Guide v2.0 (May 2026)." />
+  <link rel="canonical" href="https://www.ohiopride.org/brand" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Brand Reference | Ohio Pride PAC" />
+  <meta property="og:description" content="Logo, color, typography, voice, and digital specs for Ohio Pride PAC." />
+  <meta property="og:url" content="https://www.ohiopride.org/brand" />
+  <meta property="og:site_name" content="Ohio Pride PAC" />
+  <meta property="og:image" content="https://ohiopride.org/assets/social/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Brand Reference | Ohio Pride PAC" />
+  <meta name="twitter:description" content="Logo, color, typography, voice, and digital specs for Ohio Pride PAC." />
+  <meta name="twitter:image" content="https://ohiopride.org/assets/social/og-image.png" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+  <meta name="theme-color" content="#152233" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto+Slab:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/site-template.css" />
+
+  <style>
+    body { background: var(--brand-navy); }
+
+    .updated-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--brand-border-on-navy-medium);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: var(--brand-font-display);
+      font-size: 11px; font-weight: 600;
+      color: var(--brand-text-on-navy-dim);
+      letter-spacing: 0.5px;
+      margin-top: 20px;
+    }
+    .updated-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--brand-text-success);
+      display: inline-block;
+    }
+
+    .pride-stripe {
+      height: 3px; width: 100%;
+      background: var(--brand-pride-gradient-h);
+      border-radius: 2px;
+      margin: 28px 0 0;
+      max-width: 220px;
+    }
+
+    .brand-hero {
+      padding: 120px 24px 60px;
+      max-width: 980px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .brand-hero h1 {
+      font-family: var(--brand-font-display);
+      font-weight: 800;
+      font-size: clamp(36px, 6vw, 60px);
+      color: var(--brand-text-on-navy);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 18px 0 16px;
+    }
+    .brand-hero .lede {
+      font-family: var(--brand-font-body);
+      font-size: 18px; line-height: 1.6;
+      color: var(--brand-text-on-navy-soft);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .brand-eyebrow {
+      font-family: var(--brand-font-display);
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2.5px;
+      color: var(--brand-text-accent);
+    }
+
+    .jump-nav {
+      margin-top: 32px;
+      background: rgba(31, 52, 80, 0.5);
+      border: 1px solid var(--brand-border-on-navy);
+      border-radius: 12px;
+      padding: 14px 18px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      text-align: left;
+    }
+    .jump-nav-label {
+      font-family: var(--brand-font-display);
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--brand-text-on-navy-dim);
+      margin-right: 12px;
+      display: inline-block;
+    }
+    .jump-nav a {
+      display: inline-block;
+      margin: 0 4px 4px 0;
+      padding: 6px 12px;
+      font-family: var(--brand-font-display);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--brand-text-on-navy-soft);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--brand-border-on-navy);
+      border-radius: 999px;
+      text-decoration: none;
+      transition: var(--brand-transition);
+    }
+    .jump-nav a:hover { color: var(--brand-text-accent); border-color: var(--brand-text-accent); }
+
+    .brand-section { padding: 40px 24px; max-width: 1100px; margin: 0 auto; }
+    .brand-card {
+      background: rgba(31, 52, 80, 0.4);
+      border: 1px solid var(--brand-border-on-navy);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 28px;
+      backdrop-filter: blur(8px);
+    }
+    .bc-eyebrow {
+      font-family: var(--brand-font-display);
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px;
+      color: var(--brand-text-accent);
+      margin: 0 0 8px;
+    }
+    .brand-card h2 {
+      font-family: var(--brand-font-display);
+      font-weight: 800;
+      font-size: clamp(28px, 4vw, 40px);
+      color: var(--brand-text-on-navy);
+      letter-spacing: -0.02em;
+      margin: 0 0 14px;
+    }
+    .brand-card h3 {
+      font-family: var(--brand-font-display);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--brand-text-on-navy);
+      margin: 32px 0 12px;
+    }
+    .brand-card p {
+      font-family: var(--brand-font-body);
+      font-size: 15px; line-height: 1.7;
+      color: var(--brand-text-on-navy-soft);
+    }
+    .brand-card code {
+      font-family: 'JetBrains Mono', Menlo, monospace;
+      font-size: 12px;
+      color: var(--brand-text-accent);
+    }
+
+    /* Logo display stage */
+    .logo-stage-grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); margin: 20px 0; }
+    .logo-stage {
+      border: 1px solid var(--brand-border-on-navy);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--brand-navy);
+    }
+    .logo-stage--white { background: var(--brand-white); }
+    .logo-stage--navy  { background: var(--brand-navy); }
+    .logo-stage .stage-canvas {
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+    .logo-stage img { max-width: 80%; max-height: 80%; }
+    .logo-stage .stage-meta {
+      padding: 12px 16px;
+      background: var(--brand-navy-footer);
+      border-top: 1px solid var(--brand-border-on-navy);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .stage-meta .label {
+      font-family: var(--brand-font-display);
+      font-size: 12px; font-weight: 700;
+      color: var(--brand-text-on-navy);
+    }
+    .stage-meta .label small {
+      display: block;
+      font-weight: 500;
+      font-size: 10px;
+      color: var(--brand-text-on-navy-dim);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .stage-meta .download {
+      display: inline-flex; gap: 8px;
+      font-family: var(--brand-font-display);
+      font-size: 11px; font-weight: 700;
+      color: var(--brand-text-accent);
+      text-decoration: none;
+      padding: 6px 10px;
+      border: 1px solid var(--brand-border-on-navy-medium);
+      border-radius: 6px;
+    }
+    .stage-meta .download:hover { background: rgba(112,214,236,0.08); }
+
+    /* Color swatches */
+    .color-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); margin: 16px 0 8px; }
+    .swatch {
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--brand-border-on-navy);
+      border-radius: 12px;
+    }
+    .swatch-chip {
+      display: block; width: 100%; height: 64px; border-radius: 8px;
+    }
+    .swatch-chip--bordered { border: 1px solid var(--brand-border-on-navy-medium); }
+    .swatch-name {
+      font-family: var(--brand-font-display);
+      font-size: 13px; font-weight: 700;
+      color: var(--brand-text-on-navy);
+      margin: 0;
+    }
+    .swatch-hex {
+      font-family: 'JetBrains Mono', Menlo, monospace;
+      font-size: 11px; color: var(--brand-text-on-navy-dim);
+    }
+    .swatch-token {
+      font-family: 'JetBrains Mono', Menlo, monospace;
+      font-size: 10px; color: var(--brand-text-accent);
+    }
+
+    .gradient-stage { height: 70px; border-radius: 8px; margin: 12px 0; background: var(--brand-pride-gradient); }
+    .gradient-stage--horizontal { background: var(--brand-pride-gradient-h); }
+
+    .callout {
+      margin: 22px 0 0;
+      padding: 18px 20px;
+      background: rgba(112, 214, 236, 0.08);
+      border-left: 3px solid var(--brand-light-blue);
+      border-radius: 0 10px 10px 0;
+    }
+    .callout-label {
+      display: inline-block;
+      font-family: var(--brand-font-display);
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--brand-text-accent);
+      margin-bottom: 6px;
+    }
+    .callout p { margin: 0; color: var(--brand-text-on-navy-soft); }
+
+    .voice-list { background: rgba(255,255,255,0.02); border-radius: 10px; padding: 18px 22px; }
+    .voice-list--use { border-left: 3px solid var(--brand-text-success); }
+    .voice-list--avoid { border-left: 3px solid var(--brand-text-danger); }
+    .voice-list h4 {
+      font-family: var(--brand-font-display);
+      font-size: 12px; font-weight: 800; letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin: 0 0 8px;
+      color: var(--brand-text-on-navy);
+    }
+    .voice-list ul { padding-left: 18px; margin: 0; }
+    .voice-list li {
+      font-family: var(--brand-font-body);
+      font-size: 14px; line-height: 1.7;
+      color: var(--brand-text-on-navy-soft);
+    }
+    .two-col { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+    .pillar-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin: 14px 0; }
+    .pillar-card {
+      padding: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--brand-border-on-navy);
+      border-radius: 12px;
+    }
+    .pc-name {
+      font-family: var(--brand-font-display);
+      font-size: 14px; font-weight: 800;
+      color: var(--brand-text-on-navy);
+      margin-bottom: 6px;
+    }
+    .pc-desc {
+      font-family: var(--brand-font-body);
+      font-size: 13px; line-height: 1.65;
+      color: var(--brand-text-on-navy-soft);
+    }
+
+    .type-specimen {
+      padding: 22px 0;
+      border-bottom: 1px solid var(--brand-border-on-navy);
+    }
+    .type-specimen:last-child { border-bottom: 0; }
+    .type-display {
+      font-family: var(--brand-font-display);
+      font-weight: 800; font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.08; letter-spacing: -0.02em;
+      color: var(--brand-text-on-navy);
+      margin: 0 0 8px;
+    }
+    .type-section-title {
+      font-family: var(--brand-font-display);
+      font-weight: 700; font-size: 26px;
+      color: var(--brand-text-on-navy);
+      margin: 0 0 8px;
+    }
+    .type-eyebrow {
+      font-family: var(--brand-font-display);
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--brand-text-accent);
+      margin: 0 0 8px;
+    }
+    .type-body {
+      font-family: var(--brand-font-body);
+      font-size: 16px; line-height: 1.75;
+      color: var(--brand-text-on-navy-soft);
+      max-width: 64ch;
+      margin: 0 0 8px;
+    }
+    .type-spec-line {
+      font-family: 'JetBrains Mono', Menlo, monospace;
+      font-size: 11px;
+      color: var(--brand-text-on-navy-dim);
+    }
+
+    .favicon-row { display: flex; gap: 18px; flex-wrap: wrap; margin: 12px 0; align-items: end; }
+    .favicon-tile {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--brand-border-on-navy);
+      border-radius: 10px;
+    }
+    .favicon-tile span {
+      font-family: 'JetBrains Mono', Menlo, monospace;
+      font-size: 11px; color: var(--brand-text-on-navy-dim);
+    }
+
+    .dont-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .dont {
+      padding: 16px;
+      background: rgba(255, 107, 107, 0.06);
+      border: 1px solid rgba(255, 107, 107, 0.25);
+      border-radius: 10px;
+    }
+    .dont .label {
+      font-family: var(--brand-font-display);
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--brand-text-danger);
+      display: block; margin-bottom: 6px;
+    }
+    .dont p {
+      font-family: var(--brand-font-body);
+      font-size: 13px; line-height: 1.6;
+      color: var(--brand-text-on-navy-soft);
+      margin: 0;
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .download-card {
+      display: flex; flex-direction: column; gap: 6px;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--brand-border-on-navy);
+      border-radius: 10px;
+      text-decoration: none;
+      transition: var(--brand-transition);
+    }
+    .download-card:hover { border-color: var(--brand-text-accent); background: rgba(112,214,236,0.06); }
+    .download-card .dc-format {
+      font-family: 'JetBrains Mono', Menlo, monospace;
+      font-size: 10px;
+      color: var(--brand-text-accent);
+      letter-spacing: 1px;
+    }
+    .download-card .dc-name {
+      font-family: var(--brand-font-display);
+      font-size: 13px; font-weight: 700;
+      color: var(--brand-text-on-navy);
+    }
+    .download-card .dc-desc {
+      font-family: var(--brand-font-body);
+      font-size: 12px; line-height: 1.5;
+      color: var(--brand-text-on-navy-dim);
+    }
+
+    .back-link {
+      display: inline-block;
+      font-family: var(--brand-font-display);
+      font-size: 13px; font-weight: 600;
+      color: var(--brand-text-accent);
+      text-decoration: none;
+      margin-top: 28px;
+    }
+    .last-reviewed {
+      font-family: 'JetBrains Mono', Menlo, monospace;
+      font-size: 11px;
+      color: var(--brand-text-on-navy-dim);
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-header"></div>
+
+  <main>
+
+  <section class="brand-hero">
+    <p class="brand-eyebrow">Brand Reference</p>
+    <h1>Ohio Pride PAC Brand System</h1>
+    <p class="lede">The v2.0 mark, color, voice, and digital specs the team uses to keep Ohio Pride PAC sounding and looking like itself — calm, institutional, and built for the long fight ahead.</p>
+    <div class="updated-badge"><span class="dot"></span> Brand Guide v2.0 · Updated May 2026</div>
+    <div class="pride-stripe" style="margin-left:auto; margin-right:auto;"></div>
+
+    <nav class="jump-nav" aria-label="Brand sections">
+      <span class="jump-nav-label">Jump to</span>
+      <a href="#why">Why v2.0</a>
+      <a href="#logo">Logo system</a>
+      <a href="#downloads">Downloads</a>
+      <a href="#color">Color</a>
+      <a href="#typography">Typography</a>
+      <a href="#voice">Voice &amp; tone</a>
+      <a href="#messaging">Messaging</a>
+      <a href="#digital">Digital specs</a>
+      <a href="#donts">What not to do</a>
+    </nav>
+  </section>
+
+  <section class="brand-section">
+
+    <!-- 01 Why v2.0 -->
+    <div class="brand-card" id="why">
+      <p class="bc-eyebrow">Section 01</p>
+      <h2>Why we rebuilt the mark</h2>
+      <p>The v1 logo was generated quickly to get us launched. It read as a startup. The v2.0 wordmark fixes that. It signals stability, professionalism, and seriousness — the visual language donors expect when a PAC asks them to back real political work.</p>
+      <div class="callout">
+        <span class="callout-label">In one line</span>
+        <p>Calm, institutional, "big-tent." We don't need rainbow on every surface to prove we're a Pride org. Our work will showcase that.</p>
+      </div>
+
+      <h3>What changed</h3>
+      <p><strong>Navy is now #152233</strong>, a measured shift from generic navy that reads as authoritative without looking corporate. <strong>Light blue is now #70D6EC</strong> and is reserved for the "PRIDE" half of the wordmark and on-dark accent text. <strong>The Progress Pride rainbow stays in the system</strong> — but as a deliberate accent (thin stripes, the donate button, on-brand celebration moments), never as default chrome.</p>
+    </div>
+
+    <!-- 02 Logo system -->
+    <div class="brand-card" id="logo">
+      <p class="bc-eyebrow">Section 02</p>
+      <h2>The wordmark</h2>
+      <p>The wordmark is constructed as two stacked elements: <strong>OHIO PRIDE</strong> set in Montserrat with OHIO in the brand foreground color and PRIDE in Light Blue, followed by a hairline divider centered on the word <strong>PAC</strong>. The hierarchy is deliberate — PRIDE (movement) sits above PAC (machinery).</p>
+
+      <h3>Primary — on navy (default for digital)</h3>
+      <div class="logo-stage-grid">
+        <div class="logo-stage logo-stage--navy">
+          <div class="stage-canvas"><img src="/assets/logo/wordmark-primary-transparent.png" alt="Ohio Pride PAC wordmark, white and light blue on navy" /></div>
+          <div class="stage-meta">
+            <span class="label">Primary lockup<small>White + Light Blue on Navy</small></span>
+            <a class="download" href="/assets/logo/wordmark-primary-on-navy.svg" download>SVG</a>
+          </div>
+        </div>
+        <div class="logo-stage logo-stage--navy">
+          <div class="stage-canvas"><img src="/assets/logo/wordmark-mono-white-transparent.png" alt="Ohio Pride PAC wordmark, mono white on navy" /></div>
+          <div class="stage-meta">
+            <span class="label">Mono White<small>All white on Navy</small></span>
+            <a class="download" href="/assets/logo/wordmark-mono-white-on-navy.svg" download>SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <h3>Light backgrounds</h3>
+      <div class="logo-stage-grid">
+        <div class="logo-stage logo-stage--white">
+          <div class="stage-canvas"><img src="/assets/logo/wordmark-primary-dark-transparent.png" alt="Ohio Pride PAC wordmark, navy and light blue on white" /></div>
+          <div class="stage-meta">
+            <span class="label">Primary on White<small>Navy + Light Blue</small></span>
+            <a class="download" href="/assets/logo/wordmark-primary-on-white.svg" download>SVG</a>
+          </div>
+        </div>
+        <div class="logo-stage logo-stage--white">
+          <div class="stage-canvas"><img src="/assets/logo/wordmark-mono-navy-transparent.png" alt="Ohio Pride PAC wordmark, mono navy on white" /></div>
+          <div class="stage-meta">
+            <span class="label">Mono Navy<small>Single-color print &amp; signage</small></span>
+            <a class="download" href="/assets/logo/wordmark-mono-navy-on-white.svg" download>SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <h3>Banner lockup</h3>
+      <p>For website headers, email banners, and event collateral, use the wide banner lockup with the tagline and Progress Pride underline. Built at a 9:4 aspect ratio.</p>
+      <div class="logo-stage logo-stage--navy">
+        <div class="stage-canvas" style="aspect-ratio: auto; padding: 40px;"><img src="/assets/logo/banner-primary-on-navy.png" alt="Ohio Pride PAC banner lockup with tagline Ohio's Statewide LGBTQ+ PAC" style="max-width: 100%; max-height: 280px;" /></div>
+        <div class="stage-meta">
+          <span class="label">Banner with tagline<small>"Ohio's Statewide LGBTQ+ PAC" · 9:4</small></span>
+          <a class="download" href="/assets/logo/banner-primary-on-navy.svg" download>SVG</a>
+        </div>
+      </div>
+
+      <h3>Clear space &amp; minimum size</h3>
+      <p>Maintain clear space equal to the height of the "O" in OHIO on all sides of the wordmark. Minimum width: <strong>140px</strong> on screen, <strong>1.25 inches</strong> in print. Below this, switch to the favicon mark.</p>
+    </div>
+
+    <!-- 03 Downloads -->
+    <div class="brand-card" id="downloads">
+      <p class="bc-eyebrow">Section 03</p>
+      <h2>Asset downloads</h2>
+      <p>Direct links to canonical assets. SVG is the default; PNG is offered for tools that cannot consume vectors. Source <code>.ai</code> files live with the brand team.</p>
+
+      <h3>Vector (SVG)</h3>
+      <div class="download-grid">
+        <a class="download-card" href="/assets/logo/wordmark-primary-on-navy.svg" download>
+          <span class="dc-format">SVG · 9 KB</span>
+          <span class="dc-name">Primary on Navy</span>
+          <span class="dc-desc">Default digital lockup.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/wordmark-primary-on-white.svg" download>
+          <span class="dc-format">SVG · 9 KB</span>
+          <span class="dc-name">Primary on White</span>
+          <span class="dc-desc">Light backgrounds &amp; print.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/wordmark-mono-white-on-navy.svg" download>
+          <span class="dc-format">SVG · 9 KB</span>
+          <span class="dc-name">Mono White on Navy</span>
+          <span class="dc-desc">Single-color fallback.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/wordmark-mono-navy-on-white.svg" download>
+          <span class="dc-format">SVG · 9 KB</span>
+          <span class="dc-name">Mono Navy on White</span>
+          <span class="dc-desc">Print, fax, embroidery.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/banner-primary-on-navy.svg" download>
+          <span class="dc-format">SVG · 100 KB</span>
+          <span class="dc-name">Banner Lockup</span>
+          <span class="dc-desc">Wide format with tagline.</span>
+        </a>
+      </div>
+
+      <h3>Transparent PNG</h3>
+      <div class="download-grid">
+        <a class="download-card" href="/assets/logo/wordmark-primary-transparent.png" download>
+          <span class="dc-format">PNG · 2796×717</span>
+          <span class="dc-name">Primary · Transparent</span>
+          <span class="dc-desc">White + Light Blue for any dark surface.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/wordmark-primary-dark-transparent.png" download>
+          <span class="dc-format">PNG · 2796×717</span>
+          <span class="dc-name">Primary Dark · Transparent</span>
+          <span class="dc-desc">Navy + Light Blue for any light surface.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/wordmark-mono-white-transparent.png" download>
+          <span class="dc-format">PNG · 2796×717</span>
+          <span class="dc-name">Mono White · Transparent</span>
+          <span class="dc-desc">Single-color for any dark surface.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/wordmark-mono-navy-transparent.png" download>
+          <span class="dc-format">PNG · 2796×717</span>
+          <span class="dc-name">Mono Navy · Transparent</span>
+          <span class="dc-desc">Single-color for any light surface.</span>
+        </a>
+      </div>
+
+      <h3>Square lockup (avatar / profile)</h3>
+      <div class="download-grid">
+        <a class="download-card" href="/assets/logo/lockup-primary-on-navy.png" download>
+          <span class="dc-format">PNG · 3127×3127</span>
+          <span class="dc-name">Primary on Navy</span>
+          <span class="dc-desc">Profile pictures, social avatars.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/lockup-primary-on-white.png" download>
+          <span class="dc-format">PNG · 3127×3127</span>
+          <span class="dc-name">Primary on White</span>
+          <span class="dc-desc">Profile pictures on light backgrounds.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/lockup-mono-white-on-navy.png" download>
+          <span class="dc-format">PNG · 3127×3127</span>
+          <span class="dc-name">Mono White on Navy</span>
+          <span class="dc-desc">Single-color avatar.</span>
+        </a>
+        <a class="download-card" href="/assets/logo/lockup-mono-navy-on-white.png" download>
+          <span class="dc-format">PNG · 3127×3127</span>
+          <span class="dc-name">Mono Navy on White</span>
+          <span class="dc-desc">Single-color avatar, light.</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 04 Color -->
+    <div class="brand-card" id="color">
+      <p class="bc-eyebrow">Section 04</p>
+      <h2>Color system</h2>
+      <p>Three brand colors, three roles. Navy is the foundation. Light Blue is the accent. White is the breath between them.</p>
+
+      <h3>Core brand</h3>
+      <div class="color-grid">
+        <div class="swatch">
+          <span class="swatch-chip" style="background: #152233;"></span>
+          <p class="swatch-name">Navy Primary</p>
+          <span class="swatch-hex">#152233</span>
+          <span class="swatch-token">--brand-navy</span>
+        </div>
+        <div class="swatch">
+          <span class="swatch-chip" style="background: #70D6EC;"></span>
+          <p class="swatch-name">Light Blue</p>
+          <span class="swatch-hex">#70D6EC</span>
+          <span class="swatch-token">--brand-light-blue</span>
+        </div>
+        <div class="swatch">
+          <span class="swatch-chip swatch-chip--bordered" style="background: #FFFFFF;"></span>
+          <p class="swatch-name">Pure White</p>
+          <span class="swatch-hex">#FFFFFF</span>
+          <span class="swatch-token">--brand-white</span>
+        </div>
+        <div class="swatch">
+          <span class="swatch-chip" style="background: #0d1726;"></span>
+          <p class="swatch-name">Navy Footer</p>
+          <span class="swatch-hex">#0D1726</span>
+          <span class="swatch-token">--brand-navy-footer</span>
+        </div>
+      </div>
+
+      <h3>Progress Pride palette (accent only)</h3>
+      <div class="color-grid">
+        <div class="swatch"><span class="swatch-chip" style="background:#e40303;"></span><p class="swatch-name">Red</p><span class="swatch-hex">#E40303</span></div>
+        <div class="swatch"><span class="swatch-chip" style="background:#FFBC00;"></span><p class="swatch-name">Orange</p><span class="swatch-hex">#FFBC00</span></div>
+        <div class="swatch"><span class="swatch-chip" style="background:#ffed00;"></span><p class="swatch-name">Yellow</p><span class="swatch-hex">#FFED00</span></div>
+        <div class="swatch"><span class="swatch-chip" style="background:#008026;"></span><p class="swatch-name">Green</p><span class="swatch-hex">#008026</span></div>
+        <div class="swatch"><span class="swatch-chip" style="background:#004dff;"></span><p class="swatch-name">Blue</p><span class="swatch-hex">#004DFF</span></div>
+        <div class="swatch"><span class="swatch-chip" style="background:#750787;"></span><p class="swatch-name">Violet</p><span class="swatch-hex">#750787</span></div>
+        <div class="swatch"><span class="swatch-chip swatch-chip--bordered" style="background:#000000;"></span><p class="swatch-name">Black</p><span class="swatch-hex">#000000</span></div>
+        <div class="swatch"><span class="swatch-chip" style="background:#613915;"></span><p class="swatch-name">Brown</p><span class="swatch-hex">#613915</span></div>
+        <div class="swatch"><span class="swatch-chip" style="background:#ffafc8;"></span><p class="swatch-name">Pink</p><span class="swatch-hex">#FFAFC8</span></div>
+      </div>
+
+      <h3>Signature gradient</h3>
+      <div class="gradient-stage" role="img" aria-label="135 degree Progress Pride gradient"></div>
+      <p><code>linear-gradient(135deg, …)</code> · token <code>--brand-pride-gradient</code></p>
+
+      <h3>Horizontal sweep variant</h3>
+      <div class="gradient-stage gradient-stage--horizontal" role="img" aria-label="Horizontal Progress Pride sweep"></div>
+      <p><code>linear-gradient(90deg, …)</code> · token <code>--brand-pride-gradient-h</code></p>
+
+      <div class="callout">
+        <span class="callout-label">Use deliberately</span>
+        <p>The Progress Pride gradient is for thin dividers, donate-button fills, and accent stripes — used deliberately, never decoratively. The raw Pride chips fail WCAG AA on Navy; for accent text on dark, use <code>--brand-text-accent</code>, <code>--brand-text-danger</code>, <code>--brand-text-success</code>, <code>--brand-text-warning</code>.</p>
+      </div>
+    </div>
+
+    <!-- 05 Typography -->
+    <div class="brand-card" id="typography">
+      <p class="bc-eyebrow">Section 05</p>
+      <h2>Typography</h2>
+      <p><strong>Montserrat</strong> handles headlines, UI, and the wordmark. <strong>Roboto Slab</strong> carries body copy and long-form reading.</p>
+
+      <div class="type-specimen">
+        <p class="type-display">A clear, steady<br>voice for Ohio.</p>
+        <span class="type-spec-line">Display headline · Montserrat ExtraBold 800 · 36–60px · line-height 1.05 · tracking -0.02em</span>
+      </div>
+      <div class="type-specimen">
+        <p class="type-section-title">Endorse. Mobilize. Fight for Ohio.</p>
+        <span class="type-spec-line">Section title · Montserrat Bold 700 · 22–30px</span>
+      </div>
+      <div class="type-specimen">
+        <p class="type-eyebrow">Pro-Equality · Nonpartisan · Ohio-Focused</p>
+        <span class="type-spec-line">Eyebrow / label · Montserrat Bold 700 · 10–11px uppercase · 2–3px tracking</span>
+      </div>
+      <div class="type-specimen">
+        <p class="type-body">Ohio Pride PAC is a state-level political action committee registered with the Ohio Secretary of State, dedicated to building political power for LGBTQ+ equality across every corner of Ohio. We endorse pro-equality candidates, mobilize voters, and fight anti-LGBTQ+ legislation in the Ohio Statehouse.</p>
+        <span class="type-spec-line">Body copy · Roboto Slab Regular 400 · 15–16px · line-height 1.75</span>
+      </div>
+    </div>
+
+    <!-- 06 Voice & tone -->
+    <div class="brand-card" id="voice">
+      <p class="bc-eyebrow">Section 06</p>
+      <h2>Voice &amp; tone</h2>
+      <p>Confident, not loud. Action-oriented. Complementary, not competitive. Nonpartisan, pro-equality. Institutional in feel, neighborhood in voice.</p>
+      <div class="callout">
+        <span class="callout-label">In one sentence</span>
+        <p>The clear, steady voice of an Ohioan who's done waiting — informed, organized, and ready to fight for neighbors at the ballot box.</p>
+      </div>
+
+      <h3>Word choice</h3>
+      <div class="two-col">
+        <div class="voice-list voice-list--use">
+          <h4>Use</h4>
+          <ul>
+            <li>Pro-equality candidates</li>
+            <li>LGBTQ+ Ohioans and their families</li>
+            <li>Ally / Pro-equality leader</li>
+            <li>Ohio Statehouse / Ohio General Assembly</li>
+            <li>"Build durable political power"</li>
+          </ul>
+        </div>
+        <div class="voice-list voice-list--avoid">
+          <h4>Avoid</h4>
+          <ul>
+            <li>Partisan labels in voice copy unless legally required</li>
+            <li>"Activist" framing — use leader or organizer</li>
+            <li>Passive constructions</li>
+            <li>Naming peer advocacy orgs in comparison copy</li>
+            <li>Performative rainbow flourishes in headline copy</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 Messaging -->
+    <div class="brand-card" id="messaging">
+      <p class="bc-eyebrow">Section 07</p>
+      <h2>Messaging pillars</h2>
+      <div class="pillar-grid">
+        <div class="pillar-card">
+          <div class="pc-name">Power behind candidates</div>
+          <div class="pc-desc">Money and political muscle behind pro-equality candidates who act once in office.</div>
+        </div>
+        <div class="pillar-card">
+          <div class="pc-name">Complement, don't duplicate</div>
+          <div class="pc-desc">Advocacy orgs educate and lobby. Ohio Pride PAC builds on that work in a lane only a PAC can fill.</div>
+        </div>
+        <div class="pillar-card">
+          <div class="pc-name">Nonpartisan, Ohio-focused</div>
+          <div class="pc-desc">State-level, statehouse-first, anchored in Ohio's communities and Ohio's voters.</div>
+        </div>
+        <div class="pillar-card">
+          <div class="pc-name">2026 urgency</div>
+          <div class="pc-desc">Statewide offices, a special U.S. Senate election, statehouse races, and active anti-LGBTQ+ legislation make this a year that decides the next decade.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 Digital specs -->
+    <div class="brand-card" id="digital">
+      <p class="bc-eyebrow">Section 08</p>
+      <h2>Digital specs</h2>
+
+      <h3>Favicon system</h3>
+      <p>A simplified OH monogram on Navy Primary, sized for every browser surface. Shipped under <code>/assets/favicon/</code>.</p>
+      <div class="favicon-row">
+        <div class="favicon-tile">
+          <img src="/assets/favicon/favicon-16.png" alt="Favicon 16x16" width="16" height="16" />
+          <span>16×16</span>
+        </div>
+        <div class="favicon-tile">
+          <img src="/assets/favicon/favicon-32.png" alt="Favicon 32x32" width="32" height="32" />
+          <span>32×32</span>
+        </div>
+        <div class="favicon-tile">
+          <img src="/assets/favicon/favicon-96.png" alt="Favicon 96x96" width="48" height="48" />
+          <span>96×96</span>
+        </div>
+        <div class="favicon-tile">
+          <img src="/assets/favicon/apple-touch-icon.png" alt="Apple touch icon 180x180" width="60" height="60" style="border-radius: 12px;" />
+          <span>180×180</span>
+        </div>
+        <div class="favicon-tile">
+          <img src="/assets/favicon/favicon-512.png" alt="Favicon 512x512" width="80" height="80" style="border-radius: 16px;" />
+          <span>512×512</span>
+        </div>
+      </div>
+
+      <h3>Open Graph image</h3>
+      <p>Default share image lives at <code>/assets/social/og-image.png</code> at 1200×630 — primary wordmark on Navy with the Progress Pride underline tagline.</p>
+
+      <h3>Theme color</h3>
+      <p>Mobile browser chrome: <code>&lt;meta name="theme-color" content="#152233"&gt;</code>.</p>
+
+      <h3>Tokens, helpers, and the consistency check</h3>
+      <p>Every page consumes the canonical tokens at <code>/css/brand-tokens.css</code> and the shared chrome injected by <code>/js/site-template.js</code>. The <code>npm run check:brand</code> script walks every public HTML page in the repo and flags drift before a PR can land. See <a href="https://github.com/zachJCG/OhioPride/blob/main/docs/brand-system.md" rel="noopener">docs/brand-system.md</a> for wiring details.</p>
+    </div>
+
+    <!-- 09 What not to do -->
+    <div class="brand-card" id="donts">
+      <p class="bc-eyebrow">Section 09</p>
+      <h2>What not to do</h2>
+      <div class="dont-grid">
+        <div class="dont">
+          <span class="label">Don't</span>
+          <p>Recolor PRIDE to anything other than Light Blue, White, or Navy.</p>
+        </div>
+        <div class="dont">
+          <span class="label">Don't</span>
+          <p>Drop a rainbow gradient into the wordmark. The mark is monochrome by design.</p>
+        </div>
+        <div class="dont">
+          <span class="label">Don't</span>
+          <p>Stretch, condense, or rotate the lockup. Scale uniformly.</p>
+        </div>
+        <div class="dont">
+          <span class="label">Don't</span>
+          <p>Place the navy-on-white wordmark on a busy photo. Use the mono white wordmark instead.</p>
+        </div>
+        <div class="dont">
+          <span class="label">Don't</span>
+          <p>Use the v1 wordmark from before May 2026. It's retired.</p>
+        </div>
+        <div class="dont">
+          <span class="label">Don't</span>
+          <p>Mix the Pride orange #FF8C00 — it's been retired in favor of #FFBC00.</p>
+        </div>
+      </div>
+
+      <p class="last-reviewed">Brand Guide v2.0 · May 2026 · Last reviewed by the Ohio Pride PAC team.</p>
+      <a class="back-link" href="/about">&larr; Back to About</a>
+    </div>
+
+  </section>
+
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="/js/main.js" defer></script>
+  <script src="/js/site-template.js" defer></script>
+  <script src="/js/enhancements.js" defer></script>
+</body>
+</html>

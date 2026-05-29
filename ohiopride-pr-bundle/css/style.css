@@ -1,0 +1,2397 @@
+/* ============================================================
+   Ohio Pride PAC — Brand Stylesheet
+   Progress Pride Palette · Montserrat + Roboto Slab
+   Last updated: February 2026
+
+   Brand tokens (colors, gradients, typography, the .ohp-wordmark
+   utility) are defined in /css/brand-tokens.css. The legacy
+   --color-* / --dark-bg / --text-* tokens below are now thin
+   aliases that resolve to those brand tokens, so editing this
+   block in isolation will NOT change the palette — update
+   brand-tokens.css instead. See docs/brand-system.md.
+   ============================================================ */
+
+@import url('/css/brand-tokens.css');
+
+/* --- CSS Custom Properties (Brand Architecture Guide) --- */
+:root {
+  /* Progress Pride Palette */
+  --color-red: #e40303;
+  --color-orange: #FFBC00;
+  --color-yellow: #ffed00;
+  --color-green: #008026;
+  --color-blue: #004dff;
+  --color-violet: #750787;
+  --color-black: #000000;
+  --color-brown: #613915;
+  --color-light-blue: #70D6EC;
+  --color-pink: #ffafc8;
+  --color-white: #ffffff;
+
+  /* Extended palette */
+  --dark-bg: #152233;
+  --dark-bg-light: #1a3a52;
+  --dark-bg-lighter: #234a66;
+
+  /* Semantic colors — dark-theme defaults (all pages use dark bg) */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-muted: rgba(255, 255, 255, 0.6); /* WCAG AA: ~6.2:1 on --dark-bg */
+  --text-light: rgba(255, 255, 255, 0.85);
+  --text-white: #ffffff;
+
+  /* Accessible accent text colors for use on --dark-bg.
+     The Progress Pride palette values (--color-blue #004dff, --color-red
+     #e40303, --color-green #008026) are brand-correct but fail WCAG AA
+     contrast when used as text on the dark background. Use these tokens
+     instead for any text, icon, or small UI element that sits on --dark-bg. */
+  --text-accent: #70D6EC;   /* was var(--color-blue),  ~9.6:1 on dark-bg */
+  --text-danger: #ff6b6b;   /* was var(--color-red),   ~5.8:1 on dark-bg */
+  --text-success: #4ade80;  /* was var(--color-green), ~8.9:1 on dark-bg */
+  --text-warning: #fbbf24;  /* was #d97706/#c59a00,   ~10.1:1 on dark-bg */
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --bg-light: rgba(19, 45, 68, 0.3);
+  --bg-white: rgba(19, 45, 68, 0.5);
+
+  /* Gradient */
+  --pride-gradient: linear-gradient(
+    135deg,
+    var(--color-red) 0%,
+    var(--color-orange) 18%,
+    var(--color-yellow) 34%,
+    var(--color-green) 50%,
+    var(--color-blue) 66%,
+    var(--color-violet) 82%
+  );
+
+  /* Spacing — mobile-first; tablet and desktop scale up via media queries */
+  --section-pad: 48px;
+  --container-max: 1140px;
+  --nav-height: 72px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --section-pad: 60px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --section-pad: 80px;
+  }
+}
+
+/* --- Reset & Base --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: "Roboto Slab", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  background: var(--dark-bg);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Site-wide diagonal stripe pattern — matches the subpage hero look.
+   Rendered via a fixed pseudo-element so per-page inline body background
+   overrides (background: var(--dark-bg)) don't clear it. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(255, 255, 255, 0.015) 40px,
+    rgba(255, 255, 255, 0.015) 80px
+  );
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-white);
+}
+
+a {
+  color: var(--color-light-blue);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: var(--text-white);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* --- Utilities --- */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 24px;
+  }
+}
+
+.section {
+  padding: var(--section-pad) 0;
+}
+
+.section-label {
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--color-light-blue);
+  margin-bottom: 12px;
+}
+
+.section-label-light {
+  color: var(--color-light-blue);
+}
+
+.section-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  line-height: 1.15;
+  color: var(--text-white);
+}
+
+.section-title-light {
+  color: var(--text-white);
+}
+
+/* --- Buttons --- */
+.btn {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  padding: 12px 28px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.btn-primary {
+  background: var(--color-blue);
+  color: var(--text-white);
+  border-color: var(--color-blue);
+}
+.btn-primary:hover {
+  background: #0039cc;
+  border-color: #0039cc;
+  color: var(--text-white);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-white);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.btn-outline:hover {
+  border-color: var(--text-white);
+  color: var(--text-white);
+}
+
+.btn-outline-light {
+  background: transparent;
+  color: var(--text-white);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.btn-outline-light:hover {
+  border-color: var(--text-white);
+  color: var(--text-white);
+}
+
+.btn-nav {
+  background: var(--color-blue);
+  color: var(--text-white) !important;
+  border-color: var(--color-blue);
+  padding: 8px 20px;
+  font-size: 13px;
+}
+.btn-nav:hover {
+  background: #0039cc;
+  color: var(--text-white) !important;
+}
+
+.btn-large {
+  padding: 16px 36px;
+  font-size: 16px;
+}
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+/* --- Navigation --- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--nav-height);
+  background: rgba(15, 34, 51, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.3s;
+}
+
+.nav-solid {
+  background: var(--dark-bg);
+}
+
+.nav-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: "Montserrat", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text-white);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+.logo-ohio {
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 400;
+}
+.logo-pride {
+  color: var(--text-white);
+}
+.logo-pac {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-light-blue);
+  margin-left: 4px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.nav-links a {
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.3px;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.nav-links a:hover {
+  color: var(--text-white);
+}
+
+/* Mobile toggle */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-white);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* --- Hero (Homepage) --- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-top: var(--nav-height);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--dark-bg);
+  /* Diagonal stripe pattern */
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(255, 255, 255, 0.015) 40px,
+    rgba(255, 255, 255, 0.015) 80px
+  );
+}
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 34, 51, 0.3) 0%,
+    rgba(15, 34, 51, 0.7) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.hero-badge {
+  font-family: "Montserrat", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-light-blue);
+  margin-bottom: 24px;
+}
+
+.hero-title {
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 24px;
+  line-height: 1.08;
+}
+
+.hero-gradient {
+  background: var(--pride-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-light);
+  max-width: 600px;
+  margin-bottom: 36px;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.hero-actions .btn-outline {
+  color: var(--text-white);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.hero-actions .btn-outline:hover {
+  border-color: var(--text-white);
+  color: var(--text-white);
+}
+
+.hero-stripe {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--pride-gradient);
+  z-index: 3;
+}
+
+/* --- Subpage Hero (mobile-first) --- */
+.subpage-hero {
+  position: relative;
+  padding: calc(var(--nav-height) + 32px) 0 40px;
+  background: var(--dark-bg);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(255, 255, 255, 0.015) 40px,
+    rgba(255, 255, 255, 0.015) 80px
+  );
+  overflow: hidden;
+}
+.subpage-hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--pride-gradient);
+}
+
+.subpage-hero .section-label {
+  color: var(--color-light-blue);
+}
+.subpage-hero .section-title {
+  color: var(--text-white);
+  margin-bottom: 16px;
+  font-size: clamp(26px, 7vw, 36px);
+}
+.subpage-hero-sub {
+  font-size: 15px;
+  color: var(--text-light);
+  max-width: 640px;
+}
+
+@media (min-width: 768px) {
+  .subpage-hero {
+    padding: calc(var(--nav-height) + 60px) 0 60px;
+  }
+  .subpage-hero-sub {
+    font-size: 17px;
+  }
+}
+
+/* Contact hero */
+.contact-hero {
+  position: relative;
+  padding: calc(var(--nav-height) + 60px) 0 60px;
+  background: var(--dark-bg);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(255, 255, 255, 0.015) 40px,
+    rgba(255, 255, 255, 0.015) 80px
+  );
+}
+.contact-hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--pride-gradient);
+}
+.contact-hero .section-label {
+  color: var(--color-light-blue);
+}
+.contact-hero .section-title {
+  color: var(--text-white);
+  margin-bottom: 16px;
+}
+.contact-hero-sub {
+  font-size: 17px;
+  color: var(--text-light);
+  max-width: 640px;
+}
+
+/* --- Mission Section --- */
+.section-mission {
+  background: var(--bg-white);
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.mission-text p {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.mission-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.stat {
+  padding: 24px 28px;
+  background: var(--bg-light);
+  border-radius: 10px;
+  border-left: 4px solid var(--color-blue);
+}
+
+.stat-number {
+  font-family: "Montserrat", sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--dark-bg);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* --- Priorities / Pillars --- */
+.section-priorities {
+  background: var(--bg-light);
+}
+
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.pillar {
+  background: var(--bg-white);
+  border-radius: 12px;
+  padding: 36px 28px;
+  border: 1px solid var(--border-light);
+  transition:
+    box-shadow 0.3s,
+    transform 0.3s;
+}
+.pillar:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.pillar-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 77, 255, 0.08),
+    rgba(112, 214, 236, 0.12)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: var(--text-accent);
+}
+
+.pillar h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.pillar p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* --- Gala Event Card (Homepage) --- */
+.section-gala {
+  background: var(--bg-white);
+}
+
+.gala-event-card {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.gala-event-card-visual {
+  background: var(--dark-bg);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 30px,
+    rgba(255, 255, 255, 0.02) 30px,
+    rgba(255, 255, 255, 0.02) 60px
+  );
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.gala-card-label {
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--color-light-blue);
+  margin-bottom: 12px;
+}
+
+.gala-card-title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--text-white);
+  line-height: 1;
+}
+
+.gala-card-subtitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  background: var(--pride-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.gala-card-rainbow {
+  height: 4px;
+  background: var(--pride-gradient);
+  margin-top: 24px;
+  border-radius: 2px;
+}
+
+.gala-event-card-info {
+  padding: 40px 36px;
+}
+
+.gala-event-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.gala-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+.gala-meta-item svg {
+  color: var(--text-accent);
+  flex-shrink: 0;
+}
+
+.gala-event-desc {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.65;
+}
+
+.gala-event-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* --- Donate Section --- */
+.section-donate {
+  background: var(--dark-bg);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(255, 255, 255, 0.015) 40px,
+    rgba(255, 255, 255, 0.015) 80px
+  );
+}
+
+.donate-inner {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.donate-text {
+  font-size: 17px;
+  color: var(--text-light);
+  margin-bottom: 32px;
+}
+
+.donate-amounts {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.donate-amount {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 10px 22px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-white);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.donate-amount:hover,
+.donate-amount.active {
+  background: var(--color-blue);
+  border-color: var(--color-blue);
+  color: var(--text-white);
+}
+
+.donate-disclaimer {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 20px;
+  line-height: 1.5;
+}
+
+/* --- Notice Banner (Working Concept) --- */
+.notice-banner {
+  background: #fef9e7;
+  border-bottom: 1px solid #f0e6c0;
+  padding: 16px 0;
+}
+
+.notice-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.notice-inner {
+  color: #1a1a1a; /* legacy light-bg notice, override inherited dark text */
+}
+.notice-inner svg {
+  color: #8a6a00;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.notice-inner a {
+  color: #0039cc;
+  font-weight: 600;
+}
+
+/* --- Gala Detail Grid (gala.html) --- */
+.gala-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 48px;
+  align-items: start;
+}
+
+.gala-detail-box {
+  background: var(--bg-light);
+  border-radius: 10px;
+  padding: 24px 28px;
+  border: 1px solid var(--border-light);
+  margin-bottom: 36px;
+}
+
+.gala-detail-line {
+  padding: 8px 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+.gala-detail-line:last-child {
+  border-bottom: none;
+}
+
+.gala-detail-label {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-accent);
+  display: inline-block;
+  width: 100px;
+}
+
+.gala-section-head {
+  font-size: 22px;
+  margin: 32px 0 16px;
+  color: var(--dark-bg);
+}
+
+.gala-detail-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+/* Program timeline */
+.gala-program-list {
+  margin-top: 20px;
+}
+
+.gala-prog-row {
+  display: flex;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.gala-prog-row:last-child {
+  border-bottom: none;
+}
+
+.gala-prog-time {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-accent);
+  min-width: 80px;
+  padding-top: 2px;
+}
+
+.gala-prog-name {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.gala-prog-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Sidebar cards */
+.gala-detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gala-sidebar-card {
+  background: var(--bg-light);
+  border-radius: 10px;
+  padding: 28px 24px;
+  border: 1px solid var(--border-light);
+}
+
+.gala-sidebar-card h3 {
+  font-size: 17px;
+  margin-bottom: 10px;
+}
+
+.gala-sidebar-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.gala-sidebar-card-featured {
+  background: var(--dark-bg);
+  border-color: var(--dark-bg);
+}
+.gala-sidebar-card-featured h3 {
+  color: var(--text-white);
+}
+.gala-sidebar-card-featured p {
+  color: var(--text-light);
+}
+
+/* --- Tier Cards (Founding Members + Sponsorship) --- */
+.tier-intro {
+  max-width: 760px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+.tier-intro p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+.tiers-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+@media (min-width: 640px) {
+  .tiers-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tiers-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.tier-card {
+  background: rgba(19, 45, 68, 0.5);
+  border: 1px solid var(--dark-bg-light);
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    box-shadow 0.3s,
+    transform 0.3s;
+}
+.tier-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 77, 255, 0.08);
+  transform: translateY(-2px);
+  border-color: var(--color-blue);
+}
+
+.tier-card-header {
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--dark-bg-light);
+  background: rgba(15, 34, 51, 0.6);
+}
+
+.tier-card-name {
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  margin-bottom: 4px;
+}
+
+.tier-card-amount {
+  font-family: "Montserrat", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-white);
+}
+
+.tier-card-benefits {
+  list-style: none;
+  padding: 20px 24px 24px;
+}
+.tier-card-benefits li {
+  font-size: 14px;
+  color: var(--text-light);
+  padding: 6px 0 6px 20px;
+  position: relative;
+  line-height: 1.5;
+}
+.tier-card-benefits li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--text-success);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Featured tier card */
+.tier-card-featured {
+  border-color: var(--color-blue);
+  box-shadow: 0 4px 20px rgba(0, 77, 255, 0.1);
+}
+.tier-card-featured .tier-card-header {
+  background: var(--dark-bg);
+}
+.tier-card-featured .tier-card-name {
+  color: var(--color-light-blue);
+}
+.tier-card-featured .tier-card-amount {
+  color: var(--text-white);
+}
+
+/* Tier table (sponsorship) */
+.tier-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 48px;
+}
+
+.tier-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.tier-table thead {
+  background: var(--dark-bg);
+}
+.tier-table th {
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-white);
+  padding: 14px 20px;
+  text-align: left;
+}
+
+.tier-table td {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+}
+
+.t-name {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--dark-bg);
+  white-space: nowrap;
+}
+
+.t-amount {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text-accent);
+  white-space: nowrap;
+}
+
+.t-benefits {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.tier-table tbody tr:hover {
+  background: var(--bg-light);
+}
+
+/* Tier CTA */
+.tier-cta-section {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.tier-cta-section p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+/* --- Goal Progress Bar --- */
+.goal-block {
+  max-width: 600px;
+  margin: 0 auto 48px;
+  background: rgba(19, 45, 68, 0.5);
+  border-radius: 12px;
+  padding: 24px 28px;
+  border: 1px solid var(--dark-bg-light);
+}
+
+.goal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.goal-text {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.goal-amt {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-light-blue);
+}
+
+.goal-track {
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.goal-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--pride-gradient);
+  border-radius: 6px;
+  transition: width 1.5s ease;
+}
+
+.goal-note {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* --- IRS Notice --- */
+.irs-notice {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 16px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* --- Contact Page --- */
+.section-contact {
+  background: var(--bg-light);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 48px;
+  align-items: start;
+}
+
+.contact-form-wrap {
+  background: var(--bg-white);
+  border-radius: 12px;
+  padding: 40px 36px;
+  border: 1px solid var(--border-light);
+}
+
+.contact-form-title {
+  font-size: 22px;
+  margin-bottom: 28px;
+  color: var(--dark-bg);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group-full {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.required {
+  color: var(--text-danger);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: "Roboto Slab", Georgia, serif;
+  font-size: 15px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--bg-white);
+  color: var(--text-primary);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px rgba(0, 77, 255, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.btn-submit {
+  width: 100%;
+}
+
+/* Form success state */
+.form-success {
+  text-align: center;
+  padding: 40px 20px;
+}
+.form-success .success-icon {
+  color: var(--text-success);
+  margin-bottom: 16px;
+}
+.form-success h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+.form-success p {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* Contact sidebar */
+.contact-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-info-card {
+  background: var(--bg-white);
+  border-radius: 12px;
+  padding: 28px 24px;
+  border: 1px solid var(--border-light);
+}
+.contact-info-card h3 {
+  font-size: 17px;
+  margin-bottom: 16px;
+}
+.contact-info-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.contact-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.contact-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.contact-info-icon {
+  color: var(--text-accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contact-info-label {
+  font-family: "Montserrat", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.contact-info-value {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+/* --- Footer --- */
+.footer {
+  background: var(--dark-bg);
+  padding: 60px 0 0;
+  color: var(--text-light);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-logo {
+  margin-bottom: 12px;
+  display: inline-flex;
+}
+
+.footer-tagline {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.footer-links h4 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 16px;
+}
+
+.footer-links a {
+  display: block;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 10px;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.footer-links a:hover {
+  color: var(--text-white);
+}
+
+.footer-bottom {
+  padding: 24px 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-disclaimer {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* --- Compliance Footer (Phase 2 — Required on every page) --- */
+.compliance-footer {
+  background: var(--color-black);
+  padding: 16px 0;
+  text-align: center;
+  border-top: 3px solid var(--color-blue);
+}
+
+.compliance-footer p {
+  font-family: "Roboto Slab", Georgia, serif;
+  font-size: 13px;
+  color: var(--text-white);
+  line-height: 1.5;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.compliance-footer .irs-line {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 6px;
+}
+
+/* --- Founding Home Section (Homepage) --- */
+.founding-home {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.founding-home-desc {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+.founding-home-note {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 24px;
+}
+
+/* --- Founding Members Progress (Subpage) --- */
+.founding-progress {
+  max-width: 640px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.founding-progress-count {
+  font-family: "Montserrat", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  background: var(--pride-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.founding-progress-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-top: 20px;
+  line-height: 1.7;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Tier Legend (Founding Members Page) --- */
+.tier-legend {
+  background: var(--bg-light);
+  padding: var(--section-pad) 0;
+}
+
+.tier-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 900px;
+  margin: 24px auto 0;
+}
+
+.tier-legend-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  transition: box-shadow 0.3s;
+}
+
+.tier-legend-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.tier-legend-name {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.tier-legend-price {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* --- Member List / Empty State --- */
+.member-empty-state {
+  border: 2px dashed var(--border-light);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--bg-light);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.member-empty-state h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.member-empty-state p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* --- Issues Tracker --- */
+.filter-section {
+  margin-bottom: 32px;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+.filter-label {
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-btn {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 8px 18px;
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  background: var(--bg-white);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  border-color: var(--color-blue);
+  color: var(--text-accent);
+}
+
+.filter-btn.active {
+  background: var(--color-blue);
+  border-color: var(--color-blue);
+  color: var(--text-white);
+}
+
+.results-info {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.bills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.bill-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--border-medium);
+  border-radius: 10px;
+  padding: 24px;
+  transition:
+    box-shadow 0.3s,
+    transform 0.3s;
+}
+
+.bill-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.bill-card.status-introduced {
+  border-left-color: var(--color-blue);
+}
+.bill-card.status-in-committee {
+  border-left-color: #f59e0b;
+}
+.bill-card.status-passed-committee {
+  border-left-color: var(--color-orange);
+}
+.bill-card.status-signed-into-law {
+  border-left-color: var(--color-red);
+}
+.bill-card.status-dead-tabled {
+  border-left-color: var(--text-muted);
+}
+
+.bill-number {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-accent);
+  margin-bottom: 6px;
+}
+
+.bill-title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.bill-meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.badge-introduced {
+  background: rgba(0, 77, 255, 0.1);
+  color: var(--text-accent);
+  border: 1px solid rgba(0, 77, 255, 0.3);
+}
+
+.badge-in-committee {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--text-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-passed-committee {
+  background: rgba(255, 140, 0, 0.12);
+  color: var(--color-orange);
+  border: 1px solid rgba(255, 140, 0, 0.35);
+}
+
+.badge-signed-into-law {
+  background: rgba(228, 3, 3, 0.1);
+  color: var(--text-danger);
+  border: 1px solid rgba(228, 3, 3, 0.3);
+}
+
+.badge-dead-tabled {
+  background: rgba(119, 119, 119, 0.1);
+  color: var(--text-muted);
+  border: 1px solid rgba(119, 119, 119, 0.3);
+}
+
+.category-tag {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  background: rgba(0, 77, 255, 0.06);
+  color: var(--text-accent);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 77, 255, 0.15);
+}
+
+.bill-description {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.65;
+}
+
+.bill-updated {
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-light);
+  padding-top: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.issues-info-box {
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 28px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.issues-info-box p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.issues-info-box a {
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
+/* --- Priorities Page --- */
+.priorities-intro {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+.priorities-intro strong {
+  color: var(--text-primary);
+}
+
+.endorsement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.endorsement-card {
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 36px 24px;
+  text-align: center;
+  position: relative;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.3s;
+}
+
+.endorsement-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+.coming-soon-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: var(--pride-gradient);
+  color: var(--text-white);
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+.card-placeholder {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.policy-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.policy-tag {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  background: var(--pride-gradient);
+  color: var(--text-white);
+  padding: 8px 20px;
+  border-radius: 20px;
+}
+
+.cta-tracker {
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.cta-tracker p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.cta-tracker .btn {
+  margin-top: 16px;
+}
+
+/* --- Donate Page --- */
+.cta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 40px;
+}
+
+.cta-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 36px 28px;
+  transition:
+    box-shadow 0.3s,
+    transform 0.3s;
+}
+
+.cta-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.cta-card.prominent {
+  border: 2px solid var(--color-blue);
+  box-shadow: 0 4px 20px rgba(0, 77, 255, 0.08);
+}
+
+.cta-card h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.cta-card p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.65;
+}
+
+.amount-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.amount-btn {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 18px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--bg-white);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.amount-btn:hover {
+  border-color: var(--color-blue);
+  color: var(--text-accent);
+  background: rgba(0, 77, 255, 0.04);
+}
+
+.donate-disclaimer-box {
+  background: rgba(19, 45, 68, 0.3);
+  border: 1px solid var(--dark-bg-light);
+  border-radius: 10px;
+  padding: 24px;
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* --- Founding Member Donate Page --- */
+.founding-tier-featured {
+  border: 2px solid var(--color-blue);
+  box-shadow: 0 4px 20px rgba(0, 77, 255, 0.1);
+  overflow: visible;
+  margin-top: 12px;
+}
+
+.featured-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: var(--pride-gradient);
+  color: var(--text-white);
+  padding: 4px 16px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.founding-tier-tag {
+  display: inline-block;
+  font-family: "Montserrat", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-light-blue);
+  background: rgba(112, 214, 236, 0.1);
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.founding-tier-desc {
+  font-size: 15px;
+  color: var(--text-light);
+  margin-bottom: 12px;
+  line-height: 1.65;
+}
+
+.founding-tier-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.benefits-section {
+  margin: 48px 0;
+  text-align: center;
+}
+.benefits-section .section-title {
+  color: var(--text-white);
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  max-width: 720px;
+  margin: 24px auto 0;
+}
+
+@media (min-width: 640px) {
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.benefit-item {
+  background: rgba(19, 45, 68, 0.5);
+  border-left: 3px solid var(--color-blue);
+  border-radius: 6px;
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 14px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .benefit-item {
+    padding: 16px 20px;
+  }
+}
+
+.benefit-item::before {
+  content: "\2713";
+  color: var(--text-success);
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.member-note {
+  background: rgba(19, 45, 68, 0.3);
+  border: 1px solid var(--dark-bg-light);
+  border-radius: 10px;
+  padding: 20px 24px;
+  font-size: 14px;
+  color: var(--text-light);
+  text-align: center;
+  margin: 32px 0;
+}
+
+/* --- Responsive --- */
+@media (max-width: 960px) {
+  .mission-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .pillars {
+    grid-template-columns: 1fr;
+  }
+  .gala-event-card {
+    grid-template-columns: 1fr;
+  }
+  .gala-detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .cta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+  }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    background: var(--dark-bg);
+    flex-direction: column;
+    padding: 20px 24px 28px;
+    gap: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .nav-links.open {
+    display: flex;
+  }
+  .nav-links a {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .btn-nav {
+    align-self: flex-start;
+  }
+
+  .hero-title {
+    font-size: clamp(32px, 8vw, 52px);
+  }
+  .hero-actions {
+    flex-direction: column;
+  }
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+  .gala-event-actions {
+    flex-direction: column;
+  }
+  .gala-event-actions .btn {
+    width: 100%;
+  }
+
+  .bills-grid {
+    grid-template-columns: 1fr;
+  }
+  .endorsement-grid {
+    grid-template-columns: 1fr;
+  }
+  .policy-tags {
+    flex-direction: column;
+  }
+  .founding-tier-options {
+    flex-direction: column;
+  }
+  .amount-buttons {
+    flex-direction: column;
+  }
+  .amount-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .contact-form-wrap {
+    padding: 28px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .donate-amounts {
+    gap: 8px;
+  }
+  .donate-amount {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  .gala-event-card-visual {
+    padding: 32px 24px;
+  }
+  .gala-card-title,
+  .gala-card-subtitle {
+    font-size: 32px;
+  }
+}
+
+/* ==========================================================================
+   ANIMATIONS & INTERACTIVE EFFECTS
+   ========================================================================== */
+
+/* --- Pride Gradient Shimmer on Primary Buttons --- */
+@keyframes prideShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 77, 255, 0.35);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 77, 255, 0.25);
+}
+
+/* Pride shimmer on CTA buttons */
+.btn-pride-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-red),
+    var(--color-orange),
+    var(--color-yellow),
+    var(--color-green),
+    var(--color-blue),
+    var(--color-violet),
+    var(--color-red)
+  );
+  background-size: 300% 100%;
+  animation: prideShimmer 4s ease infinite;
+  color: var(--text-white);
+  border-color: transparent;
+  font-weight: 700;
+}
+.btn-pride-shimmer:hover {
+  animation-duration: 1.5s;
+  box-shadow: 0 6px 24px rgba(0, 77, 255, 0.4);
+  color: var(--text-white);
+}
+
+/* --- Outline Button Glow --- */
+.btn-outline-light {
+  transition: all 0.3s ease, transform 0.2s ease;
+}
+.btn-outline-light:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+}
+
+/* --- Card Hover Lift & Glow --- */
+.wwd-card,
+.tier-card,
+.tier-legend-card,
+.donate-card,
+.stat-card,
+.bill-card {
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* --- Scroll Reveal Animation --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Reveal animations — only activate when JS adds .reveal-ready to <html> */
+html.reveal-ready .reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+html.reveal-ready .reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+html.reveal-ready .reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+html.reveal-ready .reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Stagger children animations — only when JS is ready */
+html.reveal-ready .reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+html.reveal-ready .reveal-stagger.visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+html.reveal-ready .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.1s; }
+html.reveal-ready .reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.2s; }
+html.reveal-ready .reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.3s; }
+html.reveal-ready .reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.4s; }
+html.reveal-ready .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.5s; }
+
+/* --- Animated Counter Pulse --- */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.stat-num.animate {
+  animation: pulse 0.6s ease;
+}
+
+/* --- Pride Stripe Animated Bar --- */
+@keyframes stripeScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 200% 0; }
+}
+
+.pride-stripe {
+  height: 4px;
+  background: var(--pride-gradient);
+  background-size: 200% 100%;
+  animation: stripeScroll 8s linear infinite;
+}
+
+/* --- Goal Fill Animated Glow --- */
+.goal-fill {
+  position: relative;
+}
+.goal-fill::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
+  border-radius: 0 6px 6px 0;
+  animation: pulse 2s ease infinite;
+}
+
+/* --- Floating Donate Button (Mobile) --- */
+.mobile-donate-fab {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 999;
+  padding: 12px 20px;
+  background: var(--color-blue);
+  color: var(--text-white);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0, 77, 255, 0.4);
+  text-decoration: none;
+  transition: all 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.mobile-donate-fab.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.mobile-donate-fab:hover {
+  background: #0039cc;
+  box-shadow: 0 6px 28px rgba(0, 77, 255, 0.5);
+  transform: translateY(-2px);
+  color: var(--text-white);
+}
+
+@media (max-width: 768px) {
+  .mobile-donate-fab {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-donate-fab {
+    bottom: 20px;
+    right: 20px;
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+}
+
+/* --- Interactive Nav Link Underline --- */
+.nav-links a:not(.btn)::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 2px;
+  background: var(--pride-gradient);
+  transition: width 0.3s ease;
+}
+.nav-links a:not(.btn):hover::after,
+.nav-links a:not(.btn).active::after {
+  width: 100%;
+}
+
+/* --- Focus / Accessibility --- */
+.btn:focus-visible,
+.filter-btn:focus-visible,
+.amount-btn:focus-visible {
+  outline: 2px solid var(--color-light-blue);
+  outline-offset: 2px;
+}

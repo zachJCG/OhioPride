@@ -1,0 +1,512 @@
+/* ==========================================================================
+   OHIO PRIDE PAC — Shared Site Header & Footer Template
+   ------------------------------------------------------
+   This file provides the site-wide header/footer styles. To update the
+   visual appearance of the header, menu, or footer across the ENTIRE site,
+   edit this file (markup lives in /js/site-template.js).
+
+   Brand color, typography, and gradient tokens are imported from
+   /css/brand-tokens.css. Do not redefine palette values here — extend
+   the canonical tokens instead. See docs/brand-system.md.
+   ========================================================================== */
+
+@import url('/css/brand-tokens.css');
+
+/* The animated Progress-Pride banner is owned by /js/enhancements.js, which
+   injects a single fixed-position bar immediately below whatever nav/header
+   the current page is using. We intentionally do NOT render a banner from
+   this template to avoid stacking two bars above the header. */
+
+/* Visually hidden until focused. Lets keyboard users jump past the nav. */
+.ohp-skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--ohp-accent);
+  color: #0c1a2b;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 6px 0;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease-out;
+  z-index: 1100;
+}
+.ohp-skip-link:focus,
+.ohp-skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid #0c1a2b;
+  outline-offset: 2px;
+}
+
+/* ------------------------------- Navigation ------------------------------- */
+.ohp-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(15, 34, 51, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ohp-border);
+  padding: 0 2rem;
+  font-family: 'Roboto Slab', Georgia, serif;
+}
+
+.ohp-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+}
+
+.ohp-nav-logo {
+  font-family: 'Montserrat', Arial, sans-serif;
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.ohp-nav-logo .ohp-logo-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.32em;
+  font-size: 1.05rem;
+}
+.ohp-nav-logo .ohp-logo-ohio {
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--ohp-text-white);
+}
+.ohp-nav-logo .ohp-logo-pride {
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--ohp-accent);
+}
+.ohp-nav-logo .ohp-logo-pac {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--ohp-text-soft);
+}
+.ohp-nav-logo .ohp-logo-pac::before,
+.ohp-nav-logo .ohp-logo-pac::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--ohp-text-soft);
+  opacity: 0.65;
+}
+
+.ohp-nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ohp-nav-links a {
+  color: var(--ohp-text-soft);
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: var(--ohp-transition);
+}
+.ohp-nav-links a:hover,
+.ohp-nav-links a.active,
+.ohp-nav-links a[aria-current="page"] {
+  color: var(--ohp-text-white);
+}
+.ohp-nav-links a[aria-current="page"] {
+  position: relative;
+}
+.ohp-nav-links a[aria-current="page"]:not(.ohp-btn-donate)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--ohp-accent);
+  border-radius: 2px;
+}
+.ohp-nav-links a:focus-visible {
+  outline: 2px solid var(--ohp-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* ------------------------ Nav dropdown groups (desktop) ------------------ */
+.ohp-nav-group {
+  position: relative;
+}
+.ohp-nav-group-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: var(--ohp-text-soft);
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.9rem;
+  line-height: inherit;
+  transition: var(--ohp-transition);
+}
+.ohp-nav-group-toggle:hover,
+.ohp-nav-group.open > .ohp-nav-group-toggle,
+.ohp-nav-group.active > .ohp-nav-group-toggle {
+  color: var(--ohp-text-white);
+}
+.ohp-nav-group-toggle:focus-visible {
+  outline: 2px solid var(--ohp-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.ohp-nav-group-caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  transition: transform 0.18s ease;
+}
+.ohp-nav-group.open .ohp-nav-group-caret {
+  transform: rotate(180deg);
+}
+.ohp-nav-group.active > .ohp-nav-group-toggle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 14px;
+  bottom: -6px;
+  height: 2px;
+  background: var(--ohp-accent);
+  border-radius: 2px;
+}
+
+.ohp-nav-submenu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  min-width: 180px;
+  background: rgba(15, 34, 51, 0.98);
+  border: 1px solid var(--ohp-border);
+  border-radius: 10px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 1001;
+}
+.ohp-nav-group:hover > .ohp-nav-submenu,
+.ohp-nav-group:focus-within > .ohp-nav-submenu,
+.ohp-nav-group.open > .ohp-nav-submenu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.ohp-nav-submenu li { width: 100%; }
+.ohp-nav-submenu a {
+  display: block;
+  padding: 0.55rem 0.85rem;
+  border-radius: 6px;
+  color: var(--ohp-text-soft);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.ohp-nav-submenu a:hover,
+.ohp-nav-submenu a:focus-visible {
+  background: rgba(112, 214, 236, 0.1);
+  color: var(--ohp-text-white);
+}
+.ohp-nav-submenu a[aria-current="page"]:not(.ohp-btn-donate)::after {
+  display: none;
+}
+.ohp-nav-submenu a[aria-current="page"] {
+  color: var(--ohp-text-white);
+  background: rgba(112, 214, 236, 0.12);
+}
+
+.ohp-menu-toggle {
+  display: none;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--ohp-text-white);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.ohp-menu-toggle:focus-visible {
+  outline: 2px solid var(--ohp-accent);
+  outline-offset: 2px;
+}
+.ohp-menu-toggle-icon,
+.ohp-menu-toggle-icon::before,
+.ohp-menu-toggle-icon::after {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.ohp-menu-toggle-icon {
+  position: relative;
+}
+.ohp-menu-toggle-icon::before,
+.ohp-menu-toggle-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+.ohp-menu-toggle-icon::before { top: -7px; }
+.ohp-menu-toggle-icon::after  { top: 7px; }
+.ohp-menu-toggle[aria-expanded="true"] .ohp-menu-toggle-icon {
+  background: transparent;
+}
+.ohp-menu-toggle[aria-expanded="true"] .ohp-menu-toggle-icon::before {
+  transform: translateY(7px) rotate(45deg);
+}
+.ohp-menu-toggle[aria-expanded="true"] .ohp-menu-toggle-icon::after {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+  .ohp-nav-links {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--ohp-navy);
+    border-bottom: 1px solid var(--ohp-border);
+    padding: 1rem 1.25rem;
+    gap: 0.25rem;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+  }
+  .ohp-nav-links.active {
+    display: flex;
+  }
+  .ohp-nav-links li { width: 100%; }
+  .ohp-nav-links a {
+    display: block;
+    padding: 0.85rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    min-height: 44px;
+    line-height: 1.4;
+  }
+  .ohp-nav-links a:hover,
+  .ohp-nav-links a:focus-visible {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .ohp-nav-links a[aria-current="page"]:not(.ohp-btn-donate)::after {
+    display: none;
+  }
+  .ohp-nav-links a[aria-current="page"] {
+    background: rgba(112, 214, 236, 0.1);
+    border-left: 3px solid var(--ohp-accent);
+    padding-left: calc(0.75rem - 3px);
+  }
+  .ohp-nav-links a.ohp-btn-donate {
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+  .ohp-menu-toggle {
+    display: inline-flex;
+  }
+
+  /* Dropdown groups collapse inline within the hamburger drawer. */
+  .ohp-nav-group { width: 100%; }
+  .ohp-nav-group-toggle {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.85rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    min-height: 44px;
+  }
+  .ohp-nav-group-toggle:hover,
+  .ohp-nav-group-toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .ohp-nav-submenu {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0 0 0.25rem 0.75rem;
+    min-width: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease;
+  }
+  .ohp-nav-group.open > .ohp-nav-submenu {
+    max-height: 480px;
+    transform: none;
+  }
+  .ohp-nav-submenu a {
+    padding: 0.7rem 0.75rem;
+    font-size: 0.95rem;
+    white-space: normal;
+  }
+}
+
+/* Donate call-to-action in the nav — animated rainbow border. The mask trick
+   lets the rainbow gradient show only as a border stroke around transparent
+   content, and the slow @keyframes shifts the gradient for a subtle shimmer. */
+@keyframes ohpRainbowSweep {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.ohp-nav-links a.ohp-btn-donate {
+  position: relative;
+  display: inline-block;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  color: var(--ohp-text-white);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  isolation: isolate;
+}
+.ohp-nav-links a.ohp-btn-donate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: var(--ohp-rainbow);
+  background-size: 200% 200%;
+  animation: ohpRainbowSweep 5s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  z-index: -1;
+}
+.ohp-nav-links a.ohp-btn-donate:hover,
+.ohp-nav-links a.ohp-btn-donate:focus-visible {
+  color: var(--ohp-text-white);
+}
+.ohp-nav-links a.ohp-btn-donate:hover::before,
+.ohp-nav-links a.ohp-btn-donate:focus-visible::before {
+  animation-duration: 2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ohp-nav-links a.ohp-btn-donate::before {
+    animation: none;
+  }
+}
+
+/* -------------------------------- Footer --------------------------------- */
+.ohp-footer {
+  background: var(--ohp-navy-footer);
+  border-top: 3px solid;
+  border-image: var(--ohp-rainbow) 1;
+  padding: 2.5rem 2rem;
+  margin-top: 2rem;
+  font-family: 'Roboto Slab', Georgia, serif;
+  color: var(--ohp-text-soft);
+}
+
+.ohp-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.ohp-footer-col h4 {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--ohp-accent);
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+}
+
+.ohp-footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ohp-footer-col li {
+  margin-bottom: 0.4rem;
+}
+.ohp-footer-col a {
+  color: var(--ohp-text-soft);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.ohp-footer-col a:hover {
+  color: var(--ohp-accent);
+}
+
+.ohp-footer-col .ohp-directors {
+  color: var(--ohp-text-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.ohp-footer-col .ohp-directors strong {
+  color: var(--ohp-text-white);
+}
+
+.ohp-footer-bottom {
+  max-width: 1200px;
+  margin: 1.5rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ohp-border);
+  text-align: center;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.8rem;
+  color: var(--ohp-text-dim);
+}
+.ohp-footer-bottom .ohp-disclaimer {
+  font-style: italic;
+  margin-top: 0.5rem;
+  color: var(--ohp-text-faint);
+}
+
+@media (max-width: 768px) {
+  .ohp-footer-inner {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
