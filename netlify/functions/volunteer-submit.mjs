@@ -21,8 +21,9 @@ import { createClient } from '@supabase/supabase-js';
 
 // ---------- Volunteer enums ----------
 const ALLOWED_INTERESTS = new Set([
-  'field_canvassing', 'phone_text_banking', 'pride_tabling', 'social_amplification',
-  'skills_based', 'house_party_host', 'local_captain', 'day_of_logistics',
+  'field_canvassing', 'phone_text_banking', 'pride_tabling', 'walk_pride_parade',
+  'social_amplification', 'skills_based', 'house_party_host', 'local_captain',
+  'day_of_logistics',
 ]);
 const ALLOWED_SKILLS = new Set([
   'writing', 'graphic_design', 'photography', 'videography', 'legal',
@@ -32,6 +33,7 @@ const ALLOWED_SKILLS = new Set([
 const ALLOWED_AVAILABILITY    = new Set(['weekday_days', 'weekday_evenings', 'weekends']);
 const ALLOWED_TIME_COMMITMENT = new Set(['one_time', 'monthly', 'weekly', 'surge_only']);
 const ALLOWED_REGISTERED_VOTER = new Set(['yes', 'no', 'unsure']);
+const ALLOWED_TSHIRT_SIZE = new Set(['xs', 's', 'm', 'l', 'xl', '2xl', '3xl', '4xl']);
 
 // ---------- Intern enums ----------
 const ALLOWED_POSITIONS = new Set([
@@ -130,6 +132,7 @@ async function handleVolunteer(supabase, req, body) {
     skills:       filterArray(body.skills,       ALLOWED_SKILLS),
     availability: filterArray(body.availability, ALLOWED_AVAILABILITY),
     time_commitment: pickEnum(body.time_commitment, ALLOWED_TIME_COMMITMENT),
+    tshirt_size: pickEnum(typeof body.tshirt_size === 'string' ? body.tshirt_size.toLowerCase() : body.tshirt_size, ALLOWED_TSHIRT_SIZE),
     prior_campaign_experience: !!body.prior_campaign_experience,
     prior_campaign_notes:      clean(body.prior_campaign_notes, 500),
     referral_source:    clean(body.referral_source, 200),
