@@ -63,6 +63,7 @@
           field_canvassing:    'Field & canvassing',
           phone_text_banking:  'Phone & text banking',
           pride_tabling:       'Pride tabling',
+          walk_pride_parade:   'Walk in a Pride parade',
           social_amplification:'Social amplification',
           skills_based:        'Skills-based',
           house_party_host:    'House party host',
@@ -73,6 +74,7 @@
           field_canvassing:    'Field',
           phone_text_banking:  'Phone/Text',
           pride_tabling:       'Tabling',
+          walk_pride_parade:   'Parade',
           social_amplification:'Social',
           skills_based:        'Skills',
           house_party_host:    'House Party',
@@ -94,6 +96,10 @@
           one_time:'One-time', monthly:'A few hrs/mo', weekly:'A few hrs/wk', surge_only:'Surge only'
         };
         var TIME_OPTIONS = ['one_time','monthly','weekly','surge_only'];
+        var TSHIRT_OPTIONS = ['xs','s','m','l','xl','2xl','3xl','4xl'];
+        var TSHIRT_LABEL = {
+          xs:'XS', s:'S', m:'M', l:'L', xl:'XL', '2xl':'2XL', '3xl':'3XL', '4xl':'4XL'
+        };
         var VOTER_OPTIONS = ['yes','no','unsure'];
         var STATUS_OPTIONS = ['new','contacted','assigned','inactive','declined'];
         var STATUS_LABEL = {
@@ -226,7 +232,7 @@
             .select(
               'id, created_at, first_name, last_name, email, phone, pronouns, ' +
               'city, county, zip, registered_voter, interests, skills, availability, ' +
-              'time_commitment, prior_campaign_experience, prior_campaign_notes, ' +
+              'time_commitment, tshirt_size, prior_campaign_experience, prior_campaign_notes, ' +
               'is_founding_member, referral_source, additional_notes, ' +
               'email_optin, sms_optin, status, assigned_to, admin_notes'
             )
@@ -580,6 +586,7 @@
                 row('Skills',      pill(r.skills, SKILL_LABEL)) +
                 row('Availability', pill(r.availability, AVAIL_LABEL)) +
                 row('Commitment',  val(TIME_LABEL[r.time_commitment] || r.time_commitment)) +
+                row('T-shirt size', val(TSHIRT_LABEL[r.tshirt_size] || r.tshirt_size)) +
                 row('Prior campaign', r.prior_campaign_experience
                     ? (r.prior_campaign_notes ? escapeHtml(r.prior_campaign_notes) : 'Yes')
                     : 'No') +
@@ -608,6 +615,10 @@
 
           var timeOpts = ['<option value="">&mdash;</option>'].concat(TIME_OPTIONS.map(function (t) {
             return '<option value="' + t + '"' + (t === r.time_commitment ? ' selected' : '') + '>' + TIME_LABEL[t] + '</option>';
+          })).join('');
+
+          var tshirtOpts = ['<option value="">&mdash;</option>'].concat(TSHIRT_OPTIONS.map(function (t) {
+            return '<option value="' + t + '"' + (t === r.tshirt_size ? ' selected' : '') + '>' + TSHIRT_LABEL[t] + '</option>';
           })).join('');
 
           var assigneeOpts = ['<option value="">Unassigned</option>'].concat(
@@ -694,6 +705,7 @@
                 '<div class="vol-check-grid" data-group="availability">' + availChecks + '</div>' +
                 '<div class="vol-form-grid" style="margin-top:14px">' +
                   '<label>Commitment<select class="admin-input" name="time_commitment">' + timeOpts + '</select></label>' +
+                  '<label>T-shirt size<select class="admin-input" name="tshirt_size">' + tshirtOpts + '</select></label>' +
                   '<label>Referral source<input class="admin-input" name="referral_source" value="' + escapeAttr(r.referral_source || '') + '" /></label>' +
                   '<label class="vol-span-2">Prior campaign notes<textarea class="admin-input" name="prior_campaign_notes">' +
                     escapeHtml(r.prior_campaign_notes || '') + '</textarea></label>' +
@@ -744,6 +756,7 @@
             zip:        trimOrNull(fd.get('zip')),
             registered_voter: trimOrNull(fd.get('registered_voter')),
             time_commitment:  trimOrNull(fd.get('time_commitment')),
+            tshirt_size:      trimOrNull(fd.get('tshirt_size')),
             referral_source:  trimOrNull(fd.get('referral_source')),
             prior_campaign_experience: fd.get('prior_campaign_experience') === 'on',
             prior_campaign_notes:      trimOrNull(fd.get('prior_campaign_notes')),
@@ -915,7 +928,7 @@
           var cols = [
             'created_at','first_name','last_name','email','phone','pronouns',
             'city','county','zip','registered_voter',
-            'interests','skills','availability','time_commitment',
+            'interests','skills','availability','time_commitment','tshirt_size',
             'prior_campaign_experience','is_founding_member','referral_source',
             'email_optin','sms_optin','status','assigned_to','assigned_to_name','admin_notes','additional_notes'
           ];

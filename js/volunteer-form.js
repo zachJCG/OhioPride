@@ -282,6 +282,7 @@
       skills:       getCheckedValues('skills'),
       availability: getCheckedValues('availability'),
       time_commitment: val('time_commitment') || null,
+      tshirt_size:  val('tshirt_size') || null,
 
       prior_campaign_experience: !!val('prior_campaign_experience'),
       prior_campaign_notes:      val('prior_campaign_notes') || null,
@@ -463,6 +464,19 @@
   if (priorToggle && priorWrap) {
     priorToggle.addEventListener('change', function () {
       priorWrap.hidden = !priorToggle.checked;
+    });
+  }
+
+  // Reveal the t-shirt size picker when someone opts in to march in a parade
+  var walkParadeToggle = document.getElementById('interestWalkParade');
+  var tshirtWrap       = document.getElementById('tshirtSizeWrap');
+  if (walkParadeToggle && tshirtWrap) {
+    walkParadeToggle.addEventListener('change', function () {
+      tshirtWrap.hidden = !walkParadeToggle.checked;
+      if (walkParadeToggle.checked) {
+        var sel = document.getElementById('tshirtSize');
+        if (sel) setTimeout(function () { sel.focus(); }, 30);
+      }
     });
   }
 
