@@ -27,6 +27,26 @@
       .tasks-table .task-desc-snippet { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-weight: 400; }
       .tasks-table td.task-overdue strong { color: #ff8a8a; }
 
+      /* WBS nesting */
+      .wbs-toggle {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: rgba(15, 34, 51, 0.6); border: 1px solid var(--border-medium);
+        color: var(--text-muted); border-radius: 6px; padding: 8px 12px;
+        font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+        letter-spacing: 0.6px; text-transform: uppercase; cursor: pointer;
+        white-space: nowrap;
+      }
+      .wbs-toggle:hover { color: var(--text-light); border-color: var(--text-light); }
+      .wbs-toggle.is-active {
+        color: var(--text-accent); border-color: rgba(112, 214, 236, 0.55);
+        background: rgba(112, 214, 236, 0.12);
+      }
+      .task-title-text { display: block; }
+      .task-tree-rail {
+        color: var(--text-muted); opacity: 0.55;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace; margin-right: 4px;
+      }
+
       /* Status pills */
       .admin-status-not_started { background-color: rgba(255, 255, 255, 0.08); border-color: var(--border-medium);    color: var(--text-muted); }
       .admin-status-in_progress { background-color: rgba(112, 214, 236, 0.15); border-color: rgba(112, 214, 236, 0.55); color: var(--text-accent); }
@@ -183,6 +203,7 @@
           canWrite: false,
           sortKey: 'due_date',
           sortDir: 'asc',
+          nestByWbs: true,      // hierarchical view: indent 1.1 under 1, etc.
           tab: 'open',          // open | mine | all | done
           activeId: null
         };
@@ -250,6 +271,7 @@
                   return '<option value="' + p + '">' + PRIORITY_LABEL[p] + '</option>';
                 }).join(''),
               '</select>',
+              '<button type="button" class="wbs-toggle is-active" id="wbsNestToggle" aria-pressed="true" title="Order and indent tasks by their WBS code (1.1 nests under 1)">&#9783; Nest by WBS</button>',
               '<span class="admin-toolbar-spacer"></span>',
               '<span class="admin-result-count" id="resultCount"></span>',
             '</div>',
@@ -504,6 +526,19 @@
         }
 
         function applySort(today) {
+          if (state.nestByWbs) {
+            // Hierarchical view: order strictly by WBS code so children fall
+            // directly under their parent (1, 1.1, 1.1.1, 1.2, 2, ...).
+            // Tasks without a WBS code sort to the bottom, by title.
+            state.filtered.sort(function (a, b) {
+              var c = compareWbs(a.wbs_code, b.wbs_code);
+              if (c !== 0) return c;
+              return String(a.title || '').localeCompare(String(b.title || ''), undefined, { sensitivity: 'base' });
+            });
+            renderRows(today || todayISO());
+            renderSortHeaders();
+            return;
+          }
           var key = state.sortKey, dir = state.sortDir === 'asc' ? 1 : -1;
           var priorityOrder = { urgent: 0, high: 1, normal: 2, low: 3 };
           state.filtered.sort(function (a, b) {
@@ -524,7 +559,7 @@
         function renderSortHeaders() {
           document.querySelectorAll('#tasksTable thead th[data-sort]').forEach(function (th) {
             th.classList.remove('admin-sort-asc','admin-sort-desc');
-            if (th.dataset.sort === state.sortKey) {
+            if (!state.nestByWbs && th.dataset.sort === state.sortKey) {
               th.classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
             }
           });
@@ -549,7 +584,11 @@
             var wbs = r.wbs_code
               ? '<span class="task-wbs">WBS&nbsp;' + escapeHtml(r.wbs_code) + '</span>'
               : '';
-            var title = '<div class="task-title-cell">' + wbs + escapeHtml(r.title || '') +
+            var depth = state.nestByWbs ? wbsDepth(r.wbs_code) : 0;
+            var indentStyle = depth ? ' style="padding-left:' + (depth * 20) + 'px"' : '';
+            var rail = depth ? '<span class="task-tree-rail" aria-hidden="true">&#9492;&#9472;</span>' : '';
+            var title = '<div class="task-title-cell"' + indentStyle + '>' + wbs +
+                        '<span class="task-title-text">' + rail + escapeHtml(r.title || '') + '</span>' +
                         (r.description
                           ? '<div class="task-desc-snippet">' + escapeHtml(snippet(r.description, 90)) + '</div>'
                           : '') +
@@ -836,11 +875,19 @@
 
           document.querySelectorAll('#tasksTable thead th[data-sort]').forEach(function (th) {
             th.addEventListener('click', function (ev) {
+              // Sorting by a column leaves the hierarchical WBS view.
+              if (state.nestByWbs) setNestByWbs(false);
               var key = ev.currentTarget.dataset.sort;
               if (state.sortKey === key) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
               else { state.sortKey = key; state.sortDir = key === 'due_date' ? 'asc' : 'asc'; }
               applySort();
             });
+          });
+
+          var wbsBtn = $('wbsNestToggle');
+          if (wbsBtn) wbsBtn.addEventListener('click', function () {
+            setNestByWbs(!state.nestByWbs);
+            applyFilters();
           });
 
           var body = $('tasksBody');
@@ -945,6 +992,55 @@
         // Helpers
         // =================================================================
         function $(id) { return document.getElementById(id); }
+
+        function setNestByWbs(on) {
+          state.nestByWbs = !!on;
+          var btn = $('wbsNestToggle');
+          if (btn) {
+            btn.classList.toggle('is-active', state.nestByWbs);
+            btn.setAttribute('aria-pressed', state.nestByWbs ? 'true' : 'false');
+          }
+        }
+
+        // Split a WBS code ("1.2.10") into its dotted segments. Returns null
+        // for blank codes so they can be sorted to the bottom.
+        function wbsSegments(code) {
+          if (code == null) return null;
+          var trimmed = String(code).trim();
+          if (!trimmed) return null;
+          return trimmed.split('.').map(function (s) { return s.trim(); });
+        }
+
+        // Nesting depth = number of dotted segments below the root.
+        // "1" -> 0, "1.1" -> 1, "1.1.2" -> 2.
+        function wbsDepth(code) {
+          var segs = wbsSegments(code);
+          return segs ? segs.length - 1 : 0;
+        }
+
+        // Order WBS codes the way an outline reads: parents before children,
+        // segments compared numerically when possible ("1.2" before "1.10"),
+        // lexically otherwise. Blank codes sort last.
+        function compareWbs(a, b) {
+          var as = wbsSegments(a), bs = wbsSegments(b);
+          if (!as && !bs) return 0;
+          if (!as) return 1;
+          if (!bs) return -1;
+          var n = Math.max(as.length, bs.length);
+          for (var i = 0; i < n; i++) {
+            if (i >= as.length) return -1;   // "1" comes before "1.1"
+            if (i >= bs.length) return 1;
+            var x = as[i], y = bs[i];
+            var nx = parseFloat(x), ny = parseFloat(y);
+            if (!isNaN(nx) && !isNaN(ny) && String(nx) === x && String(ny) === y) {
+              if (nx !== ny) return nx < ny ? -1 : 1;
+            } else {
+              var c = x.localeCompare(y, undefined, { numeric: true, sensitivity: 'base' });
+              if (c !== 0) return c;
+            }
+          }
+          return 0;
+        }
         function escapeHtml(s) {
           return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
             return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
