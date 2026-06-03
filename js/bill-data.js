@@ -4,7 +4,7 @@
    ========================================================================== */
 
 // Update this constant whenever bill data changes
-const LAST_UPDATED = { date: "05/07/26", time: "09:55 AM EDT" };
+const LAST_UPDATED = { date: "06/02/26", time: "10:35 PM EDT" };
 
 const BILLS = [
   /* ===== ANTI-LGBTQ+ BILLS ===== */
@@ -54,8 +54,8 @@ const BILLS = [
     description:
       "Creates 'unlawful adult cabaret performance' with a definition reaching gender expression differing from 'biological sex.' Penalties escalate from misdemeanors to felonies when minors are present.",
     sponsors: "Rep. Angela N. King (R-84), Rep. Josh Williams (R-44)",
-    lastAction: "Referred to Senate Judiciary Committee — April 15, 2026",
-    nextDate: "Awaiting first Senate committee hearing",
+    lastAction: "Assigned to Senate Judiciary Committee — April 15, 2026",
+    nextDate: "Awaiting Senate Judiciary Committee hearing",
     houseVote: "Passed 63–32 on March 25, 2026",
     chamber: "house",
     currentStep: 6,
@@ -80,19 +80,19 @@ const BILLS = [
     officialTitle:
       "Restrict Medicaid and public-employee coverage of gender-affirming surgery",
     stance: "anti",
-    status: "introduced",
-    statusLabel: "Introduced",
-    statusColor: "#3b82f6",
+    status: "in-committee",
+    statusLabel: "In Committee",
+    statusColor: "#f59e0b",
     categories: ["healthcare", "anti-trans"],
     categoryLabels: ["Healthcare", "Anti-Trans"],
     description:
       "Restricts Medicaid and public-employee health benefits from covering gender-affirming surgery for adult Ohioans. Extends the HB 68 framework from minors into adult care via state coverage rather than direct prohibition.",
     sponsors: "Rep. Gross",
-    lastAction: "Introduced — April 30, 2026",
-    nextDate: "Awaiting committee assignment",
+    lastAction: "Assigned to House Insurance Committee — May 13, 2026",
+    nextDate: "Awaiting first committee hearing",
     chamber: "house",
-    currentStep: 0,
-    pipelineDates: { 0: "Apr 30, 2026" },
+    currentStep: 1,
+    pipelineDates: { 0: "Apr 30, 2026", 1: "May 13, 2026" },
     url: "/issues/hb838",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb838",
     textUrl:
@@ -156,19 +156,19 @@ const BILLS = [
     nickname: "Omnibus Anti-Trans Bill",
     officialTitle: "Enact the Privacy Protection Act",
     stance: "anti",
-    status: "introduced",
-    statusLabel: "Introduced",
-    statusColor: "#3b82f6",
+    status: "in-committee",
+    statusLabel: "In Committee",
+    statusColor: "#f59e0b",
     categories: ["anti-trans", "education", "corrections"],
     categoryLabels: ["Anti-Trans", "Education", "Corrections"],
     description:
       "Unusually broad: sex-segregated facilities, school name/pronoun mandates, government document restrictions, and private right of action for facility violations.",
     sponsors: "Rep. Josh Williams (R-44)",
-    lastAction: "Introduced — March 31, 2026",
-    nextDate: "Awaiting committee assignment",
+    lastAction: "Assigned to House Judiciary Committee — May 13, 2026",
+    nextDate: "Awaiting first committee hearing",
     chamber: "house",
-    currentStep: 0,
-    pipelineDates: { 0: "Mar 31, 2026" },
+    currentStep: 1,
+    pipelineDates: { 0: "Mar 31, 2026", 1: "May 13, 2026" },
     url: "/issues/hb798",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb798",
     textUrl:
@@ -182,19 +182,19 @@ const BILLS = [
     officialTitle:
       "Ensure inmates, prisoners housed according to biological sex",
     stance: "anti",
-    status: "introduced",
-    statusLabel: "Introduced",
-    statusColor: "#3b82f6",
+    status: "in-committee",
+    statusLabel: "In Committee",
+    statusColor: "#f59e0b",
     categories: ["corrections", "anti-trans"],
     categoryLabels: ["Corrections", "Anti-Trans"],
     description:
       "Requires incarcerated people be housed 'in accordance with their biological sex,' overriding individualized safety assessments for transgender inmates.",
     sponsors: "Rep. Josh Williams (R-44)",
-    lastAction: "Introduced — March 25, 2026",
-    nextDate: "Awaiting committee assignment",
+    lastAction: "Assigned to House Public Safety Committee — May 13, 2026",
+    nextDate: "Awaiting first committee hearing",
     chamber: "house",
-    currentStep: 0,
-    pipelineDates: { 0: "Mar 25, 2026" },
+    currentStep: 1,
+    pipelineDates: { 0: "Mar 25, 2026", 1: "May 13, 2026" },
     url: "/issues/hb796",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb796",
     textUrl:
@@ -548,8 +548,8 @@ const BILLS = [
     nickname: "House Conversion Therapy Companion",
     officialTitle: "Prohibit licensed professionals from practicing conversion therapy on minors",
     stance: "pro",
-    status: "introduced",
-    statusLabel: "Introduced",
+    status: "in-committee",
+    statusLabel: "In Committee",
     statusColor: "#22c55e",
     categories: ["healthcare", "youth"],
     categoryLabels: ["Healthcare", "Youth / Family"],
@@ -557,7 +557,7 @@ const BILLS = [
       "House companion to SB 71. Bans conversion therapy on minors by licensed professionals. Supported by the American Medical Association, American Psychological Association, and American Academy of Pediatrics.",
     sponsors: "Rep. Karen Brownlee (D-28), Rep. Crystal Lett (D-11)",
     lastAction: "Referred to House Health Committee — May 28, 2025",
-    nextDate: "Awaiting committee hearing",
+    nextDate: "Awaiting first committee hearing",
     chamber: "house",
     currentStep: 1,
     pipelineDates: { 0: "May 21, 2025", 1: "May 28, 2025" },
@@ -660,8 +660,8 @@ const BILLS = [
     description:
       "Creates enhanced penalties for hate crimes based on race, religion, national origin, disability, and sexual orientation — but notably excludes gender identity, leaving transgender Ohioans without protection.",
     sponsors: "Rep. Brett Hillyer (R-37), Rep. Bride Rose Sweeney (D-16)",
-    lastAction: "1st hearing in House Criminal Justice Committee — February 25, 2026",
-    nextDate: "Additional hearings expected",
+    lastAction: "Sponsor testimony (first hearing) — February 25, 2026",
+    nextDate: "Awaiting committee hearing",
     chamber: "house",
     currentStep: 2,
     pipelineDates: { 0: "May 27, 2025", 1: "Jun 4, 2025", 2: "Feb 25, 2026" },
