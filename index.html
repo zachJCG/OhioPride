@@ -210,6 +210,94 @@
         .endorse-spotlight .launch-day-card { animation: none; }
       }
 
+      /* Compact endorsement strip — keeps the rainbow border but trims the
+         card to a slim spotlight so it doesn't dominate the homepage. */
+      .endorse-spotlight--compact { max-width: 760px; }
+      .endorse-spotlight--compact .launch-day-card {
+        padding: 1.25rem 1.75rem;
+        text-align: left;
+      }
+      .endorse-spotlight--compact .section-label {
+        margin-bottom: 0.4rem;
+        font-size: 0.7rem;
+      }
+      .endorse-spotlight--compact h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+      }
+      .endorse-spotlight--compact p {
+        font-size: 0.92rem;
+        margin: 0 0 1rem;
+        max-width: none;
+      }
+      .endorse-spotlight--compact .launch-day-actions {
+        justify-content: flex-start;
+      }
+      @media (max-width: 600px) {
+        .endorse-spotlight--compact .launch-day-card { text-align: center; }
+        .endorse-spotlight--compact .launch-day-actions { justify-content: center; }
+      }
+
+      /* Newsletter band — entry point that forwards to /signup. */
+      .newsletter-band {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+        background: linear-gradient(135deg, rgba(40, 18, 75, 0.82), rgba(19, 45, 68, 0.92));
+        border: 1px solid rgba(182, 140, 255, 0.4);
+        border-radius: 14px;
+        padding: 2rem;
+        box-shadow: 0 0 24px rgba(118, 80, 180, 0.15);
+      }
+      .newsletter-band-copy { flex: 1 1 320px; }
+      .newsletter-band-copy .section-label { margin-bottom: 0.5rem; }
+      .newsletter-band-copy h2 {
+        font-family: "Montserrat", sans-serif;
+        color: var(--text-white);
+        margin-bottom: 0.5rem;
+        font-size: 1.4rem;
+      }
+      .newsletter-band-copy p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        line-height: 1.6;
+        font-size: 0.95rem;
+        margin: 0;
+      }
+      .newsletter-band-form {
+        display: flex;
+        gap: 0.6rem;
+        flex: 1 1 320px;
+        flex-wrap: wrap;
+      }
+      .newsletter-band-form input[type="email"] {
+        flex: 1 1 200px;
+        min-width: 0;
+        padding: 0.75rem 0.9rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(8, 21, 33, 0.55);
+        color: var(--text-white);
+        font-family: "Roboto Slab", serif;
+        font-size: 0.95rem;
+      }
+      .newsletter-band-form input[type="email"]:focus {
+        outline: none;
+        border-color: #b68cff;
+        box-shadow: 0 0 0 3px rgba(182, 140, 255, 0.22);
+      }
+      .sr-only {
+        position: absolute; width: 1px; height: 1px;
+        padding: 0; margin: -1px; overflow: hidden;
+        clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+      }
+      @media (max-width: 720px) {
+        .newsletter-band { padding: 1.5rem; }
+        .newsletter-band-form .btn { width: 100%; }
+      }
+
       .cards-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -459,22 +547,13 @@
       </div>
     </section>
 
-    <section class="launch-day-callout endorse-spotlight">
+    <section class="launch-day-callout endorse-spotlight endorse-spotlight--compact">
       <div class="launch-day-card reveal">
         <div class="section-label section-label-light">First Endorsement of 2026</div>
         <h2>We're standing with Jeff Givan for Ohio House.</h2>
-        <div class="launch-day-meta">
-          <span>Ohio House District 78</span>
-          <span>Allen + Auglaize Counties</span>
-          <span>November 2026</span>
-        </div>
         <p>
-          Jeff is a co-founder of the Lima Pride Alliance and the Democratic
-          nominee challenging House Speaker Matt Huffman. He's running to
-          defend public schools, protect marriage equality, and expand
-          access to preventative healthcare. District 78 is the kind of seat
-          that decides whether the Statehouse keeps coming after our community,
-          and we need volunteers in every corner of it.
+          Co-founder of the Lima Pride Alliance and the Democratic nominee in
+          House District 78 (Allen + Auglaize), challenging Speaker Matt Huffman.
         </p>
         <div class="launch-day-actions">
           <a href="/endorsements" class="btn btn-primary">Read the Endorsement</a>
@@ -577,6 +656,27 @@
           <a href="/donate/founding-member" class="btn btn-primary"
             >Become a Founding Member</a
           >
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="newsletter-band reveal">
+          <div class="newsletter-band-copy">
+            <div class="section-label section-label-light">Join the Movement</div>
+            <h2>Newsletter, volunteer, founding member — one place.</h2>
+            <p>
+              Sign up to get our newsletter and find every way to stand with
+              Ohio Pride.
+            </p>
+          </div>
+          <form class="newsletter-band-form" action="/signup" method="get">
+            <label class="sr-only" for="homeNewsletterEmail">Email address</label>
+            <input type="email" id="homeNewsletterEmail" name="email"
+                   placeholder="you@email.com" autocomplete="email" />
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+          </form>
         </div>
       </div>
     </section>
