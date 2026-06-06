@@ -60,6 +60,12 @@
   to = "/pride/signup.html"
   status = 200
 
+# Unified signup hub: newsletter + volunteer + founding member
+[[redirects]]
+  from = "/signup"
+  to = "/signup/index.html"
+  status = 200
+
 [[redirects]]
   from = "/scorecard"
   to = "/scorecard.html"

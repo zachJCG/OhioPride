@@ -1,0 +1,28 @@
+-- =====================================================================
+-- Ohio Pride PAC — ActBlue Contributions Import: 2026-05-08 .. 2026-06-07
+-- =====================================================================
+--
+-- This import was applied DIRECTLY to the Supabase project (recorded in
+-- the project's own migration history as `actblue_contributions_seed_june`).
+-- The donor-level INSERT rows are intentionally NOT committed here.
+--
+-- Why: this repository is public, and CLAUDE.md is explicit —
+--   "Don't pull live ActBlue donor PII into the repo or a shared doc."
+-- Donor names, emails, and addresses live only in Supabase (and ActBlue),
+-- never in version control.
+--
+-- What was imported (source: ActBlue dashboard export, committee 214738):
+--   * 122 receipts in the export window; 25 were new and inserted into
+--     public.founding_members (the other 97 already existed and were
+--     left untouched).
+--   * INSERT ... ON CONFLICT (actblue_contribution_id) DO NOTHING, so the
+--     import never overwrites curated rows.
+--   * Export timestamps (America/New_York, EDT) were converted to UTC to
+--     match how existing rows are stored.
+--   * Result: founding_members 138 -> 163 rows; gross $8,162.52 -> $9,796.90.
+--
+-- To re-run or audit, use the original ActBlue CSV with the same
+-- DO NOTHING upsert keyed on actblue_contribution_id.
+-- =====================================================================
+
+-- No-op: data applied out-of-band to protect donor PII (see header).
