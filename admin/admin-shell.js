@@ -63,7 +63,6 @@
         { id: 'volunteers',   href: '/admin/volunteers',   label: 'Volunteers',   icon: 'users',      permission: ['volunteers','read'] },
         { id: 'internships',  href: '/admin/internships',  label: 'Internships',  icon: 'briefcase',  permission: ['internships','read'] },
         { id: 'donors',       href: '/admin/donors',      label: 'Donors',       icon: 'heart',      permission: ['donors','read'] },
-        { id: 'prospects',    href: '/admin/prospects',    label: 'Prospects',    icon: 'funnel',     permission: ['prospects','read'] },
         { id: 'networking',   href: '/admin/networking',   label: 'Networking',   icon: 'network',    permission: ['networking','read'] },
         { id: 'pride',        href: '/admin/pride',        label: 'Events',       icon: 'flag',       permission: ['pride','read'] },
         { id: 'launch',       href: '/admin/launch-day',   label: 'Launch Day',   icon: 'megaphone',  permission: ['launch','read'] },
@@ -90,6 +89,17 @@
       ]
     },
     {
+      // The LEGAL WALL lives here: PAC (pac_prospects) and c4 (c4_prospects)
+      // are gated independently, so a user only sees the side(s) they may access.
+      group: 'Fundraising',
+      items: [
+        { id: 'fundraising',             href: '/admin/fundraising',               label: 'Dashboard',       icon: 'dollar',    permission: ['fundraising','read'] },
+        { id: 'fundraising_individuals', href: '/admin/fundraising/individuals',    label: 'PAC Individuals', icon: 'funnel',    permission: ['pac_prospects','read'] },
+        { id: 'fundraising_companies',   href: '/admin/fundraising/companies',      label: 'c4 Companies',    icon: 'building',  permission: ['c4_prospects','read'] },
+        { id: 'fundraising_donors',      href: '/admin/fundraising/donors',         label: 'Secured Donors',  icon: 'heart',     permission: ['donors','read'] },
+      ]
+    },
+    {
       group: 'Money',
       items: [
         { id: 'finance',      href: '/admin/finance/budget', label: 'Budget',      icon: 'wallet',     permission: ['finance','read'] },
@@ -113,6 +123,8 @@
     network:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="7" r="2.4"/><circle cx="12" cy="18" r="2.4"/><path d="M7.8 7.4 10.4 16M16.5 8.8 12.9 16.2M8 6.4h7.6"/></svg>',
     briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>',
     wallet:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 13h.01"/><path d="M3 11h18"/></svg>',
+    dollar:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><line x1="12" y1="3" x2="12" y2="21"/><path d="M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3 2 2.7 4.5 3 4.5 1.3 4.5 3-2 3-4.5 3-4.5-1.3-4.5-3"/></svg>',
+    building:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="4" y="3" width="11" height="18" rx="1"/><path d="M15 9h5v12h-5"/><path d="M8 7h3M8 11h3M8 15h3"/></svg>',
     check:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="m8 12 2.5 2.5L16 9"/></svg>',
     mail:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
     menu:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="4" y1="7"  x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>',
@@ -242,7 +254,7 @@
               };
               state.roles = [{ slug: 'super_admin', label: 'Super Admin' }];
               // Synthesize permissions for the legacy super_admin.
-              ['dashboard','tasks','volunteers','endorsements','donors','prospects','networking','bills','legislators','news','board','launch','pride','finance','users','settings','internships']
+              ['dashboard','tasks','volunteers','endorsements','donors','prospects','fundraising','pac_prospects','c4_prospects','networking','bills','legislators','news','board','launch','pride','finance','users','settings','internships']
                 .forEach(function (m) {
                   ['read','write','admin','manage_users'].forEach(function (a) {
                     state.permSet.add(m + ':' + a);
