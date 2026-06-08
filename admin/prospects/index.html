@@ -305,7 +305,11 @@
           priority: '',
           dnc: '',            // '', 'only', 'hide'
           followups: false,
-          showSecured: false,
+          // Default ON: the pipeline currently holds only secured founding
+          // members (no net-new prospects yet), so hiding them left the table
+          // empty on load and looked broken. Staff can toggle them off to focus
+          // on active cultivation once there are non-secured prospects.
+          showSecured: true,
           // sort + page
           sortKey: 'next_action_date',
           sortDir: 'asc',
@@ -476,8 +480,8 @@
                 '<option value="hide">Hide do-not-contact</option>',
                 '<option value="only">Do-not-contact only</option>',
               '</select>',
-              '<button type="button" class="prospect-toolbar-toggle" id="toggleFollowups">Follow-ups due</button>',
-              '<button type="button" class="prospect-toolbar-toggle" id="toggleSecured">Show secured</button>',
+              '<button type="button" class="prospect-toolbar-toggle' + (state.followups ? ' is-on' : '') + '" id="toggleFollowups">Follow-ups due</button>',
+              '<button type="button" class="prospect-toolbar-toggle' + (state.showSecured ? ' is-on' : '') + '" id="toggleSecured">Show secured</button>',
               '<span class="admin-toolbar-spacer"></span>',
               '<span class="admin-result-count" id="resultCount"></span>',
             '</div>',
