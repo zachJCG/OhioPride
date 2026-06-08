@@ -18,6 +18,11 @@
  * ============================================================================= */
 
 import { createClient } from '@supabase/supabase-js';
+import { syncSubscriberSafe } from './lib/mailerlite.mjs';
+
+// Group new newsletter signups land in. A MailerLite automation on join can
+// send the welcome / confirmation email. Override with MAILERLITE_NEWSLETTER_GROUP.
+const NEWSLETTER_GROUP = process.env.MAILERLITE_NEWSLETTER_GROUP || 'Newsletter';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ALLOWED_SOURCES = new Set(['homepage', 'signup_page', 'website_newsletter', 'other']);
@@ -106,6 +111,14 @@ export default async (req, _context) => {
       details: error.details || null,
     });
   }
+  // Sync into MailerLite so the welcome/confirmation automation can fire.
+  // Best-effort: never blocks or fails the submission.
+  await syncSubscriberSafe({
+    email,
+    fields: { name: row.first_name || undefined, last_name: row.last_name || undefined },
+    groupName: NEWSLETTER_GROUP,
+  });
+
   return jsonResponse(200, { ok: true, id: data?.id || null });
 };
 
