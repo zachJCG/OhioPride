@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <style>
+      .email-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 20px; }
+      @media (max-width: 900px) { .email-grid { grid-template-columns: 1fr; } }
+      .email-field { margin-bottom: 16px; }
+      .email-field label { display: block; font-weight: 600; font-size: 13px; color: #fff; margin-bottom: 6px; }
+      .email-field .hint { font-weight: 400; color: rgba(255,255,255,.55); font-size: 12px; }
+      .email-field textarea.admin-input { min-height: 260px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.5; resize: vertical; }
+      .email-groups { display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow: auto; padding: 4px 2px; }
+      .email-group-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: rgba(255,255,255,.85); }
+      .email-group-row .count { margin-left: auto; font-size: 12px; color: rgba(255,255,255,.5); }
+      .email-banner { padding: 14px 16px; border-radius: 10px; font-size: 14px; margin-bottom: 18px; }
+      .email-banner.warn { background: rgba(255,193,7,.12); border: 1px solid rgba(255,193,7,.4); color: #ffe08a; }
+      .email-banner.ok   { background: rgba(56,193,114,.12); border: 1px solid rgba(56,193,114,.4); color: #9be7bf; }
+      .email-banner.err  { background: rgba(244,67,54,.12); border: 1px solid rgba(244,67,54,.4); color: #ff9a90; }
+      .email-recent { list-style: none; margin: 0; padding: 0; }
+      .email-recent li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 13px; }
+      .email-recent li:last-child { border-bottom: none; }
+      .email-recent .r-subject { color: #fff; font-weight: 600; display: block; }
+      .email-recent .r-meta { color: rgba(255,255,255,.5); font-size: 12px; }
+      .email-status { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,.1); margin-left: 6px; }
+    </style>
+  </head>
+  <body class="admin-shell">
+    <div id="shell-root"
+         data-active-nav="email"
+         data-page-eyebrow="Comms"
+         data-page-title="Email"
+         data-page-sub="Compose and send an email blast to your MailerLite groups."></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script>
+      (function () {
+        'use strict';
+
+        var ENDPOINT = '/.netlify/functions/admin-email-send';
+        var state = { token: null, canWrite: false, groups: [], defaults: {} };
+
+        function esc(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+          });
+        }
+
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var detail = ev.detail || {};
+          state.token = detail.session.access_token;
+          state.canWrite = (detail.can || function () { return false; })('news', 'write');
+
+          document.getElementById('shellBody').innerHTML = pageHtml();
+          bindEvents();
+          loadConfig();
+        });
+
+        function pageHtml() {
+          return [
+            '<div id="emailBanner"></div>',
+            '<div class="email-grid">',
+              '<div class="shell-widget">',
+                '<div class="email-field">',
+                  '<label>Send to groups <span class="hint">— at least one required</span></label>',
+                  '<div class="email-groups" id="groupList"><div class="shell-widget-empty" style="padding:16px">Loading groups…</div></div>',
+                '</div>',
+                '<div class="email-field">',
+                  '<label for="fldSubject">Subject</label>',
+                  '<input type="text" class="admin-input" id="fldSubject" maxlength="255" placeholder="Subject line" autocomplete="off" />',
+                '</div>',
+                '<div class="email-field">',
+                  '<label for="fldHtml">Email body <span class="hint">— HTML allowed</span></label>',
+                  '<textarea class="admin-input" id="fldHtml" placeholder="<p>Hello friends,</p>"></textarea>',
+                '</div>',
+                '<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">',
+                  '<button type="button" class="shell-btn shell-btn-primary" id="sendBtn">Send now</button>',
+                  '<span class="hint" style="color:rgba(255,255,255,.55);font-size:12px" id="sendHint"></span>',
+                '</div>',
+              '</div>',
+
+              '<div>',
+                '<div class="shell-widget" style="margin-bottom:20px">',
+                  '<h3 style="margin:0 0 12px;color:#fff;font-size:15px">Sender</h3>',
+                  '<div class="email-field">',
+                    '<label for="fldFromName">From name</label>',
+                    '<input type="text" class="admin-input" id="fldFromName" maxlength="120" autocomplete="off" />',
+                  '</div>',
+                  '<div class="email-field">',
+                    '<label for="fldFrom">From email <span class="hint">— must be a verified MailerLite sender</span></label>',
+                    '<input type="email" class="admin-input" id="fldFrom" autocomplete="off" />',
+                  '</div>',
+                  '<div class="email-field" style="margin-bottom:0">',
+                    '<label for="fldReplyTo">Reply-to <span class="hint">— optional</span></label>',
+                    '<input type="email" class="admin-input" id="fldReplyTo" autocomplete="off" />',
+                  '</div>',
+                '</div>',
+                '<div class="shell-widget">',
+                  '<h3 style="margin:0 0 12px;color:#fff;font-size:15px">Recent campaigns</h3>',
+                  '<ul class="email-recent" id="recentList"><li class="r-meta">Loading…</li></ul>',
+                '</div>',
+              '</div>',
+            '</div>'
+          ].join('');
+        }
+
+        function banner(kind, msg) {
+          document.getElementById('emailBanner').innerHTML =
+            msg ? '<div class="email-banner ' + kind + '">' + msg + '</div>' : '';
+        }
+
+        function loadConfig() {
+          fetch(ENDPOINT, { headers: { Authorization: 'Bearer ' + state.token } })
+            .then(function (r) { return r.json().then(function (b) { return { ok: r.ok, b: b }; }); })
+            .then(function (res) {
+              var b = res.b || {};
+              if (!res.ok || !b.ok) {
+                banner('err', 'Could not load email settings: ' + esc(b.error || 'unknown'));
+                return;
+              }
+              state.defaults = b;
+              document.getElementById('fldFromName').value = b.default_from_name || '';
+              document.getElementById('fldFrom').value = b.default_from || '';
+
+              if (!b.configured) {
+                banner('warn', '<strong>MailerLite is not configured.</strong> Set the ' +
+                  '<code>MAILERLITE_API_KEY</code> environment variable in Netlify to enable sending.');
+              }
+              renderGroups(b.groups || []);
+              renderRecent(b.campaigns || []);
+
+              if (!state.canWrite) {
+                document.getElementById('sendBtn').disabled = true;
+                document.getElementById('sendHint').textContent = 'Your role can view but not send.';
+              }
+            })
+            .catch(function (err) {
+              console.error('email config load failed', err);
+              banner('err', 'Could not reach the email service.');
+            });
+        }
+
+        function renderGroups(groups) {
+          state.groups = groups;
+          var el = document.getElementById('groupList');
+          if (!groups.length) {
+            el.innerHTML = '<div class="shell-widget-empty" style="padding:16px">' +
+              'No MailerLite groups yet. Groups are created automatically the first time someone ' +
+              'submits a form (Newsletter, Volunteers, Internship Applicants), or create one in MailerLite.' +
+              '</div>';
+            return;
+          }
+          el.innerHTML = groups.map(function (g) {
+            var count = g.active_count != null ? '<span class="count">' + g.active_count + ' active</span>' : '';
+            return '<label class="email-group-row">' +
+              '<input type="checkbox" class="grp-check" value="' + esc(g.id) + '" /> ' +
+              '<span>' + esc(g.name) + '</span>' + count +
+            '</label>';
+          }).join('');
+        }
+
+        function renderRecent(campaigns) {
+          var el = document.getElementById('recentList');
+          if (!campaigns.length) { el.innerHTML = '<li class="r-meta">No campaigns yet.</li>'; return; }
+          el.innerHTML = campaigns.map(function (c) {
+            var when = c.scheduled_for || c.created_at || '';
+            return '<li>' +
+              '<span class="r-subject">' + esc(c.subject || c.name || 'Untitled') +
+                '<span class="email-status">' + esc(c.status || '') + '</span></span>' +
+              (when ? '<span class="r-meta">' + esc(String(when).replace('T', ' ').slice(0, 16)) + '</span>' : '') +
+            '</li>';
+          }).join('');
+        }
+
+        function selectedGroupIds() {
+          return Array.prototype.slice
+            .call(document.querySelectorAll('.grp-check:checked'))
+            .map(function (c) { return c.value; });
+        }
+
+        function bindEvents() {
+          document.getElementById('sendBtn').addEventListener('click', onSend);
+        }
+
+        function onSend() {
+          if (!state.canWrite) return;
+          banner('', '');
+
+          var groupIds = selectedGroupIds();
+          var subject  = document.getElementById('fldSubject').value.trim();
+          var html     = document.getElementById('fldHtml').value.trim();
+          var fromName = document.getElementById('fldFromName').value.trim();
+          var from     = document.getElementById('fldFrom').value.trim();
+          var replyTo  = document.getElementById('fldReplyTo').value.trim();
+
+          if (!groupIds.length) { banner('err', 'Pick at least one group to send to.'); return; }
+          if (!subject) { banner('err', 'Add a subject line.'); return; }
+          if (!html)    { banner('err', 'Add an email body.'); return; }
+
+          var names = state.groups
+            .filter(function (g) { return groupIds.indexOf(String(g.id)) !== -1; })
+            .map(function (g) { return g.name; }).join(', ');
+          if (!window.confirm('Send "' + subject + '" to: ' + names + '?\n\nThis sends immediately.')) return;
+
+          var btn = document.getElementById('sendBtn');
+          btn.disabled = true; btn.textContent = 'Sending…';
+
+          fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + state.token, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              subject: subject, html: html, group_ids: groupIds,
+              from_name: fromName, from: from, reply_to: replyTo || undefined,
+            }),
+          })
+            .then(function (r) { return r.json().then(function (b) { return { ok: r.ok, b: b }; }); })
+            .then(function (res) {
+              var b = res.b || {};
+              if (!res.ok || !b.ok) {
+                var detail = b.detail || b.error || 'unknown error';
+                banner('err', 'Send failed: ' + esc(detail));
+                return;
+              }
+              banner('ok', '<strong>Sent.</strong> Your email is on its way to ' + esc(names) + '.');
+              document.getElementById('fldSubject').value = '';
+              document.getElementById('fldHtml').value = '';
+              Array.prototype.slice.call(document.querySelectorAll('.grp-check:checked'))
+                .forEach(function (c) { c.checked = false; });
+              loadConfig();
+            })
+            .catch(function (err) {
+              console.error('send failed', err);
+              banner('err', 'Could not reach the email service.');
+            })
+            .finally(function () { btn.disabled = false; btn.textContent = 'Send now'; });
+        }
+      })();
+    </script>
+  </body>
+</html>

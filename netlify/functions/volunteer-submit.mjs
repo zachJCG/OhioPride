@@ -18,6 +18,12 @@
  * ============================================================================= */
 
 import { createClient } from '@supabase/supabase-js';
+import { syncSubscriberSafe } from './lib/mailerlite.mjs';
+
+// Groups new submitters land in. A MailerLite automation on join can send the
+// welcome/confirmation email. Override via env if the group names change.
+const VOLUNTEER_GROUP  = process.env.MAILERLITE_VOLUNTEER_GROUP  || 'Volunteers';
+const INTERNSHIP_GROUP = process.env.MAILERLITE_INTERNSHIP_GROUP || 'Internship Applicants';
 
 // ---------- Volunteer enums ----------
 const ALLOWED_INTERESTS = new Set([
@@ -164,6 +170,15 @@ async function handleVolunteer(supabase, req, body) {
       details: error.details || null,
     });
   }
+  // Sync into MailerLite (only if they didn't opt out of email).
+  if (row.email_optin) {
+    await syncSubscriberSafe({
+      email,
+      fields: { name: first_name || undefined, last_name: last_name || undefined },
+      groupName: VOLUNTEER_GROUP,
+    });
+  }
+
   return jsonResponse(200, { ok: true, id: data?.id || null, kind: 'volunteer' });
 }
 
@@ -248,6 +263,15 @@ async function handleInternship(supabase, req, body) {
       details: error.details || null,
     });
   }
+  // Sync into MailerLite (only if they didn't opt out of email).
+  if (row.email_optin) {
+    await syncSubscriberSafe({
+      email,
+      fields: { name: first_name || undefined, last_name: last_name || undefined },
+      groupName: INTERNSHIP_GROUP,
+    });
+  }
+
   return jsonResponse(200, { ok: true, id: data?.id || null, kind: 'internship' });
 }
 
