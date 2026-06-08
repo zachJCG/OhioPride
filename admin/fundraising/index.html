@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fundraising | Ohio Pride Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+    <link rel="stylesheet" href="/admin/fundraising/fundraising.css" />
+  </head>
+
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="fundraising"
+      data-page-eyebrow="Fundraising"
+      data-page-title="Fundraising Dashboard"
+      data-page-sub="PAC and c4 are legally separate — figures are never combined."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script>
+      (function () {
+        'use strict';
+
+        var STAGES = ['identified','qualified','cultivating','ask_made','committed','secured','stewardship','lapsed','declined'];
+        var STAGE_LABEL = {
+          identified:'Identified', qualified:'Qualified', cultivating:'Cultivating',
+          ask_made:'Ask Made', committed:'Committed', secured:'Secured',
+          stewardship:'Stewardship', lapsed:'Lapsed', declined:'Declined'
+        };
+
+        function $(id) { return document.getElementById(id); }
+        function money(cents) {
+          if (cents == null) return '$0';
+          var n = Number(cents);
+          return new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', minimumFractionDigits: n % 100 ? 2 : 0 }).format(n / 100);
+        }
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+
+        var state = { client: null, canPac: false, canC4: false };
+
+        document.addEventListener('admin-shell-ready', function (ev) {
+          state.client = (ev.detail || {}).client;
+          if (!state.client) return;
+
+          Promise.all([
+            state.client.rpc('has_permission', { p_module: 'fundraising',  p_action: 'read' }),
+            state.client.rpc('has_permission', { p_module: 'pac_prospects', p_action: 'read' }),
+            state.client.rpc('has_permission', { p_module: 'c4_prospects',  p_action: 'read' })
+          ]).then(function (res) {
+            var canRead = res[0] && res[0].data === true;
+            state.canPac = res[1] && res[1].data === true;
+            state.canC4  = res[2] && res[2].data === true;
+            if (!canRead) { renderDenied(); return; }
+            renderShell();
+            loadDashboard();
+          }).catch(function (err) {
+            console.error('fundraising gate failed', err);
+            renderDenied();
+          });
+        });
+
+        function renderDenied() {
+          $('shellBody').innerHTML =
+            '<div class="admin-panel"><div class="admin-panel-empty">' +
+              '<div class="admin-panel-empty-eyebrow">Restricted</div>' +
+              '<h2>You don’t have access to fundraising</h2>' +
+              '<p>The <code>fundraising</code> module is limited by role. Ask the Director if you need it.</p>' +
+            '</div></div>';
+        }
+
+        function renderShell() {
+          $('shellBody').innerHTML = [
+            '<div class="fund-gradient-bar" aria-hidden="true"></div>',
+            '<div class="fund-wall" data-fund-side="pac" role="note">',
+              '<span class="fund-wall-tag">Legal wall</span>',
+              '<span><span class="fund-wall-title">PAC and c4 are legally separate entities.</span><br/>',
+              '<span class="fund-wall-body">Ohio Pride PAC (political committee) and Ohio Pride Action (501(c)(4)) money is never combined into a single figure.</span></span>',
+            '</div>',
+            '<div id="raisedRow"></div>',
+            '<div class="fund-dash-grid" id="dashGrid"></div>'
+          ].join('');
+        }
+
+        function loadDashboard() {
+          var jobs = [ state.client.from('fundraising_dashboard').select('*').maybeSingle() ];
+          jobs.push(state.canPac ? state.client.from('pac_pipeline_by_stage').select('*') : Promise.resolve({ data: [] }));
+          jobs.push(state.canC4  ? state.client.from('c4_pipeline_by_stage').select('*')  : Promise.resolve({ data: [] }));
+
+          Promise.all(jobs).then(function (res) {
+            if (res[0].error) throw res[0].error;
+            var d = res[0].data || {};
+            var pacByStage = (res[1] && res[1].data) || [];
+            var c4ByStage  = (res[2] && res[2].data) || [];
+            renderRaised(d);
+            renderPanels(d, pacByStage, c4ByStage);
+          }).catch(function (err) {
+            console.error('dashboard load failed', err);
+            $('dashGrid').innerHTML = '<div class="admin-panel admin-error">Could not load the fundraising dashboard.</div>';
+          });
+        }
+
+        function renderRaised(d) {
+          // The "Raised" row is PAC money (founding members + secured PAC gifts).
+          if (!state.canPac) { $('raisedRow').innerHTML = ''; return; }
+          var count = Number(d.founding_members_count || 0);
+          var target = Number(d.founding_members_target || 1969);
+          var pct = target > 0 ? Math.min(100, Math.round((count / target) * 1000) / 10) : 0;
+
+          $('raisedRow').innerHTML =
+            '<div class="admin-stat-grid">' +
+              '<div class="admin-stat"><div class="admin-stat-num">' + money(d.secured_pac_cents) + '</div>' +
+                '<div class="admin-stat-label">Total Raised (PAC)</div></div>' +
+              '<div class="admin-stat"><div class="admin-stat-num">' + Number(d.other_pac_donors_count || 0).toLocaleString() + '</div>' +
+                '<div class="admin-stat-label">Other PAC donors</div></div>' +
+              '<div class="admin-stat" style="grid-column:span 2;min-width:260px">' +
+                '<div class="admin-stat-num">' + count.toLocaleString() + ' <span style="font-size:14px;color:var(--text-muted)">/ ' + target.toLocaleString() + '</span></div>' +
+                '<div class="admin-stat-label">Founding members</div>' +
+                '<div class="fund-progress-wrap"><div class="fund-progress-track"><div class="fund-progress-fill" style="width:' + pct + '%"></div></div>' +
+                  '<div class="fund-progress-meta"><span>' + pct + '% to goal</span><span>1,969 target</span></div></div>' +
+              '</div>' +
+            '</div>';
+        }
+
+        function renderPanels(d, pacByStage, c4ByStage) {
+          var html = '';
+          if (state.canPac) {
+            html += sidePanel('pac', 'Ohio Pride PAC', 'PAC', {
+              count: d.pac_pipeline_count, committed: d.pac_committed_cents, capacity: d.pac_capacity_cents
+            }, pacByStage, '#152233');
+          }
+          if (state.canC4) {
+            html += sidePanel('c4', 'Ohio Pride Action', 'c4', {
+              count: d.c4_pipeline_count, committed: d.c4_committed_cents, capacity: d.c4_capacity_cents
+            }, c4ByStage, '#70D6EC');
+          }
+          if (!html) {
+            html = '<div class="admin-panel"><p class="admin-muted">You have fundraising access but no PAC or c4 pipeline permission. Ask the Director to grant the side you need.</p></div>';
+          }
+          $('dashGrid').innerHTML = html;
+        }
+
+        function sidePanel(side, name, tag, stats, byStage, fillColor) {
+          var map = {};
+          (byStage || []).forEach(function (r) { map[r.stage] = r; });
+          var maxCount = 0;
+          STAGES.forEach(function (s) { maxCount = Math.max(maxCount, Number((map[s] || {}).prospect_count || 0)); });
+
+          var funnel = STAGES.map(function (s) {
+            var row = map[s] || {};
+            var c = Number(row.prospect_count || 0);
+            var w = maxCount > 0 ? Math.round((c / maxCount) * 100) : 0;
+            return '<li><span class="fund-funnel-label">' + escapeHtml(STAGE_LABEL[s]) + '</span>' +
+              '<span class="fund-funnel-track"><span class="fund-funnel-fill" style="width:' + w + '%;background:' + fillColor + '"></span></span>' +
+              '<span class="fund-funnel-count">' + c.toLocaleString() + '</span></li>';
+          }).join('');
+
+          return '<section class="fund-side-panel" data-side="' + side + '">' +
+            '<div class="fund-side-panel-head">' +
+              '<span class="fund-side-panel-tag">' + escapeHtml(tag) + '</span>' +
+              '<span class="fund-side-panel-title">' + escapeHtml(name) + '</span>' +
+            '</div>' +
+            '<div class="fund-side-panel-body">' +
+              '<div class="fund-mini-stats">' +
+                '<div class="fund-mini-stat"><div class="fund-mini-num">' + Number(stats.count || 0).toLocaleString() + '</div><div class="fund-mini-label">In pipeline</div></div>' +
+                '<div class="fund-mini-stat"><div class="fund-mini-num">' + money(stats.committed) + '</div><div class="fund-mini-label">Committed</div></div>' +
+                '<div class="fund-mini-stat"><div class="fund-mini-num">' + money(stats.capacity) + '</div><div class="fund-mini-label">Capacity</div></div>' +
+              '</div>' +
+              '<ul class="fund-funnel">' + funnel + '</ul>' +
+              '<p class="fund-capacity-note">Capacity = demonstrated capacity (public record), not pledged.</p>' +
+            '</div>' +
+          '</section>';
+        }
+      })();
+    </script>
+    <script src="/admin/admin-responsive.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Secured Donors | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+    <link rel="stylesheet" href="/admin/fundraising/fundraising.css" />
+  </head>
+
+  <body class="admin-shell" data-fund-side="pac">
+    <div
+      id="shell-root"
+      data-active-nav="fundraising_donors"
+      data-page-eyebrow="Fundraising · Ohio Pride PAC"
+      data-page-title="Secured Donors"
+      data-page-sub="Founding members and the contribution ledger. Read-only — identity and gifts are managed in Donors."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script>
+      (function () {
+        'use strict';
+
+        function $(id) { return document.getElementById(id); }
+        function money(cents) {
+          if (cents == null) return '$0';
+          var n = Number(cents);
+          return new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', minimumFractionDigits: n % 100 ? 2 : 0 }).format(n / 100);
+        }
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+        }
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function tierFor(cents, recurrence) {
+          if (recurrence === 'monthly' && cents >= 1969 && cents < 5000) return 'Stonewall Sustainer';
+          if (cents >= 250000) return 'Founders Circle';
+          if (cents >= 100000) return 'Leadership';
+          if (cents >=  50000) return 'Champion';
+          if (cents >=  25000) return 'Advocate';
+          if (cents >=  10000) return 'Ally';
+          if (cents >=   5000) return 'Friend';
+          return 'Supporter';
+        }
+        function dash() { return '<span class="admin-muted">&mdash;</span>'; }
+
+        var state = { client: null, search: '', members: [], ledger: [] };
+
+        document.addEventListener('admin-shell-ready', function (ev) {
+          state.client = (ev.detail || {}).client;
+          if (!state.client) return;
+          state.client.rpc('has_permission', { p_module: 'donors', p_action: 'read' }).then(function (r) {
+            if (!(r && r.data === true)) { renderDenied(); return; }
+            renderShell();
+            loadData();
+          }).catch(function (err) { console.error(err); renderDenied(); });
+        });
+
+        function renderDenied() {
+          $('shellBody').innerHTML =
+            '<div class="admin-panel"><div class="admin-panel-empty">' +
+              '<div class="admin-panel-empty-eyebrow">Restricted</div>' +
+              '<h2>You don’t have access to donors</h2>' +
+              '<p>The <code>donors</code> module is limited by role. Ask the Director if you need it.</p>' +
+            '</div></div>';
+        }
+
+        function renderShell() {
+          $('shellBody').innerHTML = [
+            '<div class="fund-gradient-bar" aria-hidden="true"></div>',
+            '<div class="fund-wall" role="note">',
+              '<span class="fund-wall-tag">PAC</span>',
+              '<span><span class="fund-wall-title">Secured PAC donors — read-only.</span><br/>',
+              '<span class="fund-wall-body">Identity and gift details are managed in the Donors (founding-member) admin. This view never combines PAC with c4.</span></span>',
+            '</div>',
+            '<div class="admin-stat-grid" id="statGrid"></div>',
+            '<div class="admin-toolbar">',
+              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search name or email…" autocomplete="off" />',
+              '<span class="admin-toolbar-spacer"></span>',
+              '<span class="admin-result-count" id="resultCount"></span>',
+            '</div>',
+            '<div class="admin-table-wrap">',
+              '<table class="admin-table"><thead><tr>',
+                '<th class="admin-num">#</th><th>Name</th><th>Email</th>',
+                '<th class="admin-num">Amount</th><th>Tier</th><th>City / County</th><th>Contributed</th>',
+                '<th class="admin-toggle-col">Public</th><th class="admin-toggle-col">Vetted</th>',
+              '</tr></thead><tbody id="membersBody"><tr><td colspan="9" class="admin-empty-row">Loading…</td></tr></tbody></table>',
+            '</div>',
+
+            '<h3 style="font-family:Montserrat,sans-serif;font-size:14px;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted);margin:28px 4px 12px">Contribution ledger</h3>',
+            '<div class="admin-table-wrap">',
+              '<table class="admin-table"><thead><tr>',
+                '<th>Name</th><th class="admin-num">Amount</th><th>Type</th><th>Source</th><th>Refcode</th><th>Contributed</th>',
+              '</tr></thead><tbody id="ledgerBody"><tr><td colspan="6" class="admin-empty-row">Loading…</td></tr></tbody></table>',
+            '</div>',
+
+            '<p class="admin-panel-foot">Source of truth: <code>founding_members</code> + <code>donors</code> · Manage identity &amp; vetting in <a href="/admin/donors">Donors</a>.</p>'
+          ].join('');
+
+          var debT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debT);
+            debT = setTimeout(function () { state.search = $('filterSearch').value.trim().toLowerCase(); renderMembers(); }, 150);
+          });
+        }
+
+        function loadData() {
+          Promise.all([
+            state.client.from('founding_members').select('*').order('founding_number', { ascending: true, nullsFirst: false }),
+            state.client.from('donors').select('id, full_name, email, amount_cents, recurrence, source, refcode, contributed_at').order('contributed_at', { ascending: false })
+          ]).then(function (res) {
+            if (res[0].error) throw res[0].error;
+            state.members = (res[0].data || []).map(function (m) { m._tier = tierFor(m.amount_cents, m.recurrence); return m; });
+            state.ledger = (res[1] && res[1].data) || [];
+            renderStats();
+            renderMembers();
+            renderLedger();
+          }).catch(function (err) {
+            console.error('secured donors load failed', err);
+            $('membersBody').innerHTML = '<tr><td colspan="9" class="admin-empty-row admin-error">Could not load donors. Your role may not include this view.</td></tr>';
+          });
+        }
+
+        function renderStats() {
+          var total = state.members.reduce(function (s, m) { return s + (m.amount_cents || 0); }, 0);
+          var monthly = state.members.filter(function (m) { return m.recurrence === 'monthly'; }).length;
+          var pub = state.members.filter(function (m) { return m.is_public && m.is_vetted; }).length;
+          $('statGrid').innerHTML =
+            '<div class="admin-stat"><div class="admin-stat-num">' + state.members.length.toLocaleString() + '</div><div class="admin-stat-label">Secured donors</div></div>' +
+            '<div class="admin-stat"><div class="admin-stat-num">' + money(total) + '</div><div class="admin-stat-label">Total raised (PAC)</div></div>' +
+            '<div class="admin-stat"><div class="admin-stat-num">' + monthly.toLocaleString() + '</div><div class="admin-stat-label">Monthly sustainers</div></div>' +
+            '<div class="admin-stat"><div class="admin-stat-num">' + pub.toLocaleString() + '</div><div class="admin-stat-label">On public roster</div></div>';
+        }
+
+        function renderMembers() {
+          var q = state.search;
+          var rows = state.members.filter(function (m) {
+            if (!q) return true;
+            return ((m.full_name || '') + ' ' + (m.email || '') + ' ' + (m.display_name || '')).toLowerCase().indexOf(q) !== -1;
+          });
+          $('resultCount').textContent = rows.length.toLocaleString() + (rows.length === 1 ? ' donor' : ' donors');
+          var body = $('membersBody');
+          if (!rows.length) { body.innerHTML = '<tr><td colspan="9" class="admin-empty-row">No donors match.</td></tr>'; return; }
+          body.innerHTML = rows.map(function (m) {
+            var amount = money(m.amount_cents) + (m.recurrence === 'monthly' ? '<span class="admin-cell-sub">/mo</span>' : '');
+            var loc = [m.city, m.county ? (m.county.replace(/ County$/, '') + ' Co.') : ''].filter(Boolean).join(', ');
+            return '<tr>' +
+              '<td class="admin-num">' + (m.founding_number ? '#' + m.founding_number : dash()) + '</td>' +
+              '<td class="admin-cell-name">' + escapeHtml(m.full_name || m.display_name || '—') +
+                (m.elected_office ? '<span class="admin-cell-sub">' + escapeHtml(m.elected_office) + '</span>' : '') + '</td>' +
+              '<td>' + (m.email ? '<a class="admin-link" href="mailto:' + escapeHtml(m.email) + '">' + escapeHtml(m.email) + '</a>' : dash()) + '</td>' +
+              '<td class="admin-num">' + amount + '</td>' +
+              '<td><span class="admin-pill admin-pill-tier">' + escapeHtml(m._tier) + '</span></td>' +
+              '<td>' + (loc ? escapeHtml(loc) : dash()) + '</td>' +
+              '<td>' + (m.contributed_at ? escapeHtml(fmtDate(m.contributed_at)) : dash()) + '</td>' +
+              '<td class="admin-toggle-col">' + (m.is_public ? '✓' : dash()) + '</td>' +
+              '<td class="admin-toggle-col">' + (m.is_vetted ? '✓' : dash()) + '</td>' +
+            '</tr>';
+          }).join('');
+        }
+
+        function renderLedger() {
+          var body = $('ledgerBody');
+          if (!state.ledger.length) { body.innerHTML = '<tr><td colspan="6" class="admin-empty-row">No ledger entries.</td></tr>'; return; }
+          body.innerHTML = state.ledger.map(function (g) {
+            var amount = money(g.amount_cents) + (g.recurrence === 'monthly' ? '<span class="admin-cell-sub">/mo</span>' : '');
+            return '<tr>' +
+              '<td class="admin-cell-name">' + escapeHtml(g.full_name || '—') + '</td>' +
+              '<td class="admin-num">' + amount + '</td>' +
+              '<td>' + (g.recurrence === 'monthly' ? 'Monthly' : 'One-time') + '</td>' +
+              '<td>' + (g.source ? escapeHtml(g.source) : dash()) + '</td>' +
+              '<td>' + (g.refcode ? '<span class="admin-pill-refcode">' + escapeHtml(g.refcode) + '</span>' : dash()) + '</td>' +
+              '<td>' + (g.contributed_at ? escapeHtml(fmtDate(g.contributed_at)) : dash()) + '</td>' +
+            '</tr>';
+          }).join('');
+        }
+      })();
+    </script>
+    <script src="/admin/admin-responsive.js" defer></script>
+  </body>
+</html>
