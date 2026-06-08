@@ -315,6 +315,7 @@
           // lookups
           adminUsers: [],
           adminUserById: {},
+          securedCount: 0,
           // drawer
           activeId: null,
           activeRow: null
@@ -566,7 +567,12 @@
             if (resp.error) { console.warn('summary load failed', resp.error); $('summaryStrip').innerHTML = ''; return; }
             var byStage = {};
             (resp.data || []).forEach(function (r) { byStage[r.stage] = r; });
+            state.securedCount = Number((byStage.secured && byStage.secured.prospect_count) || 0);
             renderSummary(byStage);
+            // The list loads in parallel with the summary, so an empty table may
+            // have rendered before we knew the secured count. Re-render the
+            // empty state now that we do, so the "show secured" hint can appear.
+            if (state.rows && state.rows.length === 0) renderRows();
           });
         }
 
@@ -653,13 +659,47 @@
           });
         }
 
+        // Are any narrowing filters active beyond the default secured-hidden view?
+        function hasActiveFilters() {
+          return !!(state.search || state.stageFilter.length || state.ownerId ||
+            state.source || state.county || state.priority || state.dnc || state.followups);
+        }
+
+        // Context-aware empty message. The common "looks broken" case is a fresh
+        // pipeline where every prospect is a secured founding member: those are
+        // hidden by default, so the table is empty even though the Secured chip
+        // shows a count. Guide the user to reveal them instead of dead-ending.
+        function emptyStateHtml() {
+          if (!hasActiveFilters() && !state.showSecured && state.securedCount > 0) {
+            return 'No active prospects yet. ' +
+              '<strong>' + state.securedCount.toLocaleString() + '</strong> secured ' +
+              (state.securedCount === 1 ? 'donor is' : 'donors are') + ' hidden from this view. ' +
+              '<button type="button" class="shell-btn shell-btn-outline" id="emptyShowSecured" ' +
+              'style="margin-left:8px">Show secured donors</button>';
+          }
+          if (hasActiveFilters()) {
+            return 'No prospects match these filters.';
+          }
+          return 'No prospects yet. Add one, or import a list via <code>scripts/import_prospects.py</code>.';
+        }
+
         function renderRows() {
           var body = $('prospectsBody');
           var totalPages = Math.max(1, Math.ceil(state.total / PAGE_SIZE));
           $('resultCount').textContent = state.total.toLocaleString() + (state.total === 1 ? ' prospect' : ' prospects');
 
           if (state.rows.length === 0) {
-            body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">No prospects match these filters.</td></tr>';
+            body.innerHTML =
+              '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">' + emptyStateHtml() + '</td></tr>';
+            var showBtn = $('emptyShowSecured');
+            if (showBtn) {
+              showBtn.addEventListener('click', function () {
+                state.showSecured = true;
+                var toggle = $('toggleSecured');
+                if (toggle) toggle.classList.add('is-on');
+                state.page = 0; loadList();
+              });
+            }
             return;
           }
 
