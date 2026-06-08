@@ -281,6 +281,16 @@
   status = 200
 
 [[redirects]]
+  from = "/admin/networking"
+  to = "/admin/networking/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/networking/capture"
+  to = "/admin/networking/capture/index.html"
+  status = 200
+
+[[redirects]]
   from = "/admin/endorsements"
   to = "/admin/endorsements/index.html"
   status = 200
