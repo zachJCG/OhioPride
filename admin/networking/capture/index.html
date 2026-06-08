@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Capture card | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+
+    <style>
+      .net-gradient-bar {
+        height: 3px; border-radius: 999px; margin: 0 0 20px;
+        background: linear-gradient(90deg,#E40303,#FFBC00,#FFED00,#008026,#004DFF,#750787);
+      }
+      .cap-grid { display: grid; grid-template-columns: minmax(0, 360px) 1fr; gap: 22px; align-items: start; }
+      @media (max-width: 860px) { .cap-grid { grid-template-columns: 1fr; } }
+
+      .cap-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+      .cap-form-grid label {
+        display: flex; flex-direction: column; gap: 4px; font-size: 11px; letter-spacing: 0.6px;
+        text-transform: uppercase; color: rgba(255,255,255,0.55); font-family: "Montserrat", sans-serif;
+      }
+      .cap-form-grid label.span-2 { grid-column: 1 / -1; }
+      .cap-form-grid input.admin-input,
+      .cap-form-grid select.admin-input,
+      .cap-form-grid textarea.admin-input {
+        width: 100%; min-width: 0; font-family: "Roboto Slab", Georgia, serif; font-size: 14px;
+        text-transform: none; letter-spacing: 0; color: var(--text-white);
+      }
+      .cap-form-grid textarea.admin-input { min-height: 64px; resize: vertical; }
+
+      .cap-drop {
+        border: 2px dashed var(--border-medium); border-radius: 12px; padding: 18px; text-align: center;
+        background: rgba(15,34,51,0.5); cursor: pointer; transition: border-color 0.15s, background 0.15s;
+      }
+      .cap-drop:hover { border-color: var(--text-accent); }
+      .cap-preview { max-width: 100%; max-height: 220px; border-radius: 10px; margin-top: 12px; display: none; }
+      .cap-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+      .cap-card-tile {
+        display: flex; gap: 12px; padding: 12px; border-radius: 10px; margin-bottom: 10px;
+        border: 1px solid var(--border-light); background: rgba(15,34,51,0.5);
+      }
+      .cap-card-thumb {
+        width: 84px; height: 56px; border-radius: 6px; object-fit: cover; flex: 0 0 auto;
+        background: rgba(255,255,255,0.06); border: 1px solid var(--border-light);
+      }
+      .cap-card-meta { flex: 1; min-width: 0; }
+      .cap-card-title { font-weight: 700; color: var(--text-white); }
+      .cap-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+      .cap-card-notes { font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 6px; white-space: pre-wrap; }
+      .cap-card-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    </style>
+  </head>
+
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="networking"
+      data-page-eyebrow="People · Networking"
+      data-page-title="Capture card"
+      data-page-sub="Snap a business card, jot a note, and drop it in the inbox. Promote to a full contact later."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+
+    <script>
+      (function () {
+        'use strict';
+
+        var BUCKET = 'network-cards';
+        var REGIONS = [
+          'Statewide','Greater Columbus','Greater Cincinnati','Greater Cleveland',
+          'Greater Dayton','Akron/Canton','Toledo','Southeast Ohio','National','Out-of-state'
+        ];
+
+        var state = { client: null, canWrite: false, file: null, signedUrls: {} };
+
+        function $(id) { return document.getElementById(id); }
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+        function toast(msg, kind) { if (window.AdminShell && window.AdminShell.toast) window.AdminShell.toast(msg, kind); }
+        function fmtDateTime(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          return isNaN(d.getTime()) ? '' : d.toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+        }
+
+        document.addEventListener('admin-shell-ready', function (ev) {
+          state.client = (ev.detail || {}).client;
+          Promise.all([
+            state.client.rpc('has_permission', { p_module: 'networking', p_action: 'read'  }),
+            state.client.rpc('has_permission', { p_module: 'networking', p_action: 'write' })
+          ]).then(function (res) {
+            var canRead = res[0] && res[0].data === true;
+            state.canWrite = res[1] && res[1].data === true;
+            if (!canRead) { renderDenied(); return; }
+            renderShell();
+            bindEvents();
+            loadInbox();
+          }).catch(function (err) { console.error('capture gate failed', err); renderDenied(); });
+        });
+
+        function renderDenied() {
+          $('shellBody').innerHTML =
+            '<div class="admin-panel"><div class="admin-panel-empty">' +
+              '<div class="admin-panel-empty-eyebrow">Restricted</div>' +
+              '<h2>You don’t have access to networking</h2>' +
+            '</div></div>';
+        }
+
+        function renderShell() {
+          $('shellPageActions').innerHTML =
+            '<a class="shell-btn shell-btn-outline" href="/admin/networking">Back to networking</a>';
+          var regionOpts = '<option value="">Region…</option>' + REGIONS.map(function (r) {
+            return '<option value="' + escapeAttr(r) + '">' + escapeHtml(r) + '</option>';
+          }).join('');
+
+          var captureCol = state.canWrite
+            ? '<div class="admin-panel">' +
+                '<h3 style="margin-top:0">New card</h3>' +
+                '<div class="cap-drop" id="dropZone">' +
+                  '<div>📇 Tap to photograph or choose a card image</div>' +
+                  '<div class="cap-hint">JPG/PNG/HEIC · uploads to a private bucket</div>' +
+                  '<img class="cap-preview" id="preview" alt="Card preview" />' +
+                '</div>' +
+                '<input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none" />' +
+                '<div class="cap-form-grid" style="margin-top:14px">' +
+                  '<label class="span-2">Quick note<textarea class="admin-input" id="rawNotes" placeholder="Where you met, what they can unlock…"></textarea></label>' +
+                  '<label>Event / context<input class="admin-input" id="eventContext" placeholder="e.g. Stonewall gala" /></label>' +
+                  '<label>Location<input class="admin-input" id="location" placeholder="City / venue" /></label>' +
+                  '<label>Region<select class="admin-input" id="region">' + regionOpts + '</select></label>' +
+                  '<label>County<input class="admin-input" id="county" /></label>' +
+                  '<label class="span-2">Parsed fields (optional JSON)' +
+                    '<textarea class="admin-input" id="parsedJson" placeholder=\'{"full_name":"…","title":"…","organization":"…","email":"…","phone":"…"}\'></textarea>' +
+                  '</label>' +
+                '</div>' +
+                '<div class="cap-hint">Tip: on your phone, ask Claude to read the card photo and return that JSON, then paste it here.</div>' +
+                '<div style="margin-top:12px"><button type="button" class="shell-btn shell-btn-primary" id="saveCardBtn">Save to inbox</button></div>' +
+              '</div>'
+            : '<div class="admin-panel"><div class="admin-muted">You have read-only access — cards can be viewed but not captured.</div></div>';
+
+          $('shellBody').innerHTML =
+            '<div class="net-gradient-bar" aria-hidden="true"></div>' +
+            '<div class="cap-grid">' +
+              captureCol +
+              '<div class="admin-panel">' +
+                '<h3 style="margin-top:0">Inbox</h3>' +
+                '<div id="inboxBody"><div class="admin-muted">Loading inbox…</div></div>' +
+              '</div>' +
+            '</div>';
+        }
+
+        function bindEvents() {
+          if (!state.canWrite) return;
+          var drop = $('dropZone'), input = $('fileInput');
+          if (drop && input) {
+            drop.addEventListener('click', function () { input.click(); });
+            input.addEventListener('change', function () {
+              var f = input.files && input.files[0];
+              if (!f) return;
+              state.file = f;
+              var img = $('preview');
+              img.src = URL.createObjectURL(f);
+              img.style.display = 'block';
+            });
+          }
+          var save = $('saveCardBtn');
+          if (save) save.addEventListener('click', saveCard);
+        }
+
+        function saveCard() {
+          var notes = $('rawNotes').value.trim();
+          if (!state.file && !notes) { toast('Add a photo or a note first.', 'error'); return; }
+
+          var btn = $('saveCardBtn');
+          if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+          var upload = state.file ? uploadImage(state.file) : Promise.resolve(null);
+          upload.then(function (imagePath) {
+            var parsed = {};
+            var raw = $('parsedJson').value.trim();
+            if (raw) { try { parsed = JSON.parse(raw); } catch (e) { toast('Parsed fields are not valid JSON — saved without them.', 'error'); parsed = {}; } }
+
+            return state.client.from('network_business_cards').insert({
+              image_path: imagePath,
+              raw_notes: notes || null,
+              parsed: parsed,
+              event_context: $('eventContext').value.trim() || null,
+              location: $('location').value.trim() || null,
+              region: $('region').value || null,
+              county: $('county').value.trim() || null
+            });
+          }).then(function (resp) {
+            if (resp && resp.error) throw resp.error;
+            toast('Card saved to inbox.', 'success');
+            resetForm();
+            loadInbox();
+          }).catch(function (err) {
+            console.error('save card failed', err);
+            toast('Could not save card.', 'error');
+          }).finally(function () {
+            if (btn) { btn.disabled = false; btn.textContent = 'Save to inbox'; }
+          });
+        }
+
+        function uploadImage(file) {
+          var ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+          var path = 'cards/' + Date.now() + '-' + Math.random().toString(36).slice(2, 9) + '.' + ext;
+          return state.client.storage.from(BUCKET).upload(path, file, { contentType: file.type || 'image/jpeg', upsert: false })
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              return path;
+            });
+        }
+
+        function resetForm() {
+          state.file = null;
+          ['rawNotes','eventContext','location','county','parsedJson'].forEach(function (id) { if ($(id)) $(id).value = ''; });
+          if ($('region')) $('region').value = '';
+          var img = $('preview'); if (img) { img.src = ''; img.style.display = 'none'; }
+          if ($('fileInput')) $('fileInput').value = '';
+        }
+
+        function loadInbox() {
+          state.client.from('network_business_cards')
+            .select('*')
+            .eq('status', 'inbox')
+            .order('created_at', { ascending: false })
+            .then(function (resp) {
+              var body = $('inboxBody');
+              if (!body) return;
+              if (resp.error) { body.innerHTML = '<div class="admin-muted">Could not load inbox.</div>'; return; }
+              var cards = resp.data || [];
+              if (!cards.length) { body.innerHTML = '<div class="admin-muted">Inbox is empty. Captured cards land here.</div>'; return; }
+              body.innerHTML = cards.map(cardTile).join('');
+              bindInbox();
+              cards.forEach(function (c) { if (c.image_path) signThumb(c.id, c.image_path); });
+            });
+        }
+
+        function cardTile(c) {
+          var p = c.parsed || {};
+          var title = p.full_name || p.name || '(unparsed card)';
+          var sub = [];
+          if (p.title) sub.push(escapeHtml(p.title));
+          if (p.organization || p.company) sub.push(escapeHtml(p.organization || p.company));
+          if (c.event_context) sub.push(escapeHtml(c.event_context));
+          sub.push(escapeHtml(fmtDateTime(c.created_at)));
+          var actions = state.canWrite
+            ? '<div class="cap-card-actions">' +
+                '<button type="button" class="shell-btn shell-btn-primary" data-promote="' + escapeAttr(c.id) + '">Promote → contact</button>' +
+                '<button type="button" class="shell-btn shell-btn-outline" data-discard="' + escapeAttr(c.id) + '">Discard</button>' +
+              '</div>'
+            : '';
+          return '<div class="cap-card-tile" data-card="' + escapeAttr(c.id) + '">' +
+            '<img class="cap-card-thumb" id="thumb-' + escapeAttr(c.id) + '" alt="" />' +
+            '<div class="cap-card-meta">' +
+              '<div class="cap-card-title">' + escapeHtml(title) + '</div>' +
+              '<div class="cap-card-sub">' + sub.join(' · ') + '</div>' +
+              (c.raw_notes ? '<div class="cap-card-notes">' + escapeHtml(c.raw_notes) + '</div>' : '') +
+              actions +
+            '</div>' +
+          '</div>';
+        }
+
+        function signThumb(id, path) {
+          state.client.storage.from(BUCKET).createSignedUrl(path, 3600).then(function (resp) {
+            if (resp.error || !resp.data) return;
+            var img = $('thumb-' + id);
+            if (img) img.src = resp.data.signedUrl;
+          });
+        }
+
+        function bindInbox() {
+          if (!state.canWrite) return;
+          document.querySelectorAll('[data-promote]').forEach(function (btn) {
+            btn.addEventListener('click', function () { promoteCard(btn.dataset.promote, btn); });
+          });
+          document.querySelectorAll('[data-discard]').forEach(function (btn) {
+            btn.addEventListener('click', function () { discardCard(btn.dataset.discard); });
+          });
+        }
+
+        function promoteCard(cardId, btn) {
+          if (btn) { btn.disabled = true; btn.textContent = 'Promoting…'; }
+          state.client.from('network_business_cards').select('*').eq('id', cardId).single()
+            .then(function (resp) {
+              if (resp.error || !resp.data) throw (resp.error || new Error('Card not found.'));
+              var card = resp.data;
+              var p = card.parsed || {};
+              return state.client.from('network_contacts').insert({
+                full_name: p.full_name || p.name || 'Unnamed contact',
+                title: p.title || null,
+                organization: p.organization || p.company || null,
+                email: p.email || null,
+                phone: p.phone || null,
+                region: card.region,
+                county: card.county,
+                source: card.event_context ? ('Card capture: ' + card.event_context) : 'Card capture',
+                card_image_path: card.image_path,
+                notes: card.raw_notes
+              }).select('id').single().then(function (ins) {
+                if (ins.error) throw ins.error;
+                return state.client.from('network_business_cards')
+                  .update({ status: 'processed', contact_id: ins.data.id }).eq('id', cardId);
+              });
+            })
+            .then(function (resp) {
+              if (resp && resp.error) throw resp.error;
+              toast('Card promoted to a contact.', 'success');
+              loadInbox();
+            })
+            .catch(function (err) {
+              console.error('promote failed', err);
+              toast('Could not promote card.', 'error');
+              if (btn) { btn.disabled = false; btn.textContent = 'Promote → contact'; }
+            });
+        }
+
+        function discardCard(cardId) {
+          state.client.from('network_business_cards').update({ status: 'discarded' }).eq('id', cardId)
+            .then(function (resp) {
+              if (resp.error) { toast('Could not discard card.', 'error'); return; }
+              toast('Card discarded.', 'success');
+              loadInbox();
+            });
+        }
+      })();
+    </script>
+    <script src="/admin/admin-responsive.js" defer></script>
+  </body>
+</html>

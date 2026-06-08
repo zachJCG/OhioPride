@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Networking | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+
+    <style>
+      /* Local enhancements layered on admin-shared.css. Brand v2.0 (May 2026):
+         Navy #152233, Light Blue #70D6EC. The Pride gradient is an accent only —
+         a thin top bar — never behind text or pills. */
+
+      .net-gradient-bar {
+        height: 3px;
+        border-radius: 999px;
+        margin: 0 0 20px;
+        background: linear-gradient(90deg,#E40303,#FFBC00,#FFED00,#008026,#004DFF,#750787);
+      }
+
+      /* ---- Region rollup strip (clickable chips, doubles as region filter) ---- */
+      .net-rollup {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 2px 0 10px;
+        margin-bottom: 18px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .net-chip {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        min-width: 132px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border-light);
+        background: rgba(15, 34, 51, 0.6);
+        cursor: pointer;
+        text-align: left;
+        font-family: "Montserrat", sans-serif;
+        transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+      }
+      .net-chip:hover { transform: translateY(-1px); }
+      .net-chip.is-on {
+        border-color: var(--text-accent);
+        box-shadow: 0 0 0 2px rgba(112, 214, 236, 0.25);
+      }
+      .net-chip-label {
+        font-size: 10px; font-weight: 700; letter-spacing: 0.7px;
+        text-transform: uppercase; color: rgba(255,255,255,0.7); white-space: nowrap;
+      }
+      .net-chip-count { font-size: 22px; font-weight: 800; line-height: 1.05; color: var(--text-white); }
+      .net-chip-sub {
+        font-size: 11px; font-weight: 600; color: var(--text-accent);
+        font-variant-numeric: tabular-nums; white-space: nowrap;
+      }
+      .net-chip-due { color: #ffc857; }
+
+      /* ---- Target-paths panel ("how do we get to X") ---- */
+      .net-paths { margin: 0 0 22px; }
+      .net-paths-head {
+        display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px;
+      }
+      .net-paths-head h3 {
+        margin: 0; font-family: "Montserrat", sans-serif; font-size: 14px;
+        font-weight: 800; letter-spacing: 0.4px; color: var(--text-white);
+      }
+      .net-path-card {
+        padding: 12px 14px; border-radius: 10px; margin-bottom: 8px;
+        border: 1px solid var(--border-light); background: rgba(15, 34, 51, 0.5);
+        cursor: pointer; transition: border-color 0.15s, transform 0.1s;
+      }
+      .net-path-card:hover { transform: translateY(-1px); border-color: var(--text-accent); }
+      .net-path-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+      .net-path-name { font-weight: 700; color: var(--text-white); font-size: 15px; }
+      .net-path-org { color: var(--text-muted); font-size: 13px; }
+      .net-path-connectors {
+        margin-top: 6px; font-size: 13px; color: rgba(255,255,255,0.78);
+        font-family: "Roboto Slab", Georgia, serif;
+      }
+
+      /* ---- Pills ---- */
+      .net-pill {
+        display: inline-flex; align-items: center; font-family: "Montserrat", sans-serif;
+        font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+        padding: 3px 9px; border-radius: 999px; color: #fff; white-space: nowrap;
+      }
+      .net-role-badge {
+        display: inline-flex; align-items: center; gap: 4px; margin-right: 5px;
+        font-family: "Montserrat", sans-serif; font-size: 9px; font-weight: 800;
+        letter-spacing: 0.6px; text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
+      }
+      .net-role-target    { background: rgba(196,116,10,0.2); color: #ffb454; }
+      .net-role-connector { background: rgba(0,128,38,0.18); color: #5bd98a; }
+      .net-strength {
+        display: inline-flex; gap: 1px; font-size: 11px; color: var(--text-accent);
+        font-variant-numeric: tabular-nums;
+      }
+
+      table.admin-table tbody tr.net-row { cursor: pointer; }
+      table.admin-table tbody tr.net-row:hover { background: rgba(112, 214, 236, 0.06); }
+
+      /* ---- Pagination ---- */
+      .net-pager {
+        display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+        margin-top: 16px; font-family: "Montserrat", sans-serif; font-size: 12px; color: var(--text-muted);
+      }
+      .net-pager button {
+        font-family: "Montserrat", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+        text-transform: uppercase; padding: 7px 12px; border-radius: 6px; border: 1px solid var(--border-medium);
+        background: rgba(15, 34, 51, 0.6); color: var(--text-light); cursor: pointer;
+      }
+      .net-pager button:disabled { opacity: 0.4; cursor: default; }
+
+      .net-toolbar-toggle {
+        display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px;
+        font-family: "Montserrat", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+        text-transform: uppercase; color: var(--text-light); background: rgba(15, 34, 51, 0.6);
+        border: 1px solid var(--border-medium); border-radius: 6px; cursor: pointer; transition: all 0.15s;
+      }
+      .net-toolbar-toggle.is-on {
+        color: var(--text-accent); border-color: var(--text-accent); background: rgba(112, 214, 236, 0.12);
+      }
+
+      /* ---- Drawer form bits (mirrors prospects module) ---- */
+      .net-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+      .net-form-grid label {
+        display: flex; flex-direction: column; gap: 4px; font-size: 11px; letter-spacing: 0.6px;
+        text-transform: uppercase; color: rgba(255,255,255,0.55); font-family: "Montserrat", sans-serif;
+      }
+      .net-form-grid label.span-2 { grid-column: 1 / -1; }
+      .net-form-grid input.admin-input,
+      .net-form-grid select.admin-input,
+      .net-form-grid textarea.admin-input {
+        width: 100%; min-width: 0; font-family: "Roboto Slab", Georgia, serif; font-size: 14px;
+        text-transform: none; letter-spacing: 0; color: var(--text-white);
+      }
+      .net-form-grid textarea.admin-input { min-height: 70px; resize: vertical; }
+      .net-bool-row { display: flex; flex-wrap: wrap; gap: 14px 24px; padding-top: 4px; }
+      .net-bool-row label {
+        display: inline-flex; align-items: center; gap: 8px; font-family: "Roboto Slab", Georgia, serif;
+        font-size: 13px; color: rgba(255,255,255,0.85);
+      }
+      .net-bool-row input[type="checkbox"] { accent-color: #70D6EC; width: 15px; height: 15px; }
+
+      .net-paths-list { list-style: none; margin: 8px 0 0; padding: 0; }
+      .net-paths-list li {
+        padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+        font-family: "Roboto Slab", Georgia, serif; font-size: 13px; color: rgba(255,255,255,0.85);
+      }
+      .net-paths-list li:last-child { border-bottom: none; }
+      .net-path-meta { color: var(--text-muted); font-size: 12px; margin-left: 4px; }
+
+      /* ---- Activity timeline ---- */
+      .net-timeline { list-style: none; margin: 12px 0 0; padding: 0; }
+      .net-act {
+        position: relative; padding: 0 0 16px 26px; border-left: 2px solid rgba(255,255,255,0.1); margin-left: 6px;
+      }
+      .net-act:last-child { border-left-color: transparent; padding-bottom: 0; }
+      .net-act-icon {
+        position: absolute; left: -11px; top: 0; width: 20px; height: 20px; border-radius: 50%;
+        background: #0e2237; border: 2px solid var(--text-accent); display: flex; align-items: center;
+        justify-content: center; font-size: 10px; color: var(--text-accent);
+      }
+      .net-act-subject { font-size: 14px; font-weight: 600; color: var(--text-white); }
+      .net-act-body { font-size: 13px; color: rgba(255,255,255,0.8); white-space: pre-wrap; margin-top: 2px; }
+      .net-act-meta { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+      .net-act-type { text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; font-family: "Montserrat", sans-serif; }
+
+      @media (max-width: 600px) { .net-form-grid { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="networking"
+      data-page-eyebrow="People"
+      data-page-title="Networking"
+      data-page-sub="Map who can connect us to whom, by region — and chart the path to every target."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+
+    <script>
+      (function () {
+        'use strict';
+
+        var PAGE_SIZE = 50;
+        var COLSPAN = 7;
+
+        // Ohio Pride regional taxonomy (mirrors the prospects pipeline values).
+        var REGIONS = [
+          'Statewide','Greater Columbus','Greater Cincinnati','Greater Cleveland',
+          'Greater Dayton','Akron/Canton','Toledo','Southeast Ohio','National','Out-of-state'
+        ];
+
+        var WARMTH = ['cold','warm','hot'];
+        var WARMTH_LABEL = { cold:'Cold', warm:'Warm', hot:'Hot' };
+        var WARMTH_COLOR = { cold:'#64748B', warm:'#C2740A', hot:'#9B2C2C' };
+
+        var TIERS = ['principal','connector','gatekeeper','staffer','contact'];
+        var TIER_LABEL = {
+          principal:'Principal', connector:'Connector', gatekeeper:'Gatekeeper',
+          staffer:'Staffer', contact:'Contact'
+        };
+
+        var PRIORITY = ['high','medium','low'];
+        var PRIORITY_LABEL = { high:'High', medium:'Medium', low:'Low' };
+
+        var STATUSES = ['active','dormant','do_not_contact','archived'];
+        var STATUS_LABEL = { active:'Active', dormant:'Dormant', do_not_contact:'Do not contact', archived:'Archived' };
+
+        var INTRO_STATUS = ['potential','requested','made','declined','blocked'];
+        var INTRO_STATUS_LABEL = {
+          potential:'Potential', requested:'Requested', made:'Made', declined:'Declined', blocked:'Blocked'
+        };
+
+        var ACTIVITY_TYPES = ['note','call','email','meeting','event','intro_made'];
+        var ACTIVITY_LABEL = {
+          note:'Note', call:'Call', email:'Email', meeting:'Meeting', event:'Event', intro_made:'Intro made'
+        };
+        var ACTIVITY_ICON = {
+          note:'✎', call:'☎', email:'✉', meeting:'\u{1F465}', event:'⚑', intro_made:'\u{1F91D}'
+        };
+
+        var state = {
+          client: null,
+          canWrite: false,
+          actorEmail: '',
+          // filters
+          search: '',
+          region: '',
+          warmth: '',
+          role: '',          // '', 'target', 'connector'
+          ownerId: '',
+          status: '',
+          targetsOnly: false,
+          actionsDue: false,
+          // sort + page
+          sortKey: 'full_name',
+          sortDir: 'asc',
+          page: 0,
+          total: 0,
+          rows: [],
+          // lookups
+          adminUsers: [],
+          adminUserById: {},
+          allContacts: [],   // {id, full_name} for intro picker
+          // drawer
+          activeId: null,
+          activeRow: null
+        };
+
+        function $(id) { return document.getElementById(id); }
+
+        // ---------------------------------------------------------------
+        // Helpers
+        // ---------------------------------------------------------------
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        function fmtDateTime(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+        }
+        function relTime(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          var secs = Math.round((Date.now() - d.getTime()) / 1000);
+          if (secs < 60) return 'just now';
+          var mins = Math.round(secs / 60);
+          if (mins < 60) return mins + 'm ago';
+          var hrs = Math.round(mins / 60);
+          if (hrs < 24) return hrs + 'h ago';
+          var days = Math.round(hrs / 24);
+          if (days < 30) return days + 'd ago';
+          return fmtDate(iso);
+        }
+        function todayISO() {
+          var d = new Date();
+          var m = String(d.getMonth() + 1).padStart(2, '0');
+          var day = String(d.getDate()).padStart(2, '0');
+          return d.getFullYear() + '-' + m + '-' + day;
+        }
+        function escapeHtml(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+        function toast(msg, kind) {
+          if (window.AdminShell && window.AdminShell.toast) window.AdminShell.toast(msg, kind);
+        }
+        function warmthPill(w) {
+          if (!w) return '<span class="admin-muted">&mdash;</span>';
+          return '<span class="net-pill" style="background:' + (WARMTH_COLOR[w] || '#64748B') + '">' +
+            escapeHtml(WARMTH_LABEL[w] || w) + '</span>';
+        }
+        function roleBadges(r) {
+          var out = '';
+          if (r.is_target) out += '<span class="net-role-badge net-role-target">Target</span>';
+          if (r.is_connector) out += '<span class="net-role-badge net-role-connector">Connector</span>';
+          return out || '<span class="admin-muted">&mdash;</span>';
+        }
+        function strengthDots(n) {
+          n = Number(n) || 0;
+          if (!n) return '';
+          var filled = '★'.repeat(n);
+          return '<span class="net-strength" title="' + n + '/5">' + filled + '</span>';
+        }
+        function selectOptionsHtml(values, labels, current, includeBlank, blankLabel) {
+          var opts = includeBlank ? ['<option value="">' + (blankLabel || '&mdash;') + '</option>'] : [];
+          values.forEach(function (v) {
+            opts.push('<option value="' + escapeAttr(v) + '"' + (v === current ? ' selected' : '') + '>' +
+              escapeHtml(labels[v] || v) + '</option>');
+          });
+          return opts.join('');
+        }
+
+        // ---------------------------------------------------------------
+        // Boot
+        // ---------------------------------------------------------------
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var detail = ev.detail || {};
+          state.client = detail.client;
+          state.actorEmail = (detail.session && detail.session.user && detail.session.user.email) || '';
+
+          Promise.all([
+            state.client.rpc('has_permission', { p_module: 'networking', p_action: 'read'  }),
+            state.client.rpc('has_permission', { p_module: 'networking', p_action: 'write' })
+          ]).then(function (res) {
+            var canRead  = res[0] && res[0].data === true;
+            state.canWrite = res[1] && res[1].data === true;
+
+            if (!canRead) { renderDenied(); return; }
+            renderShell();
+            bindEvents();
+
+            Promise.all([loadAdminUsers(), loadAllContacts()]).then(function () {
+              populateOwnerFilter();
+              loadRollup();
+              loadTargetPaths();
+              loadList();
+            });
+          }).catch(function (err) {
+            console.error('networking gate failed', err);
+            renderDenied();
+          });
+        });
+
+        function renderDenied() {
+          $('shellBody').innerHTML =
+            '<div class="admin-panel"><div class="admin-panel-empty">' +
+              '<div class="admin-panel-empty-eyebrow">Restricted</div>' +
+              '<h2>You don’t have access to networking</h2>' +
+              '<p>The <code>networking</code> module is limited to board members, the treasurer, ' +
+              'comms/legislative leads, and admins. Ask the Director if you need access.</p>' +
+            '</div></div>';
+        }
+
+        function renderShell() {
+          if (state.canWrite) {
+            $('shellPageActions').innerHTML =
+              '<a class="shell-btn shell-btn-outline" href="/admin/networking/capture">Capture card</a>' +
+              '<button type="button" class="shell-btn shell-btn-primary" id="addContactBtn">Add contact</button>';
+          } else {
+            $('shellPageActions').innerHTML =
+              '<a class="shell-btn shell-btn-outline" href="/admin/networking/capture">Capture card</a>';
+          }
+          $('shellBody').innerHTML = pageHtml();
+        }
+
+        function pageHtml() {
+          var regionOpts = '<option value="">All regions</option>' + REGIONS.map(function (r) {
+            return '<option value="' + escapeAttr(r) + '">' + escapeHtml(r) + '</option>';
+          }).join('');
+          var warmthOpts = '<option value="">Any warmth</option>' + WARMTH.map(function (w) {
+            return '<option value="' + w + '">' + WARMTH_LABEL[w] + '</option>';
+          }).join('');
+          var statusOpts = '<option value="">Any status</option>' + STATUSES.map(function (s) {
+            return '<option value="' + s + '">' + STATUS_LABEL[s] + '</option>';
+          }).join('');
+
+          return [
+            '<div class="net-gradient-bar" aria-hidden="true"></div>',
+
+            '<div class="net-rollup" id="rollupStrip" aria-label="Contacts by region">',
+              '<div class="admin-muted" style="padding:8px 4px">Loading regions…</div>',
+            '</div>',
+
+            '<div class="net-paths admin-panel" id="targetPathsPanel">',
+              '<div class="net-paths-head">',
+                '<h3>Paths to targets</h3>',
+                '<span class="admin-muted" style="font-size:12px">How do we get to the people we want to reach?</span>',
+              '</div>',
+              '<div id="targetPathsBody"><div class="admin-muted">Loading target paths…</div></div>',
+            '</div>',
+
+            '<div class="admin-toolbar">',
+              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search name, org, or email…" autocomplete="off" />',
+              '<select class="admin-input" id="filterRegion">' + regionOpts + '</select>',
+              '<select class="admin-input" id="filterWarmth">' + warmthOpts + '</select>',
+              '<select class="admin-input" id="filterRole">',
+                '<option value="">Targets &amp; connectors</option>',
+                '<option value="target">Targets only</option>',
+                '<option value="connector">Connectors only</option>',
+              '</select>',
+              '<select class="admin-input" id="filterOwner"><option value="">All owners</option><option value="__unassigned__">Unassigned</option></select>',
+              '<select class="admin-input" id="filterStatus">' + statusOpts + '</select>',
+              '<button type="button" class="net-toolbar-toggle" id="toggleActionsDue">Actions due</button>',
+              '<span class="admin-toolbar-spacer"></span>',
+              '<span class="admin-result-count" id="resultCount"></span>',
+            '</div>',
+
+            '<div class="admin-table-wrap">',
+              '<table class="admin-table" id="netTable" data-stack-mobile="true">',
+                '<thead><tr>',
+                  '<th data-sort="full_name" class="admin-sortable">Name<span class="admin-sort-arrow">&darr;</span></th>',
+                  '<th>Region</th>',
+                  '<th>Role</th>',
+                  '<th>Warmth</th>',
+                  '<th>Paths</th>',
+                  '<th>Owner</th>',
+                  '<th data-sort="last_activity_at" class="admin-sortable">Last activity<span class="admin-sort-arrow">&darr;</span></th>',
+                '</tr></thead>',
+                '<tbody id="netBody"><tr><td colspan="' + COLSPAN + '" class="admin-empty-row">Loading contacts…</td></tr></tbody>',
+              '</table>',
+            '</div>',
+
+            '<div class="net-pager" id="pager"></div>',
+
+            '<p class="admin-panel-foot">',
+              'Contacts are tagged by region and flagged as <strong>targets</strong> (people we want to reach) ',
+              'and <strong>connectors</strong> (people who open doors). Introductions form the path graph that ',
+              'feeds <em>Paths to targets</em>. Quick-capture business cards from your phone at ',
+              '<a href="/admin/networking/capture">Capture card</a>.',
+            '</p>'
+          ].join('');
+        }
+
+        // ---------------------------------------------------------------
+        // Lookups
+        // ---------------------------------------------------------------
+        function loadAdminUsers() {
+          return state.client
+            .from('admin_users')
+            .select('id, email, full_name, is_active')
+            .eq('is_active', true)
+            .order('full_name', { ascending: true })
+            .then(function (resp) {
+              if (resp.error) { console.warn('admin_users load failed', resp.error); return; }
+              state.adminUsers = resp.data || [];
+              state.adminUserById = {};
+              state.adminUsers.forEach(function (u) { state.adminUserById[u.id] = u; });
+            });
+        }
+
+        function loadAllContacts() {
+          return state.client
+            .from('network_contacts')
+            .select('id, full_name, organization')
+            .order('full_name', { ascending: true })
+            .limit(2000)
+            .then(function (resp) {
+              if (resp.error) { console.warn('contacts load failed', resp.error); return; }
+              state.allContacts = resp.data || [];
+            });
+        }
+
+        function populateOwnerFilter() {
+          var sel = $('filterOwner');
+          if (!sel) return;
+          state.adminUsers.forEach(function (u) {
+            var opt = document.createElement('option');
+            opt.value = u.id;
+            opt.textContent = u.full_name || u.email;
+            sel.appendChild(opt);
+          });
+        }
+
+        // ---------------------------------------------------------------
+        // Region rollup (network_by_region)
+        // ---------------------------------------------------------------
+        function loadRollup() {
+          state.client.from('network_by_region').select('*').then(function (resp) {
+            if (resp.error) { console.warn('rollup load failed', resp.error); $('rollupStrip').innerHTML = ''; return; }
+            renderRollup(resp.data || []);
+          });
+        }
+        function renderRollup(rows) {
+          var strip = $('rollupStrip');
+          if (!rows.length) { strip.innerHTML = '<div class="admin-muted" style="padding:8px 4px">No contacts yet.</div>'; return; }
+          strip.innerHTML = rows.map(function (r) {
+            var on = state.region === r.region;
+            var due = Number(r.actions_due || 0);
+            return '<button type="button" class="net-chip' + (on ? ' is-on' : '') + '" data-region="' + escapeAttr(r.region) + '" ' +
+                'aria-pressed="' + (on ? 'true' : 'false') + '">' +
+              '<span class="net-chip-label">' + escapeHtml(r.region) + '</span>' +
+              '<span class="net-chip-count">' + Number(r.contact_count || 0).toLocaleString() + '</span>' +
+              '<span class="net-chip-sub">' + Number(r.target_count || 0) + ' tgt · ' + Number(r.connector_count || 0) + ' conn' +
+                (due ? ' · <span class="net-chip-due">' + due + ' due</span>' : '') + '</span>' +
+            '</button>';
+          }).join('');
+        }
+
+        // ---------------------------------------------------------------
+        // Target paths (network_target_paths)
+        // ---------------------------------------------------------------
+        function loadTargetPaths() {
+          state.client.from('network_target_paths')
+            .select('*')
+            .order('best_strength', { ascending: false })
+            .limit(25)
+            .then(function (resp) {
+              var body = $('targetPathsBody');
+              if (!body) return;
+              if (resp.error) { console.warn('target paths failed', resp.error); body.innerHTML = '<div class="admin-muted">Could not load target paths.</div>'; return; }
+              var rows = resp.data || [];
+              if (!rows.length) {
+                body.innerHTML = '<div class="admin-muted">No introduction paths recorded yet. ' +
+                  'Mark a contact as a <strong>target</strong>, then add an introduction from a connector who can reach them.</div>';
+                return;
+              }
+              body.innerHTML = rows.map(function (p) {
+                var sub = [];
+                if (p.target_org) sub.push(escapeHtml(p.target_org));
+                if (p.target_region) sub.push(escapeHtml(p.target_region));
+                return '<div class="net-path-card" data-target="' + escapeAttr(p.target_id) + '">' +
+                  '<div class="net-path-top">' +
+                    '<span class="net-path-name">' + escapeHtml(p.target_name) + '</span>' +
+                    (sub.length ? '<span class="net-path-org">' + sub.join(' · ') + '</span>' : '') +
+                    '<span class="admin-toolbar-spacer"></span>' +
+                    strengthDots(p.best_strength) +
+                    '<span class="net-path-meta">' + Number(p.path_count || 0) + ' path' + (Number(p.path_count) === 1 ? '' : 's') +
+                      (Number(p.paths_made) ? ', ' + p.paths_made + ' made' : '') + '</span>' +
+                  '</div>' +
+                  '<div class="net-path-connectors">' + escapeHtml(p.connector_paths || '') + '</div>' +
+                '</div>';
+              }).join('');
+            });
+        }
+
+        // ---------------------------------------------------------------
+        // Directory list (network_contacts_directory)
+        // ---------------------------------------------------------------
+        function buildQuery() {
+          var q = state.client.from('network_contacts_directory').select('*', { count: 'exact' });
+
+          if (state.search) {
+            var s = state.search.replace(/[%,()]/g, ' ').trim();
+            if (s) q = q.or('full_name.ilike.%' + s + '%,organization.ilike.%' + s + '%,email.ilike.%' + s + '%');
+          }
+          if (state.region) q = q.eq('region', state.region);
+          if (state.warmth) q = q.eq('warmth', state.warmth);
+          if (state.role === 'target') q = q.eq('is_target', true);
+          else if (state.role === 'connector') q = q.eq('is_connector', true);
+          if (state.targetsOnly) q = q.eq('is_target', true);
+          if (state.ownerId === '__unassigned__') q = q.is('owner_id', null);
+          else if (state.ownerId) q = q.eq('owner_id', state.ownerId);
+          if (state.status) q = q.eq('status', state.status);
+          else q = q.neq('status', 'archived');
+          if (state.actionsDue) q = q.not('next_action_date', 'is', null).lte('next_action_date', todayISO());
+
+          if (state.sortKey === 'last_activity_at') {
+            q = q.order('last_activity_at', { ascending: state.sortDir === 'asc', nullsFirst: false });
+          } else {
+            q = q.order('full_name', { ascending: state.sortDir !== 'desc' });
+          }
+
+          var from = state.page * PAGE_SIZE;
+          return q.range(from, from + PAGE_SIZE - 1);
+        }
+
+        function loadList() {
+          buildQuery().then(function (resp) {
+            if (resp.error) {
+              console.error('networking list failed', resp.error);
+              $('netBody').innerHTML =
+                '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
+                'Could not load contacts. Your role may not include this module.</td></tr>';
+              toast('Could not load contacts.', 'error');
+              return;
+            }
+            state.rows = resp.data || [];
+            state.total = resp.count == null ? state.rows.length : resp.count;
+            renderRows();
+            renderPager();
+          });
+        }
+
+        function renderRows() {
+          var body = $('netBody');
+          $('resultCount').textContent = state.total.toLocaleString() + (state.total === 1 ? ' contact' : ' contacts');
+
+          if (state.rows.length === 0) {
+            body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">No contacts match these filters.</td></tr>';
+            return;
+          }
+
+          var html = '';
+          state.rows.forEach(function (r) {
+            var name = escapeHtml(r.full_name || '—');
+            var sub = [];
+            if (r.title && r.organization) sub.push(escapeHtml(r.title + ', ' + r.organization));
+            else if (r.organization) sub.push(escapeHtml(r.organization));
+            else if (r.title) sub.push(escapeHtml(r.title));
+            if (r.email) sub.push(escapeHtml(r.email));
+            var subHtml = sub.length ? '<span class="admin-cell-sub">' + sub.join(' · ') + '</span>' : '';
+
+            var region = r.region ? escapeHtml(r.region) : '<span class="admin-muted">—</span>';
+            var owner = r.owner_name ? escapeHtml(r.owner_name) : '<span class="admin-muted">Unassigned</span>';
+
+            var pathsBits = [];
+            if (Number(r.inbound_path_count)) pathsBits.push('→ ' + r.inbound_path_count + ' in');
+            if (Number(r.outbound_intro_count)) pathsBits.push(r.outbound_intro_count + ' out →');
+            var paths = pathsBits.length
+              ? '<span class="admin-cell-sub">' + pathsBits.join(' · ') + '</span>'
+              : '<span class="admin-muted">—</span>';
+
+            var lastAct = r.last_activity_at ? escapeHtml(relTime(r.last_activity_at)) : '<span class="admin-muted">—</span>';
+
+            html +=
+              '<tr class="net-row" data-id="' + escapeAttr(r.id) + '">' +
+                '<td class="admin-cell-name" data-label="Name">' + name + subHtml + '</td>' +
+                '<td data-label="Region">' + region + '</td>' +
+                '<td data-label="Role">' + roleBadges(r) + '</td>' +
+                '<td data-label="Warmth">' + warmthPill(r.warmth) + '</td>' +
+                '<td data-label="Paths">' + paths + '</td>' +
+                '<td data-label="Owner">' + owner + '</td>' +
+                '<td data-label="Last activity">' + lastAct + '</td>' +
+              '</tr>';
+          });
+          body.innerHTML = html;
+        }
+
+        function renderPager() {
+          var pager = $('pager');
+          var totalPages = Math.max(1, Math.ceil(state.total / PAGE_SIZE));
+          if (state.total <= PAGE_SIZE) { pager.innerHTML = ''; return; }
+          var from = state.page * PAGE_SIZE + 1;
+          var to = Math.min(state.total, (state.page + 1) * PAGE_SIZE);
+          pager.innerHTML =
+            '<span>' + from + '–' + to + ' of ' + state.total.toLocaleString() + '</span>' +
+            '<button type="button" id="pagerPrev"' + (state.page === 0 ? ' disabled' : '') + '>Prev</button>' +
+            '<button type="button" id="pagerNext"' + (state.page + 1 >= totalPages ? ' disabled' : '') + '>Next</button>';
+          var prev = $('pagerPrev'), next = $('pagerNext');
+          if (prev) prev.addEventListener('click', function () { if (state.page > 0) { state.page--; loadList(); } });
+          if (next) next.addEventListener('click', function () { if (state.page + 1 < totalPages) { state.page++; loadList(); } });
+        }
+
+        function refreshAfterChange() {
+          loadRollup();
+          loadTargetPaths();
+          loadList();
+        }
+
+        // ---------------------------------------------------------------
+        // Events
+        // ---------------------------------------------------------------
+        function bindEvents() {
+          var debT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debT);
+            debT = setTimeout(function () {
+              state.search = $('filterSearch').value.trim();
+              state.page = 0; loadList();
+            }, 200);
+          });
+          ['filterRegion','filterWarmth','filterRole','filterOwner','filterStatus'].forEach(function (id) {
+            $(id).addEventListener('change', function () {
+              state.region  = $('filterRegion').value;
+              state.warmth  = $('filterWarmth').value;
+              state.role    = $('filterRole').value;
+              state.ownerId = $('filterOwner').value;
+              state.status  = $('filterStatus').value;
+              // Keep the region rollup chips in sync with the dropdown.
+              syncRollupSelection();
+              state.page = 0; loadList();
+            });
+          });
+          $('toggleActionsDue').addEventListener('click', function () {
+            state.actionsDue = !state.actionsDue;
+            this.classList.toggle('is-on', state.actionsDue);
+            state.page = 0; loadList();
+          });
+
+          // Region chips toggle the region filter.
+          $('rollupStrip').addEventListener('click', function (e) {
+            var btn = e.target.closest && e.target.closest('[data-region]');
+            if (!btn) return;
+            var region = btn.dataset.region;
+            state.region = (state.region === region) ? '' : region;
+            $('filterRegion').value = state.region;
+            syncRollupSelection();
+            state.page = 0; loadList();
+          });
+
+          // Target-path card opens the target's drawer.
+          $('targetPathsBody').addEventListener('click', function (e) {
+            var card = e.target.closest && e.target.closest('[data-target]');
+            if (!card) return;
+            openDrawerById(card.dataset.target);
+          });
+
+          // Sortable headers.
+          document.querySelectorAll('#netTable thead th[data-sort]').forEach(function (th) {
+            th.addEventListener('click', function () {
+              var key = th.dataset.sort;
+              if (state.sortKey === key) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              } else {
+                state.sortKey = key;
+                state.sortDir = key === 'last_activity_at' ? 'desc' : 'asc';
+              }
+              renderSortHeaders();
+              state.page = 0; loadList();
+            });
+          });
+
+          // Row click -> detail drawer.
+          $('netBody').addEventListener('click', function (e) {
+            var tr = e.target.closest && e.target.closest('tr.net-row');
+            if (!tr) return;
+            var row = state.rows.find(function (r) { return r.id === tr.dataset.id; });
+            if (row) openDrawer(row);
+          });
+
+          if (state.canWrite) {
+            var addBtn = $('addContactBtn');
+            if (addBtn) addBtn.addEventListener('click', openCreateDrawer);
+          }
+        }
+
+        function syncRollupSelection() {
+          document.querySelectorAll('#rollupStrip [data-region]').forEach(function (btn) {
+            var on = btn.dataset.region === state.region;
+            btn.classList.toggle('is-on', on);
+            btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+        }
+
+        function renderSortHeaders() {
+          document.querySelectorAll('#netTable thead th[data-sort]').forEach(function (th) {
+            th.classList.remove('admin-sort-asc', 'admin-sort-desc');
+            if (th.dataset.sort === state.sortKey) {
+              th.classList.add(state.sortDir === 'asc' ? 'admin-sort-asc' : 'admin-sort-desc');
+            }
+          });
+        }
+
+        // ---------------------------------------------------------------
+        // Detail drawer
+        // ---------------------------------------------------------------
+        function openDrawerById(id) {
+          var existing = state.rows.find(function (r) { return r.id === id; });
+          if (existing) { openDrawer(existing); return; }
+          state.client.from('network_contacts_directory').select('*').eq('id', id).maybeSingle()
+            .then(function (resp) {
+              if (resp.error || !resp.data) { toast('Could not load contact.', 'error'); return; }
+              openDrawer(resp.data);
+            });
+        }
+
+        function ownerOptionsHtml(currentId) {
+          var opts = ['<option value="">Unassigned</option>'];
+          state.adminUsers.forEach(function (u) {
+            opts.push('<option value="' + escapeAttr(u.id) + '"' + (u.id === currentId ? ' selected' : '') + '>' +
+              escapeHtml(u.full_name || u.email) + '</option>');
+          });
+          if (currentId && !state.adminUserById[currentId]) {
+            opts.push('<option value="' + escapeAttr(currentId) + '" selected>Former admin</option>');
+          }
+          return opts.join('');
+        }
+
+        function openDrawer(row) {
+          state.activeId = row.id;
+          state.activeRow = row;
+
+          var foot = state.canWrite
+            ? (row.email ? '<a class="shell-btn shell-btn-outline" href="mailto:' + escapeAttr(row.email) + '">Email</a>' : '') +
+              '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>' +
+              '<button type="button" class="shell-btn shell-btn-primary" id="netSaveBtn">Save changes</button>'
+            : '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>';
+
+          var eyebrowBits = [];
+          if (row.is_target) eyebrowBits.push('Target');
+          if (row.is_connector) eyebrowBits.push('Connector');
+          if (row.region) eyebrowBits.push(row.region);
+
+          window.AdminShell.openDrawer({
+            eyebrow: eyebrowBits.join(' · ') || 'Contact',
+            title: row.full_name || 'Contact',
+            bodyHtml: buildDrawerBody(row),
+            footHtml: foot
+          });
+
+          bindDrawer(row);
+          loadPaths(row.id);
+          loadActivities(row.id);
+        }
+
+        function buildDrawerBody(r) {
+          var ro = !state.canWrite;
+          var dis = ro ? ' disabled' : '';
+
+          var attributes =
+            '<div class="shell-drawer-section">' +
+              '<h4>Networking</h4>' +
+              '<div class="net-form-grid">' +
+                '<label>Region<select class="admin-input" data-f="region"' + dis + '>' +
+                  selectOptionsHtml(REGIONS, {}, r.region, true, 'Unspecified') + '</select></label>' +
+                '<label>Influence tier<select class="admin-input" data-f="influence_tier"' + dis + '>' +
+                  selectOptionsHtml(TIERS, TIER_LABEL, r.influence_tier || 'contact', false) + '</select></label>' +
+                '<label>Warmth<select class="admin-input" data-f="warmth"' + dis + '>' +
+                  selectOptionsHtml(WARMTH, WARMTH_LABEL, r.warmth || 'cold', false) + '</select></label>' +
+                '<label>Closeness (1–5)<input class="admin-input" data-f="relationship_strength" type="number" min="1" max="5" value="' + escapeAttr(r.relationship_strength == null ? '' : r.relationship_strength) + '"' + dis + ' /></label>' +
+                '<label>Priority<select class="admin-input" data-f="priority"' + dis + '>' +
+                  selectOptionsHtml(PRIORITY, PRIORITY_LABEL, r.priority || 'medium', false) + '</select></label>' +
+                '<label>Status<select class="admin-input" data-f="status"' + dis + '>' +
+                  selectOptionsHtml(STATUSES, STATUS_LABEL, r.status || 'active', false) + '</select></label>' +
+                '<label>Owner<select class="admin-input" data-f="owner_id"' + dis + '>' + ownerOptionsHtml(r.owner_id) + '</select></label>' +
+                '<label>Tags (comma-separated)<input class="admin-input" data-f="tags" value="' + escapeAttr((r.tags || []).join(', ')) + '"' + dis + ' /></label>' +
+                '<label class="span-2">How they help<textarea class="admin-input" data-f="how_they_help"' + dis + '>' + escapeHtml(r.how_they_help || '') + '</textarea></label>' +
+                '<label class="span-2">The ask / context<textarea class="admin-input" data-f="ask_context"' + dis + '>' + escapeHtml(r.ask_context || '') + '</textarea></label>' +
+              '</div>' +
+              '<div class="net-bool-row">' +
+                '<label><input type="checkbox" data-f="is_target"' + (r.is_target ? ' checked' : '') + dis + '> Target (we want to reach)</label>' +
+                '<label><input type="checkbox" data-f="is_connector"' + (r.is_connector ? ' checked' : '') + dis + '> Connector (opens doors)</label>' +
+                '<label><input type="checkbox" data-f="do_not_contact"' + (r.do_not_contact ? ' checked' : '') + dis + '> Do not contact</label>' +
+              '</div>' +
+            '</div>';
+
+          var contact =
+            '<div class="shell-drawer-section">' +
+              '<h4>Contact</h4>' +
+              '<div class="net-form-grid">' +
+                '<label class="span-2">Full name<input class="admin-input" data-f="full_name" value="' + escapeAttr(r.full_name || '') + '"' + dis + ' /></label>' +
+                '<label>Title<input class="admin-input" data-f="title" value="' + escapeAttr(r.title || '') + '"' + dis + ' /></label>' +
+                '<label>Organization<input class="admin-input" data-f="organization" value="' + escapeAttr(r.organization || '') + '"' + dis + ' /></label>' +
+                '<label>Sector<input class="admin-input" data-f="sector" value="' + escapeAttr(r.sector || '') + '"' + dis + ' /></label>' +
+                '<label>Email<input class="admin-input" data-f="email" type="email" value="' + escapeAttr(r.email || '') + '"' + dis + ' /></label>' +
+                '<label>Phone<input class="admin-input" data-f="phone" value="' + escapeAttr(r.phone || '') + '"' + dis + ' /></label>' +
+                '<label>LinkedIn<input class="admin-input" data-f="linkedin_url" value="' + escapeAttr(r.linkedin_url || '') + '"' + dis + ' /></label>' +
+                '<label>Website<input class="admin-input" data-f="website" value="' + escapeAttr(r.website || '') + '"' + dis + ' /></label>' +
+                '<label>City<input class="admin-input" data-f="city" value="' + escapeAttr(r.city || '') + '"' + dis + ' /></label>' +
+                '<label>County<input class="admin-input" data-f="county" value="' + escapeAttr(r.county || '') + '"' + dis + ' /></label>' +
+              '</div>' +
+            '</div>';
+
+          var workflow =
+            '<div class="shell-drawer-section">' +
+              '<h4>Workflow</h4>' +
+              '<div class="net-form-grid">' +
+                '<label class="span-2">Next action<input class="admin-input" data-f="next_action" value="' + escapeAttr(r.next_action || '') + '"' + dis + ' /></label>' +
+                '<label>Next action date<input class="admin-input" data-f="next_action_date" type="date" value="' + escapeAttr(r.next_action_date || '') + '"' + dis + ' /></label>' +
+                '<label>Source<input class="admin-input" value="' + escapeAttr(r.source || '') + '" disabled /></label>' +
+                '<label class="span-2">Notes<textarea class="admin-input" data-f="notes"' + dis + '>' + escapeHtml(r.notes || '') + '</textarea></label>' +
+              '</div>' +
+            '</div>';
+
+          var addIntro = state.canWrite
+            ? '<div class="net-form-grid" style="margin-top:8px">' +
+                '<label>Direction<select class="admin-input" id="introDir">' +
+                  '<option value="out">This person can introduce us to…</option>' +
+                  '<option value="in">Who can introduce us to this person?</option>' +
+                '</select></label>' +
+                '<label>Other contact<select class="admin-input" id="introOther">' + contactOptionsHtml(r.id) + '</select></label>' +
+                '<label>Relationship<input class="admin-input" id="introLabel" placeholder="e.g. former colleague" /></label>' +
+                '<label>Strength<select class="admin-input" id="introStrength">' +
+                  selectOptionsHtml(['1','2','3','4','5'], {1:'1',2:'2',3:'3',4:'4',5:'5'}, '3', false) + '</select></label>' +
+                '<label>Status<select class="admin-input" id="introStatus">' +
+                  selectOptionsHtml(INTRO_STATUS, INTRO_STATUS_LABEL, 'potential', false) + '</select></label>' +
+              '</div>' +
+              '<div style="margin-top:8px"><button type="button" class="shell-btn shell-btn-outline" id="introAddBtn">Add introduction path</button></div>'
+            : '';
+          var paths =
+            '<div class="shell-drawer-section">' +
+              '<h4>Introduction paths</h4>' +
+              '<ul class="net-paths-list" id="pathsList"><li class="admin-muted" style="list-style:none">Loading paths…</li></ul>' +
+              addIntro +
+            '</div>';
+
+          var composer = state.canWrite
+            ? '<div class="net-form-grid" style="margin-top:8px">' +
+                '<label>Type<select class="admin-input" id="actType">' +
+                  selectOptionsHtml(ACTIVITY_TYPES, ACTIVITY_LABEL, 'note', false) + '</select></label>' +
+                '<label>Date<input class="admin-input" id="actDate" type="date" value="' + todayISO() + '" /></label>' +
+                '<label class="span-2">Subject<input class="admin-input" id="actSubject" placeholder="One-line summary" /></label>' +
+                '<label class="span-2">Detail<textarea class="admin-input" id="actBody" placeholder="Optional detail…"></textarea></label>' +
+              '</div>' +
+              '<div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">' +
+                '<button type="button" class="shell-btn shell-btn-outline" id="actNoteBtn">Add note</button>' +
+                '<button type="button" class="shell-btn shell-btn-primary" id="actLogBtn">Log activity</button>' +
+              '</div>'
+            : '';
+          var activity =
+            '<div class="shell-drawer-section">' +
+              '<h4>Activity</h4>' +
+              composer +
+              '<ul class="net-timeline" id="actTimeline"><li class="admin-muted" style="list-style:none">Loading activity…</li></ul>' +
+            '</div>';
+
+          return attributes + contact + workflow + paths + activity;
+        }
+
+        function contactOptionsHtml(excludeId) {
+          return state.allContacts.filter(function (c) { return c.id !== excludeId; }).map(function (c) {
+            var label = c.full_name + (c.organization ? ' (' + c.organization + ')' : '');
+            return '<option value="' + escapeAttr(c.id) + '">' + escapeHtml(label) + '</option>';
+          }).join('');
+        }
+
+        function bindDrawer(row) {
+          if (!state.canWrite) return;
+          var saveBtn = $('netSaveBtn');
+          if (saveBtn) saveBtn.addEventListener('click', function () { saveContact(row); });
+
+          var introBtn = $('introAddBtn');
+          if (introBtn) introBtn.addEventListener('click', function () { addIntroduction(row); });
+
+          var noteBtn = $('actNoteBtn');
+          if (noteBtn) noteBtn.addEventListener('click', function () { logActivity(row.id, 'note'); });
+          var logBtn = $('actLogBtn');
+          if (logBtn) logBtn.addEventListener('click', function () { logActivity(row.id, null); });
+        }
+
+        // ---------------------------------------------------------------
+        // Mutations
+        // ---------------------------------------------------------------
+        function collectFields() {
+          function read(field) {
+            var el = document.querySelector('#shellDrawerBody [data-f="' + field + '"]');
+            if (!el) return undefined;
+            if (el.type === 'checkbox') return el.checked;
+            return el.value;
+          }
+          function trimOrNull(v) {
+            v = (v == null ? '' : String(v)).trim();
+            return v.length ? v : null;
+          }
+          var strength = read('relationship_strength');
+          var patch = {
+            full_name: trimOrNull(read('full_name')),
+            title: trimOrNull(read('title')),
+            organization: trimOrNull(read('organization')),
+            sector: trimOrNull(read('sector')),
+            email: trimOrNull(read('email')),
+            phone: trimOrNull(read('phone')),
+            linkedin_url: trimOrNull(read('linkedin_url')),
+            website: trimOrNull(read('website')),
+            city: trimOrNull(read('city')),
+            county: trimOrNull(read('county')),
+            region: trimOrNull(read('region')),
+            influence_tier: read('influence_tier') || 'contact',
+            warmth: read('warmth') || 'cold',
+            relationship_strength: (strength === '' || strength == null) ? null : Number(strength),
+            priority: read('priority') || 'medium',
+            status: read('status') || 'active',
+            owner_id: read('owner_id') || null,
+            is_target: read('is_target') === true,
+            is_connector: read('is_connector') === true,
+            do_not_contact: read('do_not_contact') === true,
+            how_they_help: trimOrNull(read('how_they_help')),
+            ask_context: trimOrNull(read('ask_context')),
+            next_action: trimOrNull(read('next_action')),
+            next_action_date: trimOrNull(read('next_action_date')),
+            notes: trimOrNull(read('notes'))
+          };
+          var tagsRaw = read('tags');
+          if (tagsRaw !== undefined) {
+            patch.tags = String(tagsRaw).split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+          }
+          return patch;
+        }
+
+        function saveContact(row) {
+          var patch = collectFields();
+          if (!patch.full_name) { toast('Full name is required.', 'error'); return; }
+          var btn = $('netSaveBtn');
+          if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+          state.client.from('network_contacts').update(patch).eq('id', row.id)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              toast('Contact saved.', 'success');
+              window.AdminShell.closeDrawer();
+              refreshAfterChange();
+            })
+            .catch(function (err) {
+              console.error('save failed', err);
+              toast('Could not save changes.', 'error');
+              if (btn) { btn.disabled = false; btn.textContent = 'Save changes'; }
+            });
+        }
+
+        function addIntroduction(row) {
+          var dir = $('introDir') ? $('introDir').value : 'out';
+          var other = $('introOther') ? $('introOther').value : '';
+          if (!other) { toast('Pick the other contact.', 'error'); return; }
+          // dir=out: this contact is the connector reaching `other` (the target).
+          // dir=in:  `other` is the connector reaching this contact (the target).
+          var connector_id = dir === 'out' ? row.id : other;
+          var target_id    = dir === 'out' ? other : row.id;
+          var payload = {
+            connector_id: connector_id,
+            target_id: target_id,
+            relationship_label: ($('introLabel') && $('introLabel').value.trim()) || null,
+            strength: Number($('introStrength') ? $('introStrength').value : 3) || 3,
+            status: ($('introStatus') && $('introStatus').value) || 'potential',
+            confidence: 'medium'
+          };
+          var btn = $('introAddBtn');
+          if (btn) { btn.disabled = true; btn.textContent = 'Adding…'; }
+
+          state.client.from('network_introductions').insert(payload)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              toast('Introduction path added.', 'success');
+              if ($('introLabel')) $('introLabel').value = '';
+              loadPaths(row.id);
+              loadTargetPaths();
+            })
+            .catch(function (err) {
+              console.error('intro add failed', err);
+              var msg = err && err.code === '23505' ? 'That connector → target path already exists.' : 'Could not add introduction.';
+              toast(msg, 'error');
+            })
+            .finally(function () { if (btn) { btn.disabled = false; btn.textContent = 'Add introduction path'; } });
+        }
+
+        function loadPaths(id) {
+          var list = $('pathsList');
+          if (!list) return;
+          Promise.all([
+            state.client.from('network_intro_paths').select('*').eq('target_id', id),
+            state.client.from('network_intro_paths').select('*').eq('connector_id', id)
+          ]).then(function (res) {
+            if (state.activeId !== id) return;
+            var inbound = (res[0] && res[0].data) || [];
+            var outbound = (res[1] && res[1].data) || [];
+            if (!inbound.length && !outbound.length) {
+              list.innerHTML = '<li class="admin-muted" style="list-style:none">No introduction paths yet.</li>';
+              return;
+            }
+            var html = '';
+            inbound.forEach(function (p) {
+              html += '<li><strong>' + escapeHtml(p.connector_name) + '</strong> can reach them' +
+                ' <span class="net-path-meta">' + escapeHtml(INTRO_STATUS_LABEL[p.status] || p.status) +
+                ' · ' + (Number(p.strength) || 0) + '/5' +
+                (p.relationship_label ? ' · ' + escapeHtml(p.relationship_label) : '') + '</span></li>';
+            });
+            outbound.forEach(function (p) {
+              html += '<li>Can introduce us to <strong>' + escapeHtml(p.target_name) + '</strong>' +
+                ' <span class="net-path-meta">' + escapeHtml(INTRO_STATUS_LABEL[p.status] || p.status) +
+                ' · ' + (Number(p.strength) || 0) + '/5' +
+                (p.relationship_label ? ' · ' + escapeHtml(p.relationship_label) : '') + '</span></li>';
+            });
+            list.innerHTML = html;
+          });
+        }
+
+        function logActivity(id, forcedType) {
+          var type = forcedType || ($('actType') ? $('actType').value : 'note');
+          var subjEl = $('actSubject'), bodyEl = $('actBody'), dateEl = $('actDate');
+          var subject = subjEl ? subjEl.value.trim() : '';
+          var body = bodyEl ? bodyEl.value.trim() : '';
+          if (!subject && !body) { toast('Add a subject or detail.', 'error'); return; }
+
+          var occurred = (dateEl && dateEl.value)
+            ? new Date(dateEl.value + 'T12:00:00').toISOString()
+            : new Date().toISOString();
+
+          var payload = {
+            contact_id: id,
+            activity_type: type,
+            subject: subject || null,
+            body: body || null,
+            occurred_at: occurred,
+            actor_email: state.actorEmail || null
+          };
+
+          var logBtn = $('actLogBtn'), noteBtn = $('actNoteBtn');
+          if (logBtn) logBtn.disabled = true;
+          if (noteBtn) noteBtn.disabled = true;
+
+          state.client.from('network_activities').insert(payload)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              if (subjEl) subjEl.value = '';
+              if (bodyEl) bodyEl.value = '';
+              toast('Activity logged.', 'success');
+              loadActivities(id);
+            })
+            .catch(function (err) {
+              console.error('activity log failed', err);
+              toast('Could not log activity.', 'error');
+            })
+            .finally(function () {
+              if (logBtn) logBtn.disabled = false;
+              if (noteBtn) noteBtn.disabled = false;
+            });
+        }
+
+        function loadActivities(id) {
+          var list = $('actTimeline');
+          if (!list) return;
+          state.client.from('network_activities')
+            .select('*')
+            .eq('contact_id', id)
+            .order('occurred_at', { ascending: false })
+            .then(function (resp) {
+              if (state.activeId !== id) return;
+              if (resp.error) { list.innerHTML = '<li class="admin-muted" style="list-style:none">Could not load activity.</li>'; return; }
+              var acts = resp.data || [];
+              if (acts.length === 0) { list.innerHTML = '<li class="admin-muted" style="list-style:none">No activity yet.</li>'; return; }
+              list.innerHTML = acts.map(function (a) {
+                var meta = ['<span class="net-act-type">' + escapeHtml(ACTIVITY_LABEL[a.activity_type] || a.activity_type) + '</span>'];
+                if (a.actor_email) meta.push(escapeHtml(a.actor_email));
+                meta.push(escapeHtml(fmtDateTime(a.occurred_at)));
+                var subject = a.subject ? escapeHtml(a.subject) : escapeHtml(ACTIVITY_LABEL[a.activity_type] || a.activity_type);
+                return '<li class="net-act">' +
+                  '<span class="net-act-icon">' + (ACTIVITY_ICON[a.activity_type] || '•') + '</span>' +
+                  '<div class="net-act-subject">' + subject + '</div>' +
+                  (a.body ? '<div class="net-act-body">' + escapeHtml(a.body) + '</div>' : '') +
+                  '<div class="net-act-meta">' + meta.join(' · ') + '</div>' +
+                '</li>';
+              }).join('');
+            });
+        }
+
+        // ---------------------------------------------------------------
+        // Create contact
+        // ---------------------------------------------------------------
+        function openCreateDrawer() {
+          if (!state.canWrite) return;
+          var foot =
+            '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Cancel</button>' +
+            '<button type="button" class="shell-btn shell-btn-primary" id="netCreateBtn">Create contact</button>';
+          window.AdminShell.openDrawer({
+            eyebrow: 'New contact',
+            title: 'Add contact',
+            bodyHtml: buildCreateBody(),
+            footHtml: foot
+          });
+          var btn = $('netCreateBtn');
+          if (btn) btn.addEventListener('click', createContact);
+        }
+
+        function buildCreateBody() {
+          return '' +
+            '<div class="shell-drawer-section">' +
+              '<h4>Identity</h4>' +
+              '<div class="net-form-grid">' +
+                '<label class="span-2">Full name *<input class="admin-input" id="cFull" /></label>' +
+                '<label>Title<input class="admin-input" id="cTitle" /></label>' +
+                '<label>Organization<input class="admin-input" id="cOrg" /></label>' +
+                '<label>Email<input class="admin-input" id="cEmail" type="email" /></label>' +
+                '<label>Phone<input class="admin-input" id="cPhone" /></label>' +
+                '<label>City<input class="admin-input" id="cCity" /></label>' +
+                '<label>County<input class="admin-input" id="cCounty" /></label>' +
+              '</div>' +
+            '</div>' +
+            '<div class="shell-drawer-section">' +
+              '<h4>Networking</h4>' +
+              '<div class="net-form-grid">' +
+                '<label>Region<select class="admin-input" id="cRegion">' + selectOptionsHtml(REGIONS, {}, '', true, 'Unspecified') + '</select></label>' +
+                '<label>Influence tier<select class="admin-input" id="cTier">' + selectOptionsHtml(TIERS, TIER_LABEL, 'contact', false) + '</select></label>' +
+                '<label>Warmth<select class="admin-input" id="cWarmth">' + selectOptionsHtml(WARMTH, WARMTH_LABEL, 'cold', false) + '</select></label>' +
+                '<label>Priority<select class="admin-input" id="cPriority">' + selectOptionsHtml(PRIORITY, PRIORITY_LABEL, 'medium', false) + '</select></label>' +
+                '<label>Owner<select class="admin-input" id="cOwner">' + ownerOptionsHtml(null) + '</select></label>' +
+                '<label>Tags (comma-separated)<input class="admin-input" id="cTags" /></label>' +
+              '</div>' +
+              '<div class="net-bool-row">' +
+                '<label><input type="checkbox" id="cTarget"> Target</label>' +
+                '<label><input type="checkbox" id="cConnector"> Connector</label>' +
+              '</div>' +
+            '</div>' +
+            '<div class="shell-drawer-section">' +
+              '<h4>Context</h4>' +
+              '<div class="net-form-grid">' +
+                '<label class="span-2">How they help<textarea class="admin-input" id="cHelp"></textarea></label>' +
+                '<label class="span-2">The ask / context<textarea class="admin-input" id="cAsk"></textarea></label>' +
+                '<label class="span-2">Notes<textarea class="admin-input" id="cNotes"></textarea></label>' +
+              '</div>' +
+            '</div>';
+        }
+
+        function createContact() {
+          function v(id) { var el = $(id); return el ? el.value.trim() : ''; }
+          function n(id) { var x = v(id); return x.length ? x : null; }
+          var full = v('cFull');
+          if (!full) { toast('Full name is required.', 'error'); return; }
+
+          var payload = {
+            full_name: full,
+            title: n('cTitle'),
+            organization: n('cOrg'),
+            email: n('cEmail'),
+            phone: n('cPhone'),
+            city: n('cCity'),
+            county: n('cCounty'),
+            region: n('cRegion'),
+            influence_tier: v('cTier') || 'contact',
+            warmth: v('cWarmth') || 'cold',
+            priority: v('cPriority') || 'medium',
+            owner_id: n('cOwner'),
+            tags: v('cTags').split(',').map(function (t) { return t.trim(); }).filter(Boolean),
+            is_target: $('cTarget') ? $('cTarget').checked : false,
+            is_connector: $('cConnector') ? $('cConnector').checked : false,
+            how_they_help: n('cHelp'),
+            ask_context: n('cAsk'),
+            notes: n('cNotes'),
+            source: 'manual'
+          };
+
+          var btn = $('netCreateBtn');
+          if (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }
+
+          state.client.from('network_contacts').insert(payload).select().single()
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              toast('Contact added.', 'success');
+              window.AdminShell.closeDrawer();
+              state.allContacts.push({ id: resp.data.id, full_name: resp.data.full_name, organization: resp.data.organization });
+              state.allContacts.sort(function (a, b) { return (a.full_name || '').localeCompare(b.full_name || ''); });
+              state.page = 0;
+              refreshAfterChange();
+            })
+            .catch(function (err) {
+              console.error('create failed', err);
+              toast('Could not create contact.', 'error');
+              if (btn) { btn.disabled = false; btn.textContent = 'Create contact'; }
+            });
+        }
+      })();
+    </script>
+    <script src="/admin/admin-responsive.js" defer></script>
+  </body>
+</html>
