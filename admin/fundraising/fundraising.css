@@ -1,0 +1,232 @@
+/* =========================================================================
+   Ohio Pride :: Fundraising section
+   Layered on top of admin-shared.css. Brand v2.0:
+     PAC accent = Navy  #152233   (data-fund-side="pac")
+     c4  accent = Light Blue #70D6EC (data-fund-side="c4")
+   The Pride gradient appears ONLY as a thin accent rule — never on text.
+   ========================================================================= */
+
+/* Per-side accent tokens. Navy is dark, so on the dark admin canvas the PAC
+   accent reads through a light keyline; c4's light blue reads as a solid fill. */
+[data-fund-side="pac"] {
+  --fund-accent: #152233;
+  --fund-accent-strong: #25405c;
+  --fund-accent-line: #70D6EC;   /* light keyline so navy stays visible */
+  --fund-accent-ink: #ffffff;
+  --fund-chip: rgba(112, 214, 236, 0.28);
+}
+[data-fund-side="c4"] {
+  --fund-accent: #70D6EC;
+  --fund-accent-strong: #70D6EC;
+  --fund-accent-line: #152233;
+  --fund-accent-ink: #152233;
+  --fund-chip: rgba(112, 214, 236, 0.18);
+}
+
+/* Thin Pride gradient rule (accent only). */
+.fund-gradient-bar {
+  height: 3px;
+  border-radius: 999px;
+  margin: 0 0 18px;
+  background: linear-gradient(90deg,#E40303,#FFBC00,#FFED00,#008026,#004DFF,#750787);
+}
+
+/* ---- Legal wall banner ---- */
+.fund-wall {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  background: var(--fund-accent);
+  color: var(--fund-accent-ink);
+  border: 1px solid rgba(112, 214, 236, 0.35);
+  border-left: 4px solid var(--fund-accent-line);
+  font-family: "Montserrat", sans-serif;
+}
+.fund-wall-tag {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--fund-accent-line);
+  color: var(--fund-accent);
+}
+[data-fund-side="c4"] .fund-wall-tag { color: #fff; }
+.fund-wall-title { font-size: 13px; font-weight: 800; }
+.fund-wall-body  { font-size: 12px; font-weight: 600; opacity: 0.92; }
+
+/* ---- Summary chips (stage filter) ---- */
+.fund-summary {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 10px;
+  margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+.fund-chip {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 100px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-light);
+  background: rgba(15, 34, 51, 0.6);
+  cursor: pointer;
+  text-align: left;
+  font-family: "Montserrat", sans-serif;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+.fund-chip:hover { transform: translateY(-1px); }
+.fund-chip.is-on {
+  border-color: var(--fund-accent-line);
+  box-shadow: 0 0 0 2px var(--fund-chip);
+}
+.fund-chip-top { display: flex; align-items: center; gap: 7px; }
+.fund-chip-dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+.fund-chip-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; color: rgba(255,255,255,0.7); white-space: nowrap;
+}
+.fund-chip-count {
+  font-size: 22px; font-weight: 800; line-height: 1.05;
+  letter-spacing: -0.02em; color: var(--text-white);
+}
+.fund-chip-money { font-size: 11px; font-weight: 600; color: var(--text-accent); font-variant-numeric: tabular-nums; }
+
+/* ---- Stage pill ---- */
+.fund-stage-pill {
+  display: inline-flex; align-items: center;
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.7px;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 999px;
+  color: #fff; white-space: nowrap;
+}
+select.fund-stage-select {
+  min-width: 130px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.admin-pill-refcode {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  background: rgba(112, 214, 236, 0.18);
+  color: var(--text-white);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.fund-type-pill {
+  display: inline-flex; align-items: center;
+  font-family: "Montserrat", sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.6px; text-transform: uppercase; padding: 2px 8px;
+  border-radius: 999px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8);
+  white-space: nowrap;
+}
+
+table.admin-table tbody tr.fund-row { cursor: pointer; }
+table.admin-table tbody tr.fund-row:hover { background: rgba(112, 214, 236, 0.06); }
+td.fund-cell-next { white-space: normal; min-width: 150px; }
+
+/* ---- Stat row ---- */
+.fund-stat-note {
+  font-size: 11px; color: var(--text-muted); font-style: italic; margin: -10px 4px 18px;
+}
+
+/* ---- Dashboard ---- */
+.fund-dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 820px) { .fund-dash-grid { grid-template-columns: 1fr; } }
+
+.fund-side-panel {
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  background: rgba(15, 34, 51, 0.55);
+  overflow: hidden;
+}
+.fund-side-panel-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px;
+  font-family: "Montserrat", sans-serif;
+}
+.fund-side-panel[data-side="pac"] .fund-side-panel-head {
+  background: #152233; color: #fff; border-bottom: 3px solid #70D6EC;
+}
+.fund-side-panel[data-side="c4"] .fund-side-panel-head {
+  background: #70D6EC; color: #152233; border-bottom: 3px solid #152233;
+}
+.fund-side-panel-tag {
+  font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px;
+}
+.fund-side-panel[data-side="pac"] .fund-side-panel-tag { background:#70D6EC; color:#152233; }
+.fund-side-panel[data-side="c4"]  .fund-side-panel-tag { background:#152233; color:#fff; }
+.fund-side-panel-title { font-size: 15px; font-weight: 800; }
+.fund-side-panel-body { padding: 16px 18px; }
+
+.fund-mini-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.fund-mini-stat { }
+.fund-mini-num { font-family: "Montserrat", sans-serif; font-size: 22px; font-weight: 800; color: var(--text-white); line-height: 1.1; }
+.fund-mini-label { margin-top: 4px; font-family: "Montserrat", sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+
+/* funnel */
+.fund-funnel { list-style: none; margin: 8px 0 0; padding: 0; }
+.fund-funnel li { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+.fund-funnel-label { flex: 0 0 96px; font-family: "Montserrat", sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: rgba(255,255,255,0.7); }
+.fund-funnel-track { flex: 1 1 auto; height: 16px; border-radius: 4px; background: rgba(255,255,255,0.06); overflow: hidden; }
+.fund-funnel-fill { height: 100%; border-radius: 4px; }
+.fund-funnel-count { flex: 0 0 auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--text-white); min-width: 34px; text-align: right; }
+
+/* Progress bar (founding members toward goal) */
+.fund-progress-wrap { margin: 6px 0 4px; }
+.fund-progress-track { height: 12px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.fund-progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg,#008026,#70D6EC); }
+.fund-progress-meta { display: flex; justify-content: space-between; margin-top: 6px; font-family: "Montserrat", sans-serif; font-size: 11px; color: var(--text-muted); }
+
+.fund-capacity-note { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 10px; }
+
+/* Read-only detail grid inside the (dark) drawer. */
+.shell-drawer-body .admin-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px 16px;
+  margin: 0 0 4px;
+}
+.shell-drawer-body .admin-detail-grid dt {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--text-muted); margin: 6px 0 0; font-family: "Montserrat", sans-serif;
+}
+.shell-drawer-body .admin-detail-grid dd {
+  margin: 0; font-size: 14px; color: var(--text-white);
+  font-family: "Roboto Slab", Georgia, serif; word-break: break-word;
+}
+
+/* Drawer detail (mirrors donors detail-grid, dark theme) */
+.fund-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+.fund-form-grid label {
+  display: flex; flex-direction: column; gap: 4px;
+  font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase;
+  color: rgba(255,255,255,0.55); font-family: "Montserrat", sans-serif;
+}
+.fund-form-grid label.span-2 { grid-column: 1 / -1; }
+.fund-form-grid input.admin-input, .fund-form-grid select.admin-input, .fund-form-grid textarea.admin-input {
+  width: 100%; min-width: 0; font-family: "Roboto Slab", Georgia, serif;
+  font-size: 14px; text-transform: none; letter-spacing: 0; color: var(--text-white);
+}
+.fund-form-grid textarea.admin-input { min-height: 70px; resize: vertical; }
+.fund-bool-row { display: flex; flex-wrap: wrap; gap: 14px 24px; padding-top: 4px; }
+.fund-bool-row label { display: inline-flex; align-items: center; gap: 8px; font-family: "Roboto Slab", Georgia, serif; font-size: 13px; color: rgba(255,255,255,0.85); }
+.fund-bool-row input[type="checkbox"] { accent-color: #70D6EC; width: 15px; height: 15px; }
+.fund-readonly-note { font-size: 12px; color: var(--text-muted); font-style: italic; margin: 2px 0 10px; }
+
+@media (max-width: 600px) { .fund-form-grid { grid-template-columns: 1fr; } }
