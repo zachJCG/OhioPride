@@ -94,6 +94,7 @@
       group: 'Fundraising',
       items: [
         { id: 'fundraising',             href: '/admin/fundraising',               label: 'Dashboard',       icon: 'dollar',    permission: ['fundraising','read'] },
+        { id: 'fundraising_calltime',    href: '/admin/fundraising/call-time',      label: 'Call Time',       icon: 'phone',     permission: ['pac_prospects','read'] },
         { id: 'fundraising_individuals', href: '/admin/fundraising/individuals',    label: 'PAC Individuals', icon: 'funnel',    permission: ['pac_prospects','read'] },
         { id: 'fundraising_companies',   href: '/admin/fundraising/companies',      label: 'c4 Companies',    icon: 'building',  permission: ['c4_prospects','read'] },
         { id: 'fundraising_donors',      href: '/admin/fundraising/donors',         label: 'Secured Donors',  icon: 'heart',     permission: ['donors','read'] },
@@ -124,6 +125,7 @@
     briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>',
     wallet:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 13h.01"/><path d="M3 11h18"/></svg>',
     dollar:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><line x1="12" y1="3" x2="12" y2="21"/><path d="M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3 2 2.7 4.5 3 4.5 1.3 4.5 3-2 3-4.5 3-4.5-1.3-4.5-3"/></svg>',
+    phone:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7A2 2 0 0 1 22 16.9z"/></svg>',
     building:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="4" y="3" width="11" height="18" rx="1"/><path d="M15 9h5v12h-5"/><path d="M8 7h3M8 11h3M8 15h3"/></svg>',
     check:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="m8 12 2.5 2.5L16 9"/></svg>',
     mail:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
