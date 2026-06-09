@@ -153,47 +153,96 @@
     <section class="admin-login-section">
       <div class="container" style="display: flex; justify-content: center;">
         <div class="admin-login-card">
-          <h2>Sign In</h2>
-          <p class="lede">Use your authorized Ohio Pride PAC email and password.</p>
-
           <div class="admin-alert admin-alert-error" id="alertError" role="alert"></div>
 
-          <form id="loginForm" novalidate>
-            <div class="field">
-              <label for="email">Email address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                autocomplete="email"
-                inputmode="email"
-                placeholder="you@ohiopride.org"
-              />
+          <!-- View: Sign in -->
+          <div id="signinView">
+            <h2>Sign In</h2>
+            <p class="lede">Use your authorized Ohio Pride PAC email and password.</p>
+
+            <form id="loginForm" novalidate>
+              <div class="field">
+                <label for="email">Email address</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  inputmode="email"
+                  placeholder="you@ohiopride.org"
+                />
+              </div>
+
+              <div class="field">
+                <label for="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  autocomplete="current-password"
+                  placeholder="Your password"
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="btnSubmit">
+                <span class="spinner" aria-hidden="true"></span>
+                <span class="label">Sign In</span>
+              </button>
+            </form>
+
+            <div class="admin-login-foot">
+              Forgot your password? <a href="#" id="forgotLink">Email a reset link</a>
+              <br />
+              Not authorized? <a href="/">Return to OhioPride.org</a>
             </div>
+          </div>
 
-            <div class="field">
-              <label for="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                autocomplete="current-password"
-                placeholder="Your password"
-              />
+          <!-- View: Set a new password (shown after following a recovery link) -->
+          <div id="resetView" hidden>
+            <h2>Set a New Password</h2>
+            <p class="lede">
+              You followed a password-reset link. Choose a new password to finish
+              signing in.
+            </p>
+
+            <form id="resetForm" novalidate>
+              <div class="field">
+                <label for="newPassword">New password</label>
+                <input
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  required
+                  minlength="8"
+                  autocomplete="new-password"
+                  placeholder="At least 8 characters"
+                />
+              </div>
+
+              <div class="field">
+                <label for="confirmPassword">Confirm new password</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  required
+                  minlength="8"
+                  autocomplete="new-password"
+                  placeholder="Re-enter the password"
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="btnReset">
+                <span class="spinner" aria-hidden="true"></span>
+                <span class="label">Update Password</span>
+              </button>
+            </form>
+
+            <div class="admin-login-foot">
+              <a href="#" id="backToSignin">&larr; Back to sign in</a>
             </div>
-
-            <button type="submit" class="btn btn-primary" id="btnSubmit">
-              <span class="spinner" aria-hidden="true"></span>
-              <span class="label">Sign In</span>
-            </button>
-          </form>
-
-          <div class="admin-login-foot">
-            Forgot your password? <a href="#" id="forgotLink">Email a reset link</a>
-            <br />
-            Not authorized? <a href="/">Return to OhioPride.org</a>
           </div>
         </div>
       </div>
@@ -236,10 +285,44 @@
         { auth: { detectSessionInUrl: true, persistSession: true } }
       );
 
+      // Are we landing from a password-reset email? Supabase's recovery links
+      // redirect here with `type=recovery` in the URL hash. We capture this
+      // synchronously, before detectSessionInUrl can strip the hash, so we know
+      // to show the "set a new password" view instead of bouncing to the
+      // dashboard on the temporary recovery session.
+      let recoveryMode = window.location.hash.indexOf('type=recovery') !== -1;
+
+      function showResetView() {
+        recoveryMode = true;
+        $('#signinView').hidden = true;
+        $('#resetView').hidden = false;
+        clearAlert();
+        const el = $('#newPassword');
+        if (el) el.focus();
+      }
+
+      function showSigninView() {
+        recoveryMode = false;
+        $('#resetView').hidden = true;
+        $('#signinView').hidden = false;
+        clearAlert();
+      }
+
+      // Some flows (e.g. PKCE) surface recovery via an auth event rather than a
+      // visible hash, so listen for that too.
+      client.auth.onAuthStateChange((event) => {
+        if (event === 'PASSWORD_RECOVERY') showResetView();
+      });
+
       (async function checkExistingSession() {
+        // Don't auto-redirect a recovery visitor — let them set a new password.
+        if (recoveryMode) {
+          showResetView();
+          return;
+        }
         try {
           const { data: { session } } = await client.auth.getSession();
-          if (session) {
+          if (session && !recoveryMode) {
             window.location.replace(CONFIG.DASHBOARD_PATH);
           }
         } catch (_) { /* no-op */ }
@@ -298,11 +381,63 @@
             redirectTo: CONFIG.RESET_REDIRECT_TO,
           });
           if (error) throw error;
-          showInfo('Password reset link sent to ' + email + '.');
+          showInfo(
+            'Password reset link sent to ' + email +
+            '. Follow it to set a new password.'
+          );
         } catch (err) {
           console.error('Reset error:', err);
           showError((err && err.message) || 'Could not send reset link.');
         }
+      });
+
+      // Set-a-new-password form (shown after following a recovery link). The
+      // recovery session is already active thanks to detectSessionInUrl, so we
+      // just write the new password and send them into the dashboard.
+      $('#resetForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = $('#btnReset');
+        const pw = $('#newPassword').value;
+        const pw2 = $('#confirmPassword').value;
+
+        if (pw.length < 8) {
+          showError('Password must be at least 8 characters.');
+          return;
+        }
+        if (pw !== pw2) {
+          showError('The two passwords do not match.');
+          return;
+        }
+
+        btn.classList.add('loading');
+        btn.disabled = true;
+        clearAlert();
+
+        try {
+          const { error } = await client.auth.updateUser({ password: pw });
+          if (error) throw error;
+          showInfo('Password updated. Signing you in…');
+          setTimeout(() => window.location.replace(CONFIG.DASHBOARD_PATH), 900);
+        } catch (err) {
+          console.error('Password update error:', err);
+          const msg = (err && err.message) || '';
+          if (/session|jwt|token|expired/i.test(msg)) {
+            showError(
+              'Your reset link has expired. Go back to sign in and request a new one.'
+            );
+          } else if (/different from the old|should be different/i.test(msg)) {
+            showError('Choose a password different from your current one.');
+          } else {
+            showError(msg || 'Could not update password. Please try again.');
+          }
+          btn.classList.remove('loading');
+          btn.disabled = false;
+        }
+      });
+
+      $('#backToSignin').addEventListener('click', (e) => {
+        e.preventDefault();
+        showSigninView();
       });
     </script>
   </body>
