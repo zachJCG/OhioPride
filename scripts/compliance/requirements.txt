@@ -1,0 +1,5 @@
+# Compliance module (CFOFS export) dependencies.
+# PyYAML is optional -- a flat "key: value" config parser is used as a fallback.
+openpyxl>=3.1    ; python_version >= "3.8"   # reads .xlsx
+xlrd>=2.0        ; python_version >= "3.8"   # reads .xls (xlrd 2.x is .xls-only)
+PyYAML>=5.4      ; python_version >= "3.8"   # optional, nicer config parsing
