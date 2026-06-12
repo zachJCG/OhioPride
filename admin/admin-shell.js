@@ -111,7 +111,7 @@
       // (or import a workbook) and export the SOS upload file per schedule.
       group: 'Compliance',
       items: [
-        { id: 'cmp-contribution', href: '/admin/compliance/contribution', label: 'Contribution', icon: 'dollar',    permission: ['finance','read'] },
+        { id: 'cmp-contribution', href: '/admin/compliance/contributions', label: 'Contributions', icon: 'dollar',    permission: ['finance','read'] },
         { id: 'cmp-expense',      href: '/admin/compliance/expense',      label: 'Expense',      icon: 'wallet',    permission: ['finance','read'] },
         { id: 'cmp-loan',         href: '/admin/compliance/loan',         label: 'Loan',         icon: 'briefcase', permission: ['finance','read'] },
       ]
