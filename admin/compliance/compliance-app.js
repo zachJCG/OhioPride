@@ -37,7 +37,7 @@
     contribution: {
       key: 'CONT', code: '31A', tab: 'Contributions',
       table: 'compliance_contributions',
-      title: 'Contribution', sub: 'Schedule 31-A — contributions & other income',
+      title: 'Contribution', titlePlural: 'Contributions', sub: 'Schedule 31-A — contributions & other income',
       headers: CFOFS.CONT_HEADERS, ids: CFOFS.CONT_IDS,
       nameLabel: 'Contributor',
       fields: [
@@ -66,7 +66,7 @@
     expense: {
       key: 'EXPS', code: '31B', tab: 'Expense',
       table: 'compliance_expenditures',
-      title: 'Expense', sub: 'Schedule 31-B — expenditures',
+      title: 'Expense', titlePlural: 'Expenses', sub: 'Schedule 31-B — expenditures',
       headers: CFOFS.EXPS_HEADERS, ids: CFOFS.EXPS_IDS,
       nameLabel: 'Payee',
       fields: [
@@ -92,7 +92,7 @@
     loan: {
       key: 'LOAN', code: '31N/31C', tab: 'Loan',
       table: 'compliance_loans',
-      title: 'Loan', sub: 'Schedule 31-N (debt) / 31-C (loan)',
+      title: 'Loan', titlePlural: 'Loans', sub: 'Schedule 31-N (debt) / 31-C (loan)',
       headers: CFOFS.LOAN_HEADERS, ids: CFOFS.LOAN_IDS,
       nameLabel: 'Creditor',
       fields: [
@@ -252,54 +252,51 @@
     return CFOFS.exportWorkbook(sheets, cfg).files[sched.key];
   }
 
-  // ---- Render: export readiness card ------------------------------------
-  function renderCard() {
+  // ---- Validation status + export (top-right button) --------------------
+  // Recompute validation over the database rows, update the page-bar status
+  // line + the collapsible issues list, then refresh the table (fix badges).
+  function refresh() {
     var sched = state.sched;
     var f = exportFile(sched, state.rows, liveConfig());
     state.validation = f.rows;   // index-aligned to state.rows
+    var held = f.blocking.length;
 
-    var status, badge, canDl = false;
-    if (!state.rows.length) { status = 'no rows'; badge = 'cmp-badge-empty'; }
-    else if (f.blocking.length) { status = f.blocking.length + ' row(s) held'; badge = 'cmp-badge-held'; canDl = true; }
-    else { status = 'ready to upload'; badge = 'cmp-badge-ok'; canDl = true; }
-
-    var html =
-      '<div class="cmp-schedule">' +
-        '<div class="cmp-schedule-head">' +
-          '<div>' +
-            '<div class="cmp-schedule-title">' + esc(sched.title) + ' — CFOFS upload file</div>' +
-            '<div class="cmp-schedule-sub">' + esc(sched.sub) + '</div>' +
-            '<div class="cmp-schedule-meta">' +
-              state.rows.length + ' row(s) &middot; total ' + (f.total != null ? CFOFS.fmtAmount(f.total) : '0.00') + '</div>' +
-          '</div>' +
-          '<div style="display:flex;gap:10px;align-items:center;">' +
-            '<span class="cmp-badge ' + badge + '">' + esc(status) + '</span>' +
-            (canDl
-              ? '<button type="button" class="shell-btn shell-btn-primary" id="cmpDownload">Download ' + esc(f.filename) + '</button>'
-              : '<button type="button" class="shell-btn shell-btn-outline" disabled>Download</button>') +
-          '</div>' +
-        '</div>' +
-        (f.blocking.length
-          ? '<div class="cmp-schedule-sub" style="margin-top:8px;color:#b3261e;">Held rows are excluded from the file until fixed — the file still downloads with the clean rows.</div>'
-          : '') +
-        issuesHtml(f) +
-      '</div>';
-    el('cmpCard').innerHTML = html;
-
-    if (canDl) {
-      el('cmpDownload').addEventListener('click', function () {
-        // Re-export only the rows that pass validation so the CFOFS item
-        // numbers stay contiguous (1..N) in the downloaded file.
-        var cleanRecords = state.rows.filter(function (rec, i) {
-          var v = state.validation[i];
-          return !(v && v.errors && v.errors.length);
-        });
-        if (!cleanRecords.length) { toast('Every row has a blocking error — nothing to export yet.', 'error'); return; }
-        var out = exportFile(sched, cleanRecords, liveConfig());
-        download(out.filename, CFOFS.toCsv(out.rows));
-        toast('Exported ' + out.rows.length + ' row(s) to ' + out.filename, 'success');
-      });
+    var statusEl = el('cmpStatus');
+    if (statusEl) {
+      var msg = state.rows.length + ' ' + (state.rows.length === 1 ? 'entry' : 'entries') +
+        ' · total ' + (f.total != null ? CFOFS.fmtAmount(f.total) : '0.00');
+      var cls = 'cmp-pagebar-status';
+      if (!state.rows.length) { msg += ' · nothing to export yet'; }
+      else if (held) { msg += ' · ' + held + ' need' + (held === 1 ? 's' : '') + ' a fix before filing'; cls += ' is-held'; }
+      else { msg += ' · ready to export'; cls += ' is-ok'; }
+      statusEl.textContent = msg;
+      statusEl.className = cls;
     }
+    var btn = el('cmpExportBtn');
+    if (btn) btn.disabled = !state.rows.length;
+
+    var issues = el('cmpIssues');
+    if (issues) {
+      var h = issuesHtml(f);
+      issues.innerHTML = h
+        ? '<details class="cmp-issues-wrap"' + (held ? ' open' : '') + '><summary>Validation — ' +
+            (f.blocking.length + f.warned.length) + ' issue(s)</summary>' + h + '</details>'
+        : '';
+    }
+    renderList();
+  }
+
+  function exportNow() {
+    // Re-export only the rows that pass validation so CFOFS item numbers
+    // stay contiguous (1..N) in the downloaded file.
+    var clean = state.rows.filter(function (rec, i) {
+      var v = state.validation[i];
+      return !(v && v.errors && v.errors.length);
+    });
+    if (!clean.length) { toast('No rows are ready to export yet — fix the flagged entries first.', 'error'); return; }
+    var out = exportFile(state.sched, clean, liveConfig());
+    download(out.filename, CFOFS.toCsv(out.rows));
+    toast('Exported ' + out.rows.length + ' row(s) to ' + out.filename, 'success');
   }
 
   function issuesHtml(f) {
@@ -403,7 +400,7 @@
         toast('Entry added.', 'success');
       }
       sortRows();
-      renderForm(); renderCard(); renderList();
+      renderForm(); refresh();
     }).catch(function (err) {
       console.error('compliance save failed', err);
       toast('Could not save — your account may not have finance write access.', 'error');
@@ -485,8 +482,10 @@
 
   function startEdit(id) {
     state.editingId = id;
+    var det = el('cmpFormDetails');
+    if (det) det.open = true;
     renderForm();
-    el('cmpForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (det) det.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   function deleteEntry(id) {
     var rec = state.rows.filter(function (r) { return r.id === id; })[0];
@@ -496,7 +495,7 @@
       if (resp.error) throw resp.error;
       state.rows = state.rows.filter(function (r) { return r.id !== id; });
       if (state.editingId === id) state.editingId = null;
-      renderForm(); renderCard(); renderList();
+      renderForm(); refresh();
       toast('Entry deleted.', 'success');
     }).catch(function (err) {
       console.error('compliance delete failed', err);
@@ -576,7 +575,7 @@
         sortRows();
         pending.payloads = null;
         setStatus('✓ Imported ' + n + ' row(s).');
-        renderCard(); renderList();
+        refresh();
         toast('Imported ' + n + ' row(s).', 'success');
       }).catch(function (err) {
         console.error('compliance import failed', err);
@@ -591,18 +590,27 @@
     var sched = state.sched;
     el('shellBody').innerHTML =
       '<div class="admin-panel">' +
-        configBarHtml() +
-        '<form class="cmp-entry-form" id="cmpForm" autocomplete="off"></form>' +
-        '<div id="cmpCard"></div>' +
-        '<div class="admin-toolbar" style="margin-top:18px;">' +
-          '<input type="search" class="admin-input" id="cmpSearch" placeholder="Search entries…" autocomplete="off" />' +
+        '<div class="cmp-pagebar">' +
+          '<div>' +
+            '<div class="cmp-pagebar-title">' + esc(sched.titlePlural || sched.title) + ' ledger</div>' +
+            '<div class="cmp-pagebar-status" id="cmpStatus">Loading…</div>' +
+          '</div>' +
+          '<button type="button" class="shell-btn shell-btn-primary" id="cmpExportBtn" disabled>Export CSV</button>' +
+        '</div>' +
+        '<div id="cmpIssues"></div>' +
+        '<div class="admin-toolbar" style="margin-top:6px;">' +
+          '<input type="search" class="admin-input" id="cmpSearch" placeholder="Search ' + esc((sched.titlePlural || sched.title).toLowerCase()) + '…" autocomplete="off" />' +
           '<span class="admin-toolbar-spacer"></span>' +
           '<span class="admin-result-count" id="cmpCount"></span>' +
         '</div>' +
         '<div class="admin-table-wrap" id="cmpList"></div>' +
-        '<details class="cmp-import">' +
+        '<details class="cmp-drawer" id="cmpFormDetails">' +
+          '<summary>Add a ' + esc(sched.title.toLowerCase()) + '</summary>' +
+          '<form class="cmp-entry-form" id="cmpForm" autocomplete="off"></form>' +
+        '</details>' +
+        '<details class="cmp-drawer">' +
           '<summary>Import from a workbook (.xlsx / .xls)</summary>' +
-          '<p class="cmp-muted" style="margin:10px 0;">Reads the <strong>' + esc(sched.tab) + '</strong> tab using the official CFOFS column order and loads each row into the entries above. Header row is skipped.</p>' +
+          '<p class="cmp-muted" style="margin:10px 0;">Reads the <strong>' + esc(sched.tab) + '</strong> tab using the official CFOFS column order and loads each row into the ledger above. Header row is skipped.</p>' +
           '<label class="cmp-drop" id="cmpDrop">' +
             '<input type="file" id="cmpDropInput" accept=".xlsx,.xls" />' +
             '<div class="cmp-drop-main">Drop a workbook here, or click to choose</div>' +
@@ -611,13 +619,18 @@
           '</label>' +
           '<button type="button" class="shell-btn shell-btn-outline" id="cmpImportBtn" disabled>Import rows</button>' +
         '</details>' +
+        '<details class="cmp-drawer">' +
+          '<summary>Filing settings (entity, report, PAC stamp)</summary>' +
+          configBarHtml() +
+        '</details>' +
         '<p class="cmp-siblings">Other CFOFS schedules: ' +
           siblingsHtml() + '</p>' +
       '</div>';
 
     ['cfgEntity', 'cfgReport', 'cfgForm', 'cfgStamp'].forEach(function (id) {
-      el(id).addEventListener('change', function () { saveConfigFromInputs(); renderCard(); });
+      el(id).addEventListener('change', function () { saveConfigFromInputs(); refresh(); });
     });
+    el('cmpExportBtn').addEventListener('click', exportNow);
     el('cmpForm').addEventListener('submit', submitForm);
     var t;
     el('cmpSearch').addEventListener('input', function () {
@@ -640,7 +653,7 @@
 
   function siblingsHtml() {
     var links = [
-      { key: 'contribution', label: 'Contribution', href: '/admin/compliance/contribution' },
+      { key: 'contribution', label: 'Contributions', href: '/admin/compliance/contributions' },
       { key: 'expense', label: 'Expense', href: '/admin/compliance/expense' },
       { key: 'loan', label: 'Loan', href: '/admin/compliance/loan' }
     ];
@@ -649,18 +662,17 @@
   }
 
   function loadRows() {
-    el('cmpCard').innerHTML = '<p class="cmp-muted">Loading entries…</p>';
     el('cmpList').innerHTML = '<table class="admin-table"><tbody><tr><td class="admin-empty-row">Loading…</td></tr></tbody></table>';
     state.client.from(state.sched.table).select(state.sched.colSelect)
       .then(function (resp) {
         if (resp.error) throw resp.error;
         state.rows = resp.data || [];
         sortRows();
-        renderCard(); renderList();
+        refresh();
       }, function (err) {
         console.error('compliance load failed', err);
-        el('cmpCard').innerHTML = '<div class="cmp-balance off">Could not load entries. The compliance tables may not be migrated yet.</div>';
-        el('cmpList').innerHTML = '';
+        var s = el('cmpStatus'); if (s) { s.textContent = 'Could not load entries — see console. The compliance tables may not be migrated yet.'; s.className = 'cmp-pagebar-status is-held'; }
+        el('cmpList').innerHTML = '<table class="admin-table"><tbody><tr><td class="admin-empty-row admin-error">Could not load entries.</td></tr></tbody></table>';
       });
   }
 
@@ -678,6 +690,13 @@
     state.pageKey = (root && root.dataset.compliancePage) || 'contribution';
     state.sched = SCHED[state.pageKey] || SCHED.contribution;
     if (!state.client) { body.innerHTML = '<div class="admin-panel"><p>Could not connect to the database.</p></div>'; return; }
-    renderPage();
+    try {
+      renderPage();
+    } catch (err) {
+      console.error('compliance render failed', err);
+      body.innerHTML = '<div class="admin-panel"><p class="admin-error">The compliance page hit an error while loading. ' +
+        'Try a hard refresh (Cmd/Ctrl+Shift+R). If it persists, send this to the developer:</p>' +
+        '<pre style="white-space:pre-wrap;color:#b3261e;">' + esc(err && err.message ? err.message : String(err)) + '</pre></div>';
+    }
   });
 })();

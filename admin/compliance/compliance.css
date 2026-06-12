@@ -14,11 +14,24 @@
 .cmp-del:hover { color:#b3261e !important; }
 .cmp-cat-pill { font-size:.78rem; padding:2px 8px; border-radius:999px; background:#eef2f6; color:#1a1f29; }
 
-/* ---- Import drawer ---- */
-.cmp-import { margin-top:22px; border-top:1px solid var(--border-light,#eef1f4); padding-top:14px; }
-.cmp-import > summary { cursor:pointer; font-weight:600; color:var(--text-white,#fff); }
-.cmp-import > summary:hover { color:var(--text-accent,#70D6EC); }
-.cmp-import .cmp-drop { margin-top:10px; }
+/* ---- Page bar: title + status + Export CSV (top right) ---- */
+.cmp-pagebar { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:14px; }
+.cmp-pagebar-title { font-weight:800; font-size:1.15rem; color:var(--text-white,#fff); }
+.cmp-pagebar-status { font-size:.9rem; color:#9aa6b2; margin-top:4px; font-variant-numeric:tabular-nums; }
+.cmp-pagebar-status.is-ok { color:#5fd08a; }
+.cmp-pagebar-status.is-held { color:#ff8a80; }
+
+/* ---- Validation list ---- */
+.cmp-issues-wrap { margin:4px 0 8px; }
+.cmp-issues-wrap > summary { cursor:pointer; font-weight:600; color:#ff8a80; }
+
+/* ---- Collapsible drawers (add entry / import / settings) ---- */
+.cmp-drawer { margin-top:16px; border-top:1px solid var(--border-light,rgba(255,255,255,.08)); padding-top:14px; }
+.cmp-drawer > summary { cursor:pointer; font-weight:600; color:var(--text-white,#fff); }
+.cmp-drawer > summary:hover { color:var(--text-accent,#70D6EC); }
+.cmp-drawer .cmp-entry-form { margin-top:12px; }
+.cmp-drawer .cmp-drop { margin-top:10px; }
+.cmp-drawer .cmp-config { margin-top:12px; }
 
 @media (max-width:1024px){ .cmp-entry-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:560px){ .cmp-entry-grid { grid-template-columns:1fr; } .cmp-entry-grid .cmp-field-wide,.cmp-entry-grid .cmp-field.cmp-check { grid-column:span 1; } }
