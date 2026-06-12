@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compliance | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <style>
+      .cmp-tabs { display:flex; gap:4px; border-bottom:1px solid var(--color-border,#d3d6dc); margin:0 0 20px; }
+      .cmp-tab { appearance:none; background:transparent; border:0; border-bottom:2px solid transparent;
+        padding:10px 18px; font:inherit; font-weight:600; font-size:.95rem; color:#6c7480; cursor:pointer; }
+      .cmp-tab:hover { color:#1a1f29; }
+      .cmp-tab.is-active { color:#152233; border-bottom-color:#152233; }
+
+      .cmp-config { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px;
+        background:#fafbfc; border:1px solid var(--color-border,#d3d6dc); border-radius:8px; padding:14px; margin-bottom:18px; }
+      .cmp-field { display:flex; flex-direction:column; gap:4px; }
+      .cmp-field label { font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:#6c7480; font-weight:600; }
+      .cmp-field.cmp-check { flex-direction:row; align-items:center; gap:8px; align-self:end; }
+      .cmp-note { font-size:.78rem; color:#6c7480; margin:-6px 0 16px; }
+      .cmp-note strong { color:#b3261e; }
+
+      .cmp-drop { border:1.5px dashed #c2c8d0; border-radius:10px; padding:22px; text-align:center;
+        background:#fbfcfd; cursor:pointer; transition:border-color .15s, background .15s; }
+      .cmp-drop:hover, .cmp-drop.is-over { border-color:#152233; background:#f3f6f9; }
+      .cmp-drop input { display:none; }
+      .cmp-drop-main { font-weight:600; color:#1a1f29; }
+      .cmp-drop-sub { font-size:.82rem; color:#6c7480; margin-top:4px; }
+      .cmp-filename { font-size:.85rem; color:#1f7a3d; margin-top:8px; font-weight:600; }
+
+      .cmp-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0; }
+      .cmp-card { border:1px solid var(--color-border,#d3d6dc); border-radius:8px; padding:14px; }
+      .cmp-card-num { font-size:1.45rem; font-weight:700; font-variant-numeric:tabular-nums; }
+      .cmp-card-label { font-size:.78rem; color:#6c7480; text-transform:uppercase; letter-spacing:.03em; margin-top:2px; }
+
+      .cmp-file { border:1px solid var(--color-border,#d3d6dc); border-radius:8px; padding:14px 16px; margin-bottom:12px; }
+      .cmp-file-head { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+      .cmp-file-title { font-weight:700; }
+      .cmp-file-meta { font-size:.85rem; color:#6c7480; font-variant-numeric:tabular-nums; }
+      .cmp-badge { font-size:.72rem; font-weight:700; padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:.03em; }
+      .cmp-badge-ok { background:#e7f5ec; color:#1f7a3d; }
+      .cmp-badge-held { background:#fcecea; color:#b3261e; }
+      .cmp-badge-empty { background:#eef2f6; color:#6c7480; }
+      .cmp-issues { margin:10px 0 0; padding:0; list-style:none; font-size:.85rem; }
+      .cmp-issues li { padding:3px 0 3px 18px; position:relative; }
+      .cmp-issues li.err::before { content:"\2715"; color:#b3261e; position:absolute; left:0; font-weight:700; }
+      .cmp-issues li.warn::before { content:"\26A0"; color:#b8860b; position:absolute; left:0; }
+      .cmp-issues .cmp-row { color:#6c7480; font-variant-numeric:tabular-nums; }
+
+      .cmp-recon-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:8px; }
+      .cmp-list { margin:6px 0 0; padding:0; list-style:none; font-size:.85rem; font-variant-numeric:tabular-nums; }
+      .cmp-list li { display:grid; grid-template-columns:96px 110px 1fr; gap:8px; padding:4px 0; border-top:1px solid #eef1f4; }
+      .cmp-list .neg { color:#b3261e; } .cmp-list .pos { color:#1f7a3d; }
+      .cmp-balance { font-weight:700; padding:10px 14px; border-radius:8px; margin:14px 0; }
+      .cmp-balance.ok { background:#e7f5ec; color:#1f7a3d; }
+      .cmp-balance.off { background:#fcecea; color:#b3261e; }
+      .cmp-muted { color:#6c7480; }
+      @media (max-width:820px){ .cmp-config{grid-template-columns:1fr 1fr;} .cmp-cards{grid-template-columns:1fr;} .cmp-recon-grid{grid-template-columns:1fr;} }
+    </style>
+  </head>
+
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="compliance"
+      data-page-eyebrow="Finance"
+      data-page-title="Compliance"
+      data-page-sub="Build CFOFS upload files and reconcile the books to the bank — all in the browser."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="/admin/finance/compliance/cfofs-browser.js"></script>
+
+    <script>
+      (function () {
+        'use strict';
+
+        var state = { sheets: null, sourceName: '', bankRows: null, bankName: '', tab: 'export' };
+
+        function esc(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function el(id) { return document.getElementById(id); }
+        function cfg() {
+          return {
+            entity: el('cfgEntity').value.trim(),
+            report: el('cfgReport').value.trim(),
+            form_of_contribution_code: el('cfgForm').value,
+            stamp_filer_pac_number: el('cfgStamp').checked ? 'true' : 'false'
+          };
+        }
+        function download(name, text) {
+          var blob = new Blob([text], { type: 'text/csv;charset=utf-8' });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url; a.download = name;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        }
+
+        // Read a workbook/CSV file into { name: rows[][] } using SheetJS.
+        function readFile(file) {
+          return file.arrayBuffer().then(function (buf) {
+            var wb = XLSX.read(buf, { type: 'array' });
+            var sheets = {};
+            wb.SheetNames.forEach(function (n) {
+              sheets[n] = XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1, raw: true, defval: null, blankrows: false });
+            });
+            return sheets;
+          });
+        }
+
+        // ---- Export tab ----
+        function renderExport() {
+          if (!state.sheets) { el('exResults').innerHTML = ''; return; }
+          var out = CFOFS.exportWorkbook(state.sheets, cfg());
+          var t = out.totals;
+          var html =
+            '<div class="cmp-cards">' +
+              card(CFOFS.fmtAmount(t.CONT||0), 'Contributions (31-A)') +
+              card(CFOFS.fmtAmount(t.EXPS||0), 'Expenditures (31-B)') +
+              card(CFOFS.fmtAmount(t.LOAN||0), 'Loans/debts outstanding') +
+            '</div>';
+          CFOFS.SCHEDULES.forEach(function (sc) {
+            html += fileBlock(out.files[sc.key]);
+          });
+          el('exResults').innerHTML = html;
+          // Wire downloads
+          CFOFS.SCHEDULES.forEach(function (sc) {
+            var f = out.files[sc.key];
+            var btn = el('dl_' + sc.key);
+            if (btn) btn.addEventListener('click', function () { download(f.filename, CFOFS.toCsv(f.rows)); });
+          });
+        }
+        function card(num, label) {
+          return '<div class="cmp-card"><div class="cmp-card-num">' + esc(num) + '</div>' +
+            '<div class="cmp-card-label">' + esc(label) + '</div></div>';
+        }
+        function fileBlock(f) {
+          var status, badge, canDl = false, metaExtra = '';
+          if (!f.found) { status = 'tab missing'; badge = 'cmp-badge-empty'; metaExtra = 'No "' + esc(f.tab) + '" tab found in the workbook.'; }
+          else if (f.blocking.length) { status = f.blocking.length + ' held'; badge = 'cmp-badge-held'; }
+          else if (!f.rows.length) { status = 'no rows'; badge = 'cmp-badge-empty'; metaExtra = 'Nothing to upload this period.'; }
+          else { status = 'ready'; badge = 'cmp-badge-ok'; canDl = true; }
+
+          var issues = '';
+          if (f.blocking.length) {
+            issues += '<ul class="cmp-issues">' + f.blocking.map(function (r) {
+              return r.errors.map(function (e) {
+                return '<li class="err"><span class="cmp-row">row ' + r.row + ':</span> ' + esc(e) + '</li>';
+              }).join('');
+            }).join('') + '</ul>';
+          }
+          if (f.warned.length) {
+            issues += '<ul class="cmp-issues">' + f.warned.map(function (r) {
+              return r.warnings.map(function (w) {
+                return '<li class="warn"><span class="cmp-row">row ' + r.row + ':</span> ' + esc(w) + '</li>';
+              }).join('');
+            }).join('') + '</ul>';
+          }
+
+          return '<div class="cmp-file">' +
+            '<div class="cmp-file-head">' +
+              '<div><span class="cmp-file-title">' + esc(f.tab) + '</span> ' +
+                '<span class="cmp-file-meta">&nbsp;Schedule ' + esc(f.code) + ' &middot; ' +
+                (f.found ? (f.rows.length + ' row(s) &middot; total ' + CFOFS.fmtAmount(f.total)) : '&mdash;') + '</span></div>' +
+              '<div style="display:flex;gap:10px;align-items:center;">' +
+                '<span class="cmp-badge ' + badge + '">' + esc(status) + '</span>' +
+                (canDl ? '<button type="button" class="shell-btn shell-btn-primary" id="dl_' + f.schedule + '">Download ' + esc(f.filename) + '</button>'
+                       : '<button type="button" class="shell-btn shell-btn-outline" disabled>Download</button>') +
+              '</div>' +
+            '</div>' +
+            (metaExtra ? '<div class="cmp-file-meta" style="margin-top:6px;">' + esc(metaExtra) + '</div>' : '') +
+            issues +
+          '</div>';
+        }
+
+        // ---- Reconcile tab ----
+        function runReconcile() {
+          var box = el('reResults');
+          if (!state.sheets) { box.innerHTML = '<p class="cmp-muted">Load a workbook on the Export tab first (or above).</p>'; return; }
+          if (!state.bankRows) { box.innerHTML = '<p class="cmp-muted">Upload a bank statement to reconcile.</p>'; return; }
+          var recon;
+          try {
+            recon = CFOFS.reconcile(state.sheets, state.bankRows, {
+              periodStart: el('rePeriodStart').value || null,
+              periodEnd: el('rePeriodEnd').value || null,
+              toleranceDays: parseInt(el('reTolerance').value, 10) || 5,
+              openingBalance: el('reOpening').value || null
+            });
+          } catch (err) {
+            box.innerHTML = '<div class="cmp-balance off">' + esc(err.message) + '</div>'; return;
+          }
+          var html = '';
+          html += '<div class="cmp-cards">' +
+            card(CFOFS.fmtAmount(recon.inCents), 'Money in (revenue + loan proceeds)') +
+            card(CFOFS.fmtAmount(recon.outCents), 'Money out (expenses + payments)') +
+            card(CFOFS.fmtAmount(recon.ledgerNet), 'Ledger net movement') +
+          '</div>';
+          html += '<p class="cmp-muted">Period ' + (recon.start ? CFOFS.fmtISO(recon.start) : '(start)') +
+            ' &rarr; ' + (recon.end ? CFOFS.fmtISO(recon.end) : '(end)') +
+            ' &middot; bank net ' + CFOFS.fmtAmount(recon.bankNet) +
+            (recon.opening !== null ? ' &middot; opening ' + CFOFS.fmtAmount(recon.opening) +
+              ' &rarr; computed closing ' + CFOFS.fmtAmount(recon.opening + recon.bankNet) : '') + '</p>';
+          html += '<div class="cmp-balance ' + (recon.balanced ? 'ok' : 'off') + '">' +
+            (recon.balanced ? 'In balance &mdash; ' + recon.matched.length + ' items cleared, nothing outstanding.'
+              : 'Out of balance by ' + CFOFS.fmtAmount(recon.diff) + ' &mdash; ' + recon.matched.length + ' matched, ' +
+                recon.unmatchedLedger.length + ' in books only, ' + recon.unmatchedBank.length + ' on statement only.') +
+          '</div>';
+          html += '<div class="cmp-recon-grid">' +
+            reconList('In your books, not on the statement', recon.unmatchedLedger, true) +
+            reconList('On the statement, not in your books', recon.unmatchedBank, false) +
+          '</div>';
+          html += '<button type="button" class="shell-btn shell-btn-primary" id="dlRecon">Download reconciliation worksheet</button>';
+          box.innerHTML = html;
+          el('dlRecon').addEventListener('click', function () {
+            var c = cfg();
+            var stem = [c.entity, 'RECON', c.report].filter(Boolean).join('_') || 'reconciliation';
+            download(stem + '.csv', CFOFS.reconWorksheetCsv(recon));
+          });
+        }
+        function reconList(title, items, showSource) {
+          if (!items.length) return '<div><strong>' + esc(title) + '</strong><p class="cmp-muted" style="margin:6px 0 0;">None.</p></div>';
+          return '<div><strong>' + esc(title) + '</strong><ul class="cmp-list">' +
+            items.slice().sort(function (a, b) { return a.date - b.date; }).map(function (e) {
+              return '<li><span>' + CFOFS.fmtISO(e.date) + '</span>' +
+                '<span class="' + (e.cents < 0 ? 'neg' : 'pos') + '">' + CFOFS.fmtAmount(e.cents) + '</span>' +
+                '<span>' + esc((showSource ? e.source + ' ' + e.ref + ' — ' : '') + e.desc) + '</span></li>';
+            }).join('') + '</ul></div>';
+        }
+
+        // ---- Tabs ----
+        function setTab(tab) {
+          state.tab = tab;
+          el('paneExport').hidden = tab !== 'export';
+          el('paneReconcile').hidden = tab !== 'reconcile';
+          el('tabExport').classList.toggle('is-active', tab === 'export');
+          el('tabReconcile').classList.toggle('is-active', tab === 'reconcile');
+        }
+
+        function bodyHtml() {
+          return '' +
+          '<div class="admin-panel">' +
+            '<div class="cmp-config">' +
+              field('cfgEntity', 'Entity (PAC #)', '<input class="admin-input" id="cfgEntity" value="16372" />') +
+              field('cfgReport', 'Report', '<input class="admin-input" id="cfgReport" value="PostPrimary2026" />') +
+              field('cfgForm', 'Default form of contribution',
+                '<select class="admin-input" id="cfgForm">' +
+                  '<option value="1">1 — Check</option><option value="2">2 — Cash</option>' +
+                  '<option value="3">3 — Credit Card</option><option value="4" selected>4 — Electronic</option>' +
+                '</select>') +
+              '<div class="cmp-field cmp-check"><input type="checkbox" id="cfgStamp" checked />' +
+                '<label for="cfgStamp" style="text-transform:none;letter-spacing:0;">Stamp PAC # on every row</label></div>' +
+            '</div>' +
+            '<p class="cmp-note">Form-of-contribution code is the module\'s working legend — ' +
+              '<strong>verify via CFOFS Data Download before filing.</strong> ' +
+              'With “Stamp PAC #” on, the filer number is written into PAC REGISTRATION NUMBER on every Contributions/Loan row ' +
+              '(a row that already names a different PAC keeps its own number).</p>' +
+
+            '<div class="cmp-tabs" role="tablist">' +
+              '<button type="button" class="cmp-tab is-active" id="tabExport">CFOFS Export</button>' +
+              '<button type="button" class="cmp-tab" id="tabReconcile">Reconciliation</button>' +
+            '</div>' +
+
+            '<div id="paneExport">' +
+              dropZone('exDrop', 'exFile', 'Drop the working workbook here, or click to choose',
+                '3 tabs — Contributions, Expense, Loan · .xlsx or .xls', '.xlsx,.xls') +
+              '<div id="exResults"></div>' +
+            '</div>' +
+
+            '<div id="paneReconcile" hidden>' +
+              dropZone('reWbDrop', 'reWbFile', 'Workbook (same 3-tab file)',
+                'Reuses the Export workbook if already loaded · .xlsx or .xls', '.xlsx,.xls') +
+              dropZone('reBankDrop', 'reBankFile', 'Bank statement',
+                'CSV or Excel — date, description, amount (or debit/credit)', '.csv,.xlsx,.xls') +
+              '<div class="cmp-config" style="grid-template-columns:repeat(4,1fr);margin-top:14px;">' +
+                field('rePeriodStart', 'Period start', '<input type="date" class="admin-input" id="rePeriodStart" />') +
+                field('rePeriodEnd', 'Period end', '<input type="date" class="admin-input" id="rePeriodEnd" />') +
+                field('reTolerance', 'Match window (days)', '<input class="admin-input" id="reTolerance" value="5" inputmode="numeric" />') +
+                field('reOpening', 'Opening balance (optional)', '<input class="admin-input" id="reOpening" placeholder="1000.00" inputmode="decimal" />') +
+              '</div>' +
+              '<button type="button" class="shell-btn shell-btn-primary" id="reRun" style="margin-bottom:16px;">Run reconciliation</button>' +
+              '<div id="reResults"></div>' +
+            '</div>' +
+          '</div>';
+        }
+        function field(id, label, control) {
+          return '<div class="cmp-field"><label for="' + id + '">' + esc(label) + '</label>' + control + '</div>';
+        }
+        function dropZone(dropId, inputId, main, sub, accept) {
+          return '<label class="cmp-drop" id="' + dropId + '">' +
+            '<input type="file" id="' + inputId + '" accept="' + accept + '" />' +
+            '<div class="cmp-drop-main">' + esc(main) + '</div>' +
+            '<div class="cmp-drop-sub">' + esc(sub) + '</div>' +
+            '<div class="cmp-filename" id="' + inputId + 'Name"></div>' +
+          '</label>';
+        }
+
+        function wireDrop(dropId, inputId, onLoad) {
+          var drop = el(dropId), input = el(inputId);
+          input.addEventListener('change', function () { if (input.files[0]) handle(input.files[0]); });
+          ['dragover', 'dragenter'].forEach(function (ev) {
+            drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('is-over'); });
+          });
+          ['dragleave', 'drop'].forEach(function (ev) {
+            drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('is-over'); });
+          });
+          drop.addEventListener('drop', function (e) {
+            if (e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);
+          });
+          function handle(file) {
+            el(inputId + 'Name').textContent = 'Loading ' + file.name + '…';
+            readFile(file).then(function (sheets) {
+              el(inputId + 'Name').textContent = '✓ ' + file.name;
+              onLoad(sheets, file.name);
+            }).catch(function (err) {
+              el(inputId + 'Name').textContent = '✗ ' + err.message;
+            });
+          }
+        }
+
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var can = (ev.detail && ev.detail.can) || function () { return false; };
+          var body = el('shellBody');
+          if (!can('finance', 'read')) {
+            body.innerHTML = '<div class="admin-panel"><p>You don’t have finance access. Ask the Director to grant the <code>finance</code> role.</p></div>';
+            return;
+          }
+          body.innerHTML = bodyHtml();
+
+          el('tabExport').addEventListener('click', function () { setTab('export'); });
+          el('tabReconcile').addEventListener('click', function () { setTab('reconcile'); });
+
+          wireDrop('exDrop', 'exFile', function (sheets, name) {
+            state.sheets = sheets; state.sourceName = name;
+            // Mirror into the reconcile workbook slot if it's empty.
+            if (el('reWbFileName') && !el('reWbFileName').textContent) el('reWbFileName').textContent = '✓ (using ' + name + ')';
+            renderExport();
+          });
+          wireDrop('reWbDrop', 'reWbFile', function (sheets, name) {
+            state.sheets = sheets; state.sourceName = name; renderExport();
+          });
+          wireDrop('reBankDrop', 'reBankFile', function (sheets, name) {
+            state.bankRows = sheets[Object.keys(sheets)[0]]; state.bankName = name;
+          });
+
+          el('reRun').addEventListener('click', runReconcile);
+
+          // Re-run export when config changes (cheap).
+          ['cfgEntity', 'cfgReport', 'cfgForm', 'cfgStamp'].forEach(function (id) {
+            el(id).addEventListener('change', function () { if (state.sheets) renderExport(); });
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

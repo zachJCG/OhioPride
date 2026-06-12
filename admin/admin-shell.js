@@ -103,7 +103,8 @@
     {
       group: 'Money',
       items: [
-        { id: 'finance',      href: '/admin/finance/budget', label: 'Budget',      icon: 'wallet',     permission: ['finance','read'] },
+        { id: 'finance',      href: '/admin/finance/budget',     label: 'Budget',      icon: 'wallet',     permission: ['finance','read'] },
+        { id: 'compliance',   href: '/admin/finance/compliance', label: 'Compliance',  icon: 'shield',     permission: ['finance','read'] },
       ]
     }
   ];

@@ -383,6 +383,12 @@
   to = "/admin/finance/budget/index.html"
   status = 200
 
+# Finance · Compliance (CFOFS export + bank reconciliation, in-browser)
+[[redirects]]
+  from = "/admin/finance/compliance"
+  to = "/admin/finance/compliance/index.html"
+  status = 200
+
 [[redirects]]
   from = "/internships"
   to = "/volunteer.html?path=internship"
