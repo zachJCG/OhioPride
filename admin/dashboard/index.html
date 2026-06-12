@@ -298,7 +298,7 @@
           if (can('endorsements','read')) actions.push({ href: '/admin/endorsements',       label: 'Review endorsements',     sub: 'Open the queue',         icon: iconStar() });
           if (can('donors','read'))       actions.push({ href: '/admin/donors',             label: 'Donor roster',            sub: 'Founding members list',  icon: iconHeart() });
           if (can('finance','read'))      actions.push({ href: '/admin/finance/budget',    label: 'Budget',                  sub: 'Revenue & expenses',     icon: iconWallet() });
-          if (can('finance','read'))      actions.push({ href: '/admin/finance/compliance', label: 'Compliance',            sub: 'CFOFS export & reconcile', icon: iconShield() });
+          if (can('finance','read'))      actions.push({ href: '/admin/compliance/revenue', label: 'Compliance',            sub: 'CFOFS filing export',    icon: iconShield() });
           if (can('pride','read'))        actions.push({ href: '/admin/pride',              label: 'Pride Road Tour',         sub: 'Staff every Pride stop', icon: iconFlag() });
           if (can('news','write'))        actions.push({ href: '/admin/news',               label: 'Post a statement',        sub: 'Draft + publish',        icon: iconMegaphone() });
           if (can('bills','read'))        actions.push({ href: '/admin/bills',              label: 'Bills tracker',           sub: 'Roll calls + sponsors',  icon: iconGavel() });

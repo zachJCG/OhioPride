@@ -104,7 +104,16 @@
       group: 'Money',
       items: [
         { id: 'finance',      href: '/admin/finance/budget',     label: 'Budget',      icon: 'wallet',     permission: ['finance','read'] },
-        { id: 'compliance',   href: '/admin/finance/compliance', label: 'Compliance',  icon: 'shield',     permission: ['finance','read'] },
+      ]
+    },
+    {
+      // Compliance: each page is one part of the CFOFS filing, exported on its own.
+      group: 'Compliance',
+      items: [
+        { id: 'cmp-revenue',   href: '/admin/compliance/revenue',   label: 'Revenue',        icon: 'dollar',     permission: ['finance','read'] },
+        { id: 'cmp-expense',   href: '/admin/compliance/expense',   label: 'Expense',        icon: 'wallet',     permission: ['finance','read'] },
+        { id: 'cmp-loan',      href: '/admin/compliance/loan',      label: 'Loan',           icon: 'briefcase',  permission: ['finance','read'] },
+        { id: 'cmp-reconcile', href: '/admin/compliance/reconcile', label: 'Reconciliation', icon: 'check',      permission: ['finance','read'] },
       ]
     }
   ];
