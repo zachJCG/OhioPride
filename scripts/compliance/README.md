@@ -92,6 +92,33 @@ Non-blocking **warnings** (printed, file still written): missing employer for
 an individual contributor, missing purpose on an expense, a PAC REG NUMBER that
 equals the filing entity, a loan payment amount with no payment date.
 
+## Bank reconciliation (`reconcile.py`)
+
+Ties the **same workbook** to the money that actually moved through the bank
+account for a period — so expenses and revenue reconcile to cash in and out.
+
+```bash
+python scripts/compliance/reconcile.py myfiling.xlsx statement.csv \
+    --period-start 2026-01-01 --period-end 2026-06-30 \
+    --opening-balance 1000.00 --write-worksheet
+```
+
+- **Money in** = Contributions + cash actually borrowed (31-C loan proceeds).
+  **Money out** = Expenses + loan payments made. 31-N debts are obligations,
+  not cash, so they're excluded.
+- Each ledger cash event is matched to a bank line by **equal signed amount
+  within a date window** (`--tolerance-days`, default ±5), nearest date wins.
+- The report shows: what cleared, what's **in the books but not on the
+  statement** (uncleared or missing), what's **on the statement but not in the
+  books** (unrecorded — bank fees, an unlogged gift), and whether ledger net
+  ties to bank net. Exits non-zero when anything is unmatched or out of balance.
+- **Bank statement** is CSV or Excel; columns auto-detect from the header
+  (`date` / `description` / `amount`, or split `debit`/`credit`). Override with
+  `--bank-date-col`, `--bank-amount-col`, `--bank-debit-col`,
+  `--bank-credit-col`, `--bank-desc-col` if a header is unusual.
+- `--write-worksheet` emits `{ENTITY}_RECON_{REPORT}.csv` — a line-by-line
+  worksheet (status, date, amount, source, matched bank line) for the treasurer.
+
 ## Source
 
 - Column orders/headers: Ohio SOS CFOFS Excel upload template, tabs CONT / EXPS
