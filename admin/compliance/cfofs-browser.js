@@ -609,6 +609,7 @@
 
   var API = {
     CONT_HEADERS: CONT_HEADERS, EXPS_HEADERS: EXPS_HEADERS, LOAN_HEADERS: LOAN_HEADERS,
+    CONT_IDS: CONT_IDS, EXPS_IDS: EXPS_IDS, LOAN_IDS: LOAN_IDS,
     SCHEDULES: SCHEDULES,
     collapse: collapse, properCase: properCase, normalizeZip: normalizeZip,
     parseAmount: parseAmount, fmtAmount: fmtAmount, parseDate: parseDate, fmtMDY: fmtMDY,

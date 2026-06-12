@@ -107,13 +107,13 @@
       ]
     },
     {
-      // Compliance: each page is one part of the CFOFS filing, exported on its own.
+      // Compliance: each page is one CFOFS schedule — enter rows in the admin
+      // (or import a workbook) and export the SOS upload file per schedule.
       group: 'Compliance',
       items: [
-        { id: 'cmp-revenue',   href: '/admin/compliance/revenue',   label: 'Revenue',        icon: 'dollar',     permission: ['finance','read'] },
-        { id: 'cmp-expense',   href: '/admin/compliance/expense',   label: 'Expense',        icon: 'wallet',     permission: ['finance','read'] },
-        { id: 'cmp-loan',      href: '/admin/compliance/loan',      label: 'Loan',           icon: 'briefcase',  permission: ['finance','read'] },
-        { id: 'cmp-reconcile', href: '/admin/compliance/reconcile', label: 'Reconciliation', icon: 'check',      permission: ['finance','read'] },
+        { id: 'cmp-contribution', href: '/admin/compliance/contribution', label: 'Contribution', icon: 'dollar',    permission: ['finance','read'] },
+        { id: 'cmp-expense',      href: '/admin/compliance/expense',      label: 'Expense',      icon: 'wallet',    permission: ['finance','read'] },
+        { id: 'cmp-loan',         href: '/admin/compliance/loan',         label: 'Loan',         icon: 'briefcase', permission: ['finance','read'] },
       ]
     }
   ];
