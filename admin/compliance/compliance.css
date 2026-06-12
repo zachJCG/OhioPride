@@ -1,0 +1,55 @@
+/* Compliance module — shared styles for the Revenue / Expense / Loan / Reconcile pages. */
+
+.cmp-config { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px;
+  background:#fafbfc; border:1px solid var(--color-border,#d3d6dc); border-radius:8px; padding:14px; margin-bottom:14px; }
+.cmp-field { display:flex; flex-direction:column; gap:4px; }
+.cmp-field label { font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:#6c7480; font-weight:600; }
+.cmp-field.cmp-check { flex-direction:row; align-items:center; gap:8px; align-self:end; }
+.cmp-note { font-size:.78rem; color:#6c7480; margin:0 0 16px; }
+.cmp-note strong { color:#b3261e; }
+
+.cmp-drop { display:block; border:1.5px dashed #c2c8d0; border-radius:10px; padding:20px; text-align:center;
+  background:#fbfcfd; cursor:pointer; transition:border-color .15s, background .15s; margin-bottom:14px; }
+.cmp-drop:hover, .cmp-drop.is-over { border-color:#152233; background:#f3f6f9; }
+.cmp-drop input { display:none; }
+.cmp-drop-main { font-weight:600; color:#1a1f29; }
+.cmp-drop-sub { font-size:.82rem; color:#6c7480; margin-top:4px; }
+.cmp-filename { font-size:.85rem; color:#1f7a3d; margin-top:8px; font-weight:600; }
+
+.cmp-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0; }
+.cmp-card { border:1px solid var(--color-border,#d3d6dc); border-radius:8px; padding:14px; }
+.cmp-card-num { font-size:1.45rem; font-weight:700; font-variant-numeric:tabular-nums; }
+.cmp-card-label { font-size:.78rem; color:#6c7480; text-transform:uppercase; letter-spacing:.03em; margin-top:2px; }
+
+.cmp-schedule { border:1px solid var(--color-border,#d3d6dc); border-radius:10px; padding:18px 20px; margin-bottom:16px; }
+.cmp-schedule-head { display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; }
+.cmp-schedule-title { font-weight:700; font-size:1.05rem; }
+.cmp-schedule-sub { font-size:.85rem; color:#6c7480; }
+.cmp-schedule-meta { font-size:.9rem; color:#1a1f29; font-variant-numeric:tabular-nums; margin-top:4px; }
+.cmp-badge { font-size:.72rem; font-weight:700; padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; }
+.cmp-badge-ok { background:#e7f5ec; color:#1f7a3d; }
+.cmp-badge-held { background:#fcecea; color:#b3261e; }
+.cmp-badge-empty { background:#eef2f6; color:#6c7480; }
+
+.cmp-issues { margin:12px 0 0; padding:0; list-style:none; font-size:.85rem; }
+.cmp-issues li { padding:3px 0 3px 20px; position:relative; }
+.cmp-issues li.err::before { content:"\2715"; color:#b3261e; position:absolute; left:0; font-weight:700; }
+.cmp-issues li.warn::before { content:"\26A0"; color:#b8860b; position:absolute; left:0; }
+.cmp-issues .cmp-row { color:#6c7480; font-variant-numeric:tabular-nums; }
+
+.cmp-recon-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:8px; }
+.cmp-list { margin:6px 0 0; padding:0; list-style:none; font-size:.85rem; font-variant-numeric:tabular-nums; }
+.cmp-list li { display:grid; grid-template-columns:96px 110px 1fr; gap:8px; padding:4px 0; border-top:1px solid #eef1f4; }
+.cmp-list .neg { color:#b3261e; } .cmp-list .pos { color:#1f7a3d; }
+.cmp-balance { font-weight:700; padding:10px 14px; border-radius:8px; margin:14px 0; }
+.cmp-balance.ok { background:#e7f5ec; color:#1f7a3d; }
+.cmp-balance.off { background:#fcecea; color:#b3261e; }
+.cmp-muted { color:#6c7480; }
+.cmp-siblings { font-size:.85rem; color:#6c7480; margin-top:18px; padding-top:14px; border-top:1px solid #eef1f4; }
+.cmp-siblings a { font-weight:600; }
+
+@media (max-width:820px){
+  .cmp-config{grid-template-columns:1fr 1fr;}
+  .cmp-cards{grid-template-columns:1fr;}
+  .cmp-recon-grid{grid-template-columns:1fr;}
+}

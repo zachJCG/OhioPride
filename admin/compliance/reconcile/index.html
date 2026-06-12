@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reconciliation · Compliance | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/compliance/compliance.css" />
+  </head>
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="cmp-reconcile"
+      data-compliance-page="reconcile"
+      data-page-eyebrow="Compliance"
+      data-page-title="Reconciliation"
+      data-page-sub="Tie revenue and expenses to the money moving in and out of the bank account."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="/admin/compliance/cfofs-browser.js"></script>
+    <script src="/admin/compliance/compliance-app.js"></script>
+  </body>
+</html>
