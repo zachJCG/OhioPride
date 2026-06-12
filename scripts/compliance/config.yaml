@@ -1,12 +1,19 @@
 # Ohio SOS CFOFS export config -- set per filing.
 #
-# entity / report are used in the OUTPUT FILENAMES ONLY. The entity number is
-# never written into a PAC REGISTRATION NUMBER column -- CFOFS already knows the
-# filer from the logged-in session.
+# entity / report drive the OUTPUT FILENAMES ({ENTITY}_CONT_{REPORT}.csv, etc.),
+# which is how CFOFS associates the upload with the filing committee.
 
 entity: "16372"            # filing committee's SOS registration number
 report: "PostPrimary2026"  # report label, e.g. PostPrimary2026, Annual2026
 output_dir: "./out"        # where the three CSVs are written
+
+# Stamp the filer's entity number into the PAC REGISTRATION NUMBER column on
+# every Contributions/Loan row (a row that already names a different PAC keeps
+# its own number). The CFOFS template guidance says the filer's own number does
+# not belong in this column; this is enabled deliberately per filer request.
+# Set to "false" to revert to the template-correct behavior (column blank
+# except for contributors/creditors that are themselves PACs).
+stamp_filer_pac_number: "true"
 
 # FORM OF CONTRIBUTION default code, used when the source cell is blank.
 #   1 = Check   2 = Cash   3 = Credit Card   4 = Electronic / Electronic Transfer

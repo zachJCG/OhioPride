@@ -133,6 +133,13 @@ DEFAULT_CONFIG = {
     "report": "",
     "output_dir": "./out",
     "form_of_contribution_code": "4",
+    # When true, the filer's own entity number is stamped into the PAC
+    # REGISTRATION NUMBER column on every Contributions/Loan row (a row that
+    # already carries a different PAC number -- a contributor that is itself a
+    # PAC -- is left as-is). Note: the CFOFS template guidance says the filer's
+    # own number does not belong in this column (the system tags the filer from
+    # the logged-in session); this is enabled deliberately per filer request.
+    "stamp_filer_pac_number": "true",
 }
 
 
@@ -321,6 +328,22 @@ def normalize_forgiven(value):
     return "1" if s in ("1", "y", "yes", "true", "forgiven") else ""
 
 
+def is_truthy(value):
+    return collapse(value).lower() in ("1", "y", "yes", "true", "on")
+
+
+def filer_pac_number(fields, cfg):
+    """PAC REGISTRATION NUMBER for a row. A real value from the source (a
+    contributor/creditor that is itself a PAC) wins; otherwise the filer's own
+    entity number is stamped in when stamp_filer_pac_number is enabled."""
+    existing = collapse(fields.get("pac_reg"))
+    if existing:
+        return existing
+    if is_truthy(cfg.get("stamp_filer_pac_number")) and cfg.get("entity"):
+        return cfg["entity"]
+    return ""
+
+
 # --------------------------------------------------------------------------- #
 # Workbook reading (backend-agnostic): {sheet_name: [[cell, ...], ...]}
 # --------------------------------------------------------------------------- #
@@ -505,10 +528,7 @@ def process_contributions(rows, cfg):
 
         amount = required_amount(f, "amount", errors, "AMOUNT")
 
-        pac_reg = collapse(f.get("pac_reg"))
-        if pac_reg and pac_reg == cfg["entity"]:
-            warnings.append("PAC REGISTRATION NUMBER equals the filing entity -- "
-                            "leave blank unless the contributor is itself a PAC")
+        pac_reg = filer_pac_number(f, cfg)
 
         event_date_text, ev_err = parse_date(f.get("event_date"))
         if ev_err:
@@ -625,10 +645,7 @@ def process_loans(rows, cfg):
         if schedule_code not in ("31N", "31C"):
             errors.append(f"SCHEDULE CODE '{schedule_code}' must be 31N (debt) or 31C (loan)")
 
-        pac_reg = collapse(f.get("pac_reg"))
-        if pac_reg and pac_reg == cfg["entity"]:
-            warnings.append("PAC REGISTRATION NUMBER equals the filing entity -- "
-                            "leave blank unless the creditor is itself a PAC")
+        pac_reg = filer_pac_number(f, cfg)
 
         item += 1
         cells = [
