@@ -305,6 +305,16 @@
   color: var(--text-light);
 }
 
+/* Per-day subheading (e.g. multi-day tabling schedule) */
+.ve-day-head {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-accent);
+  margin: 1.5rem 0 0.6rem;
+}
+.ve-day-head:first-of-type { margin-top: 0.5rem; }
+
 /* Roster table */
 .ve-table-wrap { overflow-x: auto; }
 .ve-table {
