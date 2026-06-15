@@ -63,6 +63,7 @@
         { id: 'volunteers',   href: '/admin/volunteers',   label: 'Volunteers',   icon: 'users',      permission: ['volunteers','read'] },
         { id: 'internships',  href: '/admin/internships',  label: 'Internships',  icon: 'briefcase',  permission: ['internships','read'] },
         { id: 'donors',       href: '/admin/donors',      label: 'Donors',       icon: 'heart',      permission: ['donors','read'] },
+        { id: 'contacts',     href: '/admin/contacts',     label: 'Contacts',     icon: 'idcard',     permission: ['contacts','read'] },
         { id: 'networking',   href: '/admin/networking',   label: 'Networking',   icon: 'network',    permission: ['networking','read'] },
         { id: 'pride',        href: '/admin/pride',        label: 'Events',       icon: 'flag',       permission: ['pride','read'] },
         { id: 'launch',       href: '/admin/launch-day',   label: 'Launch Day',   icon: 'megaphone',  permission: ['launch','read'] },
@@ -132,6 +133,7 @@
     flag:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/></svg>',
     funnel:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 5h18l-7 8.5V20l-4 1v-7.5L3 5z"/></svg>',
     network:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="7" r="2.4"/><circle cx="12" cy="18" r="2.4"/><path d="M7.8 7.4 10.4 16M16.5 8.8 12.9 16.2M8 6.4h7.6"/></svg>',
+    idcard:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.5-1.5 1.7-2.3 3-2.3s2.5.8 3 2.3"/><path d="M14.5 9.5h4M14.5 13h4"/></svg>',
     briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>',
     wallet:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 13h.01"/><path d="M3 11h18"/></svg>',
     dollar:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><line x1="12" y1="3" x2="12" y2="21"/><path d="M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3 2 2.7 4.5 3 4.5 1.3 4.5 3-2 3-4.5 3-4.5-1.3-4.5-3"/></svg>',
@@ -266,7 +268,7 @@
               };
               state.roles = [{ slug: 'super_admin', label: 'Super Admin' }];
               // Synthesize permissions for the legacy super_admin.
-              ['dashboard','tasks','volunteers','endorsements','donors','prospects','fundraising','pac_prospects','c4_prospects','networking','bills','legislators','news','board','launch','pride','finance','users','settings','internships']
+              ['dashboard','tasks','volunteers','endorsements','donors','contacts','prospects','fundraising','pac_prospects','c4_prospects','networking','bills','legislators','news','board','launch','pride','finance','users','settings','internships']
                 .forEach(function (m) {
                   ['read','write','admin','manage_users'].forEach(function (a) {
                     state.permSet.add(m + ':' + a);
