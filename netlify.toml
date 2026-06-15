@@ -50,6 +50,22 @@
   to = "/volunteer.html"
   status = 200
 
+# Volunteer event hub + per-event run-of-show pages (folder/index.html)
+[[redirects]]
+  from = "/volunteer/events"
+  to = "/volunteer/events/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/volunteer/events/columbus2026"
+  to = "/volunteer/events/columbus2026/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/volunteer/events/cincinnati2026"
+  to = "/volunteer/events/cincinnati2026/index.html"
+  status = 200
+
 [[redirects]]
   from = "/pride"
   to = "/pride.html"
