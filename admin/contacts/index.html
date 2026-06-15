@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contacts | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+
+    <style>
+      /* Contacts module — layered on admin-shared.css. Brand v2.0: Navy #152233,
+         Light Blue #70D6EC. Pride gradient is a thin accent bar only. */
+
+      .ct-gradient-bar {
+        height: 3px; border-radius: 999px; margin: 0 0 20px;
+        background: linear-gradient(90deg,#E40303,#FFBC00,#FFED00,#008026,#004DFF,#750787);
+      }
+
+      /* Needs-review banner / queue entry point */
+      .ct-review-banner {
+        display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        padding: 12px 16px; margin: 0 0 18px; border-radius: 10px;
+        border: 1px solid rgba(255,200,87,0.4); background: rgba(255,200,87,0.08);
+      }
+      .ct-review-banner.is-hidden { display: none; }
+      .ct-review-count {
+        font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 22px;
+        color: #ffc857; line-height: 1; font-variant-numeric: tabular-nums;
+      }
+      .ct-review-copy { color: rgba(255,255,255,0.85); font-size: 13px; }
+      .ct-review-copy strong { color: var(--text-white); }
+
+      /* Badges */
+      .ct-role-badge {
+        display: inline-flex; align-items: center; margin: 0 4px 2px 0;
+        font-family: "Montserrat", sans-serif; font-size: 9px; font-weight: 800;
+        letter-spacing: 0.6px; text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
+        background: rgba(112,214,236,0.16); color: var(--text-accent);
+      }
+      .ct-role-donor          { background: rgba(0,128,38,0.18);  color: #5bd98a; }
+      .ct-role-founding_member{ background: rgba(196,116,10,0.2); color: #ffb454; }
+      .ct-role-signup         { background: rgba(155,44,44,0.2);  color: #ff9d9d; }
+      .ct-needs-review {
+        display: inline-flex; align-items: center; gap: 4px;
+        font-family: "Montserrat", sans-serif; font-size: 9px; font-weight: 800;
+        letter-spacing: 0.6px; text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
+        background: rgba(255,200,87,0.18); color: #ffc857;
+      }
+      .ct-dnc {
+        display: inline-flex; font-family: "Montserrat", sans-serif; font-size: 9px;
+        font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
+        padding: 2px 7px; border-radius: 4px; background: rgba(155,44,44,0.2); color: #ff9d9d;
+      }
+
+      table.admin-table tbody tr.ct-row { cursor: pointer; }
+      table.admin-table tbody tr.ct-row:hover { background: rgba(112, 214, 236, 0.06); }
+
+      /* Pagination (mirrors networking) */
+      .ct-pager {
+        display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+        margin-top: 16px; font-family: "Montserrat", sans-serif; font-size: 12px; color: var(--text-muted);
+      }
+      .ct-pager button {
+        font-family: "Montserrat", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+        text-transform: uppercase; padding: 7px 12px; border-radius: 6px; border: 1px solid var(--border-medium);
+        background: rgba(15, 34, 51, 0.6); color: var(--text-light); cursor: pointer;
+      }
+      .ct-pager button:disabled { opacity: 0.4; cursor: default; }
+
+      .ct-toolbar-toggle {
+        display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px;
+        font-family: "Montserrat", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+        text-transform: uppercase; border-radius: 6px; border: 1px solid var(--border-medium);
+        background: rgba(15, 34, 51, 0.6); color: var(--text-light); cursor: pointer; white-space: nowrap;
+      }
+      .ct-toolbar-toggle.is-on { border-color: var(--text-accent); color: var(--text-accent); box-shadow: 0 0 0 2px rgba(112,214,236,0.18); }
+
+      /* Drawer bits */
+      .ct-field { margin-bottom: 12px; }
+      .ct-field label {
+        display: block; font-family: "Montserrat", sans-serif; font-size: 11px; font-weight: 700;
+        letter-spacing: 0.4px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;
+      }
+      .ct-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .ct-geo-preview { font-size: 12px; color: var(--text-accent); margin-top: 4px; min-height: 16px; }
+      .ct-check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-light); margin-bottom: 8px; }
+      .ct-check input { width: 16px; height: 16px; }
+
+      .ct-related-card {
+        padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
+        border: 1px solid var(--border-light); background: rgba(15, 34, 51, 0.5);
+      }
+      .ct-related-card .ct-rc-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+      .ct-rc-kind { font-family: "Montserrat", sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-accent); }
+      .ct-rc-when { font-size: 11px; color: var(--text-muted); }
+      .ct-rc-body { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 4px; }
+
+      .ct-dup-card {
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
+        border: 1px solid rgba(255,200,87,0.3); background: rgba(255,200,87,0.06);
+      }
+      .ct-dup-main { font-size: 13px; color: var(--text-white); }
+      .ct-dup-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+      .ct-dup-reason { font-family: "Montserrat", sans-serif; font-size: 9px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: #ffc857; }
+      .ct-drawer-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+      .shell-drawer-section h4 {
+        margin: 0 0 10px; font-family: "Montserrat", sans-serif; font-size: 13px; font-weight: 800;
+        letter-spacing: 0.4px; color: var(--text-white);
+      }
+    </style>
+  </head>
+
+  <body class="admin-shell">
+    <div
+      id="shell-root"
+      data-active-nav="contacts"
+      data-page-eyebrow="People"
+      data-page-title="Contacts"
+      data-page-sub="One canonical record per person — keyed by email — across donors, volunteers, sign-ups, and more."
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+
+    <script>
+      (function () {
+        'use strict';
+
+        var PAGE_SIZE = 50;
+        var COLSPAN = 5;
+
+        // Ohio Pride regional taxonomy used by the contacts geo automation.
+        var REGIONS = [
+          'Northeast Ohio','Northwest Ohio','Central Ohio','Southwest Ohio','Southeast Ohio'
+        ];
+
+        // Canonical role vocabulary (contacts.roles[]).
+        var ROLE_LABEL = {
+          donor: 'Donor', volunteer: 'Volunteer', founding_member: 'Founding member',
+          signup: 'Sign-up', launch_signup: 'Launch sign-up', newsletter: 'Newsletter',
+          network: 'Network', press: 'Press'
+        };
+
+        // 360° related records: which person tables to pull by contact_id, and how to render.
+        var RELATED = [
+          { table: 'donors', kind: 'Donation',
+            select: 'amount_cents, recurrence, contributed_at, actblue_contribution_id, created_at',
+            when: function (r) { return r.contributed_at || r.created_at; },
+            body: function (r) {
+              var bits = [];
+              if (r.amount_cents != null) bits.push('$' + (Number(r.amount_cents) / 100).toFixed(2));
+              if (r.recurrence && r.recurrence !== 'once') bits.push(esc(r.recurrence));
+              if (r.actblue_contribution_id) bits.push('ActBlue #' + esc(r.actblue_contribution_id));
+              return bits.join(' · ') || 'Donation on file';
+            } },
+          { table: 'founding_members', kind: 'Founding member',
+            select: 'founding_number, amount_cents, is_public, contributed_at, created_at',
+            when: function (r) { return r.contributed_at || r.created_at; },
+            body: function (r) {
+              var bits = [];
+              if (r.founding_number != null) bits.push('No. ' + esc(r.founding_number));
+              if (r.amount_cents != null) bits.push('$' + (Number(r.amount_cents) / 100).toFixed(2));
+              bits.push(r.is_public ? 'Public roster' : 'Private');
+              return bits.join(' · ');
+            } },
+          { table: 'volunteers', kind: 'Volunteer',
+            select: 'status, interests, city, created_at',
+            when: function (r) { return r.created_at; },
+            body: function (r) {
+              var bits = [];
+              if (r.status) bits.push(esc(r.status));
+              if (r.city) bits.push(esc(r.city));
+              if (Array.isArray(r.interests) && r.interests.length) bits.push(r.interests.slice(0, 3).map(esc).join(', '));
+              return bits.join(' · ') || 'Volunteer profile';
+            } },
+          { table: 'pride_volunteers', kind: 'Pride volunteer',
+            select: 'preferred_region, events_interested, created_at',
+            when: function (r) { return r.created_at; },
+            body: function (r) {
+              var bits = [];
+              if (r.preferred_region) bits.push(esc(r.preferred_region));
+              if (Array.isArray(r.events_interested) && r.events_interested.length) bits.push(r.events_interested.length + ' event(s)');
+              return bits.join(' · ') || 'Pride event volunteer';
+            } },
+          { table: 'launch_signups', kind: 'Launch sign-up',
+            select: 'organization, title, created_at',
+            when: function (r) { return r.created_at; },
+            body: function (r) {
+              var bits = [];
+              if (r.title) bits.push(esc(r.title));
+              if (r.organization) bits.push(esc(r.organization));
+              return bits.join(', ') || 'Launch sign-up';
+            } },
+          { table: 'newsletter_subscribers', kind: 'Newsletter',
+            select: 'status, created_at',
+            when: function (r) { return r.created_at; },
+            body: function (r) { return r.status ? ('Status: ' + esc(r.status)) : 'Subscribed'; } },
+          { table: 'network_contacts', kind: 'Network',
+            select: 'organization, warmth, created_at',
+            when: function (r) { return r.created_at; },
+            body: function (r) {
+              var bits = [];
+              if (r.organization) bits.push(esc(r.organization));
+              if (r.warmth) bits.push(esc(r.warmth));
+              return bits.join(' · ') || 'Network contact';
+            } },
+          { table: 'press_conference_attendees', kind: 'Press',
+            select: 'organization, title, created_at',
+            when: function (r) { return r.created_at; },
+            body: function (r) {
+              var bits = [];
+              if (r.title) bits.push(esc(r.title));
+              if (r.organization) bits.push(esc(r.organization));
+              return bits.join(', ') || 'Press attendee';
+            } },
+          { table: 'signup_sheet_imports', kind: 'Sign-up sheet',
+            select: 'source_file, page_no, confidence, raw_name, raw_phone, imported_at',
+            when: function (r) { return r.imported_at; },
+            body: function (r) {
+              var bits = [];
+              if (r.confidence) bits.push('Confidence: ' + esc(r.confidence));
+              if (r.source_file) bits.push(esc(r.source_file) + (r.page_no ? ' p.' + r.page_no : ''));
+              return bits.join(' · ') || 'OCR sign-up';
+            } }
+        ];
+
+        var state = {
+          client: null,
+          canWrite: false,
+          actorEmail: '',
+          search: '',
+          role: '',
+          region: '',
+          source: '',
+          tag: '',
+          needsReview: false,
+          doNotContact: false,
+          sortKey: 'name',
+          sortDir: 'asc',
+          page: 0,
+          total: 0,
+          rows: [],
+          reviewCount: 0,
+          sources: [],
+          tags: []
+        };
+
+        function $(id) { return document.getElementById(id); }
+
+        // -------- helpers (mirror networking module) --------
+        function fmtDate(iso) {
+          if (!iso) return '';
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        function esc(s) {
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        function escAttr(s) { return esc(s).replace(/"/g, '&quot;'); }
+        function toast(msg, kind) {
+          if (window.AdminShell && window.AdminShell.toast) window.AdminShell.toast(msg, kind);
+        }
+        function digits(s) { return String(s == null ? '' : s).replace(/[^0-9]/g, ''); }
+        function roleBadges(roles) {
+          if (!Array.isArray(roles) || !roles.length) return '<span class="admin-muted">&mdash;</span>';
+          return roles.map(function (r) {
+            return '<span class="ct-role-badge ct-role-' + escAttr(r) + '">' + esc(ROLE_LABEL[r] || r) + '</span>';
+          }).join('');
+        }
+
+        // -------------------------------------------------------------
+        // Boot
+        // -------------------------------------------------------------
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var detail = ev.detail || {};
+          state.client = detail.client;
+          state.actorEmail = (detail.session && detail.session.user && detail.session.user.email) || '';
+
+          Promise.all([
+            state.client.rpc('has_permission', { p_module: 'contacts', p_action: 'read'  }),
+            state.client.rpc('has_permission', { p_module: 'contacts', p_action: 'write' })
+          ]).then(function (res) {
+            var canRead = res[0] && res[0].data === true;
+            state.canWrite = res[1] && res[1].data === true;
+
+            if (!canRead) { renderDenied(); return; }
+            renderShell();
+            bindEvents();
+            loadFacets().then(function () {
+              populateFacetFilters();
+              loadReviewCount();
+              loadList();
+            });
+          }).catch(function (err) {
+            console.error('contacts gate failed', err);
+            renderDenied();
+          });
+        });
+
+        function renderDenied() {
+          $('shellBody').innerHTML =
+            '<div class="admin-panel"><div class="admin-panel-empty">' +
+              '<div class="admin-panel-empty-eyebrow">Restricted</div>' +
+              '<h2>You don&rsquo;t have access to contacts</h2>' +
+              '<p>The <code>contacts</code> module is limited to board members, the treasurer, ' +
+              'comms/legislative leads, and admins. Ask the Director if you need access.</p>' +
+            '</div></div>';
+        }
+
+        function renderShell() {
+          if (state.canWrite) {
+            $('shellPageActions').innerHTML =
+              '<button type="button" class="shell-btn shell-btn-outline" id="exportBtn">Export CSV</button>' +
+              '<button type="button" class="shell-btn shell-btn-primary" id="addContactBtn">Add contact</button>';
+          } else {
+            $('shellPageActions').innerHTML =
+              '<button type="button" class="shell-btn shell-btn-outline" id="exportBtn">Export CSV</button>';
+          }
+          $('shellBody').innerHTML = pageHtml();
+        }
+
+        function pageHtml() {
+          var regionOpts = '<option value="">All regions</option>' + REGIONS.map(function (r) {
+            return '<option value="' + escAttr(r) + '">' + esc(r) + '</option>';
+          }).join('');
+          var roleOpts = '<option value="">All roles</option>' + Object.keys(ROLE_LABEL).map(function (k) {
+            return '<option value="' + k + '">' + esc(ROLE_LABEL[k]) + '</option>';
+          }).join('');
+
+          return [
+            '<div class="ct-gradient-bar" aria-hidden="true"></div>',
+
+            '<div class="ct-review-banner is-hidden" id="reviewBanner">',
+              '<span class="ct-review-count" id="reviewCount">0</span>',
+              '<span class="ct-review-copy"><strong>contacts need review</strong> &mdash; OCR sign-ups awaiting a human check of name, email, phone, and ZIP.</span>',
+              '<span class="admin-toolbar-spacer"></span>',
+              '<button type="button" class="ct-toolbar-toggle" id="reviewQueueBtn">Open review queue</button>',
+            '</div>',
+
+            '<div class="admin-toolbar">',
+              '<input type="search" class="admin-input" id="filterSearch" placeholder="Search name, email, phone, or ZIP&hellip;" autocomplete="off" />',
+              '<select class="admin-input" id="filterRole">' + roleOpts + '</select>',
+              '<select class="admin-input" id="filterRegion">' + regionOpts + '</select>',
+              '<select class="admin-input" id="filterSource"><option value="">All sources</option></select>',
+              '<select class="admin-input" id="filterTag"><option value="">All tags</option></select>',
+              '<button type="button" class="ct-toolbar-toggle" id="toggleNeedsReview">Needs review</button>',
+              '<button type="button" class="ct-toolbar-toggle" id="toggleDnc">Do not contact</button>',
+              '<span class="admin-toolbar-spacer"></span>',
+              '<span class="admin-result-count" id="resultCount"></span>',
+            '</div>',
+
+            '<div class="admin-table-wrap">',
+              '<table class="admin-table" id="ctTable" data-stack-mobile="true">',
+                '<thead><tr>',
+                  '<th data-sort="name" class="admin-sortable">Name<span class="admin-sort-arrow">&darr;</span></th>',
+                  '<th data-sort="email" class="admin-sortable">Email<span class="admin-sort-arrow">&darr;</span></th>',
+                  '<th data-sort="phone" class="admin-sortable">Phone<span class="admin-sort-arrow">&darr;</span></th>',
+                  '<th data-sort="region" class="admin-sortable">Region<span class="admin-sort-arrow">&darr;</span></th>',
+                  '<th>Roles</th>',
+                '</tr></thead>',
+                '<tbody id="ctBody"><tr><td colspan="' + COLSPAN + '" class="admin-empty-row">Loading contacts&hellip;</td></tr></tbody>',
+              '</table>',
+            '</div>',
+
+            '<div class="ct-pager" id="pager"></div>',
+
+            '<p class="admin-panel-foot">',
+              'Every person is one canonical record keyed by email. New donors, volunteers, and sign-ups ',
+              'auto-link here by email (no duplicates). Use the row menu to review OCR sign-ups, find ',
+              'possible duplicates, and merge.',
+            '</p>'
+          ].join('');
+        }
+
+        // -------------------------------------------------------------
+        // Facets (sources + tags for filters)
+        // -------------------------------------------------------------
+        function loadFacets() {
+          return state.client.from('contacts').select('sources, tags')
+            .eq('is_merged', false).limit(5000)
+            .then(function (resp) {
+              var src = {}, tg = {};
+              (resp.data || []).forEach(function (r) {
+                (r.sources || []).forEach(function (s) { if (s) src[s] = true; });
+                (r.tags || []).forEach(function (t) { if (t) tg[t] = true; });
+              });
+              state.sources = Object.keys(src).sort();
+              state.tags = Object.keys(tg).sort();
+            });
+        }
+        function populateFacetFilters() {
+          var s = $('filterSource');
+          if (s) s.innerHTML = '<option value="">All sources</option>' + state.sources.map(function (v) {
+            return '<option value="' + escAttr(v) + '">' + esc(v) + '</option>';
+          }).join('');
+          var t = $('filterTag');
+          if (t) t.innerHTML = '<option value="">All tags</option>' + state.tags.map(function (v) {
+            return '<option value="' + escAttr(v) + '">' + esc(v) + '</option>';
+          }).join('');
+        }
+
+        function loadReviewCount() {
+          state.client.from('contacts').select('id', { count: 'exact', head: true })
+            .eq('is_merged', false).eq('needs_review', true)
+            .then(function (resp) {
+              state.reviewCount = resp.count || 0;
+              var banner = $('reviewBanner'), countEl = $('reviewCount');
+              if (countEl) countEl.textContent = state.reviewCount.toLocaleString();
+              if (banner) banner.classList.toggle('is-hidden', state.reviewCount === 0);
+            });
+        }
+
+        // -------------------------------------------------------------
+        // List
+        // -------------------------------------------------------------
+        function buildQuery() {
+          var q = state.client.from('contacts')
+            .select('id, name, first_name, last_name, full_name, email, phone, address1, address2, city, county, region, state, zip, roles, sources, source, tags, email_optin, sms_optin, do_not_contact, needs_review, review_reason, notes, created_at', { count: 'exact' })
+            .eq('is_merged', false);
+
+          if (state.search) {
+            var s = state.search.replace(/[%,()]/g, ' ').trim();
+            if (s) q = q.or('name.ilike.%' + s + '%,email.ilike.%' + s + '%,phone.ilike.%' + s + '%,zip.ilike.%' + s + '%');
+          }
+          if (state.role)   q = q.contains('roles', [state.role]);
+          if (state.region) q = q.eq('region', state.region);
+          if (state.source) q = q.contains('sources', [state.source]);
+          if (state.tag)    q = q.contains('tags', [state.tag]);
+          if (state.needsReview)   q = q.eq('needs_review', true);
+          if (state.doNotContact)  q = q.eq('do_not_contact', true);
+
+          var col = state.sortKey || 'name';
+          q = q.order(col, { ascending: state.sortDir !== 'desc', nullsFirst: false });
+
+          var from = state.page * PAGE_SIZE;
+          return q.range(from, from + PAGE_SIZE - 1);
+        }
+
+        function loadList() {
+          buildQuery().then(function (resp) {
+            if (resp.error) {
+              console.error('contacts list failed', resp.error);
+              $('ctBody').innerHTML =
+                '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
+                'Could not load contacts. Your role may not include this module.</td></tr>';
+              toast('Could not load contacts.', 'error');
+              return;
+            }
+            state.rows = resp.data || [];
+            state.total = resp.count == null ? state.rows.length : resp.count;
+            renderRows();
+            renderPager();
+          });
+        }
+
+        function renderRows() {
+          var body = $('ctBody');
+          $('resultCount').textContent = state.total.toLocaleString() + (state.total === 1 ? ' contact' : ' contacts');
+
+          if (state.rows.length === 0) {
+            body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">No contacts match these filters.</td></tr>';
+            return;
+          }
+
+          var html = '';
+          state.rows.forEach(function (r) {
+            var nameCell = esc(r.name || '&mdash;');
+            var flags = '';
+            if (r.needs_review) flags += ' <span class="ct-needs-review">Needs review</span>';
+            if (r.do_not_contact) flags += ' <span class="ct-dnc">Do not contact</span>';
+
+            var email = r.email ? esc(r.email) : '<span class="admin-muted">&mdash;</span>';
+            var phone = r.phone ? esc(r.phone) : '<span class="admin-muted">&mdash;</span>';
+            var region = r.region ? esc(r.region) : '<span class="admin-muted">&mdash;</span>';
+
+            html +=
+              '<tr class="ct-row" data-id="' + escAttr(r.id) + '">' +
+                '<td class="admin-cell-name" data-label="Name">' + nameCell + flags + '</td>' +
+                '<td data-label="Email">' + email + '</td>' +
+                '<td data-label="Phone">' + phone + '</td>' +
+                '<td data-label="Region">' + region + '</td>' +
+                '<td data-label="Roles">' + roleBadges(r.roles) + '</td>' +
+              '</tr>';
+          });
+          body.innerHTML = html;
+        }
+
+        function renderPager() {
+          var pager = $('pager');
+          var totalPages = Math.max(1, Math.ceil(state.total / PAGE_SIZE));
+          if (state.total <= PAGE_SIZE) { pager.innerHTML = ''; return; }
+          var from = state.page * PAGE_SIZE + 1;
+          var to = Math.min(state.total, (state.page + 1) * PAGE_SIZE);
+          pager.innerHTML =
+            '<span>' + from + '&ndash;' + to + ' of ' + state.total.toLocaleString() + '</span>' +
+            '<button type="button" id="pagerPrev"' + (state.page === 0 ? ' disabled' : '') + '>Prev</button>' +
+            '<button type="button" id="pagerNext"' + (state.page + 1 >= totalPages ? ' disabled' : '') + '>Next</button>';
+          var prev = $('pagerPrev'), next = $('pagerNext');
+          if (prev) prev.addEventListener('click', function () { if (state.page > 0) { state.page--; loadList(); } });
+          if (next) next.addEventListener('click', function () { if (state.page + 1 < totalPages) { state.page++; loadList(); } });
+        }
+
+        function refreshAfterChange() {
+          loadReviewCount();
+          loadList();
+        }
+
+        // -------------------------------------------------------------
+        // Events
+        // -------------------------------------------------------------
+        function bindEvents() {
+          var debT;
+          $('filterSearch').addEventListener('input', function () {
+            clearTimeout(debT);
+            debT = setTimeout(function () {
+              state.search = $('filterSearch').value.trim();
+              state.page = 0; loadList();
+            }, 200);
+          });
+          ['filterRole','filterRegion','filterSource','filterTag'].forEach(function (id) {
+            $(id).addEventListener('change', function () {
+              state.role   = $('filterRole').value;
+              state.region = $('filterRegion').value;
+              state.source = $('filterSource').value;
+              state.tag    = $('filterTag').value;
+              state.page = 0; loadList();
+            });
+          });
+          $('toggleNeedsReview').addEventListener('click', function () {
+            state.needsReview = !state.needsReview;
+            this.classList.toggle('is-on', state.needsReview);
+            state.page = 0; loadList();
+          });
+          $('toggleDnc').addEventListener('click', function () {
+            state.doNotContact = !state.doNotContact;
+            this.classList.toggle('is-on', state.doNotContact);
+            state.page = 0; loadList();
+          });
+          var reviewQueueBtn = $('reviewQueueBtn');
+          if (reviewQueueBtn) reviewQueueBtn.addEventListener('click', function () {
+            state.needsReview = true;
+            $('toggleNeedsReview').classList.add('is-on');
+            state.page = 0; loadList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+
+          document.querySelectorAll('#ctTable thead th[data-sort]').forEach(function (th) {
+            th.addEventListener('click', function () {
+              var key = th.dataset.sort;
+              if (state.sortKey === key) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+              else { state.sortKey = key; state.sortDir = 'asc'; }
+              state.page = 0; loadList();
+            });
+          });
+
+          $('ctBody').addEventListener('click', function (e) {
+            var tr = e.target.closest('tr.ct-row');
+            if (!tr) return;
+            var row = state.rows.find(function (r) { return r.id === tr.dataset.id; });
+            if (row) openDrawer(row);
+          });
+
+          var exportBtn = $('exportBtn');
+          if (exportBtn) exportBtn.addEventListener('click', exportCsv);
+          var addBtn = $('addContactBtn');
+          if (addBtn) addBtn.addEventListener('click', openCreateDrawer);
+        }
+
+        // -------------------------------------------------------------
+        // Detail drawer (360° view + edit + duplicates + merge)
+        // -------------------------------------------------------------
+        function openDrawer(row) {
+          var foot = state.canWrite
+            ? '<button type="button" class="shell-btn shell-btn-primary" id="ctSaveBtn">Save changes</button>' +
+              '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>'
+            : '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>';
+
+          window.AdminShell.openDrawer({
+            eyebrow: 'Contact',
+            title: row.name || row.email || 'Contact',
+            bodyHtml: buildDrawerBody(row),
+            footHtml: foot
+          });
+          bindDrawer(row);
+          loadRelated(row.id);
+          loadDuplicates(row.id);
+        }
+
+        function field(label, name, value, type) {
+          return '<div class="ct-field"><label>' + esc(label) + '</label>' +
+            '<input class="admin-input" type="' + (type || 'text') + '" data-f="' + name + '" value="' + escAttr(value || '') + '"' +
+            (state.canWrite ? '' : ' disabled') + ' /></div>';
+        }
+        function checkbox(label, name, checked) {
+          return '<label class="ct-check"><input type="checkbox" data-f="' + name + '"' +
+            (checked ? ' checked' : '') + (state.canWrite ? '' : ' disabled') + ' />' + esc(label) + '</label>';
+        }
+
+        function buildDrawerBody(r) {
+          var regionOpts = '<option value="">&mdash;</option>' + REGIONS.map(function (x) {
+            return '<option value="' + escAttr(x) + '"' + (x === r.region ? ' selected' : '') + '>' + esc(x) + '</option>';
+          }).join('');
+
+          var reviewBlock = '';
+          if (r.needs_review) {
+            reviewBlock =
+              '<div class="shell-drawer-section">' +
+                '<div class="ct-needs-review">Needs review</div>' +
+                (r.review_reason ? '<p class="ct-rc-body" style="margin-top:8px">' + esc(r.review_reason) + '</p>' : '') +
+                (state.canWrite ? '<div class="ct-drawer-actions"><button type="button" class="shell-btn shell-btn-outline" id="ctMarkReviewedBtn">Mark reviewed</button></div>' : '') +
+              '</div>';
+          }
+
+          return [
+            reviewBlock,
+
+            '<div class="shell-drawer-section">',
+              '<h4>Identity</h4>',
+              field('Full name', 'full_name', r.full_name || r.name),
+              '<div class="ct-grid2">', field('First name', 'first_name', r.first_name), field('Last name', 'last_name', r.last_name), '</div>',
+              field('Email', 'email', r.email, 'email'),
+              field('Phone', 'phone', r.phone, 'tel'),
+            '</div>',
+
+            '<div class="shell-drawer-section">',
+              '<h4>Address</h4>',
+              field('Address 1', 'address1', r.address1),
+              field('Address 2', 'address2', r.address2),
+              '<div class="ct-grid2">', field('City', 'city', r.city), field('County', 'county', r.county), '</div>',
+              '<div class="ct-grid2">',
+                '<div class="ct-field"><label>Region</label><select class="admin-input" data-f="region"' + (state.canWrite ? '' : ' disabled') + '>' + regionOpts + '</select></div>',
+                field('ZIP', 'zip', r.zip),
+              '</div>',
+              '<div class="ct-geo-preview" id="ctGeoPreview"></div>',
+            '</div>',
+
+            '<div class="shell-drawer-section">',
+              '<h4>Preferences</h4>',
+              checkbox('Email opt-in', 'email_optin', r.email_optin),
+              checkbox('SMS opt-in', 'sms_optin', r.sms_optin),
+              checkbox('Do not contact', 'do_not_contact', r.do_not_contact),
+              field('Tags (comma-separated)', 'tags', (r.tags || []).join(', ')),
+              '<div class="ct-field"><label>Notes</label><textarea class="admin-input" data-f="notes" rows="3"' + (state.canWrite ? '' : ' disabled') + '>' + esc(r.notes || '') + '</textarea></div>',
+            '</div>',
+
+            '<div class="shell-drawer-section">',
+              '<h4>Roles &amp; sources</h4>',
+              '<div>' + roleBadges(r.roles) + '</div>',
+              '<p class="ct-rc-body" style="margin-top:6px">' + ((r.sources || []).length ? esc((r.sources || []).join(', ')) : '<span class="admin-muted">No sources recorded</span>') + '</p>',
+            '</div>',
+
+            '<div class="shell-drawer-section">',
+              '<h4>History &amp; activity</h4>',
+              '<div id="ctRelated"><p class="admin-muted">Loading linked records&hellip;</p></div>',
+            '</div>',
+
+            '<div class="shell-drawer-section">',
+              '<h4>Possible duplicates</h4>',
+              '<div id="ctDuplicates"><p class="admin-muted">Checking for duplicates&hellip;</p></div>',
+            '</div>'
+          ].join('');
+        }
+
+        function bindDrawer(row) {
+          var saveBtn = $('ctSaveBtn');
+          if (saveBtn) saveBtn.addEventListener('click', function () { saveContact(row); });
+
+          var reviewedBtn = $('ctMarkReviewedBtn');
+          if (reviewedBtn) reviewedBtn.addEventListener('click', function () { markReviewed(row); });
+
+          // Live ZIP -> city/county/region preview.
+          var zipEl = document.querySelector('#shellDrawerBody [data-f="zip"]');
+          if (zipEl && state.canWrite) {
+            var t;
+            zipEl.addEventListener('input', function () {
+              clearTimeout(t);
+              t = setTimeout(function () { previewGeo(zipEl.value); }, 250);
+            });
+          }
+        }
+
+        function previewGeo(zip) {
+          var out = $('ctGeoPreview');
+          if (!out) return;
+          var z = digits(zip).slice(0, 5);
+          if (z.length < 5) { out.textContent = ''; return; }
+          Promise.all([
+            state.client.rpc('city_for_zip',   { p_zip: z }),
+            state.client.rpc('county_for_zip', { p_zip: z }),
+            state.client.rpc('region_for_zip', { p_zip: z })
+          ]).then(function (res) {
+            var city = res[0] && res[0].data, county = res[1] && res[1].data, region = res[2] && res[2].data;
+            var bits = [];
+            if (city) bits.push(esc(city));
+            if (county) bits.push(esc(county));
+            if (region) bits.push(esc(region));
+            out.innerHTML = bits.length ? ('Resolves to: ' + bits.join(' &middot; ') + ' (saved automatically)') : 'No match in ZIP table; region resolves on save.';
+          }).catch(function () { out.textContent = ''; });
+        }
+
+        function loadRelated(contactId) {
+          var host = $('ctRelated');
+          if (!host) return;
+          Promise.all(RELATED.map(function (def) {
+            return state.client.from(def.table).select(def.select).eq('contact_id', contactId)
+              .then(function (resp) { return { def: def, rows: (resp && resp.data) || [] }; }, function () { return { def: def, rows: [] }; });
+          })).then(function (results) {
+            var cards = [];
+            results.forEach(function (g) {
+              g.rows.forEach(function (row) {
+                cards.push({ kind: g.def.kind, when: g.def.when(row), body: g.def.body(row) });
+              });
+            });
+            if (!cards.length) { host.innerHTML = '<p class="admin-muted">No linked records yet.</p>'; return; }
+            cards.sort(function (a, b) { return new Date(b.when || 0) - new Date(a.when || 0); });
+            host.innerHTML = cards.map(function (c) {
+              return '<div class="ct-related-card"><div class="ct-rc-top">' +
+                '<span class="ct-rc-kind">' + esc(c.kind) + '</span>' +
+                '<span class="ct-rc-when">' + esc(fmtDate(c.when)) + '</span></div>' +
+                '<div class="ct-rc-body">' + c.body + '</div></div>';
+            }).join('');
+          });
+        }
+
+        function loadDuplicates(contactId) {
+          var host = $('ctDuplicates');
+          if (!host) return;
+          state.client.rpc('contacts_possible_duplicates', { p_id: contactId }).then(function (resp) {
+            if (resp.error) { host.innerHTML = '<p class="admin-muted">Could not check duplicates.</p>'; return; }
+            var rows = resp.data || [];
+            if (!rows.length) { host.innerHTML = '<p class="admin-muted">No likely duplicates found.</p>'; return; }
+            host.innerHTML = rows.map(function (d) {
+              var sub = [];
+              if (d.email) sub.push(esc(d.email));
+              if (d.phone) sub.push(esc(d.phone));
+              if (d.region) sub.push(esc(d.region));
+              var mergeBtn = state.canWrite
+                ? '<button type="button" class="shell-btn shell-btn-outline" data-merge-loser="' + escAttr(d.id) + '" data-merge-name="' + escAttr(d.name || d.email || 'this record') + '">Merge in</button>'
+                : '';
+              return '<div class="ct-dup-card"><div><div class="ct-dup-main">' + esc(d.name || '&mdash;') +
+                (d.needs_review ? ' <span class="ct-needs-review">Needs review</span>' : '') +
+                '</div><div class="ct-dup-sub">' + (sub.join(' &middot; ') || '&mdash;') + '</div>' +
+                '<div class="ct-dup-reason">' + esc(d.match_reason) + '</div></div>' + mergeBtn + '</div>';
+            }).join('');
+
+            host.querySelectorAll('[data-merge-loser]').forEach(function (btn) {
+              btn.addEventListener('click', function () {
+                mergeContacts(contactId, btn.dataset.mergeLoser, btn.dataset.mergeName);
+              });
+            });
+          });
+        }
+
+        // -------------------------------------------------------------
+        // Mutations
+        // -------------------------------------------------------------
+        function collectFields() {
+          function read(field) {
+            var el = document.querySelector('#shellDrawerBody [data-f="' + field + '"]');
+            if (!el) return undefined;
+            if (el.type === 'checkbox') return el.checked;
+            return el.value;
+          }
+          function trimOrNull(v) { v = (v == null ? '' : String(v)).trim(); return v.length ? v : null; }
+
+          var patch = {
+            full_name: trimOrNull(read('full_name')),
+            first_name: trimOrNull(read('first_name')),
+            last_name: trimOrNull(read('last_name')),
+            email: trimOrNull(read('email')),
+            phone: trimOrNull(read('phone')),
+            address1: trimOrNull(read('address1')),
+            address2: trimOrNull(read('address2')),
+            city: trimOrNull(read('city')),
+            county: trimOrNull(read('county')),
+            region: trimOrNull(read('region')),
+            zip: trimOrNull(read('zip')),
+            email_optin: read('email_optin') === true,
+            sms_optin: read('sms_optin') === true,
+            do_not_contact: read('do_not_contact') === true,
+            notes: trimOrNull(read('notes'))
+          };
+          var tagsRaw = read('tags');
+          if (tagsRaw !== undefined) {
+            patch.tags = String(tagsRaw).split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+          }
+          return patch;
+        }
+
+        function saveContact(row) {
+          var patch = collectFields();
+          if (!patch.email) { toast('Email is required (canonical identity key).', 'error'); return; }
+          var btn = $('ctSaveBtn');
+          if (btn) { btn.disabled = true; btn.textContent = 'Saving&hellip;'; }
+
+          state.client.from('contacts').update(patch).eq('id', row.id)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              toast('Contact saved.', 'success');
+              window.AdminShell.closeDrawer();
+              refreshAfterChange();
+            })
+            .catch(function (err) {
+              console.error('save failed', err);
+              var msg = (err && err.code === '23505') ? 'That email already belongs to another contact.' : 'Could not save changes.';
+              toast(msg, 'error');
+              if (btn) { btn.disabled = false; btn.textContent = 'Save changes'; }
+            });
+        }
+
+        function markReviewed(row) {
+          state.client.from('contacts').update({ needs_review: false, review_reason: null }).eq('id', row.id)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              toast('Marked as reviewed.', 'success');
+              window.AdminShell.closeDrawer();
+              refreshAfterChange();
+            })
+            .catch(function (err) { console.error('mark reviewed failed', err); toast('Could not update.', 'error'); });
+        }
+
+        function mergeContacts(winnerId, loserId, loserName) {
+          if (!window.confirm('Merge "' + loserName + '" into this contact?\n\nAll linked donations, sign-ups, and records move here. The other record is tombstoned. This cannot be undone from the UI.')) return;
+          state.client.rpc('merge_contacts', { p_winner: winnerId, p_loser: loserId })
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              toast('Contacts merged.', 'success');
+              window.AdminShell.closeDrawer();
+              refreshAfterChange();
+            })
+            .catch(function (err) { console.error('merge failed', err); toast('Merge failed.', 'error'); });
+        }
+
+        // -------------------------------------------------------------
+        // Create
+        // -------------------------------------------------------------
+        function openCreateDrawer() {
+          var regionOpts = '<option value="">&mdash;</option>' + REGIONS.map(function (x) {
+            return '<option value="' + escAttr(x) + '">' + esc(x) + '</option>';
+          }).join('');
+
+          window.AdminShell.openDrawer({
+            eyebrow: 'New contact',
+            title: 'Add contact',
+            bodyHtml: [
+              '<div class="shell-drawer-section">',
+                '<h4>Identity</h4>',
+                field('Full name', 'full_name', ''),
+                '<div class="ct-grid2">', field('First name', 'first_name', ''), field('Last name', 'last_name', ''), '</div>',
+                field('Email (required)', 'email', '', 'email'),
+                field('Phone', 'phone', '', 'tel'),
+              '</div>',
+              '<div class="shell-drawer-section">',
+                '<h4>Address</h4>',
+                '<div class="ct-grid2">', field('City', 'city', ''), field('County', 'county', ''), '</div>',
+                '<div class="ct-grid2">',
+                  '<div class="ct-field"><label>Region</label><select class="admin-input" data-f="region">' + regionOpts + '</select></div>',
+                  field('ZIP', 'zip', ''),
+                '</div>',
+                '<div class="ct-geo-preview" id="ctGeoPreview"></div>',
+              '</div>',
+              '<div class="shell-drawer-section">',
+                checkbox('Email opt-in', 'email_optin', false),
+                checkbox('SMS opt-in', 'sms_optin', false),
+                checkbox('Do not contact', 'do_not_contact', false),
+                field('Tags (comma-separated)', 'tags', ''),
+                '<div class="ct-field"><label>Notes</label><textarea class="admin-input" data-f="notes" rows="3"></textarea></div>',
+              '</div>'
+            ].join(''),
+            footHtml:
+              '<button type="button" class="shell-btn shell-btn-primary" id="ctCreateBtn">Create contact</button>' +
+              '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Cancel</button>'
+          });
+
+          var zipEl = document.querySelector('#shellDrawerBody [data-f="zip"]');
+          if (zipEl) { var t; zipEl.addEventListener('input', function () { clearTimeout(t); t = setTimeout(function () { previewGeo(zipEl.value); }, 250); }); }
+
+          var createBtn = $('ctCreateBtn');
+          if (createBtn) createBtn.addEventListener('click', createContact);
+        }
+
+        function createContact() {
+          var patch = collectFields();
+          patch.source = 'admin_manual';
+          patch.sources = ['admin_manual'];
+          if (!patch.email) { toast('Email is required.', 'error'); return; }
+          var btn = $('ctCreateBtn');
+          if (btn) { btn.disabled = true; btn.textContent = 'Creating&hellip;'; }
+
+          state.client.from('contacts').insert(patch).select('id').single()
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              toast('Contact created.', 'success');
+              window.AdminShell.closeDrawer();
+              loadFacets().then(populateFacetFilters);
+              refreshAfterChange();
+            })
+            .catch(function (err) {
+              console.error('create failed', err);
+              var msg = (err && err.code === '23505') ? 'A contact with that email already exists.' : 'Could not create contact.';
+              toast(msg, 'error');
+              if (btn) { btn.disabled = false; btn.textContent = 'Create contact'; }
+            });
+        }
+
+        // -------------------------------------------------------------
+        // CSV export (current filtered view, all pages)
+        // -------------------------------------------------------------
+        function exportCsv() {
+          var q = state.client.from('contacts')
+            .select('name, email, phone, region, roles, needs_review')
+            .eq('is_merged', false);
+          if (state.search) {
+            var s = state.search.replace(/[%,()]/g, ' ').trim();
+            if (s) q = q.or('name.ilike.%' + s + '%,email.ilike.%' + s + '%,phone.ilike.%' + s + '%,zip.ilike.%' + s + '%');
+          }
+          if (state.role)   q = q.contains('roles', [state.role]);
+          if (state.region) q = q.eq('region', state.region);
+          if (state.source) q = q.contains('sources', [state.source]);
+          if (state.tag)    q = q.contains('tags', [state.tag]);
+          if (state.needsReview)  q = q.eq('needs_review', true);
+          if (state.doNotContact) q = q.eq('do_not_contact', true);
+          q = q.order('name', { ascending: true, nullsFirst: false }).limit(10000);
+
+          q.then(function (resp) {
+            if (resp.error) { toast('Export failed.', 'error'); return; }
+            var rows = resp.data || [];
+            var header = ['Name', 'Email', 'Phone', 'Region', 'Roles', 'Needs Review'];
+            function cell(v) {
+              var s = (v == null) ? '' : (Array.isArray(v) ? v.join('; ') : String(v));
+              return '"' + s.replace(/"/g, '""') + '"';
+            }
+            var lines = [header.map(cell).join(',')];
+            rows.forEach(function (r) {
+              lines.push([r.name, r.email, r.phone, r.region, r.roles, r.needs_review ? 'yes' : ''].map(cell).join(','));
+            });
+            var blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url; a.download = 'ohio-pride-contacts.csv';
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+            toast(rows.length.toLocaleString() + ' contacts exported.', 'success');
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
