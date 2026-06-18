@@ -69,6 +69,8 @@ export default async (req, _context) => {
     return jsonResponse(400, { ok: false, error: 'invalid_zip' });
   }
 
+  const phone = clean(body.phone, 40);
+
   const source = ALLOWED_SOURCES.has(body.source) ? body.source : 'signup_page';
 
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
@@ -87,6 +89,7 @@ export default async (req, _context) => {
     email,
     first_name: clean(body.first_name, 100),
     last_name:  clean(body.last_name, 100),
+    phone,
     zip,
     source,
     referrer:   clean(body.referrer, 500),
