@@ -41,6 +41,10 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.ohiopride.org/elected-resources</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.ohiopride.org/contact</loc>
     <priority>0.7</priority>
   </url>

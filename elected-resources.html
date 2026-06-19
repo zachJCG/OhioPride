@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LGBTQ+ Equality Toolkit for Ohio Local Officials | Ohio Pride</title>
+    <meta
+      name="description"
+      content="A practical toolkit for Ohio local officials: model non-discrimination ordinances, conversion-therapy bans, safe-haven resolutions, home-rule authority, and where to get drafting help."
+    />
+    <link rel="canonical" href="https://www.ohiopride.org/elected-resources" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="LGBTQ+ Equality Toolkit for Ohio Local Officials | Ohio Pride" />
+    <meta property="og:description" content="Model non-discrimination ordinances, conversion-therapy bans, safe-haven resolutions, home-rule authority, and drafting help for Ohio local officials." />
+    <meta property="og:url" content="https://www.ohiopride.org/elected-resources" />
+    <meta property="og:site_name" content="Ohio Pride" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="LGBTQ+ Equality Toolkit for Ohio Local Officials | Ohio Pride" />
+    <meta name="twitter:description" content="Model non-discrimination ordinances, conversion-therapy bans, safe-haven resolutions, home-rule authority, and drafting help for Ohio local officials." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      body {
+        background: var(--dark-bg);
+      }
+
+      .res-hero {
+        padding: calc(var(--nav-height) + 3rem) 1.5rem 2rem;
+        text-align: center;
+        max-width: 880px;
+        margin: 0 auto;
+      }
+      .res-hero .res-eyebrow {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-accent);
+        margin-bottom: 0.75rem;
+      }
+      .res-hero h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: clamp(1.9rem, 4.5vw, 3rem);
+        font-weight: 700;
+        color: var(--text-white);
+        line-height: 1.15;
+        margin-bottom: 0.5rem;
+      }
+      .res-hero .hero-divider {
+        width: 90px;
+        height: 4px;
+        background: var(--pride-gradient);
+        margin: 1.5rem auto;
+        border-radius: 2px;
+      }
+      .res-hero p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+
+      .res-body {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 1rem 1.5rem 3rem;
+      }
+
+      /* --- Table of contents --- */
+      .res-toc {
+        background: var(--bg-white);
+        border: 1px solid var(--border-medium);
+        border-radius: 14px;
+        padding: 1.25rem 1.5rem;
+        margin: 1.5rem 0 2.5rem;
+      }
+      .res-toc h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0 0 0.85rem;
+      }
+      .res-toc ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.4rem 1.5rem;
+        counter-reset: toc;
+      }
+      .res-toc li {
+        counter-increment: toc;
+      }
+      .res-toc a {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        text-decoration: none;
+        font-size: 0.95rem;
+        display: block;
+        padding: 0.35rem 0;
+      }
+      .res-toc a::before {
+        content: counter(toc) ". ";
+        color: var(--text-accent);
+        font-weight: 700;
+      }
+      .res-toc a:hover {
+        color: var(--text-white);
+      }
+
+      /* --- Typography --- */
+      .res-body h2.res-section {
+        font-family: "Montserrat", sans-serif;
+        font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+        font-weight: 700;
+        color: var(--text-white);
+        margin: 3rem 0 0.4rem;
+        padding-top: 1rem;
+        scroll-margin-top: calc(var(--nav-height) + 1rem);
+      }
+      .res-body h2.res-section .res-num {
+        color: var(--text-accent);
+        margin-right: 0.5rem;
+      }
+      .res-body h3 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin: 2rem 0 0.6rem;
+      }
+      .res-body p,
+      .res-body li {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        font-size: 0.98rem;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+      }
+      .res-body ul,
+      .res-body ol.res-list {
+        padding-left: 1.4rem;
+        margin-bottom: 1.25rem;
+      }
+      .res-body li {
+        margin-bottom: 0.5rem;
+      }
+      .res-body a {
+        color: var(--color-light-blue, #70d6ec);
+        text-decoration: underline;
+      }
+      .res-body strong {
+        color: var(--text-white);
+      }
+
+      /* --- Key findings cards --- */
+      .res-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0 1rem;
+      }
+      .res-card {
+        background: var(--bg-white);
+        border: 1px solid var(--border-medium);
+        border-radius: 14px;
+        padding: 1.25rem 1.35rem;
+      }
+      .res-card .res-card-tag {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-accent);
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+      .res-card p {
+        margin-bottom: 0;
+        font-size: 0.92rem;
+        line-height: 1.65;
+      }
+
+      /* --- Callout boxes --- */
+      .res-callout {
+        border-radius: 12px;
+        padding: 1.1rem 1.35rem;
+        margin: 1.5rem 0;
+        border-left: 4px solid var(--text-accent);
+        background: var(--bg-light);
+      }
+      .res-callout p:last-child {
+        margin-bottom: 0;
+      }
+      .res-callout .res-callout-label {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 0.4rem;
+        color: var(--text-accent);
+      }
+      .res-callout.is-warning {
+        border-left-color: var(--text-warning);
+        background: rgba(251, 191, 36, 0.07);
+      }
+      .res-callout.is-warning .res-callout-label {
+        color: var(--text-warning);
+      }
+      .res-callout.is-model {
+        border-left-color: var(--text-success);
+        background: rgba(74, 222, 128, 0.06);
+      }
+      .res-callout.is-model .res-callout-label {
+        color: var(--text-success);
+      }
+
+      /* --- Staged recommendations --- */
+      .res-stage {
+        background: var(--bg-white);
+        border: 1px solid var(--border-medium);
+        border-radius: 14px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.25rem;
+      }
+      .res-stage h3 {
+        margin-top: 0;
+        display: flex;
+        align-items: baseline;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+      }
+      .res-stage .res-stage-badge {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .res-stage.low .res-stage-badge {
+        background: rgba(74, 222, 128, 0.18);
+        color: var(--text-success);
+      }
+      .res-stage.mid .res-stage-badge {
+        background: rgba(251, 191, 36, 0.16);
+        color: var(--text-warning);
+      }
+      .res-stage.high .res-stage-badge {
+        background: rgba(255, 107, 107, 0.16);
+        color: var(--text-danger);
+      }
+
+      /* --- Help / CTA banner --- */
+      .res-help {
+        background: linear-gradient(135deg, var(--dark-bg-light), var(--dark-bg-lighter));
+        border: 1px solid var(--border-medium);
+        border-radius: 16px;
+        padding: 1.75rem;
+        margin: 2.5rem 0;
+        text-align: center;
+      }
+      .res-help h3 {
+        margin-top: 0;
+      }
+      .res-help p {
+        max-width: 560px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* --- Sources --- */
+      .res-sources {
+        margin-top: 1rem;
+      }
+      .res-sources summary {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        color: var(--text-white);
+        cursor: pointer;
+        padding: 0.6rem 0;
+        font-size: 1rem;
+      }
+      .res-sources ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      .res-sources li {
+        font-size: 0.88rem;
+        word-break: break-word;
+        margin-bottom: 0.6rem;
+      }
+
+      .res-updated {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-style: italic;
+        margin-top: 2.5rem;
+        text-align: center;
+      }
+    </style>
+    <link rel="stylesheet" href="/css/site-template.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main">
+      <section class="res-hero">
+        <div class="res-eyebrow">Resources for Elected Officials</div>
+        <h1>LGBTQ+ Equality Toolkit for Ohio Local Officials</h1>
+        <div class="hero-divider"></div>
+        <p>
+          Ohio has no statewide LGBTQ+ non-discrimination law, so local action is
+          the only path. This toolkit collects the strongest, most-replicable
+          models — comprehensive non-discrimination ordinances, conversion-therapy
+          bans, safe-haven resolutions, and Pride proclamations — along with the
+          home-rule authority and drafting help that make them possible.
+        </p>
+      </section>
+
+      <div class="res-body">
+        <!-- TL;DR cards -->
+        <div class="res-cards">
+          <div class="res-card">
+            <span class="res-card-tag">NDOs lead the way</span>
+            <p>
+              Roughly 37 Ohio municipalities plus Cuyahoga County prohibit
+              discrimination based on sexual orientation and gender identity.
+              Columbus (1974) is the template; the count keeps growing.
+            </p>
+          </div>
+          <div class="res-card">
+            <span class="res-card-tag">Resolutions are lowest-risk</span>
+            <p>
+              Safe-haven resolutions, Pride proclamations, and resolutions
+              opposing anti-LGBTQ+ state bills carry little legal exposure — they
+              express policy preferences rather than create binding law.
+            </p>
+          </div>
+          <div class="res-card">
+            <span class="res-card-tag">Home rule is the key</span>
+            <p>
+              Article XVIII of the Ohio Constitution grants broad authority. Only
+              a conflicting state "general law" can preempt a local ordinance —
+              and none addresses SOGI, so NDOs fill a gap.
+            </p>
+          </div>
+          <div class="res-card">
+            <span class="res-card-tag">Know the headwinds</span>
+            <p>
+              HB 68, HB 183, HB 8, and SB 1 constrain action on healthcare,
+              bathrooms, schools, and universities. The March 31, 2026 Supreme
+              Court ruling puts conversion-therapy bans at legal risk.
+            </p>
+          </div>
+        </div>
+
+        <!-- Table of contents -->
+        <nav class="res-toc" aria-label="On this page">
+          <h2>On this page</h2>
+          <ol>
+            <li><a href="#ndos">Non-discrimination ordinances</a></li>
+            <li><a href="#conversion-therapy">Conversion-therapy bans</a></li>
+            <li><a href="#other-measures">Other municipal measures</a></li>
+            <li><a href="#school-boards">School board policies</a></li>
+            <li><a href="#model-legislation">Model legislation &amp; data</a></li>
+            <li><a href="#how-to-pass">How to pass it — home rule</a></li>
+            <li><a href="#recommendations">Recommendations</a></li>
+            <li><a href="#caveats">Caveats</a></li>
+          </ol>
+        </nav>
+
+        <!-- 1. NDOs -->
+        <h2 class="res-section" id="ndos">
+          <span class="res-num">1.</span>Non-Discrimination Ordinances (NDOs)
+        </h2>
+        <p>
+          <strong>What they do:</strong> Prohibit discrimination based on sexual
+          orientation and gender identity or expression (SOGI) in some or all of:
+          employment, housing, and public accommodations. The strongest
+          ("comprehensive") ordinances cover all three areas and include an
+          enforcement mechanism.
+        </p>
+        <p>
+          <strong>Current count:</strong> Equality Ohio executive director Dwayne
+          Steward stated the number of local NDOs "rose to 37 last year" (i.e., in
+          2025), per NBC4/WCMH (Feb. 2026). The Movement Advancement Project's Ohio
+          Equality Profile reports 40 cities with full SOGI protections in private
+          employment, housing, and public accommodations — covering 31% of the
+          state population — plus 16 municipalities with partial protections and 1
+          county (Cuyahoga). The ACLU of Ohio (as of Feb. 20, 2024) counted 35
+          localities plus 1 county. Numbers differ by date and counting method;
+          verify before publishing a single figure.
+        </p>
+
+        <h3>Comprehensive SOGI NDOs (employment + housing + public accommodations)</h3>
+        <p>
+          Jurisdictions include: Akron, Athens, Beachwood, Bexley, Bowling Green,
+          Cincinnati, Cleveland, Cleveland Heights, Columbus, Coshocton, Cuyahoga
+          County, Dayton, Dublin, East Cleveland, Galion, Gambier, Golf Manor,
+          Kent, Lakewood, Medina, Newark, Norwood, Oberlin, Olmsted Falls, Oxford,
+          Portsmouth, Reynoldsburg, Sandusky, Shaker Heights, South Euclid, Toledo,
+          University Heights, Westerville, Worthington, Yellow Springs, Youngstown,
+          Whitehall (2025), and Grove City (Dec. 2025).
+        </p>
+        <p>
+          <strong>Partial protections:</strong> Canton (employment + housing only).
+          Employee-only protections (city/county workers): Cuyahoga Falls, Franklin
+          County, Gahanna, Hamilton, Hamilton County, Laura, Lima, Lucas County,
+          Montgomery County, Summit County, Wood County.
+        </p>
+
+        <div class="res-callout is-model">
+          <span class="res-callout-label">Model — City of Columbus</span>
+          <p>
+            <strong>Title 23, Chapter 2331 ("Discriminatory Practices; Civil
+            Rights").</strong> Columbus passed the first Ohio sexual-orientation
+            protection in <strong>January 1974</strong> (housing and public
+            accommodations); "gender identity or expression" and four other classes
+            were added on <strong>December 15, 2008</strong>. Twelve protected
+            classes now span employment, housing, and public accommodations
+            ("employer" = anyone employing four or more persons in the city).
+          </p>
+          <p>
+            <strong>Enforcement:</strong> The Columbus Community Relations
+            Commission (CRC) investigates, mediates, or refers complaints; a charge
+            must be filed within six months. A violation is a first-degree
+            misdemeanor (up to 180 days and/or up to $1,000 for an individual; up to
+            $5,000 for an organization). A standard religious exemption applies.
+          </p>
+        </div>
+
+        <div class="res-callout is-model">
+          <span class="res-callout-label">Model — Dublin &amp; Worthington</span>
+          <p>
+            <strong>Dublin</strong> publicly posts its Law Director memo and draft
+            ordinance — an Ohio-specific template with a
+            <strong>civil/administrative</strong> (not criminal) enforcement model,
+            a religious-organization exemption, and a legal-basis discussion citing
+            home-rule authority and <em>Walker v. City of Toledo</em>.
+            <strong>Worthington</strong> files complaints with the City Clerk and
+            refers them to the Ohio Civil Rights Commission, EEOC, or Law Director —
+            a clean administrative approach recommended by its Community Relations
+            Commission.
+          </p>
+        </div>
+
+        <div class="res-callout is-warning">
+          <span class="res-callout-label">Caution</span>
+          <p>
+            A reported case (<em>Columbus Community Church v. City of Upper
+            Arlington</em>, ~2020) involved a dispute over local SOGI ordinance
+            scope. Secondary summaries are inconsistent — verify the precise holding
+            with your city attorney before relying on it.
+          </p>
+        </div>
+
+        <!-- 2. Conversion therapy -->
+        <h2 class="res-section" id="conversion-therapy">
+          <span class="res-num">2.</span>Conversion-Therapy Bans
+        </h2>
+        <p>
+          <strong>What they do:</strong> Prohibit licensed mental-health
+          professionals from practicing conversion therapy on minors. They
+          typically exempt clergy and religious counselors.
+        </p>
+        <p>
+          <strong>16 Ohio communities ban the practice</strong> (15 cities plus
+          Cuyahoga County, per The Buckeye Flame, Jan. 2026):
+          <strong>Cincinnati</strong> (2015 — the nation's first; $200/day civil
+          fine; the only Ohio jurisdiction with a record of enforcement),
+          <strong>Columbus, Dayton, Athens</strong> (2017),
+          <strong>Lakewood</strong> (2018), <strong>Kent</strong> (2019),
+          <strong>Toledo</strong> (2020), <strong>Cleveland, Cleveland Heights,
+          Akron, Reynoldsburg</strong> (2022), <strong>Lorain, Whitehall</strong>
+          (2024), <strong>Westerville</strong> and <strong>Cuyahoga County</strong>
+          (2025 — first and only county; covers minors and "vulnerable adults"),
+          and <strong>Oberlin</strong> (2026, the 15th city; $500–$1,000/day).
+        </p>
+
+        <div class="res-callout is-warning">
+          <span class="res-callout-label">Critical legal warning</span>
+          <p>
+            On <strong>March 31, 2026</strong> the U.S. Supreme Court decided
+            <em>Chiles v. Salazar</em> 8–1 (Gorsuch, J.), holding that Colorado's
+            ban, as applied to talk therapy by a licensed counselor, is a content-
+            and viewpoint-based regulation of speech subject to strict scrutiny, and
+            remanded to the Tenth Circuit. On <strong>December 17, 2025</strong>, the
+            Sixth Circuit (binding on Ohio) blocked enforcement of Michigan's ban in
+            <em>Catholic Charities of Jackson v. Whitmer</em>. These rulings make all
+            16 Ohio bans legally vulnerable. MAP notes <em>Chiles</em> "does not
+            prevent states or localities from regulating conversion practices" but
+            sends the case back under a different standard. Officials considering a
+            new ban must work with counsel on narrow, conduct-focused drafting.
+          </p>
+        </div>
+
+        <!-- 3. Other measures -->
+        <h2 class="res-section" id="other-measures">
+          <span class="res-num">3.</span>Other Municipal LGBTQ+ Equality Measures
+        </h2>
+
+        <h3>Safe-haven / welcoming resolutions</h3>
+        <p>
+          <strong>Athens</strong> unanimously passed Resolution R-01-25 (March 3,
+          2025) declaring the city a "safe haven for transgender and non-binary
+          individuals seeking gender-affirming healthcare," drafted by the OU YDSA
+          chapter with ACLU of Ohio support. It urges the administration to protect
+          patient privacy, support telehealth/pop-up clinics, and oppose criminal
+          prosecution of providers and patients. Cleveland Heights and Cincinnati
+          passed similar resolutions. As the Athens law director confirmed, a
+          resolution expresses policy preferences and does not alter state law,
+          minimizing legal exposure — making these ideal model templates.
+        </p>
+
+        <h3>Pride proclamations and flag-raisings</h3>
+        <p>
+          Common, low-risk leadership actions scored by HRC's Municipal Equality
+          Index. Salt Lake City's adoption of official city flags (LGBTQ+, trans)
+          was cited nationally in 2025 as a workaround to a state flag-display
+          restriction — a model for Ohio cities facing similar limits.
+        </p>
+
+        <h3>Trans-inclusive employee benefits</h3>
+        <p>
+          Many Ohio cities offer trans-inclusive health coverage for municipal
+          employees (an MEI-scored category). But HB 68's ban on gender-affirming
+          care for minors means cities cannot meaningfully cover employees' minor
+          dependents. The proposed Cleveland Gender Freedom Policy (a DSA-led 2026
+          petition ordinance) would continue coverage for gender-affirming care
+          "even if such care must legally be provided outside the State of Ohio" and
+          make enforcement of anti-trans laws the city's "lowest possible priority."
+        </p>
+
+        <h3>Domestic partnership registries</h3>
+        <p>
+          Cleveland Heights was first (2002/2004), followed by Toledo (2007),
+          Cuyahoga County and Oberlin (2012), Yellow Springs (2009), and others.
+          After <em>Obergefell v. Hodges</em> (2015) these are largely symbolic for
+          same-sex couples but still serve unmarried couples.
+        </p>
+
+        <h3>All-gender restrooms &amp; inclusive procurement</h3>
+        <p>
+          Designating single-occupancy restrooms in municipal buildings as
+          all-gender is a common MEI-scored policy. (HB 183 mandates single-sex
+          multi-user facilities in K-12 schools and colleges — not municipal
+          buildings — but confirm scope with counsel.) Cities with NDOs can also
+          extend non-discrimination requirements to contractors.
+        </p>
+
+        <h3>"Gay/trans panic" defense bans</h3>
+        <p>
+          No Ohio jurisdiction has banned this defense; it is typically a
+          state-level (penal code) measure. The Williams Institute and the National
+          LGBTQ+ Bar Association publish model legislation, and local officials can
+          pass resolutions urging the General Assembly to act.
+        </p>
+
+        <!-- 4. School boards -->
+        <h2 class="res-section" id="school-boards">
+          <span class="res-num">4.</span>School Board Policies (and State Constraints)
+        </h2>
+        <p>
+          Ohio has no state law requiring SOGI-inclusive non-discrimination or
+          anti-bullying policies. School boards face significant new state
+          constraints:
+        </p>
+        <ul>
+          <li>
+            <strong>HB 8 (Parents' Bill of Rights),</strong> effective April 9,
+            2025: requires parental notification of changes in a student's
+            services/well-being (effectively forced outing), bans "sexuality
+            content" in grades K-3, and requires parental notification before
+            mentioning LGBTQ+ people/history in grades 5–12.
+          </li>
+          <li>
+            <strong>HB 183 (bathroom bill):</strong> single-sex facilities in
+            schools and colleges.
+          </li>
+          <li>
+            <strong>SB 1 (Advance Ohio Higher Education Act),</strong> effective
+            June 27, 2025: bans DEI programs/offices at public universities and
+            restricts "controversial" institutional statements.
+          </li>
+        </ul>
+        <p>
+          <strong>What boards can still do:</strong> Honesty for Ohio Education (a
+          40+ organization coalition) publishes a "Don't Discriminate Guide to HB 8"
+          toolkit, model resolutions, and a School Board Alliance. Bexley City
+          Schools adopted a narrow compliance policy emphasizing "age-appropriate
+          and developmentally appropriate lessons about gender diversity and
+          acceptance." Boards retain discretion not to use birth names/genders (HB 8
+          does not require it) and can honor pronouns for students whose parents
+          consent.
+        </p>
+
+        <!-- 5. Model legislation -->
+        <h2 class="res-section" id="model-legislation">
+          <span class="res-num">5.</span>Model Legislation &amp; Data Sources
+        </h2>
+        <ul>
+          <li>
+            <strong>Equality Ohio</strong> — Municipal Map and direct drafting
+            assistance (<a href="mailto:advocacy@equalityohio.org">advocacy@equalityohio.org</a>);
+            the "Roadmap Back to Equality" aims for equality measures in 30
+            municipalities by 2029, so no LGBTQ+ person is more than 45 minutes from
+            a "queer haven."
+          </li>
+          <li>
+            <strong>Movement Advancement Project (MAP)</strong> — Ohio Equality
+            Profile, local NDO maps, conversion-therapy and panic-defense maps with
+            model-legislation links.
+          </li>
+          <li>
+            <strong>HRC Municipal Equality Index (MEI)</strong> — scores cities on
+            ~49 criteria. 2025 Ohio scores: Akron 100, Cincinnati 100, Columbus 100,
+            Lakewood 100, Dayton 97, Cleveland 95, Dublin 90, Toledo 85 — an Ohio
+            average of 96 vs. the national 70. All eight rated cities earned
+            "All-Star" status. Includes a mayors' toolkit.
+          </li>
+          <li>
+            <strong>ACLU of Ohio</strong> — anti-discrimination ordinance list and
+            litigation (<em>Moe v. Yost</em>, challenging HB 68).
+          </li>
+          <li>
+            <strong>Williams Institute / National LGBTQ+ Bar Association</strong> —
+            model gay/trans panic-defense ban legislation.
+          </li>
+          <li>
+            <strong>Honesty for Ohio Education / TransOhio / Kaleidoscope Youth
+            Center</strong> — school policy toolkits and Know Your Rights materials.
+          </li>
+        </ul>
+
+        <!-- 6. How to pass it -->
+        <h2 class="res-section" id="how-to-pass">
+          <span class="res-num">6.</span>How to Pass It — Mechanics &amp; Ohio Home Rule
+        </h2>
+        <p>
+          <strong>Ordinance vs. resolution.</strong> An <strong>ordinance</strong>
+          creates binding local law (use for NDOs, conversion-therapy bans,
+          benefits). A <strong>resolution</strong> expresses the body's position
+          (use for safe-haven declarations, Pride proclamations, opposition to state
+          bills) and carries far less legal risk. Ordinances typically require
+          committee referral, multiple readings, public hearings, and a majority
+          vote.
+        </p>
+        <p>
+          <strong>Home rule (Ohio Constitution, Article XVIII, Section 3).</strong>
+          Adopted by Ohio voters in 1912, it grants municipalities the power of
+          local self-government and the power to adopt local police, sanitary, and
+          similar regulations "not in conflict with general laws." Only a
+          <strong>general law that conflicts</strong> with a local ordinance
+          preempts it. The three-part preemption test (<em>City of Cleveland v.
+          State</em>, 2010) asks whether the ordinance is an exercise of police
+          power, the statute is a general law, and the two conflict.
+        </p>
+        <p>
+          <strong>What this means for LGBTQ+ measures:</strong> NDOs and resolutions
+          are on solid ground — Ohio's anti-discrimination statute (ORC Chapter
+          4112) does not address SOGI, so local NDOs fill a gap rather than
+          conflict. Conversion-therapy bans are now vulnerable on First Amendment
+          (not preemption) grounds. State law constrains gender-affirming care for
+          minors (HB 68), school/college bathrooms (HB 183), school curriculum
+          (HB 8), and public-university DEI (SB 1).
+        </p>
+
+        <div class="res-callout">
+          <span class="res-callout-label">Practical advice</span>
+          <p>
+            <strong>Engage the city/county attorney early</strong> — every
+            successful Ohio NDO ran through legal review.
+            <strong>Build a coalition</strong> — the Athens resolution succeeded
+            because students, medical professionals, and the ACLU packed the
+            chamber. <strong>Use a human relations commission</strong> for
+            enforcement and education. <strong>Choose civil/administrative
+            enforcement</strong> over criminal where possible. And
+            <strong>anticipate opposition</strong>: standard religious exemptions
+            answer "religious freedom"; no conflicting general law answers "state
+            preemption"; and economic-competitiveness signals (per the 1,000+ member
+            Ohio Business Competes coalition) answer "it's just symbolic."
+          </p>
+        </div>
+
+        <!-- Recommendations -->
+        <h2 class="res-section" id="recommendations">
+          <span class="res-num">7.</span>Recommendations — A Staged Approach
+        </h2>
+
+        <div class="res-stage low">
+          <h3>Stage 1 <span class="res-stage-badge">Lowest risk · start now</span></h3>
+          <ol class="res-list">
+            <li>Pass a <strong>Pride proclamation</strong> and flag-raising resolution (annual, near-zero legal risk).</li>
+            <li>Pass a <strong>resolution opposing state anti-LGBTQ+ legislation</strong> and/or a safe-haven resolution modeled on Athens R-01-25, vetted by your law director.</li>
+            <li>If your jurisdiction lacks one, draft a <strong>comprehensive SOGI NDO</strong> using the Columbus, Dublin, or Worthington models with civil/administrative enforcement and a standard religious exemption. Contact Equality Ohio for drafting help.</li>
+          </ol>
+        </div>
+
+        <div class="res-stage mid">
+          <h3>Stage 2 <span class="res-stage-badge">After coalition-building &amp; legal review</span></h3>
+          <ol class="res-list" start="4">
+            <li>Establish or empower a <strong>human relations commission</strong> to enforce the NDO and run education programs.</li>
+            <li>Adopt <strong>all-gender single-occupancy restroom</strong> designations in municipal buildings and <strong>inclusive contractor/procurement</strong> requirements.</li>
+            <li>Review <strong>municipal employee benefits</strong> for trans-inclusive coverage (note the HB 68 limit on minor dependents).</li>
+          </ol>
+        </div>
+
+        <div class="res-stage high">
+          <h3>Stage 3 <span class="res-stage-badge">Higher legal risk · counsel required</span></h3>
+          <ol class="res-list" start="7">
+            <li>A <strong>conversion-therapy ban</strong> is now constitutionally vulnerable after <em>Chiles</em> (March 31, 2026) and the Sixth Circuit's Michigan ruling (Dec. 17, 2025); pursue only with narrow, conduct-focused drafting and a willingness to defend it.</li>
+          </ol>
+        </div>
+
+        <!-- Help banner -->
+        <div class="res-help">
+          <h3>Need help drafting an ordinance?</h3>
+          <p>
+            Equality Ohio offers direct drafting assistance to local officials.
+            Reach their advocacy team at
+            <a href="mailto:advocacy@equalityohio.org">advocacy@equalityohio.org</a>,
+            or contact Ohio Pride PAC at
+            <a href="mailto:info@ohiopride.org">info@ohiopride.org</a> and we'll help
+            connect you with the right resources and model language.
+          </p>
+        </div>
+
+        <!-- Caveats -->
+        <h2 class="res-section" id="caveats">Caveats</h2>
+        <ul>
+          <li>
+            <strong>Counts vary by source and date.</strong> Equality Ohio: 37 NDOs
+            in 2025; MAP: 40 cities + 1 county; ACLU: 35 + 1 county (Feb. 2024).
+            Conversion-therapy-ban counts range from 14 to 16. Verify before
+            publishing a single number.
+          </li>
+          <li>
+            <strong>Conversion-therapy bans are in legal flux</strong> as of mid-2026
+            — do not present them as settled law.
+          </li>
+          <li>
+            <strong>School and bathroom measures are heavily preempted</strong> by
+            HB 8 and HB 183; local boards have narrow room to maneuver.
+          </li>
+          <li>
+            A few specific claims (e.g., the Upper Arlington case, the exact 2008
+            Columbus ordinance number, the year sexual orientation was added to
+            Columbus's <em>employment</em> protections) should be confirmed with a
+            city attorney before citing.
+          </li>
+        </ul>
+
+        <!-- Sources -->
+        <details class="res-sources">
+          <summary>Source URLs for verification</summary>
+          <ul>
+            <li>Equality Ohio Municipal Map — <a href="https://equalityohio.org/our-work/local/municipal-map/" target="_blank" rel="noopener">equalityohio.org/our-work/local/municipal-map</a></li>
+            <li>Equality Ohio Local Advocacy — <a href="https://equalityohio.org/our-work/local/" target="_blank" rel="noopener">equalityohio.org/our-work/local</a></li>
+            <li>ACLU of Ohio, Anti-Discrimination Ordinances — <a href="https://www.acluohio.org/news/anti-discrimination-ordinances/" target="_blank" rel="noopener">acluohio.org/news/anti-discrimination-ordinances</a></li>
+            <li>MAP Ohio Equality Profile — <a href="https://mapresearch.org/equality-profiles/oh/" target="_blank" rel="noopener">mapresearch.org/equality-profiles/oh</a></li>
+            <li>MAP Conversion Therapy Laws — <a href="https://www.lgbtmap.org/equality-maps/conversion_therapy" target="_blank" rel="noopener">lgbtmap.org/equality-maps/conversion_therapy</a></li>
+            <li>MAP Local Nondiscrimination Ordinances — <a href="https://www.lgbtmap.org/equality-maps/non_discrimination_ordinances" target="_blank" rel="noopener">lgbtmap.org/equality-maps/non_discrimination_ordinances</a></li>
+            <li>Columbus Code Chapter 2331 — <a href="https://library.municode.com/oh/columbus/codes/code_of_ordinances?nodeId=TIT23GEOFCO_CH2331DIPRCIRIDI" target="_blank" rel="noopener">library.municode.com (Columbus Ch. 2331)</a></li>
+            <li>Columbus CRC / Protected Classes — <a href="https://www.columbus.gov/Government/Mayors-Office/City-Boards-Commissions-Committees/Community-Relations-Commission/Discrimination-Protected-Classes-in-Columbus" target="_blank" rel="noopener">columbus.gov (Protected Classes)</a></li>
+            <li>Worthington NDO — <a href="https://www.worthington.org/1891/Non-Discrimination-Ordinance" target="_blank" rel="noopener">worthington.org/1891/Non-Discrimination-Ordinance</a></li>
+            <li>Dublin NDO materials (PDF) — <a href="https://dublinohiousa.gov/dev/dev/wp-content/uploads/2021/10/4.-Nondiscrimination-Ordinance-Materials.pdf" target="_blank" rel="noopener">dublinohiousa.gov (NDO materials)</a></li>
+            <li>Cincinnati first conversion-therapy ban (FOX19) — <a href="https://www.fox19.com/story/30708054/cincinnati-becomes-first-city-to-ban-lgbt-conversion-therapy/" target="_blank" rel="noopener">fox19.com</a></li>
+            <li>Oberlin, 15th city (NBC4) — <a href="https://www.nbc4i.com/news/local-news/central-ohio-news/oberlin-becomes-15th-ohio-city-to-ban-conversion-therapy-for-minors/" target="_blank" rel="noopener">nbc4i.com</a></li>
+            <li>The Buckeye Flame, 16 conversion-therapy bans — <a href="https://thebuckeyeflame.com/2026/01/28/conversion-therapy-score-cards/" target="_blank" rel="noopener">thebuckeyeflame.com</a></li>
+            <li>Chiles v. Salazar opinion (No. 24-539) — <a href="https://www.supremecourt.gov/opinions/25pdf/24-539_fd9g.pdf" target="_blank" rel="noopener">supremecourt.gov (24-539)</a></li>
+            <li>Athens safe-haven resolution (The Buckeye Flame) — <a href="https://thebuckeyeflame.com/2025/03/07/athens-approves-safe-haven-resolution/" target="_blank" rel="noopener">thebuckeyeflame.com</a></li>
+            <li>Cleveland Gender Freedom Policy — <a href="https://thebuckeyeflame.com/2026/06/03/cleveland-gender-freedom-policy-needs-5000-signatures/" target="_blank" rel="noopener">thebuckeyeflame.com</a></li>
+            <li>HRC Municipal Equality Index 2025 — <a href="https://reports.hrc.org/municipal-equality-index-2025" target="_blank" rel="noopener">reports.hrc.org/municipal-equality-index-2025</a></li>
+            <li>Williams Institute, gay/trans panic model legislation — <a href="https://williamsinstitute.law.ucla.edu/publications/model-leg-gay-trans-panic/" target="_blank" rel="noopener">williamsinstitute.law.ucla.edu</a></li>
+            <li>Ohio LSC Municipal Home Rule brief (PDF) — <a href="https://www.lsc.ohio.gov/assets/organizations/legislative-service-commission/files/municipal-home-rule.pdf" target="_blank" rel="noopener">lsc.ohio.gov (Home Rule)</a></li>
+            <li>HB 68 — <a href="https://www.legislature.ohio.gov/legislation/135/hb68" target="_blank" rel="noopener">legislature.ohio.gov/legislation/135/hb68</a></li>
+            <li>HB 183 — <a href="https://www.legislature.ohio.gov/legislation/135/hb183" target="_blank" rel="noopener">legislature.ohio.gov/legislation/135/hb183</a></li>
+            <li>HB 8 Parents' Bill of Rights (Ohio Capital Journal) — <a href="https://ohiocapitaljournal.com/briefs/ohio-gov-mike-dewine-signs-forced-outing-mandated-religious-release-time-policy-bill-into-law/" target="_blank" rel="noopener">ohiocapitaljournal.com</a></li>
+            <li>Honesty for Ohio Education — <a href="https://www.honestyforohioeducation.org/" target="_blank" rel="noopener">honestyforohioeducation.org</a></li>
+            <li>TransOhio Know Your Rights — <a href="https://www.transohio.org/know-your-rights" target="_blank" rel="noopener">transohio.org/know-your-rights</a></li>
+          </ul>
+        </details>
+
+        <p class="res-updated">
+          This toolkit is a starting point, not legal advice. Conditions change —
+          always work with your city or county attorney before acting. Last
+          reviewed: June 2026.
+        </p>
+      </div>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <a href="/donate" class="mobile-donate-fab">Donate</a>
+    <script src="/js/main.js" defer></script>
+    <script src="/js/enhancements.js" defer></script>
+    <script src="/js/site-template.js" defer></script>
+  </body>
+</html>

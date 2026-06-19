@@ -46,6 +46,11 @@
   status = 200
 
 [[redirects]]
+  from = "/elected-resources"
+  to = "/elected-resources.html"
+  status = 200
+
+[[redirects]]
   from = "/volunteer"
   to = "/volunteer.html"
   status = 200
