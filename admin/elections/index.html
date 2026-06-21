@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Elections · Ohio Pride Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+
+    <style>
+      /* Elections module — dark admin theme (matches the rest of /admin).
+         Surfaces are raised translucent panels on the near-black shell
+         content gradient; text is light; pride gradient is a thin accent. */
+      .elx-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+      @media (min-width: 720px) { .elx-grid { grid-template-columns: repeat(2, 1fr); } }
+      .elx-card {
+        display: block; text-decoration: none; color: inherit;
+        background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09);
+        border-radius: 14px; padding: 22px 22px 18px; transition: transform .15s, box-shadow .15s, border-color .15s;
+      }
+      .elx-card:hover { transform: translateY(-2px); border-color: rgba(112,214,236,.5);
+        box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+      .elx-card-top { height: 4px; border-radius: 4px; background: var(--pride-gradient); margin: -22px -22px 18px; }
+      .elx-eyebrow { font-family: "Montserrat",sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+        text-transform: uppercase; color: var(--text-accent, #70D6EC); }
+      .elx-title { font-family: "Montserrat",sans-serif; font-weight: 800; font-size: 22px; color: #fff; margin: 4px 0 6px; letter-spacing: -.02em; }
+      .elx-meta { font-size: 13.5px; color: rgba(255,255,255,.72); line-height: 1.6; }
+      .elx-stat-row { display: flex; gap: 18px; margin-top: 16px; flex-wrap: wrap; }
+      .elx-stat b { font-family: "Montserrat",sans-serif; font-weight: 800; font-size: 18px; color: #fff; display: block; }
+      .elx-stat span { font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: rgba(255,255,255,.5); }
+      .elx-pill { display: inline-block; font-family: "Montserrat",sans-serif; font-size: 10.5px; font-weight: 700;
+        letter-spacing: .6px; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; }
+      .elx-pill-plan { background: rgba(255,200,87,.16); color: #f3d27a; }
+      .elx-pill-active { background: rgba(74,222,128,.16); color: #6ee7a0; }
+      .elx-empty { color: rgba(255,255,255,.5); font-size: 14px; padding: 30px 0; }
+    </style>
+  </head>
+
+  <body class="admin-shell">
+    <!-- data-active-nav="elections" is intentionally NOT a NAV id, so no sidebar item lights up. -->
+    <div id="shell-root"
+         data-active-nav="elections"
+         data-page-eyebrow="Field Operations"
+         data-page-title="Elections"
+         data-page-sub="Poll-coverage programs. Internal module, unlinked by design."></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script>
+      document.addEventListener('admin-shell-ready', async function (ev) {
+        var client = ev.detail.client;
+        var mount = document.getElementById('shellBody');
+        mount.innerHTML = '<div class="elx-empty">Loading campaigns…</div>';
+
+        var { data: camps, error } = await client
+          .from('election_campaigns')
+          .select('*')
+          .order('election_date', { ascending: true });
+
+        if (error) { mount.innerHTML = '<div class="elx-empty">Could not load campaigns. ' + error.message + '</div>'; return; }
+        if (!camps || !camps.length) { mount.innerHTML = '<div class="elx-empty">No campaigns yet.</div>'; return; }
+
+        var fmt = function (d) {
+          if (!d) return 'TBD';
+          var dt = new Date(d + 'T12:00:00');
+          return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        };
+        var daysTo = function (d) {
+          if (!d) return null;
+          var ms = new Date(d + 'T12:00:00') - new Date();
+          return Math.max(0, Math.ceil(ms / 86400000));
+        };
+
+        mount.innerHTML = '<div class="elx-grid">' + camps.map(function (c) {
+          var pill = c.status === 'active'
+            ? '<span class="elx-pill elx-pill-active">Active</span>'
+            : '<span class="elx-pill elx-pill-plan">Planning</span>';
+          var dd = daysTo(c.election_date);
+          return '' +
+            '<a class="elx-card" href="/admin/elections/' + c.id + '">' +
+              '<div class="elx-card-top"></div>' +
+              '<div class="elx-eyebrow">' + (c.election_kind || 'Election').toUpperCase() + ' · ' + (c.jurisdiction || '') + '</div>' +
+              '<div class="elx-title">' + (c.name || c.id) + '</div>' +
+              '<div class="elx-meta">' + (c.candidate ? c.candidate + ' · ' : '') + (c.office || '') + '<br/>' +
+                'Election ' + fmt(c.election_date) + (dd !== null ? ' · ' + dd + ' days out' : '') + ' &nbsp; ' + pill + '</div>' +
+              '<div class="elx-stat-row">' +
+                '<div class="elx-stat"><b>' + (c.goal_sites || '—') + '</b><span>Sites</span></div>' +
+                '<div class="elx-stat"><b>' + (c.goal_precincts || '—') + '</b><span>Precincts</span></div>' +
+                '<div class="elx-stat"><b>' + (c.coverage_target || '—') + '</b><span>On the ground</span></div>' +
+                '<div class="elx-stat"><b>' + (c.goal_volunteers || '—') + '</b><span>Recruit goal</span></div>' +
+              '</div>' +
+            '</a>';
+        }).join('') + '</div>';
+      });
+    </script>
+  </body>
+</html>

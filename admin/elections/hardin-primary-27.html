@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Hardin Primary '27 · Ohio Pride Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+
+    <style>
+      /* Hardin Primary '27 dashboard — dark admin theme (matches /admin).
+         Raised translucent panels on the near-black shell content gradient;
+         light text; tier colors and pride gradient as accents. */
+      :root { --hp-a:#E40303; --hp-b:#FFBC00; --hp-c:#70D6EC; }
+      .hp-wrap { max-width: 980px; margin: 0 auto; }
+
+      /* Planning banner */
+      .hp-banner {
+        display: flex; gap: 10px; align-items: flex-start;
+        background: rgba(255,200,87,.08); border: 1px solid rgba(255,200,87,.3); color: #f3d27a;
+        border-radius: 12px; padding: 11px 14px; font-size: 13px; line-height: 1.5; margin-bottom: 18px;
+      }
+      .hp-banner b { font-family: "Montserrat",sans-serif; color: #ffd98a; }
+
+      /* KPI strip */
+      .hp-kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+      @media (min-width: 720px) { .hp-kpis { grid-template-columns: repeat(4, 1fr); } }
+      .hp-kpi { background: var(--dark-bg, #152233); border: 1px solid rgba(255,255,255,.06); border-radius: 14px; padding: 16px 16px 14px; color: #fff; position: relative; overflow: hidden; }
+      .hp-kpi::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background: var(--pride-gradient); }
+      .hp-kpi b { font-family: "Montserrat",sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -.02em; display: block; line-height: 1.1; }
+      .hp-kpi span { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: rgba(255,255,255,.6); }
+      .hp-kpi small { color: var(--text-accent, #70D6EC); font-size: 12px; font-family:"Montserrat",sans-serif; font-weight:600; }
+
+      /* Progress bars */
+      .hp-bars { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09); border-radius: 14px; padding: 16px 18px; margin-bottom: 16px; }
+      .hp-bar + .hp-bar { margin-top: 14px; }
+      .hp-bar-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+      .hp-bar-label .l { font-family:"Montserrat",sans-serif; font-weight:700; font-size:12.5px; text-transform:uppercase; letter-spacing:.7px; color: #fff; }
+      .hp-bar-label .v { font-size:12.5px; color: rgba(255,255,255,.72); font-family:"Montserrat",sans-serif; font-weight:600; }
+      .hp-track { height: 12px; background: rgba(255,255,255,.1); border-radius: 7px; overflow: hidden; }
+      .hp-fill { height: 100%; width: 0; background: var(--pride-gradient); border-radius: 7px; transition: width 1s ease; }
+
+      /* Recruit strip */
+      .hp-recruit { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+      .hp-btn { -webkit-appearance:none; appearance:none; border:none; cursor:pointer; font-family:"Montserrat",sans-serif; font-weight:700;
+        font-size:13.5px; padding: 12px 18px; border-radius: 10px; display:inline-flex; align-items:center; gap:8px; text-decoration:none; min-height:44px; }
+      .hp-btn-primary { background: var(--color-blue,#004DFF); color:#fff; }
+      .hp-btn-primary:hover { background:#0039cc; }
+      .hp-btn-ghost { background: rgba(255,255,255,.06); color: #fff; border:1px solid rgba(255,255,255,.12); }
+      .hp-btn-ghost:hover { background: rgba(255,255,255,.1); }
+      .hp-btn-sm { font-size:12px; padding:8px 13px; min-height:0; border-radius:8px; }
+
+      /* Tabs (in page actions) */
+      .hp-tabs { display:inline-flex; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:10px; padding:3px; }
+      .hp-tab { border:none; background:transparent; cursor:pointer; font-family:"Montserrat",sans-serif; font-weight:700; font-size:12.5px;
+        padding:8px 16px; border-radius:8px; color: rgba(255,255,255,.6); }
+      .hp-tab.active { background: rgba(112,214,236,.18); color:#fff; }
+
+      /* Filter bar */
+      .hp-filter { position: sticky; top: 0; z-index: 5; background: #0a1b2a; padding: 10px 0 12px; margin-bottom: 4px; }
+      .hp-search { width:100%; padding:12px 14px; border:1px solid rgba(255,255,255,.12); border-radius:10px; font-family:"Roboto Slab",Georgia,serif; font-size:15px; background:rgba(15,34,51,.6); color:#fff; margin-bottom:10px; }
+      .hp-search::placeholder { color: rgba(255,255,255,.4); }
+      .hp-search:focus { outline:none; border-color: var(--text-accent,#70D6EC); box-shadow:0 0 0 3px rgba(112,214,236,.15); }
+      .hp-chiprow { display:flex; gap:7px; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+      .hp-chiprow::-webkit-scrollbar { display:none; }
+      .hp-chip { flex:0 0 auto; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); cursor:pointer; font-family:"Montserrat",sans-serif;
+        font-weight:600; font-size:12px; padding:7px 13px; border-radius:999px; color: rgba(255,255,255,.72); white-space:nowrap; }
+      .hp-chip.active { background: rgba(112,214,236,.18); border-color: rgba(112,214,236,.4); color:#fff; }
+      .hp-count { font-size:12.5px; color: rgba(255,255,255,.5); margin: 6px 2px 12px; font-family:"Montserrat",sans-serif; font-weight:600; }
+
+      /* Site cards */
+      .hp-sites { display:grid; gap:12px; grid-template-columns:1fr; }
+      @media (min-width:720px){ .hp-sites{ grid-template-columns:repeat(2,1fr);} }
+      @media (min-width:1040px){ .hp-sites{ grid-template-columns:repeat(3,1fr);} }
+      .hp-site { text-align:left; width:100%; cursor:pointer; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09);
+        border-radius:14px; padding:15px 15px 13px; transition:border-color .15s, box-shadow .15s, transform .12s; border-left-width:4px; }
+      .hp-site:hover { border-color: rgba(112,214,236,.5); box-shadow:0 8px 22px rgba(0,0,0,.35); transform: translateY(-1px); }
+      .hp-site.t-A { border-left-color: var(--hp-a); }
+      .hp-site.t-B { border-left-color: var(--hp-b); }
+      .hp-site.t-C { border-left-color: var(--hp-c); }
+      .hp-site-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+      .hp-tier { font-family:"Montserrat",sans-serif; font-weight:800; font-size:10.5px; letter-spacing:.6px; padding:2px 8px; border-radius:6px; white-space:nowrap; }
+      .hp-tier.t-A { background:rgba(228,3,3,.22); color:#ff8a8a; } .hp-tier.t-B { background:rgba(255,188,0,.2); color:#f3d27a; } .hp-tier.t-C { background:rgba(112,214,236,.18); color:#9fe4f4; }
+      .hp-site-name { font-family:"Montserrat",sans-serif; font-weight:700; font-size:15px; color:#fff; line-height:1.25; margin:8px 0 3px; }
+      .hp-site-meta { font-size:12.5px; color:rgba(255,255,255,.5); line-height:1.5; }
+      .hp-site-meta em { color:#f3d27a; font-style:normal; font-weight:600; }
+      .hp-fillrow { display:flex; gap:6px; margin-top:11px; flex-wrap:wrap; }
+      .hp-slotpill { font-family:"Montserrat",sans-serif; font-weight:700; font-size:10.5px; padding:4px 9px; border-radius:999px; letter-spacing:.4px; }
+      .hp-slotpill.ok { background:rgba(74,222,128,.18); color:#6ee7a0; }
+      .hp-slotpill.part { background:rgba(255,188,0,.18); color:#f3d27a; }
+      .hp-slotpill.none { background:rgba(255,255,255,.08); color:rgba(255,255,255,.45); }
+      .hp-statusdot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:2px; vertical-align:middle; }
+
+      /* Roster */
+      .hp-vrow { display:flex; align-items:center; gap:12px; padding:13px 4px; border-bottom:1px solid rgba(255,255,255,.08); }
+      .hp-avatar { flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:var(--pride-gradient); color:#fff; display:flex; align-items:center; justify-content:center; font-family:"Montserrat",sans-serif; font-weight:700; font-size:13px; }
+      .hp-vname { font-family:"Montserrat",sans-serif; font-weight:700; font-size:14px; color:#fff; }
+      .hp-vsub { font-size:12px; color:rgba(255,255,255,.5); }
+      .hp-vtag { margin-left:auto; font-family:"Montserrat",sans-serif; font-weight:700; font-size:11px; padding:3px 9px; border-radius:999px; background:rgba(255,255,255,.08); color:rgba(255,255,255,.7); }
+
+      /* Drawer slot UI */
+      .hp-slot { padding:14px 0; border-bottom:1px solid rgba(255,255,255,.08); }
+      .hp-slot:last-child { border-bottom:none; }
+      .hp-slot-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:9px; }
+      .hp-slot-title { font-family:"Montserrat",sans-serif; font-weight:700; font-size:13px; color:#fff; text-transform:uppercase; letter-spacing:.5px; }
+      .hp-slot-need { font-size:12px; color:rgba(255,255,255,.5); font-family:"Montserrat",sans-serif; font-weight:600; }
+      .hp-assigned { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:9px; }
+      .hp-achip { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+        border-radius:999px; padding:5px 6px 5px 11px; font-size:12.5px; font-family:"Montserrat",sans-serif; font-weight:600; color:#fff; }
+      .hp-achip button { border:none; background:rgba(255,255,255,.18); color:#fff; width:18px; height:18px; border-radius:50%; cursor:pointer; font-size:12px; line-height:1; }
+      .hp-achip button:hover { background:rgba(255,107,107,.4); }
+      .hp-pick { display:flex; gap:8px; }
+      .hp-pick select { flex:1; padding:10px 11px; border:1px solid rgba(255,255,255,.12); border-radius:9px; font-family:"Roboto Slab",Georgia,serif; font-size:14px; background:rgba(15,34,51,.6); color:#fff; }
+      .hp-pick select option { background: var(--dark-bg,#152233); color:#fff; }
+
+      /* Forms (add volunteer) */
+      .hp-field { margin-bottom:13px; }
+      .hp-field label { display:block; font-family:"Montserrat",sans-serif; font-weight:600; font-size:12.5px; color:#fff; margin-bottom:5px; }
+      .hp-field input, .hp-field select { width:100%; padding:11px 12px; border:1px solid rgba(255,255,255,.12); border-radius:9px; font-family:"Roboto Slab",Georgia,serif; font-size:15px; background:rgba(15,34,51,.6); color:#fff; }
+      .hp-field input::placeholder { color: rgba(255,255,255,.4); }
+      .hp-field select option { background: var(--dark-bg,#152233); color:#fff; }
+      .hp-field input:focus, .hp-field select:focus { outline:none; border-color:var(--text-accent,#70D6EC); box-shadow:0 0 0 3px rgba(112,214,236,.15); }
+      .hp-check { display:flex; align-items:center; gap:9px; font-family:"Roboto Slab",Georgia,serif; font-size:14px; color:#fff; }
+      .hp-check input { width:auto; }
+      .hp-empty { color:rgba(255,255,255,.5); font-size:14px; padding:34px 6px; text-align:center; }
+      .hidden { display:none !important; }
+    </style>
+  </head>
+
+  <body class="admin-shell">
+    <!-- data-active-nav="elections" is NOT a NAV id → no sidebar item highlights, module stays unlinked. -->
+    <div id="shell-root"
+         data-active-nav="elections"
+         data-page-eyebrow="Field Operations · Poll Coverage"
+         data-page-title="Hardin Primary '27"
+         data-page-sub="Recruit, assign, and track poll coverage across Columbus."></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script>
+    document.addEventListener('admin-shell-ready', function (ev) {
+      var sb = ev.detail.client;
+      var SLUG = (location.pathname.split('/').filter(Boolean).pop() || 'hardin-primary-27');
+      var body = document.getElementById('shellBody');
+      var actions = document.getElementById('shellPageActions');
+
+      var S = { camp:null, locs:[], vols:[], asn:[], tab:'sites',
+                f:{ q:'', tier:'all', quad:'all', status:'all' }, openLid:null };
+
+      var esc = function (s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+      var initials = function (n){ var p=(n||'').trim().split(/\s+/); return ((p[0]||'')[0]||'')+((p[1]||'')[0]||''); };
+
+      function load(){
+        body.innerHTML = '<div class="hp-empty">Loading…</div>';
+        Promise.all([
+          sb.from('election_campaigns').select('*').eq('id', SLUG).single(),
+          sb.from('election_polling_locations').select('*').eq('campaign_id', SLUG),
+          sb.from('election_volunteers').select('*').eq('campaign_id', SLUG).order('full_name'),
+          sb.from('election_assignments').select('*').eq('campaign_id', SLUG)
+        ]).then(function (r){
+          if (r[0].error) { body.innerHTML = '<div class="hp-empty">Could not load campaign. '+esc(r[0].error.message)+'</div>'; return; }
+          S.camp = r[0].data;
+          S.locs = (r[1].data||[]).sort(function(a,b){ return (b.precinct_count||0)-(a.precinct_count||0) || (a.name>b.name?1:-1); });
+          S.vols = r[2].data||[];
+          S.asn  = r[3].data||[];
+          renderActions(); render();
+        });
+      }
+
+      // ---- per-location fill computation ----
+      function fillFor(lid){
+        var t = S.locs.find(function(l){ return l.lid===lid; }) || {};
+        var need = t.target_per_shift || 1;
+        var rows = S.asn.filter(function(a){ return a.location_lid===lid; });
+        var am = rows.filter(function(a){ return a.shift==='am' && a.role!=='lead'; });
+        var pm = rows.filter(function(a){ return a.shift==='pm' && a.role!=='lead'; });
+        var lead = rows.filter(function(a){ return a.role==='lead'; });
+        var state = (am.length>=need && pm.length>=need) ? 'ok' : ((am.length+pm.length+lead.length)>0 ? 'part' : 'none');
+        return { need:need, am:am, pm:pm, lead:lead, state:state };
+      }
+      function totals(){
+        var slotsNeed=0, slotsHave=0, sitesFilled=0;
+        S.locs.forEach(function(l){
+          var f=fillFor(l.lid); slotsNeed += f.need*2;
+          slotsHave += Math.min(f.am.length,f.need) + Math.min(f.pm.length,f.need);
+          if (f.state==='ok') sitesFilled++;
+        });
+        return { slotsNeed:slotsNeed, slotsHave:slotsHave, sitesFilled:sitesFilled };
+      }
+      function daysOut(){ if(!S.camp.election_date) return '—';
+        return Math.max(0, Math.ceil((new Date(S.camp.election_date+'T12:00:00')-new Date())/86400000)); }
+
+      // ---- header actions (tabs + add volunteer + share) ----
+      function renderActions(){
+        actions.innerHTML =
+          '<div class="hp-tabs">'+
+            '<button class="hp-tab '+(S.tab==='sites'?'active':'')+'" data-tab="sites">Sites</button>'+
+            '<button class="hp-tab '+(S.tab==='roster'?'active':'')+'" data-tab="roster">Roster</button>'+
+          '</div>';
+        actions.querySelectorAll('[data-tab]').forEach(function(b){
+          b.onclick = function(){ S.tab=b.dataset.tab; renderActions(); render(); };
+        });
+      }
+
+      // ---- main render ----
+      function render(){ S.tab==='roster' ? renderRoster() : renderSites(); }
+
+      function header(){
+        var t = totals();
+        var gv = S.camp.goal_volunteers||1, gc = t.slotsNeed||1;
+        var vpct = Math.min(100, Math.round(S.vols.length/gv*100));
+        var cpct = Math.min(100, Math.round(t.slotsHave/gc*100));
+        return ''+
+        '<div class="hp-banner"><span>⚑</span><div><b>Planning, pre-endorsement.</b> Internal only. Deploys after the Board endorsement vote and the candidate files. Official 2027 sites finalize ~5 weeks out; reconcile then.</div></div>'+
+        '<div class="hp-kpis">'+
+          '<div class="hp-kpi"><b>'+daysOut()+'</b><span>Days to '+(S.camp.election_kind||'election')+'</span><br><small>'+fmtDate(S.camp.election_date)+'</small></div>'+
+          '<div class="hp-kpi"><b>'+t.sitesFilled+'</b><span>Sites fully staffed</span><br><small>of '+S.locs.length+'</small></div>'+
+          '<div class="hp-kpi"><b>'+S.vols.length+'</b><span>Volunteers</span><br><small>goal '+(S.camp.goal_volunteers||'—')+'</small></div>'+
+          '<div class="hp-kpi"><b>'+t.slotsHave+'</b><span>Shift slots filled</span><br><small>of '+t.slotsNeed+'</small></div>'+
+        '</div>'+
+        '<div class="hp-bars">'+
+          '<div class="hp-bar"><div class="hp-bar-label"><span class="l">Volunteers recruited</span><span class="v">'+S.vols.length+' / '+(S.camp.goal_volunteers||'—')+'</span></div><div class="hp-track"><div class="hp-fill" style="width:'+vpct+'%"></div></div></div>'+
+          '<div class="hp-bar"><div class="hp-bar-label"><span class="l">Shift coverage</span><span class="v">'+cpct+'%</span></div><div class="hp-track"><div class="hp-fill" style="width:'+cpct+'%"></div></div></div>'+
+        '</div>'+
+        '<div class="hp-recruit">'+
+          '<button class="hp-btn hp-btn-primary" id="hpAdd">＋ Add volunteer</button>'+
+          '<button class="hp-btn hp-btn-ghost" id="hpShare">🔗 Copy sign-up link</button>'+
+        '</div>';
+      }
+      function fmtDate(d){ if(!d) return 'TBD'; return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+
+      function renderSites(){
+        var t = totals();
+        var list = S.locs.filter(function(l){
+          if (S.f.tier!=='all' && l.tier!==S.f.tier) return false;
+          if (S.f.quad!=='all' && l.quadrant!==S.f.quad) return false;
+          if (S.f.status!=='all' && fillFor(l.lid).state!==S.f.status) return false;
+          if (S.f.q){ var q=S.f.q.toLowerCase();
+            if ((l.name||'').toLowerCase().indexOf(q)<0 && (l.address||'').toLowerCase().indexOf(q)<0
+                && (l.zip||'').indexOf(q)<0 && (l.precincts||[]).join(' ').toLowerCase().indexOf(q)<0) return false; }
+          return true;
+        });
+        var chip = function(group,val,label){ return '<button class="hp-chip '+(S.f[group]===val?'active':'')+'" data-g="'+group+'" data-v="'+val+'">'+label+'</button>'; };
+
+        body.innerHTML = '<div class="hp-wrap">'+ header() +
+          '<div class="hp-filter">'+
+            '<input class="hp-search" id="hpQ" placeholder="Search site, address, ZIP, precinct…" value="'+esc(S.f.q)+'">'+
+            '<div class="hp-chiprow">'+
+              chip('tier','all','All tiers')+chip('tier','A','Tier A')+chip('tier','B','Tier B')+chip('tier','C','Tier C')+
+              '<span style="width:6px"></span>'+
+              chip('quad','all','All areas')+chip('quad','NE','NE')+chip('quad','NW','NW')+chip('quad','SE','SE')+chip('quad','SW','SW')+
+              '<span style="width:6px"></span>'+
+              chip('status','all','Any')+chip('status','none','Unfilled')+chip('status','part','Partial')+chip('status','ok','Filled')+
+            '</div>'+
+          '</div>'+
+          '<div class="hp-count">'+list.length+' of '+S.locs.length+' sites</div>'+
+          '<div class="hp-sites">'+ list.map(siteCard).join('') +'</div>'+
+          (list.length?'':'<div class="hp-empty">No sites match these filters.</div>')+
+        '</div>';
+
+        wireHeader();
+        var q = document.getElementById('hpQ');
+        q.oninput = function(){ S.f.q=q.value; var c=q.selectionStart; renderSites();
+          var nq=document.getElementById('hpQ'); nq.focus(); try{nq.setSelectionRange(c,c);}catch(e){} };
+        body.querySelectorAll('.hp-chip').forEach(function(b){ b.onclick=function(){ S.f[b.dataset.g]=b.dataset.v; renderSites(); }; });
+        body.querySelectorAll('.hp-site').forEach(function(b){ b.onclick=function(){ openSite(b.dataset.lid); }; });
+      }
+
+      function siteCard(l){
+        var f = fillFor(l.lid);
+        var pills =
+          '<span class="hp-slotpill '+(f.lead.length?'ok':'none')+'">Lead '+(f.lead.length?'✓':'—')+'</span>'+
+          '<span class="hp-slotpill '+(f.am.length>=f.need?'ok':(f.am.length?'part':'none'))+'">AM '+f.am.length+'/'+f.need+'</span>'+
+          '<span class="hp-slotpill '+(f.pm.length>=f.need?'ok':(f.pm.length?'part':'none'))+'">PM '+f.pm.length+'/'+f.need+'</span>';
+        var dotc = f.state==='ok'?'#19a35a':(f.state==='part'?'#e0a400':'#c2cad3');
+        return '<button class="hp-site t-'+l.tier+'" data-lid="'+esc(l.lid)+'">'+
+          '<div class="hp-site-top"><span class="hp-tier t-'+l.tier+'">TIER '+l.tier+'</span>'+
+            '<span style="font-size:11px;color:rgba(255,255,255,.5);font-family:Montserrat,sans-serif;font-weight:600">'+(l.quadrant||'')+' · '+(l.precinct_count||0)+' prec</span></div>'+
+          '<div class="hp-site-name"><span class="hp-statusdot" style="background:'+dotc+'"></span>'+esc(l.name)+'</div>'+
+          '<div class="hp-site-meta">'+esc(l.address||'')+(l.zip?', '+esc(l.zip):'')+(l.addr_confidence==='CHECK'?' · <em>verify</em>':'')+'</div>'+
+          '<div class="hp-fillrow">'+pills+'</div>'+
+        '</button>';
+      }
+
+      function renderRoster(){
+        body.innerHTML = '<div class="hp-wrap">'+ header() +
+          '<div class="hp-count">'+S.vols.length+' volunteers · '+S.asn.filter(function(a){return a.role!=='lead'||true;}).length+' assignments</div>'+
+          (S.vols.length? S.vols.map(function(v){
+            var n = S.asn.filter(function(a){ return a.volunteer_id===v.id; }).length;
+            return '<div class="hp-vrow"><div class="hp-avatar">'+esc(initials(v.full_name).toUpperCase())+'</div>'+
+              '<div><div class="hp-vname">'+esc(v.full_name)+(v.can_captain?' · 🅒':'')+'</div>'+
+              '<div class="hp-vsub">'+esc(v.preferred_quadrant||'any area')+' · '+esc(v.shift_pref||'flexible')+' · '+esc(v.status||'signed_up')+'</div></div>'+
+              '<span class="hp-vtag">'+n+' assigned</span></div>';
+          }).join('') : '<div class="hp-empty">No volunteers yet. Tap “Add volunteer” to start the roster.</div>')+
+        '</div>';
+        wireHeader();
+      }
+
+      function wireHeader(){
+        var a=document.getElementById('hpAdd'); if(a) a.onclick=addVolunteerDrawer;
+        var s=document.getElementById('hpShare'); if(s) s.onclick=function(){
+          var url='https://ohiopride.org/poll-corps?c='+SLUG;
+          (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(function(){ AdminShell.toast('Sign-up link copied','success'); },
+            function(){ AdminShell.toast(url); });
+        };
+        requestAnimationFrame(function(){ body.querySelectorAll('.hp-fill').forEach(function(f){ var w=f.style.width; f.style.width='0'; requestAnimationFrame(function(){ f.style.width=w; }); }); });
+      }
+
+      // ---- assignment drawer ----
+      function openSite(lid){
+        S.openLid = lid;
+        var l = S.locs.find(function(x){ return x.lid===lid; }); if(!l) return;
+        var f = fillFor(lid);
+        var nameOf = function(id){ var v=S.vols.find(function(x){return x.id===id;}); return v?v.full_name:'#'+id; };
+        var chipFor = function(a){ return '<span class="hp-achip">'+esc(nameOf(a.volunteer_id))+'<button data-del="'+a.id+'">✕</button></span>'; };
+        var taken = function(shift){ return S.asn.filter(function(a){return a.location_lid===lid && (shift==='lead'? a.role==='lead' : (a.shift===shift && a.role!=='lead'));}).map(function(a){return a.volunteer_id;}); };
+        var options = function(shift){
+          var t = taken(shift);
+          var opts = S.vols.filter(function(v){ return t.indexOf(v.id)<0; })
+            .map(function(v){ return '<option value="'+v.id+'">'+esc(v.full_name)+(v.preferred_quadrant?' · '+esc(v.preferred_quadrant):'')+'</option>'; }).join('');
+          return '<option value="">Add volunteer…</option>'+opts;
+        };
+        var slot = function(key,title,need,assigned){
+          return '<div class="hp-slot"><div class="hp-slot-head"><span class="hp-slot-title">'+title+'</span>'+
+            (need!=null?'<span class="hp-slot-need">'+assigned.length+' / '+need+'</span>':'')+'</div>'+
+            '<div class="hp-assigned">'+(assigned.length?assigned.map(chipFor).join(''):'<span class="hp-vsub">None yet</span>')+'</div>'+
+            '<div class="hp-pick"><select data-slot="'+key+'">'+options(key)+'</select>'+
+            '<button class="hp-btn hp-btn-primary hp-btn-sm" data-add="'+key+'">Add</button></div></div>';
+        };
+
+        AdminShell.openDrawer({
+          eyebrow: 'Tier '+l.tier+' · '+(l.quadrant||'')+' · '+(l.precinct_count||0)+' precincts',
+          title: l.name,
+          bodyHtml:
+            '<p class="hp-vsub" style="margin-bottom:14px">'+esc(l.address||'')+(l.zip?', '+esc(l.city||'')+' '+esc(l.zip):'')+
+              (l.addr_confidence==='CHECK'?' · <strong>verify address vs BOE</strong>':'')+'</p>'+
+            slot('lead','Site Lead', null, f.lead)+
+            slot('am','AM Shift · 6:00a-1:00p', f.need, f.am)+
+            slot('pm','PM Shift · 1:00p-7:45p', f.need, f.pm)+
+            '<p class="hp-vsub" style="margin-top:14px">Precincts: '+esc((l.precincts||[]).join(', '))+'</p>'
+        });
+
+        // wire drawer controls
+        var drawer = document.getElementById('shellDrawerBody');
+        drawer.querySelectorAll('[data-add]').forEach(function(btn){
+          btn.onclick = function(){
+            var key = btn.dataset.add;
+            var sel = drawer.querySelector('select[data-slot="'+key+'"]');
+            var vid = sel && sel.value; if(!vid){ return; }
+            var rec = { campaign_id:SLUG, location_lid:lid, volunteer_id:Number(vid),
+                        role: key==='lead'?'lead':'greeter', shift: key==='lead'?'all':key };
+            sb.from('election_assignments').insert(rec).select().then(function(r){
+              if(r.error){ AdminShell.toast(r.error.message,'error'); return; }
+              S.asn.push(r.data[0]); AdminShell.toast('Assigned','success'); openSite(lid); render();
+            });
+          };
+        });
+        drawer.querySelectorAll('[data-del]').forEach(function(btn){
+          btn.onclick = function(){
+            var id = Number(btn.dataset.del);
+            sb.from('election_assignments').delete().eq('id', id).then(function(r){
+              if(r.error){ AdminShell.toast(r.error.message,'error'); return; }
+              S.asn = S.asn.filter(function(a){ return a.id!==id; }); openSite(lid); render();
+            });
+          };
+        });
+      }
+
+      // ---- add volunteer drawer ----
+      function addVolunteerDrawer(){
+        AdminShell.openDrawer({
+          eyebrow: 'Recruit',
+          title: 'Add a volunteer',
+          bodyHtml:
+            '<div class="hp-field"><label>Full name *</label><input id="vName" placeholder="Jordan Rivera"></div>'+
+            '<div class="hp-field"><label>Phone</label><input id="vPhone" placeholder="(614) 555-0123"></div>'+
+            '<div class="hp-field"><label>Email</label><input id="vEmail" placeholder="name@email.com"></div>'+
+            '<div class="hp-field"><label>Preferred area</label><select id="vQuad"><option value="">No preference</option><option>NE</option><option>NW</option><option>SE</option><option>SW</option></select></div>'+
+            '<div class="hp-field"><label>Shift preference</label><select id="vShift"><option value="flexible">Flexible</option><option value="am">AM</option><option value="pm">PM</option><option value="all">All day</option></select></div>'+
+            '<div class="hp-field"><label>Source</label><select id="vSrc"><option value="road_tour">Road tour</option><option value="web">Web</option><option value="referral">Referral</option><option value="event">Event</option></select></div>'+
+            '<div class="hp-field"><label class="hp-check"><input type="checkbox" id="vCap"> Willing to be a Site Lead / Captain</label></div>',
+          footHtml: '<button class="hp-btn hp-btn-primary" id="vSave" style="width:100%">Save volunteer</button>'
+        });
+        var save = document.getElementById('vSave');
+        save.onclick = function(){
+          var name = (document.getElementById('vName').value||'').trim();
+          if(!name){ AdminShell.toast('Name is required','error'); return; }
+          var rec = { campaign_id:SLUG, full_name:name,
+            phone: document.getElementById('vPhone').value.trim()||null,
+            email: document.getElementById('vEmail').value.trim()||null,
+            preferred_quadrant: document.getElementById('vQuad').value||null,
+            shift_pref: document.getElementById('vShift').value||null,
+            source: document.getElementById('vSrc').value||null,
+            can_captain: document.getElementById('vCap').checked };
+          save.disabled = true;
+          sb.from('election_volunteers').insert(rec).select().then(function(r){
+            if(r.error){ AdminShell.toast(r.error.message,'error'); save.disabled=false; return; }
+            S.vols.push(r.data[0]); S.vols.sort(function(a,b){return (a.full_name>b.full_name?1:-1);});
+            AdminShell.toast('Volunteer added','success'); AdminShell.closeDrawer(); render();
+          });
+        };
+      }
+
+      load();
+    });
+    </script>
+  </body>
+</html>

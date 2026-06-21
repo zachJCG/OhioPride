@@ -432,6 +432,17 @@
   to = "/admin/compliance/reconcile/index.html"
   status = 200
 
+# Elections (hidden module — no sidebar link; reachable by direct URL only)
+[[redirects]]
+  from = "/admin/elections"
+  to = "/admin/elections/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/elections/hardin-primary-27"
+  to = "/admin/elections/hardin-primary-27.html"
+  status = 200
+
 [[redirects]]
   from = "/internships"
   to = "/volunteer.html?path=internship"
