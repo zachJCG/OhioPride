@@ -476,6 +476,17 @@
         try { localStorage.setItem('opAdminSidebarCollapsed', layout.classList.contains('is-collapsed') ? '1' : '0'); } catch (e) {}
       }
     });
+    // Mobile: tapping the scrim outside the open sidebar drawer dismisses it.
+    // (The scrim is a CSS ::after pseudo-element, so it can't take a listener
+    //  itself — we detect taps that land outside the sidebar instead.)
+    var sidebar = document.querySelector('.shell-sidebar');
+    var toggleBtn = document.getElementById('shellToggle');
+    document.addEventListener('click', function (e) {
+      if (!layout.classList.contains('is-drawer-open')) return;
+      if (sidebar && sidebar.contains(e.target)) return;
+      if (toggleBtn && toggleBtn.contains(e.target)) return;
+      layout.classList.remove('is-drawer-open');
+    });
     try {
       if (localStorage.getItem('opAdminSidebarCollapsed') === '1' &&
           !window.matchMedia('(max-width: 820px)').matches) {
@@ -499,6 +510,7 @@
       if (e.key === 'Escape') {
         pop.hidden = true;
         closeDrawer();
+        layout.classList.remove('is-drawer-open');
       }
     });
 
