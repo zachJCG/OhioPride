@@ -98,6 +98,12 @@
         .fin-quickadd { grid-template-columns: 1fr 1fr; }
         .fin-quickadd .fin-field-wide { grid-column: 1 / -1; }
       }
+      @media (max-width: 600px) {
+        .fin-quickadd { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
+        .fin-quickadd .fin-btn { width: 100%; }
+        /* keep iOS from zooming on focus */
+        .admin-input, .fin-quickadd select { font-size: 16px; }
+      }
     </style>
   </head>
   <body>

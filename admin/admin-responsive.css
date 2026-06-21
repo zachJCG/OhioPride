@@ -55,7 +55,10 @@
   /* Force single-column on the patterns our modules use */
   .form-grid, .form-row, .row-2col, .row-3col,
   .donor-form, .endorse-form, .leg-form,
-  .bills-form, .legs-form { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bills-form, .legs-form,
+  /* page-specific multi-column form/checkbox grids that otherwise stay 2-up */
+  .user-form-row, .role-checkbox-list,
+  .task-form-row, .vol-check-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
 
   /* Bigger tap targets */
   .btn, .shell-btn, .pill, .badge {
