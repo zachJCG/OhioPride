@@ -134,7 +134,7 @@
     '<footer class="ohp-footer">',
     '  <div class="ohp-footer-inner">',
     '    <div class="ohp-footer-col">',
-    '      <h4>Organization</h4>',
+    '      <h4>Info</h4>',
     '      <ul>',
     '        <li><a href="/issues">Issues</a></li>',
     '        <li><a href="/scorecard">Scorecard</a></li>',
