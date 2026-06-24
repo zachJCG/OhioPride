@@ -290,12 +290,35 @@
           });
         }
 
+        // Canonical person identity, mirrors public.founding_member_key() in
+        // SQL: a donor is identified by full_name + email together, so a single
+        // donor's recurring/duplicate gifts collapse to one person while two
+        // different donors sharing a contact email stay separate.
+        function personKey(r) {
+          var name  = (r.full_name || '').trim().toLowerCase();
+          var email = (r.email || '').trim().toLowerCase();
+          if (!name && !email) return 'id:' + (r.id || Math.random());
+          return name + '|' + email;
+        }
+        function distinctPeople(rows) {
+          var seen = {};
+          rows.forEach(function (r) { seen[personKey(r)] = true; });
+          return Object.keys(seen).length;
+        }
+        function isEligible(r) {
+          return r.is_public && r.is_vetted && !r.is_refunded && !r.is_cancelled_recurring;
+        }
+
         function renderStats() {
-          var totalMembers = state.rows.length;
-          var totalCents = state.rows.reduce(function (s, r) { return s + (r.amount_cents || 0); }, 0);
-          var publicCount = state.rows.filter(function (r) { return r.is_public && r.is_vetted; }).length;
+          // De-duplicate by person so recurring/duplicate gifts are not counted
+          // as separate members. "On Public Roster" and "Toward 1,969" use the
+          // same eligible population as the public site, so the admin and the
+          // public pages always show the same 1,969 number.
+          var totalMembers = distinctPeople(state.rows);
+          var totalCents   = state.rows.reduce(function (s, r) { return s + (r.amount_cents || 0); }, 0);
+          var publicCount  = distinctPeople(state.rows.filter(isEligible));
           var goal = 1969;
-          var pct = totalMembers > 0 ? Math.min(100, Math.round((totalMembers / goal) * 1000) / 10) : 0;
+          var pct = publicCount > 0 ? Math.min(100, Math.round((publicCount / goal) * 1000) / 10) : 0;
 
           $('statMembers').textContent  = totalMembers.toLocaleString();
           $('statRaised').textContent   = fmtMoney(totalCents);

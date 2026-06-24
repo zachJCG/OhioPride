@@ -61,36 +61,11 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   /* --- Founding Member Progress Bar --- */
-  var FOUNDING_MEMBER_COUNT = 0;
-  var FOUNDING_MEMBER_GOAL = 1969;
-
-  var goalFill = document.getElementById("goalFill");
-  var memberCount = document.getElementById("memberCount");
-
-  if (goalFill) {
-    var pct = Math.min(
-      (FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100,
-      100,
-    );
-
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            goalFill.style.width = pct + "%";
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.3 },
-    );
-
-    observer.observe(goalFill.parentElement);
-  }
-
-  if (memberCount) {
-    memberCount.textContent = FOUNDING_MEMBER_COUNT;
-  }
+  // The progress bar and count are filled by OhioPride.loadProgress()
+  // (js/ohiopride-data.js), which is the single source of truth: it reads the
+  // canonical founding_members_progress() count from the server. The old
+  // hardcoded-zero block that used to live here also targeted #goalFill and
+  // raced loadProgress, so it was removed to keep one writer per element.
 
   /* --- Scroll Reveal Animations --- */
   // Only hide elements when JS is confirmed working
