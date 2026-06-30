@@ -25,8 +25,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 
 // Directories that ship to production. Anything outside these is
-// ignored — legacy snapshots (Update/, OhioPride-Refocused/) are not
-// deployed and intentionally do not follow the system.
+// ignored and intentionally does not follow the system.
 const SCAN_ROOTS = [
   '.',
   'issues',
