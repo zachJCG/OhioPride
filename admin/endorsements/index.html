@@ -146,6 +146,34 @@
       .endo-decision-banner { padding: 10px 14px; border-radius: 8px; font-size: 0.86rem; font-weight: 600; margin-bottom: 10px; }
       .endo-decision-banner.endorse { background: rgba(74,222,128,0.14); color: #a7e9c0; }
       .endo-decision-banner.decline { background: rgba(255,107,107,0.14); color: #ffc2c2; }
+
+      /* ---------- mobile ---------- */
+      @media (max-width: 600px) {
+        /* Stack every control row full-width for thumb-friendly tap targets. */
+        .endo-edit-row { flex-direction: column; align-items: stretch; gap: 8px; }
+        .endo-edit-row select,
+        .endo-edit-row input,
+        .endo-edit-row .shell-btn,
+        .endo-edit-row button { width: 100%; min-width: 0; }
+        .endo-form { padding: 12px; }
+
+        /* Pipeline: tighter so all five steps fit a narrow screen. */
+        .endo-pipeline { gap: 0; }
+        .pl-dot { width: 18px; height: 18px; font-size: 0.6rem; }
+        .pl-step::before { top: 9px; }
+        .pl-label { font-size: 0.55rem; letter-spacing: 0; }
+
+        /* Vote rows: let the pill drop below the name on very narrow screens. */
+        .vote-row { flex-wrap: wrap; }
+        .vote-row .vote-pill { order: -1; }
+
+        .tally-legend { gap: 10px; font-size: 0.78rem; }
+        .assign-row { flex-wrap: wrap; }
+      }
+      @media (max-width: 380px) {
+        .pl-label { font-size: 0.5rem; }
+        .endo-sec-title { margin-top: 20px; }
+      }
     </style>
   </head>
   <body class="admin-shell">
@@ -368,13 +396,13 @@
             var dist = r.district || (r.election_year ? String(r.election_year) : '');
             html +=
               '<tr data-id="' + escapeHtml(r.id) + '" style="cursor:pointer">' +
-                '<td class="admin-cell-name">' + escapeHtml(r.candidate_name || '—') + pron + '</td>' +
-                '<td>' + (r.office_sought ? escapeHtml(r.office_sought) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
-                '<td>' + (dist ? escapeHtml(dist) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
-                '<td>' + stagePill(r.stage) + '</td>' +
-                '<td>' + tallyMini(state.reviewsByApp[r.id]) + '</td>' +
-                '<td class="admin-cell-tight">' + escapeHtml(fmtDate(r.created_at)) + '</td>' +
-                '<td class="admin-cell-tight"><span class="admin-link">Open &rsaquo;</span></td>' +
+                '<td class="admin-cell-name" data-label="Candidate">' + escapeHtml(r.candidate_name || '—') + pron + '</td>' +
+                '<td data-label="Office">' + (r.office_sought ? escapeHtml(r.office_sought) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td data-label="District">' + (dist ? escapeHtml(dist) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td data-label="Stage">' + stagePill(r.stage) + '</td>' +
+                '<td data-label="Board Vote">' + tallyMini(state.reviewsByApp[r.id]) + '</td>' +
+                '<td class="admin-cell-tight" data-label="Submitted">' + escapeHtml(fmtDate(r.created_at)) + '</td>' +
+                '<td class="admin-cell-tight" data-label="">' + '<span class="admin-link">Open &rsaquo;</span></td>' +
               '</tr>';
           }
           body.innerHTML = html;
@@ -575,6 +603,38 @@
         }
 
         // ---- drawer assembly -------------------------------------------
+        function controlsHtml(a) {
+          // Decision-maker controls (endorsements:write only). Kept in the
+          // scrolling body — NOT the sticky drawer foot — so it never grows
+          // into a giant fixed panel on a phone.
+          if (!state.me.canWrite) return '';
+          var stageOpts = ['new', 'screening', 'board_review', 'voting', 'endorsed', 'declined', 'tabled', 'withdrawn']
+            .map(function (s) {
+              return '<option value="' + s + '"' + ((a.stage || 'new') === s ? ' selected' : '') + '>' + STAGE_LABEL[s] + '</option>';
+            }).join('');
+          return '<div class="endo-sec-title">Director Controls</div>' +
+            '<div class="endo-form">' +
+              '<label class="endo-edit-label" for="endoStage">Move stage</label>' +
+              '<div class="endo-edit-row">' +
+                '<select class="admin-input" id="endoStage">' + stageOpts + '</select>' +
+                '<button type="button" class="shell-btn shell-btn-primary" id="endoStageSave">Update stage</button>' +
+              '</div>' +
+              '<div class="endo-edit-row" style="margin-top:12px">' +
+                '<button type="button" class="shell-btn endo-btn-push" id="endoPush">Push endorsement &#9889;</button>' +
+                '<button type="button" class="shell-btn endo-btn-danger" id="endoDecline">Decline</button>' +
+              '</div>' +
+              '<p style="margin:10px 0 0;font-size:0.78rem;color:rgba(255,255,255,0.5)"><strong style="color:rgba(255,255,255,0.75)">Push endorsement</strong> records the board’s decision and immediately publishes this candidate on the public endorsements page — the director can do this whenever the vote makes it clear.</p>' +
+            '</div>';
+        }
+        function notesHtml(a) {
+          if (!state.me.canWrite) return '';
+          return '<div class="endo-sec-title">Reviewer Notes (internal)</div>' +
+            '<div class="endo-form">' +
+              '<textarea class="admin-input" id="endoNotes" placeholder="Notes for the screening committee. Never shared with the candidate or public.">' + escapeHtml(a.reviewer_notes || '') + '</textarea>' +
+              '<button type="button" class="shell-btn" id="endoNotesSave" style="margin-top:8px">Save notes</button>' +
+            '</div>';
+        }
+
         function renderDrawer(a, reviews, activity) {
           var body = document.getElementById('shellDrawerBody');
           var foot = document.getElementById('shellDrawerFoot');
@@ -590,37 +650,16 @@
             '<div class="endo-sec-title">Board Vote</div>' + tallyBlock(reviews) +
             votesListHtml(reviews) +
             '<div class="endo-sec-title">Your Vote</div>' + myVoteFormHtml(reviews) +
+            controlsHtml(a) +
             '<div class="endo-sec-title">Assigned Reviewers</div>' + assignmentsHtml(a) +
+            notesHtml(a) +
             '<details class="endo-collapse"><summary>Candidate Application</summary>' +
               '<div class="endo-collapse-body">' + buildApplicationHtml(a) + '</div></details>' +
             '<div class="endo-sec-title">Activity Timeline</div>' + timelineHtml(activity);
 
-          // Foot: decision-maker controls (write only).
-          if (state.me.canWrite && foot) {
-            var stageOpts = ['new', 'screening', 'board_review', 'voting', 'endorsed', 'declined', 'tabled', 'withdrawn']
-              .map(function (s) {
-                return '<option value="' + s + '"' + ((a.stage || 'new') === s ? ' selected' : '') + '>' + STAGE_LABEL[s] + '</option>';
-              }).join('');
-            foot.innerHTML = '<div style="width:100%">' +
-              '<label class="endo-edit-label" for="endoStage">Move stage</label>' +
-              '<div class="endo-edit-row">' +
-                '<select class="admin-input" id="endoStage">' + stageOpts + '</select>' +
-                '<button type="button" class="shell-btn shell-btn-primary" id="endoStageSave">Update stage</button>' +
-              '</div>' +
-              '<div class="endo-edit-row" style="margin-top:12px">' +
-                '<button type="button" class="shell-btn endo-btn-push" id="endoPush">Push endorsement &#9889;</button>' +
-                '<button type="button" class="shell-btn endo-btn-danger" id="endoDecline">Decline</button>' +
-              '</div>' +
-              '<label class="endo-edit-label" for="endoNotes" style="margin-top:14px">Reviewer notes (internal)</label>' +
-              '<textarea class="admin-input" id="endoNotes" placeholder="Notes for the screening committee. Never shared with the candidate or public.">' + escapeHtml(a.reviewer_notes || '') + '</textarea>' +
-              '<button type="button" class="shell-btn" id="endoNotesSave" style="margin-top:8px">Save notes</button>' +
-              '<p style="margin-top:10px;font-size:0.78rem;color:rgba(255,255,255,0.5)"><strong style="color:rgba(255,255,255,0.75)">Push endorsement</strong> records the board’s decision and immediately publishes this candidate on the public endorsements page — the director can do this whenever the vote makes it clear.</p>' +
-            '</div>';
-            foot.hidden = false;
-          } else if (foot) {
-            foot.innerHTML = '';
-            foot.hidden = true;
-          }
+          // The drawer foot is intentionally unused here — all controls live in
+          // the scrolling body so the mobile bottom-sheet stays usable.
+          if (foot) { foot.innerHTML = ''; foot.hidden = true; }
 
           bindDrawerEvents(a);
         }
@@ -672,8 +711,7 @@
           window.AdminShell.openDrawer({
             eyebrow: meta || 'Endorsement application',
             title: a.candidate_name || 'Application',
-            bodyHtml: '<p class="vote-empty">Loading review data&hellip;</p>',
-            footHtml: ' '
+            bodyHtml: '<p class="vote-empty">Loading review data&hellip;</p>'
           });
           if (history.replaceState) {
             history.replaceState(null, '', window.location.pathname + '?id=' + encodeURIComponent(id));
