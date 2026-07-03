@@ -11,8 +11,35 @@ Supabase-backed candidate endorsement workflow. Wired against the live
 | `/endorsement/screening/thank-you`| Public         | Confirmation page after submit.                          |
 | `/endorsements`                   | Public         | Lists endorsed candidates from `public_endorsements` view. |
 | `/admin/endorsements/login`       | Admin          | Magic-link sign-in via Supabase Auth.                    |
-| `/admin/endorsements`             | Admin          | List, filter, sort all applications. Authorized via `is_admin()`. |
-| `/admin/endorsements/detail`      | Admin          | Detail view for one application. Update `status` and `reviewer_notes`. |
+| `/admin/endorsements`             | Admin          | ATS-style review console: list/filter/sort applications, per-member voting, reviewer assignment, pipeline progression, and the director decision/push controls (all in the slide-out drawer). |
+| `/admin/endorsements/detail`      | Admin          | Legacy deep link — redirects into the console drawer (`?id=`). |
+
+## Review workflow (ATS for the board)
+
+Migration `supabase/migrations/20260703000000_endorsement_review_workflow.sql`
+adds the tracking layer on top of `endorsement_applications`:
+
+| Object | Purpose |
+|--------|---------|
+| `endorsement_applications.stage` | Internal pipeline: `new → screening → board_review → voting → endorsed / declined`, plus side states `tabled` / `withdrawn`. A trigger keeps the public `status` (and therefore `public_endorsements` / `/endorsements`) derived from `stage`. |
+| `endorsement_reviews` | One vote + recommendation per board member. Vote scale: `endorse, lean_endorse, neutral, lean_decline, decline, abstain, recuse`. Unique per `(application_id, reviewer_email)`. |
+| `endorsement_assignments` | Which board members are assigned to weigh in on an application. |
+| `endorsement_activity` | Append-only progression timeline (votes, stage moves, assignments, director pushes, decisions). |
+
+### Who can do what (RLS)
+
+- **`endorsements:read`** (board members, chair, director, …) — read every
+  application, every vote, and the timeline; **cast / update their own vote**
+  (their `reviewer_email` is pinned to their JWT email — they can't vote as
+  anyone else, and can't change the application itself).
+- **`endorsements:write`** (`endorsements_chair`, `super_admin` / director) —
+  move the `stage`, assign reviewers, record the decision, edit reviewer
+  notes, and **"Push endorsement"** — publish the endorsement whenever the
+  vote makes the outcome clear, regardless of how many members have voted.
+
+Application UPDATE is now gated on `endorsements:write` (previously any active
+admin). Board members influence the outcome through their vote, not by editing
+the record.
 
 ## Supabase wiring
 

@@ -19,77 +19,160 @@
         font-weight: 600;
         padding: 2px 10px;
         border-radius: 999px;
+        white-space: nowrap;
       }
-      .admin-pill-st-submitted    { background: rgba(112, 214, 236,0.18); color: #0b6c83; }
-      .admin-pill-st-under_review { background: rgba(255,200,87,0.20);   color: #8a6d1f; }
-      .admin-pill-st-endorsed     { background: rgba(74,222,128,0.20);   color: #1e7e45; }
-      .admin-pill-st-declined     { background: rgba(255,107,107,0.18);  color: #c0392b; }
-      .admin-pill-st-withdrawn    { background: #eef2f6;                 color: #6c7480; }
+      .admin-pill-st-new          { background: rgba(112,214,236,0.18); color: #0b6c83; }
+      .admin-pill-st-screening    { background: rgba(160,132,232,0.20); color: #5b3fa8; }
+      .admin-pill-st-board_review { background: rgba(255,200,87,0.20);  color: #8a6d1f; }
+      .admin-pill-st-voting       { background: rgba(255,159,67,0.20);  color: #a65416; }
+      .admin-pill-st-endorsed     { background: rgba(74,222,128,0.20);  color: #1e7e45; }
+      .admin-pill-st-declined     { background: rgba(255,107,107,0.18); color: #c0392b; }
+      .admin-pill-st-tabled       { background: #eef2f6;                color: #6c7480; }
+      .admin-pill-st-withdrawn    { background: #eef2f6;                color: #6c7480; }
       td.admin-cell-tight { white-space: nowrap; }
 
-      /* Drawer detail — rendered inside the dark slideout panel (#0e2237) */
+      /* Table vote-tally mini bar */
+      .tally-mini { display: inline-flex; gap: 6px; align-items: center; font-size: 0.78rem; }
+      .tally-dot { display: inline-flex; align-items: center; gap: 3px; font-weight: 700; }
+      .tally-dot .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+      .tally-dot.for   .dot { background: #4ade80; }
+      .tally-dot.against .dot { background: #ff6b6b; }
+      .tally-dot.other .dot { background: #b7c0cc; }
+      .tally-empty { color: var(--muted, #9aa5b1); font-size: 0.78rem; }
+
+      /* Drawer detail — dark slideout panel */
       .endo-sec-title {
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--text-accent, #70D6EC);
-        margin: 22px 0 10px;
-        font-weight: 700;
+        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
+        color: var(--text-accent, #70D6EC); margin: 24px 0 12px; font-weight: 700;
       }
       .endo-sec-title:first-child { margin-top: 0; }
       .endo-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 10px 18px;
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px 18px;
       }
-      .endo-grid dt {
-        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em;
-        color: rgba(255,255,255,0.45); margin: 0 0 2px;
-      }
-      .endo-grid dd {
-        margin: 0 0 4px; font-size: 0.92rem; word-break: break-word;
-        color: rgba(255,255,255,0.88);
-      }
+      .endo-grid dt { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(255,255,255,0.45); margin: 0 0 2px; }
+      .endo-grid dd { margin: 0 0 4px; font-size: 0.92rem; word-break: break-word; color: rgba(255,255,255,0.88); }
       .endo-q { margin: 0 0 14px; }
-      .endo-q-text {
-        font-size: 0.9rem; line-height: 1.5; margin: 0 0 6px;
-        color: rgba(255,255,255,0.85);
-      }
+      .endo-q-text { font-size: 0.9rem; line-height: 1.5; margin: 0 0 6px; color: rgba(255,255,255,0.85); }
       .endo-q-num { font-weight: 800; color: var(--text-accent, #70D6EC); margin-right: 4px; }
-      .endo-ans {
-        display: inline-block; font-size: 0.7rem; font-weight: 700;
-        letter-spacing: 0.06em; text-transform: uppercase;
-        padding: 2px 10px; border-radius: 999px; margin-bottom: 6px;
-      }
+      .endo-ans { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 10px; border-radius: 999px; margin-bottom: 6px; }
       .endo-ans.yes { background: rgba(74,222,128,0.22);  color: #6ee7a0; }
       .endo-ans.no  { background: rgba(255,107,107,0.22); color: #ff9b9b; }
       .endo-ans.na  { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.55); }
-      .endo-explain {
-        font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65);
-        white-space: pre-wrap; margin: 0;
-      }
+      .endo-explain { font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65); white-space: pre-wrap; margin: 0; }
       .endo-explain.empty { font-style: italic; color: rgba(255,255,255,0.35); }
-      .endo-prose {
-        font-size: 0.9rem; line-height: 1.65; color: rgba(255,255,255,0.78);
-        white-space: pre-wrap; margin: 0 0 4px;
-        background: rgba(255,255,255,0.04);
-        border-left: 3px solid var(--text-accent, #70D6EC);
-        padding: 12px 14px; border-radius: 6px;
-      }
-      .endo-prose.empty {
-        font-style: italic; color: rgba(255,255,255,0.35);
-        background: rgba(255,255,255,0.04);
-      }
-      .endo-edit-label {
-        display: block; font-size: 0.72rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.05em;
-        color: rgba(255,255,255,0.5); margin: 0 0 6px;
-      }
+      .endo-prose { font-size: 0.9rem; line-height: 1.65; color: rgba(255,255,255,0.78); white-space: pre-wrap; margin: 0 0 4px; background: rgba(255,255,255,0.04); border-left: 3px solid var(--text-accent, #70D6EC); padding: 12px 14px; border-radius: 6px; }
+      .endo-prose.empty { font-style: italic; color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.04); }
+      .endo-edit-label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.5); margin: 0 0 6px; }
       .endo-edit-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
       .endo-edit-row select { min-width: 180px; }
-      #endoNotes {
-        width: 100%; min-height: 90px; resize: vertical; margin-top: 4px;
+      #endoNotes { width: 100%; min-height: 90px; resize: vertical; margin-top: 4px; }
+
+      /* Collapsible application block */
+      .endo-collapse { border: 1px solid rgba(255,255,255,0.10); border-radius: 8px; margin: 4px 0 0; }
+      .endo-collapse > summary { cursor: pointer; padding: 12px 14px; font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(255,255,255,0.75); list-style: none; }
+      .endo-collapse > summary::-webkit-details-marker { display: none; }
+      .endo-collapse > summary::after { content: '▸'; float: right; color: var(--text-accent, #70D6EC); }
+      .endo-collapse[open] > summary::after { content: '▾'; }
+      .endo-collapse-body { padding: 4px 16px 18px; }
+
+      /* Pipeline tracker */
+      .endo-pipeline { display: flex; align-items: flex-start; gap: 0; margin: 2px 0 6px; }
+      .pl-step { flex: 1 1 0; text-align: center; position: relative; }
+      .pl-step::before { content: ''; position: absolute; top: 11px; left: -50%; width: 100%; height: 2px; background: rgba(255,255,255,0.14); z-index: 0; }
+      .pl-step:first-child::before { display: none; }
+      .pl-dot { position: relative; z-index: 1; width: 22px; height: 22px; border-radius: 50%; margin: 0 auto 6px; background: rgba(255,255,255,0.10); border: 2px solid rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 800; color: rgba(255,255,255,0.55); }
+      .pl-label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.03em; color: rgba(255,255,255,0.45); font-weight: 700; }
+      .pl-step.done .pl-dot   { background: var(--text-accent, #70D6EC); border-color: var(--text-accent, #70D6EC); color: #06202e; }
+      .pl-step.done .pl-label { color: rgba(255,255,255,0.72); }
+      .pl-step.done::before   { background: var(--text-accent, #70D6EC); }
+      .pl-step.current .pl-dot   { box-shadow: 0 0 0 4px rgba(112,214,236,0.22); }
+      .pl-step.decided-endorsed .pl-dot { background: #4ade80; border-color: #4ade80; color: #063; }
+      .pl-step.decided-endorsed::before { background: #4ade80; }
+      .pl-step.decided-declined .pl-dot { background: #ff6b6b; border-color: #ff6b6b; color: #400; }
+      .pl-step.decided-declined::before { background: #ff6b6b; }
+      .endo-side-badge { display: inline-block; margin-top: 6px; font-size: 0.72rem; font-weight: 700; padding: 3px 12px; border-radius: 999px; background: #eef2f6; color: #55606c; }
+
+      /* Vote tally bar */
+      .tally-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,0.10); margin: 8px 0 6px; }
+      .tally-bar span { display: block; height: 100%; }
+      .tally-bar .b-for { background: #4ade80; }
+      .tally-bar .b-against { background: #ff6b6b; }
+      .tally-bar .b-other { background: #8b96a3; }
+      .tally-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.8rem; color: rgba(255,255,255,0.72); }
+      .tally-legend b { color: #fff; }
+
+      /* Vote list */
+      .vote-list { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 0; }
+      .vote-row { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; background: rgba(255,255,255,0.04); border-radius: 8px; }
+      .vote-row .vr-main { flex: 1 1 auto; min-width: 0; }
+      .vote-row .vr-name { font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.9); }
+      .vote-row .vr-rec  { font-size: 0.85rem; color: rgba(255,255,255,0.62); white-space: pre-wrap; margin-top: 3px; line-height: 1.5; }
+      .vote-row .vr-time { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 4px; }
+      .vote-pill { flex: 0 0 auto; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+      .vp-endorse      { background: rgba(74,222,128,0.22);  color: #6ee7a0; }
+      .vp-lean_endorse { background: rgba(74,222,128,0.14);  color: #a7e9c0; }
+      .vp-neutral      { background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.7); }
+      .vp-abstain      { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.55); }
+      .vp-recuse       { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+      .vp-lean_decline { background: rgba(255,107,107,0.14); color: #ffc2c2; }
+      .vp-decline      { background: rgba(255,107,107,0.22); color: #ff9b9b; }
+      .vote-empty { font-size: 0.85rem; font-style: italic; color: rgba(255,255,255,0.4); }
+
+      /* My-vote / assign forms */
+      .endo-form { background: rgba(112,214,236,0.06); border: 1px solid rgba(112,214,236,0.18); border-radius: 10px; padding: 14px 16px; margin-top: 4px; }
+      .endo-form.mine-voted { border-color: rgba(74,222,128,0.30); background: rgba(74,222,128,0.06); }
+      .endo-form textarea { width: 100%; min-height: 64px; resize: vertical; margin-top: 8px; }
+      .assign-row { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: rgba(255,255,255,0.04); border-radius: 7px; }
+      .assign-row .ar-name { flex: 1 1 auto; font-size: 0.86rem; color: rgba(255,255,255,0.85); }
+      .assign-row .ar-role { font-size: 0.72rem; color: rgba(255,255,255,0.5); }
+      .assign-remove { background: none; border: none; color: #ff9b9b; cursor: pointer; font-size: 0.8rem; font-weight: 700; }
+
+      /* Timeline */
+      .tl { list-style: none; margin: 4px 0 0; padding: 0; position: relative; }
+      .tl::before { content: ''; position: absolute; left: 6px; top: 4px; bottom: 4px; width: 2px; background: rgba(255,255,255,0.12); }
+      .tl-item { position: relative; padding: 0 0 14px 24px; }
+      .tl-item::before { content: ''; position: absolute; left: 0; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.18); border: 2px solid #0e2237; }
+      .tl-item.t-vote::before        { background: #70D6EC; }
+      .tl-item.t-stage_change::before{ background: #ffc857; }
+      .tl-item.t-decision::before    { background: #4ade80; }
+      .tl-item.t-director_push::before { background: #a084e8; }
+      .tl-item.t-assignment::before  { background: #8b96a3; }
+      .tl-sum { font-size: 0.86rem; color: rgba(255,255,255,0.82); line-height: 1.45; }
+      .tl-meta { font-size: 0.72rem; color: rgba(255,255,255,0.42); margin-top: 2px; }
+
+      .endo-btn-danger { background: rgba(255,107,107,0.15) !important; color: #ff9b9b !important; border: 1px solid rgba(255,107,107,0.35) !important; }
+      .endo-btn-push   { background: #4ade80 !important; color: #06371c !important; }
+      .endo-decision-banner { padding: 10px 14px; border-radius: 8px; font-size: 0.86rem; font-weight: 600; margin-bottom: 10px; }
+      .endo-decision-banner.endorse { background: rgba(74,222,128,0.14); color: #a7e9c0; }
+      .endo-decision-banner.decline { background: rgba(255,107,107,0.14); color: #ffc2c2; }
+
+      /* ---------- mobile ---------- */
+      @media (max-width: 600px) {
+        /* Stack every control row full-width for thumb-friendly tap targets. */
+        .endo-edit-row { flex-direction: column; align-items: stretch; gap: 8px; }
+        .endo-edit-row select,
+        .endo-edit-row input,
+        .endo-edit-row .shell-btn,
+        .endo-edit-row button { width: 100%; min-width: 0; }
+        .endo-form { padding: 12px; }
+
+        /* Pipeline: tighter so all five steps fit a narrow screen. */
+        .endo-pipeline { gap: 0; }
+        .pl-dot { width: 18px; height: 18px; font-size: 0.6rem; }
+        .pl-step::before { top: 9px; }
+        .pl-label { font-size: 0.55rem; letter-spacing: 0; }
+
+        /* Vote rows: let the pill drop below the name on very narrow screens. */
+        .vote-row { flex-wrap: wrap; }
+        .vote-row .vote-pill { order: -1; }
+
+        .tally-legend { gap: 10px; font-size: 0.78rem; }
+        .assign-row { flex-wrap: wrap; }
+      }
+      @media (max-width: 380px) {
+        .pl-label { font-size: 0.5rem; }
+        .endo-sec-title { margin-top: 20px; }
       }
     </style>
   </head>
@@ -98,42 +181,31 @@
          data-active-nav="endorsements"
          data-page-eyebrow="Program"
          data-page-title="Endorsements"
-         data-page-sub="Screen candidate applications and publish endorsement decisions."></div>
+         data-page-sub="Track each candidate through screening, board review, and the endorsement vote."></div>
 
     <template id="endoTpl">
       <div class="shell-widget admin-panel">
         <div class="admin-stat-grid" id="statGrid">
-          <div class="admin-stat">
-            <div class="admin-stat-num" id="statTotal">0</div>
-            <div class="admin-stat-label">Applications</div>
-          </div>
-          <div class="admin-stat">
-            <div class="admin-stat-num" id="statNew">0</div>
-            <div class="admin-stat-label">New</div>
-          </div>
-          <div class="admin-stat">
-            <div class="admin-stat-num" id="statReview">0</div>
-            <div class="admin-stat-label">In Review</div>
-          </div>
-          <div class="admin-stat">
-            <div class="admin-stat-num" id="statEndorsed">0</div>
-            <div class="admin-stat-label">Endorsed</div>
-          </div>
+          <div class="admin-stat"><div class="admin-stat-num" id="statTotal">0</div><div class="admin-stat-label">Applications</div></div>
+          <div class="admin-stat"><div class="admin-stat-num" id="statNew">0</div><div class="admin-stat-label">New</div></div>
+          <div class="admin-stat"><div class="admin-stat-num" id="statReview">0</div><div class="admin-stat-label">In Review</div></div>
+          <div class="admin-stat"><div class="admin-stat-num" id="statEndorsed">0</div><div class="admin-stat-label">Endorsed</div></div>
         </div>
 
         <div class="admin-toolbar">
-          <input type="search" class="admin-input" id="filterSearch"
-                 placeholder="Search candidate name or email&hellip;" autocomplete="off" />
+          <input type="search" class="admin-input" id="filterSearch" placeholder="Search candidate name or email&hellip;" autocomplete="off" />
           <select class="admin-input" id="filterStatus">
-            <option value="">All statuses</option>
-            <option value="submitted">Submitted</option>
-            <option value="under_review">Under Review</option>
+            <option value="">All stages</option>
+            <option value="new">New</option>
+            <option value="screening">Screening</option>
+            <option value="board_review">Board Review</option>
+            <option value="voting">Voting</option>
             <option value="endorsed">Endorsed</option>
             <option value="declined">Declined</option>
+            <option value="tabled">Tabled</option>
             <option value="withdrawn">Withdrawn</option>
           </select>
-          <input type="search" class="admin-input" id="filterOffice"
-                 placeholder="Filter by office&hellip;" autocomplete="off" />
+          <input type="search" class="admin-input" id="filterOffice" placeholder="Filter by office&hellip;" autocomplete="off" />
           <span class="admin-toolbar-spacer"></span>
           <span class="admin-result-count" id="resultCount"></span>
         </div>
@@ -145,13 +217,14 @@
                 <th data-sort="candidate_name" class="admin-sortable">Candidate<span class="admin-sort-arrow">&darr;</span></th>
                 <th data-sort="office_sought" class="admin-sortable">Office<span class="admin-sort-arrow">&darr;</span></th>
                 <th data-sort="district" class="admin-sortable">District<span class="admin-sort-arrow">&darr;</span></th>
-                <th data-sort="status" class="admin-sortable">Status<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="stage" class="admin-sortable">Stage<span class="admin-sort-arrow">&darr;</span></th>
+                <th>Board Vote</th>
                 <th data-sort="created_at" class="admin-sortable">Submitted<span class="admin-sort-arrow">&darr;</span></th>
                 <th></th>
               </tr>
             </thead>
             <tbody id="endoBody">
-              <tr><td colspan="6" class="admin-empty-row">Loading applications&hellip;</td></tr>
+              <tr><td colspan="7" class="admin-empty-row">Loading applications&hellip;</td></tr>
             </tbody>
           </table>
         </div>
@@ -171,92 +244,112 @@
       (function () {
         'use strict';
 
-        var COLSPAN = 6;
+        var COLSPAN = 7;
 
-        var STATUS_LABEL = {
-          submitted: 'Submitted',
-          under_review: 'Under Review',
-          endorsed: 'Endorsed',
-          declined: 'Declined',
-          withdrawn: 'Withdrawn'
+        var STAGE_LABEL = {
+          new: 'New', screening: 'Screening', board_review: 'Board Review',
+          voting: 'Voting', endorsed: 'Endorsed', declined: 'Declined',
+          tabled: 'Tabled', withdrawn: 'Withdrawn'
         };
+        // Ordered pipeline steps shown in the tracker.
+        var PIPELINE = ['new', 'screening', 'board_review', 'voting', 'decision'];
+        var PIPELINE_LABEL = { new: 'New', screening: 'Screening', board_review: 'Board Review', voting: 'Voting', decision: 'Decision' };
+        var SIDE_STAGES = { tabled: 'Tabled', withdrawn: 'Withdrawn' };
+
+        var VOTE_META = {
+          endorse:      { label: 'Endorse',      bucket: 'for' },
+          lean_endorse: { label: 'Lean endorse', bucket: 'for' },
+          neutral:      { label: 'Neutral',      bucket: 'other' },
+          lean_decline: { label: 'Lean decline', bucket: 'against' },
+          decline:      { label: 'Decline',      bucket: 'against' },
+          abstain:      { label: 'Abstain',      bucket: 'other' },
+          recuse:       { label: 'Recuse',       bucket: 'other' }
+        };
+        var VOTE_ORDER = ['endorse', 'lean_endorse', 'neutral', 'lean_decline', 'decline', 'abstain', 'recuse'];
 
         var state = {
-          rows: [],
-          filtered: [],
-          byId: Object.create(null),
-          sortKey: 'created_at',
-          sortDir: 'desc',
-          client: null,
-          drawerId: null
+          rows: [], filtered: [], byId: Object.create(null),
+          reviewsByApp: Object.create(null),   // application_id -> [reviews]
+          sortKey: 'created_at', sortDir: 'desc',
+          client: null, drawerId: null,
+          me: { email: '', name: '', userId: null, canWrite: false },
+          adminUsers: []                       // for the assignment picker
         };
 
         function $(id) { return document.getElementById(id); }
-
         function escapeHtml(s) {
           return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
             return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
           });
         }
-
         function fmtDate(iso) {
           if (!iso) return '';
-          var d = new Date(iso);
-          if (isNaN(d.getTime())) return '';
-          var now = new Date();
-          var diff = (now - d) / 1000;
+          var d = new Date(iso); if (isNaN(d.getTime())) return '';
+          var diff = (new Date() - d) / 1000;
           if (diff < 60) return 'Just now';
           if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
           if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
           if (diff < 86400 * 7) return Math.floor(diff / 86400) + 'd ago';
           return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
-
         function fmtDateTime(iso) {
           if (!iso) return '';
-          var d = new Date(iso);
-          if (isNaN(d.getTime())) return '';
+          var d = new Date(iso); if (isNaN(d.getTime())) return '';
           return d.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
         }
-
-        function statusPill(s) {
-          return '<span class="admin-pill-status admin-pill-st-' + escapeHtml(s) + '">' +
-            escapeHtml(STATUS_LABEL[s] || s) + '</span>';
+        function stagePill(s) {
+          var st = s || 'new';
+          return '<span class="admin-pill-status admin-pill-st-' + escapeHtml(st) + '">' +
+            escapeHtml(STAGE_LABEL[st] || st) + '</span>';
         }
-
         function toast(msg, kind) {
-          if (window.AdminShell && window.AdminShell.toast) {
-            window.AdminShell.toast(msg, kind);
-            return;
-          }
-          var el = $('toast');
-          if (!el) return;
+          if (window.AdminShell && window.AdminShell.toast) { window.AdminShell.toast(msg, kind); return; }
+          var el = $('toast'); if (!el) return;
           el.textContent = msg;
           el.className = 'admin-toast visible' + (kind ? ' admin-toast-' + kind : '');
           clearTimeout(toast._t);
           toast._t = setTimeout(function () { el.classList.remove('visible'); }, 3200);
         }
 
-        function updateStats() {
-          var c = { total: state.rows.length, submitted: 0, under_review: 0, endorsed: 0 };
-          state.rows.forEach(function (r) {
-            if (r.status === 'submitted') c.submitted++;
-            if (r.status === 'under_review') c.under_review++;
-            if (r.status === 'endorsed') c.endorsed++;
+        // ---- tally helpers ---------------------------------------------
+        function tallyOf(reviews) {
+          var t = { for: 0, against: 0, other: 0, total: 0 };
+          (reviews || []).forEach(function (r) {
+            var m = VOTE_META[r.vote]; if (!m) return;
+            t[m.bucket]++; t.total++;
           });
-          $('statTotal').textContent    = c.total;
-          $('statNew').textContent      = c.submitted;
-          $('statReview').textContent   = c.under_review;
-          $('statEndorsed').textContent = c.endorsed;
+          return t;
+        }
+        function tallyMini(reviews) {
+          var t = tallyOf(reviews);
+          if (t.total === 0) return '<span class="tally-empty">No votes</span>';
+          return '<span class="tally-mini">' +
+            '<span class="tally-dot for"><span class="dot"></span>' + t.for + '</span>' +
+            '<span class="tally-dot against"><span class="dot"></span>' + t.against + '</span>' +
+            '<span class="tally-dot other"><span class="dot"></span>' + t.other + '</span>' +
+          '</span>';
         }
 
+        // ---- stats + filters + table -----------------------------------
+        function updateStats() {
+          var c = { total: state.rows.length, neu: 0, review: 0, endorsed: 0 };
+          state.rows.forEach(function (r) {
+            var st = r.stage || 'new';
+            if (st === 'new') c.neu++;
+            if (st === 'screening' || st === 'board_review' || st === 'voting') c.review++;
+            if (st === 'endorsed') c.endorsed++;
+          });
+          $('statTotal').textContent = c.total;
+          $('statNew').textContent = c.neu;
+          $('statReview').textContent = c.review;
+          $('statEndorsed').textContent = c.endorsed;
+        }
         function applyFilters() {
           var q = $('filterSearch').value.trim().toLowerCase();
-          var stat = $('filterStatus').value;
+          var stg = $('filterStatus').value;
           var off = $('filterOffice').value.trim().toLowerCase();
-
           state.filtered = state.rows.filter(function (r) {
-            if (stat && r.status !== stat) return false;
+            if (stg && (r.stage || 'new') !== stg) return false;
             if (off && (r.office_sought || '').toLowerCase().indexOf(off) === -1) return false;
             if (q) {
               var hay = ((r.candidate_name || '') + ' ' + (r.email || '')).toLowerCase();
@@ -266,21 +359,15 @@
           });
           applySort();
         }
-
         function applySort() {
-          var key = state.sortKey;
-          var dir = state.sortDir === 'asc' ? 1 : -1;
+          var key = state.sortKey, dir = state.sortDir === 'asc' ? 1 : -1;
           state.filtered.sort(function (a, b) {
             var av = a[key], bv = b[key];
-            if (key === 'created_at') {
-              return ((new Date(av || 0)) - (new Date(bv || 0))) * dir;
-            }
+            if (key === 'created_at') return ((new Date(av || 0)) - (new Date(bv || 0))) * dir;
             return String(av || '').localeCompare(String(bv || ''), undefined, { numeric: true, sensitivity: 'base' }) * dir;
           });
-          renderRows();
-          renderSortHeaders();
+          renderRows(); renderSortHeaders();
         }
-
         function renderSortHeaders() {
           var ths = document.querySelectorAll('#endoTable thead th[data-sort]');
           for (var i = 0; i < ths.length; i++) {
@@ -290,14 +377,11 @@
             }
           }
         }
-
         function renderRows() {
           var body = $('endoBody');
-          $('resultCount').textContent =
-            state.filtered.length === state.rows.length
-              ? state.rows.length + ' total'
-              : state.filtered.length + ' of ' + state.rows.length;
-
+          $('resultCount').textContent = state.filtered.length === state.rows.length
+            ? state.rows.length + ' total'
+            : state.filtered.length + ' of ' + state.rows.length;
           if (state.filtered.length === 0) {
             var msg = state.rows.length === 0
               ? 'No applications yet. When a candidate submits the screening form, they appear here.'
@@ -305,79 +389,61 @@
             body.innerHTML = '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row">' + msg + '</td></tr>';
             return;
           }
-
           var html = '';
           for (var i = 0; i < state.filtered.length; i++) {
             var r = state.filtered[i];
-            var pron = r.pronouns
-              ? '<span class="admin-cell-sub">' + escapeHtml(r.pronouns) + '</span>' : '';
+            var pron = r.pronouns ? '<span class="admin-cell-sub">' + escapeHtml(r.pronouns) + '</span>' : '';
             var dist = r.district || (r.election_year ? String(r.election_year) : '');
             html +=
               '<tr data-id="' + escapeHtml(r.id) + '" style="cursor:pointer">' +
-                '<td class="admin-cell-name">' + escapeHtml(r.candidate_name || '—') + pron + '</td>' +
-                '<td>' + (r.office_sought ? escapeHtml(r.office_sought) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
-                '<td>' + (dist ? escapeHtml(dist) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
-                '<td>' + statusPill(r.status) + '</td>' +
-                '<td class="admin-cell-tight">' + escapeHtml(fmtDate(r.created_at)) + '</td>' +
-                '<td class="admin-cell-tight"><span class="admin-link">View &rsaquo;</span></td>' +
+                '<td class="admin-cell-name" data-label="Candidate">' + escapeHtml(r.candidate_name || '—') + pron + '</td>' +
+                '<td data-label="Office">' + (r.office_sought ? escapeHtml(r.office_sought) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td data-label="District">' + (dist ? escapeHtml(dist) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
+                '<td data-label="Stage">' + stagePill(r.stage) + '</td>' +
+                '<td data-label="Board Vote">' + tallyMini(state.reviewsByApp[r.id]) + '</td>' +
+                '<td class="admin-cell-tight" data-label="Submitted">' + escapeHtml(fmtDate(r.created_at)) + '</td>' +
+                '<td class="admin-cell-tight" data-label="">' + '<span class="admin-link">Open &rsaquo;</span></td>' +
               '</tr>';
           }
           body.innerHTML = html;
         }
 
-        // ---- Drawer detail ---------------------------------------------
+        // ---- application body (candidate responses) --------------------
         function yn(v) {
-          return v === true ? { c: 'yes', t: 'Yes' }
-               : v === false ? { c: 'no', t: 'No' }
-               : { c: 'na', t: 'No answer' };
+          return v === true ? { c: 'yes', t: 'Yes' } : v === false ? { c: 'no', t: 'No' } : { c: 'na', t: 'No answer' };
         }
-
         function qBlock(num, q, ans, exp) {
           var a = yn(ans);
           return '<div class="endo-q">' +
             '<p class="endo-q-text"><span class="endo-q-num">' + num + '.</span>' + escapeHtml(q) + '</p>' +
             '<span class="endo-ans ' + a.c + '">' + a.t + '</span>' +
-            (exp
-              ? '<p class="endo-explain">' + escapeHtml(exp) + '</p>'
-              : '<p class="endo-explain empty">No explanation provided.</p>') +
+            (exp ? '<p class="endo-explain">' + escapeHtml(exp) + '</p>' : '<p class="endo-explain empty">No explanation provided.</p>') +
             '</div>';
         }
-
         function prose(label, body) {
           return '<div class="endo-sec-title">' + escapeHtml(label) + '</div>' +
-            (body
-              ? '<p class="endo-prose">' + escapeHtml(body) + '</p>'
-              : '<p class="endo-prose empty">No response provided.</p>');
+            (body ? '<p class="endo-prose">' + escapeHtml(body) + '</p>' : '<p class="endo-prose empty">No response provided.</p>');
         }
-
-        function buildDrawerBody(a) {
-          // Values are escaped by grid() unless wrapped via raw() — only the
-          // anchor links (already built from escaped parts) are raw HTML.
+        function grid(items) {
+          var html = '<dl class="endo-grid">';
+          for (var i = 0; i < items.length; i++) {
+            var v = items[i][1];
+            if (v === '' || v == null) continue;
+            var cell = (v && typeof v === 'object' && v.__html != null) ? v.__html : escapeHtml(String(v));
+            html += '<div><dt>' + escapeHtml(items[i][0]) + '</dt><dd>' + cell + '</dd></div>';
+          }
+          return html + '</dl>';
+        }
+        function buildApplicationHtml(a) {
           function raw(html) { return { __html: html }; }
           var contact = [
             ['Email', a.email ? raw('<a class="admin-link" href="mailto:' + escapeHtml(a.email) + '">' + escapeHtml(a.email) + '</a>') : null],
             ['Phone', a.phone ? raw('<a class="admin-link" href="tel:' + escapeHtml(a.phone) + '">' + escapeHtml(a.phone) + '</a>') : null],
             ['Website', a.website ? raw('<a class="admin-link" target="_blank" rel="noopener" href="' + escapeHtml(a.website) + '">' + escapeHtml(a.website) + '</a>') : null],
-            ['Party', a.party],
-            ['Office Sought', a.office_sought],
-            ['District', a.district],
-            ['Election Year', a.election_year],
-            ['Committee', a.committee_name],
-            ['Treasurer', a.treasurer_name],
+            ['Party', a.party], ['Office Sought', a.office_sought], ['District', a.district],
+            ['Election Year', a.election_year], ['Committee', a.committee_name], ['Treasurer', a.treasurer_name],
             ['Out as LGBTQ+', a.is_out === 'yes' ? 'Yes' : a.is_out === 'no' ? 'No' : a.is_out === 'prefer_not_to_say' ? 'Prefer not to say' : null]
           ];
-          function grid(items) {
-            var html = '<dl class="endo-grid">';
-            for (var i = 0; i < items.length; i++) {
-              var v = items[i][1];
-              if (v === '' || v == null) continue;
-              var cell = (v && typeof v === 'object' && v.__html != null)
-                ? v.__html : escapeHtml(String(v));
-              html += '<div><dt>' + escapeHtml(items[i][0]) + '</dt><dd>' + cell + '</dd></div>';
-            }
-            return html + '</dl>';
-          }
-
           var positions = [
             ['Q1', 'Support statewide nondiscrimination protections for LGBTQ+ Ohioans (the Ohio Fairness Act)?', a.q1_nondiscrimination, a.q1_explanation],
             ['Q2', 'Oppose legislation restricting gender-affirming care or broadly banning gender expression?', a.q2_anti_lgbtq_legislation, a.q2_explanation],
@@ -385,11 +451,9 @@
             ['Q4', 'Support inclusive K-12 schools (anti-bullying, no forced outing, accurate information)?', a.q4_inclusive_education, a.q4_explanation],
             ['Q5', 'Vote against bills that roll back LGBTQ+ rights or create broad religious exemptions?', a.q5_vote_against_rollbacks, a.q5_explanation]
           ];
-
           var attest = a.attestation
             ? '<p class="endo-explain">&#10003; Certified. Signed by ' + escapeHtml(a.signature || 'unsigned') + '.</p>'
             : '<p class="endo-explain empty">Not certified. Signature: ' + escapeHtml(a.signature || 'none') + '.</p>';
-
           return '' +
             '<div class="endo-sec-title">Candidate Information</div>' + grid(contact) +
             '<div class="endo-sec-title">Core Positions</div>' +
@@ -399,37 +463,244 @@
             prose('Addressing threats to LGBTQ+ safety', a.q8_safety) +
             prose('How equality connects to other race priorities', a.q9_intersection) +
             prose('Why they seek Ohio Pride’s endorsement', a.q10_why_endorsement) +
-            prose('Bio', a.bio) +
-            prose('Conflicts disclosure', a.conflicts_disclosure) +
+            prose('Bio', a.bio) + prose('Conflicts disclosure', a.conflicts_disclosure) +
             '<div class="endo-sec-title">Attestation</div>' + attest +
             '<div class="endo-sec-title">Audit Trail</div>' +
             grid([
-              ['Application ID', a.id],
-              ['Submitted', fmtDateTime(a.created_at)],
+              ['Application ID', a.id], ['Submitted', fmtDateTime(a.created_at)],
               ['Last updated', fmtDateTime(a.updated_at)],
-              ['Reviewed by', a.reviewed_by],
-              ['Reviewed at', fmtDateTime(a.reviewed_at)]
+              ['Decided by', a.decided_by], ['Decided at', fmtDateTime(a.decided_at)]
             ]);
         }
 
-        function buildDrawerFoot(a) {
-          var opts = ['submitted', 'under_review', 'endorsed', 'declined', 'withdrawn']
-            .map(function (s) {
-              return '<option value="' + s + '"' + (a.status === s ? ' selected' : '') + '>' +
-                STATUS_LABEL[s] + '</option>';
-            }).join('');
-          return '' +
-            '<div style="width:100%">' +
-              '<label class="endo-edit-label" for="endoStatus">Decision status</label>' +
-              '<div class="endo-edit-row">' +
-                '<select class="admin-input" id="endoStatus">' + opts + '</select>' +
-                '<button type="button" class="shell-btn shell-btn-primary" id="endoSave">Save changes</button>' +
+        // ---- pipeline tracker ------------------------------------------
+        function pipelineHtml(stage) {
+          var decided = stage === 'endorsed' ? 'endorsed' : stage === 'declined' ? 'declined' : null;
+          var idx;
+          if (stage === 'endorsed' || stage === 'declined') idx = PIPELINE.indexOf('decision');
+          else if (SIDE_STAGES[stage]) idx = 2; // tabled/withdrawn: show pipeline up to board review
+          else idx = PIPELINE.indexOf(stage);
+          if (idx < 0) idx = 0;
+
+          var html = '<div class="endo-pipeline">';
+          PIPELINE.forEach(function (step, i) {
+            var cls = 'pl-step';
+            if (i < idx) cls += ' done';
+            if (i === idx) {
+              cls += ' current';
+              if (step === 'decision' && decided) cls += ' decided-' + decided;
+              else cls += ' done';
+            }
+            var mark = (i < idx || (i === idx && step !== 'decision')) ? '&#10003;'
+                     : (step === 'decision' && decided === 'declined') ? '&times;'
+                     : (i + 1);
+            html += '<div class="' + cls + '"><div class="pl-dot">' + mark + '</div>' +
+              '<div class="pl-label">' + escapeHtml(PIPELINE_LABEL[step]) + '</div></div>';
+          });
+          html += '</div>';
+          if (SIDE_STAGES[stage]) {
+            html += '<div style="text-align:center"><span class="endo-side-badge">' + escapeHtml(SIDE_STAGES[stage]) + '</span></div>';
+          }
+          return html;
+        }
+
+        // ---- votes section ---------------------------------------------
+        function votePillHtml(vote) {
+          var m = VOTE_META[vote]; if (!m) return '';
+          return '<span class="vote-pill vp-' + escapeHtml(vote) + '">' + escapeHtml(m.label) + '</span>';
+        }
+        function tallyBlock(reviews) {
+          var t = tallyOf(reviews);
+          var total = t.total || 1;
+          var html = '<div class="tally-bar">' +
+            '<span class="b-for" style="width:' + (t.for / total * 100) + '%"></span>' +
+            '<span class="b-against" style="width:' + (t.against / total * 100) + '%"></span>' +
+            '<span class="b-other" style="width:' + (t.other / total * 100) + '%"></span>' +
+          '</div>' +
+          '<div class="tally-legend">' +
+            '<span><b>' + t.for + '</b> for</span>' +
+            '<span><b>' + t.against + '</b> against</span>' +
+            '<span><b>' + t.other + '</b> neutral / abstain</span>' +
+            '<span><b>' + t.total + '</b> total votes</span>' +
+          '</div>';
+          return html;
+        }
+        function votesListHtml(reviews) {
+          if (!reviews || reviews.length === 0) return '<p class="vote-empty">No board member has voted yet.</p>';
+          var sorted = reviews.slice().sort(function (a, b) {
+            return VOTE_ORDER.indexOf(a.vote) - VOTE_ORDER.indexOf(b.vote);
+          });
+          return '<div class="vote-list">' + sorted.map(function (r) {
+            return '<div class="vote-row">' +
+              '<div class="vr-main">' +
+                '<div class="vr-name">' + escapeHtml(r.reviewer_name || r.reviewer_email) + '</div>' +
+                (r.recommendation ? '<div class="vr-rec">' + escapeHtml(r.recommendation) + '</div>' : '') +
+                '<div class="vr-time">' + escapeHtml(fmtDate(r.updated_at || r.created_at)) + '</div>' +
               '</div>' +
-              '<label class="endo-edit-label" for="endoNotes" style="margin-top:14px">Reviewer notes (internal)</label>' +
-              '<textarea class="admin-input" id="endoNotes" placeholder="Notes for the screening committee. Never shared with the candidate or public.">' +
-                escapeHtml(a.reviewer_notes || '') + '</textarea>' +
-              '<p style="margin-top:8px;font-size:0.78rem;color:rgba(255,255,255,0.5)">Setting status to <strong style="color:rgba(255,255,255,0.75)">Endorsed</strong> publishes this candidate on the public endorsements page.</p>' +
+              votePillHtml(r.vote) +
             '</div>';
+          }).join('') + '</div>';
+        }
+        function myVoteFormHtml(reviews) {
+          var mine = (reviews || []).filter(function (r) {
+            return String(r.reviewer_email || '').toLowerCase() === state.me.email.toLowerCase();
+          })[0];
+          var opts = VOTE_ORDER.map(function (v) {
+            return '<option value="' + v + '"' + (mine && mine.vote === v ? ' selected' : '') + '>' + escapeHtml(VOTE_META[v].label) + '</option>';
+          }).join('');
+          var head = mine
+            ? 'Your vote: ' + escapeHtml(VOTE_META[mine.vote].label)
+            : 'Cast your vote';
+          return '<div class="endo-form' + (mine ? ' mine-voted' : '') + '" id="myVoteForm">' +
+            '<label class="endo-edit-label" for="myVote">' + head + '</label>' +
+            '<div class="endo-edit-row">' +
+              '<select class="admin-input" id="myVote">' + opts + '</select>' +
+              '<button type="button" class="shell-btn shell-btn-primary" id="saveVote">' + (mine ? 'Update vote' : 'Submit vote') + '</button>' +
+            '</div>' +
+            '<textarea class="admin-input" id="myRec" placeholder="Your recommendation / reasoning for the board (optional).">' + escapeHtml(mine ? (mine.recommendation || '') : '') + '</textarea>' +
+          '</div>';
+        }
+
+        // ---- assignments (write only) ----------------------------------
+        function assignmentsHtml(a) {
+          var list = (a._assignments || []);
+          var rows = list.length
+            ? list.map(function (as) {
+                return '<div class="assign-row" data-assign-id="' + escapeHtml(as.id) + '">' +
+                  '<span class="ar-name">' + escapeHtml(as.assignee_name || as.assignee_email) +
+                    (as.role_label ? ' <span class="ar-role">· ' + escapeHtml(as.role_label) + '</span>' : '') + '</span>' +
+                  (state.me.canWrite ? '<button type="button" class="assign-remove" data-remove-assign="' + escapeHtml(as.id) + '">Remove</button>' : '') +
+                '</div>';
+              }).join('')
+            : '<p class="vote-empty">No board members assigned yet.</p>';
+          var picker = '';
+          if (state.me.canWrite) {
+            var assignedEmails = list.map(function (x) { return String(x.assignee_email || '').toLowerCase(); });
+            var uopts = state.adminUsers
+              .filter(function (u) { return assignedEmails.indexOf(String(u.email).toLowerCase()) === -1; })
+              .map(function (u) { return '<option value="' + escapeHtml(u.email) + '">' + escapeHtml(u.full_name || u.email) + '</option>'; })
+              .join('');
+            picker = '<div class="endo-form" style="margin-top:10px">' +
+              '<div class="endo-edit-row">' +
+                '<select class="admin-input" id="assignPick"><option value="">Assign a board member&hellip;</option>' + uopts + '</select>' +
+                '<input class="admin-input" id="assignRole" placeholder="Role (optional)" style="min-width:150px" />' +
+                '<button type="button" class="shell-btn" id="assignAdd">Assign</button>' +
+              '</div>' +
+            '</div>';
+          }
+          return rows + picker;
+        }
+
+        // ---- timeline --------------------------------------------------
+        function timelineHtml(activity) {
+          if (!activity || activity.length === 0) return '<p class="vote-empty">No activity recorded yet.</p>';
+          return '<ul class="tl">' + activity.map(function (e) {
+            return '<li class="tl-item t-' + escapeHtml(e.event_type) + '">' +
+              '<div class="tl-sum">' + escapeHtml(e.summary || e.event_type) + '</div>' +
+              '<div class="tl-meta">' + escapeHtml(e.actor_name || e.actor_email || 'System') + ' · ' + escapeHtml(fmtDateTime(e.created_at)) + '</div>' +
+            '</li>';
+          }).join('') + '</ul>';
+        }
+
+        // ---- drawer assembly -------------------------------------------
+        function controlsHtml(a) {
+          // Decision-maker controls (endorsements:write only). Kept in the
+          // scrolling body — NOT the sticky drawer foot — so it never grows
+          // into a giant fixed panel on a phone.
+          if (!state.me.canWrite) return '';
+          var stageOpts = ['new', 'screening', 'board_review', 'voting', 'endorsed', 'declined', 'tabled', 'withdrawn']
+            .map(function (s) {
+              return '<option value="' + s + '"' + ((a.stage || 'new') === s ? ' selected' : '') + '>' + STAGE_LABEL[s] + '</option>';
+            }).join('');
+          return '<div class="endo-sec-title">Director Controls</div>' +
+            '<div class="endo-form">' +
+              '<label class="endo-edit-label" for="endoStage">Move stage</label>' +
+              '<div class="endo-edit-row">' +
+                '<select class="admin-input" id="endoStage">' + stageOpts + '</select>' +
+                '<button type="button" class="shell-btn shell-btn-primary" id="endoStageSave">Update stage</button>' +
+              '</div>' +
+              '<div class="endo-edit-row" style="margin-top:12px">' +
+                '<button type="button" class="shell-btn endo-btn-push" id="endoPush">Push endorsement &#9889;</button>' +
+                '<button type="button" class="shell-btn endo-btn-danger" id="endoDecline">Decline</button>' +
+              '</div>' +
+              '<p style="margin:10px 0 0;font-size:0.78rem;color:rgba(255,255,255,0.5)"><strong style="color:rgba(255,255,255,0.75)">Push endorsement</strong> records the board’s decision and immediately publishes this candidate on the public endorsements page — the director can do this whenever the vote makes it clear.</p>' +
+            '</div>';
+        }
+        function notesHtml(a) {
+          if (!state.me.canWrite) return '';
+          return '<div class="endo-sec-title">Reviewer Notes (internal)</div>' +
+            '<div class="endo-form">' +
+              '<textarea class="admin-input" id="endoNotes" placeholder="Notes for the screening committee. Never shared with the candidate or public.">' + escapeHtml(a.reviewer_notes || '') + '</textarea>' +
+              '<button type="button" class="shell-btn" id="endoNotesSave" style="margin-top:8px">Save notes</button>' +
+            '</div>';
+        }
+
+        function renderDrawer(a, reviews, activity) {
+          var body = document.getElementById('shellDrawerBody');
+          var foot = document.getElementById('shellDrawerFoot');
+          if (!body) return;
+
+          var decisionBanner = '';
+          if (a.decision === 'endorse') decisionBanner = '<div class="endo-decision-banner endorse">&#10003; Endorsed — published on the public endorsements page.</div>';
+          else if (a.decision === 'decline') decisionBanner = '<div class="endo-decision-banner decline">Declined.</div>';
+
+          body.innerHTML = '' +
+            decisionBanner +
+            '<div class="endo-sec-title">Progress</div>' + pipelineHtml(a.stage || 'new') +
+            '<div class="endo-sec-title">Board Vote</div>' + tallyBlock(reviews) +
+            votesListHtml(reviews) +
+            '<div class="endo-sec-title">Your Vote</div>' + myVoteFormHtml(reviews) +
+            controlsHtml(a) +
+            '<div class="endo-sec-title">Assigned Reviewers</div>' + assignmentsHtml(a) +
+            notesHtml(a) +
+            '<details class="endo-collapse"><summary>Candidate Application</summary>' +
+              '<div class="endo-collapse-body">' + buildApplicationHtml(a) + '</div></details>' +
+            '<div class="endo-sec-title">Activity Timeline</div>' + timelineHtml(activity);
+
+          // The drawer foot is intentionally unused here — all controls live in
+          // the scrolling body so the mobile bottom-sheet stays usable.
+          if (foot) { foot.innerHTML = ''; foot.hidden = true; }
+
+          bindDrawerEvents(a);
+        }
+
+        function bindDrawerEvents(a) {
+          var saveVote = document.getElementById('saveVote');
+          if (saveVote) saveVote.addEventListener('click', function () { castVote(a); });
+
+          var stageSave = document.getElementById('endoStageSave');
+          if (stageSave) stageSave.addEventListener('click', function () { saveStage(a); });
+          var push = document.getElementById('endoPush');
+          if (push) push.addEventListener('click', function () { decide(a, 'endorse'); });
+          var decline = document.getElementById('endoDecline');
+          if (decline) decline.addEventListener('click', function () { decide(a, 'decline'); });
+          var notesSave = document.getElementById('endoNotesSave');
+          if (notesSave) notesSave.addEventListener('click', function () { saveNotes(a); });
+
+          var assignAdd = document.getElementById('assignAdd');
+          if (assignAdd) assignAdd.addEventListener('click', function () { addAssignment(a); });
+          var body = document.getElementById('shellDrawerBody');
+          if (body) {
+            body.addEventListener('click', function (ev) {
+              var rm = ev.target.closest && ev.target.closest('[data-remove-assign]');
+              if (rm) removeAssignment(a, rm.getAttribute('data-remove-assign'));
+            });
+          }
+        }
+
+        // ---- data fetch per application --------------------------------
+        function fetchDrawerData(id) {
+          return Promise.all([
+            state.client.from('endorsement_reviews').select('*').eq('application_id', id).order('created_at', { ascending: true }),
+            state.client.from('endorsement_assignments').select('*').eq('application_id', id).order('assigned_at', { ascending: true }),
+            state.client.from('endorsement_activity').select('*').eq('application_id', id).order('created_at', { ascending: false })
+          ]).then(function (res) {
+            return {
+              reviews: (res[0] && res[0].data) || [],
+              assignments: (res[1] && res[1].data) || [],
+              activity: (res[2] && res[2].data) || []
+            };
+          });
         }
 
         function openDetail(id) {
@@ -440,106 +711,230 @@
           window.AdminShell.openDrawer({
             eyebrow: meta || 'Endorsement application',
             title: a.candidate_name || 'Application',
-            bodyHtml: buildDrawerBody(a),
-            footHtml: buildDrawerFoot(a)
+            bodyHtml: '<p class="vote-empty">Loading review data&hellip;</p>'
           });
-          var saveBtn = document.getElementById('endoSave');
-          if (saveBtn) saveBtn.addEventListener('click', saveDrawer);
           if (history.replaceState) {
             history.replaceState(null, '', window.location.pathname + '?id=' + encodeURIComponent(id));
           }
+          fetchDrawerData(id).then(function (d) {
+            if (state.drawerId !== id) return; // drawer changed while loading
+            a._assignments = d.assignments;
+            state.reviewsByApp[id] = d.reviews;
+            renderDrawer(a, d.reviews, d.activity);
+            renderRows(); // refresh table tally column
+          }).catch(function (err) {
+            console.error('Failed to load review data:', err);
+            var body = document.getElementById('shellDrawerBody');
+            if (body) body.innerHTML = '<p class="admin-error">Could not load review data.</p>';
+          });
         }
 
-        async function saveDrawer() {
-          var id = state.drawerId;
-          var a = state.byId[id];
-          if (!a) return;
-          var sel = document.getElementById('endoStatus');
-          var notes = document.getElementById('endoNotes');
-          var btn = document.getElementById('endoSave');
-          var newStatus = sel.value;
-          var newNotes = notes.value;
-          btn.disabled = true;
-          btn.textContent = 'Saving…';
-          try {
-            var resp = await state.client
-              .from('endorsement_applications')
-              .update({ status: newStatus, reviewer_notes: newNotes })
-              .eq('id', id);
-            if (resp.error) throw resp.error;
-            a.status = newStatus;
-            a.reviewer_notes = newNotes;
-            updateStats();
-            applyFilters();
-            toast('Changes saved.', 'success');
-          } catch (err) {
-            console.error('Save failed:', err);
-            toast('Save failed. Please try again.', 'error');
-          } finally {
-            btn.disabled = false;
-            btn.textContent = 'Save changes';
+        // ---- write actions ---------------------------------------------
+        function logActivity(appId, eventType, summary, detail) {
+          return state.client.from('endorsement_activity').insert({
+            application_id: appId,
+            actor_email: state.me.email || null,
+            actor_name: state.me.name || null,
+            event_type: eventType,
+            summary: summary,
+            detail: detail || {}
+          });
+        }
+        function refreshDrawer(a) {
+          return fetchDrawerData(a.id).then(function (d) {
+            a._assignments = d.assignments;
+            state.reviewsByApp[a.id] = d.reviews;
+            renderDrawer(a, d.reviews, d.activity);
+            renderRows();
+          });
+        }
+
+        function castVote(a) {
+          var vote = document.getElementById('myVote').value;
+          var rec = document.getElementById('myRec').value;
+          var btn = document.getElementById('saveVote');
+          if (!state.me.email) { toast('Could not determine your account email.', 'error'); return; }
+          btn.disabled = true; btn.textContent = 'Saving…';
+          var row = {
+            application_id: a.id,
+            reviewer_user_id: state.me.userId || null,
+            reviewer_email: state.me.email,
+            reviewer_name: state.me.name || null,
+            vote: vote,
+            recommendation: rec || null
+          };
+          state.client.from('endorsement_reviews')
+            .upsert(row, { onConflict: 'application_id,reviewer_email' })
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              return logActivity(a.id, 'vote', (state.me.name || state.me.email) + ' voted “' + VOTE_META[vote].label + '”', { vote: vote });
+            })
+            .then(function () { toast('Your vote was recorded.', 'success'); return refreshDrawer(a); })
+            .catch(function (err) { console.error(err); toast('Could not save your vote.', 'error'); btn.disabled = false; btn.textContent = 'Submit vote'; });
+        }
+
+        function saveStage(a) {
+          var stage = document.getElementById('endoStage').value;
+          var btn = document.getElementById('endoStageSave');
+          btn.disabled = true; btn.textContent = 'Saving…';
+          var patch = { stage: stage };
+          if (stage === 'endorsed' || stage === 'declined') {
+            patch.decision = stage === 'endorsed' ? 'endorse' : 'decline';
+            patch.decided_at = new Date().toISOString();
+            patch.decided_by = state.me.name || state.me.email;
+            patch.reviewed_by = state.me.name || state.me.email;
+            patch.reviewed_at = new Date().toISOString();
           }
+          state.client.from('endorsement_applications').update(patch).eq('id', a.id)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              Object.assign(a, patch);
+              updateStats(); applyFilters();
+              return logActivity(a.id, 'stage_change', (state.me.name || state.me.email) + ' moved to “' + STAGE_LABEL[stage] + '”', { stage: stage });
+            })
+            .then(function () { toast('Stage updated.', 'success'); return refreshDrawer(a); })
+            .catch(function (err) { console.error(err); toast('Could not update stage.', 'error'); btn.disabled = false; btn.textContent = 'Update stage'; });
         }
 
-        async function loadApplications(client) {
-          var resp = await client
-            .from('endorsement_applications')
-            .select('*')
-            .order('created_at', { ascending: false });
-          if (resp.error) throw resp.error;
-          return resp.data || [];
+        function decide(a, decision) {
+          var isEndorse = decision === 'endorse';
+          var verb = isEndorse ? 'push this endorsement through and publish it publicly' : 'decline this candidate';
+          if (!window.confirm('Are you sure you want to ' + verb + '?')) return;
+          var stage = isEndorse ? 'endorsed' : 'declined';
+          var patch = {
+            stage: stage, decision: decision,
+            decided_at: new Date().toISOString(), decided_by: state.me.name || state.me.email,
+            reviewed_by: state.me.name || state.me.email, reviewed_at: new Date().toISOString()
+          };
+          state.client.from('endorsement_applications').update(patch).eq('id', a.id)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              Object.assign(a, patch);
+              updateStats(); applyFilters();
+              var etype = isEndorse ? 'director_push' : 'decision';
+              var summary = isEndorse
+                ? (state.me.name || state.me.email) + ' pushed the endorsement through'
+                : (state.me.name || state.me.email) + ' declined the endorsement';
+              return logActivity(a.id, etype, summary, { decision: decision });
+            })
+            .then(function () { toast(isEndorse ? 'Endorsement published.' : 'Candidate declined.', 'success'); return refreshDrawer(a); })
+            .catch(function (err) { console.error(err); toast('Could not save the decision.', 'error'); });
+        }
+
+        function saveNotes(a) {
+          var notes = document.getElementById('endoNotes').value;
+          var btn = document.getElementById('endoNotesSave');
+          btn.disabled = true; btn.textContent = 'Saving…';
+          state.client.from('endorsement_applications').update({ reviewer_notes: notes }).eq('id', a.id)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              a.reviewer_notes = notes;
+              toast('Notes saved.', 'success');
+            })
+            .catch(function (err) { console.error(err); toast('Could not save notes.', 'error'); })
+            .then(function () { btn.disabled = false; btn.textContent = 'Save notes'; });
+        }
+
+        function addAssignment(a) {
+          var email = document.getElementById('assignPick').value;
+          var role = document.getElementById('assignRole').value.trim();
+          if (!email) { toast('Pick a board member to assign.', 'error'); return; }
+          var u = state.adminUsers.filter(function (x) { return String(x.email).toLowerCase() === email.toLowerCase(); })[0];
+          var row = {
+            application_id: a.id,
+            assignee_user_id: (u && u.id) || null,
+            assignee_email: email,
+            assignee_name: (u && u.full_name) || email,
+            role_label: role || null,
+            assigned_by: state.me.email || null
+          };
+          state.client.from('endorsement_assignments').insert(row)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              return logActivity(a.id, 'assignment', (state.me.name || state.me.email) + ' assigned ' + ((u && u.full_name) || email), { assignee: email });
+            })
+            .then(function () { toast('Reviewer assigned.', 'success'); return refreshDrawer(a); })
+            .catch(function (err) { console.error(err); toast('Could not assign reviewer.', 'error'); });
+        }
+        function removeAssignment(a, assignId) {
+          var target = (a._assignments || []).filter(function (x) { return x.id === assignId; })[0];
+          state.client.from('endorsement_assignments').delete().eq('id', assignId)
+            .then(function (resp) {
+              if (resp.error) throw resp.error;
+              return logActivity(a.id, 'unassignment', (state.me.name || state.me.email) + ' unassigned ' + ((target && (target.assignee_name || target.assignee_email)) || 'a reviewer'), {});
+            })
+            .then(function () { toast('Reviewer removed.', 'success'); return refreshDrawer(a); })
+            .catch(function (err) { console.error(err); toast('Could not remove reviewer.', 'error'); });
+        }
+
+        // ---- initial load ----------------------------------------------
+        function loadApplications(client) {
+          return client.from('endorsement_applications').select('*').order('created_at', { ascending: false })
+            .then(function (resp) { if (resp.error) throw resp.error; return resp.data || []; });
+        }
+        function loadAllReviews(client) {
+          return client.from('endorsement_reviews').select('application_id, reviewer_email, reviewer_name, vote, recommendation, created_at, updated_at')
+            .then(function (resp) { if (resp.error) return []; return resp.data || []; });
+        }
+        function loadAdminUsers(client) {
+          return client.from('admin_users').select('id, email, full_name, is_active').eq('is_active', true).order('full_name', { ascending: true })
+            .then(function (resp) { if (resp.error) return []; return resp.data || []; });
         }
 
         document.addEventListener('admin-shell-ready', function (e) {
-          var client = e.detail && e.detail.client;
+          var d = e.detail || {};
+          var client = d.client;
           if (!client) return;
           state.client = client;
+
+          // Who am I?
+          var sessEmail = (d.session && d.session.user && d.session.user.email) || '';
+          state.me.email = ((d.user && d.user.email) || sessEmail || '').toLowerCase();
+          state.me.name = (d.user && d.user.full_name) || '';
+          state.me.userId = (d.user && d.user.id) || null;
+          state.me.canWrite = !!(d.can && d.can('endorsements', 'write'));
 
           var shellBody = document.getElementById('shellBody');
           if (shellBody && !document.getElementById('endoTable')) {
             shellBody.appendChild(document.getElementById('endoTpl').content.cloneNode(true));
           }
 
-          loadApplications(client).then(function (rows) {
-            state.rows = rows;
-            state.byId = Object.create(null);
-            rows.forEach(function (r) { state.byId[r.id] = r; });
-            updateStats();
-            applyFilters();
+          Promise.all([loadApplications(client), loadAllReviews(client), loadAdminUsers(client)])
+            .then(function (r) {
+              var rows = r[0], reviews = r[1];
+              state.adminUsers = r[2] || [];
+              state.rows = rows;
+              state.byId = Object.create(null);
+              rows.forEach(function (row) { state.byId[row.id] = row; });
+              state.reviewsByApp = Object.create(null);
+              reviews.forEach(function (rv) {
+                (state.reviewsByApp[rv.application_id] = state.reviewsByApp[rv.application_id] || []).push(rv);
+              });
+              updateStats();
+              applyFilters();
 
-            // Deep link: /admin/endorsements?id=<uuid> opens the drawer.
-            var params = new URLSearchParams(window.location.search);
-            var deepId = params.get('id');
-            if (deepId && state.byId[deepId]) openDetail(deepId);
-          }).catch(function (err) {
-            console.error('Failed to load applications:', err);
-            $('endoBody').innerHTML =
-              '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
-              'Could not load applications. Your account may not be authorized for this view.' +
-              '</td></tr>';
-          });
+              var params = new URLSearchParams(window.location.search);
+              var deepId = params.get('id');
+              if (deepId && state.byId[deepId]) openDetail(deepId);
+            })
+            .catch(function (err) {
+              console.error('Failed to load applications:', err);
+              $('endoBody').innerHTML =
+                '<tr><td colspan="' + COLSPAN + '" class="admin-empty-row admin-error">' +
+                'Could not load applications. Your account may not be authorized for this view.</td></tr>';
+            });
 
           var debounceT;
-          $('filterSearch').addEventListener('input', function () {
-            clearTimeout(debounceT);
-            debounceT = setTimeout(applyFilters, 150);
-          });
+          $('filterSearch').addEventListener('input', function () { clearTimeout(debounceT); debounceT = setTimeout(applyFilters, 150); });
           $('filterStatus').addEventListener('change', applyFilters);
-          $('filterOffice').addEventListener('input', function () {
-            clearTimeout(debounceT);
-            debounceT = setTimeout(applyFilters, 150);
-          });
+          $('filterOffice').addEventListener('input', function () { clearTimeout(debounceT); debounceT = setTimeout(applyFilters, 150); });
 
           var ths = document.querySelectorAll('#endoTable thead th[data-sort]');
           for (var i = 0; i < ths.length; i++) {
             ths[i].addEventListener('click', function (ev) {
               var key = ev.currentTarget.dataset.sort;
-              if (state.sortKey === key) {
-                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
-              } else {
-                state.sortKey = key;
-                state.sortDir = key === 'created_at' ? 'desc' : 'asc';
-              }
+              if (state.sortKey === key) { state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc'; }
+              else { state.sortKey = key; state.sortDir = key === 'created_at' ? 'desc' : 'asc'; }
               applySort();
             });
           }
