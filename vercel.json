@@ -22,6 +22,8 @@
     { "source": "/admin/endorsements/login", "destination": "/admin/login", "permanent": true },
     { "source": "/admin/finance", "destination": "/admin/finance/budget", "permanent": false },
     { "source": "/admin/compliance", "destination": "/admin/compliance/contributions", "permanent": false },
+    { "source": "/internships", "destination": "/volunteer?path=internship", "permanent": false },
+    { "source": "/apply/:position", "destination": "/volunteer?path=internship&position=:position", "permanent": false },
     { "source": "/scorecard/methodology", "destination": "/methodology", "permanent": true },
     { "source": "/scorecard/methodology.html", "destination": "/methodology", "permanent": true },
     { "source": "/gala", "destination": "/", "permanent": true },
@@ -30,10 +32,8 @@
     { "source": "/priorities", "destination": "/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/.netlify/functions/:path*", "destination": "https://www.ohiopride.org/.netlify/functions/:path*" },
+    { "source": "/.netlify/functions/:path*", "destination": "https://ohiopride.netlify.app/.netlify/functions/:path*" },
     { "source": "/admin/finance/budget/revenue", "destination": "/admin/finance/budget/index.html" },
-    { "source": "/admin/finance/budget/expense", "destination": "/admin/finance/budget/index.html" },
-    { "source": "/internships", "destination": "/volunteer.html?path=internship" },
-    { "source": "/apply/:position", "destination": "/volunteer.html?path=internship&position=:position" }
+    { "source": "/admin/finance/budget/expense", "destination": "/admin/finance/budget/index.html" }
   ]
 }

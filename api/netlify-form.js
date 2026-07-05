@@ -21,7 +21,7 @@ module.exports = async function handler(req, res) {
 
   try {
     var body = await readBody(req);
-    var response = await fetch("https://www.ohiopride.org/", {
+    var response = await fetch("https://ohiopride.netlify.app/", {
       method: "POST",
       headers: {
         "content-type": "application/x-www-form-urlencoded",
