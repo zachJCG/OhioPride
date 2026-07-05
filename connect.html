@@ -635,6 +635,12 @@
     const form = document.getElementById('connectForm');
     const submitBtn = document.getElementById('submitBtn');
     const successMsg = document.getElementById('successMessage');
+    const netlifyFormEndpoint = () => {
+        const host = window.location.hostname;
+        return host === 'ohiopride.org' || host === 'www.ohiopride.org'
+            ? '/'
+            : '/api/netlify-form';
+    };
 
     if (form) {
         form.addEventListener('submit', async function(e) {
@@ -643,11 +649,12 @@
             submitBtn.textContent = 'Sending\u2026';
             const formData = new FormData(form);
             try {
-                await fetch('/', {
+                const response = await fetch(netlifyFormEndpoint(), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams(formData).toString()
                 });
+                if (!response.ok) throw new Error('submit_failed');
                 form.style.display = 'none';
                 successMsg.style.display = 'block';
             } catch (err) {

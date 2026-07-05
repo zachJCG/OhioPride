@@ -185,13 +185,20 @@ document.addEventListener("DOMContentLoaded", function () {
   var contactForm = document.getElementById("contactForm");
   var formSuccess = document.getElementById("formSuccess");
 
+  function netlifyFormEndpoint() {
+    var host = window.location.hostname;
+    return host === "ohiopride.org" || host === "www.ohiopride.org"
+      ? "/"
+      : "/api/netlify-form";
+  }
+
   if (contactForm) {
     contactForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
       var formData = new FormData(contactForm);
 
-      fetch("/", {
+      fetch(netlifyFormEndpoint(), {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams(formData).toString(),

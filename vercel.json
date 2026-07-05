@@ -1,0 +1,39 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    },
+    {
+      "source": "/admin/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
+      ]
+    }
+  ],
+  "redirects": [
+    { "source": "/admin", "destination": "/admin/login", "permanent": false },
+    { "source": "/admin/endorsements/login", "destination": "/admin/login", "permanent": true },
+    { "source": "/admin/finance", "destination": "/admin/finance/budget", "permanent": false },
+    { "source": "/admin/compliance", "destination": "/admin/compliance/contributions", "permanent": false },
+    { "source": "/scorecard/methodology", "destination": "/methodology", "permanent": true },
+    { "source": "/scorecard/methodology.html", "destination": "/methodology", "permanent": true },
+    { "source": "/gala", "destination": "/", "permanent": true },
+    { "source": "/gala.html", "destination": "/", "permanent": true },
+    { "source": "/sponsorship", "destination": "/", "permanent": true },
+    { "source": "/priorities", "destination": "/", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/.netlify/functions/:path*", "destination": "https://www.ohiopride.org/.netlify/functions/:path*" },
+    { "source": "/admin/finance/budget/revenue", "destination": "/admin/finance/budget/index.html" },
+    { "source": "/admin/finance/budget/expense", "destination": "/admin/finance/budget/index.html" },
+    { "source": "/internships", "destination": "/volunteer.html?path=internship" },
+    { "source": "/apply/:position", "destination": "/volunteer.html?path=internship&position=:position" }
+  ]
+}

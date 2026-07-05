@@ -38,9 +38,16 @@
     });
   }
 
+  function netlifyFormEndpoint() {
+    var host = window.location.hostname;
+    return host === "ohiopride.org" || host === "www.ohiopride.org"
+      ? "/"
+      : "/api/netlify-form";
+  }
+
   function postToNetlify(form) {
     var fd = new FormData(form);
-    return fetch("/", {
+    return fetch(netlifyFormEndpoint(), {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams(fd).toString()
