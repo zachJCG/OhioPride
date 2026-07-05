@@ -7,6 +7,16 @@
 [functions."actblue-sync"]
   schedule = "@hourly"
 
+# Vercel-migration compatibility: the rebuilt forms (and any future client
+# code) POST to /api/*. On this parachute deployment those paths route to the
+# same-named Netlify functions. force=true so the raw api/*.mjs sources are
+# never served as static files.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

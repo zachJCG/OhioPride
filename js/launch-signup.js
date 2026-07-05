@@ -2,9 +2,9 @@
    launch-signup.js
    Drop-in handler for any Ohio Pride PAC RSVP / signup form.
 
-   Inserts the submission into public.launch_signups (Supabase) and
-   keeps the existing Netlify Forms post for redundancy + email
-   notification. No backend code required.
+   Inserts the submission into public.launch_signups (Supabase) and also
+   posts to /api/contact-submit so the team gets the email notification
+   and an admin-side record.
 
    USAGE
    -----
@@ -38,12 +38,16 @@
     });
   }
 
-  function postToNetlify(form) {
+  // Best-effort notification + admin record; the Supabase insert above is
+  // the source of truth for the RSVP itself.
+  function postToApi(form) {
     var fd = new FormData(form);
-    return fetch("/", {
+    var payload = { form_name: form.getAttribute("name") || "launch-day-rsvp" };
+    fd.forEach(function (value, key) { payload[key] = value; });
+    return fetch("/api/contact-submit", {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(fd).toString()
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
   }
 
@@ -69,8 +73,7 @@
         referrer: document.referrer || null
       };
 
-      var calls = [postToSupabase(payload)];
-      if (form.hasAttribute("data-netlify")) calls.push(postToNetlify(form));
+      var calls = [postToSupabase(payload), postToApi(form)];
 
       Promise.allSettled(calls).then(function (results) {
         var resp = results[0].status === "fulfilled" ? results[0].value : null;

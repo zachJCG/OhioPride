@@ -547,9 +547,8 @@
     <div class="contact-card">
         <h2>Or send us a note.</h2>
         <p class="subtitle">Prefer to write first? We'll get back within a couple of business days.</p>
-        <form id="connectForm" name="connect" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <form id="connectForm" name="connect" method="POST">
             <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
-            <input type="hidden" name="form-name" value="connect">
 
             <div class="form-row">
                 <div class="form-group">
@@ -642,12 +641,15 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending\u2026';
             const formData = new FormData(form);
+            const payload = { form_name: 'connect' };
+            formData.forEach((value, key) => { payload[key] = value; });
             try {
-                await fetch('/', {
+                const resp = await fetch('/api/contact-submit', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams(formData).toString()
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
+                if (!resp.ok) throw new Error('submit_failed');
                 form.style.display = 'none';
                 successMsg.style.display = 'block';
             } catch (err) {

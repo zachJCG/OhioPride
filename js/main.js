@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  /* --- Contact Form Submission (Netlify) --- */
+  /* --- Contact Form Submission (/api/contact-submit) --- */
   var contactForm = document.getElementById("contactForm");
   var formSuccess = document.getElementById("formSuccess");
 
@@ -190,11 +190,15 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
 
       var formData = new FormData(contactForm);
+      var payload = { form_name: "contact" };
+      formData.forEach(function (value, key) {
+        payload[key] = value;
+      });
 
-      fetch("/", {
+      fetch("/api/contact-submit", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData).toString(),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       })
         .then(function (response) {
           if (response.ok) {

@@ -1,0 +1,11 @@
+# Keep non-site material out of the deployment. Netlify's publish="." served
+# the whole repo as static files; on Vercel these paths are neither served
+# nor uploaded. (api/ is still deployed — it is the functions directory.)
+netlify/
+supabase/
+scripts/
+docs/
+README.md
+CLAUDE.md
+.claude/
+node_modules/

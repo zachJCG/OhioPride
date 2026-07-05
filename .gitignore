@@ -1,4 +1,7 @@
-# Local Netlify folder
+# Local Vercel folder
+.vercel
+
+# Local Netlify folder (until Netlify is decommissioned)
 .netlify
 
 # macOS

@@ -1,0 +1,51 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    },
+    {
+      "source": "/admin/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
+      ]
+    }
+  ],
+
+  "redirects": [
+    { "source": "/admin", "destination": "/admin/login", "permanent": false },
+    { "source": "/admin/endorsements/login", "destination": "/admin/login", "permanent": true },
+    { "source": "/admin/finance", "destination": "/admin/finance/budget", "permanent": false },
+    { "source": "/admin/compliance", "destination": "/admin/compliance/revenue", "permanent": false },
+    { "source": "/scorecard/methodology", "destination": "/methodology", "permanent": true },
+    { "source": "/scorecard/methodology.html", "destination": "/methodology", "permanent": true },
+    { "source": "/gala", "destination": "/", "permanent": true },
+    { "source": "/gala.html", "destination": "/", "permanent": true },
+    { "source": "/sponsorship", "destination": "/", "permanent": true },
+    { "source": "/priorities", "destination": "/", "permanent": true },
+    { "source": "/rsvp", "destination": "/launch-day", "permanent": false }
+  ],
+
+  "rewrites": [
+    { "source": "/.netlify/functions/:fn*", "destination": "/api/:fn*" },
+    { "source": "/internships", "destination": "/volunteer?path=internship" },
+    { "source": "/apply/:position", "destination": "/volunteer?path=internship&position=:position" },
+    { "source": "/admin/finance/budget/revenue", "destination": "/admin/finance/budget" },
+    { "source": "/admin/finance/budget/expense", "destination": "/admin/finance/budget" }
+  ],
+
+  "functions": {
+    "api/actblue-sync.mjs": { "maxDuration": 300 }
+  },
+
+  "crons": [
+    { "path": "/api/actblue-sync", "schedule": "0 * * * *" }
+  ]
+}
