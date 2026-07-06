@@ -9,7 +9,7 @@ Supabase-backed candidate endorsement workflow. Wired against the live
 |-----------------------------------|----------------|----------------------------------------------------------|
 | `/endorsement/screening`          | Public         | Multi-step questionnaire. Inserts into `endorsement_applications` as anon. |
 | `/endorsement/screening/thank-you`| Public         | Confirmation page after submit.                          |
-| `/endorsements`                   | Public         | Lists endorsed candidates from `public_endorsements` view. |
+| `/endorsements`                   | Public         | Grid of endorsed candidates from `public_endorsements`, plus a shareable profile view per candidate at `/endorsements/#<slug>`. Photos, card blurbs, and full endorsement copy live in `js/endorsement-content.js` (see the walkthrough at the top of that file). |
 | `/admin/endorsements/login`       | Admin          | Magic-link sign-in via Supabase Auth.                    |
 | `/admin/endorsements`             | Admin          | ATS-style review console: list/filter/sort applications, per-member voting, reviewer assignment, pipeline progression, and the director decision/push controls (all in the slide-out drawer). |
 | `/admin/endorsements/detail`      | Admin          | Legacy deep link — redirects into the console drawer (`?id=`). |
