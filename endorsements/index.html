@@ -35,7 +35,10 @@
 
   <style>
     /* =================================================================
-       Endorsements list — dark theme, mirrors /issues + /scorecard
+       Endorsements — dark theme, mirrors /issues + /scorecard.
+       Two views on one page:
+         #listView    photo-forward card grid
+         #profileView long-form endorsement profile, routed by #<slug>
        ================================================================= */
     body { background: var(--dark-bg); }
 
@@ -47,9 +50,9 @@
       --end-text-dim: #6889a6;
     }
 
-    /* ── Hero (matches .tracker-hero) ─────────────────────────────────── */
+    /* ── Hero ─────────────────────────────────────────────────────────── */
     .endorse-hero {
-      padding: calc(var(--nav-height) + 56px) 2rem 56px;
+      padding: calc(var(--nav-height) + 56px) 2rem 48px;
       text-align: center;
       background: var(--dark-bg);
     }
@@ -80,7 +83,7 @@
     }
     .endorse-hero p + p { margin-top: 0.5rem; font-size: 0.95rem; color: var(--end-text-gray); }
 
-    /* ── Sticky controls (mirrors /scorecard .controls-bar) ────────────── */
+    /* ── Filters (shown only once the list is big enough to need them) ── */
     .endorse-controls {
       position: sticky;
       top: var(--nav-height);
@@ -110,11 +113,7 @@
       color: var(--end-text-dim);
       flex: 0 0 auto;
     }
-    .endorse-pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .endorse-pill-group { display: flex; flex-wrap: wrap; gap: 6px; }
     .endorse-pill {
       font-family: 'Montserrat', sans-serif;
       font-size: 0.78rem;
@@ -133,25 +132,14 @@
       align-items: center;
       justify-content: center;
     }
-    .endorse-pill:hover {
-      border-color: rgba(255, 255, 255, 0.25);
-      color: var(--text-white);
-    }
-    .endorse-pill:focus-visible {
-      outline: 2px solid var(--text-accent);
-      outline-offset: 2px;
-    }
+    .endorse-pill:hover { border-color: rgba(255, 255, 255, 0.25); color: var(--text-white); }
+    .endorse-pill:focus-visible { outline: 2px solid var(--text-accent); outline-offset: 2px; }
     .endorse-pill.active {
       background: var(--color-blue);
       border-color: var(--color-blue);
       color: var(--text-white);
     }
-    .endorse-pill .count {
-      margin-left: 6px;
-      font-weight: 500;
-      opacity: 0.75;
-      font-size: 0.7rem;
-    }
+    .endorse-pill .count { margin-left: 6px; font-weight: 500; opacity: 0.75; font-size: 0.7rem; }
     .endorse-year-select {
       padding: 8px 32px 8px 14px;
       min-height: 36px;
@@ -174,7 +162,6 @@
       box-shadow: 0 0 0 3px rgba(112, 214, 236, 0.25);
     }
     .endorse-year-select option { background: #1a3a52; color: #fff; }
-
     .endorse-count {
       font-family: 'Montserrat', sans-serif;
       font-size: 0.78rem;
@@ -189,23 +176,19 @@
     .endorse-grid-wrap {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 2rem 4rem;
+      padding: 12px 2rem 4rem;
     }
-    .endorse-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1rem;
-    }
+    .endorse-grid,
     .endorse-skeleton-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
     }
     .endorse-skeleton {
       background: var(--end-card-bg);
       border: 1px solid var(--end-card-border);
       border-radius: 12px;
-      height: 280px;
+      height: 420px;
       position: relative;
       overflow: hidden;
     }
@@ -247,136 +230,64 @@
       background: var(--brand-pride-gradient-h, var(--ohp-rainbow));
       flex: 0 0 auto;
     }
-    .endorse-card-body {
-      padding: 1.25rem 1.4rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      flex: 1;
+    .endorse-card-photolink {
+      display: block;
+      text-decoration: none;
+      background: #152233;
     }
-
-    .endorse-card-head {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
+    .endorse-card-photolink:focus-visible {
+      outline: 2px solid var(--text-accent);
+      outline-offset: -2px;
     }
-    .endorse-avatar {
-      width: 52px; height: 52px;
-      border-radius: 10px;
+    .endorse-card-photo {
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-bottom: 1px solid var(--end-card-border);
+    }
+    .endorse-card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .endorse-card:hover .endorse-card-photo img { transform: scale(1.02); }
+    .endorse-card-photo.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 4 / 3;
       background: linear-gradient(135deg, #1a3a52 0%, #234a66 100%);
       color: var(--text-white);
       font-family: 'Montserrat', sans-serif;
       font-weight: 800;
-      font-size: 1.25rem;
+      font-size: 4rem;
       letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-    }
-    .endorse-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      display: block;
-    }
-    .endorse-hero-photo {
-      width: 100%;
-      max-height: 320px;
-      overflow: hidden;
-      background: #152233;
-      border-bottom: 1px solid var(--end-card-border);
-    }
-    .endorse-hero-photo img {
-      width: 100%;
-      height: 100%;
-      max-height: 320px;
-      object-fit: cover;
-      object-position: center 15%;
-      display: block;
     }
 
-    /* ── Expandable full endorsement ───────────────────────────────────── */
-    .endorse-readmore-btn {
-      align-self: flex-start;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 8px 14px;
-      background: rgba(112, 214, 236, 0.12);
-      color: var(--text-accent);
-      border: 1px solid rgba(112, 214, 236, 0.4);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    .endorse-card-body {
+      padding: 1.25rem 1.4rem 1.35rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      flex: 1;
     }
-    .endorse-readmore-btn:hover {
-      background: rgba(112, 214, 236, 0.2);
-      color: var(--text-white);
-      border-color: var(--text-accent);
-    }
-    .endorse-readmore-btn .chev {
-      display: inline-block;
-      transition: transform 0.25s ease;
-    }
-    .endorse-readmore-btn[aria-expanded="true"] .chev {
-      transform: rotate(180deg);
-    }
-    .endorse-fullstatement {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.35s ease;
-    }
-    .endorse-fullstatement > div {
-      overflow: hidden;
-    }
-    .endorse-fullstatement.open {
-      grid-template-rows: 1fr;
-    }
-    .endorse-fullstatement-inner {
-      padding: 1rem 0 0;
-      font-family: 'Roboto Slab', Georgia, serif;
-      font-size: 0.92rem;
-      line-height: 1.7;
-      color: var(--text-light);
-    }
-    .endorse-fullstatement-inner p {
-      margin: 0 0 0.85rem;
-    }
-    .endorse-fullstatement-inner p:last-child { margin-bottom: 0; }
-    .endorse-fullstatement-inner h4 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-accent);
-      margin: 1.25rem 0 0.5rem;
-    }
-    .endorse-fullstatement-inner h4:first-child { margin-top: 0.25rem; }
-    @media (prefers-reduced-motion: reduce) {
-      .endorse-fullstatement { transition: none; }
-      .endorse-readmore-btn .chev { transition: none; }
-    }
-    .endorse-card-headtext { flex: 1; min-width: 0; }
     .endorse-card-name {
       font-family: 'Montserrat', sans-serif;
       font-weight: 800;
-      font-size: 1.1rem;
-      line-height: 1.25;
+      font-size: 1.35rem;
+      line-height: 1.2;
       letter-spacing: -0.01em;
-      color: var(--text-white);
       margin: 0;
       word-break: break-word;
     }
+    .endorse-card-name a {
+      color: var(--text-white);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .endorse-card-name a:hover { color: var(--text-accent); }
     .endorse-card-pronouns {
       font-size: 0.8rem;
       color: var(--end-text-dim);
@@ -388,7 +299,7 @@
       font-size: 0.95rem;
       font-weight: 500;
       color: var(--text-light);
-      margin: 0;
+      margin: 6px 0 0;
       line-height: 1.4;
       word-break: break-word;
     }
@@ -420,39 +331,58 @@
     .endorsed-pill svg { width: 11px; height: 11px; flex-shrink: 0; }
 
     .endorse-card-bio {
-      font-size: 0.88rem;
-      line-height: 1.55;
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.92rem;
+      line-height: 1.6;
       color: var(--end-text-gray);
       margin: 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      line-clamp: 4;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
-    .endorse-card-bio.empty {
-      font-style: italic;
-      color: var(--end-text-dim);
-    }
+    .endorse-card-bio.empty { font-style: italic; color: var(--end-text-dim); }
 
     .endorse-card-foot {
       margin-top: auto;
-      padding-top: 12px;
+      padding-top: 14px;
       border-top: 1px solid var(--end-card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
     }
-    .endorse-campaign-link {
+    .endorse-read-btn {
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      padding: 10px 16px;
+      background: rgba(112, 214, 236, 0.12);
       color: var(--text-accent);
+      border: 1px solid rgba(112, 214, 236, 0.4);
+      border-radius: 6px;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: color 0.15s, transform 0.15s;
+      transition: all 0.15s;
+    }
+    .endorse-read-btn:hover {
+      background: rgba(112, 214, 236, 0.2);
+      color: var(--text-white);
+      border-color: var(--text-accent);
+    }
+    .endorse-campaign-link {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--end-text-gray);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s;
     }
     .endorse-campaign-link:hover { color: var(--text-white); }
     .endorse-campaign-link::after {
@@ -461,13 +391,253 @@
       transition: transform 0.15s;
     }
     .endorse-campaign-link:hover::after { transform: translateX(3px); }
-    .endorse-campaign-link.disabled {
-      color: var(--end-text-dim);
-      pointer-events: none;
-    }
-    .endorse-campaign-link.disabled::after { display: none; }
 
-    /* ── Empty / loading / error states (mirrors /issues .empty-state) ── */
+    /* Coming-soon slot */
+    .endorse-card.soon {
+      border-style: dashed;
+      background: rgba(19, 45, 68, 0.55);
+      justify-content: center;
+      text-align: center;
+      min-height: 320px;
+      padding: 2rem 1.5rem;
+    }
+    .endorse-card.soon:hover { transform: none; box-shadow: none; }
+    .endorse-card.soon h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--text-white);
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .endorse-card.soon p {
+      color: var(--end-text-gray);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      margin: 0 auto 1.1rem;
+      max-width: 34ch;
+    }
+    .endorse-card.soon a {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-accent);
+      text-decoration: none;
+    }
+    .endorse-card.soon a:hover { color: var(--text-white); }
+
+    /* ── Profile view ─────────────────────────────────────────────────── */
+    .endorse-profile {
+      padding: calc(var(--nav-height) + 40px) 2rem 4rem;
+    }
+    .endorse-profile-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .endorse-back {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--end-text-gray);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1.75rem;
+      transition: color 0.15s;
+    }
+    .endorse-back::before { content: '\2190'; font-size: 1rem; }
+    .endorse-back:hover { color: var(--text-white); }
+
+    .endorse-profile-head {
+      display: grid;
+      grid-template-columns: minmax(220px, 320px) 1fr;
+      gap: 2.25rem;
+      align-items: start;
+      margin-bottom: 2.5rem;
+    }
+    .endorse-profile-photo {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--end-card-border);
+      background: #152233;
+      position: relative;
+    }
+    .endorse-profile-photo::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--brand-pride-gradient-h, var(--ohp-rainbow));
+      z-index: 1;
+    }
+    .endorse-profile-photo img {
+      width: 100%;
+      display: block;
+    }
+    .endorse-profile-photo.placeholder {
+      aspect-ratio: 4 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a3a52 0%, #234a66 100%);
+      color: var(--text-white);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 5rem;
+    }
+    .endorse-profile-idcard { min-width: 0; }
+    .endorse-profile-idcard h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      margin: 0.85rem 0 0.35rem;
+      outline: none;
+    }
+    .endorse-profile-pronouns {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.9rem;
+      color: var(--end-text-dim);
+      margin: 0 0 0.75rem;
+    }
+    .endorse-profile-office {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-light);
+      margin: 0 0 1.1rem;
+      line-height: 1.45;
+    }
+    .endorse-profile-tagline {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-accent);
+      border-left: 3px solid rgba(112, 214, 236, 0.45);
+      padding-left: 14px;
+      margin: 0 0 1.25rem;
+      line-height: 1.5;
+    }
+    .endorse-facts {
+      list-style: none;
+      margin: 0 0 1.5rem;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .endorse-facts li {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--end-text-gray);
+      font-family: 'Roboto Slab', Georgia, serif;
+    }
+    .endorse-facts .fact-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--end-text-dim);
+      display: block;
+      margin-bottom: 1px;
+    }
+    .endorse-profile-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .endorse-btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 12px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .endorse-btn.primary {
+      background: var(--text-accent);
+      color: var(--dark-bg);
+      border: 1px solid var(--text-accent);
+    }
+    .endorse-btn.primary:hover {
+      background: var(--text-white);
+      border-color: var(--text-white);
+      transform: translateY(-1px);
+    }
+    .endorse-btn.secondary {
+      background: rgba(112, 214, 236, 0.12);
+      color: var(--text-accent);
+      border: 1px solid rgba(112, 214, 236, 0.4);
+    }
+    .endorse-btn.secondary:hover {
+      background: rgba(112, 214, 236, 0.2);
+      color: var(--text-white);
+      border-color: var(--text-accent);
+    }
+
+    .endorse-profile-body {
+      max-width: 68ch;
+    }
+    .endorse-profile-body h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--text-white);
+      margin: 2.25rem 0 1rem;
+    }
+    .endorse-profile-body h2:first-child { margin-top: 0; }
+    .endorse-profile-body p {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 1.02rem;
+      line-height: 1.85;
+      color: var(--text-light);
+      margin: 0 0 1.15rem;
+    }
+    .endorse-profile-ctarow {
+      margin-top: 2.25rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--end-card-border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 18px;
+    }
+    .endorse-profile-ctarow a {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s;
+    }
+    .endorse-profile-ctarow a::after { content: '\2192'; }
+    .endorse-profile-ctarow a:hover { color: var(--text-white); }
+    .endorse-profile-ctarow .ctadiv {
+      color: var(--end-text-dim);
+      user-select: none;
+    }
+
+    /* ── Empty / error states ─────────────────────────────────────────── */
     .endorse-state {
       grid-column: 1 / -1;
       max-width: 720px;
@@ -574,50 +744,14 @@
       max-width: 56ch;
     }
     .endorse-cta-actions { flex: 0 0 auto; }
-    .endorse-cta-btn {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 14px 26px;
-      border-radius: 6px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-      white-space: nowrap;
-      background: var(--text-accent);
-      color: var(--dark-bg);
-      border: 1px solid var(--text-accent);
-    }
-    .endorse-cta-btn:hover {
-      background: var(--text-white);
-      border-color: var(--text-white);
-      transform: translateY(-1px);
-    }
-    .endorse-cta-btn::after {
-      content: '\2192';
-      transition: transform 0.15s;
-    }
-    .endorse-cta-btn:hover::after { transform: translateX(3px); }
 
     /* ── Mobile ───────────────────────────────────────────────────────── */
     @media (max-width: 768px) {
-      .endorse-hero {
-        padding: calc(var(--nav-height) + 24px) 1rem 32px;
-      }
+      .endorse-hero { padding: calc(var(--nav-height) + 24px) 1rem 28px; }
       .endorse-hero h1 { font-size: 1.65rem; }
       .endorse-hero p { font-size: 0.95rem; }
-      .endorse-controls-inner {
-        padding: 0 1rem;
-        gap: 8px;
-      }
-      .endorse-controls-label {
-        flex-basis: 100%;
-        margin-bottom: 0.1rem;
-      }
+      .endorse-controls-inner { padding: 0 1rem; gap: 8px; }
+      .endorse-controls-label { flex-basis: 100%; margin-bottom: 0.1rem; }
       .endorse-pill-group {
         width: 100%;
         overflow-x: auto;
@@ -627,32 +761,29 @@
       }
       .endorse-pill { flex-shrink: 0; }
       .endorse-year-select { flex: 1 1 auto; min-width: 130px; }
-      .endorse-count {
-        flex-basis: 100%;
-        margin-left: 0;
-        text-align: right;
-      }
-      .endorse-grid-wrap { padding: 0 1rem 2rem; }
-      .endorse-grid, .endorse-skeleton-grid {
+      .endorse-count { flex-basis: 100%; margin-left: 0; text-align: right; }
+      .endorse-grid-wrap { padding: 8px 1rem 2rem; }
+      .endorse-grid, .endorse-skeleton-grid { grid-template-columns: 1fr; gap: 1rem; }
+
+      .endorse-profile { padding: calc(var(--nav-height) + 24px) 1rem 2.5rem; }
+      .endorse-profile-head {
         grid-template-columns: 1fr;
-        gap: 0.85rem;
+        gap: 1.5rem;
+        margin-bottom: 1.75rem;
       }
+      .endorse-profile-photo { max-width: 420px; }
+      .endorse-profile-actions .endorse-btn { flex: 1 1 auto; justify-content: center; }
+
       .endorse-cta { padding: 0 1rem; }
-      .endorse-cta-card {
-        padding: 1.75rem 1.25rem;
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      .endorse-cta-card { padding: 1.75rem 1.25rem; flex-direction: column; align-items: flex-start; }
       .endorse-cta-actions { width: 100%; }
-      .endorse-cta-btn {
-        width: 100%;
-        justify-content: center;
-      }
+      .endorse-cta-actions .endorse-btn { width: 100%; justify-content: center; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .endorse-skeleton::after { animation: none; }
       .endorse-card { transition: none; }
+      .endorse-card-photo img { transition: none; }
     }
   </style>
 </head>
@@ -660,70 +791,81 @@
   <div id="site-header"></div>
 
   <main id="main">
-    <section class="endorse-hero" aria-labelledby="page-title">
-      <p class="eyebrow">Endorsed Candidates</p>
-      <h1 id="page-title">Pro-equality leadership for Ohio.</h1>
-      <p>Ohio Pride PAC endorses candidates who demonstrate strong, consistent support for LGBTQ+ equality. Each candidate below has been vetted by our Screening Committee and approved by our Board.</p>
-      <p>Endorse. Mobilize. Fight for Ohio.</p>
-    </section>
+    <!-- ══════════════ LIST VIEW ══════════════ -->
+    <div id="listView">
+      <section class="endorse-hero" aria-labelledby="page-title">
+        <p class="eyebrow">Endorsed Candidates</p>
+        <h1 id="page-title">Pro-equality leadership for Ohio.</h1>
+        <p>Ohio Pride PAC endorses candidates who demonstrate strong, consistent support for LGBTQ+ equality. Each candidate below has been vetted by our Screening Committee and approved by our Board.</p>
+        <p>Endorse. Mobilize. Fight for Ohio.</p>
+      </section>
 
-    <section class="endorse-controls" aria-label="Filters">
-      <div class="endorse-controls-inner">
-        <span class="endorse-controls-label">Office</span>
-        <div class="endorse-pill-group" role="group" aria-label="Office level">
-          <button type="button" class="endorse-pill active" data-level="all" aria-pressed="true">All</button>
-          <button type="button" class="endorse-pill" data-level="federal" aria-pressed="false">Federal</button>
-          <button type="button" class="endorse-pill" data-level="state" aria-pressed="false">State</button>
-          <button type="button" class="endorse-pill" data-level="local" aria-pressed="false">Local</button>
+      <section class="endorse-controls" id="controlsBar" aria-label="Filters" hidden>
+        <div class="endorse-controls-inner">
+          <span class="endorse-controls-label">Office</span>
+          <div class="endorse-pill-group" role="group" aria-label="Office level">
+            <button type="button" class="endorse-pill active" data-level="all" aria-pressed="true">All</button>
+            <button type="button" class="endorse-pill" data-level="federal" aria-pressed="false">Federal</button>
+            <button type="button" class="endorse-pill" data-level="state" aria-pressed="false">State</button>
+            <button type="button" class="endorse-pill" data-level="local" aria-pressed="false">Local</button>
+          </div>
+          <select class="endorse-year-select" id="filterYear" aria-label="Election year">
+            <option value="">All years</option>
+          </select>
+          <span class="endorse-count" id="filterCount" role="status" aria-live="polite">
+            <strong id="countNum">0</strong> endorsed
+          </span>
         </div>
-        <select class="endorse-year-select" id="filterYear" aria-label="Election year">
-          <option value="">All years</option>
-        </select>
-        <span class="endorse-count" id="filterCount" role="status" aria-live="polite">
-          <strong id="countNum">0</strong> endorsed
-        </span>
-      </div>
-    </section>
+      </section>
 
-    <div class="endorse-grid-wrap">
-      <div id="skeletonGrid" class="endorse-skeleton-grid" aria-hidden="true">
-        <div class="endorse-skeleton"></div>
-        <div class="endorse-skeleton"></div>
-        <div class="endorse-skeleton"></div>
-        <div class="endorse-skeleton"></div>
-        <div class="endorse-skeleton"></div>
-        <div class="endorse-skeleton"></div>
+      <div class="endorse-grid-wrap">
+        <div id="skeletonGrid" class="endorse-skeleton-grid" aria-hidden="true">
+          <div class="endorse-skeleton"></div>
+          <div class="endorse-skeleton"></div>
+          <div class="endorse-skeleton"></div>
+        </div>
+
+        <div id="grid" class="endorse-grid" hidden></div>
+        <div id="emptyState" class="endorse-state" hidden></div>
       </div>
 
-      <div id="grid" class="endorse-grid" hidden></div>
-      <div id="emptyState" class="endorse-state" hidden></div>
+      <section class="endorse-cta" aria-labelledby="cta-title">
+        <div class="endorse-cta-card">
+          <div class="endorse-cta-text">
+            <p class="endorse-cta-eyebrow">Are you a candidate?</p>
+            <h2 id="cta-title">Apply for an Ohio Pride PAC endorsement.</h2>
+            <p>If you're running for federal, state, or local office in Ohio and want to make a real commitment to LGBTQ+ equality, we want to hear from you. Applications are reviewed on a rolling basis.</p>
+          </div>
+          <div class="endorse-cta-actions">
+            <a href="/endorsement/screening" class="endorse-btn primary">Apply for Endorsement</a>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <section class="endorse-cta" aria-labelledby="cta-title">
-      <div class="endorse-cta-card">
-        <div class="endorse-cta-text">
-          <p class="endorse-cta-eyebrow">Are you a candidate?</p>
-          <h2 id="cta-title">Apply for an Ohio Pride PAC endorsement.</h2>
-          <p>If you're running for federal, state, or local office in Ohio and want to make a real commitment to LGBTQ+ equality, we want to hear from you. Applications are reviewed on a rolling basis.</p>
-        </div>
-        <div class="endorse-cta-actions">
-          <a href="/endorsement/screening" class="endorse-cta-btn">Apply for Endorsement</a>
-        </div>
-      </div>
-    </section>
+    <!-- ══════════════ PROFILE VIEW (rendered by JS, routed by #slug) ══════════════ -->
+    <article id="profileView" class="endorse-profile" hidden></article>
   </main>
 
   <div id="site-footer"></div>
 
   <a href="/donate" class="mobile-donate-fab">Donate</a>
 
-  <!-- Supabase client + page logic -->
+  <!-- Supabase client + per-candidate editorial content + page logic -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/endorsement-content.js"></script>
   <script>
     /* ===================================================================
-       Endorsements list — public read of `public_endorsements` view.
-       Anon key is public by design; RLS restricts the view to status=
-       'endorsed' rows.
+       Endorsements — public read of `public_endorsements` view.
+       Anon key is public by design; RLS restricts the view to
+       status='endorsed' rows.
+
+       Editorial content (photos, card blurbs, full endorsement profiles)
+       lives in /js/endorsement-content.js. See that file for how to add
+       a new endorsement.
+
+       Routing: /endorsements/#<slug> opens the candidate's profile view;
+       no hash shows the grid. Profile URLs are shareable.
        =================================================================== */
     const CONFIG = {
       SUPABASE_URL:      'https://dkdxefzhttkmjhdbkvqn.supabase.co',
@@ -734,33 +876,26 @@
     const $  = (s) => document.querySelector(s);
     const $$ = (s) => Array.from(document.querySelectorAll(s));
 
-    const state = { rows: [], level: 'all', year: '', loadFailed: false };
+    const state = { rows: [], level: 'all', year: '', loadFailed: false, loaded: false };
+    const DEFAULT_TITLE = document.title;
+    const DEFAULT_META  = document.querySelector('meta[name="description"]').getAttribute('content');
 
-    // Per-candidate overrides: photo + full endorsement statement (HTML).
-    // Keyed by lowercase candidate_name. Add new entries as endorsements ship.
-    const ENDORSEMENT_OVERRIDES = {
-      'jeff givan': {
-        photo_url: '/assets/endorsements/jeff-givan.png',
-        photo_alt: 'Jeff Givan, Democratic nominee for Ohio House District 78',
-        endorsement_full: `
-          <h4>Why we're standing with Jeff</h4>
-          <p>Ohio Pride PAC is proud to make Jeff Givan our first endorsement of the 2026 cycle. Jeff is the Democratic nominee for Ohio House District 78 — Allen County and part of Auglaize — running against House Speaker Matt Huffman, the architect of nearly every anti-LGBTQ bill of the last decade.</p>
-          <p>Jeff and his husband were the second gay couple to marry in rural Allen County. He's a co-founder of the Lima Pride Alliance, and he has spent years building community in a region of Ohio where being out still takes courage. That lived experience is exactly what the Statehouse is missing.</p>
-          <h4>What Jeff is running on</h4>
-          <p>Jeff's platform is built around three commitments that match ours: defending public schools from voucher schemes and book bans, protecting marriage equality at the state level as federal protections come under attack, and expanding access to preventative healthcare — including PrEP, HRT, and mental-health care — for every Ohioan regardless of ZIP code.</p>
-          <h4>Where he stood on our screening</h4>
-          <p>Jeff returned an unqualified yes on all five of our screening commitments: statewide nondiscrimination, opposing anti-LGBTQ legislation, banning conversion therapy, inclusive education, and voting against any rollback of existing equality protections. Our board approved the endorsement unanimously.</p>
-          <h4>How District 78 decides the Statehouse</h4>
-          <p>House Speaker Matt Huffman is term-limited out of the Senate and trying to slide into the House to keep driving the anti-equality agenda. District 78 is the seat that decides whether that succeeds. Flipping it doesn't just elect a fair-minded representative — it removes the Speaker from the chamber that has done the most damage to LGBTQ+ Ohioans.</p>
-          <p>This race is winnable. It needs volunteers in Lima, Wapakoneta, and every small town in between, and it needs donors who understand that a few hundred dollars in a state-rep race goes further than almost any check you'll write in 2026.</p>
-        `
-      }
-    };
-
-    function getOverride(name) {
-      return ENDORSEMENT_OVERRIDES[String(name || '').trim().toLowerCase()] || null;
+    /* ── Content lookup ──────────────────────────────────────────────── */
+    function contentFor(row) {
+      const key = String(row.candidate_name || '').trim().toLowerCase();
+      return (window.ENDORSEMENT_CONTENT || []).find(c => c.match === key) || null;
+    }
+    function slugFor(row) {
+      const c = contentFor(row);
+      if (c && c.slug) return c.slug;
+      return String(row.candidate_name || '').toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+    function rowForSlug(slug) {
+      return state.rows.find(r => slugFor(r) === slug) || null;
     }
 
+    /* ── Helpers ─────────────────────────────────────────────────────── */
     function classifyOffice(office) {
       if (!office) return 'local';
       const s = String(office).toLowerCase();
@@ -779,7 +914,6 @@
       if (/\bcourt of appeals\b/.test(s) && /\bohio\b/.test(s)) return 'state';
       return 'local';
     }
-
     function escapeHtml(s) {
       return String(s ?? '').replace(/[&<>"']/g, c => ({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
@@ -797,95 +931,88 @@
       if (/^https?:\/\//i.test(trimmed)) return trimmed;
       return 'https://' + trimmed;
     }
+    function formatDate(iso) {
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ''));
+      if (!m) return null;
+      const months = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+      return `${months[Number(m[2]) - 1]} ${Number(m[3])}, ${m[1]}`;
+    }
+    const ENDORSED_PILL = `
+      <span class="endorsed-pill">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="3,8 7,12 13,4" />
+        </svg>
+        Endorsed by Ohio Pride PAC
+      </span>`;
 
+    /* ── List view: cards ────────────────────────────────────────────── */
     function renderCard(row) {
+      const content = contentFor(row);
+      const slug = slugFor(row);
       const officeLevel = classifyOffice(row.office_sought);
-      const override = getOverride(row.candidate_name);
+      const name = escapeHtml(row.candidate_name);
+
       const meta = [];
       if (row.district)      meta.push(escapeHtml(row.district));
       if (row.election_year) meta.push(escapeHtml(row.election_year));
       if (row.party)         meta.push(escapeHtml(row.party));
 
-      const bioHtml = row.bio
-        ? `<p class="endorse-card-bio">${escapeHtml(row.bio)}</p>`
-        : `<p class="endorse-card-bio empty">No bio provided.</p>`;
+      const photoHtml = content && content.photo
+        ? `<div class="endorse-card-photo">
+             <img src="${escapeHtml(content.photo)}" alt="${escapeHtml(content.photoAlt || row.candidate_name)}" loading="lazy" />
+           </div>`
+        : `<div class="endorse-card-photo placeholder" aria-hidden="true">${escapeHtml(initials(row.candidate_name))}</div>`;
+
+      const blurb = (content && content.cardBlurb) || row.bio;
+      const blurbHtml = blurb
+        ? `<p class="endorse-card-bio">${escapeHtml(blurb)}</p>`
+        : `<p class="endorse-card-bio empty">Profile coming soon.</p>`;
 
       const websiteUrl = normalizeUrl(row.website);
-      const linkHtml = websiteUrl
-        ? `<a class="endorse-campaign-link" href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener">Visit Campaign Site</a>`
-        : `<span class="endorse-campaign-link disabled">Campaign site coming soon</span>`;
+      const siteLink = websiteUrl
+        ? `<a class="endorse-campaign-link" href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener">Campaign Site</a>`
+        : '';
 
       const pronouns = row.pronouns
         ? `<p class="endorse-card-pronouns">${escapeHtml(row.pronouns)}</p>`
         : '';
 
-      const avatarInner = override && override.photo_url
-        ? `<img src="${escapeHtml(override.photo_url)}" alt="${escapeHtml(override.photo_alt || row.candidate_name)}" loading="lazy" />`
-        : escapeHtml(initials(row.candidate_name));
-
-      let readMoreHtml = '';
-      if (override && override.endorsement_full) {
-        const slug = String(row.candidate_name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-        const panelId = `endorse-full-${slug}`;
-        readMoreHtml = `
-            <button type="button" class="endorse-readmore-btn" aria-expanded="false" aria-controls="${panelId}" data-target="${panelId}">
-              <span class="label">Read full endorsement</span>
-              <span class="chev" aria-hidden="true">&#x25BE;</span>
-            </button>
-            <div class="endorse-fullstatement" id="${panelId}" aria-hidden="true">
-              <div><div class="endorse-fullstatement-inner">${override.endorsement_full}</div></div>
-            </div>`;
-      }
-
       return `
         <article class="endorse-card" data-level="${officeLevel}" data-year="${row.election_year || ''}">
           <div class="endorse-card-stripe" aria-hidden="true"></div>
+          <a class="endorse-card-photolink" href="#${slug}" tabindex="-1" aria-hidden="true">
+            ${photoHtml}
+          </a>
           <div class="endorse-card-body">
-            <div class="endorse-card-head">
-              <div class="endorse-avatar" aria-hidden="true">${avatarInner}</div>
-              <div class="endorse-card-headtext">
-                <h3 class="endorse-card-name">${escapeHtml(row.candidate_name)}</h3>
-                ${pronouns}
-              </div>
-            </div>
-
             <div>
+              <h3 class="endorse-card-name"><a href="#${slug}">${name}</a></h3>
+              ${pronouns}
               <p class="endorse-card-office">${escapeHtml(row.office_sought || '')}</p>
               ${meta.length ? `<p class="endorse-card-meta">${meta.join(' &middot; ')}</p>` : ''}
             </div>
-
-            <span class="endorsed-pill">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polyline points="3,8 7,12 13,4" />
-              </svg>
-              Endorsed by Ohio Pride PAC
-            </span>
-
-            ${bioHtml}
-            ${readMoreHtml}
-
-            <div class="endorse-card-foot">${linkHtml}</div>
+            ${ENDORSED_PILL}
+            ${blurbHtml}
+            <div class="endorse-card-foot">
+              <a class="endorse-read-btn" href="#${slug}">Read Our Endorsement</a>
+              ${siteLink}
+            </div>
           </div>
         </article>
       `;
     }
 
-    function bindReadMore(root) {
-      root.querySelectorAll('.endorse-readmore-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-target');
-          const panel = document.getElementById(id);
-          if (!panel) return;
-          const open = panel.classList.toggle('open');
-          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-          panel.setAttribute('aria-hidden', open ? 'false' : 'true');
-          btn.querySelector('.label').textContent = open
-            ? 'Hide full endorsement'
-            : 'Read full endorsement';
-        });
-      });
+    function renderComingSoonCard() {
+      return `
+        <article class="endorse-card soon">
+          <h3>More endorsements coming soon</h3>
+          <p>Our Screening Committee reviews applications on a rolling basis. New endorsed candidates appear here as the Board approves them.</p>
+          <a href="${CONFIG.SCREENING_PATH}">Are you a candidate? Apply now</a>
+        </article>
+      `;
     }
 
+    /* ── List view: filtering ────────────────────────────────────────── */
     function applyFilters() {
       const filtered = state.rows.filter(r => {
         if (state.level !== 'all' && classifyOffice(r.office_sought) !== state.level) return false;
@@ -939,8 +1066,8 @@
       } else {
         empty.hidden = true;
         grid.hidden = false;
-        grid.innerHTML = filtered.map(renderCard).join('');
-        bindReadMore(grid);
+        const showSoon = state.level === 'all' && !state.year;
+        grid.innerHTML = filtered.map(renderCard).join('') + (showSoon ? renderComingSoonCard() : '');
       }
 
       updateChipCounts();
@@ -966,11 +1093,128 @@
         state.rows.map(r => r.election_year).filter(Boolean)
       )).sort((a, b) => b - a);
       const sel = $('#filterYear');
-      if (!sel) return;
+      if (!sel) return years;
       sel.innerHTML = '<option value="">All years</option>' +
         years.map(y => `<option value="${y}">${y}</option>`).join('');
+      return years;
     }
 
+    /* Filters earn their screen space only once the list needs them:
+       more than three candidates, or more than one year / office level. */
+    function maybeShowControls(years) {
+      const levels = new Set(state.rows.map(r => classifyOffice(r.office_sought)));
+      const needed = state.rows.length > 3 || years.length > 1 || levels.size > 1;
+      $('#controlsBar').hidden = !needed;
+    }
+
+    /* ── Profile view ────────────────────────────────────────────────── */
+    function renderProfile(row) {
+      const content = contentFor(row) || {};
+      const name = escapeHtml(row.candidate_name);
+      const websiteUrl = normalizeUrl(row.website);
+
+      const photoHtml = content.photo
+        ? `<div class="endorse-profile-photo">
+             <img src="${escapeHtml(content.photo)}" alt="${escapeHtml(content.photoAlt || row.candidate_name)}" />
+           </div>`
+        : `<div class="endorse-profile-photo placeholder" aria-hidden="true">${escapeHtml(initials(row.candidate_name))}</div>`;
+
+      const officeBits = [row.office_sought, row.district].filter(Boolean).map(escapeHtml);
+      const endorsedOn = formatDate(content.endorsedDate);
+
+      const facts = [];
+      if (content.region)    facts.push({ label: 'District', value: content.region });
+      if (content.opponent)  facts.push({ label: 'Running against', value: content.opponent });
+      if (row.party)         facts.push({ label: 'Party', value: row.party });
+      if (row.election_year) facts.push({ label: 'Election', value: row.election_year });
+      if (endorsedOn)        facts.push({ label: 'Endorsed', value: endorsedOn });
+      const factsHtml = facts.length
+        ? `<ul class="endorse-facts">` + facts.map(f =>
+            `<li><span class="fact-label">${escapeHtml(f.label)}</span>${escapeHtml(f.value)}</li>`
+          ).join('') + `</ul>`
+        : '';
+
+      const actions = [];
+      if (websiteUrl) actions.push(`<a class="endorse-btn primary" href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener">Campaign Site</a>`);
+      if (content.donate) actions.push(`<a class="endorse-btn secondary" href="${escapeHtml(content.donate)}" target="_blank" rel="noopener">Donate to the Campaign</a>`);
+
+      const sections = Array.isArray(content.profile) ? content.profile : [];
+      let bodyHtml = '';
+      if (sections.length) {
+        bodyHtml = sections.map(sec => {
+          const h = sec.heading ? `<h2>${escapeHtml(sec.heading)}</h2>` : '';
+          const ps = (sec.paragraphs || []).map(p => `<p>${escapeHtml(p)}</p>`).join('');
+          return h + ps;
+        }).join('');
+      } else if (row.bio) {
+        bodyHtml = `<h2>About ${escapeHtml(String(row.candidate_name).trim().split(/\s+/)[0])}</h2>` +
+                   `<p>${escapeHtml(row.bio)}</p>` +
+                   `<p><em>Our full endorsement statement is coming soon.</em></p>`;
+      }
+
+      const ctaLinks = Array.isArray(content.cta) ? content.cta : [];
+      const ctaHtml = ctaLinks.length
+        ? `<div class="endorse-profile-ctarow">` + ctaLinks.map((l, i) => {
+            const href = escapeHtml(normalizeUrl(l.href) && /^https?:/i.test(l.href) ? l.href : l.href);
+            const external = /^https?:/i.test(l.href);
+            const div = i > 0 ? `<span class="ctadiv" aria-hidden="true">|</span>` : '';
+            return `${div}<a href="${href}"${external ? ' target="_blank" rel="noopener"' : ''}>${escapeHtml(l.label)}</a>`;
+          }).join('') + `</div>`
+        : '';
+
+      $('#profileView').innerHTML = `
+        <div class="endorse-profile-inner">
+          <a class="endorse-back" href="#">All Endorsed Candidates</a>
+          <header class="endorse-profile-head">
+            ${photoHtml}
+            <div class="endorse-profile-idcard">
+              ${ENDORSED_PILL}
+              <h1 tabindex="-1" id="profileName">${name}</h1>
+              ${row.pronouns ? `<p class="endorse-profile-pronouns">${escapeHtml(row.pronouns)}</p>` : ''}
+              <p class="endorse-profile-office">${officeBits.join(', ')}</p>
+              ${content.tagline ? `<p class="endorse-profile-tagline">${escapeHtml(content.tagline)}</p>` : ''}
+              ${factsHtml}
+              ${actions.length ? `<div class="endorse-profile-actions">${actions.join('')}</div>` : ''}
+            </div>
+          </header>
+          <div class="endorse-profile-body">${bodyHtml}</div>
+          ${ctaHtml}
+        </div>
+      `;
+
+      document.title = `${row.candidate_name} | Endorsed Candidates | Ohio Pride PAC`;
+      const metaEl = document.querySelector('meta[name="description"]');
+      if (metaEl) metaEl.setAttribute('content', content.meta || DEFAULT_META);
+    }
+
+    /* ── Routing ─────────────────────────────────────────────────────── */
+    function route() {
+      const slug = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+      const listView = $('#listView');
+      const profileView = $('#profileView');
+
+      if (slug && state.loaded) {
+        const row = rowForSlug(slug);
+        if (row) {
+          renderProfile(row);
+          listView.hidden = true;
+          profileView.hidden = false;
+          window.scrollTo(0, 0);
+          const h1 = document.getElementById('profileName');
+          if (h1) h1.focus({ preventScroll: true });
+          return;
+        }
+      }
+
+      profileView.hidden = true;
+      profileView.innerHTML = '';
+      listView.hidden = false;
+      document.title = DEFAULT_TITLE;
+      const metaEl = document.querySelector('meta[name="description"]');
+      if (metaEl) metaEl.setAttribute('content', DEFAULT_META);
+    }
+
+    /* ── Data ────────────────────────────────────────────────────────── */
     async function loadEndorsements() {
       try {
         if (!window.supabase) throw new Error('Supabase library failed to load.');
@@ -991,6 +1235,7 @@
       }
     }
 
+    /* ── Init ────────────────────────────────────────────────────────── */
     (async function init() {
       $$('.endorse-pill').forEach(chip => {
         chip.addEventListener('click', () => {
@@ -1013,15 +1258,20 @@
         });
       }
 
+      window.addEventListener('hashchange', route);
+
       const result = await loadEndorsements();
       state.rows = result.data;
       state.loadFailed = !result.ok;
+      state.loaded = true;
 
       const skel = $('#skeletonGrid');
       if (skel) skel.remove();
 
-      populateYears();
+      const years = populateYears();
+      maybeShowControls(years);
       applyFilters();
+      route();
     })();
   </script>
 
