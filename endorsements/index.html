@@ -956,7 +956,6 @@
       const meta = [];
       if (row.district)      meta.push(escapeHtml(row.district));
       if (row.election_year) meta.push(escapeHtml(row.election_year));
-      if (row.party)         meta.push(escapeHtml(row.party));
 
       const cardPhoto = content && (content.cardPhoto || content.photo);
       const photoHtml = cardPhoto
@@ -1126,7 +1125,6 @@
       const facts = [];
       if (content.region)    facts.push({ label: 'District', value: content.region });
       if (content.opponent)  facts.push({ label: 'Running against', value: content.opponent });
-      if (row.party)         facts.push({ label: 'Party', value: row.party });
       if (row.election_year) facts.push({ label: 'Election', value: row.election_year });
       if (endorsedOn)        facts.push({ label: 'Endorsed', value: endorsedOn });
       const factsHtml = facts.length
