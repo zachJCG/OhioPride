@@ -11,9 +11,14 @@
 -- status-based; it does not have the `stage` column from the
 -- (unapplied) 20260703000000_endorsement_review_workflow migration.
 --
--- TODO: confirm Board approval date and campaign ActBlue link with
--- Zach; the contact email below is an internal placeholder (email is
--- not exposed by public_endorsements).
+-- SUPERSEDED 2026-07-06 (later the same day): Caleb had already
+-- submitted a real application through /endorsement/screening, so the
+-- row this seed created was deleted and his original application row
+-- (c5f87e2c-7710-4a35-95f8-cc31baaa967c) was promoted to
+-- status='endorsed' instead, preserving his questionnaire responses.
+-- Board approval date recorded as 2026-07-01 (reviewed_at/updated_at);
+-- Karen Brownlee and Seth Walsh were endorsed the same day. ActBlue:
+-- https://secure.actblue.com/donate/caleb-price-1
 --
 -- Idempotent: an UPDATE block keeps a re-run from creating a duplicate
 -- candidate or downgrading the status if the row already exists.

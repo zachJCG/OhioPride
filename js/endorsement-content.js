@@ -88,8 +88,8 @@ window.ENDORSEMENT_CONTENT = [
     tagline: "A fresh voice for Cincinnati's west side.",
     region: "Cincinnati's west side and Green Township, western Hamilton County",
     opponent: 'Rep. Mike Odioso (incumbent)',
-    // endorsedDate: TODO, Zach to confirm before it displays.
-    // donate: TODO, confirm ActBlue link from the campaign.
+    endorsedDate: '2026-07-01',
+    donate: 'https://secure.actblue.com/donate/caleb-price-1',
     cardBlurb:
       "Born and raised on Cincinnati's west side, Caleb Price is a Walnut Hills grad and IBEW union member running for District 30. He is fighting to write marriage equality into Ohio law, ban conversion therapy, and bring the first Pride to the west side.",
     meta:
