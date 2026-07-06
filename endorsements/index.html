@@ -958,9 +958,10 @@
       if (row.election_year) meta.push(escapeHtml(row.election_year));
       if (row.party)         meta.push(escapeHtml(row.party));
 
-      const photoHtml = content && content.photo
+      const cardPhoto = content && (content.cardPhoto || content.photo);
+      const photoHtml = cardPhoto
         ? `<div class="endorse-card-photo">
-             <img src="${escapeHtml(content.photo)}" alt="${escapeHtml(content.photoAlt || row.candidate_name)}" loading="lazy" />
+             <img src="${escapeHtml(cardPhoto)}" alt="${escapeHtml(content.photoAlt || row.candidate_name)}" loading="lazy" />
            </div>`
         : `<div class="endorse-card-photo placeholder" aria-hidden="true">${escapeHtml(initials(row.candidate_name))}</div>`;
 

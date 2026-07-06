@@ -4,6 +4,8 @@ Drop campaign photos here named by candidate slug:
 
 - `jeff-givan.jpg` — Jeff Givan, OH House District 78 (2026). Approved
   campaign portrait: downtown Lima, black patterned shirt.
+- `jeff-givan-card.jpg` — square crop of the above for the grid card
+  (the full portrait leaves his face too small in a 1:1 crop).
 - `caleb-price.jpg` — Caleb Price, OH House District 30 (2026). Approved
   headshot: tan zip polo, gray background.
 

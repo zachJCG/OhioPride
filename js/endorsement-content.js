@@ -30,6 +30,10 @@
      slug        URL fragment for the profile view (#<slug>)
      match       candidate_name from Supabase, lowercased
      photo       path under /assets/endorsements/
+     cardPhoto   optional square crop for the grid card; use when the
+                 main photo is a wide or full-body shot that would
+                 leave the face small in the card's 1:1 crop. The
+                 profile view always uses `photo` uncropped.
      photoAlt    accessible alt text for the photo
      tagline     one line, shown under the name on the profile
      region      plain-language description of the district
@@ -47,6 +51,7 @@ window.ENDORSEMENT_CONTENT = [
     slug: 'jeff-givan',
     match: 'jeff givan',
     photo: '/assets/endorsements/jeff-givan.jpg',
+    cardPhoto: '/assets/endorsements/jeff-givan-card.jpg',
     photoAlt: 'Jeff Givan smiling in downtown Lima, Ohio',
     tagline: 'Every community deserves a voice.',
     region: 'Lima, Allen County and part of Auglaize County',
