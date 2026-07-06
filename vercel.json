@@ -23,7 +23,7 @@
     { "source": "/admin", "destination": "/admin/login", "permanent": false },
     { "source": "/admin/endorsements/login", "destination": "/admin/login", "permanent": true },
     { "source": "/admin/finance", "destination": "/admin/finance/budget", "permanent": false },
-    { "source": "/admin/compliance", "destination": "/admin/compliance/revenue", "permanent": false },
+    { "source": "/admin/compliance", "destination": "/admin/compliance/contributions", "permanent": false },
     { "source": "/scorecard/methodology", "destination": "/methodology", "permanent": true },
     { "source": "/scorecard/methodology.html", "destination": "/methodology", "permanent": true },
     { "source": "/gala", "destination": "/", "permanent": true },
@@ -38,7 +38,10 @@
     { "source": "/internships", "destination": "/volunteer?path=internship" },
     { "source": "/apply/:position", "destination": "/volunteer?path=internship&position=:position" },
     { "source": "/admin/finance/budget/revenue", "destination": "/admin/finance/budget" },
-    { "source": "/admin/finance/budget/expense", "destination": "/admin/finance/budget" }
+    { "source": "/admin/finance/budget/expense", "destination": "/admin/finance/budget" },
+    { "source": "/proxy.js", "destination": "https://simpleanalyticsexternal.com/proxy.js?hostname=ohiopride.org&path=/simple" },
+    { "source": "/auto-events.js", "destination": "https://simpleanalyticsexternal.com/auto-events.js?hostname=ohiopride.org&path=/simple" },
+    { "source": "/simple/:match*", "destination": "https://queue.simpleanalyticscdn.com/:match*" }
   ],
 
   "functions": {

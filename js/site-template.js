@@ -335,6 +335,18 @@
     if (el) el.innerHTML = publicWordmarkHtml(opts);
   };
 
+  // Simple Analytics. On Netlify the platform extension injected the
+  // <script src="/proxy.js"> tag at deploy time; Vercel has no such
+  // extension, so we inject it here (vercel.json rewrites /proxy.js and
+  // /simple/* to Simple Analytics). Guarded so we never double-inject on
+  // deployments where the platform already added the tag.
+  if (!document.querySelector('script[src$="proxy.js"]')) {
+    var sa = document.createElement('script');
+    sa.async = true;
+    sa.src = '/proxy.js';
+    document.head.appendChild(sa);
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', render);
   } else {
