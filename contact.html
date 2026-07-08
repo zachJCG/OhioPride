@@ -171,9 +171,10 @@
             id="contactForm"
             name="contact"
             method="POST"
-            data-netlify="true"
           >
-            <input type="hidden" name="form-name" value="contact" />
+            <p style="display: none" aria-hidden="true">
+              <label>Leave this field empty: <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+            </p>
 
             <div class="form-group">
               <label for="fullName">Full Name</label>

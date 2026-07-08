@@ -37,14 +37,25 @@ JS (in `js/`):
 
 CSS: `css/style.css`, `css/site-template.css`
 
-Netlify functions (`netlify/functions/`):
-- `actblue-sync.mjs` — pulls ActBlue donors into `founding_members`
+Serverless functions (`api/`, Vercel Node runtime, `handler(req, res)` signature):
+- `actblue-sync.mjs` — hourly ActBlue donor sync into `founding_members` (Vercel cron in `vercel.json`)
+- `bills.mjs`, `scorecard.mjs` — live bill tracker + legislator scorecard data
 - `board-members.mjs` — feeds `/board`
 - `founding-member-tiers.mjs` — feeds tier cards on `/founding-members` and `/donate/founding-member`
 - `founding-members-progress.mjs` — 1,969 progress bar
 - `public-members.mjs` — public donor roster, grouped by tier
 - `site-leadership.mjs` — footer disclaimer block
-- `submission-created.js` — legacy form handler
+- `pride-events.mjs`, `pride-volunteer-submit.mjs` — road-tour pages
+- `newsletter-submit.mjs`, `volunteer-submit.mjs` — signup form writes (+ MailerLite sync)
+- `contact-submit.mjs` — contact/connect/launch-day forms → `contact_submissions` + Resend email (replaced Netlify Forms)
+- `admin-dashboard.mjs`, `admin-email-send.mjs`, `admin-user-manage.mjs` — JWT-gated admin endpoints
+- `zip-county-lookup.mjs` — ZIP → county
+- `_lib/` — shared helpers (mailerlite, contact-core, http); not exposed as routes
+
+`netlify/` and `netlify.toml` are still in the repo ONLY as the cutover parachute
+(Netlify stays deployed but idle for 48h after the DNS flip). Delete both once
+Netlify is decommissioned. Old `/.netlify/functions/*` URLs are rewritten to
+`/api/*` in `vercel.json`.
 
 Supabase migrations (`supabase/migrations/`, all dated 2026-04-22 onward):
 - `20260422015834_initial_schema.sql` — `board_members`, `founding_members` (+ `display_name`, `is_public`, `is_vetted`, `actblue_contribution_id`), `founding_member_tier()` fn, `founding_members_public` view, `founding_members_progress()` rpc
@@ -86,9 +97,10 @@ Public donor display order is set explicitly via `display_order` column on `foun
 ## Standing platform decisions
 
 - **DB:** Supabase (Postgres). RLS enabled by default; public read where pages need it.
-- **Hosting:** Netlify. Functions in `netlify/functions/*.mjs` (Node ESM).
-- **Donations:** ActBlue. Donor sync runs via `netlify/functions/actblue-sync.mjs` into `founding_members`.
-- **Frontend:** plain HTML + vanilla JS (no framework). Pages fetch from Netlify functions, which proxy to Supabase using the service-role key (kept server-side).
+- **Hosting:** Vercel (migrated from Netlify, July 2026). Functions in `api/*.mjs` (Node ESM, `handler(req, res)`). Routing/headers/crons in `vercel.json`; clean URLs come from `cleanUrls: true`.
+- **Donations:** ActBlue. Donor sync runs via `api/actblue-sync.mjs` on an hourly Vercel cron (requires Vercel Pro) into `founding_members`.
+- **Forms:** no platform forms product. Public forms POST JSON to `/api/contact-submit`, which writes `public.contact_submissions` and sends the Resend notification.
+- **Frontend:** plain HTML + vanilla JS (no framework). Pages fetch from `/api/*` functions (legacy `/.netlify/functions/*` calls still work via a rewrite), which proxy to Supabase using the service-role key (kept server-side).
 
 ## Things to never do
 

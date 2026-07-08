@@ -2,7 +2,7 @@
   "name": "ohiopride-web",
   "private": true,
   "version": "1.0.0",
-  "description": "Ohio Pride PAC website. Static HTML deployed by Netlify, backed by Supabase for dynamic content.",
+  "description": "Ohio Pride PAC website. Static HTML deployed by Vercel, backed by Supabase for dynamic content.",
   "scripts": {
     "check:brand": "node scripts/check-brand-consistency.js"
   },

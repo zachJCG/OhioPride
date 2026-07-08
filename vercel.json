@@ -1,6 +1,7 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+
   "headers": [
     {
       "source": "/(.*)",
@@ -17,23 +18,37 @@
       ]
     }
   ],
+
   "redirects": [
     { "source": "/admin", "destination": "/admin/login", "permanent": false },
     { "source": "/admin/endorsements/login", "destination": "/admin/login", "permanent": true },
     { "source": "/admin/finance", "destination": "/admin/finance/budget", "permanent": false },
     { "source": "/admin/compliance", "destination": "/admin/compliance/contributions", "permanent": false },
-    { "source": "/internships", "destination": "/volunteer?path=internship", "permanent": false },
-    { "source": "/apply/:position", "destination": "/volunteer?path=internship&position=:position", "permanent": false },
     { "source": "/scorecard/methodology", "destination": "/methodology", "permanent": true },
     { "source": "/scorecard/methodology.html", "destination": "/methodology", "permanent": true },
     { "source": "/gala", "destination": "/", "permanent": true },
     { "source": "/gala.html", "destination": "/", "permanent": true },
     { "source": "/sponsorship", "destination": "/", "permanent": true },
-    { "source": "/priorities", "destination": "/", "permanent": true }
+    { "source": "/priorities", "destination": "/", "permanent": true },
+    { "source": "/rsvp", "destination": "/launch-day", "permanent": false }
   ],
+
   "rewrites": [
-    { "source": "/.netlify/functions/:path*", "destination": "https://ohiopride.netlify.app/.netlify/functions/:path*" },
-    { "source": "/admin/finance/budget/revenue", "destination": "/admin/finance/budget/index.html" },
-    { "source": "/admin/finance/budget/expense", "destination": "/admin/finance/budget/index.html" }
+    { "source": "/.netlify/functions/:fn*", "destination": "/api/:fn*" },
+    { "source": "/internships", "destination": "/volunteer?path=internship" },
+    { "source": "/apply/:position", "destination": "/volunteer?path=internship&position=:position" },
+    { "source": "/admin/finance/budget/revenue", "destination": "/admin/finance/budget" },
+    { "source": "/admin/finance/budget/expense", "destination": "/admin/finance/budget" },
+    { "source": "/proxy.js", "destination": "https://simpleanalyticsexternal.com/proxy.js?hostname=ohiopride.org&path=/simple" },
+    { "source": "/auto-events.js", "destination": "https://simpleanalyticsexternal.com/auto-events.js?hostname=ohiopride.org&path=/simple" },
+    { "source": "/simple/:match*", "destination": "https://queue.simpleanalyticscdn.com/:match*" }
+  ],
+
+  "functions": {
+    "api/actblue-sync.mjs": { "maxDuration": 300 }
+  },
+
+  "crons": [
+    { "path": "/api/actblue-sync", "schedule": "0 * * * *" }
   ]
 }

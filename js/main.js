@@ -181,27 +181,24 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  /* --- Contact Form Submission (Netlify) --- */
+  /* --- Contact Form Submission (/api/contact-submit) --- */
   var contactForm = document.getElementById("contactForm");
   var formSuccess = document.getElementById("formSuccess");
-
-  function netlifyFormEndpoint() {
-    var host = window.location.hostname;
-    return host === "ohiopride.org" || host === "www.ohiopride.org"
-      ? "/"
-      : "/api/netlify-form";
-  }
 
   if (contactForm) {
     contactForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
       var formData = new FormData(contactForm);
+      var payload = { form_name: "contact" };
+      formData.forEach(function (value, key) {
+        payload[key] = value;
+      });
 
-      fetch(netlifyFormEndpoint(), {
+      fetch("/api/contact-submit", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData).toString(),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       })
         .then(function (response) {
           if (response.ok) {

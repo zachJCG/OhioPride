@@ -7,6 +7,16 @@
 [functions."actblue-sync"]
   schedule = "@hourly"
 
+# Vercel-migration compatibility: the rebuilt forms (and any future client
+# code) POST to /api/*. On this parachute deployment those paths route to the
+# same-named Netlify functions. force=true so the raw api/*.mjs sources are
+# never served as static files.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -404,17 +414,19 @@
   to = "/admin/finance/budget/index.html"
   status = 200
 
-# Compliance module — Revenue / Expense / Loan / Reconciliation, each its own
-# part of the CFOFS filing, exported individually.
+# Compliance module — Contributions / Expense / Loan, each its own part of
+# the CFOFS filing, exported individually. (revenue/ and reconcile/ were
+# retired when the module was restructured; the old redirect to
+# /admin/compliance/revenue 404'd.)
 [[redirects]]
   from = "/admin/compliance"
-  to = "/admin/compliance/revenue"
+  to = "/admin/compliance/contributions"
   status = 302
   force = true
 
 [[redirects]]
-  from = "/admin/compliance/revenue"
-  to = "/admin/compliance/revenue/index.html"
+  from = "/admin/compliance/contributions"
+  to = "/admin/compliance/contributions/index.html"
   status = 200
 
 [[redirects]]
@@ -425,11 +437,6 @@
 [[redirects]]
   from = "/admin/compliance/loan"
   to = "/admin/compliance/loan/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/admin/compliance/reconcile"
-  to = "/admin/compliance/reconcile/index.html"
   status = 200
 
 # Elections (hidden module — no sidebar link; reachable by direct URL only)

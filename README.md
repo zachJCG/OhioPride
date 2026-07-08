@@ -1,63 +1,48 @@
-# Ohio Pride PAC :: Road Tour Admin Dashboard
+# ohiopride.org
 
-Drop-in bundle for `ohiopride.org/admin/pride`. Backs the four-tab event/volunteer assignment workflow generated from the Coordinator Workbook.
+Public website + admin backend for **Ohio Pride PAC**. Plain HTML/CSS/vanilla JS
+(no framework, no build step), hosted on **Vercel**, backed by **Supabase**
+(Postgres + Auth + RLS).
 
-## What's already done on Supabase (project `dkdxefzhttkmjhdbkvqn`)
+## Stack
 
-1. `public.pride_event_volunteers` table (assignment join) — confirm / tentative / decline / remove, RLS gated by `public.is_admin()`.
-2. `public.pride_event_volunteers_v` and `public.pride_event_roster_v` helper views (security_invoker).
-3. Seed: 12 demo volunteers in `pride_volunteers` (source='seed_workbook'), 19 assignments distributed across the four statuses on Tier-1 events so every tab has data.
-4. `auth.users` row for `admin@ohiopride.org` (email confirmed) with bcrypt-hashed password and matching `auth.identities` row.
-5. `admin@ohiopride.org` added to `public.admin_emails` — grants Super Admin via the legacy fallback path in `admin-shell.js`.
+| Layer      | How it works                                                              |
+|------------|---------------------------------------------------------------------------|
+| Hosting    | Vercel, static files from the repo root. `cleanUrls: true` serves `/about` from `about.html`. |
+| Functions  | `api/*.mjs` — Vercel Node functions (`handler(req, res)`). Shared helpers in `api/_lib/` (not routed). |
+| Data       | Supabase Postgres. Public reads go through the functions (service-role key stays server-side); admin endpoints verify the caller's Supabase JWT. |
+| Auth       | Supabase Auth; client-side gating in `admin/admin-auth.js` / `admin-shell.js`, server-side checks via `is_admin()` / `has_permission()` RPCs. |
+| Donations  | ActBlue. `api/actblue-sync.mjs` polls the CDS CSV hourly (Vercel cron in `vercel.json`, Pro plan required). |
+| Email      | Resend for form notifications (`api/contact-submit.mjs`); MailerLite for newsletter/campaigns (`api/_lib/mailerlite.mjs`). |
+| Forms      | contact / connect / launch-day POST JSON to `/api/contact-submit` → `public.contact_submissions` + Resend notification. |
 
-## What ships in this bundle
+## Layout
 
-```
-ohiopride-admin-pride/
-├── admin/pride/index.html         # New page at /admin/pride
-├── admin/pride/pride.js           # Dashboard logic
-├── patches/admin-shell.pride.patch  # Adds Pride nav item + module to legacy super_admin synth
-├── supabase/migrations/20260519000000_pride_event_volunteers.sql
-└── README.md
-```
+- `*.html`, `issues/`, `admin/`, `volunteer/`, `pride/`, `signup/`, `endorsement*/` — pages
+- `js/`, `css/`, `assets/` — front-end
+- `api/` — serverless functions (deployed); `api/_lib/` — shared server code
+- `vercel.json` — headers, redirects, rewrites (incl. legacy `/.netlify/functions/*` → `/api/*`), crons
+- `supabase/migrations/` — schema history (applied to the live project)
+- `scripts/` — maintenance / verification scripts (not deployed; see `.vercelignore`)
+- `docs/` — internal docs and runbooks (not deployed)
+- `netlify/` + `netlify.toml` — **legacy parachute only**; Netlify stays deployed but idle for 48h after DNS cutover, then both get deleted
 
-## Deploy steps
+## Environment variables (Vercel dashboard)
 
-1. Copy `admin/pride/` into the live site repo at the same path (`/admin/pride/index.html` + `/admin/pride/pride.js`).
-2. Apply the small patch in `patches/admin-shell.pride.patch` to `admin/admin-shell.js` (two hunks: nav entry + legacy synth list).
-3. Commit `supabase/migrations/20260519000000_pride_event_volunteers.sql` so the local and remote schemas stay in sync. The migration is already applied to the live project.
-4. Push. The page is reachable at `https://ohiopride.org/admin/pride` after deploy.
+`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`,
+`ACTBLUE_USERNAME`, `ACTBLUE_PASSWORD`, `ACTBLUE_FORM_SLUG`,
+`ACTBLUE_FOUNDING_REFCODE_PREFIX`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`,
+`MAILERLITE_API_KEY`, `MAILERLITE_FROM_EMAIL`, `MAILERLITE_FROM_NAME`,
+optional `MAILERLITE_*_GROUP` overrides, `CRON_SECRET`, `SITE_URL`.
 
-## Admin credentials (rotate immediately)
+Keep the service-role key **Production-scoped only**. The Supabase anon key is
+hardcoded client-side by design (safe behind RLS).
 
-```
-Email:    admin@ohiopride.org
-Password: OhioPride!Adm1n#2026
-```
+## Local checks
 
-This is a placeholder. Sign in at `/admin/login`, then have the user change the password via Supabase Studio → Auth → Users, or by sending a password reset email.
-
-## Notes / Assumptions
-
-- The user wrote `adadm@ohipride.org` in the request. Read as a typo for `admin@ohiopride.org` (matches the `ohiopride.org` domain in use everywhere else). If the actual intended address is different, update both `auth.users.email` and `public.admin_emails.email`.
-- The four-tab UX (Confirmed / Tentative / Declined / Removed) is built around `status` transitions. "Remove" is a soft state that preserves audit history; the small `×` button is an explicit hard delete with a confirm.
-- Seed assignments are tagged `set_by = 'seed@ohiopride.org'`. Filter them out with `WHERE set_by <> 'seed@ohiopride.org'` if you want a clean board before launch.
-
-## Sanity SQL
-
-```sql
--- Roster overview
-SELECT event_date, name, city, confirmed_count, tentative_count, declined_count, removed_count
-FROM pride_event_roster_v
-WHERE pac_priority
-ORDER BY event_date;
-
--- All assignments for a single event
-SELECT first_name, last_name, role, status, set_at
-FROM pride_event_volunteers_v
-WHERE event_slug = 'cleveland-march-2026-06-06';
-
--- Strip seed data when ready
-DELETE FROM pride_event_volunteers WHERE set_by = 'seed@ohiopride.org';
-DELETE FROM pride_volunteers       WHERE source = 'seed_workbook';
+```bash
+npm install
+npm run check:brand          # brand consistency scan
+node --check api/*.mjs       # syntax-check the functions
+vercel dev                   # run static site + functions locally
 ```
