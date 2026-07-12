@@ -8,6 +8,12 @@ Drop campaign photos here named by candidate slug:
   (the full portrait leaves his face too small in a 1:1 crop).
 - `caleb-price.jpg` — Caleb Price, OH House District 30 (2026). Approved
   headshot: tan zip polo, gray background.
+- `karen-brownlee.jpg` — Rep. Karen Brownlee, OH House District 28 (2026).
+  Approved headshot: glasses, blue top, black blazer, gray background.
+- `seth-walsh.jpg` — Seth Walsh, State Treasurer (2026). Approved campaign
+  photo: green quarter-zip, brick background. Landscape orientation.
+- `seth-walsh-card.jpg` — square crop of the above for the grid card
+  (the full photo is landscape, which would clip his face in a 1:1 crop).
 
 File naming
 - Use lowercase, hyphen-separated: `first-last.jpg`

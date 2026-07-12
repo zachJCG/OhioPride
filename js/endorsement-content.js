@@ -42,7 +42,9 @@
      donate      campaign ActBlue URL; omit until confirmed
      cardBlurb   ~45 words shown on the grid card
      meta        <=155 char description swapped in for the profile view
-     profile     [{ heading, paragraphs: [...] }]
+     profile     [{ heading, paragraphs: [...], bullets: [...] }]
+                 (bullets are optional; rendered as a list after the
+                 section's paragraphs — used for record/receipts sections)
      cta         [{ label, href }] rendered as the profile CTA row
    ==================================================================== */
 
@@ -108,6 +110,85 @@ window.ENDORSEMENT_CONTENT = [
     cta: [
       { label: 'Learn more at calebpriceforoh30.com', href: 'https://www.calebpriceforoh30.com' },
       { label: 'Volunteer with Ohio Pride in District 30', href: '/volunteer' },
+    ],
+  },
+
+  {
+    slug: 'karen-brownlee',
+    match: 'karen brownlee',
+    photo: '/assets/endorsements/karen-brownlee.jpg',
+    photoAlt: 'Rep. Karen Brownlee headshot, wearing glasses, a blue top, and a black blazer',
+    tagline: '“My record is already on paper, and I intend to keep adding to it.”',
+    region: 'The Cincinnati suburbs in Hamilton County',
+    endorsedDate: '2026-07-01',
+    cardBlurb:
+      'In a single term, Rep. Karen Brownlee has assembled one of the strongest pro-equality records in the General Assembly, and she holds the top score on our legislative scorecard. The PRIDE Act and conversion therapy ban sponsor is running for re-election in House District 28.',
+    meta:
+      'Ohio Pride endorses Rep. Karen Brownlee for re-election in Ohio House District 28. The PRIDE Act sponsor holds the top score on our legislative scorecard.',
+    profile: [
+      {
+        heading: 'Why we endorsed Karen',
+        paragraphs: [
+          'Ohio Pride proudly endorses Representative Karen Brownlee for re-election to Ohio House District 28.',
+          'In a single term, Brownlee has assembled one of the strongest pro-equality records in the entire General Assembly, and she currently holds the top score on our legislative scorecard. She has not asked voters to take a promise on faith. She has put her name on the bills. She is the primary sponsor of the PRIDE Act and of legislation to ban conversion therapy for minors, and a cosponsor of the Ohio Fairness Act, the Hate Crime Act, the CROWN Act, and a constitutional amendment to protect the freedom to marry.',
+          'A licensed clinical social worker from the Cincinnati suburbs, Brownlee treats equality as a question of health, safety, and economic stability, not an abstraction. She has been direct about the stakes for LGBTQ+ young people and about building a state where every family can put down roots without fear. Ohio Pride is honored to stand with her.',
+        ],
+      },
+      {
+        heading: 'Her record',
+        bullets: [
+          'Primary sponsor, PRIDE Act (H.B. 327)',
+          'Primary sponsor, ban on conversion therapy for minors (H.B. 300)',
+          'Cosponsor, Ohio Fairness Act (H.B. 136)',
+          'Cosponsor, Hate Crime Act (H.B. 306)',
+          'Cosponsor, marriage equality constitutional amendment (H.J.R. 4)',
+          'Cosponsor, CROWN Act (H.B. 415)',
+        ],
+      },
+    ],
+    cta: [
+      { label: 'Learn more at votekarenbrownlee.com', href: 'https://www.votekarenbrownlee.com' },
+      { label: 'Volunteer with Ohio Pride in District 28', href: '/volunteer' },
+    ],
+  },
+
+  {
+    slug: 'seth-walsh',
+    match: 'seth walsh',
+    photo: '/assets/endorsements/seth-walsh.jpg',
+    cardPhoto: '/assets/endorsements/seth-walsh-card.jpg',
+    photoAlt: 'Seth Walsh smiling in a green quarter-zip outside a brick building',
+    tagline: '“I will use the office of State Treasurer to strongly advocate non-discrimination standards in state financial relationships.”',
+    region: 'Statewide, all 88 Ohio counties',
+    endorsedDate: '2026-07-01',
+    cardBlurb:
+      'A Cincinnati City Council member and a founding member of Ohio Pride, Seth Walsh has spent his public service proving that equality and responsible stewardship of public money are the same work. As Treasurer, he will hold state financial relationships to real non-discrimination standards.',
+    meta:
+      'Ohio Pride endorses Seth Walsh for Ohio State Treasurer. The Cincinnati councilmember will bring real non-discrimination standards to state finances.',
+    profile: [
+      {
+        heading: 'Why we endorsed Seth',
+        paragraphs: [
+          'Ohio Pride proudly endorses Seth Walsh for Ohio State Treasurer.',
+          "A Cincinnati City Council member and a founding member of Ohio Pride, Walsh has spent his public service proving that equality and responsible stewardship of public money are the same work. On Council he strengthened the city's LGBTQIA+ Commission, expanded how the city engages LGBTQ+ residents, and consistently backed non-discrimination and equity in city government.",
+          "The Treasurer does not vote on legislation, and Walsh has been specific about how he would use the office regardless. He has committed to hold Ohio's banking, investment, and vendor relationships to real non-discrimination standards, to promote inclusive procurement, and to treat fair, welcoming communities as a matter of the state's economic competitiveness. He would use the platform to speak out against any effort to roll back equality. Twice endorsed by Equality Cincinnati PAC, Walsh is ready to carry this fight statewide, and Ohio Pride is proud to stand with him.",
+        ],
+      },
+      {
+        heading: 'His record',
+        bullets: [
+          'Founding member of Ohio Pride',
+          'Cincinnati City Council member',
+          "Strengthened Cincinnati's LGBTQIA+ Commission",
+          'Twice endorsed by Equality Cincinnati PAC',
+          'Committed to non-discrimination standards in state banking, investment, and vendor relationships',
+          'Committed to inclusive state procurement practices',
+        ],
+      },
+    ],
+    cta: [
+      { label: 'Learn more at sethwalshforohio.com', href: 'https://sethwalshforohio.com' },
+      { label: 'Volunteer with Ohio Pride', href: '/volunteer' },
     ],
   },
 ];

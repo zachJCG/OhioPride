@@ -608,6 +608,16 @@
       color: var(--text-light);
       margin: 0 0 1.15rem;
     }
+    .endorse-profile-body ul {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: var(--text-light);
+      margin: 0 0 1.15rem;
+      padding-left: 1.35rem;
+    }
+    .endorse-profile-body li { margin-bottom: 0.4rem; }
+    .endorse-profile-body li::marker { color: var(--text-accent); }
     .endorse-profile-ctarow {
       margin-top: 2.25rem;
       padding-top: 1.5rem;
@@ -1143,7 +1153,10 @@
         bodyHtml = sections.map(sec => {
           const h = sec.heading ? `<h2>${escapeHtml(sec.heading)}</h2>` : '';
           const ps = (sec.paragraphs || []).map(p => `<p>${escapeHtml(p)}</p>`).join('');
-          return h + ps;
+          const ul = (sec.bullets || []).length
+            ? `<ul>` + sec.bullets.map(b => `<li>${escapeHtml(b)}</li>`).join('') + `</ul>`
+            : '';
+          return h + ps + ul;
         }).join('');
       } else if (row.bio) {
         bodyHtml = `<h2>About ${escapeHtml(String(row.candidate_name).trim().split(/\s+/)[0])}</h2>` +
