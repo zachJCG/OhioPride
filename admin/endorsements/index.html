@@ -31,6 +31,21 @@
       .admin-pill-st-withdrawn    { background: #eef2f6;                color: #6c7480; }
       td.admin-cell-tight { white-space: nowrap; }
 
+      /* Endorsement-path pill (list + detail) */
+      .admin-pill-path {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 2px 10px;
+        border-radius: 999px;
+        white-space: nowrap;
+        letter-spacing: 0.02em;
+      }
+      .admin-pill-path-statewide { background: rgba(112,214,236,0.18); color: #0b6c83; }
+      .admin-pill-path-federal   { background: rgba(160,132,232,0.20); color: #5b3fa8; }
+      .admin-pill-path-local     { background: rgba(74,222,128,0.20);  color: #1e7e45; }
+      .admin-pill-path-judicial  { background: rgba(255,200,87,0.22);  color: #8a6d1f; }
+      .admin-pill-path-none      { background: #eef2f6;                color: #6c7480; }
+
       /* Table vote-tally mini bar */
       .tally-mini { display: inline-flex; gap: 6px; align-items: center; font-size: 0.78rem; }
       .tally-dot { display: inline-flex; align-items: center; gap: 3px; font-weight: 700; }
@@ -205,6 +220,13 @@
             <option value="tabled">Tabled</option>
             <option value="withdrawn">Withdrawn</option>
           </select>
+          <select class="admin-input" id="filterPath">
+            <option value="">All paths</option>
+            <option value="statewide">Statewide and General Assembly</option>
+            <option value="federal">Federal</option>
+            <option value="local">Local and County</option>
+            <option value="judicial">Judicial</option>
+          </select>
           <input type="search" class="admin-input" id="filterOffice" placeholder="Filter by office&hellip;" autocomplete="off" />
           <span class="admin-toolbar-spacer"></span>
           <span class="admin-result-count" id="resultCount"></span>
@@ -215,6 +237,7 @@
             <thead>
               <tr>
                 <th data-sort="candidate_name" class="admin-sortable">Candidate<span class="admin-sort-arrow">&darr;</span></th>
+                <th data-sort="endorsement_path" class="admin-sortable">Path<span class="admin-sort-arrow">&darr;</span></th>
                 <th data-sort="office_sought" class="admin-sortable">Office<span class="admin-sort-arrow">&darr;</span></th>
                 <th data-sort="district" class="admin-sortable">District<span class="admin-sort-arrow">&darr;</span></th>
                 <th data-sort="stage" class="admin-sortable">Stage<span class="admin-sort-arrow">&darr;</span></th>
@@ -224,7 +247,7 @@
               </tr>
             </thead>
             <tbody id="endoBody">
-              <tr><td colspan="7" class="admin-empty-row">Loading applications&hellip;</td></tr>
+              <tr><td colspan="8" class="admin-empty-row">Loading applications&hellip;</td></tr>
             </tbody>
           </table>
         </div>
@@ -244,13 +267,20 @@
       (function () {
         'use strict';
 
-        var COLSPAN = 7;
+        var COLSPAN = 8;
 
         var STAGE_LABEL = {
           new: 'New', screening: 'Screening', board_review: 'Board Review',
           voting: 'Voting', endorsed: 'Endorsed', declined: 'Declined',
           tabled: 'Tabled', withdrawn: 'Withdrawn'
         };
+        var PATH_LABEL = {
+          statewide: 'Statewide and General Assembly',
+          federal: 'Federal',
+          local: 'Local and County',
+          judicial: 'Judicial'
+        };
+        var PATH_SHORT = { statewide: 'Statewide', federal: 'Federal', local: 'Local', judicial: 'Judicial' };
         // Ordered pipeline steps shown in the tracker.
         var PIPELINE = ['new', 'screening', 'board_review', 'voting', 'decision'];
         var PIPELINE_LABEL = { new: 'New', screening: 'Screening', board_review: 'Board Review', voting: 'Voting', decision: 'Decision' };
@@ -273,7 +303,8 @@
           sortKey: 'created_at', sortDir: 'desc',
           client: null, drawerId: null,
           me: { email: '', name: '', userId: null, canWrite: false },
-          adminUsers: []                       // for the assignment picker
+          adminUsers: [],                      // for the assignment picker
+          qByKey: Object.create(null)          // question_key -> catalog row (incl inactive)
         };
 
         function $(id) { return document.getElementById(id); }
@@ -301,6 +332,11 @@
           var st = s || 'new';
           return '<span class="admin-pill-status admin-pill-st-' + escapeHtml(st) + '">' +
             escapeHtml(STAGE_LABEL[st] || st) + '</span>';
+        }
+        function pathPill(p, useShort) {
+          if (!p) return '<span class="admin-pill-path admin-pill-path-none">Legacy</span>';
+          var label = (useShort ? PATH_SHORT[p] : PATH_LABEL[p]) || p;
+          return '<span class="admin-pill-path admin-pill-path-' + escapeHtml(p) + '">' + escapeHtml(label) + '</span>';
         }
         function toast(msg, kind) {
           if (window.AdminShell && window.AdminShell.toast) { window.AdminShell.toast(msg, kind); return; }
@@ -347,9 +383,11 @@
         function applyFilters() {
           var q = $('filterSearch').value.trim().toLowerCase();
           var stg = $('filterStatus').value;
+          var pth = $('filterPath').value;
           var off = $('filterOffice').value.trim().toLowerCase();
           state.filtered = state.rows.filter(function (r) {
             if (stg && (r.stage || 'new') !== stg) return false;
+            if (pth && (r.endorsement_path || '') !== pth) return false;
             if (off && (r.office_sought || '').toLowerCase().indexOf(off) === -1) return false;
             if (q) {
               var hay = ((r.candidate_name || '') + ' ' + (r.email || '')).toLowerCase();
@@ -397,6 +435,7 @@
             html +=
               '<tr data-id="' + escapeHtml(r.id) + '" style="cursor:pointer">' +
                 '<td class="admin-cell-name" data-label="Candidate">' + escapeHtml(r.candidate_name || '—') + pron + '</td>' +
+                '<td data-label="Path">' + pathPill(r.endorsement_path, true) + '</td>' +
                 '<td data-label="Office">' + (r.office_sought ? escapeHtml(r.office_sought) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
                 '<td data-label="District">' + (dist ? escapeHtml(dist) : '<span class="admin-muted">&mdash;</span>') + '</td>' +
                 '<td data-label="Stage">' + stagePill(r.stage) + '</td>' +
@@ -434,16 +473,54 @@
           }
           return html + '</dl>';
         }
-        function buildApplicationHtml(a) {
-          function raw(html) { return { __html: html }; }
-          var contact = [
-            ['Email', a.email ? raw('<a class="admin-link" href="mailto:' + escapeHtml(a.email) + '">' + escapeHtml(a.email) + '</a>') : null],
-            ['Phone', a.phone ? raw('<a class="admin-link" href="tel:' + escapeHtml(a.phone) + '">' + escapeHtml(a.phone) + '</a>') : null],
-            ['Website', a.website ? raw('<a class="admin-link" target="_blank" rel="noopener" href="' + escapeHtml(a.website) + '">' + escapeHtml(a.website) + '</a>') : null],
-            ['Party', a.party], ['Office Sought', a.office_sought], ['District', a.district],
-            ['Election Year', a.election_year], ['Committee', a.committee_name], ['Treasurer', a.treasurer_name],
-            ['Out as LGBTQ+', a.is_out === 'yes' ? 'Yes' : a.is_out === 'no' ? 'No' : a.is_out === 'prefer_not_to_say' ? 'Prefer not to say' : null]
-          ];
+        // A response entry from the jsonb column, labeled from the question
+        // catalog (which includes inactive rows so retired keys still label).
+        function responseItem(key, entry) {
+          var q = state.qByKey[key];
+          var label = (q && q.prompt) || key;
+          var val = entry && typeof entry === 'object' ? entry.value : entry;
+          var type = q ? q.response_type : (typeof val === 'boolean' ? 'boolean' : 'long_text');
+          if (type === 'boolean') {
+            var ans = yn(val);
+            var exp = entry && entry.explanation;
+            return '<div class="endo-q">' +
+              '<p class="endo-q-text">' + escapeHtml(label) + '</p>' +
+              '<span class="endo-ans ' + ans.c + '">' + ans.t + '</span>' +
+              (exp ? '<p class="endo-explain">' + escapeHtml(exp) + '</p>'
+                   : '<p class="endo-explain empty">No explanation provided.</p>') +
+              '</div>';
+          }
+          return '<div class="endo-q">' +
+            '<p class="endo-q-text">' + escapeHtml(label) + '</p>' +
+            (val ? '<p class="endo-explain">' + escapeHtml(val) + '</p>'
+                 : '<p class="endo-explain empty">No response provided.</p>') +
+            '</div>';
+        }
+        // True only when at least one `responses` key maps to a known question
+        // (active or inactive). Distinguishes real dynamic submissions from the
+        // legacy `legacy_*` mirror some historical rows carry.
+        function hasCatalogResponses(a) {
+          var r = a.responses;
+          if (!r || typeof r !== 'object') return false;
+          var keys = Object.keys(r);
+          for (var i = 0; i < keys.length; i++) { if (state.qByKey[keys[i]]) return true; }
+          return false;
+        }
+        function buildResponsesHtml(a) {
+          var resp = a.responses || {};
+          var keys = Object.keys(resp);
+          // Order by the catalog's sort_order for the row's path; unknown keys last.
+          keys.sort(function (x, y) {
+            var qx = state.qByKey[x], qy = state.qByKey[y];
+            var sx = qx ? qx.sort_order : 100000, sy = qy ? qy.sort_order : 100000;
+            if (sx !== sy) return sx - sy;
+            return x.localeCompare(y);
+          });
+          var heading = (PATH_LABEL[a.endorsement_path] || 'Application') + ' Responses';
+          return '<div class="endo-sec-title">' + escapeHtml(heading) + '</div>' +
+            keys.map(function (k) { return responseItem(k, resp[k]); }).join('');
+        }
+        function buildLegacyHtml(a) {
           var positions = [
             ['Q1', 'Support statewide nondiscrimination protections for LGBTQ+ Ohioans (the Ohio Fairness Act)?', a.q1_nondiscrimination, a.q1_explanation],
             ['Q2', 'Oppose legislation restricting gender-affirming care or broadly banning gender expression?', a.q2_anti_lgbtq_legislation, a.q2_explanation],
@@ -451,18 +528,45 @@
             ['Q4', 'Support inclusive K-12 schools (anti-bullying, no forced outing, accurate information)?', a.q4_inclusive_education, a.q4_explanation],
             ['Q5', 'Vote against bills that roll back LGBTQ+ rights or create broad religious exemptions?', a.q5_vote_against_rollbacks, a.q5_explanation]
           ];
-          var attest = a.attestation
-            ? '<p class="endo-explain">&#10003; Certified. Signed by ' + escapeHtml(a.signature || 'unsigned') + '.</p>'
-            : '<p class="endo-explain empty">Not certified. Signature: ' + escapeHtml(a.signature || 'none') + '.</p>';
-          return '' +
-            '<div class="endo-sec-title">Candidate Information</div>' + grid(contact) +
-            '<div class="endo-sec-title">Core Positions</div>' +
-              positions.map(function (p) { return qBlock(p[0], p[1], p[2], p[3]); }).join('') +
+          return '<div class="endo-sec-title">Core Positions</div>' +
+            positions.map(function (p) { return qBlock(p[0], p[1], p[2], p[3]); }).join('') +
             prose('Top pro-equality priorities', a.q6_priorities) +
             prose('Bills they would champion', a.q7_legislation) +
             prose('Addressing threats to LGBTQ+ safety', a.q8_safety) +
             prose('How equality connects to other race priorities', a.q9_intersection) +
-            prose('Why they seek Ohio Pride’s endorsement', a.q10_why_endorsement) +
+            prose('Why they seek Ohio Pride’s endorsement', a.q10_why_endorsement);
+        }
+        function buildApplicationHtml(a) {
+          function raw(html) { return { __html: html }; }
+          var contact = [
+            ['Endorsement Path', raw(pathPill(a.endorsement_path))],
+            ['Office Sought', a.office_sought],
+            ['Office Category', a.office_category],
+            ['District', a.district],
+            ['Election Year', a.is_special_election ? 'Special election' : a.election_year],
+            ['Current / former officeholder', a.is_incumbent === true ? 'Yes' : a.is_incumbent === false ? 'No' : null],
+            ['Current / recent office', a.current_office],
+            ['Email', a.email ? raw('<a class="admin-link" href="mailto:' + escapeHtml(a.email) + '">' + escapeHtml(a.email) + '</a>') : null],
+            ['Phone', a.phone ? raw('<a class="admin-link" href="tel:' + escapeHtml(a.phone) + '">' + escapeHtml(a.phone) + '</a>') : null],
+            ['Website', a.website ? raw('<a class="admin-link" target="_blank" rel="noopener" href="' + escapeHtml(a.website) + '">' + escapeHtml(a.website) + '</a>') : null],
+            ['Party', a.party], ['Committee', a.committee_name], ['Treasurer', a.treasurer_name],
+            ['Out as LGBTQ+', a.is_out === 'yes' ? 'Yes' : a.is_out === 'no' ? 'No' : a.is_out === 'prefer_not_to_say' ? 'Prefer not to say' : null]
+          ];
+          var attest = a.attestation
+            ? '<p class="endo-explain">&#10003; Certified. Signed by ' + escapeHtml(a.signature || 'unsigned') + '.</p>'
+            : '<p class="endo-explain empty">Not certified. Signature: ' + escapeHtml(a.signature || 'none') + '.</p>';
+
+          // New submissions store answers in the `responses` jsonb keyed by
+          // question_key; the historical rows use the fixed q1_* columns. A few
+          // legacy rows also carry a denormalized `responses` mirror with
+          // `legacy_`-prefixed keys that are not in the question catalog, so we
+          // switch to the jsonb view only when a response key actually resolves
+          // against the catalog. Everything else renders from the q1_* columns.
+          var answers = hasCatalogResponses(a) ? buildResponsesHtml(a) : buildLegacyHtml(a);
+
+          return '' +
+            '<div class="endo-sec-title">Candidate Information</div>' + grid(contact) +
+            answers +
             prose('Bio', a.bio) + prose('Conflicts disclosure', a.conflicts_disclosure) +
             '<div class="endo-sec-title">Attestation</div>' + attest +
             '<div class="endo-sec-title">Audit Trail</div>' +
@@ -880,6 +984,12 @@
           return client.from('admin_users').select('id, email, full_name, is_active').eq('is_active', true).order('full_name', { ascending: true })
             .then(function (resp) { if (resp.error) return []; return resp.data || []; });
         }
+        // Full question catalog, including inactive rows, so `responses` keys
+        // (even for retired questions) can be labeled in the detail view.
+        function loadQuestionCatalog(client) {
+          return client.from('endorsement_questions').select('question_key, prompt, response_type, path, sort_order, has_explanation, active')
+            .then(function (resp) { if (resp.error) return []; return resp.data || []; });
+        }
 
         document.addEventListener('admin-shell-ready', function (e) {
           var d = e.detail || {};
@@ -899,10 +1009,12 @@
             shellBody.appendChild(document.getElementById('endoTpl').content.cloneNode(true));
           }
 
-          Promise.all([loadApplications(client), loadAllReviews(client), loadAdminUsers(client)])
+          Promise.all([loadApplications(client), loadAllReviews(client), loadAdminUsers(client), loadQuestionCatalog(client)])
             .then(function (r) {
               var rows = r[0], reviews = r[1];
               state.adminUsers = r[2] || [];
+              state.qByKey = Object.create(null);
+              (r[3] || []).forEach(function (q) { state.qByKey[q.question_key] = q; });
               state.rows = rows;
               state.byId = Object.create(null);
               rows.forEach(function (row) { state.byId[row.id] = row; });
@@ -927,6 +1039,7 @@
           var debounceT;
           $('filterSearch').addEventListener('input', function () { clearTimeout(debounceT); debounceT = setTimeout(applyFilters, 150); });
           $('filterStatus').addEventListener('change', applyFilters);
+          $('filterPath').addEventListener('change', applyFilters);
           $('filterOffice').addEventListener('input', function () { clearTimeout(debounceT); debounceT = setTimeout(applyFilters, 150); });
 
           var ths = document.querySelectorAll('#endoTable thead th[data-sort]');
