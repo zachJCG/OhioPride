@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Candidate Endorsement Application | Ohio Pride PAC</title>
-  <meta name="description" content="Apply for an Ohio Pride PAC endorsement. Open to candidates running for federal, state, or local office in Ohio who support LGBTQ+ equality." />
+  <meta name="description" content="Apply for an Ohio Pride PAC endorsement. Open to candidates running for statewide, federal, local, and judicial office in Ohio who support LGBTQ+ equality." />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://www.ohiopride.org/endorsement/screening" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Candidate Endorsement Application | Ohio Pride PAC" />
-  <meta property="og:description" content="Apply for an Ohio Pride PAC endorsement. Open to candidates running for federal, state, or local office in Ohio who support LGBTQ+ equality." />
+  <meta property="og:description" content="Apply for an Ohio Pride PAC endorsement. Open to candidates running for statewide, federal, local, and judicial office in Ohio who support LGBTQ+ equality." />
   <meta property="og:url" content="https://www.ohiopride.org/endorsement/screening" />
   <meta property="og:site_name" content="Ohio Pride PAC" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -108,7 +108,7 @@
     .progress-fill {
       position: absolute;
       inset: 0;
-      width: 20%;
+      width: 25%;
       background: var(--brand-pride-gradient-h, var(--ohp-rainbow));
       transition: width 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
@@ -185,8 +185,81 @@
       line-height: 1.55;
     }
 
+    /* ── Path cards (Step 1: what are you running for?) ────────────────── */
+    .path-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 560px) {
+      .path-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .path-card {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 20px 20px 18px;
+      background: var(--form-input-bg);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+      font-family: inherit;
+      color: inherit;
+      width: 100%;
+    }
+    .path-card:hover {
+      background: var(--form-input-bg-hover);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+    .path-card:focus-visible {
+      outline: 2px solid var(--text-accent);
+      outline-offset: 2px;
+    }
+    .path-card[aria-pressed="true"] {
+      border-color: var(--text-accent);
+      background: rgba(112, 214, 236, 0.12);
+      box-shadow: inset 0 0 0 1px var(--text-accent);
+    }
+    .path-card-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-white);
+      letter-spacing: -0.01em;
+    }
+    .path-card-sum {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--form-text-gray);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .path-card-mins {
+      margin-top: auto;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-accent);
+    }
+    .path-loading, .path-error {
+      padding: 28px 4px;
+      text-align: center;
+      color: var(--form-text-gray);
+      font-family: 'Roboto Slab', Georgia, serif;
+    }
+    .path-error { color: var(--form-error); }
+
     /* ── Form fields ──────────────────────────────────────────────────── */
     .field { margin-bottom: 18px; }
+    .field[hidden] { display: none; }
     .field-row {
       display: grid;
       grid-template-columns: 1fr;
@@ -264,7 +337,7 @@
       box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.18);
     }
     .textarea {
-      min-height: 120px;
+      min-height: 84px;
       resize: vertical;
       font-family: 'Roboto Slab', Georgia, serif;
     }
@@ -294,14 +367,10 @@
       margin-bottom: 14px;
       flex-wrap: wrap;
     }
-    .yesno-group-3 .yesno-option { min-width: calc(33.333% - 7px); }
-    @media (max-width: 480px) {
-      .yesno-group-3 { flex-direction: column; }
-      .yesno-group-3 .yesno-option { min-width: 100%; }
-    }
     .yesno-option {
       flex: 1;
       cursor: pointer;
+      min-width: 120px;
     }
     .yesno-option input { position: absolute; opacity: 0; pointer-events: none; }
     .yesno-option-label {
@@ -346,12 +415,13 @@
       border-radius: 10px;
       margin-bottom: 14px;
     }
+    .position[hidden] { display: none; }
     .position-q {
       font-family: 'Roboto Slab', Georgia, serif;
       font-size: 0.95rem;
       line-height: 1.55;
       color: var(--text-light);
-      margin: 0 0 14px;
+      margin: 0 0 12px;
       font-weight: 500;
     }
     .position-q .num {
@@ -359,6 +429,68 @@
       font-weight: 800;
       color: var(--text-accent);
       margin-right: 6px;
+    }
+    .position-q .optional {
+      color: var(--form-text-dim);
+      font-weight: 500;
+      font-size: 0.65rem;
+      margin-left: 6px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .position .help { margin-top: -6px; }
+
+    /* ── Path intro + neutrality callout (Step 3) ─────────────────────── */
+    .path-intro { margin: 0 0 22px; }
+    .path-intro-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--text-white);
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+    .path-intro-body {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--form-text-gray);
+      margin: 0 0 10px;
+    }
+    .path-intro-note {
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: var(--form-text-dim);
+      margin: 0;
+    }
+    /* Judicial neutrality callout — Navy border, Light Blue accent. The
+       most important copy on the judicial path. Never bury it. */
+    .neutrality-note {
+      position: relative;
+      background: #0d1726;
+      border: 1px solid #152233;
+      border-left: 4px solid var(--text-accent);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 0 0 24px;
+    }
+    .neutrality-note[hidden] { display: none; }
+    .neutrality-note h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--text-accent);
+      margin: 0 0 8px;
+    }
+    .neutrality-note p {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-light);
+      margin: 0;
     }
 
     /* Attestation checkbox */
@@ -390,6 +522,14 @@
       line-height: 1.5;
       color: var(--text-light);
     }
+    .attest-text .attest-jud {
+      display: block;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--form-text-gray);
+    }
+    .attest-text .attest-jud[hidden] { display: none; }
     .field.has-error .attest { border-color: var(--form-error); }
 
     /* ── Step navigation ──────────────────────────────────────────────── */
@@ -506,6 +646,7 @@
       .progress-label { display: none; }
       .save-indicator { display: none; }
       .yesno-group { gap: 8px; }
+      .yesno-option { min-width: 100%; }
       .yesno-option-label { padding: 11px 8px; font-size: 0.75rem; letter-spacing: 0.5px; }
       .btn { padding: 12px 14px; font-size: 0.72rem; letter-spacing: 1px; }
       .btn-primary, .btn-submit { flex: 1 1 auto; justify-content: center; }
@@ -513,6 +654,7 @@
       .step-header { margin-bottom: 18px; padding-bottom: 14px; }
       .step-title { font-size: 1.2rem; }
       .position { padding: 14px 14px 2px; }
+      .neutrality-note { padding: 16px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -531,8 +673,8 @@
     <section class="apply-hero" aria-labelledby="page-title">
       <p class="eyebrow">Endorsement Application</p>
       <h1 id="page-title">Apply for an Ohio Pride PAC endorsement.</h1>
-      <p>Ohio Pride PAC endorses candidates who demonstrate strong, consistent support for LGBTQ+ equality. Submissions are reviewed by our Screening Committee and Board.</p>
-      <p>Plan for 15 to 20 minutes. Your progress autosaves locally as you go, so you can return later on the same device. Responses may be shared publicly with voters.</p>
+      <p>Ohio Pride PAC endorses candidates who demonstrate strong, consistent support for LGBTQ+ equality. Our Screening Committee does its own research, and the interview is where we go deep.</p>
+      <p id="heroPlan">Start by choosing the office you are running for. Your progress autosaves locally as you go, so you can return later on the same device.</p>
     </section>
 
     <div class="form-shell">
@@ -541,7 +683,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-label" aria-live="polite">
-          Step <span class="current" id="currentStepNum">1</span> of <span id="totalSteps">5</span>
+          Step <span class="current" id="currentStepNum">1</span> of <span id="totalSteps">4</span>
         </div>
         <div class="save-indicator" id="saveIndicator" aria-live="polite">
           <span class="dot" aria-hidden="true"></span>
@@ -552,12 +694,27 @@
       <form id="endorsementForm" class="form-card" novalidate autocomplete="on">
 
         <!-- ============================================================
-             STEP 1: Candidate Information
+             STEP 1: What are you running for? (office type / path)
              ============================================================ -->
         <section class="form-step active" data-step="1" aria-labelledby="step1-title">
           <div class="step-header">
-            <p class="step-eyebrow">Section 1 of 5</p>
-            <h2 id="step1-title" class="step-title">Candidate Information</h2>
+            <p class="step-eyebrow">Step 1 of 4</p>
+            <h2 id="step1-title" class="step-title">What are you running for?</h2>
+            <p class="step-desc">Choose the office you are seeking. Different offices get different questions, so we start here.</p>
+          </div>
+
+          <div class="path-grid" id="pathGrid" role="group" aria-label="Office type">
+            <div class="path-loading">Loading office types&hellip;</div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             STEP 2: Candidate Information
+             ============================================================ -->
+        <section class="form-step" data-step="2" aria-labelledby="step2-title">
+          <div class="step-header">
+            <p class="step-eyebrow">Step 2 of 4</p>
+            <h2 id="step2-title" class="step-title">Candidate Information</h2>
             <p class="step-desc">Tell us about you and your campaign. All fields marked with an asterisk are required.</p>
           </div>
 
@@ -595,12 +752,14 @@
           <div class="field-row cols-2">
             <div class="field">
               <label class="label" for="office_sought">Office sought <span class="required" aria-hidden="true">*</span></label>
-              <input class="input" type="text" id="office_sought" name="office_sought" required placeholder="e.g., State Senate, Ohio House, Mayor of ..." />
-              <div class="field-error">Please tell us which office you are seeking.</div>
+              <select class="select" id="office_sought" name="office_sought" required>
+                <option value="">Choose one</option>
+              </select>
+              <div class="field-error">Please choose the office you are seeking.</div>
             </div>
-            <div class="field">
-              <label class="label" for="district">District / jurisdiction</label>
-              <input class="input" type="text" id="district" name="district" placeholder="e.g., District 24, City of Akron" />
+            <div class="field" id="field-district" hidden>
+              <label class="label" for="district">District / jurisdiction <span class="optional">Optional</span></label>
+              <input class="input" type="text" id="district" name="district" placeholder="e.g., District 24, Ward 3" />
             </div>
           </div>
 
@@ -641,6 +800,27 @@
             </div>
           </div>
 
+          <div class="field" data-required-radio="is_incumbent">
+            <label class="label">Are you a current or former officeholder? <span class="required" aria-hidden="true">*</span></label>
+            <div class="yesno-group" role="radiogroup" aria-label="Current or former officeholder">
+              <label class="yesno-option">
+                <input type="radio" name="is_incumbent" value="true" required />
+                <span class="yesno-option-label">Yes</span>
+              </label>
+              <label class="yesno-option">
+                <input type="radio" name="is_incumbent" value="false" required />
+                <span class="yesno-option-label">No</span>
+              </label>
+            </div>
+            <div class="field-error">Please select Yes or No.</div>
+          </div>
+
+          <div class="field" id="field-current-office" hidden>
+            <label class="label" for="current_office">Current or most recent office <span class="required" aria-hidden="true">*</span></label>
+            <input class="input" type="text" id="current_office" name="current_office" placeholder="e.g., Columbus City Council, Ohio House District 24" />
+            <div class="field-error">Please name your current or most recent office.</div>
+          </div>
+
           <div class="field-row cols-2">
             <div class="field">
               <label class="label" for="committee_name">Campaign committee name</label>
@@ -671,195 +851,38 @@
         </section>
 
         <!-- ============================================================
-             STEP 2: Core Positions
-             ============================================================ -->
-        <section class="form-step" data-step="2" aria-labelledby="step2-title">
-          <div class="step-header">
-            <p class="step-eyebrow">Section 2 of 5</p>
-            <h2 id="step2-title" class="step-title">Core Positions</h2>
-            <p class="step-desc">Five questions on the issues that matter most. A short explanation is required for each so the committee can review your reasoning.</p>
-          </div>
-
-          <!-- Q1 -->
-          <div class="position">
-            <p class="position-q"><span class="num">Q1.</span> Do you support statewide nondiscrimination protections for LGBTQ+ Ohioans in employment, housing, public accommodations, and healthcare (the Ohio Fairness Act)?</p>
-            <div class="field" data-required-radio="q1_nondiscrimination">
-              <div class="yesno-group" role="radiogroup" aria-label="Question 1 yes or no">
-                <label class="yesno-option">
-                  <input type="radio" name="q1_nondiscrimination" value="true" required />
-                  <span class="yesno-option-label">Yes</span>
-                </label>
-                <label class="yesno-option">
-                  <input type="radio" name="q1_nondiscrimination" value="false" required />
-                  <span class="yesno-option-label">No</span>
-                </label>
-              </div>
-              <div class="field-error">Please select Yes or No.</div>
-            </div>
-            <div class="field">
-              <label class="label" for="q1_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-              <textarea class="textarea" id="q1_explanation" name="q1_explanation" required rows="4"></textarea>
-              <div class="field-error">Please provide a brief explanation.</div>
-            </div>
-          </div>
-
-          <!-- Q2 -->
-          <div class="position">
-            <p class="position-q"><span class="num">Q2.</span> Do you oppose legislation restricting medically recommended gender-affirming care, or imposing broad bans on gender expression including drag performances (e.g., HB 249)?</p>
-            <div class="field" data-required-radio="q2_anti_lgbtq_legislation">
-              <div class="yesno-group" role="radiogroup" aria-label="Question 2 yes or no">
-                <label class="yesno-option">
-                  <input type="radio" name="q2_anti_lgbtq_legislation" value="true" required />
-                  <span class="yesno-option-label">Yes</span>
-                </label>
-                <label class="yesno-option">
-                  <input type="radio" name="q2_anti_lgbtq_legislation" value="false" required />
-                  <span class="yesno-option-label">No</span>
-                </label>
-              </div>
-              <div class="field-error">Please select Yes or No.</div>
-            </div>
-            <div class="field">
-              <label class="label" for="q2_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-              <textarea class="textarea" id="q2_explanation" name="q2_explanation" required rows="4"></textarea>
-              <div class="field-error">Please provide a brief explanation.</div>
-            </div>
-          </div>
-
-          <!-- Q3 -->
-          <div class="position">
-            <p class="position-q"><span class="num">Q3.</span> Do you support a statewide ban on so-called conversion therapy?</p>
-            <div class="field" data-required-radio="q3_conversion_therapy">
-              <div class="yesno-group" role="radiogroup" aria-label="Question 3 yes or no">
-                <label class="yesno-option">
-                  <input type="radio" name="q3_conversion_therapy" value="true" required />
-                  <span class="yesno-option-label">Yes</span>
-                </label>
-                <label class="yesno-option">
-                  <input type="radio" name="q3_conversion_therapy" value="false" required />
-                  <span class="yesno-option-label">No</span>
-                </label>
-              </div>
-              <div class="field-error">Please select Yes or No.</div>
-            </div>
-            <div class="field">
-              <label class="label" for="q3_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-              <textarea class="textarea" id="q3_explanation" name="q3_explanation" required rows="4"></textarea>
-              <div class="field-error">Please provide a brief explanation.</div>
-            </div>
-          </div>
-
-          <!-- Q4 -->
-          <div class="position">
-            <p class="position-q"><span class="num">Q4.</span> Do you support inclusive K-12 schools, including protections against bullying, opposition to forced outing policies, and access to accurate information about LGBTQ+ people and families?</p>
-            <div class="field" data-required-radio="q4_inclusive_education">
-              <div class="yesno-group" role="radiogroup" aria-label="Question 4 yes or no">
-                <label class="yesno-option">
-                  <input type="radio" name="q4_inclusive_education" value="true" required />
-                  <span class="yesno-option-label">Yes</span>
-                </label>
-                <label class="yesno-option">
-                  <input type="radio" name="q4_inclusive_education" value="false" required />
-                  <span class="yesno-option-label">No</span>
-                </label>
-              </div>
-              <div class="field-error">Please select Yes or No.</div>
-            </div>
-            <div class="field">
-              <label class="label" for="q4_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-              <textarea class="textarea" id="q4_explanation" name="q4_explanation" required rows="4"></textarea>
-              <div class="field-error">Please provide a brief explanation.</div>
-            </div>
-          </div>
-
-          <!-- Q5 -->
-          <div class="position">
-            <p class="position-q"><span class="num">Q5.</span> Will you vote against bills that roll back LGBTQ+ rights or create broad religious exemptions used to justify discrimination?</p>
-            <div class="field" data-required-radio="q5_vote_against_rollbacks">
-              <div class="yesno-group yesno-group-3" role="radiogroup" aria-label="Question 5 answer">
-                <label class="yesno-option">
-                  <input type="radio" name="q5_vote_against_rollbacks" value="true" required />
-                  <span class="yesno-option-label">Yes</span>
-                </label>
-                <label class="yesno-option">
-                  <input type="radio" name="q5_vote_against_rollbacks" value="false" required />
-                  <span class="yesno-option-label">No</span>
-                </label>
-                <label class="yesno-option">
-                  <input type="radio" name="q5_vote_against_rollbacks" value="na" required />
-                  <span class="yesno-option-label">Not Applicable</span>
-                </label>
-              </div>
-              <div class="field-error">Please select an answer.</div>
-            </div>
-            <div class="field">
-              <label class="label" for="q5_explanation">Explanation <span class="required" aria-hidden="true">*</span></label>
-              <textarea class="textarea" id="q5_explanation" name="q5_explanation" required rows="4" placeholder="If selecting Not Applicable (e.g., your office does not vote on legislation), briefly explain how you would use your office to push back against rollbacks of LGBTQ+ rights."></textarea>
-              <div class="field-error">Please provide a brief explanation.</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ============================================================
-             STEP 3: Legislative & Advocacy Commitment
+             STEP 3: Path intro + questions (fully dynamic)
              ============================================================ -->
         <section class="form-step" data-step="3" aria-labelledby="step3-title">
           <div class="step-header">
-            <p class="step-eyebrow">Section 3 of 5</p>
-            <h2 id="step3-title" class="step-title">Legislative and Advocacy Commitment</h2>
-            <p class="step-desc">How you will work for equality if elected.</p>
+            <p class="step-eyebrow">Step 3 of 4</p>
+            <h2 id="step3-title" class="step-title">Your Positions and Record</h2>
+            <p class="step-desc">These questions are tailored to the office you selected.</p>
           </div>
 
-          <div class="field">
-            <label class="label" for="q6_priorities">If elected, what are your top three pro-equality legislative or policy priorities? <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q6_priorities" name="q6_priorities" required rows="5"></textarea>
-            <div class="field-error">Please share your top priorities.</div>
+          <div class="path-intro">
+            <h3 class="path-intro-title" id="pathIntroTitle"></h3>
+            <p class="path-intro-body" id="pathIntroBody"></p>
+            <p class="path-intro-note" id="pathInterviewNote"></p>
           </div>
 
-          <div class="field">
-            <label class="label" for="q7_legislation">Will you sponsor or co-sponsor pro-equality legislation? Please name specific bills you would champion. <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q7_legislation" name="q7_legislation" required rows="5"></textarea>
-            <div class="field-error">Please share specific bills or commitments.</div>
+          <!-- Judicial neutrality callout (rendered above question one). -->
+          <div class="neutrality-note" id="neutralityNote" role="note" hidden>
+            <h3>A note on judicial neutrality</h3>
+            <p id="neutralityNoteBody"></p>
           </div>
 
-          <div class="field">
-            <label class="label" for="q8_safety">How will you address threats to LGBTQ+ safety, events, and community spaces in your district or role? <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q8_safety" name="q8_safety" required rows="5"></textarea>
-            <div class="field-error">Please describe your approach to safety.</div>
-          </div>
+          <div id="questionList"></div>
         </section>
 
         <!-- ============================================================
-             STEP 4: Vision and Ohio Context
+             STEP 4: Background and Attestation
              ============================================================ -->
         <section class="form-step" data-step="4" aria-labelledby="step4-title">
           <div class="step-header">
-            <p class="step-eyebrow">Section 4 of 5</p>
-            <h2 id="step4-title" class="step-title">Vision and Ohio Context</h2>
-            <p class="step-desc">Help us understand how equality fits into the broader case you are making to voters.</p>
-          </div>
-
-          <div class="field">
-            <label class="label" for="q9_intersection">How do LGBTQ+ equality issues connect to other priorities in your race, such as healthcare, education, economic opportunity, and rural communities? <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q9_intersection" name="q9_intersection" required rows="6"></textarea>
-            <div class="field-error">Please respond to this question.</div>
-          </div>
-
-          <div class="field">
-            <label class="label" for="q10_why_endorsement">Why are you seeking Ohio Pride's endorsement, and what specific commitments will you make if endorsed? <span class="required" aria-hidden="true">*</span></label>
-            <textarea class="textarea" id="q10_why_endorsement" name="q10_why_endorsement" required rows="6"></textarea>
-            <div class="field-error">Please respond to this question.</div>
-          </div>
-        </section>
-
-        <!-- ============================================================
-             STEP 5: Background and Attestation
-             ============================================================ -->
-        <section class="form-step" data-step="5" aria-labelledby="step5-title">
-          <div class="step-header">
-            <p class="step-eyebrow">Section 5 of 5</p>
-            <h2 id="step5-title" class="step-title">Background and Attestation</h2>
-            <p class="step-desc">A brief bio if you'd like to share one, a disclosure check, and your signature.</p>
+            <p class="step-eyebrow">Step 4 of 4</p>
+            <h2 id="step4-title" class="step-title">Background and Attestation</h2>
+            <p class="step-desc">A brief bio if you'd like to share one, a disclosure, and your signature.</p>
           </div>
 
           <div class="field">
@@ -868,8 +891,8 @@
           </div>
 
           <div class="field">
-            <label class="label" for="conflicts_disclosure">Have you ever taken a public position, cast a vote, or made a statement that conflicts with the answers above? <span class="required" aria-hidden="true">*</span></label>
-            <p class="help">If yes, please explain. If no, type "None" so we know you considered the question.</p>
+            <label class="label" for="conflicts_disclosure" id="conflictsLabel">Have you ever taken a public position, cast a vote, or made a statement that conflicts with the answers above? <span class="required" aria-hidden="true">*</span></label>
+            <p class="help" id="conflictsHelp">If yes, please explain. If not, type "None" so we know you considered the question.</p>
             <textarea class="textarea" id="conflicts_disclosure" name="conflicts_disclosure" required rows="4"></textarea>
             <div class="field-error">Please respond, or type "None".</div>
           </div>
@@ -877,7 +900,10 @@
           <div class="field" data-required-checkbox="attestation">
             <label class="attest">
               <input type="checkbox" id="attestation" name="attestation" required />
-              <span class="attest-text">I certify that the information provided in this application is accurate and complete to the best of my knowledge. I understand that my responses may be shared publicly with voters.</span>
+              <span class="attest-text">
+                I certify that the information provided in this application is accurate and complete to the best of my knowledge. I understand that my responses may be shared publicly with voters.
+                <span class="attest-jud" id="attestJudicial" hidden>I understand that nothing in this application constitutes a pledge, promise, or commitment regarding any case, controversy, or issue that may come before the court.</span>
+              </span>
             </label>
             <div class="field-error">You must certify before submitting.</div>
           </div>
@@ -909,7 +935,7 @@
           <button type="button" class="btn btn-secondary" id="btnBack" disabled>
             <span class="label">Back</span>
           </button>
-          <button type="button" class="btn btn-primary" id="btnNext">
+          <button type="button" class="btn btn-primary" id="btnNext" disabled>
             <span class="label">Next</span>
           </button>
           <button type="submit" class="btn btn-submit" id="btnSubmit" style="display:none;">
@@ -934,13 +960,17 @@
     /* =================================================================
        CONFIG
        Anon key is public by design and safe to ship in client code.
-       RLS allows public inserts to `endorsement_applications` only.
+       RLS allows public inserts to `endorsement_applications` only, and
+       public reads of the active `endorsement_*` catalog tables.
        ================================================================= */
     const CONFIG = {
       SUPABASE_URL:        'https://dkdxefzhttkmjhdbkvqn.supabase.co',
       SUPABASE_ANON_KEY:   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4',
       THANK_YOU_PATH:      '/endorsement/screening/thank-you',
-      STORAGE_KEY:         'op_endorsement_draft_v2',
+      // Draft is keyed by path so switching offices never bleeds answers
+      // across question sets: op_endorsement_draft_v3_<path>.
+      STORAGE_PREFIX:      'op_endorsement_draft_v3_',
+      LAST_PATH_KEY:       'op_endorsement_last_path_v3',
       AUTOSAVE_DEBOUNCE_MS: 600,
       MIN_FILL_TIME_MS:    4000  // submissions faster than this are dropped as bots
     };
@@ -950,9 +980,13 @@
        ================================================================= */
     const state = {
       currentStep: 1,
-      totalSteps: 5,
+      totalSteps: 4,
       startedAt: Date.now(),
-      submitting: false
+      submitting: false,
+      path: null,                 // 'statewide' | 'federal' | 'local' | 'judicial'
+      office: null,               // selected office option object
+      catalog: { paths: [], offices: {}, questions: {} },
+      client: null
     };
 
     /* =================================================================
@@ -960,6 +994,12 @@
        ================================================================= */
     const $  = (sel, root = document) => root.querySelector(sel);
     const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+        { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
+      ));
+    }
 
     function debounce(fn, wait) {
       let t;
@@ -986,8 +1026,294 @@
     }
 
     /* =================================================================
-       AUTOSAVE
+       CATALOG (path meta, office options, questions)
        ================================================================= */
+    async function loadCatalog(client) {
+      const [pm, oo, qq] = await Promise.all([
+        client.from('endorsement_path_meta').select('*').eq('active', true).order('sort_order', { ascending: true }),
+        client.from('endorsement_office_options').select('*').eq('active', true).order('sort_order', { ascending: true }),
+        client.from('endorsement_questions').select('*').eq('active', true).order('sort_order', { ascending: true })
+      ]);
+      if (pm.error) throw pm.error;
+      if (oo.error) throw oo.error;
+      if (qq.error) throw qq.error;
+
+      state.catalog.paths = pm.data || [];
+      state.catalog.offices = {};
+      (oo.data || []).forEach(o => {
+        (state.catalog.offices[o.path] = state.catalog.offices[o.path] || []).push(o);
+      });
+      state.catalog.questions = {};
+      (qq.data || []).forEach(q => {
+        (state.catalog.questions[q.path] = state.catalog.questions[q.path] || []).push(q);
+      });
+    }
+
+    function pathMeta(path) {
+      return state.catalog.paths.find(p => p.path === path) || null;
+    }
+
+    /* =================================================================
+       RENDER: path cards (Step 1)
+       ================================================================= */
+    function renderPathCards() {
+      const grid = $('#pathGrid');
+      if (!state.catalog.paths.length) {
+        grid.innerHTML = '<div class="path-error">We could not load the application right now. Please refresh, or email screening@ohiopride.org.</div>';
+        return;
+      }
+      grid.innerHTML = state.catalog.paths.map(p => (
+        '<button type="button" class="path-card" data-path="' + esc(p.path) + '" aria-pressed="false">' +
+          '<span class="path-card-label">' + esc(p.display_label) + '</span>' +
+          '<span class="path-card-sum">' + esc(p.intro_body) + '</span>' +
+          '<span class="path-card-mins">About ' + esc(p.estimated_minutes) + ' minutes</span>' +
+        '</button>'
+      )).join('');
+      $$('.path-card', grid).forEach(card => {
+        card.addEventListener('click', () => selectPath(card.dataset.path, { advance: true }));
+      });
+    }
+
+    function highlightSelectedCard() {
+      $$('.path-card').forEach(c => {
+        const on = c.dataset.path === state.path;
+        c.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+
+    /* =================================================================
+       RENDER: office dropdown + district visibility (Step 2)
+       ================================================================= */
+    function populateOfficeDropdown() {
+      const sel = $('#office_sought');
+      const offices = state.catalog.offices[state.path] || [];
+      sel.innerHTML = '<option value="">Choose one</option>' + offices.map(o => (
+        '<option value="' + esc(o.label) + '">' + esc(o.label) + '</option>'
+      )).join('');
+      state.office = null;
+      updateDistrictVisibility();
+    }
+
+    function syncOfficeFromSelect() {
+      const label = $('#office_sought').value;
+      const offices = state.catalog.offices[state.path] || [];
+      state.office = offices.find(o => o.label === label) || null;
+      updateDistrictVisibility();
+    }
+
+    function updateDistrictVisibility() {
+      const wrap = $('#field-district');
+      const show = !!(state.office && state.office.requires_district);
+      wrap.hidden = !show;
+      if (!show) { $('#district').value = ''; }
+    }
+
+    /* =================================================================
+       RENDER: incumbent follow-up (Step 2)
+       ================================================================= */
+    function updateIncumbentVisibility() {
+      const val = (($('input[name="is_incumbent"]:checked') || {}).value) || '';
+      const wrap = $('#field-current-office');
+      const input = $('#current_office');
+      const show = val === 'true';
+      wrap.hidden = !show;
+      input.required = show;
+      if (!show) { input.value = ''; }
+      applyIncumbentOnlyQuestions();
+    }
+
+    // incumbent_only questions render only when is_incumbent is true. Wired
+    // now so future catalog edits work without a deploy (all currently false).
+    // Hiding the block is enough: validation skips fields inside [hidden], and
+    // buildResponses() omits incumbent_only keys when the applicant is not one.
+    function applyIncumbentOnlyQuestions() {
+      const isInc = (($('input[name="is_incumbent"]:checked') || {}).value) === 'true';
+      $$('#questionList [data-incumbent-only="1"]').forEach(block => {
+        block.hidden = !isInc;
+      });
+    }
+
+    /* =================================================================
+       RENDER: path intro + questions (Step 3)
+       ================================================================= */
+    function renderPathSection() {
+      const meta = pathMeta(state.path);
+      if (!meta) return;
+
+      $('#pathIntroTitle').textContent = meta.intro_title || '';
+      $('#pathIntroBody').textContent = meta.intro_body || '';
+      $('#pathInterviewNote').textContent = meta.interview_note || '';
+
+      const noteWrap = $('#neutralityNote');
+      if (meta.neutrality_note) {
+        $('#neutralityNoteBody').textContent = meta.neutrality_note;
+        noteWrap.hidden = false;
+      } else {
+        $('#neutralityNoteBody').textContent = '';
+        noteWrap.hidden = true;
+      }
+
+      const qs = state.catalog.questions[state.path] || [];
+      $('#questionList').innerHTML = qs.map((q, i) => renderQuestion(q, i + 1)).join('');
+      applyIncumbentOnlyQuestions();
+    }
+
+    function renderQuestion(q, num) {
+      const incAttr = q.incumbent_only ? ' data-incumbent-only="1"' : '';
+      const help = q.help_text ? '<p class="help">' + esc(q.help_text) + '</p>' : '';
+
+      if (q.response_type === 'boolean') {
+        const optTag = q.required ? '' : ' <span class="optional">Optional</span>';
+        const radioReq = q.required
+          ? ' data-required-radio="' + esc(q.question_key) + '"'
+          : '';
+        const inputReq = q.required ? ' required' : '';
+        let explanation = '';
+        if (q.has_explanation) {
+          const expReq = q.required;
+          explanation =
+            '<div class="field">' +
+              '<label class="label" for="' + esc(q.question_key) + '__explanation">Explanation ' +
+                (expReq ? '<span class="required" aria-hidden="true">*</span>' : '<span class="optional">Optional</span>') +
+              '</label>' +
+              '<textarea class="textarea" id="' + esc(q.question_key) + '__explanation" ' +
+                'name="' + esc(q.question_key) + '__explanation" rows="4" data-req-base="' + (expReq ? '1' : '0') + '"' +
+                (expReq ? ' required' : '') + '></textarea>' +
+              '<div class="field-error">Please provide a brief explanation.</div>' +
+            '</div>';
+        }
+        return '<div class="position" data-question="' + esc(q.question_key) + '"' + incAttr + '>' +
+          '<p class="position-q"><span class="num">' + num + '.</span>' + esc(q.prompt) + optTag + '</p>' +
+          help +
+          '<div class="field"' + radioReq + '>' +
+            '<div class="yesno-group" role="radiogroup" aria-label="Question ' + num + ' yes or no">' +
+              '<label class="yesno-option"><input type="radio" name="' + esc(q.question_key) + '" value="true"' + inputReq + ' data-req-base="' + (q.required ? '1' : '0') + '" /><span class="yesno-option-label">Yes</span></label>' +
+              '<label class="yesno-option"><input type="radio" name="' + esc(q.question_key) + '" value="false"' + inputReq + ' data-req-base="' + (q.required ? '1' : '0') + '" /><span class="yesno-option-label">No</span></label>' +
+            '</div>' +
+            '<div class="field-error">Please select Yes or No.</div>' +
+          '</div>' +
+          explanation +
+        '</div>';
+      }
+
+      // long_text / short_text
+      const rows = q.response_type === 'short_text' ? 2 : 5;
+      const reqMark = q.required
+        ? '<span class="required" aria-hidden="true">*</span>'
+        : '<span class="optional">Optional</span>';
+      return '<div class="position" data-question="' + esc(q.question_key) + '"' + incAttr + '>' +
+        '<div class="field" style="margin-bottom:0">' +
+          '<label class="label" for="' + esc(q.question_key) + '"><span class="num">' + num + '.</span> ' + esc(q.prompt) + ' ' + reqMark + '</label>' +
+          help +
+          '<textarea class="textarea" id="' + esc(q.question_key) + '" name="' + esc(q.question_key) + '" rows="' + rows + '" data-req-base="' + (q.required ? '1' : '0') + '"' + (q.required ? ' required' : '') + '></textarea>' +
+          '<div class="field-error">Please respond to this question.</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    /* =================================================================
+       RENDER: path-aware background copy (Step 4)
+       ================================================================= */
+    function updateBackgroundCopy() {
+      const isJud = state.path === 'judicial';
+      const label = $('#conflictsLabel');
+      const help = $('#conflictsHelp');
+      if (isJud) {
+        label.innerHTML = 'Is there anything in your public record the Screening Committee should hear from you first? <span class="required" aria-hidden="true">*</span>';
+        help.textContent = 'A few sentences are plenty. If there is nothing, type "None" so we know you considered the question.';
+      } else {
+        label.innerHTML = 'Have you ever taken a public position, cast a vote, or made a statement that conflicts with the answers above? <span class="required" aria-hidden="true">*</span>';
+        help.textContent = 'If yes, please explain. If not, type "None" so we know you considered the question.';
+      }
+      $('#attestJudicial').hidden = !isJud;
+    }
+
+    function updateHeroPlan() {
+      const meta = pathMeta(state.path);
+      const el = $('#heroPlan');
+      if (meta) {
+        el.textContent = 'Plan for about ' + meta.estimated_minutes + ' minutes. Our committee does its own research, and the interview is where we go deep.';
+      }
+    }
+
+    /* =================================================================
+       PATH SELECTION
+       ================================================================= */
+    function currentDraftHasAnswers() {
+      const data = collectFormData();
+      // Any candidate, question, or background content counts.
+      for (const [k, v] of Object.entries(data)) {
+        if (k === 'company_url' || k === 'is_incumbent') continue;
+        if (typeof v === 'string' && v.trim()) return true;
+        if (v === true) return true;
+      }
+      return false;
+    }
+
+    function selectPath(path, opts) {
+      opts = opts || {};
+      if (!pathMeta(path)) return;
+
+      if (path === state.path) {
+        if (opts.advance !== false) showStep(2);
+        return;
+      }
+
+      if (state.path && !opts.silent && currentDraftHasAnswers()) {
+        const ok = window.confirm(
+          'Switch to a different office? We will show the questions for the new office. ' +
+          'Your answers for the current office are saved on this device and will return if you switch back.'
+        );
+        if (!ok) return;
+      }
+
+      state.path = path;
+      try { localStorage.setItem(CONFIG.LAST_PATH_KEY, path); } catch (_) {}
+
+      highlightSelectedCard();
+      populateOfficeDropdown();
+      renderPathSection();
+      updateBackgroundCopy();
+      updateHeroPlan();
+
+      // Reset shared candidate + background fields, then load this path's own
+      // draft so nothing bleeds across question sets.
+      resetSharedFields();
+      loadDraft();
+      syncDerivedFromForm();
+
+      $('#btnNext').disabled = false;
+      if (opts.advance !== false) showStep(2);
+    }
+
+    // Clears candidate-info (step 2) and background (step 4) fields. Step 1
+    // cards and step 3 questions are handled elsewhere (rebuilt / highlighted).
+    function resetSharedFields() {
+      const ids = [
+        'first_name', 'middle_name', 'last_name', 'pronouns', 'office_sought',
+        'district', 'election_year', 'party', 'is_out', 'current_office',
+        'committee_name', 'treasurer_name', 'email', 'phone', 'website',
+        'bio', 'conflicts_disclosure', 'signature', 'company_url'
+      ];
+      ids.forEach(id => { const el = $('#' + id); if (el) el.value = ''; });
+      $$('input[name="is_incumbent"]').forEach(r => { r.checked = false; });
+      const attest = $('#attestation'); if (attest) attest.checked = false;
+      updateDistrictVisibility();
+      updateIncumbentVisibility();
+    }
+
+    function syncDerivedFromForm() {
+      syncOfficeFromSelect();
+      updateIncumbentVisibility();
+    }
+
+    /* =================================================================
+       AUTOSAVE (keyed by path)
+       ================================================================= */
+    function draftKey() {
+      return state.path ? (CONFIG.STORAGE_PREFIX + state.path) : null;
+    }
+
     function collectFormData() {
       const data = {};
       const form = $('#endorsementForm');
@@ -1008,12 +1334,10 @@
     function applyFormData(data) {
       if (!data || typeof data !== 'object') return;
       for (const [name, value] of Object.entries(data)) {
-        const elements = $$(`[name="${name}"]`);
+        const elements = $$('[name="' + CSS.escape(name) + '"]');
         if (!elements.length) continue;
         if (elements[0].type === 'radio') {
-          for (const el of elements) {
-            el.checked = (String(el.value) === String(value));
-          }
+          for (const el of elements) el.checked = (String(el.value) === String(value));
         } else if (elements[0].type === 'checkbox') {
           elements[0].checked = !!value;
         } else {
@@ -1023,30 +1347,35 @@
     }
 
     const persist = debounce(() => {
+      const key = draftKey();
+      if (!key) return;
       try {
-        const data = collectFormData();
-        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify({
+        localStorage.setItem(key, JSON.stringify({
           savedAt: new Date().toISOString(),
           step: state.currentStep,
-          data
+          data: collectFormData()
         }));
         showSaved();
       } catch (_) { /* localStorage may be disabled */ }
     }, CONFIG.AUTOSAVE_DEBOUNCE_MS);
 
-    function loadDraft() {
+    function readDraft(path) {
       try {
-        const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        if (parsed && parsed.data) {
-          applyFormData(parsed.data);
-        }
-      } catch (_) { /* ignore */ }
+        const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + path);
+        return raw ? JSON.parse(raw) : null;
+      } catch (_) { return null; }
+    }
+
+    function loadDraft() {
+      const parsed = readDraft(state.path);
+      if (parsed && parsed.data) applyFormData(parsed.data);
     }
 
     function clearDraft() {
-      try { localStorage.removeItem(CONFIG.STORAGE_KEY); } catch (_) {}
+      const key = draftKey();
+      if (!key) return;
+      try { localStorage.removeItem(key); } catch (_) {}
+      try { localStorage.removeItem(CONFIG.LAST_PATH_KEY); } catch (_) {}
     }
 
     /* =================================================================
@@ -1056,16 +1385,18 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
     }
 
+    function isHidden(el) {
+      return !!(el.closest && el.closest('[hidden]'));
+    }
+
     function validateField(field) {
       const wrap = field.closest('.field');
       let valid = true;
-
       if (field.type === 'email' && field.value && !isValidEmail(field.value)) {
         valid = false;
       } else if (field.required && !field.value.trim()) {
         valid = false;
       }
-
       if (wrap) {
         wrap.classList.toggle('has-error', !valid);
         field.classList.toggle('invalid', !valid);
@@ -1074,7 +1405,17 @@
     }
 
     function validateStep(stepNum) {
-      const stepEl = $(`.form-step[data-step="${stepNum}"]`);
+      // Step 1: a path must be chosen.
+      if (stepNum === 1) {
+        if (!state.path) {
+          const grid = $('#pathGrid');
+          if (grid) grid.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          return false;
+        }
+        return true;
+      }
+
+      const stepEl = $('.form-step[data-step="' + stepNum + '"]');
       if (!stepEl) return true;
 
       let allValid = true;
@@ -1082,6 +1423,7 @@
 
       const inputs = $$('input:not([type=radio]):not([type=checkbox]), select, textarea', stepEl);
       for (const f of inputs) {
+        if (isHidden(f)) continue;
         if (!validateField(f)) {
           allValid = false;
           if (!firstInvalid) firstInvalid = f;
@@ -1090,12 +1432,13 @@
 
       const radioGroups = $$('[data-required-radio]', stepEl);
       for (const grp of radioGroups) {
+        if (isHidden(grp)) continue;
         const name = grp.getAttribute('data-required-radio');
-        const checked = $(`input[name="${name}"]:checked`, grp);
+        const checked = $('input[name="' + CSS.escape(name) + '"]:checked', grp);
         if (!checked) {
           grp.classList.add('has-error');
           allValid = false;
-          if (!firstInvalid) firstInvalid = $(`input[name="${name}"]`, grp);
+          if (!firstInvalid) firstInvalid = $('input[name="' + CSS.escape(name) + '"]', grp);
         } else {
           grp.classList.remove('has-error');
         }
@@ -1103,8 +1446,9 @@
 
       const checkGroups = $$('[data-required-checkbox]', stepEl);
       for (const grp of checkGroups) {
+        if (isHidden(grp)) continue;
         const name = grp.getAttribute('data-required-checkbox');
-        const cb = $(`input[name="${name}"]`, grp);
+        const cb = $('input[name="' + CSS.escape(name) + '"]', grp);
         if (cb && !cb.checked) {
           grp.classList.add('has-error');
           allValid = false;
@@ -1116,11 +1460,8 @@
 
       if (firstInvalid) {
         firstInvalid.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        if (firstInvalid.focus) {
-          setTimeout(() => firstInvalid.focus({ preventScroll: true }), 350);
-        }
+        if (firstInvalid.focus) setTimeout(() => firstInvalid.focus({ preventScroll: true }), 350);
       }
-
       return allValid;
     }
 
@@ -1129,9 +1470,7 @@
        ================================================================= */
     function showStep(n) {
       state.currentStep = n;
-      $$('.form-step').forEach(s => {
-        s.classList.toggle('active', Number(s.dataset.step) === n);
-      });
+      $$('.form-step').forEach(s => s.classList.toggle('active', Number(s.dataset.step) === n));
       $('#currentStepNum').textContent = String(n);
       $('#progressFill').style.width = ((n / state.totalSteps) * 100) + '%';
 
@@ -1140,24 +1479,21 @@
       $('#btnBack').disabled = isFirst;
       $('#btnNext').style.display   = isLast ? 'none' : 'inline-flex';
       $('#btnSubmit').style.display = isLast ? 'inline-flex' : 'none';
+      $('#btnNext').disabled = (n === 1 && !state.path);
 
-      const heading = $(`.form-step[data-step="${n}"] .step-title`);
+      const heading = $('.form-step[data-step="' + n + '"] .step-title');
       if (heading) {
         heading.setAttribute('tabindex', '-1');
         heading.focus({ preventScroll: true });
       }
-
       const shellEl = $('.form-shell');
-      if (shellEl) {
-        window.scrollTo({ top: shellEl.offsetTop - 16, behavior: 'smooth' });
-      }
+      if (shellEl) window.scrollTo({ top: shellEl.offsetTop - 16, behavior: 'smooth' });
     }
 
     function nextStep() {
       if (!validateStep(state.currentStep)) return;
       if (state.currentStep < state.totalSteps) showStep(state.currentStep + 1);
     }
-
     function prevStep() {
       if (state.currentStep > 1) showStep(state.currentStep - 1);
     }
@@ -1165,88 +1501,98 @@
     /* =================================================================
        SUBMISSION
        ================================================================= */
+    function buildResponses() {
+      const raw = collectFormData();
+      const qs = state.catalog.questions[state.path] || [];
+      const isInc = raw.is_incumbent === 'true';
+      const out = {};
+      qs.forEach(q => {
+        if (q.incumbent_only && !isInc) return;
+        if (q.response_type === 'boolean') {
+          const v = raw[q.question_key];
+          const bool = v === 'true' ? true : v === 'false' ? false : null;
+          if (bool === null && !q.required) return;
+          const entry = { value: bool };
+          if (q.has_explanation) {
+            entry.explanation = (raw[q.question_key + '__explanation'] || '').trim();
+          }
+          out[q.question_key] = entry;
+        } else {
+          const val = (raw[q.question_key] || '').trim();
+          if (!val && !q.required) return;
+          out[q.question_key] = { value: val };
+        }
+      });
+      return out;
+    }
+
     function buildPayload() {
       const raw = collectFormData();
-
-      const toBool = v => {
-        if (typeof v === 'boolean') return v;
-        if (v === 'true')  return true;
-        if (v === 'false') return false;
-        return null;
-      };
+      const trim = v => (typeof v === 'string' ? v.trim() : v);
       const toInt = v => {
-        if (v === null || v === undefined || v === '') return null;
+        if (v == null || v === '') return null;
         const n = parseInt(v, 10);
         return Number.isFinite(n) ? n : null;
       };
-      const trim = v => (typeof v === 'string' ? v.trim() : v);
 
       const firstName  = trim(raw.first_name)  || '';
       const middleName = trim(raw.middle_name) || '';
       const lastName   = trim(raw.last_name)   || '';
-      const candidateName = [firstName, middleName, lastName]
-        .filter(Boolean)
-        .join(' ');
-
-      const q5Raw = raw.q5_vote_against_rollbacks;
-      const q5IsNa = q5Raw === 'na';
+      const candidateName = [firstName, middleName, lastName].filter(Boolean).join(' ');
 
       const electionYearRaw = trim(raw.election_year) || '';
       const isSpecialElection = electionYearRaw === 'special';
 
+      const officeLabel = (state.office && state.office.label) || trim(raw.office_sought) || '';
+      const isIncumbent = raw.is_incumbent === 'true' ? true
+                        : raw.is_incumbent === 'false' ? false : null;
+
       return {
-        candidate_name:            candidateName,
-        first_name:                firstName  || null,
-        middle_name:               middleName || null,
-        last_name:                 lastName   || null,
-        pronouns:                  trim(raw.pronouns) || null,
-        office_sought:             trim(raw.office_sought),
-        district:                  trim(raw.district) || null,
-        election_year:             isSpecialElection ? null : toInt(electionYearRaw),
-        is_special_election:       isSpecialElection,
-        party:                     trim(raw.party) || null,
-        committee_name:            trim(raw.committee_name) || null,
-        treasurer_name:            trim(raw.treasurer_name) || null,
-        email:                     trim(raw.email),
-        phone:                     trim(raw.phone) || null,
-        website:                   trim(raw.website) || null,
-        is_out:                    raw.is_out || null,
-        q1_nondiscrimination:      toBool(raw.q1_nondiscrimination),
-        q1_explanation:            trim(raw.q1_explanation),
-        q2_anti_lgbtq_legislation: toBool(raw.q2_anti_lgbtq_legislation),
-        q2_explanation:            trim(raw.q2_explanation),
-        q3_conversion_therapy:     toBool(raw.q3_conversion_therapy),
-        q3_explanation:            trim(raw.q3_explanation),
-        q4_inclusive_education:    toBool(raw.q4_inclusive_education),
-        q4_explanation:            trim(raw.q4_explanation),
-        q5_vote_against_rollbacks: q5IsNa ? null : toBool(q5Raw),
-        q5_not_applicable:         q5IsNa,
-        q5_explanation:            trim(raw.q5_explanation),
-        q6_priorities:             trim(raw.q6_priorities),
-        q7_legislation:            trim(raw.q7_legislation),
-        q8_safety:                 trim(raw.q8_safety),
-        q9_intersection:           trim(raw.q9_intersection),
-        q10_why_endorsement:       trim(raw.q10_why_endorsement),
-        bio:                       trim(raw.bio) || null,
-        conflicts_disclosure:      trim(raw.conflicts_disclosure),
-        attestation:               !!raw.attestation,
-        signature:                 trim(raw.signature),
-        status:                    'submitted',
-        user_agent:                navigator.userAgent
+        candidate_name:      candidateName,
+        first_name:          firstName  || null,
+        middle_name:         middleName || null,
+        last_name:           lastName   || null,
+        pronouns:            trim(raw.pronouns) || null,
+        office_sought:       officeLabel,
+        district:            trim(raw.district) || null,
+        election_year:       isSpecialElection ? null : toInt(electionYearRaw),
+        is_special_election: isSpecialElection,
+        party:               trim(raw.party) || null,
+        committee_name:      trim(raw.committee_name) || null,
+        treasurer_name:      trim(raw.treasurer_name) || null,
+        email:               trim(raw.email),
+        phone:               trim(raw.phone) || null,
+        website:             trim(raw.website) || null,
+        is_out:              raw.is_out || null,
+        endorsement_path:    state.path,
+        office_category:     officeLabel,
+        is_incumbent:        isIncumbent,
+        current_office:      isIncumbent ? (trim(raw.current_office) || null) : null,
+        responses:           buildResponses(),
+        bio:                 trim(raw.bio) || null,
+        conflicts_disclosure: trim(raw.conflicts_disclosure),
+        attestation:         !!raw.attestation,
+        signature:           trim(raw.signature),
+        status:              'submitted',
+        user_agent:          navigator.userAgent
       };
     }
 
     async function submitApplication(e) {
       e.preventDefault();
       if (state.submitting) return;
-      if (!validateStep(5)) return;
+
+      // Validate every step so a stale field on an earlier step can't slip by.
+      for (let s = 1; s <= state.totalSteps; s++) {
+        if (!validateStep(s)) { showStep(s); return; }
+      }
 
       const errBanner = $('#submitError');
       errBanner.classList.remove('visible');
       errBanner.textContent = '';
 
-      // Honeypot: if a bot filled the hidden field, pretend success but
-      // never insert. This avoids tipping off the bot that it failed.
+      // Honeypot: if a bot filled the hidden field, pretend success but never
+      // insert. This avoids tipping off the bot that it failed.
       const honeypot = $('#company_url');
       if (honeypot && honeypot.value) {
         clearDraft();
@@ -1254,7 +1600,7 @@
         return;
       }
 
-      // Timing: a real candidate cannot fill 30+ fields in under 4 seconds.
+      // Timing: a real candidate cannot fill this form in under 4 seconds.
       const elapsed = Date.now() - state.startedAt;
       if (elapsed < CONFIG.MIN_FILL_TIME_MS) {
         clearDraft();
@@ -1268,17 +1614,9 @@
       submitBtn.disabled = true;
 
       try {
-        if (!window.supabase) throw new Error('Supabase library failed to load.');
-        const client = window.supabase.createClient(
-          CONFIG.SUPABASE_URL,
-          CONFIG.SUPABASE_ANON_KEY
-        );
-
+        if (!state.client) throw new Error('Supabase library failed to load.');
         const payload = buildPayload();
-        const { error } = await client
-          .from('endorsement_applications')
-          .insert([payload]);
-
+        const { error } = await state.client.from('endorsement_applications').insert([payload]);
         if (error) throw error;
 
         clearDraft();
@@ -1300,11 +1638,9 @@
     /* =================================================================
        INIT
        ================================================================= */
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       $('#totalSteps').textContent = state.totalSteps;
       setSignedDate();
-      loadDraft();
-      showStep(1);
 
       $('#btnNext').addEventListener('click', nextStep);
       $('#btnBack').addEventListener('click', prevStep);
@@ -1313,18 +1649,17 @@
       $('#endorsementForm').addEventListener('input', persist);
       $('#endorsementForm').addEventListener('change', persist);
 
-      $('#endorsementForm').addEventListener('input', (e) => {
-        const f = e.target;
+      // Clear per-field errors as the user fixes them.
+      $('#endorsementForm').addEventListener('input', (ev) => {
+        const f = ev.target;
         const wrap = f.closest && f.closest('.field');
-        if (wrap && wrap.classList.contains('has-error')) {
-          if (f.value.trim() || f.checked) {
-            wrap.classList.remove('has-error');
-            f.classList && f.classList.remove('invalid');
-          }
+        if (wrap && wrap.classList.contains('has-error') && (f.value.trim() || f.checked)) {
+          wrap.classList.remove('has-error');
+          if (f.classList) f.classList.remove('invalid');
         }
       });
-      $('#endorsementForm').addEventListener('change', (e) => {
-        const f = e.target;
+      $('#endorsementForm').addEventListener('change', (ev) => {
+        const f = ev.target;
         if (f.type === 'radio') {
           const grp = f.closest('[data-required-radio]');
           if (grp) grp.classList.remove('has-error');
@@ -1334,6 +1669,37 @@
           if (grp) grp.classList.remove('has-error');
         }
       });
+
+      // Live wiring for office + incumbent dependent fields.
+      $('#office_sought').addEventListener('change', syncOfficeFromSelect);
+      $$('input[name="is_incumbent"]').forEach(r => {
+        r.addEventListener('change', updateIncumbentVisibility);
+      });
+
+      // Load the catalog, render the path cards, then restore any draft.
+      try {
+        state.client = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+        await loadCatalog(state.client);
+        renderPathCards();
+
+        // Resume: if a path draft exists, re-select it (without the switch
+        // warning) and jump back to where the applicant left off.
+        let lastPath = null;
+        try { lastPath = localStorage.getItem(CONFIG.LAST_PATH_KEY); } catch (_) {}
+        const draft = lastPath ? readDraft(lastPath) : null;
+        if (lastPath && pathMeta(lastPath) && draft) {
+          selectPath(lastPath, { advance: false, silent: true });
+          const resumeStep = Math.min(Math.max(Number(draft.step) || 1, 1), state.totalSteps);
+          showStep(resumeStep);
+        } else {
+          showStep(1);
+        }
+      } catch (err) {
+        console.error('Failed to load application catalog:', err);
+        const grid = $('#pathGrid');
+        if (grid) grid.innerHTML = '<div class="path-error">We could not load the application right now. Please refresh, or email screening@ohiopride.org.</div>';
+        showStep(1);
+      }
     });
   </script>
 
