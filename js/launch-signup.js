@@ -40,9 +40,7 @@
 
   function netlifyFormEndpoint() {
     var host = window.location.hostname;
-    return host === "ohiopride.org" || host === "www.ohiopride.org"
-      ? "/"
-      : "/api/netlify-form";
+    return "/api/form-submit";
   }
 
   function postToNetlify(form) {

@@ -1,7 +1,7 @@
 /* ==========================================================================
    pride-signup.js
    Powers /pride/signup: validates the form client-side and POSTs to
-   /.netlify/functions/pride-volunteer-submit.
+   /api/pride-volunteer-submit.
 
    Signup is region-based, not per-event. The /pride page shows the tour
    schedule for visibility; this form just captures who wants to help and
@@ -11,7 +11,7 @@
 (function () {
   'use strict';
 
-  var SUBMIT_ENDPOINT = '/.netlify/functions/pride-volunteer-submit';
+  var SUBMIT_ENDPOINT = '/api/pride-volunteer-submit';
 
   var form = document.getElementById('pride-volunteer-form');
   if (!form) return;

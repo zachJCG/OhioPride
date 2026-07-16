@@ -7,7 +7,7 @@
    /admin/pride. No filters, no map, no per-event signup CTAs: signup is
    region-based and lives on /pride/signup.
 
-   Data: GET /.netlify/functions/pride-events
+   Data: GET /api/pride-events
          -> { ok, events: [...] }
 
    Brand rules honored: solid navy/cyan/white only, pride gradient as a
@@ -17,7 +17,7 @@
 (function () {
   'use strict';
 
-  var ENDPOINT = '/.netlify/functions/pride-events';
+  var ENDPOINT = '/api/pride-events';
   var SIGNUP_URL = '/pride/signup';
   var TZ = 'America/New_York';
 

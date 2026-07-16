@@ -4,9 +4,9 @@
    Drives the 5-step signup form on /volunteer.
 
    Two paths:
-     - "volunteer"  -> POST /.netlify/functions/volunteer-submit { application_type: "volunteer", ... }
+     - "volunteer"  -> POST /api/volunteer-submit { application_type: "volunteer", ... }
                       (writes to public.volunteers)
-     - "internship" -> POST /.netlify/functions/volunteer-submit { application_type: "internship", ... }
+     - "internship" -> POST /api/volunteer-submit { application_type: "internship", ... }
                       (writes to public.intern_applications)
 
    Behaviour:
@@ -22,7 +22,7 @@
   'use strict';
 
   var TOTAL_STEPS = 5;
-  var SUBMIT_ENDPOINT = '/.netlify/functions/volunteer-submit';
+  var SUBMIT_ENDPOINT = '/api/volunteer-submit';
 
   var form         = document.getElementById('volunteerForm');
   var progressEl   = document.getElementById('vformProgress');

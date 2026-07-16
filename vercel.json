@@ -1,6 +1,13 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/actblue-sync.mjs": { "maxDuration": 60 }
+  },
+  "crons": [
+    { "path": "/api/actblue-sync", "schedule": "0 * * * *" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -22,8 +29,6 @@
     { "source": "/admin/endorsements/login", "destination": "/admin/login", "permanent": true },
     { "source": "/admin/finance", "destination": "/admin/finance/budget", "permanent": false },
     { "source": "/admin/compliance", "destination": "/admin/compliance/contributions", "permanent": false },
-    { "source": "/internships", "destination": "/volunteer?path=internship", "permanent": false },
-    { "source": "/apply/:position", "destination": "/volunteer?path=internship&position=:position", "permanent": false },
     { "source": "/scorecard/methodology", "destination": "/methodology", "permanent": true },
     { "source": "/scorecard/methodology.html", "destination": "/methodology", "permanent": true },
     { "source": "/gala", "destination": "/", "permanent": true },
@@ -32,7 +37,8 @@
     { "source": "/priorities", "destination": "/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/.netlify/functions/:path*", "destination": "https://ohiopride.netlify.app/.netlify/functions/:path*" },
+    { "source": "/internships", "destination": "/volunteer?path=internship" },
+    { "source": "/apply/:position", "destination": "/volunteer?path=internship&position=:position" },
     { "source": "/admin/finance/budget/revenue", "destination": "/admin/finance/budget/index.html" },
     { "source": "/admin/finance/budget/expense", "destination": "/admin/finance/budget/index.html" }
   ]
