@@ -37,6 +37,7 @@
     { "source": "/priorities", "destination": "/", "permanent": true }
   ],
   "rewrites": [
+    { "source": "/rsvp", "destination": "/launch-day" },
     { "source": "/internships", "destination": "/volunteer?path=internship" },
     { "source": "/apply/:position", "destination": "/volunteer?path=internship&position=:position" },
     { "source": "/admin/finance/budget/revenue", "destination": "/admin/finance/budget/index.html" },
