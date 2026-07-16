@@ -42,11 +42,11 @@
   // are ever renamed or moved, there is exactly one line to change.
   // -----------------------------------------------------------------------
   var ENDPOINTS = {
-    progress:               '/.netlify/functions/founding-members-progress',
-    board:                  '/.netlify/functions/board-members',
-    foundingMemberTiers:    '/.netlify/functions/founding-member-tiers',
-    publicMembers:          '/.netlify/functions/public-members',
-    siteLeadership:         '/.netlify/functions/site-leadership',
+    progress:               '/api/founding-members-progress',
+    board:                  '/api/board-members',
+    foundingMemberTiers:    '/api/founding-member-tiers',
+    publicMembers:          '/api/public-members',
+    siteLeadership:         '/api/site-leadership',
   };
 
   // -----------------------------------------------------------------------

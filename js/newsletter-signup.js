@@ -1,7 +1,7 @@
 /* ==========================================================================
    newsletter-signup.js
    Powers the newsletter capture form on /signup. Validates client-side and
-   POSTs to /.netlify/functions/newsletter-submit.
+   POSTs to /api/newsletter-submit.
 
    If the visitor arrives from the homepage newsletter band, an ?email=...
    query param prefills the email field so they don't retype it.
@@ -10,7 +10,7 @@
 (function () {
   'use strict';
 
-  var SUBMIT_ENDPOINT = '/.netlify/functions/newsletter-submit';
+  var SUBMIT_ENDPOINT = '/api/newsletter-submit';
   var EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
   var form = document.getElementById('newsletter-form');

@@ -140,7 +140,7 @@
         // Data fetch
         // ---------------------------------------------------------------
         function loadDashboard(token) {
-          return fetch('/.netlify/functions/admin-dashboard', {
+          return fetch('/api/admin-dashboard', {
             headers: { 'Authorization': 'Bearer ' + token }
           }).then(function (res) {
             if (!res.ok) throw new Error('http_' + res.status);

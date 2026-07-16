@@ -292,7 +292,7 @@
           return state.client.auth.getSession().then(function (s) {
             var jwt = s && s.data && s.data.session && s.data.session.access_token;
             if (!jwt) throw new Error('No session');
-            return fetch('/.netlify/functions/admin-user-manage', {
+            return fetch('/api/admin-user-manage', {
               method: 'POST',
               headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + jwt },
               body: JSON.stringify(payload)

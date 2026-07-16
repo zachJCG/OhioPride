@@ -1,0 +1,5 @@
+# Keep the Netlify Functions source out of the Vercel static deploy.
+# (Vercel builds functions from /api. The netlify/ tree stays in the repo so
+#  the Netlify site keeps working as the one-week rollback fallback, but it
+#  should not ship as static assets on Vercel.)
+netlify/

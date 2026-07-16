@@ -7,7 +7,7 @@
    1. The footer's "Leadership" block now carries the attribute
       [data-ohp-directors] [data-ohp-entity="pac"]. The Round 2
       OhioPride.loadSiteLeadership() helper populates this element on page
-      load from /.netlify/functions/site-leadership, so officer changes
+      load from /api/site-leadership, so officer changes
       propagate site-wide from a single database row.
 
    2. The "Paid for by" disclaimer at the bottom carries

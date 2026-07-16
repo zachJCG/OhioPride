@@ -637,9 +637,7 @@
     const successMsg = document.getElementById('successMessage');
     const netlifyFormEndpoint = () => {
         const host = window.location.hostname;
-        return host === 'ohiopride.org' || host === 'www.ohiopride.org'
-            ? '/'
-            : '/api/netlify-form';
+        return "/api/form-submit";
     };
 
     if (form) {

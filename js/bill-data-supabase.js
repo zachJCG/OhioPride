@@ -2,7 +2,7 @@
  * /js/bill-data-supabase.js
  * -----------------------------------------------------------------------------
  * Drop-in upgrade for /issues + /issues/<slug> pages: refreshes the global
- * `BILLS` array (defined in /js/bill-data.js) from /.netlify/functions/bills,
+ * `BILLS` array (defined in /js/bill-data.js) from /api/bills,
  * then re-runs whatever the page set up to render BILLS.
  *
  * Pattern: load /js/bill-data.js (static seed) AND this file. The static seed
@@ -38,7 +38,7 @@
     }
   }
 
-  fetch('/.netlify/functions/bills', {
+  fetch('/api/bills', {
     credentials: 'omit',
     headers: { accept: 'application/json' },
   })

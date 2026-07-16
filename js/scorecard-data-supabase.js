@@ -2,7 +2,7 @@
  * /js/scorecard-data-supabase.js
  * -----------------------------------------------------------------------------
  * Drop-in upgrade for /scorecard. Refreshes HOUSE_MEMBERS + SENATE_MEMBERS +
- * SCORECARD_UPDATED from /.netlify/functions/scorecard, then re-runs the
+ * SCORECARD_UPDATED from /api/scorecard, then re-runs the
  * page renderer. Falls back silently if the fetch fails.
  *
  * Load order on /scorecard.html:
@@ -27,7 +27,7 @@
     }
   }
 
-  fetch('/.netlify/functions/scorecard', {
+  fetch('/api/scorecard', {
     credentials: 'omit',
     headers: { accept: 'application/json' },
   })
