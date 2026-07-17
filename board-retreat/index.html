@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#152233" />
+  <title>Board Retreat: August Availability</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root{
+      --navy:#152233; --navy-footer:#0D1726; --lightblue:#70D6EC;
+      --cream:#FBF8F2; --line:#D9D5CC; --white:#fff; --ink-soft:#4a5568;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{
+      background:var(--cream); color:var(--navy);
+      font-family:'Roboto Slab',Georgia,serif; line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Progress Pride accent stripe — accent only, never chrome/text */
+    .stripe{height:6px;background:linear-gradient(90deg,#E40303,#FFBC00,#FFED00,#008026,#004DFF,#750787)}
+
+    /* Brand header — wordmark per brand construction, not rebuilt from type */
+    .ohp-head{background:var(--navy);padding:16px 18px}
+    .ohp-head-inner{max-width:760px;margin:0 auto;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .wm{font-family:'Montserrat',system-ui,sans-serif;font-weight:800;letter-spacing:.01em;
+      font-size:1.35rem;line-height:1;display:inline-flex;align-items:baseline;gap:.4ch}
+    .wm .ohio{color:#fff}
+    .wm .pride{color:var(--lightblue)}
+    .wm .pac{font-weight:700;font-size:.5em;letter-spacing:.22em;color:var(--lightblue);
+      text-transform:uppercase;align-self:center;padding-left:.15em;
+      border-left:1px solid rgba(255,255,255,.35);margin-left:.15em;padding-left:.55em}
+    .ohp-head .eyebrow{font-family:'Montserrat',sans-serif;font-weight:700;text-transform:uppercase;
+      letter-spacing:.18em;font-size:.62rem;color:rgba(255,255,255,.6)}
+
+    .wrap{max-width:760px;margin:0 auto;padding:26px 18px 90px}
+    h1{font-family:'Montserrat',system-ui,sans-serif;font-weight:800;
+      letter-spacing:-.02em;font-size:1.7rem;line-height:1.1;margin:.1em 0 .35em}
+    .lede{margin:0 0 22px;font-size:1rem}
+
+    label{display:block;font-family:'Montserrat',sans-serif;font-weight:700;
+      text-transform:uppercase;font-size:.78rem;letter-spacing:.05em;margin:20px 0 6px}
+    select,textarea{width:100%;padding:12px;border:1px solid var(--line);
+      border-radius:8px;font-size:1rem;background:var(--white);color:var(--navy);
+      font-family:inherit}
+    select:focus,textarea:focus{outline:none;border-color:var(--navy);
+      box-shadow:0 0 0 3px rgba(21,34,51,.12)}
+    textarea{resize:vertical;min-height:78px}
+
+    .legend{background:var(--white);border:1px solid var(--line);border-radius:10px;
+      padding:14px 16px;margin:14px 0;font-size:.92rem}
+    .legend strong{font-family:'Montserrat',sans-serif}
+    .legend .row{display:flex;align-items:center;gap:9px;margin:7px 0}
+    .swatch{width:20px;height:20px;border-radius:5px;flex:0 0 auto}
+    .sw0{background:var(--white);border:1px solid var(--line)}
+    .sw1{background:var(--navy)}
+    .sw2{background:var(--lightblue)}
+    .times{font-size:.85rem;color:var(--ink-soft);margin-top:10px;border-top:1px dashed var(--line);padding-top:9px}
+
+    .grid{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--white)}
+    .day{display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+      padding:9px 10px;border-bottom:1px solid var(--line)}
+    .day:last-child{border-bottom:0}
+    .day.weekend{background:#F3EFE6}
+    .daylabel{font-family:'Montserrat',sans-serif;font-weight:700;
+      min-width:112px;font-size:.95rem;background:none;border:0;color:var(--navy);
+      text-align:left;padding:6px 4px;cursor:pointer;border-radius:6px}
+    .daylabel:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+    .daylabel .wk{display:block;font-weight:400;font-size:.7rem;color:var(--ink-soft)}
+    .segs{display:flex;gap:8px;flex:1 1 260px}
+    .seg{flex:1 1 84px;min-height:46px;border:1px solid var(--line);border-radius:8px;
+      background:var(--white);color:var(--navy);font-family:'Montserrat',sans-serif;
+      font-weight:700;font-size:.82rem;cursor:pointer;padding:6px 4px;line-height:1.1}
+    .seg small{display:block;font-weight:400;font-size:.68rem;opacity:.72;margin-top:2px}
+    .seg:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+    .seg[data-state="1"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+    .seg[data-state="1"] small{opacity:.85}
+    .seg[data-state="2"]{background:var(--lightblue);color:var(--navy);border-color:var(--lightblue)}
+
+    .submit{margin-top:24px;width:100%;padding:16px;border:0;border-radius:10px;
+      background:var(--navy);color:#fff;font-family:'Montserrat',sans-serif;
+      font-weight:800;font-size:1.05rem;letter-spacing:.01em;cursor:pointer}
+    .submit:hover:not(:disabled){background:#1c2f47}
+    .submit:disabled{opacity:.55;cursor:default}
+
+    .msg{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:.93rem;display:none}
+    .msg.err{background:#FDE8E8;color:#8A1C1C;display:block}
+    .msg.ok{background:#E6F4EA;color:#1B5E20;display:block}
+
+    .card{background:var(--white);border:1px solid var(--line);border-radius:12px;
+      padding:30px;text-align:center;margin-top:8px}
+    .card h2{font-family:'Montserrat',sans-serif;font-weight:800;margin:.1em 0 .4em;font-size:1.5rem}
+    .card p{margin:0;color:var(--ink-soft)}
+    .loading{color:var(--ink-soft);font-size:.95rem;padding:8px 2px}
+
+    @media (max-width:560px){
+      .day{flex-direction:column;align-items:stretch;gap:6px}
+      .daylabel{min-width:0}
+      .segs{flex-wrap:wrap}
+      .seg{flex:1 1 30%}
+    }
+  </style>
+</head>
+<body>
+  <div class="stripe"></div>
+  <header class="ohp-head">
+    <div class="ohp-head-inner">
+      <span class="wm"><span class="ohio">OHIO</span><span class="pride">PRIDE</span><span class="pac">PAC</span></span>
+      <span class="eyebrow">Board Retreat</span>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div id="form-view" hidden>
+      <h1>Board Retreat: August Availability</h1>
+      <p class="lede">Pick every day-segment you could make it, and mark each one In Person or Virtual. In-person in Columbus is the goal, but virtual is available if you need it. Takes about two minutes.</p>
+
+      <label for="who">Your name</label>
+      <select id="who" required>
+        <option value="">Select your name</option>
+      </select>
+
+      <div class="legend">
+        <strong>Tap a slot to set it. Tap again to change it.</strong>
+        <div class="row"><span class="swatch sw0"></span> Blank: <strong>not available</strong></div>
+        <div class="row"><span class="swatch sw1"></span> In Person: available, can be in Columbus</div>
+        <div class="row"><span class="swatch sw2"></span> Virtual: available, virtual only</div>
+        <div class="times">Morning 8:00a&nbsp;–&nbsp;12:00p&nbsp;&middot;&nbsp; Afternoon 12:00p&nbsp;–&nbsp;5:00p&nbsp;&middot;&nbsp; Evening 5:00p&nbsp;–&nbsp;8:00p. Leaving a slot blank means you are not available then.</div>
+      </div>
+
+      <div id="grid" class="grid" role="group" aria-label="August availability grid"></div>
+
+      <label for="notes">Notes (optional)</label>
+      <textarea id="notes" rows="3" placeholder="Travel limits, hard conflicts, preferred dates..."></textarea>
+
+      <button id="submit" class="submit" type="button">Submit My Availability</button>
+      <div id="msg" class="msg" role="alert" aria-live="assertive"></div>
+    </div>
+
+    <div id="loading-view" class="loading">Loading the roster…</div>
+
+    <div id="done-view" class="card" hidden>
+      <h2>Thanks, <span id="done-name"></span>.</h2>
+      <p>Your availability is in. You can close this page.</p>
+    </div>
+
+    <div id="empty-view" class="card" hidden>
+      <h2>All set.</h2>
+      <p>All board availability has been collected. Thanks everyone.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const SUPABASE_URL  = 'https://dkdxefzhttkmjhdbkvqn.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4';
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    const SEGMENTS = [['morning','Morning'],['afternoon','Afternoon'],['evening','Evening']];
+    const YEAR = 2026, MONTH = 8; // August 2026
+    const DAYS = 31;
+    const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const STATE_LABEL = ['Not available','In Person','Virtual'];
+
+    const $ = s => document.querySelector(s);
+    const view = { form:$('#form-view'), loading:$('#loading-view'), done:$('#done-view'), empty:$('#empty-view') };
+    const state = {}; // key `date|segment` -> 0|1|2
+
+    function show(name){
+      for(const k of Object.keys(view)) view[k].hidden = (k !== name);
+    }
+
+    function applyState(btn, val){
+      state[btn.dataset.key] = val;
+      btn.dataset.state = String(val);
+      btn.querySelector('small').textContent = STATE_LABEL[val];
+      btn.setAttribute('aria-pressed', val !== 0 ? 'true' : 'false');
+    }
+
+    function buildGrid(){
+      const g = $('#grid'); g.innerHTML = '';
+      for(let d=1; d<=DAYS; d++){
+        const dd = String(d).padStart(2,'0');
+        const date = `${YEAR}-${String(MONTH).padStart(2,'0')}-${dd}`;
+        const dow = new Date(Date.UTC(YEAR, MONTH-1, d)).getUTCDay();
+        const weekend = (dow===0 || dow===6);
+
+        const row = document.createElement('div');
+        row.className = 'day' + (weekend ? ' weekend' : '');
+
+        const dayBtns = [];
+
+        const lab = document.createElement('button');
+        lab.type = 'button';
+        lab.className = 'daylabel';
+        lab.innerHTML = `${DOW[dow]}, Aug ${d}<span class="wk">${weekend ? 'Weekend' : ''}</span>`;
+        lab.setAttribute('aria-label', `Set all segments for ${DOW[dow]}, August ${d}`);
+        // Nicety: clicking the date cycles all three of that day's segments together.
+        lab.addEventListener('click', () => {
+          const cur = state[dayBtns[0].dataset.key];
+          const same = dayBtns.every(b => state[b.dataset.key] === cur);
+          const next = same ? (cur + 1) % 3 : 1; // if mixed, unify to In Person first
+          dayBtns.forEach(b => applyState(b, next));
+        });
+        row.appendChild(lab);
+
+        const segWrap = document.createElement('div');
+        segWrap.className = 'segs';
+        for(const [seg,label] of SEGMENTS){
+          const key = `${date}|${seg}`;
+          state[key] = 0;
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'seg';
+          b.dataset.state = '0';
+          b.dataset.key = key;
+          b.setAttribute('aria-pressed', 'false');
+          b.setAttribute('aria-label', `${label}, ${DOW[dow]} August ${d}`);
+          b.innerHTML = `${label}<small>Not available</small>`;
+          b.addEventListener('click', () => applyState(b, (state[key] + 1) % 3));
+          segWrap.appendChild(b);
+          dayBtns.push(b);
+        }
+        row.appendChild(segWrap);
+        g.appendChild(row);
+      }
+    }
+
+    function collectSlots(){
+      const out = [];
+      for(const [key,val] of Object.entries(state)){
+        if(val===0) continue;
+        const [date,segment] = key.split('|');
+        out.push({ date, segment, mode: val===1 ? 'in_person' : 'virtual' });
+      }
+      return out;
+    }
+
+    function showMsg(text, kind){
+      const m = $('#msg');
+      m.textContent = text;
+      m.className = 'msg ' + (kind==='ok' ? 'ok' : 'err');
+    }
+    function clearMsg(){ $('#msg').className = 'msg'; }
+
+    async function loadPeople(){
+      const { data, error } = await sb
+        .from('board_retreat_respondents')
+        .select('id, full_name, role_label')
+        .order('sort_order', { ascending: true });
+
+      if(error){
+        show('form');
+        showMsg('Could not load the roster. Refresh and try again.','err');
+        return;
+      }
+      if(!data || data.length===0){
+        show('empty');
+        return;
+      }
+      const sel = $('#who');
+      sel.length = 1; // keep the placeholder, drop any stale options
+      for(const p of data){
+        const o = document.createElement('option');
+        o.value = p.id;
+        o.textContent = p.full_name;
+        o.dataset.name = p.full_name;
+        sel.appendChild(o);
+      }
+      show('form');
+    }
+
+    async function submit(){
+      clearMsg();
+      const sel = $('#who');
+      const id = sel.value;
+      if(!id){ showMsg('Please select your name.','err'); sel.focus(); return; }
+
+      const slots = collectSlots();
+      if(slots.length===0){ showMsg('Pick at least one time you are available.','err'); return; }
+
+      const btn = $('#submit');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      const { error } = await sb.rpc('submit_board_retreat', {
+        p_respondent_id: id,
+        p_notes: $('#notes').value.trim() || null,
+        p_slots: slots
+      });
+
+      if(error){
+        const m = (error.message || '').toLowerCase();
+        if(m.includes('already_submitted')){
+          showMsg('Looks like that availability was already submitted. If you need to change it, contact Zach.','err');
+          await loadPeople(); // refresh the dropdown so the submitted name drops off
+        } else if(m.includes('no_slots_selected')){
+          showMsg('Pick at least one time you are available.','err');
+        } else if(m.includes('respondent_not_found')){
+          showMsg('That name is no longer valid. Please reselect your name and try again.','err');
+          await loadPeople();
+        } else {
+          showMsg('Something went wrong, please try again.','err');
+        }
+        btn.disabled = false;
+        btn.textContent = 'Submit My Availability';
+        return;
+      }
+
+      const opt = sel.options[sel.selectedIndex];
+      const first = (opt && opt.dataset.name || '').trim().split(/\s+/)[0] || 'friend';
+      $('#done-name').textContent = first;
+      show('done');
+      window.scrollTo(0,0);
+    }
+
+    buildGrid();
+    loadPeople();
+    $('#submit').addEventListener('click', submit);
+  </script>
+</body>
+</html>
