@@ -19,6 +19,12 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow, noarchive"
 
+# Internal, unlisted board retreat availability form. Never linked publicly.
+[[headers]]
+  for = "/board-retreat/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
 # Clean URL redirects
 [[redirects]]
   from = "/contact"
@@ -85,6 +91,12 @@
 [[redirects]]
   from = "/signup"
   to = "/signup/index.html"
+  status = 200
+
+# Internal board retreat availability form (unlisted; folder/index.html)
+[[redirects]]
+  from = "/board-retreat"
+  to = "/board-retreat/index.html"
   status = 200
 
 [[redirects]]
