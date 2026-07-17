@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Board Retreat | Ohio Pride PAC Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <link rel="stylesheet" href="/admin/admin-shared.css" />
+    <link rel="stylesheet" href="/admin/admin-shell.css" />
+    <link rel="stylesheet" href="/admin/admin-responsive.css" />
+    <style>
+      .br-kpis{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+      .br-kpi{background:var(--brand-navy-light,#1f3450);border:1px solid rgba(255,255,255,.08);
+        border-radius:10px;padding:14px 18px;min-width:150px}
+      .br-kpi .n{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.7rem;
+        color:#fff;line-height:1}
+      .br-kpi .l{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;
+        color:rgba(255,255,255,.6);margin-top:6px}
+      .br-section{margin:22px 0}
+      .br-section > h3{font-family:'Montserrat',sans-serif;font-weight:700;color:#fff;
+        font-size:1rem;margin:0 0 4px}
+      .br-section > p.sub{color:rgba(255,255,255,.55);font-size:.85rem;margin:0 0 12px}
+      .br-table{width:100%;border-collapse:collapse;font-size:.9rem;
+        background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+      .br-table th,.br-table td{padding:9px 12px;text-align:left;
+        border-bottom:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+      .br-table th{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.72rem;
+        text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.55);background:rgba(255,255,255,.03)}
+      .br-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+      .br-table tr.top td{background:rgba(112,214,236,.10)}
+      .br-scroll{overflow-x:auto}
+      .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.72rem;
+        font-family:'Montserrat',sans-serif;font-weight:700}
+      .pill.in{background:var(--brand-navy,#152233);color:#fff;border:1px solid rgba(255,255,255,.25)}
+      .pill.vi{background:#70D6EC;color:#152233}
+      .pill.yes{background:rgba(74,222,128,.15);color:#4ade80}
+      .pill.no{background:rgba(255,255,255,.08);color:rgba(255,255,255,.55)}
+      .roster-list{list-style:none;padding:0;margin:0;display:grid;
+        grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+      .roster-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;
+        background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+        border-radius:8px;padding:9px 12px}
+      .roster-list .who{color:#fff;font-size:.9rem}
+      .roster-list .who small{display:block;color:rgba(255,255,255,.5);font-size:.72rem}
+      .person{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);
+        border-radius:10px;padding:14px 16px;margin-bottom:10px}
+      .person h4{font-family:'Montserrat',sans-serif;font-weight:700;color:#fff;
+        margin:0 0 8px;font-size:.95rem}
+      .person .chips{display:flex;flex-wrap:wrap;gap:6px}
+      .person .chip{font-size:.78rem;padding:4px 9px;border-radius:7px;
+        border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.9);background:rgba(255,255,255,.03)}
+      .person .chip b{font-weight:700}
+      .person .notes{margin-top:10px;color:rgba(255,255,255,.8);font-size:.86rem;
+        border-left:2px solid #70D6EC;padding-left:10px}
+      .br-empty{color:rgba(255,255,255,.6);font-size:.9rem;padding:6px 0}
+      .br-error{background:rgba(255,107,107,.12);color:#ff8f8f;border:1px solid rgba(255,107,107,.3);
+        border-radius:8px;padding:12px 14px;font-size:.9rem}
+      .br-actions{margin:2px 0 18px}
+      .br-refresh{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);
+        color:#fff;font-family:'Montserrat',sans-serif;font-weight:600;font-size:.82rem;
+        border-radius:8px;padding:8px 14px;cursor:pointer}
+    </style>
+  </head>
+  <body class="admin-shell">
+    <div id="shell-root"
+         data-active-nav="board"
+         data-page-eyebrow="Governance"
+         data-page-title="Board Retreat"
+         data-page-sub="August availability results — pick the winning date-segment."></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/admin/admin-shell.js"></script>
+    <script>
+      (function () {
+        var ENDPOINT = '/.netlify/functions/admin-board-retreat';
+        var SEG_LABEL = { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening' };
+        var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+        function esc(s){
+          return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+          });
+        }
+        // Format a 'YYYY-MM-DD' date with no timezone drift.
+        function fmtDate(iso){
+          var p = String(iso).split('-');
+          if (p.length !== 3) return esc(iso);
+          var dt = new Date(Date.UTC(+p[0], +p[1]-1, +p[2]));
+          return DOW[dt.getUTCDay()] + ', ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+p[1]-1] + ' ' + (+p[2]);
+        }
+        function fmtWhen(ts){
+          if (!ts) return '';
+          try { return new Date(ts).toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }); }
+          catch (e) { return ''; }
+        }
+
+        function render(data){
+          var roster = data.roster || [];
+          var tallies = (data.tallies || []).slice();
+          var detail = data.detail || [];
+          var submitted = roster.filter(function (r){ return r.has_submitted; });
+          var pending = roster.filter(function (r){ return !r.has_submitted; });
+
+          var html = '';
+
+          // KPIs
+          html += '<div class="br-kpis">'
+            + '<div class="br-kpi"><div class="n">' + submitted.length + ' / ' + roster.length + '</div><div class="l">Submitted</div></div>'
+            + '<div class="br-kpi"><div class="n">' + pending.length + '</div><div class="l">Still pending</div></div>'
+            + '</div>';
+
+          html += '<div class="br-actions"><button class="br-refresh" id="brRefresh" type="button">Refresh</button></div>';
+
+          // Best availability (tallies)
+          html += '<div class="br-section"><h3>Availability by slot</h3>'
+            + '<p class="sub">Most-available slots first. Highlighted rows are the current front-runners.</p>';
+          if (!tallies.length) {
+            html += '<div class="br-empty">No availability submitted yet.</div>';
+          } else {
+            tallies.sort(function (a, b){
+              return (b.total_available - a.total_available)
+                || (a.slot_date < b.slot_date ? -1 : a.slot_date > b.slot_date ? 1 : 0);
+            });
+            var best = tallies[0].total_available;
+            html += '<div class="br-scroll"><table class="br-table"><thead><tr>'
+              + '<th>Date</th><th>Segment</th><th class="num">In person</th><th class="num">Virtual</th><th class="num">Total</th>'
+              + '</tr></thead><tbody>';
+            tallies.forEach(function (t){
+              var top = (t.total_available === best && best > 0) ? ' class="top"' : '';
+              html += '<tr' + top + '><td>' + fmtDate(t.slot_date) + '</td>'
+                + '<td>' + esc(SEG_LABEL[t.segment] || t.segment) + '</td>'
+                + '<td class="num">' + (t.in_person_count || 0) + '</td>'
+                + '<td class="num">' + (t.virtual_count || 0) + '</td>'
+                + '<td class="num"><b>' + (t.total_available || 0) + '</b></td></tr>';
+            });
+            html += '</tbody></table></div>';
+          }
+          html += '</div>';
+
+          // Roster status
+          html += '<div class="br-section"><h3>Who&rsquo;s in</h3>'
+            + '<p class="sub">' + submitted.length + ' submitted, ' + pending.length + ' pending.</p>'
+            + '<ul class="roster-list">';
+          roster.forEach(function (r){
+            var badge = r.has_submitted
+              ? '<span class="pill yes">In ' + (r.submitted_at ? '&middot; ' + esc(fmtWhen(r.submitted_at)) : '') + '</span>'
+              : '<span class="pill no">Pending</span>';
+            html += '<li><span class="who">' + esc(r.full_name)
+              + (r.role_label ? '<small>' + esc(r.role_label) + '</small>' : '')
+              + '</span>' + badge + '</li>';
+          });
+          html += '</ul></div>';
+
+          // Per-person detail
+          html += '<div class="br-section"><h3>Detail</h3>'
+            + '<p class="sub">Each person&rsquo;s picks and notes.</p>';
+          if (!detail.length) {
+            html += '<div class="br-empty">No submissions yet.</div>';
+          } else {
+            detail.forEach(function (p){
+              html += '<div class="person"><h4>' + esc(p.respondent_name || 'Unknown')
+                + ' <span style="font-weight:400;color:rgba(255,255,255,.45);font-size:.8rem">' + esc(fmtWhen(p.submitted_at)) + '</span></h4>';
+              html += '<div class="chips">';
+              (p.slots || []).forEach(function (s){
+                var cls = s.mode === 'in_person' ? 'in' : 'vi';
+                var modeLabel = s.mode === 'in_person' ? 'In person' : 'Virtual';
+                html += '<span class="chip">' + fmtDate(s.slot_date) + ' <b>' + esc(SEG_LABEL[s.segment] || s.segment) + '</b> '
+                  + '<span class="pill ' + cls + '">' + modeLabel + '</span></span>';
+              });
+              html += '</div>';
+              if (p.notes) html += '<div class="notes">' + esc(p.notes) + '</div>';
+              html += '</div>';
+            });
+          }
+          html += '</div>';
+
+          document.getElementById('shellBody').innerHTML = html;
+          var rb = document.getElementById('brRefresh');
+          if (rb) rb.addEventListener('click', function () { load(window.__brToken, true); });
+        }
+
+        function showError(msg){
+          document.getElementById('shellBody').innerHTML =
+            '<div class="br-error">' + esc(msg) + '</div>';
+        }
+
+        function load(token, isRefresh){
+          window.__brToken = token;
+          var body = document.getElementById('shellBody');
+          if (body && !isRefresh) body.innerHTML = '<div class="br-empty">Loading results&hellip;</div>';
+          fetch(ENDPOINT, { headers: { Authorization: 'Bearer ' + token }, cache: 'no-store' })
+            .then(function (res){
+              return res.json().then(function (j){ return { ok: res.ok, status: res.status, body: j }; });
+            })
+            .then(function (r){
+              if (!r.ok || !r.body || r.body.ok === false) {
+                var e = (r.body && r.body.error) || ('http_' + r.status);
+                if (e === 'not_admin') return showError('Your account is signed in but does not have admin access to these results.');
+                if (e === 'server_misconfigured') return showError('Server is missing Supabase credentials. Set SUPABASE_SERVICE_ROLE_KEY in Netlify.');
+                return showError('Could not load results (' + esc(e) + ').');
+              }
+              render(r.body);
+            })
+            .catch(function (err){ showError('Network error: ' + (err && err.message || err)); });
+        }
+
+        document.addEventListener('admin-shell-ready', function (ev) {
+          var token = ev.detail && ev.detail.session && ev.detail.session.access_token;
+          if (!token) { showError('No session token available. Try signing in again.'); return; }
+          load(token, false);
+        });
+      })();
+    </script>
+    <script src="/admin/admin-responsive.js" defer></script>
+  </body>
+</html>

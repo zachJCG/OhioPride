@@ -6,99 +6,115 @@
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#152233" />
   <title>Board Retreat: August Availability</title>
-  <link rel="icon" href="/favicon.ico" />
+  <link rel="icon" href="/assets/favicon/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500;700&display=swap"
     rel="stylesheet"
   />
+  <!-- Canonical Ohio Pride PAC brand tokens + .ohp-wordmark utility (Brand Guide v2.0) -->
+  <link rel="stylesheet" href="/css/brand-tokens.css" />
   <style>
+    /* Page surface — warm cream, composed on top of the brand tokens. */
     :root{
-      --navy:#152233; --navy-footer:#0D1726; --lightblue:#70D6EC;
-      --cream:#FBF8F2; --line:#D9D5CC; --white:#fff; --ink-soft:#4a5568;
+      --page:#FBF8F2;
+      --surface:var(--brand-white);
+      --line:#E2DED4;
+      --line-strong:#CFC9BB;
+      --ink:var(--brand-navy);
+      --ink-soft:#54627A;
+      --weekend:#F2EEE4;
     }
     *{box-sizing:border-box}
     html,body{margin:0}
     body{
-      background:var(--cream); color:var(--navy);
-      font-family:'Roboto Slab',Georgia,serif; line-height:1.6;
+      background:var(--page); color:var(--ink);
+      font-family:var(--brand-font-body); line-height:1.6;
       -webkit-font-smoothing:antialiased;
     }
 
-    /* Progress Pride accent stripe — accent only, never chrome/text */
-    .stripe{height:6px;background:linear-gradient(90deg,#E40303,#FFBC00,#FFED00,#008026,#004DFF,#750787)}
+    /* Progress Pride accent — thin sweep only, never chrome/text (Brand Guide v2.0). */
+    .stripe{height:6px;background:var(--brand-pride-gradient-h)}
 
-    /* Brand header — wordmark per brand construction, not rebuilt from type */
-    .ohp-head{background:var(--navy);padding:16px 18px}
-    .ohp-head-inner{max-width:760px;margin:0 auto;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-    .wm{font-family:'Montserrat',system-ui,sans-serif;font-weight:800;letter-spacing:.01em;
-      font-size:1.35rem;line-height:1;display:inline-flex;align-items:baseline;gap:.4ch}
-    .wm .ohio{color:#fff}
-    .wm .pride{color:var(--lightblue)}
-    .wm .pac{font-weight:700;font-size:.5em;letter-spacing:.22em;color:var(--lightblue);
-      text-transform:uppercase;align-self:center;padding-left:.15em;
-      border-left:1px solid rgba(255,255,255,.35);margin-left:.15em;padding-left:.55em}
-    .ohp-head .eyebrow{font-family:'Montserrat',sans-serif;font-weight:700;text-transform:uppercase;
-      letter-spacing:.18em;font-size:.62rem;color:rgba(255,255,255,.6)}
+    /* Brand header — official .ohp-wordmark component on a navy band. */
+    .ohp-head{background:var(--brand-navy);padding:18px}
+    .ohp-head-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;
+      justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .ohp-head .ohp-wordmark{font-size:1.5rem}
+    .ohp-head .eyebrow{font-family:var(--brand-font-display);font-weight:700;
+      text-transform:uppercase;letter-spacing:.2em;font-size:.62rem;
+      color:var(--brand-text-on-navy-dim)}
 
-    .wrap{max-width:760px;margin:0 auto;padding:26px 18px 90px}
-    h1{font-family:'Montserrat',system-ui,sans-serif;font-weight:800;
-      letter-spacing:-.02em;font-size:1.7rem;line-height:1.1;margin:.1em 0 .35em}
-    .lede{margin:0 0 22px;font-size:1rem}
+    .wrap{max-width:760px;margin:0 auto;padding:28px 18px 96px}
+    .eyebrow-top{font-family:var(--brand-font-display);font-weight:700;
+      text-transform:uppercase;letter-spacing:.18em;font-size:.7rem;
+      color:var(--ink-soft);margin:0 0 6px}
+    h1{font-family:var(--brand-font-display);font-weight:800;
+      letter-spacing:var(--brand-wordmark-tracking);font-size:1.75rem;line-height:1.08;
+      margin:0 0 .4em}
+    .lede{margin:0 0 24px;font-size:1rem;max-width:60ch}
 
-    label{display:block;font-family:'Montserrat',sans-serif;font-weight:700;
-      text-transform:uppercase;font-size:.78rem;letter-spacing:.05em;margin:20px 0 6px}
-    select,textarea{width:100%;padding:12px;border:1px solid var(--line);
-      border-radius:8px;font-size:1rem;background:var(--white);color:var(--navy);
-      font-family:inherit}
-    select:focus,textarea:focus{outline:none;border-color:var(--navy);
-      box-shadow:0 0 0 3px rgba(21,34,51,.12)}
+    label{display:block;font-family:var(--brand-font-display);font-weight:700;
+      text-transform:uppercase;font-size:.78rem;letter-spacing:.05em;margin:22px 0 6px}
+    select,textarea{width:100%;padding:12px;border:1px solid var(--line-strong);
+      border-radius:var(--brand-radius-sm);font-size:1rem;background:var(--surface);
+      color:var(--ink);font-family:inherit}
+    select:focus,textarea:focus{outline:none;border-color:var(--brand-navy);
+      box-shadow:var(--brand-focus-ring)}
     textarea{resize:vertical;min-height:78px}
 
-    .legend{background:var(--white);border:1px solid var(--line);border-radius:10px;
-      padding:14px 16px;margin:14px 0;font-size:.92rem}
-    .legend strong{font-family:'Montserrat',sans-serif}
+    .legend{background:var(--surface);border:1px solid var(--line);
+      border-radius:var(--brand-radius-md);padding:14px 16px;margin:14px 0;font-size:.92rem}
+    .legend strong{font-family:var(--brand-font-display)}
     .legend .row{display:flex;align-items:center;gap:9px;margin:7px 0}
     .swatch{width:20px;height:20px;border-radius:5px;flex:0 0 auto}
-    .sw0{background:var(--white);border:1px solid var(--line)}
-    .sw1{background:var(--navy)}
-    .sw2{background:var(--lightblue)}
-    .times{font-size:.85rem;color:var(--ink-soft);margin-top:10px;border-top:1px dashed var(--line);padding-top:9px}
+    .sw0{background:var(--surface);border:1px solid var(--line-strong)}
+    .sw1{background:var(--brand-navy)}
+    .sw2{background:var(--brand-light-blue)}
+    .times{font-size:.85rem;color:var(--ink-soft);margin-top:10px;
+      border-top:1px dashed var(--line-strong);padding-top:9px}
 
-    .grid{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--white)}
+    .grid{border:1px solid var(--line);border-radius:var(--brand-radius-md);
+      overflow:hidden;background:var(--surface)}
     .day{display:flex;flex-wrap:wrap;align-items:center;gap:8px;
       padding:9px 10px;border-bottom:1px solid var(--line)}
     .day:last-child{border-bottom:0}
-    .day.weekend{background:#F3EFE6}
-    .daylabel{font-family:'Montserrat',sans-serif;font-weight:700;
-      min-width:112px;font-size:.95rem;background:none;border:0;color:var(--navy);
+    .day.weekend{background:var(--weekend)}
+    .daylabel{font-family:var(--brand-font-display);font-weight:700;
+      min-width:112px;font-size:.95rem;background:none;border:0;color:var(--ink);
       text-align:left;padding:6px 4px;cursor:pointer;border-radius:6px}
-    .daylabel:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+    .daylabel:focus-visible{outline:2px solid var(--brand-navy);outline-offset:2px}
     .daylabel .wk{display:block;font-weight:400;font-size:.7rem;color:var(--ink-soft)}
     .segs{display:flex;gap:8px;flex:1 1 260px}
-    .seg{flex:1 1 84px;min-height:46px;border:1px solid var(--line);border-radius:8px;
-      background:var(--white);color:var(--navy);font-family:'Montserrat',sans-serif;
-      font-weight:700;font-size:.82rem;cursor:pointer;padding:6px 4px;line-height:1.1}
+    .seg{flex:1 1 84px;min-height:46px;border:1px solid var(--line-strong);
+      border-radius:var(--brand-radius-sm);background:var(--surface);color:var(--ink);
+      font-family:var(--brand-font-display);font-weight:700;font-size:.82rem;
+      cursor:pointer;padding:6px 4px;line-height:1.1;transition:var(--brand-transition)}
     .seg small{display:block;font-weight:400;font-size:.68rem;opacity:.72;margin-top:2px}
-    .seg:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
-    .seg[data-state="1"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+    .seg:focus-visible{outline:2px solid var(--brand-navy);outline-offset:2px}
+    .seg[data-state="1"]{background:var(--brand-navy);color:#fff;border-color:var(--brand-navy)}
     .seg[data-state="1"] small{opacity:.85}
-    .seg[data-state="2"]{background:var(--lightblue);color:var(--navy);border-color:var(--lightblue)}
+    .seg[data-state="2"]{background:var(--brand-light-blue);color:var(--brand-navy);
+      border-color:var(--brand-light-blue)}
 
-    .submit{margin-top:24px;width:100%;padding:16px;border:0;border-radius:10px;
-      background:var(--navy);color:#fff;font-family:'Montserrat',sans-serif;
-      font-weight:800;font-size:1.05rem;letter-spacing:.01em;cursor:pointer}
-    .submit:hover:not(:disabled){background:#1c2f47}
+    .submit{margin-top:24px;width:100%;padding:16px;border:0;
+      border-radius:var(--brand-radius-md);background:var(--brand-navy);color:#fff;
+      font-family:var(--brand-font-display);font-weight:800;font-size:1.05rem;
+      letter-spacing:.01em;cursor:pointer;transition:var(--brand-transition)}
+    .submit:hover:not(:disabled){background:var(--brand-navy-light)}
     .submit:disabled{opacity:.55;cursor:default}
 
-    .msg{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:.93rem;display:none}
-    .msg.err{background:#FDE8E8;color:#8A1C1C;display:block}
+    .msg{margin-top:14px;padding:12px 14px;border-radius:var(--brand-radius-sm);
+      font-size:.93rem;display:none}
+    .msg.err{background:#FCE8E6;color:#8A1C1C;display:block}
     .msg.ok{background:#E6F4EA;color:#1B5E20;display:block}
 
-    .card{background:var(--white);border:1px solid var(--line);border-radius:12px;
-      padding:30px;text-align:center;margin-top:8px}
-    .card h2{font-family:'Montserrat',sans-serif;font-weight:800;margin:.1em 0 .4em;font-size:1.5rem}
+    .card{background:var(--surface);border:1px solid var(--line);
+      border-radius:var(--brand-radius-lg);padding:30px;text-align:center;margin-top:8px}
+    .card h2{font-family:var(--brand-font-display);font-weight:800;
+      margin:.1em 0 .4em;font-size:1.5rem}
     .card p{margin:0;color:var(--ink-soft)}
     .loading{color:var(--ink-soft);font-size:.95rem;padding:8px 2px}
 
@@ -114,13 +130,20 @@
   <div class="stripe"></div>
   <header class="ohp-head">
     <div class="ohp-head-inner">
-      <span class="wm"><span class="ohio">OHIO</span><span class="pride">PRIDE</span><span class="pac">PAC</span></span>
-      <span class="eyebrow">Board Retreat</span>
+      <span class="ohp-wordmark" aria-label="Ohio Pride PAC">
+        <span class="ohp-wordmark__row">
+          <span class="ohp-wordmark__ohio">OHIO</span>
+          <span class="ohp-wordmark__pride">PRIDE</span>
+        </span>
+        <span class="ohp-wordmark__pac">PAC</span>
+      </span>
+      <span class="eyebrow">Internal &middot; Board Retreat</span>
     </div>
   </header>
 
   <div class="wrap">
     <div id="form-view" hidden>
+      <p class="eyebrow-top">August 2026</p>
       <h1>Board Retreat: August Availability</h1>
       <p class="lede">Pick every day-segment you could make it, and mark each one In Person or Virtual. In-person in Columbus is the goal, but virtual is available if you need it. Takes about two minutes.</p>
 
@@ -134,7 +157,7 @@
         <div class="row"><span class="swatch sw0"></span> Blank: <strong>not available</strong></div>
         <div class="row"><span class="swatch sw1"></span> In Person: available, can be in Columbus</div>
         <div class="row"><span class="swatch sw2"></span> Virtual: available, virtual only</div>
-        <div class="times">Morning 8:00a&nbsp;–&nbsp;12:00p&nbsp;&middot;&nbsp; Afternoon 12:00p&nbsp;–&nbsp;5:00p&nbsp;&middot;&nbsp; Evening 5:00p&nbsp;–&nbsp;8:00p. Leaving a slot blank means you are not available then.</div>
+        <div class="times">Morning 8:00a&nbsp;&ndash;&nbsp;12:00p&nbsp;&middot;&nbsp; Afternoon 12:00p&nbsp;&ndash;&nbsp;5:00p&nbsp;&middot;&nbsp; Evening 5:00p&nbsp;&ndash;&nbsp;8:00p. Leaving a slot blank means you are not available then.</div>
       </div>
 
       <div id="grid" class="grid" role="group" aria-label="August availability grid"></div>
@@ -146,7 +169,7 @@
       <div id="msg" class="msg" role="alert" aria-live="assertive"></div>
     </div>
 
-    <div id="loading-view" class="loading">Loading the roster…</div>
+    <div id="loading-view" class="loading">Loading the roster&hellip;</div>
 
     <div id="done-view" class="card" hidden>
       <h2>Thanks, <span id="done-name"></span>.</h2>
