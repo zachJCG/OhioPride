@@ -192,6 +192,13 @@
     const SEGMENTS = [['morning','Morning'],['afternoon','Afternoon'],['evening','Evening']];
     const YEAR = 2026, MONTH = 8; // August 2026
     const DAYS = 31;
+    // Retired dates — hard conflicts for the Director or Secretary, or three of
+    // four submitters out. These are skipped when the grid is built so no one can
+    // pick them. Edit this set to add/remove retired dates later.
+    const EXCLUDED_DATES = new Set([
+      '2026-08-01', '2026-08-08', '2026-08-15',
+      '2026-08-16', '2026-08-22', '2026-08-23',
+    ]);
     const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     const STATE_LABEL = ['Not available','In Person','Virtual'];
 
@@ -215,6 +222,7 @@
       for(let d=1; d<=DAYS; d++){
         const dd = String(d).padStart(2,'0');
         const date = `${YEAR}-${String(MONTH).padStart(2,'0')}-${dd}`;
+        if(EXCLUDED_DATES.has(date)) continue; // retired date — never render or seed state
         const dow = new Date(Date.UTC(YEAR, MONTH-1, d)).getUTCDay();
         const weekend = (dow===0 || dow===6);
 
