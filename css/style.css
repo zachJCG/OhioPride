@@ -126,6 +126,28 @@ body::before {
   );
 }
 
+/* --- Photography treatment (graphic refresh) ---------------------------
+   Photos always sit under the navy scrim so text stays White on Navy per
+   brand, with the diagonal stripe texture above the photo at low opacity
+   for continuity with the rest of the site. Compose per page as:
+     background-image: var(--photo-texture), var(--photo-scrim), url(...);
+     background-size: auto, cover, cover;
+   ----------------------------------------------------------------------- */
+:root {
+  --photo-scrim: linear-gradient(
+    180deg,
+    rgba(21, 34, 51, 0.78),
+    rgba(13, 23, 38, 0.92)
+  );
+  --photo-texture: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(255, 255, 255, 0.015) 40px,
+    rgba(255, 255, 255, 0.015) 80px
+  );
+}
+
 h1,
 h2,
 h3,
