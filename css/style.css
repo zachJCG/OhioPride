@@ -419,10 +419,7 @@ img {
 }
 
 .hero-gradient {
-  background: var(--pride-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-light-blue);
 }
 
 .hero-sub {
@@ -689,10 +686,7 @@ img {
   font-family: "Montserrat", sans-serif;
   font-size: 42px;
   font-weight: 700;
-  background: var(--pride-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-light-blue);
   line-height: 1.1;
 }
 
@@ -1457,10 +1451,7 @@ img {
   font-family: "Montserrat", sans-serif;
   font-size: 32px;
   font-weight: 700;
-  background: var(--pride-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-light-blue);
   margin-bottom: 8px;
 }
 

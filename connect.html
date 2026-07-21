@@ -547,7 +547,7 @@
     <div class="contact-card">
         <h2>Or send us a note.</h2>
         <p class="subtitle">Prefer to write first? We'll get back within a couple of business days.</p>
-        <form id="connectForm" name="connect" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <form id="connectForm" name="connect" method="post" action="/api/form-submit">
             <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
             <input type="hidden" name="form-name" value="connect">
 

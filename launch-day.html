@@ -727,7 +727,7 @@
         <p class="rsvp-eyebrow">RSVP</p>
         <h2>I'll be there.</h2>
         <p class="rsvp-subtitle">Tell us you're coming and we'll send the final logistics a few days out.</p>
-        <form id="rsvpForm" name="launch-day-rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-launch-form data-source="launch-day-rsvp">
+        <form id="rsvpForm" name="launch-day-rsvp" method="post" action="/api/form-submit" data-launch-form data-source="launch-day-rsvp">
             <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
             <input type="hidden" name="form-name" value="launch-day-rsvp">
             <div class="form-row full">

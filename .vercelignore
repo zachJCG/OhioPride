@@ -3,3 +3,19 @@
 #  the Netlify site keeps working as the one-week rollback fallback, but it
 #  should not ship as static assets on Vercel.)
 netlify/
+
+# Internal working files, stale site snapshots, and source materials that must
+# never be served publicly from ohiopride.org. The /api functions import from
+# lib/, so lib/ is deliberately NOT ignored here.
+Update/
+OhioPride-Refocused/
+oppr-fix/
+patches/
+ohiopride-pr-bundle 3/
+docs/
+scripts/
+supabase/
+assets/img/src/
+*.md
+*.sql
+*.xlsx
