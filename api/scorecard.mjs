@@ -33,6 +33,8 @@ const json = (status, body, cacheSeconds = 300) =>
     },
   });
 
+export const config = { runtime: "edge" };
+
 export default async (_req) => {
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {

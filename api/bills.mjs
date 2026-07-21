@@ -65,6 +65,8 @@ function reshapeBill(row, pipelineSteps) {
   };
 }
 
+export const config = { runtime: "edge" };
+
 export default async (req) => {
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {

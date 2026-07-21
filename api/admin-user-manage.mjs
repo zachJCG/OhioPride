@@ -70,6 +70,8 @@ function validEmail(s) {
   return typeof s === 'string' && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s);
 }
 
+export const config = { runtime: "edge" };
+
 export default async (req) => {
   if (req.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' });
 

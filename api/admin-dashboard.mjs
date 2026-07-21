@@ -60,6 +60,8 @@ function relative(d) {
   return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
+export const config = { runtime: "edge" };
+
 export default async (req, _ctx) => {
   if (req.method !== 'GET') return json(405, { ok: false, error: 'method_not_allowed' });
 

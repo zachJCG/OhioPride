@@ -28,6 +28,8 @@ const normaliseZip = (raw) => {
     return digits.slice(0, 5).padStart(5, '0');
 };
 
+export const config = { runtime: "edge" };
+
 export default async (req) => {
     const url = new URL(req.url);
     const zip = normaliseZip(url.searchParams.get('zip'));

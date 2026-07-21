@@ -45,6 +45,8 @@ function clientIp(req) {
   return req.headers.get('x-real-ip') || req.headers.get('x-nf-client-connection-ip') || null;
 }
 
+export const config = { runtime: "edge" };
+
 export default async (req, _context) => {
   if (req.method !== 'POST') {
     return jsonResponse(405, { ok: false, error: 'method_not_allowed' });

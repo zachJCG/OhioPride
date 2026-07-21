@@ -18,6 +18,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 
+export const config = { runtime: "edge" };
+
 export default async (_req, _context) => {
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
 

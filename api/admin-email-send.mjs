@@ -63,6 +63,8 @@ async function requireCommsAdmin(req) {
   return { sb };
 }
 
+export const config = { runtime: "edge" };
+
 export default async (req) => {
   const gate = await requireCommsAdmin(req);
   if (gate.error) return gate.error;

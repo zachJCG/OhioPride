@@ -24,6 +24,8 @@ function formatAmount(cents, recurrence) {
   return recurrence === 'monthly' ? `$${formatted}/month` : `$${formatted} one-time`;
 }
 
+export const config = { runtime: "edge" };
+
 export default async (_req, _context) => {
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
 

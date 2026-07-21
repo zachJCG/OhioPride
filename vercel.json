@@ -2,9 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "functions": {
-    "api/actblue-sync.mjs": { "maxDuration": 60 }
-  },
   "crons": [
     { "path": "/api/actblue-sync", "schedule": "0 * * * *" }
   ],

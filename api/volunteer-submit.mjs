@@ -85,6 +85,8 @@ function clientIp(req) {
 // =============================================================================
 // Handler
 // =============================================================================
+export const config = { runtime: "edge" };
+
 export default async (req, _context) => {
   if (req.method !== 'POST') {
     return jsonResponse(405, { ok: false, error: 'method_not_allowed' });

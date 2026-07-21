@@ -33,7 +33,8 @@ const LOOKBACK_HOURS = 48;
 const ACTBLUE_CSV_ENDPOINT = 'https://secure.actblue.com/api/v1/contributions';
 
 function basicAuthHeader(u, p) {
-  return 'Basic ' + Buffer.from(`${u}:${p}`).toString('base64');
+  // btoa (not Node's Buffer) so this runs on the Vercel Edge runtime.
+  return 'Basic ' + btoa(`${u}:${p}`);
 }
 
 function splitCsvLine(line) {
@@ -96,6 +97,8 @@ function detectRecurrence(row) {
   }
   return 'one_time';
 }
+
+export const config = { runtime: "edge" };
 
 export default async (_req, _context) => {
   const started = Date.now();

@@ -66,6 +66,8 @@ function buildDisclaimer(entity, officers) {
   return `Paid for by ${entityName}. ${officerParts}`;
 }
 
+export const config = { runtime: "edge" };
+
 export default async (req, _context) => {
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
 
