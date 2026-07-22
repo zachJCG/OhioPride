@@ -45,6 +45,12 @@
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
       ]
+    },
+    {
+      "source": "/PRTraining",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
+      ]
     }
   ],
   "redirects": [
@@ -57,7 +63,8 @@
     { "source": "/gala", "destination": "/", "permanent": true },
     { "source": "/gala.html", "destination": "/", "permanent": true },
     { "source": "/sponsorship", "destination": "/", "permanent": true },
-    { "source": "/priorities", "destination": "/", "permanent": true }
+    { "source": "/priorities", "destination": "/", "permanent": true },
+    { "source": "/prtraining", "destination": "/PRTraining", "permanent": false }
   ],
   "rewrites": [
     { "source": "/.netlify/functions/:name", "destination": "/api/:name" },
