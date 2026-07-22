@@ -145,6 +145,31 @@
           height: auto;
         }
       }
+
+      /* Photo band: Columbus skyline at golden hour, under the standard
+         navy scrim (see .photo-band in style.css). */
+      .contact-hero {
+        --band-image-fallback: url("/assets/img/columbus-skyline-1280.jpg");
+        --band-image: image-set(
+          url("/assets/img/columbus-skyline-1280.avif") type("image/avif"),
+          url("/assets/img/columbus-skyline-1280.webp") type("image/webp"),
+          url("/assets/img/columbus-skyline-1280.jpg") type("image/jpeg")
+        );
+        min-height: 260px;
+        display: flex;
+        align-items: center;
+      }
+      .contact-hero .container { width: 100%; }
+      @media (max-width: 767px) {
+        .contact-hero {
+          --band-image-fallback: url("/assets/img/columbus-skyline-768.jpg");
+          --band-image: image-set(
+            url("/assets/img/columbus-skyline-768.avif") type("image/avif"),
+            url("/assets/img/columbus-skyline-768.webp") type("image/webp"),
+            url("/assets/img/columbus-skyline-768.jpg") type("image/jpeg")
+          );
+        }
+      }
     </style>
   <link rel="stylesheet" href="/css/site-template.css">
   </head>
@@ -152,7 +177,7 @@
 <div id="site-header"></div>
 
     <!-- Hero -->
-    <header class="contact-hero">
+    <header class="contact-hero photo-band">
       <div class="container">
         <h1 class="section-title">Get in Touch</h1>
         <p class="subpage-hero-sub">

@@ -784,6 +784,20 @@
     </div>
 </div>
 
+<!-- First party launch day photos. Ships hidden until real event photos land.
+     Workflow: drop originals into assets/img/src/events/, run
+     node scripts/build-images.mjs, replace the placeholder figure blocks
+     below with the generated picture markup, then remove the hidden
+     attribute from the section. Only name speakers in alt text after Zach
+     confirms names and spellings. No stock imagery in this section. -->
+<section id="launch-photos" hidden aria-hidden="true">
+    <div class="launch-photos-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;max-width:1100px;margin:0 auto;padding:0 2rem;">
+        <figure>
+            <!-- <picture> markup from scripts/build-images.mjs goes here -->
+        </figure>
+    </div>
+</section>
+
 <div id="site-footer"></div>
 
 <script src="/js/enhancements.js"></script>

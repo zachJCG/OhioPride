@@ -2408,3 +2408,26 @@ html.reveal-ready .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0
   outline: 2px solid var(--color-light-blue);
   outline-offset: 2px;
 }
+
+/* --- Opt-in photo band (graphic refresh) --------------------------------
+   A page adds class="photo-band" to its title band element and sets two
+   custom properties on that element in its own styles:
+     --band-image-fallback: url("/assets/img/slug-1280.jpg");
+     --band-image: image-set(avif, webp, jpg);
+   Swap both to the -768 variants inside a max-width 767px media query.
+   Kept at the end of this sheet so it wins over earlier background
+   shorthands like .subpage-hero at equal specificity. */
+.photo-band {
+  position: relative;
+  background-color: var(--dark-bg);
+  background-image: var(--photo-texture), var(--photo-scrim),
+    var(--band-image-fallback, none);
+  background-size: auto, cover, cover;
+  background-position: center;
+}
+@supports (background-image: image-set(url("/a.avif") type("image/avif"))) {
+  .photo-band {
+    background-image: var(--photo-texture), var(--photo-scrim),
+      var(--band-image, var(--band-image-fallback, none));
+  }
+}

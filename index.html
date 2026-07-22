@@ -41,6 +41,13 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style.css" />
+    <link
+      rel="preload"
+      as="image"
+      imagesrcset="/assets/img/ohio-statehouse-hero-768.avif 768w, /assets/img/ohio-statehouse-hero-1280.avif 1280w, /assets/img/ohio-statehouse-hero-1920.avif 1920w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
     <style>
       body {
         background: var(--dark-bg);
@@ -49,13 +56,60 @@
       .home-hero {
         padding: calc(var(--nav-height) + 2rem) 2rem 4rem;
         text-align: center;
-        max-width: 900px;
-        margin: 0 auto;
       }
 
+      /* Ohio Statehouse west facade under the standard navy scrim, with the
+         site stripe texture above the photo. The section is full bleed; the
+         content column below stays at the original 900px width. */
       .home-hero {
         position: relative;
         overflow: hidden;
+        background-color: var(--dark-bg);
+        background-image: var(--photo-texture), var(--photo-scrim),
+          url("/assets/img/ohio-statehouse-hero-1280.jpg");
+        background-size: auto, cover, cover;
+        background-position: center;
+      }
+      @supports (
+        background-image: image-set(url("/a.avif") type("image/avif"))
+      ) {
+        .home-hero {
+          background-image: var(--photo-texture), var(--photo-scrim),
+            image-set(
+              url("/assets/img/ohio-statehouse-hero-1280.avif")
+                type("image/avif"),
+              url("/assets/img/ohio-statehouse-hero-1280.webp")
+                type("image/webp"),
+              url("/assets/img/ohio-statehouse-hero-1280.jpg")
+                type("image/jpeg")
+            );
+        }
+        @media (max-width: 767px) {
+          .home-hero {
+            background-image: var(--photo-texture), var(--photo-scrim),
+              image-set(
+                url("/assets/img/ohio-statehouse-hero-768.avif")
+                  type("image/avif"),
+                url("/assets/img/ohio-statehouse-hero-768.webp")
+                  type("image/webp"),
+                url("/assets/img/ohio-statehouse-hero-768.jpg")
+                  type("image/jpeg")
+              );
+          }
+        }
+        @media (min-width: 1440px) {
+          .home-hero {
+            background-image: var(--photo-texture), var(--photo-scrim),
+              image-set(
+                url("/assets/img/ohio-statehouse-hero-1920.avif")
+                  type("image/avif"),
+                url("/assets/img/ohio-statehouse-hero-1920.webp")
+                  type("image/webp"),
+                url("/assets/img/ohio-statehouse-hero-1920.jpg")
+                  type("image/jpeg")
+              );
+          }
+        }
       }
       .home-hero::before {
         content: "";
@@ -68,6 +122,9 @@
       .home-hero > * {
         position: relative;
         z-index: 1;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
       }
       .hero-badge {
         display: inline-block;

@@ -526,13 +526,38 @@
         .vform-step-title { font-size: 19px; }
         .vform-paths { grid-template-columns: 1fr; }
       }
+
+      /* Photo band: progress pride flag waving, under the standard navy
+         scrim (see .photo-band in style.css). Forms below are untouched. */
+      .subpage-hero {
+        --band-image-fallback: url("/assets/img/progress-pride-flag-1280.jpg");
+        --band-image: image-set(
+          url("/assets/img/progress-pride-flag-1280.avif") type("image/avif"),
+          url("/assets/img/progress-pride-flag-1280.webp") type("image/webp"),
+          url("/assets/img/progress-pride-flag-1280.jpg") type("image/jpeg")
+        );
+        min-height: clamp(280px, 32vh, 360px);
+        display: flex;
+        align-items: center;
+      }
+      .subpage-hero .container { width: 100%; }
+      @media (max-width: 767px) {
+        .subpage-hero {
+          --band-image-fallback: url("/assets/img/progress-pride-flag-768.jpg");
+          --band-image: image-set(
+            url("/assets/img/progress-pride-flag-768.avif") type("image/avif"),
+            url("/assets/img/progress-pride-flag-768.webp") type("image/webp"),
+            url("/assets/img/progress-pride-flag-768.jpg") type("image/jpeg")
+          );
+        }
+      }
     </style>
   </head>
   <body>
     <div id="site-header"></div>
 
     <!-- Hero -->
-    <section class="subpage-hero">
+    <section class="subpage-hero photo-band">
       <div class="container">
         <div class="section-label">Get Involved</div>
         <h1 class="section-title">Power statewide. Built by people who show up.</h1>

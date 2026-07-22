@@ -1851,6 +1851,37 @@
       .subpage-hero h1 { color: #000 !important; }
       .subpage-hero p { color: #333 !important; }
     }
+    /* Slim photo banner: Ohio Statehouse rotunda dome under the standard
+       navy scrim (see .photo-band in style.css). Hidden under 640px so the
+       table stays above the fold on mobile, and stripped for print. */
+    .subpage-hero {
+      --band-image-fallback: url("/assets/img/ohio-statehouse-rotunda-1280.jpg");
+      --band-image: image-set(
+        url("/assets/img/ohio-statehouse-rotunda-1280.avif") type("image/avif"),
+        url("/assets/img/ohio-statehouse-rotunda-1280.webp") type("image/webp"),
+        url("/assets/img/ohio-statehouse-rotunda-1280.jpg") type("image/jpeg")
+      );
+      min-height: 240px;
+      display: flex;
+      align-items: center;
+    }
+    .subpage-hero .container { width: 100%; }
+    @media (max-width: 639px) {
+      .subpage-hero {
+        --band-image-fallback: none;
+        --band-image: none;
+        min-height: 0;
+        display: block;
+      }
+    }
+    @media print {
+      .subpage-hero {
+        --band-image-fallback: none;
+        --band-image: none;
+        min-height: 0;
+        display: block;
+      }
+    }
   </style>
 
   <!-- html2canvas for instagram image generator (deferred, only loaded once) -->
@@ -1862,7 +1893,7 @@
   <main id="main">
 
   <!-- Hero -->
-  <section class="subpage-hero">
+  <section class="subpage-hero photo-band">
     <div class="container">
       <p class="section-label reveal">Legislative Scorecard</p>
       <h1 class="section-title reveal" style="font-size: clamp(32px, 5vw, 48px); margin-bottom: 12px;">

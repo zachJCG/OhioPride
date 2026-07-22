@@ -42,9 +42,50 @@
         position: relative;
         padding: 5rem 2rem 3rem;
         text-align: center;
-        max-width: 900px;
-        margin: 0 auto;
         overflow: hidden;
+    }
+    .hero > * {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* Photo band: Columbus skyline at golden hour under the standard navy
+       scrim, with the site stripe texture above the photo. This page does
+       not link /css/style.css, so the treatment is inlined here. */
+    .hero.photo-band {
+        background-color: var(--navy);
+        background-image:
+            repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 80px),
+            linear-gradient(180deg, rgba(21,34,51,0.78), rgba(13,23,38,0.92)),
+            url("/assets/img/columbus-skyline-1280.jpg");
+        background-size: auto, cover, cover;
+        background-position: center;
+    }
+    @supports (background-image: image-set(url("/a.avif") type("image/avif"))) {
+        .hero.photo-band {
+            background-image:
+                repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 80px),
+                linear-gradient(180deg, rgba(21,34,51,0.78), rgba(13,23,38,0.92)),
+                image-set(
+                    url("/assets/img/columbus-skyline-1280.avif") type("image/avif"),
+                    url("/assets/img/columbus-skyline-1280.webp") type("image/webp"),
+                    url("/assets/img/columbus-skyline-1280.jpg") type("image/jpeg")
+                );
+        }
+        @media (max-width: 767px) {
+            .hero.photo-band {
+                background-image:
+                    repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 80px),
+                    linear-gradient(180deg, rgba(21,34,51,0.78), rgba(13,23,38,0.92)),
+                    image-set(
+                        url("/assets/img/columbus-skyline-768.avif") type("image/avif"),
+                        url("/assets/img/columbus-skyline-768.webp") type("image/webp"),
+                        url("/assets/img/columbus-skyline-768.jpg") type("image/jpeg")
+                    );
+            }
+        }
     }
     .hero::before {
         content: '';
@@ -475,7 +516,7 @@
 <body>
 <div id="site-header"></div>
 
-<section class="hero">
+<section class="hero photo-band">
     <div class="hero-eyebrow">
         <span>Connect with Ohio Pride</span>
     </div>
