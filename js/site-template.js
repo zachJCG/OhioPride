@@ -309,12 +309,28 @@
     });
   }
 
+  // Vercel Web Analytics + Speed Insights. Cookieless, so no consent banner
+  // is needed. Script tags inside injected innerHTML never execute, so these
+  // are appended programmatically. Until the two products are enabled on the
+  // Vercel project the scripts 404 quietly and nothing else changes.
+  function injectVercelInsights() {
+    ['/_vercel/insights/script.js', '/_vercel/speed-insights/script.js']
+      .forEach(function (src) {
+        if (document.querySelector('script[src="' + src + '"]')) return;
+        var s = document.createElement('script');
+        s.src = src;
+        s.defer = true;
+        document.body.appendChild(s);
+      });
+  }
+
   function render() {
     injectInto('site-header', HEADER_HTML);
     injectInto('site-footer', FOOTER_HTML);
     markActiveLink();
     wireMenuToggle();
     wireNavGroups();
+    injectVercelInsights();
 
     // Populate the leadership-driven parts of the footer if the data helper
     // is available. Guard with a typeof check so pages that forget to load
