@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Not Found | Ohio Pride</title>
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto+Slab:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #152233;
+        color: #ffffff;
+        font-family: "Roboto Slab", Georgia, serif;
+        text-align: center;
+        padding: 2rem;
+      }
+      .nf-wrap {
+        max-width: 560px;
+      }
+      .nf-wordmark {
+        width: 220px;
+        max-width: 70%;
+        height: auto;
+        margin: 0 auto 2rem;
+        display: block;
+      }
+      .nf-code {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: clamp(3.5rem, 12vw, 6rem);
+        line-height: 1;
+        color: #70d6ec;
+        margin-bottom: 0.75rem;
+      }
+      .nf-rule {
+        width: 120px;
+        height: 4px;
+        border-radius: 2px;
+        margin: 1.5rem auto;
+        background: linear-gradient(
+          135deg,
+          #e40303 0%,
+          #ffbc00 18%,
+          #ffed00 34%,
+          #008026 50%,
+          #004dff 66%,
+          #750787 82%
+        );
+      }
+      .nf-copy {
+        font-size: 1.05rem;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 2rem;
+        line-height: 1.7;
+      }
+      .nf-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+      }
+      .nf-links a {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 0.7rem 1.4rem;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 6px;
+        transition: border-color 0.2s, color 0.2s;
+      }
+      .nf-links a:hover {
+        border-color: #70d6ec;
+        color: #70d6ec;
+      }
+      .nf-links a.nf-primary {
+        background: #004dff;
+        border-color: #004dff;
+      }
+      .nf-links a.nf-primary:hover {
+        background: #0039cc;
+        border-color: #0039cc;
+        color: #ffffff;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .nf-wrap {
+          animation: nf-fade 0.5s ease-out;
+        }
+        @keyframes nf-fade {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: none;
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="nf-wrap">
+      <img
+        class="nf-wordmark"
+        src="/assets/logo/wordmark-mono-white-transparent.png"
+        alt="Ohio Pride PAC"
+        width="220"
+        height="56"
+      />
+      <div class="nf-code">404</div>
+      <div class="nf-rule" aria-hidden="true"></div>
+      <p class="nf-copy">This page does not exist.</p>
+      <nav class="nf-links" aria-label="Helpful links">
+        <a href="/">Home</a>
+        <a href="/scorecard">Scorecard</a>
+        <a href="/endorsements">Endorsements</a>
+        <a class="nf-primary" href="/donate/founding-member">Become a Founding Member</a>
+      </nav>
+    </main>
+    <script defer src="/_vercel/insights/script.js"></script>
+  </body>
+</html>

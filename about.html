@@ -260,13 +260,38 @@
       .section-number { font-size: 60px; }
       .about-tagline { letter-spacing: 3px; }
     }
+
+    /* Photo band: Ohio Statehouse side entrance with the Peace statue,
+       under the standard navy scrim (see .photo-band in style.css). */
+    .subpage-hero {
+      --band-image-fallback: url("/assets/img/ohio-statehouse-detail-1280.jpg");
+      --band-image: image-set(
+        url("/assets/img/ohio-statehouse-detail-1280.avif") type("image/avif"),
+        url("/assets/img/ohio-statehouse-detail-1280.webp") type("image/webp"),
+        url("/assets/img/ohio-statehouse-detail-1280.jpg") type("image/jpeg")
+      );
+      min-height: clamp(320px, 40vh, 420px);
+      display: flex;
+      align-items: center;
+    }
+    .subpage-hero .container { width: 100%; }
+    @media (max-width: 767px) {
+      .subpage-hero {
+        --band-image-fallback: url("/assets/img/ohio-statehouse-detail-768.jpg");
+        --band-image: image-set(
+          url("/assets/img/ohio-statehouse-detail-768.avif") type("image/avif"),
+          url("/assets/img/ohio-statehouse-detail-768.webp") type("image/webp"),
+          url("/assets/img/ohio-statehouse-detail-768.jpg") type("image/jpeg")
+        );
+      }
+    }
   </style>
 </head>
 <body>
   <div id="site-header"></div>
 
   <!-- Hero -->
-  <section class="subpage-hero">
+  <section class="subpage-hero photo-band">
     <div class="container">
       <p class="section-label reveal">About Ohio Pride</p>
       <h1 class="section-title reveal" style="font-size: clamp(32px, 5vw, 48px); margin-bottom: 12px;">

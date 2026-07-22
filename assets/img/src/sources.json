@@ -1,0 +1,77 @@
+{
+  "generated": "2026-07-21",
+  "picks": [
+    {
+      "slot": "columbus-skyline",
+      "slug": "columbus-skyline",
+      "file": "/home/user/OhioPride/assets/img/src/columbus-skyline.jpg",
+      "title": "Columbus-ohio-skyline-panorama.jpg",
+      "artist": "Tysto (Derek Jensen)",
+      "license": "Public domain (PD-self)",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Columbus-ohio-skyline-panorama.jpg",
+      "width": 3264,
+      "height": 1269,
+      "notes": "Named candidate confirmed via Commons API: LicenseShortName 'Public domain', PD-self category, AttributionRequired false. Original downloaded (2.1 MB, under 20 MB limit). Warm late-afternoon light with a large clean sky occupying the upper ~45% of frame \u2014 ideal headline overlay area \u2014 and a 2.57:1 panorama aspect that matches the connect/contact page bands with minimal cropping. No identifiable faces. Caveats: skyline is a 2005 photo (predates newer towers); a small 'SOLO' billboard and distant parked cars sit low in the street-level strip (~lower third, left-of-center) \u2014 legible only at full zoom and easily excluded by a band crop; plates illegible. Compared against category candidates: 'Reflecting Columbus Skyline at Sunset' and 'Skyline from Genoa Park' (both CC BY 2.0, allowed) have superior sunset glow but carry a clearly legible 'US Bank' rooftop logo on the skyline silhouette that cannot be cropped out; 'Columbus skyline from Scioto Audubon', 'Columbus Scioto Mile 01', 'Scioto Mile 01', 'Capital Reflections Dusk', 'Columbus Pano 2', 'Columbus from Main St. Bridge', 'Columbus panorama', 'Downtown Columbus from Scioto Greenway 1', 'NVMM from Rhodes State', 'Scioto Mile aerial from north' all rejected as CC BY-SA; PD alternative 'Downtown Columbus View from Main St Bridge - edit1' (6188x4227) is midday with a prominently legible 'BakerHostetler' sign; pasa47 CC BY shots are gray/overcast; Sam Howzit CC BY shots are harsh midday with a legible 'AEP' logo; 'Columbus Downtown skyline - panoramio' has a legible Huntington logo and a car with visible plate; 'Columbus Skyline with Supports of the Main Street Bridge' has bridge cables across frame, a crane, and a legible 'Fifth Third Bank' sign."
+    },
+    {
+      "slot": "pride-flag",
+      "slug": "progress-pride-flag",
+      "file": "/home/user/OhioPride/assets/img/src/progress-pride-flag.jpg",
+      "title": "Progress pride flag waving",
+      "artist": "Ken Whytock",
+      "license": "Unsplash License",
+      "source_url": "https://unsplash.com/photos/a-progress-pride-flag-is-waving-in-the-breeze-NVI6gFrpG4Q",
+      "width": 2934,
+      "height": 2089,
+      "notes": "Intersex-inclusive Progress Pride flag on a pole against blue sky with clouds and bare branches. Landscape, longest edge 2934px (meets 2400 min). No faces, signage, trademarks, or plates. Clean sky area across the top and upper-left for a headline overlay. Daylight rather than dusk, but colors are saturated and sky is soft; named must-use pick."
+    },
+    {
+      "slot": "pride-flag-2",
+      "slug": "progress-pride-flag-pexels",
+      "file": "/home/user/OhioPride/assets/img/src/progress-pride-flag-pexels.jpg",
+      "title": "Progress Pride Flag",
+      "artist": "Lisett Kruusimae",
+      "license": "Pexels License",
+      "source_url": "https://www.pexels.com/photo/progress-pride-flag-12289210/",
+      "width": 6240,
+      "height": 4160,
+      "notes": "Overhead shot of two people (heads cropped out of frame, no identifiable faces) draping a Progress Pride flag over pale wood flooring. Landscape 6240x4160, warm neutral indoor light. Clean pale-wood floor area at bottom-left/bottom-center suits a headline overlay. Sneakers have a Vans-style side stripe and a small red heel tab, but verified at full resolution that no trademark text is legible; the only lettering on the shoe is an out-of-focus decorative doodle. Flag as trade dress only; no signage or plates."
+    },
+    {
+      "slot": "statehouse-hero",
+      "slug": "ohio-statehouse-hero",
+      "file": "/home/user/OhioPride/assets/img/src/ohio-statehouse-hero.jpg",
+      "title": "Ohio State House, Columbus, OH - 48310618761",
+      "artist": "Warren LeMay (w_lemay)",
+      "license": "CC0",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Ohio_State_House,_Columbus,_OH_-_48310618761.jpg",
+      "width": 4032,
+      "height": 3024,
+      "notes": "Named candidate File:Ohio_Statehouse_(9843642126).jpg REJECTED: API returned LicenseShortName CC BY-SA 2.0 (contains SA) and it is actually an interior museum-entrance shot. Enumerated Category:Ohio_Statehouse and Category:Ohio_Statehouse_exterior (150+ files); most dusk/west-facade shots were BY-SA (Gage Skidmore 2025 series, Sun Setting over Capitol, etc.) or under 2400px (Ohio Statehouse night.jpg, 2000px). Picked this CC0 golden-hour west facade: morning sun glowing directly behind the cupola, warm rim light on the colonnade, large clean blue sky for a headline overlay, empty plaza. Caveats: two distant rooftop bank logos (Chase far left edge, PNC just above the roofline) are legible only at 100% zoom and fall outside any standard wide hero crop over the sky; one small pedestrian mid-plaza in profile (~120px tall, face not identifiable) and one distant walker on the right lawn seen from the side. Original (2.1 MB) downloaded from imageinfo url."
+    },
+    {
+      "slot": "rotunda",
+      "slug": "ohio-statehouse-rotunda",
+      "file": "/home/user/OhioPride/assets/img/src/ohio-statehouse-rotunda.jpg",
+      "title": "Ohio Statehouse Rotunda",
+      "artist": "Ibagli",
+      "license": "CC0",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Ohio_Statehouse_Rotunda.JPG",
+      "width": 4288,
+      "height": 3216,
+      "notes": "Named must-use pick, re-verified via Commons API this session: LicenseShortName CC0, Artist Ibagli. True dimensions 4288x3216 (landscape, above the 2400px minimum, so no undersize caveat). Straight-up view of the rotunda dome with the Great Seal skylight centered; no people, faces, or signage anywhere in frame. Original (5.0 MB) downloaded from https://upload.wikimedia.org/wikipedia/commons/e/e2/Ohio_Statehouse_Rotunda.JPG."
+    },
+    {
+      "slot": "about-detail",
+      "slug": "ohio-statehouse-detail",
+      "file": "/home/user/OhioPride/assets/img/src/ohio-statehouse-detail.jpg",
+      "title": "Ohio Statehouse with Flowers",
+      "artist": "puroticorico",
+      "license": "CC BY 2.0",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Ohio_Statehouse_with_Flowers.jpg",
+      "width": 3648,
+      "height": 2736,
+      "notes": "Different facade from the hero: side entrance with the bronze winged Peace statue, flower beds, and colonnade under soft warm overcast light \u2014 works as a quieter about-page band. Verified via Commons API: LicenseShortName CC BY 2.0, Artist puroticorico (Flickr import). No legible trademarks (only an illegible bronze plaque near the entrance); no identifiable faces \u2014 one figure cropped to a leg/shoe at the extreme left edge and one tiny distant seated figure on a bench, neither with a discernible face. Interior column details, cupola-tour, and Corinthian-capital shots in the interior categories were all CC BY-SA and rejected. Original (2.4 MB) downloaded. Attribution required on the site credits page (CC BY)."
+    }
+  ]
+}

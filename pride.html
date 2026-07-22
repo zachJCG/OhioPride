@@ -33,6 +33,47 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/site-template.css" />
     <link rel="stylesheet" href="/css/pride.css" />
+    <style>
+      /* Photo band: progress pride flag draped across a pale wood floor,
+         under the standard navy scrim with the site stripe texture above
+         it. Stated inline because pride.css resets the background
+         shorthand after style.css. */
+      .pride-hero.photo-band {
+        background-color: var(--brand-navy);
+        background-image: var(--photo-texture), var(--photo-scrim),
+          url("/assets/img/progress-pride-flag-pexels-1280.jpg");
+        background-size: auto, cover, cover;
+        background-position: center;
+      }
+      @supports (
+        background-image: image-set(url("/a.avif") type("image/avif"))
+      ) {
+        .pride-hero.photo-band {
+          background-image: var(--photo-texture), var(--photo-scrim),
+            image-set(
+              url("/assets/img/progress-pride-flag-pexels-1280.avif")
+                type("image/avif"),
+              url("/assets/img/progress-pride-flag-pexels-1280.webp")
+                type("image/webp"),
+              url("/assets/img/progress-pride-flag-pexels-1280.jpg")
+                type("image/jpeg")
+            );
+        }
+        @media (max-width: 767px) {
+          .pride-hero.photo-band {
+            background-image: var(--photo-texture), var(--photo-scrim),
+              image-set(
+                url("/assets/img/progress-pride-flag-pexels-768.avif")
+                  type("image/avif"),
+                url("/assets/img/progress-pride-flag-pexels-768.webp")
+                  type("image/webp"),
+                url("/assets/img/progress-pride-flag-pexels-768.jpg")
+                  type("image/jpeg")
+              );
+          }
+        }
+      }
+    </style>
   </head>
   <body class="pride-page">
     <div id="site-header"></div>
@@ -41,7 +82,7 @@
       <div class="pride-gradient-bar" aria-hidden="true"></div>
 
       <!-- Hero -->
-      <header class="pride-hero pride-hero--tour">
+      <header class="pride-hero pride-hero--tour photo-band">
         <p class="pride-hero-kicker">2026 Tour</p>
         <h1>Ohio Pride<br />Road Tour</h1>
         <p class="pride-subhead">Endorse. Mobilize. Fight for Ohio.</p>

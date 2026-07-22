@@ -26,13 +26,54 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/issue-tracker.css" />
     <link rel="stylesheet" href="/css/bill-pipeline.css" />
+    <style>
+      /* Photo band behind the page title only: progress pride flag under
+         the standard navy scrim with the site stripe texture above it.
+         Stated inline because issue-tracker.css resets the background
+         shorthand after style.css. Bill detail pages get no photos. */
+      .tracker-hero.photo-band {
+        background-color: var(--dark-bg);
+        background-image: var(--photo-texture), var(--photo-scrim),
+          url("/assets/img/progress-pride-flag-1280.jpg");
+        background-size: auto, cover, cover;
+        background-position: center;
+      }
+      @supports (
+        background-image: image-set(url("/a.avif") type("image/avif"))
+      ) {
+        .tracker-hero.photo-band {
+          background-image: var(--photo-texture), var(--photo-scrim),
+            image-set(
+              url("/assets/img/progress-pride-flag-1280.avif")
+                type("image/avif"),
+              url("/assets/img/progress-pride-flag-1280.webp")
+                type("image/webp"),
+              url("/assets/img/progress-pride-flag-1280.jpg")
+                type("image/jpeg")
+            );
+        }
+        @media (max-width: 767px) {
+          .tracker-hero.photo-band {
+            background-image: var(--photo-texture), var(--photo-scrim),
+              image-set(
+                url("/assets/img/progress-pride-flag-768.avif")
+                  type("image/avif"),
+                url("/assets/img/progress-pride-flag-768.webp")
+                  type("image/webp"),
+                url("/assets/img/progress-pride-flag-768.jpg")
+                  type("image/jpeg")
+              );
+          }
+        }
+      }
+    </style>
     <link rel="stylesheet" href="/css/site-template.css" />
   </head>
   <body>
 <div id="site-header"></div>
 
     <main id="main">
-    <section class="tracker-hero">
+    <section class="tracker-hero photo-band">
       <h1>Legislative Issue Tracker</h1>
       <p>
         Tracking anti-LGBTQIA+ legislation in the Ohio Statehouse — 136th

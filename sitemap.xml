@@ -152,4 +152,8 @@
     <loc>https://www.ohiopride.org/brand</loc>
     <priority>0.4</priority>
   </url>
+  <url>
+    <loc>https://www.ohiopride.org/credits</loc>
+    <priority>0.3</priority>
+  </url>
 </urlset>
