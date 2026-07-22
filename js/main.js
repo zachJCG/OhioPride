@@ -60,37 +60,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  /* --- Founding Member Progress Bar --- */
-  var FOUNDING_MEMBER_COUNT = 0;
-  var FOUNDING_MEMBER_GOAL = 1969;
-
-  var goalFill = document.getElementById("goalFill");
-  var memberCount = document.getElementById("memberCount");
-
-  if (goalFill) {
-    var pct = Math.min(
-      (FOUNDING_MEMBER_COUNT / FOUNDING_MEMBER_GOAL) * 100,
-      100,
-    );
-
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            goalFill.style.width = pct + "%";
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.3 },
-    );
-
-    observer.observe(goalFill.parentElement);
-  }
-
-  if (memberCount) {
-    memberCount.textContent = FOUNDING_MEMBER_COUNT;
-  }
+  /* --- Founding Member Progress Bar ---
+     Removed: a legacy handler here wrote a hardcoded 0% width into #goalFill
+     on intersection, clobbering the live width set by OhioPride.loadProgress
+     and the per-page scripts. The data client (js/ohiopride-data.js) and the
+     pages' own scripts now own the bar. --- */
 
   /* --- Scroll Reveal Animations --- */
   // Only hide elements when JS is confirmed working

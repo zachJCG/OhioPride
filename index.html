@@ -3,22 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ohio Pride | Political Action Committee for LGBTQ+ Equality</title>
+    <title>Ohio Pride | Ohio's Only Statewide LGBTQ+ Political Action Committee</title>
     <meta
       name="description"
-      content="Ohio Pride mobilizes voters, endorses pro-equality candidates, and advocates for the rights of LGBTQ+ Ohioans at every level of government."
+      content="Ohio Pride is Ohio's only statewide LGBTQ+ PAC. We endorse pro-equality candidates, score all 132 state legislators, and mobilize voters in all 88 counties."
     />
     <link rel="canonical" href="https://www.ohiopride.org/" />
+    <meta name="theme-color" content="#152233" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Ohio Pride | LGBTQ+ Equality in Ohio" />
-    <meta property="og:description" content="Ohio Pride mobilizes voters, endorses pro-equality candidates, and advocates for the rights of LGBTQ+ Ohioans at every level of government." />
+    <meta property="og:title" content="Ohio Pride | Ohio's Only Statewide LGBTQ+ PAC" />
+    <meta property="og:description" content="We endorse pro-equality candidates, score all 132 Ohio legislators, and mobilize voters in all 88 counties." />
     <meta property="og:url" content="https://www.ohiopride.org/" />
     <meta property="og:site_name" content="Ohio Pride" />
+    <meta property="og:image" content="https://www.ohiopride.org/assets/social/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Ohio Pride | LGBTQ+ Equality in Ohio" />
-    <meta name="twitter:description" content="Ohio Pride mobilizes voters, endorses pro-equality candidates, and advocates for the rights of LGBTQ+ Ohioans at every level of government." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ohio Pride | Ohio's Only Statewide LGBTQ+ PAC" />
+    <meta name="twitter:description" content="We endorse pro-equality candidates, score all 132 Ohio legislators, and mobilize voters in all 88 counties." />
+    <meta name="twitter:image" content="https://www.ohiopride.org/assets/social/og-image.png" />
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
       {
@@ -26,7 +31,7 @@
         "@type": "Organization",
         "name": "Ohio Pride",
         "url": "https://www.ohiopride.org",
-        "description": "Political Action Committee for LGBTQ+ Equality in Ohio",
+        "description": "Ohio's only statewide political action committee for LGBTQ+ equality",
         "contactPoint": {
           "@type": "ContactPoint",
           "email": "info@ohiopride.org",
@@ -37,558 +42,865 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Slab:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Slab:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style.css" />
-    <link
-      rel="preload"
-      as="image"
-      imagesrcset="/assets/img/ohio-statehouse-hero-768.avif 768w, /assets/img/ohio-statehouse-hero-1280.avif 1280w, /assets/img/ohio-statehouse-hero-1920.avif 1920w"
-      imagesizes="100vw"
-      fetchpriority="high"
-    />
     <style>
       body {
         background: var(--dark-bg);
+        overflow-x: hidden;
       }
 
-      .home-hero {
-        padding: calc(var(--nav-height) + 2rem) 2rem 4rem;
-        text-align: center;
-      }
-
-      /* Ohio Statehouse west facade under the standard navy scrim, with the
-         site stripe texture above the photo. The section is full bleed; the
-         content column below stays at the original 900px width. */
-      .home-hero {
-        position: relative;
-        overflow: hidden;
-        background-color: var(--dark-bg);
-        background-image: var(--photo-texture), var(--photo-scrim),
-          url("/assets/img/ohio-statehouse-hero-1280.jpg");
-        background-size: auto, cover, cover;
-        background-position: center;
-      }
-      @supports (
-        background-image: image-set(url("/a.avif") type("image/avif"))
-      ) {
-        .home-hero {
-          background-image: var(--photo-texture), var(--photo-scrim),
-            image-set(
-              url("/assets/img/ohio-statehouse-hero-1280.avif")
-                type("image/avif"),
-              url("/assets/img/ohio-statehouse-hero-1280.webp")
-                type("image/webp"),
-              url("/assets/img/ohio-statehouse-hero-1280.jpg")
-                type("image/jpeg")
-            );
-        }
-        @media (max-width: 767px) {
-          .home-hero {
-            background-image: var(--photo-texture), var(--photo-scrim),
-              image-set(
-                url("/assets/img/ohio-statehouse-hero-768.avif")
-                  type("image/avif"),
-                url("/assets/img/ohio-statehouse-hero-768.webp")
-                  type("image/webp"),
-                url("/assets/img/ohio-statehouse-hero-768.jpg")
-                  type("image/jpeg")
-              );
-          }
-        }
-        @media (min-width: 1440px) {
-          .home-hero {
-            background-image: var(--photo-texture), var(--photo-scrim),
-              image-set(
-                url("/assets/img/ohio-statehouse-hero-1920.avif")
-                  type("image/avif"),
-                url("/assets/img/ohio-statehouse-hero-1920.webp")
-                  type("image/webp"),
-                url("/assets/img/ohio-statehouse-hero-1920.jpg")
-                  type("image/jpeg")
-              );
-          }
-        }
-      }
-      .home-hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 35%),
-          radial-gradient(circle at 80% 15%, rgba(163, 97, 255, 0.2), transparent 30%);
-        pointer-events: none;
-      }
-      .home-hero > * {
-        position: relative;
-        z-index: 1;
-        max-width: 900px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      .hero-badge {
-        display: inline-block;
-        margin-bottom: 1rem;
-        padding: 0.35rem 0.8rem;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.8rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--text-white);
-        border: 1px solid rgba(255, 255, 255, 0.35);
-        border-radius: 999px;
-        background: rgba(8, 21, 33, 0.55);
-        box-shadow: 0 0 16px rgba(255, 255, 255, 0.15);
-      }
-      .nonpartisan-highlight {
-        color: #b68cff;
-        text-shadow: 0 0 12px rgba(182, 140, 255, 0.45);
-      }
-
-      .home-hero h1 {
-        font-family: "Montserrat", sans-serif;
-        font-size: clamp(2rem, 5vw, 3.5rem);
-        line-height: 1.2;
-        margin-bottom: 1.25rem;
-        font-weight: 700;
-        color: var(--text-white);
-      }
-      .home-hero .hero-subtitle {
-        font-family: "Roboto Slab", serif;
-        font-size: 1.1rem;
-        color: var(--text-light);
-        margin-bottom: 2rem;
-        line-height: 1.7;
-        max-width: 680px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      .home-hero .hero-divider {
-        width: 80px;
-        height: 4px;
-        background: var(--pride-gradient);
-        margin: 2rem auto;
-        border-radius: 2px;
-      }
-
-      .launch-day-callout {
-        max-width: 900px;
-        margin: 0 auto 1rem;
-        padding: 0 2rem;
-      }
-      .launch-day-card {
-        border: 1px solid rgba(182, 140, 255, 0.45);
-        background: linear-gradient(135deg, rgba(19, 45, 68, 0.92), rgba(40, 18, 75, 0.82));
-        border-radius: 14px;
-        padding: 2rem;
-        text-align: center;
-        box-shadow: 0 0 24px rgba(118, 80, 180, 0.18);
-      }
-      .launch-day-card .section-label {
-        margin-bottom: 0.75rem;
-      }
-      .launch-day-card h2 {
-        font-family: "Montserrat", sans-serif;
-        color: var(--text-white);
-        margin-bottom: 0.75rem;
-      }
-      .launch-day-card p {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        max-width: 640px;
-        margin: 0 auto 1.5rem;
-        line-height: 1.7;
-      }
-      .launch-day-meta {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-bottom: 1.5rem;
-      }
-      .launch-day-meta span {
-        padding: 0.45rem 0.8rem;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.08);
-        color: var(--text-white);
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.85rem;
-      }
-      .launch-day-actions {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-
-      /* Endorsement spotlight uses the same launch-day-card surface;
-         no countdown styles needed post-launch. */
-      .endorse-spotlight .launch-day-card {
-        position: relative;
-        border: none;
-        background:
-          linear-gradient(135deg, rgba(19, 45, 68, 0.92), rgba(40, 18, 75, 0.82)) padding-box,
-          conic-gradient(
-            from var(--endorse-angle, 0deg),
-            #e40303,
-            #FFBC00,
-            #ffed00,
-            #008026,
-            #004dff,
-            #750787,
-            #e40303
-          ) border-box;
-        border: 3px solid transparent;
-        animation: endorseRainbowSpin 6s linear infinite;
-      }
-      @property --endorse-angle {
-        syntax: "<angle>";
-        initial-value: 0deg;
-        inherits: false;
-      }
-      @keyframes endorseRainbowSpin {
-        to { --endorse-angle: 360deg; }
-      }
-      @supports not (background: conic-gradient(from 0deg, red, blue)) {
-        .endorse-spotlight .launch-day-card {
-          background: linear-gradient(135deg, rgba(19, 45, 68, 0.92), rgba(40, 18, 75, 0.82));
-          border: 3px solid #b68cff;
-          animation: none;
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .endorse-spotlight .launch-day-card { animation: none; }
-      }
-
-      /* Compact endorsement strip — keeps the rainbow border but trims the
-         card to a slim spotlight so it doesn't dominate the homepage. */
-      .endorse-spotlight--compact { max-width: 760px; }
-      .endorse-spotlight--compact .launch-day-card {
-        padding: 1.25rem 1.75rem;
-        text-align: left;
-      }
-      .endorse-spotlight--compact .section-label {
-        margin-bottom: 0.4rem;
-        font-size: 0.7rem;
-      }
-      .endorse-spotlight--compact h2 {
-        font-size: 1.2rem;
-        margin-bottom: 0.5rem;
-      }
-      .endorse-spotlight--compact p {
-        font-size: 0.92rem;
-        margin: 0 0 1rem;
-        max-width: none;
-      }
-      .endorse-spotlight--compact .launch-day-actions {
-        justify-content: flex-start;
-      }
-      @media (max-width: 600px) {
-        .endorse-spotlight--compact .launch-day-card { text-align: center; }
-        .endorse-spotlight--compact .launch-day-actions { justify-content: center; }
-      }
-
-      /* Hero call-to-action: founding-member button + mailing-list form. */
-      .hero-cta {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1.5rem;
-        margin-top: 2rem;
-      }
-      .hero-cta-founding {
-        font-size: 1.05rem;
-        padding: 0.9rem 2rem;
-      }
-      .hero-signup {
-        width: 100%;
-        max-width: 460px;
-        background: linear-gradient(135deg, rgba(40, 18, 75, 0.82), rgba(19, 45, 68, 0.92));
-        border: 1px solid rgba(182, 140, 255, 0.4);
-        border-radius: 14px;
-        padding: 1.5rem;
-        box-shadow: 0 0 24px rgba(118, 80, 180, 0.15);
-        text-align: left;
-      }
-      .hero-signup-head {
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: var(--text-white);
-        text-align: center;
-        margin-bottom: 1rem;
-      }
-      .hero-signup-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.6rem;
-      }
-      .hero-field { margin-bottom: 0.6rem; }
-      .hero-signup input[type="text"],
-      .hero-signup input[type="email"],
-      .hero-signup input[type="tel"] {
-        width: 100%;
-        padding: 0.7rem 0.85rem;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(8, 21, 33, 0.55);
-        color: var(--text-white);
-        font-family: "Roboto Slab", serif;
-        font-size: 0.95rem;
-      }
-      .hero-signup input::placeholder { color: rgba(255, 255, 255, 0.55); }
-      .hero-signup input:focus {
-        outline: none;
-        border-color: #b68cff;
-        box-shadow: 0 0 0 3px rgba(182, 140, 255, 0.22);
-      }
-      .hero-signup-submit { width: 100%; margin-top: 0.4rem; }
-      .hero-signup-error {
-        background: rgba(228, 3, 3, 0.12);
-        border: 1px solid rgba(228, 3, 3, 0.45);
-        color: #ffd3d3;
-        border-radius: 8px;
-        padding: 0.6rem 0.85rem;
-        margin-bottom: 0.85rem;
-        font-family: "Roboto Slab", serif;
-        font-size: 0.88rem;
-      }
-      .hero-signup-confirm {
-        width: 100%;
-        max-width: 460px;
-        background: rgba(19, 45, 68, 0.6);
-        border: 1px solid rgba(112, 214, 236, 0.4);
-        border-radius: 14px;
-        padding: 1.5rem;
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        line-height: 1.6;
-      }
       .sr-only {
         position: absolute; width: 1px; height: 1px;
         padding: 0; margin: -1px; overflow: hidden;
         clip: rect(0,0,0,0); white-space: nowrap; border: 0;
       }
-      @media (max-width: 720px) {
-        .hero-signup { padding: 1.25rem; }
-      }
 
-      .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-        margin-top: 2rem;
-      }
-      .wwd-card {
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 8px;
-        padding: 2rem;
-        background: rgba(19, 45, 68, 0.5);
-        transition: all 0.3s ease;
+      /* =====================================================
+         HERO: headline left, animated Ohio rainbow burgee right
+         ===================================================== */
+      .hp-hero {
         position: relative;
+        padding: calc(var(--nav-height) + 4.5rem) 2rem 4.5rem;
         overflow: hidden;
+        background-color: var(--dark-bg);
       }
-      .wwd-card::before {
+      /* Ambient aurora in brand hues, very low opacity */
+      .hp-hero::before,
+      .hp-hero::after {
         content: "";
         position: absolute;
-        top: 0;
+        width: 60vw;
+        height: 60vw;
+        max-width: 900px;
+        max-height: 900px;
+        border-radius: 50%;
+        filter: blur(90px);
+        pointer-events: none;
+        z-index: 0;
+      }
+      .hp-hero::before {
+        top: -30%;
+        right: -12%;
+        background: radial-gradient(circle,
+          rgba(112, 214, 236, 0.14), rgba(0, 77, 255, 0.10) 45%, transparent 70%);
+      }
+      .hp-hero::after {
+        bottom: -35%;
+        left: -15%;
+        background: radial-gradient(circle,
+          rgba(117, 7, 135, 0.16), rgba(228, 3, 3, 0.06) 50%, transparent 72%);
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .hp-hero::before { animation: hpDriftA 22s ease-in-out infinite alternate; }
+        .hp-hero::after  { animation: hpDriftB 26s ease-in-out infinite alternate; }
+      }
+      @keyframes hpDriftA {
+        from { transform: translate(0, 0) scale(1); }
+        to   { transform: translate(-6%, 8%) scale(1.12); }
+      }
+      @keyframes hpDriftB {
+        from { transform: translate(0, 0) scale(1.08); }
+        to   { transform: translate(7%, -6%) scale(1); }
+      }
+
+      .hp-hero-grid {
+        position: relative;
+        z-index: 1;
+        max-width: var(--container-max);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 3.5rem;
+        align-items: center;
+      }
+
+      .hp-hero-copy .section-label { margin-bottom: 1rem; }
+
+      .hp-hero h1 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: clamp(2.3rem, 4.6vw, 3.6rem);
+        line-height: 1.08;
+        letter-spacing: -0.01em;
+        color: var(--text-white);
+        margin-bottom: 1.25rem;
+        text-wrap: balance;
+      }
+      .hp-hero h1 .hp-keep-score { color: var(--color-light-blue); }
+
+      .hp-hero-sub {
+        font-family: "Roboto Slab", serif;
+        font-size: 1.08rem;
+        line-height: 1.75;
+        color: var(--text-light);
+        max-width: 540px;
+        margin-bottom: 1.75rem;
+        text-wrap: pretty;
+      }
+
+      .hp-hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.9rem;
+        margin-bottom: 1.4rem;
+      }
+      .hp-hero-actions .btn { padding: 14px 30px; font-size: 15px; }
+
+      .hp-live-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.5rem 0.95rem;
+        border-radius: 999px;
+        border: 1px solid rgba(112, 214, 236, 0.35);
+        background: rgba(19, 45, 68, 0.55);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin-bottom: 1.4rem;
+      }
+      .hp-live-chip strong {
+        color: var(--text-white);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .hp-live-dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: var(--color-light-blue);
+        box-shadow: 0 0 0 0 rgba(112, 214, 236, 0.5);
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .hp-live-dot { animation: hpPulse 2.2s ease-out infinite; }
+      }
+      @keyframes hpPulse {
+        0%   { box-shadow: 0 0 0 0 rgba(112, 214, 236, 0.5); }
+        70%  { box-shadow: 0 0 0 9px rgba(112, 214, 236, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(112, 214, 236, 0); }
+      }
+
+      .hp-trust {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem 1.4rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .hp-trust span { display: inline-flex; align-items: center; gap: 0.45rem; }
+      .hp-trust svg { color: var(--color-light-blue); flex-shrink: 0; }
+
+      /* The Ohio cutout, filled with the Progress Pride flag */
+      .hp-flag-wrap {
+        display: flex;
+        justify-content: center;
+      }
+      .hp-ohio {
+        width: 100%;
+        max-width: 480px;
+        height: auto;
+        overflow: visible;
+        filter: drop-shadow(0 26px 46px rgba(0, 0, 0, 0.5))
+                drop-shadow(0 0 70px rgba(112, 214, 236, 0.10));
+      }
+      .hp-ohio-inner { transform-origin: 50% 50%; }
+      @media (prefers-reduced-motion: no-preference) {
+        .hp-ohio-inner { animation: hpOhioFloat 9s ease-in-out infinite; }
+        .hp-ohio .hp-ohio-sheen rect { animation: hpSheen 8s ease-in-out infinite; }
+      }
+      @keyframes hpOhioFloat {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50%      { transform: translateY(-12px) rotate(0.4deg); }
+      }
+      @keyframes hpSheen {
+        0%   { transform: translateX(0); }
+        55%  { transform: translateX(1500px); }
+        100% { transform: translateX(1500px); }
+      }
+
+      @media (max-width: 920px) {
+        .hp-hero { padding: calc(var(--nav-height) + 2.5rem) 1.5rem 3.5rem; }
+        .hp-hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+        .hp-hero-copy { text-align: center; }
+        .hp-hero-sub { margin-left: auto; margin-right: auto; }
+        .hp-hero-actions, .hp-trust { justify-content: center; }
+        .hp-hero-actions .btn { flex: 1 1 240px; max-width: 340px; }
+        .hp-ohio { max-width: 340px; }
+      }
+
+      /* =====================================================
+         88-COUNTY TICKER
+         ===================================================== */
+      .hp-counties {
+        position: relative;
+        border-top: 1px solid var(--border-light);
+        border-bottom: 1px solid var(--border-light);
+        background: rgba(13, 23, 38, 0.6);
+        overflow: hidden;
+        padding: 0.85rem 0;
+      }
+      .hp-counties::before,
+      .hp-counties::after {
+        content: "";
+        position: absolute;
+        top: 0; bottom: 0;
+        width: 90px;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .hp-counties::before {
         left: 0;
+        background: linear-gradient(90deg, var(--dark-bg), transparent);
+      }
+      .hp-counties::after {
         right: 0;
+        background: linear-gradient(270deg, var(--dark-bg), transparent);
+      }
+      .hp-counties-track {
+        display: flex;
+        width: max-content;
+        gap: 0;
+      }
+      /* The marquee only runs when JS confirms it can also be paused
+         (WCAG 2.2.2). Without JS the strip renders as a static row. */
+      @media (prefers-reduced-motion: no-preference) {
+        .hp-counties.js-on .hp-counties-track { animation: hpMarquee 160s linear infinite; }
+        .hp-counties.js-on .hp-counties-toggle { display: flex; }
+      }
+      .hp-counties:hover .hp-counties-track,
+      .hp-counties.is-paused .hp-counties-track { animation-play-state: paused; }
+      .hp-counties-toggle {
+        display: none;
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        z-index: 3;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid rgba(112, 214, 236, 0.4);
+        background: rgba(13, 23, 38, 0.85);
+        color: var(--color-light-blue);
+        cursor: pointer;
+        padding: 0;
+      }
+      .hp-counties-toggle:hover { background: rgba(19, 45, 68, 0.95); }
+      .hp-counties-toggle:focus-visible {
+        outline: 2px solid var(--color-light-blue);
+        outline-offset: 2px;
+      }
+      .hp-counties-toggle .icon-play { display: none; }
+      .hp-counties.is-paused .icon-play { display: block; }
+      .hp-counties.is-paused .icon-pause { display: none; }
+      @keyframes hpMarquee {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+      }
+      .hp-counties-list {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .hp-counties-list span { padding: 0 0.9rem; }
+      .hp-counties-list i {
+        font-style: normal;
+        color: var(--color-light-blue);
+        font-size: 0.55rem;
+      }
+
+      /* =====================================================
+         LIVE NUMBERS
+         ===================================================== */
+      .hp-stats {
+        max-width: var(--container-max);
+        margin: 0 auto;
+        padding: 3.5rem 2rem 3rem;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        text-align: center;
+      }
+      .hp-stat-num {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: clamp(2.1rem, 4vw, 2.9rem);
+        line-height: 1;
+        color: var(--text-white);
+        font-variant-numeric: tabular-nums;
+      }
+      .hp-stat-rule {
+        width: 34px;
+        height: 3px;
+        border-radius: 2px;
+        background: var(--pride-gradient);
+        margin: 0.8rem auto 0.7rem;
+      }
+      .hp-stat-label {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      @media (max-width: 760px) {
+        .hp-stats { grid-template-columns: repeat(2, 1fr); padding: 2.75rem 1.25rem 2rem; gap: 1.75rem 1rem; }
+      }
+
+      /* =====================================================
+         WHAT WE DO
+         ===================================================== */
+      .hp-wwd-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+      .hp-wwd-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--dark-bg-light);
+        border-radius: 10px;
+        padding: 1.75rem 1.5rem;
+        background: rgba(19, 45, 68, 0.5);
+        transition: transform 0.3s ease, border-color 0.3s ease;
+      }
+      .hp-wwd-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
         height: 3px;
         background: var(--pride-gradient);
         transform: scaleX(0);
-        transition: transform 0.3s ease;
         transform-origin: left;
+        transition: transform 0.35s ease;
       }
-      .wwd-card:hover::before {
-        transform: scaleX(1);
-      }
-      .wwd-card:hover {
-        border-color: var(--color-light-blue);
-        transform: translateY(-4px);
-      }
-      .wwd-card .card-icon {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-      }
-      .wwd-card h3 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.2rem;
-        margin-bottom: 0.75rem;
-        color: var(--text-white);
-      }
-      .wwd-card p {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        line-height: 1.7;
-        font-size: 0.95rem;
-      }
-      .wwd-card .card-link {
-        display: inline-block;
-        margin-top: 1rem;
+      .hp-wwd-card:hover { transform: translateY(-5px); border-color: var(--color-light-blue); }
+      .hp-wwd-card:hover::before { transform: scaleX(1); }
+      .hp-wwd-icon {
+        width: 44px; height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(112, 214, 236, 0.1);
         color: var(--color-light-blue);
-        font-size: 0.9rem;
-        font-weight: 600;
+        margin-bottom: 1.1rem;
+      }
+      .hp-wwd-card h3 {
         font-family: "Montserrat", sans-serif;
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin-bottom: 0.6rem;
+      }
+      .hp-wwd-card p {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.92rem;
+        line-height: 1.7;
+        color: var(--text-light);
+      }
+      .hp-wwd-card .card-link {
+        display: inline-block;
+        margin-top: 0.9rem;
+        color: var(--color-light-blue);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
         text-decoration: none;
       }
-      .wwd-card .card-link:hover {
-        text-decoration: underline;
-      }
-      @media (max-width: 900px) {
-        .cards-grid {
-          grid-template-columns: 1fr;
-        }
-      }
+      .hp-wwd-card .card-link:hover { text-decoration: underline; }
+      @media (max-width: 1000px) { .hp-wwd-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 600px)  { .hp-wwd-grid { grid-template-columns: 1fr; } }
 
-      .founding-section {
-        border-top: 3px solid;
-        border-image: var(--pride-gradient) 1;
-        padding-top: 4rem;
+      /* =====================================================
+         SCORECARD + FOUNDING SPLITS (shared)
+         ===================================================== */
+      .hp-split {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 3.5rem;
+        align-items: center;
       }
-      .founding-inner {
-        max-width: 640px;
-        margin: 0 auto;
-        text-align: center;
+      .hp-split.hp-split-flip { grid-template-columns: 0.95fr 1.05fr; }
+      .hp-photo {
+        border-radius: 16px;
+        padding: 3px;
+        background: var(--pride-gradient);
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
       }
-      .founding-desc {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        line-height: 1.8;
-        margin-bottom: 1.5rem;
-        font-size: 1rem;
+      .hp-photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 13px;
+        aspect-ratio: 4 / 3;
       }
-      .stonewall-ref {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.9rem;
-        color: var(--text-light);
-        font-style: italic;
-        margin-bottom: 2rem;
-        line-height: 1.6;
-      }
-      .founding-cta {
-        text-align: center;
-        margin-top: 2rem;
-      }
-
-      .scorecard-callout {
-        max-width: 900px;
-        margin: 0 auto 1rem;
-        padding: 0 2rem;
-      }
-      .scorecard-card {
-        border: 1px solid rgba(112, 214, 236, 0.35);
-        background: linear-gradient(135deg, rgba(19, 45, 68, 0.92), rgba(12, 34, 55, 0.9));
-        border-radius: 14px;
-        padding: 2rem;
-        box-shadow: 0 0 24px rgba(0, 77, 255, 0.12);
-      }
-      .scorecard-card .section-label { margin-bottom: 0.75rem; }
-      .scorecard-card h2 {
+      /* The Columbus skyline source is a wide panorama; a 16:10 frame keeps
+         more of it than the 4:3 default (the sides still crop under cover). */
+      .hp-photo--wide img { aspect-ratio: 16 / 10; }
+      .hp-photo-credit {
         font-family: "Montserrat", sans-serif;
-        color: var(--text-white);
-        margin-bottom: 0.75rem;
-        text-align: center;
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        margin-top: 0.7rem;
+        text-align: right;
       }
-      .scorecard-card > p {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        max-width: 640px;
-        margin: 0 auto 1.5rem;
-        line-height: 1.7;
-        text-align: center;
+      @media (max-width: 920px) {
+        .hp-split, .hp-split.hp-split-flip { grid-template-columns: 1fr; gap: 2.25rem; }
+        .hp-split-media { order: 2; max-width: 560px; margin: 0 auto; width: 100%; }
       }
-      .scorecard-grades {
+
+      .hp-grades {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 0.5rem;
-        margin: 0 auto 1.5rem;
-        max-width: 580px;
+        gap: 0.45rem;
+        margin: 1.5rem 0;
+        max-width: 560px;
       }
-      .scorecard-grade {
+      .hp-grade {
         text-align: center;
-        padding: 0.6rem 0.2rem;
+        padding: 0.55rem 0.15rem;
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(255, 255, 255, 0.08);
       }
-      .scorecard-grade .grade-letter {
+      .hp-grade b {
         display: block;
         font-family: "Montserrat", sans-serif;
         font-weight: 800;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         line-height: 1;
       }
-      .scorecard-grade .grade-label {
+      .hp-grade span {
         display: block;
         margin-top: 0.3rem;
         font-family: "Montserrat", sans-serif;
-        font-size: 0.6rem;
-        letter-spacing: 0.08em;
+        font-size: 0.56rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
-        color: var(--text-light);
+        color: var(--text-muted);
+        white-space: nowrap;
       }
-      .scorecard-actions {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      /* Keep labels on one line so grade cells stay visually balanced. */
-      .scorecard-grade .grade-label { white-space: nowrap; }
-
       @media (max-width: 700px) {
-        .scorecard-callout { padding: 0 1rem; }
-        .scorecard-card { padding: 1.5rem 1.25rem; }
-        /* 4 cells per row (4 + 3) gives every label room to breathe instead
-           of squeezing seven cells into a viewport where "F" falls off
-           the edge. */
-        .scorecard-grades {
-          grid-template-columns: repeat(4, 1fr);
-          gap: 0.5rem;
-          max-width: 420px;
-        }
-        .scorecard-grade { padding: 0.7rem 0.25rem; }
-        .scorecard-grade .grade-letter { font-size: 1.05rem; }
-        .scorecard-grade .grade-label { font-size: 0.6rem; letter-spacing: 0.06em; }
-      }
-      @media (max-width: 380px) {
-        .scorecard-grades { gap: 0.35rem; }
-        .scorecard-grade { padding: 0.55rem 0.2rem; }
-        .scorecard-grade .grade-label { font-size: 0.55rem; letter-spacing: 0.04em; }
+        .hp-grades { grid-template-columns: repeat(4, 1fr); max-width: 420px; }
       }
 
-      .donate-cta-card {
-        background: rgba(19, 45, 68, 0.5);
-        border: 1px solid var(--dark-bg-light, #1a3a52);
-        border-radius: 8px;
-        padding: 3rem 2rem;
-        text-align: center;
-        max-width: 600px;
-        margin: 0 auto;
+      /* Find-your-legislator quick search. Submits to the scorecard, which
+         reads ?search= from the URL and filters the card list. */
+      .hp-find {
+        margin: 0 0 1.5rem;
+        max-width: 560px;
       }
-      .donate-cta-card h2 {
+      .hp-find-label {
+        display: block;
         font-family: "Montserrat", sans-serif;
-        color: var(--text-white);
-        margin-bottom: 1rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.45rem;
       }
-      .donate-cta-card p {
+      .hp-find-row {
+        display: flex;
+        gap: 0.6rem;
+      }
+      .hp-find input {
+        flex: 1;
+        min-width: 0;
+        padding: 0.75rem 0.95rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(8, 21, 33, 0.6);
+        color: var(--text-white);
+        font-family: "Roboto Slab", serif;
+        font-size: 0.95rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .hp-find input::placeholder { color: rgba(255, 255, 255, 0.6); }
+      .hp-find input:focus {
+        outline: none;
+        border-color: var(--color-light-blue);
+        box-shadow: 0 0 0 3px rgba(112, 214, 236, 0.18);
+      }
+      .hp-find .btn { padding: 0.75rem 1.5rem; font-size: 14px; white-space: nowrap; }
+      @media (max-width: 480px) {
+        .hp-find-row { flex-direction: column; }
+        .hp-find .btn { width: 100%; }
+      }
+
+      .hp-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; }
+
+      /* =====================================================
+         ENDORSED SLATE
+         ===================================================== */
+      .hp-slate-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+      .hp-slate-card {
+        position: relative;
+        display: block;
+        border: 1px solid var(--dark-bg-light);
+        border-radius: 12px;
+        background: rgba(19, 45, 68, 0.5);
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .hp-slate-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: var(--pride-gradient);
+        z-index: 1;
+      }
+      .hp-slate-card:hover,
+      .hp-slate-card:focus-visible {
+        transform: translateY(-5px);
+        border-color: var(--color-light-blue);
+        box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+      }
+      .hp-slate-card:focus-visible {
+        outline: 2px solid var(--color-light-blue);
+        outline-offset: 3px;
+      }
+      .hp-slate-photo {
+        position: relative;
+        background: rgba(8, 21, 33, 0.6);
+      }
+      .hp-slate-photo img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        object-position: center 25%;
+      }
+      .hp-slate-photo::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 62%, rgba(13, 23, 38, 0.85));
+      }
+      .hp-slate-body { padding: 1.15rem 1.3rem 1.35rem; }
+      .hp-slate-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--color-light-blue);
+        margin-bottom: 0.7rem;
+      }
+      .hp-slate-tag::before {
+        content: "";
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: var(--color-light-blue);
+      }
+      .hp-slate-name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 1.35rem;
+        line-height: 1.15;
+        color: var(--text-white);
+        margin-bottom: 0.35rem;
+      }
+      .hp-slate-race {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.6rem;
+      }
+      .hp-slate-hook {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.88rem;
+        line-height: 1.6;
+        color: var(--text-light);
+        margin-bottom: 0.85rem;
+      }
+      .hp-slate-link {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--color-light-blue);
+      }
+      .hp-slate-card:hover .hp-slate-link { text-decoration: underline; }
+      @media (max-width: 1000px) { .hp-slate-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 560px)  { .hp-slate-grid { grid-template-columns: 1fr; } }
+
+      /* =====================================================
+         FOUNDING MEMBERS
+         ===================================================== */
+      .hp-founding {
+        border-top: 3px solid;
+        border-image: var(--pride-gradient) 1;
+      }
+      .hp-founding .goal-block { max-width: 520px; margin: 1.75rem 0; }
+      .hp-founding-note {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.65;
+        color: var(--text-muted);
+        margin-top: 1rem;
+        max-width: 520px;
+      }
+      .hp-founding-link {
+        display: inline-block;
+        color: var(--color-light-blue);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        align-self: center;
+      }
+      .hp-founding-link:hover { text-decoration: underline; }
+      @media (max-width: 920px) {
+        .hp-founding .goal-block { margin-left: auto; margin-right: auto; }
+        .hp-founding-note { margin-left: auto; margin-right: auto; }
+        .hp-founding .hp-split-copy { text-align: center; }
+        .hp-founding .hp-actions { justify-content: center; }
+      }
+
+      /* =====================================================
+         SIGNUP
+         ===================================================== */
+      .hp-signup-card {
+        position: relative;
+        max-width: 620px;
+        margin: 0 auto;
+        border-radius: 16px;
+        padding: 2.5rem 2.25rem;
+        background: rgba(19, 45, 68, 0.6);
+        border: 1px solid var(--dark-bg-lighter);
+        overflow: hidden;
+      }
+      .hp-signup-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: var(--pride-gradient);
+      }
+      .hp-signup-card h2 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 1.6rem;
+        color: var(--text-white);
+        text-align: center;
+        margin-bottom: 0.6rem;
+      }
+      .hp-signup-sub {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.95rem;
+        color: var(--text-light);
+        text-align: center;
+        line-height: 1.65;
+        margin-bottom: 1.75rem;
+      }
+      .hp-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      .hp-field { margin-bottom: 1rem; }
+      .hp-field label {
+        display: block;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.4rem;
+      }
+      .hp-field label em {
+        font-style: normal;
+        text-transform: none;
+        letter-spacing: 0.02em;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .hp-field input {
+        width: 100%;
+        padding: 0.8rem 0.95rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(8, 21, 33, 0.6);
+        color: var(--text-white);
+        font-family: "Roboto Slab", serif;
+        font-size: 0.98rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .hp-field input::placeholder { color: rgba(255, 255, 255, 0.6); }
+      .hp-field input:focus {
+        outline: none;
+        border-color: var(--color-light-blue);
+        box-shadow: 0 0 0 3px rgba(112, 214, 236, 0.18);
+      }
+      .hp-field.hp-invalid input {
+        border-color: var(--text-danger);
+        box-shadow: 0 0 0 3px rgba(228, 3, 3, 0.14);
+      }
+      .hp-field-err {
+        display: none;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.8rem;
+        color: var(--text-danger);
+        margin-top: 0.35rem;
+      }
+      .hp-field.hp-invalid .hp-field-err { display: block; }
+      .hp-form-err {
+        display: none;
+        background: rgba(228, 3, 3, 0.12);
+        border: 1px solid rgba(228, 3, 3, 0.45);
+        color: #ffd3d3;
+        border-radius: 8px;
+        padding: 0.7rem 0.95rem;
+        margin-bottom: 1rem;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.88rem;
+      }
+      .hp-form-err.show { display: block; }
+      .hp-submit { width: 100%; margin-top: 0.35rem; padding: 14px 28px; font-size: 15px; position: relative; }
+      .hp-submit[disabled] { opacity: 0.75; cursor: wait; }
+      .hp-form-fine {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        text-align: center;
+        margin-top: 0.9rem;
+      }
+      .hp-signup-success {
+        display: none;
+        text-align: center;
+        padding: 1.5rem 0 0.5rem;
+      }
+      .hp-signup-success.show { display: block; }
+      .hp-success-ring {
+        width: 62px; height: 62px;
+        margin: 0 auto 1.1rem;
+        border-radius: 50%;
+        padding: 3px;
+        background: var(--pride-gradient);
+      }
+      .hp-success-ring div {
+        width: 100%; height: 100%;
+        border-radius: 50%;
+        background: var(--dark-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-success);
+      }
+      .hp-signup-success h3 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: var(--text-white);
+        margin-bottom: 0.5rem;
+      }
+      .hp-signup-success p {
         font-family: "Roboto Slab", serif;
         color: var(--text-light);
-        margin-bottom: 2rem;
+        font-size: 0.95rem;
+        line-height: 1.65;
+      }
+      @media (max-width: 560px) {
+        .hp-signup-card { padding: 2rem 1.4rem; }
+        .hp-form-grid { grid-template-columns: 1fr; gap: 0; }
       }
 
-      @media (max-width: 768px) {
-        .home-hero {
-          padding: calc(var(--nav-height) + 1rem) 1.5rem 3rem;
+      /* =====================================================
+         DONATE BAND
+         ===================================================== */
+      .hp-donate {
+        border-top: 1px solid var(--border-light);
+        text-align: center;
+      }
+      .hp-donate h2 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        color: var(--text-white);
+        margin-bottom: 0.75rem;
+      }
+      .hp-donate p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        margin-bottom: 1.75rem;
+      }
+
+      .hp-section-head { max-width: 640px; }
+      .hp-section-head p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        line-height: 1.75;
+      }
+      .hp-center { text-align: center; margin-left: auto; margin-right: auto; }
+      .hp-center .hp-actions { justify-content: center; }
+
+      /* =====================================================
+         SHARED-LAYER OVERRIDES
+         ===================================================== */
+      /* style.css's reveal-stagger rules outrank the card hover rules and
+         pin transform/transition (with per-child delays) after reveal.
+         These higher-specificity rules restore the hover lift. The cost is
+         that grid children rise together instead of staggering. */
+      html.reveal-ready .reveal-stagger.visible > .hp-wwd-card:nth-child(n),
+      html.reveal-ready .reveal-stagger.visible > .hp-slate-card:nth-child(n) {
+        transition: opacity 0.5s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        transition-delay: 0s;
+      }
+      html.reveal-ready .reveal-stagger.visible > .hp-wwd-card:nth-child(n):hover,
+      html.reveal-ready .reveal-stagger.visible > .hp-slate-card:nth-child(n):hover,
+      html.reveal-ready .reveal-stagger.visible > .hp-slate-card:nth-child(n):focus-visible {
+        transform: translateY(-5px);
+      }
+
+      /* The shared layer (style.css + enhancements.js) animates buttons,
+         goal bars, and reveal transitions without a reduced-motion guard.
+         Cover everything this page uses. */
+      @media (prefers-reduced-motion: reduce) {
+        .btn-primary, .btn-pride-shimmer, .goal-fill, .nav-logo {
+          animation: none !important;
         }
-        .home-hero .hero-cta-founding,
-        .launch-day-actions .btn {
-          width: 100%;
-          max-width: 320px;
-        }
-        .launch-day-callout {
-          padding: 0 1.5rem;
+        html.reveal-ready .reveal,
+        html.reveal-ready .reveal-left,
+        html.reveal-ready .reveal-stagger > * {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
         }
       }
     </style>
@@ -597,202 +909,399 @@
   <body>
 <div id="site-header"></div>
 
-    <section class="home-hero">
-      <div class="hero-badge">People Powered, Equality Focused</div>
-      <h1>
-        Ohio's
-        <span class="nonpartisan-highlight">Non-Partisan</span>
-        Political Action Committee for LGBTQ+ Equality
-      </h1>
-      <p class="hero-subtitle">
-        Ohio Pride mobilizes voters, endorses pro-equality candidates, and
-        advocates for the rights of LGBTQ+ Ohioans at every level of government.
-      </p>
-      <div class="hero-divider"></div>
-      <div class="hero-cta">
-        <a href="/donate/founding-member" class="btn btn-pride-shimmer hero-cta-founding"
-          >Become a Founding Member</a
-        >
+  <main id="main">
 
-        <form class="hero-signup" id="hero-signup-form" novalidate>
-          <div class="hero-signup-head">Or join our mailing list</div>
-
-          <div class="hero-signup-error" id="hero-signup-error" hidden></div>
-
-          <!-- Honeypot -->
-          <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;">
-            <label for="hs-website">Website</label>
-            <input type="text" id="hs-website" name="website" tabindex="-1" autocomplete="off" />
-          </div>
-
-          <div class="hero-signup-grid">
-            <div class="hero-field">
-              <label for="hs-first" class="sr-only">First name</label>
-              <input type="text" id="hs-first" name="first_name" required maxlength="100"
-                     autocomplete="given-name" placeholder="First name" />
-            </div>
-            <div class="hero-field">
-              <label for="hs-last" class="sr-only">Last name</label>
-              <input type="text" id="hs-last" name="last_name" required maxlength="100"
-                     autocomplete="family-name" placeholder="Last name" />
-            </div>
-          </div>
-
-          <div class="hero-field">
-            <label for="hs-email" class="sr-only">Email</label>
-            <input type="email" id="hs-email" name="email" required aria-required="true"
-                   autocomplete="email" placeholder="Email" />
-          </div>
-
-          <div class="hero-signup-grid">
-            <div class="hero-field">
-              <label for="hs-phone" class="sr-only">Phone (optional)</label>
-              <input type="tel" id="hs-phone" name="phone" maxlength="40"
-                     autocomplete="tel" placeholder="Phone (optional)" />
-            </div>
-            <div class="hero-field">
-              <label for="hs-zip" class="sr-only">ZIP</label>
-              <input type="text" id="hs-zip" name="zip" required inputmode="numeric" maxlength="10"
-                     autocomplete="postal-code" placeholder="ZIP" />
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary hero-signup-submit" id="hs-submit">Sign Up</button>
-        </form>
-
-        <div class="hero-signup-confirm" id="hero-signup-confirm" hidden>
-          You're on the list — thanks for joining Ohio Pride. Watch your inbox.
-        </div>
-      </div>
-    </section>
-
-    <section class="launch-day-callout endorse-spotlight endorse-spotlight--compact">
-      <div class="launch-day-card reveal">
-        <div class="section-label section-label-light">First Endorsement of 2026</div>
-        <h2>We're standing with Jeff Givan for Ohio House.</h2>
-        <p>
-          Jeff Givan brought Pride to Lima before he ever ran for office. A
-          co-founder of the Lima Pride Alliance, he is challenging the Speaker
-          of the Ohio House to put District 78 first: public schools,
-          affordable healthcare, and equal rights for every Ohioan.
-        </p>
-        <div class="launch-day-actions">
-          <a href="/endorsements" class="btn btn-primary">Read the Endorsement</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <h2 class="section-title section-title-light" style="text-align: center">What We Do</h2>
-        <div class="cards-grid reveal-stagger">
-          <div class="wwd-card">
-            <div class="card-icon">&#127919;</div>
-            <h3>Endorse Candidates</h3>
-            <p>
-              We identify, endorse, and contribute to pro-equality candidates at
-              every level, from statehouse races to statewide offices. 2026
-              is a historic election year.
-            </p>
-          </div>
-          <div class="wwd-card">
-            <div class="card-icon">&#128218;</div>
-            <h3>Educate Voters</h3>
-            <p>
-              We score every Ohio legislator on their LGBTQ+ equality record and
-              publish plain-language guides, so voters know who's protecting
-              equality and who's voting against it.
-            </p>
-            <a href="/scorecard" class="card-link">View the Scorecard →</a>
-          </div>
-          <div class="wwd-card">
-            <div class="card-icon">⚖️</div>
-            <h3>Advocate on LGBTQ+ Issues</h3>
-            <p>
-              We track and fight anti-LGBTQ+ legislation in the Ohio Statehouse,
-              from forced outing bills to drag bans, and push for
-              pro-equality policy.
-            </p>
-            <a href="/issues" class="card-link">View the Issue Tracker →</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="scorecard-callout">
-      <div class="scorecard-card reveal">
-        <div class="section-label section-label-light" style="text-align: center;">Know Where They Stand</div>
-        <h2>Every Ohio Legislator, Graded on Equality</h2>
-        <p>
-          We score all 132 members of the Ohio General Assembly on their
-          LGBTQ+ floor votes, committee votes, and bill sponsorships.
-          Find your state senator and representative, see their grade, and
-          share it with your community.
-        </p>
-        <div class="scorecard-grades" aria-hidden="true">
-          <div class="scorecard-grade"><span class="grade-letter" style="color:#16a34a">A+</span><span class="grade-label">Champion</span></div>
-          <div class="scorecard-grade"><span class="grade-letter" style="color:#22c55e">A</span><span class="grade-label">Strong Ally</span></div>
-          <div class="scorecard-grade"><span class="grade-letter" style="color:#65a30d">A-</span><span class="grade-label">Reliable Ally</span></div>
-          <div class="scorecard-grade"><span class="grade-letter" style="color:#84cc16">B</span><span class="grade-label">Supportive</span></div>
-          <div class="scorecard-grade"><span class="grade-letter" style="color:#eab308">C</span><span class="grade-label">Mixed</span></div>
-          <div class="scorecard-grade"><span class="grade-letter" style="color:#f97316">D</span><span class="grade-label">Unfriendly</span></div>
-          <div class="scorecard-grade"><span class="grade-letter" style="color:#dc2626">F</span><span class="grade-label">Hostile</span></div>
-        </div>
-        <div class="scorecard-actions">
-          <a href="/scorecard" class="btn btn-primary">See the Scorecard</a>
-          <a href="/issues" class="btn btn-outline">Track the Bills</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section founding-section reveal">
-      <div class="founding-inner">
-        <div class="section-label section-label-light">Join Us</div>
-        <h2 class="section-title section-title-light">Be One of the First 1,969</h2>
-        <p class="founding-desc">
-          Join our founding membership and help launch Ohio Pride at this
-          critical moment. Your support as a founding member will power our work
-          to elect pro-equality candidates and protect LGBTQ+ rights across
-          Ohio.
-        </p>
-        <p class="stonewall-ref">
-          The number 1,969 honors the Stonewall uprising of 1969, the watershed
-          moment that sparked the modern LGBTQ+ rights movement.
-        </p>
-
-        <div class="goal-block" style="max-width: 500px; margin: 0 auto">
-          <div class="goal-top">
-            <span class="goal-text">Founding Members</span>
-            <span class="goal-amt">1,969</span>
-          </div>
-          <div class="goal-track">
-            <div class="goal-fill" id="goalFill"></div>
-          </div>
-          <div class="goal-note" id="progressText">
-            0 of 1,969 Founding Members
-          </div>
-        </div>
-
-        <div class="founding-cta">
-          <a href="/donate/founding-member" class="btn btn-primary"
-            >Become a Founding Member</a
-          >
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="donate-cta-card reveal">
-          <h2>Support the Movement</h2>
-          <p>
-            Every contribution fuels our work to build political power for
-            LGBTQ+ equality in Ohio.
+    <!-- ============ HERO ============ -->
+    <section class="hp-hero">
+      <div class="hp-hero-grid">
+        <div class="hp-hero-copy">
+          <div class="section-label">Ohio's Only Statewide LGBTQ+ PAC</div>
+          <h1>We elect pro&#8209;equality leaders. <span class="hp-keep-score">And we keep score.</span></h1>
+          <p class="hp-hero-sub">
+            Ohio Pride endorses candidates, scores all 132 state legislators,
+            and mobilizes voters for LGBTQ+ equality in every one of Ohio's 88
+            counties.
           </p>
-          <a href="/donate" class="btn btn-primary">Make a Donation</a>
+          <div class="hp-live-chip">
+            <span class="hp-live-dot" aria-hidden="true"></span>
+            <span><strong id="hpHeroCount">158</strong> of 1,969 founding members and counting</span>
+          </div>
+          <div class="hp-hero-actions">
+            <a href="/donate/founding-member" class="btn btn-pride-shimmer">Become a Founding Member</a>
+            <a href="/scorecard" class="btn btn-outline-light">See the Scorecard</a>
+          </div>
+          <div class="hp-trust">
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Non-Partisan</span>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>People Powered</span>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>All 88 Counties</span>
+          </div>
+        </div>
+
+        <div class="hp-flag-wrap">
+          <!-- Ohio cutout in Progress Pride colors. Inline SVG so it stays crisp and animates. -->
+          <svg class="hp-ohio" viewBox="-24 -24 848 918" role="img"
+               aria-label="Ohio state outline filled with the Progress Pride flag design">
+            <defs>
+              <clipPath id="hpOhioClip"><path d="M575.5,672.4L569.9,680.9L571.8,701.0L566.2,705.8L559.1,705.6L561.1,713.3L568.3,721.2L565.1,733.5L569.1,743.0L565.2,743.2L556.6,738.1L551.3,751.0L543.4,755.5L537.9,750.8L543.4,742.1L536.9,727.9L528.3,726.6L524.1,718.1L517.8,718.7L514.9,726.3L507.5,731.3L497.9,749.7L497.6,763.8L483.3,776.7L489.5,789.7L491.5,821.4L486.3,824.3L475.8,822.7L470.3,827.4L467.9,847.5L463.1,860.2L449.2,861.4L422.2,870.2L415.1,867.2L411.0,853.6L402.3,847.4L394.3,835.9L388.6,832.2L375.7,831.3L367.5,824.5L361.3,800.3L362.5,788.4L359.1,784.3L342.4,791.6L332.8,791.7L328.6,799.0L317.6,804.9L312.0,816.2L300.9,818.2L292.8,815.5L283.8,823.1L272.2,809.2L251.5,803.9L241.6,797.2L221.9,803.0L217.7,814.3L212.1,815.0L195.4,808.9L192.1,798.1L182.9,793.6L180.0,785.4L176.1,782.8L159.6,776.7L139.2,780.8L112.9,772.2L109.5,766.2L108.9,750.9L98.9,735.7L95.9,723.3L88.2,715.9L73.4,712.0L71.5,700.0L67.8,695.6L64.0,695.9L57.7,702.1L50.1,700.7L39.5,707.1L25.2,700.5L18.9,691.6L14.1,689.0L6.0,696.8L0.0,699.2L3.3,359.3L2.6,68.5L254.1,59.6L255.6,65.9L262.4,69.7L272.1,70.5L277.7,67.2L295.4,81.1L322.5,90.3L333.3,102.7L350.7,112.8L361.7,109.0L365.2,104.5L364.6,97.7L369.4,94.9L378.4,106.4L391.0,106.1L391.7,115.8L396.6,118.1L409.8,133.7L428.9,144.4L435.0,145.1L457.2,134.1L477.1,132.2L490.1,122.6L522.3,112.5L547.3,120.3L562.8,117.1L573.1,119.0L598.9,101.5L628.2,74.1L657.1,52.9L664.2,52.6L708.5,30.1L729.0,26.4L747.5,16.5L762.4,14.1L799.9,0.0L799.9,325.9L789.2,331.9L785.1,329.2L779.8,330.5L772.2,339.6L785.7,365.7L782.6,383.4L778.6,386.4L783.1,390.2L784.9,404.1L781.3,416.9L775.2,421.8L772.2,432.8L765.4,443.8L764.6,456.8L759.1,463.0L758.8,488.6L754.3,493.6L755.8,502.4L746.6,501.6L749.4,513.8L742.8,519.4L742.8,530.5L734.8,538.3L741.8,553.1L735.8,556.5L732.7,573.8L724.3,574.6L716.0,581.2L697.4,599.3L685.8,616.3L675.9,620.1L670.1,630.6L660.1,631.0L645.8,640.7L640.6,641.7L637.2,639.3L633.7,628.8L625.7,625.3L606.8,642.4L604.4,659.7L584.3,658.3L581.0,662.3L581.7,669.8L575.5,672.4Z" /></clipPath>
+              <linearGradient id="hpOhioSheenGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#ffffff" stop-opacity="0" />
+                <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.16" />
+                <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <g class="hp-ohio-inner">
+              <g clip-path="url(#hpOhioClip)">
+                <rect x="0" y="0" width="800" height="146" fill="#E40303" />
+                <rect x="0" y="145" width="800" height="146" fill="#FFBC00" />
+                <rect x="0" y="290" width="800" height="146" fill="#FFED00" />
+                <rect x="0" y="435" width="800" height="146" fill="#008026" />
+                <rect x="0" y="580" width="800" height="146" fill="#004DFF" />
+                <rect x="0" y="725" width="800" height="146" fill="#750787" />
+                <polygon points="-40,-125 520,435 -40,995" fill="#000000" />
+                <polygon points="-40,-40 435,435 -40,910" fill="#613915" />
+                <polygon points="-40,45 350,435 -40,825" fill="#70D6EC" />
+                <polygon points="-40,130 265,435 -40,740" fill="#ffafc8" />
+                <polygon points="-40,215 180,435 -40,655" fill="#ffffff" />
+                <g class="hp-ohio-sheen" transform="rotate(14)">
+                  <rect x="-460" y="-160" width="320" height="1290" fill="url(#hpOhioSheenGrad)" />
+                </g>
+              </g>
+              <path d="M575.5,672.4L569.9,680.9L571.8,701.0L566.2,705.8L559.1,705.6L561.1,713.3L568.3,721.2L565.1,733.5L569.1,743.0L565.2,743.2L556.6,738.1L551.3,751.0L543.4,755.5L537.9,750.8L543.4,742.1L536.9,727.9L528.3,726.6L524.1,718.1L517.8,718.7L514.9,726.3L507.5,731.3L497.9,749.7L497.6,763.8L483.3,776.7L489.5,789.7L491.5,821.4L486.3,824.3L475.8,822.7L470.3,827.4L467.9,847.5L463.1,860.2L449.2,861.4L422.2,870.2L415.1,867.2L411.0,853.6L402.3,847.4L394.3,835.9L388.6,832.2L375.7,831.3L367.5,824.5L361.3,800.3L362.5,788.4L359.1,784.3L342.4,791.6L332.8,791.7L328.6,799.0L317.6,804.9L312.0,816.2L300.9,818.2L292.8,815.5L283.8,823.1L272.2,809.2L251.5,803.9L241.6,797.2L221.9,803.0L217.7,814.3L212.1,815.0L195.4,808.9L192.1,798.1L182.9,793.6L180.0,785.4L176.1,782.8L159.6,776.7L139.2,780.8L112.9,772.2L109.5,766.2L108.9,750.9L98.9,735.7L95.9,723.3L88.2,715.9L73.4,712.0L71.5,700.0L67.8,695.6L64.0,695.9L57.7,702.1L50.1,700.7L39.5,707.1L25.2,700.5L18.9,691.6L14.1,689.0L6.0,696.8L0.0,699.2L3.3,359.3L2.6,68.5L254.1,59.6L255.6,65.9L262.4,69.7L272.1,70.5L277.7,67.2L295.4,81.1L322.5,90.3L333.3,102.7L350.7,112.8L361.7,109.0L365.2,104.5L364.6,97.7L369.4,94.9L378.4,106.4L391.0,106.1L391.7,115.8L396.6,118.1L409.8,133.7L428.9,144.4L435.0,145.1L457.2,134.1L477.1,132.2L490.1,122.6L522.3,112.5L547.3,120.3L562.8,117.1L573.1,119.0L598.9,101.5L628.2,74.1L657.1,52.9L664.2,52.6L708.5,30.1L729.0,26.4L747.5,16.5L762.4,14.1L799.9,0.0L799.9,325.9L789.2,331.9L785.1,329.2L779.8,330.5L772.2,339.6L785.7,365.7L782.6,383.4L778.6,386.4L783.1,390.2L784.9,404.1L781.3,416.9L775.2,421.8L772.2,432.8L765.4,443.8L764.6,456.8L759.1,463.0L758.8,488.6L754.3,493.6L755.8,502.4L746.6,501.6L749.4,513.8L742.8,519.4L742.8,530.5L734.8,538.3L741.8,553.1L735.8,556.5L732.7,573.8L724.3,574.6L716.0,581.2L697.4,599.3L685.8,616.3L675.9,620.1L670.1,630.6L660.1,631.0L645.8,640.7L640.6,641.7L637.2,639.3L633.7,628.8L625.7,625.3L606.8,642.4L604.4,659.7L584.3,658.3L581.0,662.3L581.7,669.8L575.5,672.4Z" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="4" stroke-linejoin="round" />
+            </g>
+          </svg>
         </div>
       </div>
     </section>
+
+    <!-- ============ 88 COUNTIES TICKER ============ -->
+    <div class="hp-counties">
+      <p class="sr-only">Ohio Pride organizes in all 88 Ohio counties.</p>
+      <button type="button" class="hp-counties-toggle" id="hpCountiesToggle" aria-pressed="false" aria-label="Pause the scrolling county list">
+        <svg class="icon-pause" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg>
+        <svg class="icon-play" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l14 8-14 8z"/></svg>
+      </button>
+      <div class="hp-counties-track" aria-hidden="true">
+        <div class="hp-counties-list"><span>Adams</span><i>&#9670;</i><span>Allen</span><i>&#9670;</i><span>Ashland</span><i>&#9670;</i><span>Ashtabula</span><i>&#9670;</i><span>Athens</span><i>&#9670;</i><span>Auglaize</span><i>&#9670;</i><span>Belmont</span><i>&#9670;</i><span>Brown</span><i>&#9670;</i><span>Butler</span><i>&#9670;</i><span>Carroll</span><i>&#9670;</i><span>Champaign</span><i>&#9670;</i><span>Clark</span><i>&#9670;</i><span>Clermont</span><i>&#9670;</i><span>Clinton</span><i>&#9670;</i><span>Columbiana</span><i>&#9670;</i><span>Coshocton</span><i>&#9670;</i><span>Crawford</span><i>&#9670;</i><span>Cuyahoga</span><i>&#9670;</i><span>Darke</span><i>&#9670;</i><span>Defiance</span><i>&#9670;</i><span>Delaware</span><i>&#9670;</i><span>Erie</span><i>&#9670;</i><span>Fairfield</span><i>&#9670;</i><span>Fayette</span><i>&#9670;</i><span>Franklin</span><i>&#9670;</i><span>Fulton</span><i>&#9670;</i><span>Gallia</span><i>&#9670;</i><span>Geauga</span><i>&#9670;</i><span>Greene</span><i>&#9670;</i><span>Guernsey</span><i>&#9670;</i><span>Hamilton</span><i>&#9670;</i><span>Hancock</span><i>&#9670;</i><span>Hardin</span><i>&#9670;</i><span>Harrison</span><i>&#9670;</i><span>Henry</span><i>&#9670;</i><span>Highland</span><i>&#9670;</i><span>Hocking</span><i>&#9670;</i><span>Holmes</span><i>&#9670;</i><span>Huron</span><i>&#9670;</i><span>Jackson</span><i>&#9670;</i><span>Jefferson</span><i>&#9670;</i><span>Knox</span><i>&#9670;</i><span>Lake</span><i>&#9670;</i><span>Lawrence</span><i>&#9670;</i><span>Licking</span><i>&#9670;</i><span>Logan</span><i>&#9670;</i><span>Lorain</span><i>&#9670;</i><span>Lucas</span><i>&#9670;</i><span>Madison</span><i>&#9670;</i><span>Mahoning</span><i>&#9670;</i><span>Marion</span><i>&#9670;</i><span>Medina</span><i>&#9670;</i><span>Meigs</span><i>&#9670;</i><span>Mercer</span><i>&#9670;</i><span>Miami</span><i>&#9670;</i><span>Monroe</span><i>&#9670;</i><span>Montgomery</span><i>&#9670;</i><span>Morgan</span><i>&#9670;</i><span>Morrow</span><i>&#9670;</i><span>Muskingum</span><i>&#9670;</i><span>Noble</span><i>&#9670;</i><span>Ottawa</span><i>&#9670;</i><span>Paulding</span><i>&#9670;</i><span>Perry</span><i>&#9670;</i><span>Pickaway</span><i>&#9670;</i><span>Pike</span><i>&#9670;</i><span>Portage</span><i>&#9670;</i><span>Preble</span><i>&#9670;</i><span>Putnam</span><i>&#9670;</i><span>Richland</span><i>&#9670;</i><span>Ross</span><i>&#9670;</i><span>Sandusky</span><i>&#9670;</i><span>Scioto</span><i>&#9670;</i><span>Seneca</span><i>&#9670;</i><span>Shelby</span><i>&#9670;</i><span>Stark</span><i>&#9670;</i><span>Summit</span><i>&#9670;</i><span>Trumbull</span><i>&#9670;</i><span>Tuscarawas</span><i>&#9670;</i><span>Union</span><i>&#9670;</i><span>Van Wert</span><i>&#9670;</i><span>Vinton</span><i>&#9670;</i><span>Warren</span><i>&#9670;</i><span>Washington</span><i>&#9670;</i><span>Wayne</span><i>&#9670;</i><span>Williams</span><i>&#9670;</i><span>Wood</span><i>&#9670;</i><span>Wyandot</span><i>&#9670;</i></div>
+        <div class="hp-counties-list"><span>Adams</span><i>&#9670;</i><span>Allen</span><i>&#9670;</i><span>Ashland</span><i>&#9670;</i><span>Ashtabula</span><i>&#9670;</i><span>Athens</span><i>&#9670;</i><span>Auglaize</span><i>&#9670;</i><span>Belmont</span><i>&#9670;</i><span>Brown</span><i>&#9670;</i><span>Butler</span><i>&#9670;</i><span>Carroll</span><i>&#9670;</i><span>Champaign</span><i>&#9670;</i><span>Clark</span><i>&#9670;</i><span>Clermont</span><i>&#9670;</i><span>Clinton</span><i>&#9670;</i><span>Columbiana</span><i>&#9670;</i><span>Coshocton</span><i>&#9670;</i><span>Crawford</span><i>&#9670;</i><span>Cuyahoga</span><i>&#9670;</i><span>Darke</span><i>&#9670;</i><span>Defiance</span><i>&#9670;</i><span>Delaware</span><i>&#9670;</i><span>Erie</span><i>&#9670;</i><span>Fairfield</span><i>&#9670;</i><span>Fayette</span><i>&#9670;</i><span>Franklin</span><i>&#9670;</i><span>Fulton</span><i>&#9670;</i><span>Gallia</span><i>&#9670;</i><span>Geauga</span><i>&#9670;</i><span>Greene</span><i>&#9670;</i><span>Guernsey</span><i>&#9670;</i><span>Hamilton</span><i>&#9670;</i><span>Hancock</span><i>&#9670;</i><span>Hardin</span><i>&#9670;</i><span>Harrison</span><i>&#9670;</i><span>Henry</span><i>&#9670;</i><span>Highland</span><i>&#9670;</i><span>Hocking</span><i>&#9670;</i><span>Holmes</span><i>&#9670;</i><span>Huron</span><i>&#9670;</i><span>Jackson</span><i>&#9670;</i><span>Jefferson</span><i>&#9670;</i><span>Knox</span><i>&#9670;</i><span>Lake</span><i>&#9670;</i><span>Lawrence</span><i>&#9670;</i><span>Licking</span><i>&#9670;</i><span>Logan</span><i>&#9670;</i><span>Lorain</span><i>&#9670;</i><span>Lucas</span><i>&#9670;</i><span>Madison</span><i>&#9670;</i><span>Mahoning</span><i>&#9670;</i><span>Marion</span><i>&#9670;</i><span>Medina</span><i>&#9670;</i><span>Meigs</span><i>&#9670;</i><span>Mercer</span><i>&#9670;</i><span>Miami</span><i>&#9670;</i><span>Monroe</span><i>&#9670;</i><span>Montgomery</span><i>&#9670;</i><span>Morgan</span><i>&#9670;</i><span>Morrow</span><i>&#9670;</i><span>Muskingum</span><i>&#9670;</i><span>Noble</span><i>&#9670;</i><span>Ottawa</span><i>&#9670;</i><span>Paulding</span><i>&#9670;</i><span>Perry</span><i>&#9670;</i><span>Pickaway</span><i>&#9670;</i><span>Pike</span><i>&#9670;</i><span>Portage</span><i>&#9670;</i><span>Preble</span><i>&#9670;</i><span>Putnam</span><i>&#9670;</i><span>Richland</span><i>&#9670;</i><span>Ross</span><i>&#9670;</i><span>Sandusky</span><i>&#9670;</i><span>Scioto</span><i>&#9670;</i><span>Seneca</span><i>&#9670;</i><span>Shelby</span><i>&#9670;</i><span>Stark</span><i>&#9670;</i><span>Summit</span><i>&#9670;</i><span>Trumbull</span><i>&#9670;</i><span>Tuscarawas</span><i>&#9670;</i><span>Union</span><i>&#9670;</i><span>Van Wert</span><i>&#9670;</i><span>Vinton</span><i>&#9670;</i><span>Warren</span><i>&#9670;</i><span>Washington</span><i>&#9670;</i><span>Wayne</span><i>&#9670;</i><span>Williams</span><i>&#9670;</i><span>Wood</span><i>&#9670;</i><span>Wyandot</span><i>&#9670;</i></div>
+      </div>
+    </div>
+
+    <!-- ============ LIVE NUMBERS ============ -->
+    <section class="hp-stats" aria-label="Ohio Pride by the numbers">
+      <div class="reveal">
+        <div class="hp-stat-num" id="hpStatMembers">158</div>
+        <div class="hp-stat-rule" aria-hidden="true"></div>
+        <div class="hp-stat-label">Founding Members</div>
+      </div>
+      <div class="reveal">
+        <div class="hp-stat-num" data-stat="legislators">132</div>
+        <div class="hp-stat-rule" aria-hidden="true"></div>
+        <div class="hp-stat-label">Legislators Scored</div>
+      </div>
+      <div class="reveal">
+        <div class="hp-stat-num" id="hpStatBills">25</div>
+        <div class="hp-stat-rule" aria-hidden="true"></div>
+        <div class="hp-stat-label">Bills Tracked</div>
+      </div>
+      <div class="reveal">
+        <div class="hp-stat-num" data-stat="counties">88</div>
+        <div class="hp-stat-rule" aria-hidden="true"></div>
+        <div class="hp-stat-label">Counties. One Ohio.</div>
+      </div>
+    </section>
+
+    <!-- ============ WHAT WE DO ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="hp-section-head hp-center">
+          <div class="section-label">What We Do</div>
+          <h2 class="section-title" style="margin-bottom: 0.75rem;">Four jobs. One mission.</h2>
+          <p>Building durable political power for LGBTQ+ equality in Ohio.</p>
+        </div>
+        <div class="hp-wwd-grid reveal-stagger">
+          <div class="hp-wwd-card">
+            <div class="hp-wwd-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="11" rx="2"/><path d="M7 10V7l7-4 3 5-4 2"/><path d="M12 15h.01"/></svg>
+            </div>
+            <h3>Endorse Candidates</h3>
+            <p>We identify, vet, and back pro-equality candidates from school board to statewide office, then put real resources behind them.</p>
+            <a href="/endorsements" class="card-link">See Endorsements &rarr;</a>
+          </div>
+          <div class="hp-wwd-card">
+            <div class="hp-wwd-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>
+            </div>
+            <h3>Score Every Legislator</h3>
+            <p>All 132 members of the General Assembly, graded on floor votes, committee votes, and bill sponsorships. No exceptions.</p>
+            <a href="/scorecard" class="card-link">View the Scorecard &rarr;</a>
+          </div>
+          <div class="hp-wwd-card">
+            <div class="hp-wwd-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Fight Anti-LGBTQ+ Bills</h3>
+            <p>We track every anti-equality bill moving in the Statehouse and organize testimony, calls, and pressure to stop them.</p>
+            <a href="/issues" class="card-link">Track the Bills &rarr;</a>
+          </div>
+          <div class="hp-wwd-card">
+            <div class="hp-wwd-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-7-7 18-2.5-7.5L3 11z"/></svg>
+            </div>
+            <h3>Mobilize Voters</h3>
+            <p>We register, educate, and turn out pro-equality voters in every corner of the state, from Cincinnati to Conneaut.</p>
+            <a href="/volunteer" class="card-link">Volunteer &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCORECARD ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="hp-split">
+          <div class="hp-split-copy reveal">
+            <div class="section-label">Know Where They Stand</div>
+            <h2 class="section-title" style="margin-bottom: 1rem;">Every legislator. Every vote. On the record.</h2>
+            <p style="font-family:'Roboto Slab',serif; color:var(--text-light); line-height:1.75; max-width:540px;">
+              Our scorecard grades all 132 members of the Ohio General Assembly
+              on their LGBTQ+ equality record: floor votes, committee votes, and
+              bill sponsorships. Find your state senator and representative,
+              see their grade, and share it with your community.
+            </p>
+            <div class="hp-grades">
+              <div class="hp-grade"><b style="color:var(--text-success)">A+</b><span>Champion</span></div>
+              <div class="hp-grade"><b style="color:#22c55e">A</b><span>Strong Ally</span></div>
+              <div class="hp-grade"><b style="color:#65a30d">A-</b><span>Reliable Ally</span></div>
+              <div class="hp-grade"><b style="color:#84cc16">B</b><span>Supportive</span></div>
+              <div class="hp-grade"><b style="color:#eab308">C</b><span>Mixed Record</span></div>
+              <div class="hp-grade"><b style="color:#f97316">D</b><span>Unfriendly</span></div>
+              <div class="hp-grade"><b style="color:var(--text-danger)">F</b><span>Hostile</span></div>
+            </div>
+            <form class="hp-find" action="/scorecard" method="get">
+              <label class="hp-find-label" for="hpFindInput">Look up your legislators</label>
+              <div class="hp-find-row">
+                <input type="search" id="hpFindInput" name="search" maxlength="80"
+                       placeholder="Try a name or district, like Brownlee or 28" />
+                <button type="submit" class="btn btn-primary">Search</button>
+              </div>
+            </form>
+            <div class="hp-actions">
+              <a href="/scorecard" class="btn btn-primary">See the Scorecard</a>
+              <a href="/issues" class="btn btn-outline-light">Track the Bills</a>
+            </div>
+          </div>
+          <div class="hp-split-media reveal">
+            <div class="hp-photo">
+              <picture>
+                <source type="image/avif" srcset="/assets/img/ohio-statehouse-hero-768.avif 768w, /assets/img/ohio-statehouse-hero-1280.avif 1280w" sizes="(max-width: 920px) 92vw, 540px" />
+                <source type="image/webp" srcset="/assets/img/ohio-statehouse-hero-768.webp 768w, /assets/img/ohio-statehouse-hero-1280.webp 1280w" sizes="(max-width: 920px) 92vw, 540px" />
+                <img src="/assets/img/ohio-statehouse-hero-1280.jpg"
+                     srcset="/assets/img/ohio-statehouse-hero-768.jpg 768w, /assets/img/ohio-statehouse-hero-1280.jpg 1280w"
+                     sizes="(max-width: 920px) 92vw, 540px"
+                     alt="The Ohio Statehouse in Columbus" loading="lazy" decoding="async" width="1280" height="960" />
+              </picture>
+            </div>
+            <div class="hp-photo-credit">The Ohio Statehouse, Columbus</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ENDORSED SLATE ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="hp-section-head hp-center">
+          <div class="section-label">The 2026 Slate</div>
+          <h2 class="section-title" style="margin-bottom: 0.75rem;">Endorsed by Ohio Pride</h2>
+          <p>Pro-equality candidates we are proud to stand behind this cycle.</p>
+        </div>
+        <div class="hp-slate-grid reveal-stagger">
+          <a class="hp-slate-card" href="/endorsements#/seth-walsh">
+            <div class="hp-slate-photo">
+              <img src="/assets/endorsements/seth-walsh-card.jpg" alt="" loading="lazy" decoding="async" width="540" height="540" />
+            </div>
+            <div class="hp-slate-body">
+              <div class="hp-slate-tag">Endorsed</div>
+              <div class="hp-slate-name">Seth Walsh</div>
+              <div class="hp-slate-race">Ohio Treasurer</div>
+              <p class="hp-slate-hook">Cincinnati councilmember and Ohio Pride founding member, running statewide.</p>
+              <span class="hp-slate-link">Read why &rarr;</span>
+            </div>
+          </a>
+          <a class="hp-slate-card" href="/endorsements#/karen-brownlee">
+            <div class="hp-slate-photo">
+              <img src="/assets/endorsements/karen-brownlee.jpg" alt="" loading="lazy" decoding="async" width="380" height="526" />
+            </div>
+            <div class="hp-slate-body">
+              <div class="hp-slate-tag">Endorsed</div>
+              <div class="hp-slate-name">Karen Brownlee</div>
+              <div class="hp-slate-race">Ohio House, District 28</div>
+              <p class="hp-slate-hook">PRIDE Act sponsor with the top score on our legislative scorecard.</p>
+              <span class="hp-slate-link">Read why &rarr;</span>
+            </div>
+          </a>
+          <a class="hp-slate-card" href="/endorsements#/caleb-price">
+            <div class="hp-slate-photo">
+              <img src="/assets/endorsements/caleb-price.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1081" />
+            </div>
+            <div class="hp-slate-body">
+              <div class="hp-slate-tag">Endorsed</div>
+              <div class="hp-slate-name">Caleb Price</div>
+              <div class="hp-slate-race">Ohio House, District 30</div>
+              <p class="hp-slate-hook">Born and raised Westsider running to write marriage equality into Ohio law.</p>
+              <span class="hp-slate-link">Read why &rarr;</span>
+            </div>
+          </a>
+          <a class="hp-slate-card" href="/endorsements#/jeff-givan">
+            <div class="hp-slate-photo">
+              <img src="/assets/endorsements/jeff-givan-card.jpg" alt="" loading="lazy" decoding="async" width="880" height="880" />
+            </div>
+            <div class="hp-slate-body">
+              <div class="hp-slate-tag">Endorsed</div>
+              <div class="hp-slate-name">Jeff Givan</div>
+              <div class="hp-slate-race">Ohio House, District 78</div>
+              <p class="hp-slate-hook">Lima Pride Alliance co-founder challenging the Speaker of the Ohio House.</p>
+              <span class="hp-slate-link">Read why &rarr;</span>
+            </div>
+          </a>
+        </div>
+        <div class="hp-actions hp-center" style="justify-content:center;">
+          <a href="/endorsements" class="btn btn-primary">Read the Endorsements</a>
+          <a href="/endorsement/screening" class="btn btn-outline-light">Apply for Endorsement</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOUNDING MEMBERS ============ -->
+    <section class="section hp-founding">
+      <div class="container">
+        <div class="hp-split hp-split-flip">
+          <div class="hp-split-media reveal">
+            <div class="hp-photo hp-photo--wide">
+              <picture>
+                <source type="image/avif" srcset="/assets/img/columbus-skyline-768.avif 768w, /assets/img/columbus-skyline-1280.avif 1280w" sizes="(max-width: 920px) 92vw, 540px" />
+                <source type="image/webp" srcset="/assets/img/columbus-skyline-768.webp 768w, /assets/img/columbus-skyline-1280.webp 1280w" sizes="(max-width: 920px) 92vw, 540px" />
+                <img src="/assets/img/columbus-skyline-1280.jpg"
+                     srcset="/assets/img/columbus-skyline-768.jpg 768w, /assets/img/columbus-skyline-1280.jpg 1280w"
+                     sizes="(max-width: 920px) 92vw, 540px"
+                     alt="Downtown Columbus skyline above the Scioto River" loading="lazy" decoding="async" width="1280" height="498" />
+              </picture>
+            </div>
+            <div class="hp-photo-credit">Columbus on the Scioto River</div>
+          </div>
+          <div class="hp-split-copy reveal">
+            <div class="section-label">Join Us</div>
+            <h2 class="section-title" style="margin-bottom: 1rem;">Be one of the first 1,969.</h2>
+            <p style="font-family:'Roboto Slab',serif; color:var(--text-light); line-height:1.75; max-width:540px;">
+              Founding membership stays open until 1,969 Ohioans have signed on.
+              Every founding member powers our work to elect pro-equality
+              candidates and protect LGBTQ+ rights across the state.
+            </p>
+
+            <div class="goal-block">
+              <div class="goal-top">
+                <span class="goal-text">Founding Members</span>
+                <span class="goal-amt">1,969</span>
+              </div>
+              <div class="goal-track">
+                <div class="goal-fill" id="goalFill" style="width: 8%"></div>
+              </div>
+              <div class="goal-note" id="progressText">158 of 1,969 Founding Members</div>
+            </div>
+
+            <div class="hp-actions">
+              <a href="/donate/founding-member" class="btn btn-pride-shimmer">Become a Founding Member</a>
+              <a href="/founding-members" class="hp-founding-link">Meet the Founding Members &rarr;</a>
+            </div>
+            <p class="hp-founding-note">
+              The number honors 1969, the year of the Stonewall uprising that
+              sparked the modern LGBTQ+ rights movement.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SIGNUP ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="hp-signup-card reveal">
+          <h2>Get the Ohio Pride briefing</h2>
+          <p class="hp-signup-sub">
+            Action alerts, endorsements, and scorecard updates. A few emails a
+            month. Unsubscribe anytime.
+          </p>
+
+          <form id="hp-signup-form" novalidate>
+            <div class="hp-form-err" id="hpFormErr" role="alert"></div>
+
+            <!-- Honeypot -->
+            <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;">
+              <label for="hp-website">Website</label>
+              <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="hp-form-grid">
+              <div class="hp-field">
+                <label for="hp-first">First Name</label>
+                <input type="text" id="hp-first" name="first_name" required maxlength="100"
+                       autocomplete="given-name" placeholder="Jane" aria-describedby="hp-first-err" />
+                <div class="hp-field-err" id="hp-first-err">Please enter your first name.</div>
+              </div>
+              <div class="hp-field">
+                <label for="hp-last">Last Name</label>
+                <input type="text" id="hp-last" name="last_name" required maxlength="100"
+                       autocomplete="family-name" placeholder="Buckeye" aria-describedby="hp-last-err" />
+                <div class="hp-field-err" id="hp-last-err">Please enter your last name.</div>
+              </div>
+            </div>
+
+            <div class="hp-field">
+              <label for="hp-email">Email</label>
+              <input type="email" id="hp-email" name="email" required aria-required="true"
+                     autocomplete="email" placeholder="you@example.com" aria-describedby="hp-email-err" />
+              <div class="hp-field-err" id="hp-email-err">Please enter a valid email address.</div>
+            </div>
+
+            <div class="hp-form-grid">
+              <div class="hp-field">
+                <label for="hp-phone">Phone <em>(optional)</em></label>
+                <input type="tel" id="hp-phone" name="phone" maxlength="40"
+                       autocomplete="tel" placeholder="(614) 555-0188" />
+              </div>
+              <div class="hp-field">
+                <label for="hp-zip">ZIP Code</label>
+                <input type="text" id="hp-zip" name="zip" required inputmode="numeric" maxlength="10"
+                       autocomplete="postal-code" placeholder="43215" aria-describedby="hp-zip-err" />
+                <div class="hp-field-err" id="hp-zip-err">Please enter a valid ZIP code.</div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary hp-submit" id="hpSubmit">Sign Me Up</button>
+            <p class="hp-form-fine">We never sell, trade, or rent your information.</p>
+          </form>
+
+          <div class="hp-signup-success" id="hpSignupSuccess" role="status" tabindex="-1">
+            <div class="hp-success-ring"><div>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </div></div>
+            <h3>You're on the list.</h3>
+            <p>Thanks for joining Ohio Pride. Watch your inbox for the next briefing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DONATE ============ -->
+    <section class="section hp-donate">
+      <div class="container reveal">
+        <h2>Every dollar builds power.</h2>
+        <p>Your contribution fuels endorsements, the scorecard, and voter mobilization statewide.</p>
+        <a href="/donate" class="btn btn-primary btn-large">Make a Donation</a>
+      </div>
+    </section>
+
+  </main>
 
 <div id="site-footer"></div>
 
@@ -803,53 +1312,180 @@
     <script src="/js/ohiopride-data.js" defer></script>
     <script defer>
       document.addEventListener("DOMContentLoaded", function () {
-        OhioPride.loadProgress("#goalFill", "#progressText");
-      });
-    </script>
-    <script defer>
-      // Homepage hero mailing-list signup. POSTs to the same Netlify
-      // function the /signup page uses; source flags it as a homepage join.
-      (function () {
         "use strict";
-        var ENDPOINT = "/api/newsletter-submit";
-        var EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-        var form = document.getElementById("hero-signup-form");
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+        /* ---- 88-county ticker (markup is static; JS only adds pause) ---- */
+        var counties = document.querySelector(".hp-counties");
+        var countiesToggle = document.getElementById("hpCountiesToggle");
+        if (counties && countiesToggle) {
+          counties.classList.add("js-on");
+          countiesToggle.addEventListener("click", function () {
+            var paused = counties.classList.toggle("is-paused");
+            countiesToggle.setAttribute("aria-pressed", paused ? "true" : "false");
+            countiesToggle.setAttribute("aria-label",
+              paused ? "Resume the scrolling county list" : "Pause the scrolling county list");
+          });
+        }
+
+        /* ---- Live stat counters ---- */
+        /* Generation token cancels an in-flight count when a newer one starts
+           on the same element, so a slow stale count can never finish after
+           (and overwrite) the live value. */
+        function countTo(el, end, duration) {
+          if (!el) return;
+          var gen = (el.ohpCountGen = (el.ohpCountGen || 0) + 1);
+          if (reduceMotion.matches) { el.textContent = end.toLocaleString(); return; }
+          var start = 0;
+          var t0 = performance.now();
+          function tick(now) {
+            if (el.ohpCountGen !== gen) return;
+            var p = Math.min((now - t0) / duration, 1);
+            var eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(start + (end - start) * eased).toLocaleString();
+            if (p < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        }
+
+        /* Wraps a stat element: counts up from its static fallback text on
+           first view; if a live value arrives (before or after), uses it. */
+        function liveStat(el) {
+          var state = { seen: false, live: null };
+          if (el) {
+            var io = new IntersectionObserver(function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting && !state.seen) {
+                  state.seen = true;
+                  countTo(el, state.live || parseInt(el.textContent.replace(/,/g, ""), 10) || 0, 1800);
+                  io.unobserve(el);
+                }
+              });
+            }, { threshold: 0.5 });
+            io.observe(el);
+          }
+          return {
+            set: function (n) {
+              state.live = n;
+              if (state.seen) countTo(el, n, 900);
+            }
+          };
+        }
+
+        var membersStat = liveStat(document.getElementById("hpStatMembers"));
+        var billsStat = liveStat(document.getElementById("hpStatBills"));
+        liveStat(document.querySelector('[data-stat="legislators"]'));
+        liveStat(document.querySelector('[data-stat="counties"]'));
+        var heroEl = document.getElementById("hpHeroCount");
+
+        /* ---- Founding-member progress: ONE request drives the hero chip,
+           the stat, the goal bar, and the goal note. ---- */
+        fetch("/api/founding-members-progress", { headers: { accept: "application/json" } })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (!d || !d.ok || !d.member_count) return;
+            countTo(heroEl, d.member_count, 1200);
+            membersStat.set(d.member_count);
+
+            var goal = d.goal || 1969;
+            var note = document.getElementById("progressText");
+            if (note) {
+              note.textContent = d.member_count.toLocaleString() +
+                " of " + goal.toLocaleString() + " Founding Members";
+            }
+            var bar = document.getElementById("goalFill");
+            if (bar) {
+              var pct = Math.min(d.percent_to_goal || (d.member_count / goal) * 100, 100);
+              if (reduceMotion.matches) { bar.style.width = pct + "%"; return; }
+              var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                  if (entry.isIntersecting) {
+                    bar.style.transition = "width 1.5s cubic-bezier(0.4, 0, 0.2, 1)";
+                    bar.style.width = pct + "%";
+                    io.unobserve(entry.target);
+                  }
+                });
+              }, { threshold: 0.3 });
+              io.observe(bar.parentElement || bar);
+            }
+          })
+          .catch(function () { /* fail open: static numbers stay */ });
+
+        fetch("/api/bills", { headers: { accept: "application/json" } })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (!d || !d.ok || !Array.isArray(d.bills) || d.bills.length === 0) return;
+            billsStat.set(d.bills.length);
+          })
+          .catch(function () { /* fail open: static numbers stay */ });
+
+        /* ---- Signup form ---- */
+        var form = document.getElementById("hp-signup-form");
         if (!form) return;
-        var submitBtn = document.getElementById("hs-submit");
-        var errorBox = document.getElementById("hero-signup-error");
-        var confirmBox = document.getElementById("hero-signup-confirm");
+        var submitBtn = document.getElementById("hpSubmit");
+        var formErr = document.getElementById("hpFormErr");
+        var successBox = document.getElementById("hpSignupSuccess");
+        var EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        var ZIP_RE = /^\d{5}(-\d{4})?$/;
 
-        function showError(msg) {
-          if (!errorBox) return;
-          errorBox.textContent = msg;
-          errorBox.hidden = false;
+        function fieldWrap(input) { return input.closest(".hp-field"); }
+        function setInvalid(input, invalid) {
+          var wrap = fieldWrap(input);
+          if (!wrap) return;
+          wrap.classList.toggle("hp-invalid", invalid);
+          input.setAttribute("aria-invalid", invalid ? "true" : "false");
         }
-        function val(name) {
-          return ((form[name] && form[name].value) || "").trim() || null;
+        function validateField(input) {
+          var v = (input.value || "").trim();
+          var ok = true;
+          if (input.name === "email") ok = EMAIL_RE.test(v.toLowerCase());
+          else if (input.name === "zip") ok = ZIP_RE.test(v);
+          else if (input.required) ok = v.length > 0;
+          setInvalid(input, !ok);
+          return ok;
         }
+
+        ["hp-first", "hp-last", "hp-email", "hp-zip"].forEach(function (id) {
+          var input = document.getElementById(id);
+          if (!input) return;
+          input.addEventListener("blur", function () { if (input.value) validateField(input); });
+          input.addEventListener("input", function () {
+            if (fieldWrap(input).classList.contains("hp-invalid")) validateField(input);
+          });
+        });
 
         form.addEventListener("submit", function (e) {
           e.preventDefault();
-          if (errorBox) errorBox.hidden = true;
+          formErr.classList.remove("show");
 
-          var email = (val("email") || "").toLowerCase();
-          if (!EMAIL_RE.test(email)) {
-            showError("Please enter a valid email address.");
-            return;
-          }
-          if (!val("first_name") || !val("last_name") || !val("zip")) {
-            showError("Please fill in your name and ZIP.");
+          var inputs = ["hp-first", "hp-last", "hp-email", "hp-zip"].map(function (id) {
+            return document.getElementById(id);
+          });
+          var allOk = true;
+          var firstBad = null;
+          inputs.forEach(function (input) {
+            if (!validateField(input)) {
+              allOk = false;
+              if (!firstBad) firstBad = input;
+            }
+          });
+          if (!allOk) {
+            /* role="alert" announces this even when focus is already on the
+               invalid field (focus() on the focused element fires no event). */
+            formErr.textContent = "Please fix the highlighted fields.";
+            formErr.classList.add("show");
+            if (firstBad) firstBad.focus();
             return;
           }
 
           var payload = {
-            website: (document.getElementById("hs-website") || {}).value || "",
-            first_name: val("first_name"),
-            last_name: val("last_name"),
-            email: email,
-            phone: val("phone"),
-            zip: val("zip"),
+            website: (document.getElementById("hp-website") || {}).value || "",
+            first_name: document.getElementById("hp-first").value.trim(),
+            last_name: document.getElementById("hp-last").value.trim(),
+            email: document.getElementById("hp-email").value.trim().toLowerCase(),
+            phone: (document.getElementById("hp-phone").value || "").trim() || null,
+            zip: document.getElementById("hp-zip").value.trim(),
             referrer: document.referrer || null,
             source: "homepage"
           };
@@ -857,31 +1493,30 @@
           submitBtn.disabled = true;
           submitBtn.textContent = "Signing you up...";
 
-          fetch(ENDPOINT, {
+          fetch("/api/newsletter-submit", {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify(payload)
           })
-            .then(function (r) {
-              return r.json().then(function (j) { return j; });
-            })
+            .then(function (r) { return r.json(); })
             .then(function (res) {
               if (res && res.ok) {
                 form.style.display = "none";
-                if (confirmBox) confirmBox.hidden = false;
+                successBox.classList.add("show");
+                successBox.focus();
                 return;
               }
-              submitBtn.disabled = false;
-              submitBtn.textContent = "Sign Up";
-              showError("Something went wrong. Please try again, or email zach@ohiopride.org.");
+              throw new Error("bad response");
             })
             .catch(function () {
               submitBtn.disabled = false;
-              submitBtn.textContent = "Sign Up";
-              showError("Something went wrong. Please try again, or email zach@ohiopride.org.");
+              submitBtn.textContent = "Sign Me Up";
+              formErr.textContent = "Something went wrong. Please try again, or email zach@ohiopride.org.";
+              formErr.classList.add("show");
+              submitBtn.focus();
             });
         });
-      })();
+      });
     </script>
     <script src="/js/site-template.js" defer></script>
   </body>
