@@ -95,6 +95,7 @@
       group: 'Fundraising',
       items: [
         { id: 'fundraising',             href: '/admin/fundraising',               label: 'Dashboard',       icon: 'dollar',    permission: ['fundraising','read'] },
+        { id: 'events',                  href: '/admin/events',                     label: 'Events',          icon: 'calendar',  permission: ['events','read'] },
         { id: 'fundraising_calltime',    href: '/admin/fundraising/call-time',      label: 'Call Time',       icon: 'phone',     permission: ['pac_prospects','read'] },
         { id: 'fundraising_individuals', href: '/admin/fundraising/individuals',    label: 'PAC Individuals', icon: 'funnel',    permission: ['pac_prospects','read'] },
         { id: 'fundraising_companies',   href: '/admin/fundraising/companies',      label: 'c4 Companies',    icon: 'building',  permission: ['c4_prospects','read'] },
@@ -141,6 +142,7 @@
     building:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="4" y="3" width="11" height="18" rx="1"/><path d="M15 9h5v12h-5"/><path d="M8 7h3M8 11h3M8 15h3"/></svg>',
     check:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="m8 12 2.5 2.5L16 9"/></svg>',
     mail:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+    calendar:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v4"/><path d="M16 3v4"/><path d="m9 15 2 2 4-4"/></svg>',
     menu:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="4" y1="7"  x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>',
     chev:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>',
     close:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>',
