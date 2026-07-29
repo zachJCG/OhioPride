@@ -61,6 +61,12 @@
   to = "/volunteer.html"
   status = 200
 
+# Cincinnati's Pride Hour — event landing + RSVP page
+[[redirects]]
+  from = "/pride-hour"
+  to = "/pride-hour.html"
+  status = 200
+
 # Volunteer event hub + per-event run-of-show pages (folder/index.html)
 [[redirects]]
   from = "/volunteer/events"
