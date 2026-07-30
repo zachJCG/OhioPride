@@ -11,9 +11,10 @@ All four decisions are made:
 1. **Gated content lives in Supabase.** Table `public.gated_pages`, migration
    `20260730120000_gated_pages.sql` (written, **not yet applied**). RLS on,
    no anon or authenticated policy, service-role read only.
-2. **Magic links for `/governor-guide`, shared password for `/PRTraining`.**
-   The guide is a coordination-firewall race, so access should be per person
-   and auditable; the media-prep page is low stakes.
+2. **Shared password for `/PRTraining`.** The media-prep page is low stakes.
+   `/governor-guide` was the other candidate for this and no longer needs it:
+   it came off the gate and went public, so the magic-link work it was going
+   to justify is not currently needed by any page.
 3. JavaScript, not TypeScript.
 4. Incremental, not big bang.
 
