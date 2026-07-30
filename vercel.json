@@ -58,6 +58,8 @@
     { "source": "/admin/endorsements/login", "destination": "/admin/login", "permanent": true },
     { "source": "/admin/finance", "destination": "/admin/finance/budget", "permanent": false },
     { "source": "/admin/compliance", "destination": "/admin/compliance/contributions", "permanent": false },
+    { "source": "/govenorguide", "destination": "/governor-guide", "permanent": true },
+    { "source": "/governorguide", "destination": "/governor-guide", "permanent": true },
     { "source": "/scorecard/methodology", "destination": "/methodology", "permanent": true },
     { "source": "/scorecard/methodology.html", "destination": "/methodology", "permanent": true },
     { "source": "/gala", "destination": "/", "permanent": true },
