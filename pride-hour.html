@@ -64,13 +64,13 @@
             left: 50%; top: 40%; transform: translate(-50%, -50%);
             width: min(900px, 128%); height: 620px;
             background:
-                radial-gradient(38% 34% at 50% 42%, rgba(255,216,122,0.62), transparent 70%),
-                radial-gradient(48% 42% at 50% 48%, rgba(245,124,58,0.50), transparent 72%),
-                radial-gradient(62% 54% at 50% 52%, rgba(233,63,94,0.40), transparent 72%),
-                radial-gradient(72% 62% at 33% 46%, rgba(0,170,98,0.30), transparent 70%),
-                radial-gradient(72% 62% at 67% 46%, rgba(26,122,216,0.34), transparent 70%),
-                radial-gradient(90% 82% at 50% 55%, rgba(122,22,142,0.36), transparent 76%);
-            filter: blur(16px);
+                radial-gradient(38% 34% at 50% 40%, rgba(255,216,122,0.42), transparent 70%),
+                radial-gradient(48% 42% at 50% 46%, rgba(245,124,58,0.36), transparent 72%),
+                radial-gradient(62% 54% at 50% 52%, rgba(233,63,94,0.30), transparent 72%),
+                radial-gradient(72% 62% at 33% 46%, rgba(0,170,98,0.24), transparent 70%),
+                radial-gradient(72% 62% at 67% 46%, rgba(26,122,216,0.28), transparent 70%),
+                radial-gradient(90% 82% at 50% 55%, rgba(122,22,142,0.30), transparent 76%);
+            filter: blur(18px);
         }
         .ph-hero > * { position: relative; z-index: 1; }
         .ph-eyebrow {
@@ -86,7 +86,19 @@
             font-size: clamp(2.8rem, 8vw, 5rem); letter-spacing: -1px; text-transform: uppercase;
             color: #fff; margin-bottom: 1rem; text-shadow: 0 2px 24px rgba(0,0,0,0.35);
         }
-        .ph-hero .tagline { max-width: 620px; margin: 0 auto; color: var(--text-soft); font-size: 1.12rem; }
+        .ph-hero .tagline { max-width: 640px; margin: 0 auto 1.9rem; color: #fff; font-size: 1.12rem; text-shadow: 0 1px 12px rgba(0,0,0,0.55); }
+
+        /* Primary donate button — the main call to action */
+        .btn-donate {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.05rem;
+            letter-spacing: 0.5px; text-transform: uppercase; color: #fff;
+            background: var(--action-blue); border-radius: 12px; padding: 1rem 2.1rem;
+            box-shadow: 0 12px 34px rgba(0,77,255,0.42); transition: var(--transition);
+        }
+        .btn-donate:hover { transform: translateY(-2px); box-shadow: 0 18px 44px rgba(0,77,255,0.55); }
+        .btn-donate.lg { font-size: 1.15rem; padding: 1.15rem 2.6rem; }
+        .ph-hero .donate-note { margin-top: 0.9rem; color: var(--text-soft); font-size: 0.92rem; text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
 
         /* ---------- Main layout ---------- */
         .ph-main { padding: 2.5rem 0 1rem; }
@@ -155,6 +167,19 @@
         .ph-success h3 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.35rem; margin-bottom: 0.4rem; }
         .ph-success p { color: var(--text-soft); }
 
+        /* Donate CTA card (in the details column) */
+        .ph-cta-card {
+            margin-top: 1.6rem; text-align: center;
+            background: linear-gradient(180deg, rgba(19,45,68,0.85), rgba(10,20,32,0.85));
+            border: 1px solid var(--border); border-radius: 16px; padding: 1.7rem 1.5rem;
+        }
+        .ph-cta-card h2 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.4rem; color: #fff; margin-bottom: 0.5rem; }
+        .ph-cta-card p { color: var(--text-soft); font-size: 0.98rem; margin-bottom: 1.25rem; }
+
+        /* Secondary RSVP (end of page) */
+        .wrap-narrow { max-width: 620px; margin: 0 auto; padding: 0 1.5rem; }
+        .ph-rsvp-section { padding: 3.5rem 0 1rem; }
+
         /* ---------- Giving levels ---------- */
         .ph-give { padding: 3.5rem 0 1rem; }
         .ph-section-head { text-align: center; max-width: 640px; margin: 0 auto 2rem; }
@@ -166,21 +191,24 @@
         @media (max-width: 900px) { .ph-levels { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 480px) { .ph-levels { grid-template-columns: 1fr; } }
         .ph-level {
+            position: relative; overflow: hidden;
             display: flex; flex-direction: column; text-align: center;
-            background: var(--navy-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem 1rem;
+            background: var(--navy-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.6rem 1rem 1.4rem;
             transition: var(--transition);
         }
+        .ph-level::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--rainbow); background-size: 200% auto; }
         .ph-level:hover { transform: translateY(-4px); border-color: rgba(112,214,236,0.5); box-shadow: 0 16px 40px rgba(0,0,0,0.35); }
-        .ph-level .amt { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 2rem; }
-        .ph-level .amt .rainbow-word { background: var(--rainbow); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .ph-level .name { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-soft); margin: 0.4rem 0 1.1rem; }
+        .ph-level .amt { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 2.1rem; color: #fff; }
+        .ph-level .name { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin: 0.4rem 0 1.1rem; }
         .ph-level .give-btn {
-            margin-top: auto; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.5px;
-            text-transform: uppercase; color: var(--accent); border: 1px solid rgba(112,214,236,0.4); border-radius: 8px;
-            padding: 0.6rem 0.5rem; transition: var(--transition);
+            margin-top: auto; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.82rem; letter-spacing: 0.5px;
+            text-transform: uppercase; color: #fff; background: var(--action-blue); border: 1px solid var(--action-blue); border-radius: 8px;
+            padding: 0.7rem 0.5rem; transition: var(--transition);
         }
-        .ph-level .give-btn:hover { background: var(--accent); color: var(--navy-deep); }
-        .ph-give-note { text-align: center; color: var(--text-dim); font-size: 0.9rem; margin-top: 1.6rem; }
+        .ph-level .give-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,77,255,0.4); }
+        .ph-give-note { text-align: center; color: var(--text-soft); font-size: 0.92rem; margin-top: 1.6rem; }
+        .ph-give-note a { color: var(--accent); font-weight: 700; }
+        .ph-give-note a:hover { text-decoration: underline; }
 
         /* ---------- Questions ---------- */
         .ph-questions { text-align: center; padding: 3rem 1.5rem 4.5rem; }
@@ -196,7 +224,9 @@
 <section class="ph-hero">
     <span class="ph-eyebrow"><span class="dot"></span> Cincinnati · Happy Hour</span>
     <h1>Cincinnati's<br>Pride Hour</h1>
-    <p class="tagline">Join us for a happy hour in support of the work of Ohio Pride PAC. Bring a friend, meet the movement, and help power LGBTQ+ political action across Ohio.</p>
+    <p class="tagline">Join us for a happy hour in support of Ohio Pride PAC. Your contribution reserves your spot &mdash; and powers LGBTQ+ political action across Ohio.</p>
+    <a class="btn-donate lg" href="https://secure.actblue.com/donate/26-Pride-hourcincy" target="_blank" rel="noopener">Donate &amp; RSVP &rarr;</a>
+    <p class="donate-note">Wednesday, August 26, 2026 &nbsp;·&nbsp; 6&ndash;8 PM &nbsp;·&nbsp; Cobblestone OTR</p>
 </section>
 
 <!-- ===================== MAIN ===================== -->
@@ -210,7 +240,7 @@
                 <figcaption>Paid for by Ohio Pride PAC</figcaption>
             </figure>
 
-            <!-- Details + RSVP -->
+            <!-- Details -->
             <div>
                 <div class="ph-facts">
                     <div class="ph-fact">
@@ -228,7 +258,7 @@
                         </span>
                         <div>
                             <div class="label">Time</div>
-                            <div class="value">6:00 – 8:00 PM</div>
+                            <div class="value">6:00 &ndash; 8:00 PM</div>
                         </div>
                     </div>
                     <div class="ph-fact">
@@ -243,90 +273,96 @@
                     </div>
                 </div>
 
-                <!-- RSVP -->
-                <div class="ph-rsvp" id="rsvp">
-                    <form id="rsvpForm" data-launch-form data-source="pride-hour-cincinnati">
-                        <h2>RSVP</h2>
-                        <p class="rsvp-sub">Let us know you're coming. We'll send a reminder as the date gets closer.</p>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="first_name">First name</label>
-                                <input type="text" id="first_name" name="first_name" autocomplete="given-name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="last_name">Last name</label>
-                                <input type="text" id="last_name" name="last_name" autocomplete="family-name" required>
-                            </div>
-                        </div>
-                        <div class="form-row full">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
-                            </div>
-                        </div>
-                        <div class="form-row full">
-                            <div class="form-group">
-                                <label for="organization">Organization <span style="text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label>
-                                <input type="text" id="organization" name="organization" autocomplete="organization">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-rsvp" id="rsvpBtn">Count Me In</button>
-                        <p class="rsvp-fineprint">Contributions are appreciated but not required to attend.</p>
-                    </form>
-
-                    <div class="ph-success" data-launch-success>
-                        <div class="check" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4 10-10"/></svg>
-                        </div>
-                        <h3>You're on the list! ✨</h3>
-                        <p>Thanks for RSVPing to Cincinnati's Pride Hour. We can't wait to see you on August 26 at Cobblestone OTR.</p>
-                    </div>
+                <!-- Donate call-to-action -->
+                <div class="ph-cta-card">
+                    <h2>Your contribution is your RSVP</h2>
+                    <p>Reserve your spot by chipping in through ActBlue. Pick a level below, or give any amount &mdash; every dollar fuels the work.</p>
+                    <a class="btn-donate" href="https://secure.actblue.com/donate/26-Pride-hourcincy" target="_blank" rel="noopener">Donate &amp; RSVP &rarr;</a>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ===================== GIVING LEVELS ===================== -->
+<!-- ===================== GIVING LEVELS (primary) ===================== -->
 <section class="ph-give" id="give">
     <div class="wrap">
         <div class="ph-section-head">
-            <span class="eyebrow">Chip In</span>
-            <h2>Pick your level</h2>
-            <p>Every dollar helps Ohio Pride PAC endorse, organize, and win. ActBlue giving links open once event registration goes live &mdash; check back soon.</p>
+            <span class="eyebrow">Contribute to Attend</span>
+            <h2>Choose your level</h2>
+            <p>Your gift is your RSVP. Select a giving level to contribute securely through ActBlue.</p>
         </div>
-        <!-- ActBlue links are placeholders (href="#give", data-actblue="pending").
-             Once the event page exists, replace each href with the ActBlue URL,
-             e.g. https://secure.actblue.com/donate/ohio-pride-pac?amount=26&refcode=pride_hour_cincinnati
-             and add target="_blank" rel="noopener". -->
         <div class="ph-levels">
             <div class="ph-level">
-                <div class="amt"><span class="rainbow-word">$26</span></div>
+                <div class="amt">$26</div>
                 <div class="name">Young Professional</div>
-                <a class="give-btn" href="#give" data-actblue="pending">Give $26</a>
+                <a class="give-btn" href="https://secure.actblue.com/donate/26-Pride-hourcincy?amount=26" target="_blank" rel="noopener">Give $26</a>
             </div>
             <div class="ph-level">
-                <div class="amt"><span class="rainbow-word">$50</span></div>
+                <div class="amt">$50</div>
                 <div class="name">Friend</div>
-                <a class="give-btn" href="#give" data-actblue="pending">Give $50</a>
+                <a class="give-btn" href="https://secure.actblue.com/donate/26-Pride-hourcincy?amount=50" target="_blank" rel="noopener">Give $50</a>
             </div>
             <div class="ph-level">
-                <div class="amt"><span class="rainbow-word">$100</span></div>
+                <div class="amt">$100</div>
                 <div class="name">Ally</div>
-                <a class="give-btn" href="#give" data-actblue="pending">Give $100</a>
+                <a class="give-btn" href="https://secure.actblue.com/donate/26-Pride-hourcincy?amount=100" target="_blank" rel="noopener">Give $100</a>
             </div>
             <div class="ph-level">
-                <div class="amt"><span class="rainbow-word">$250</span></div>
+                <div class="amt">$250</div>
                 <div class="name">Champion</div>
-                <a class="give-btn" href="#give" data-actblue="pending">Give $250</a>
+                <a class="give-btn" href="https://secure.actblue.com/donate/26-Pride-hourcincy?amount=250" target="_blank" rel="noopener">Give $250</a>
             </div>
             <div class="ph-level">
-                <div class="amt"><span class="rainbow-word">$500</span></div>
+                <div class="amt">$500</div>
                 <div class="name">Advocate</div>
-                <a class="give-btn" href="#give" data-actblue="pending">Give $500</a>
+                <a class="give-btn" href="https://secure.actblue.com/donate/26-Pride-hourcincy?amount=500" target="_blank" rel="noopener">Give $500</a>
             </div>
         </div>
-        <p class="ph-give-note">Giving links open soon. &nbsp;·&nbsp; Contributions appreciated but not required to attend.</p>
+        <p class="ph-give-note"><a href="https://secure.actblue.com/donate/26-Pride-hourcincy" target="_blank" rel="noopener">Give another amount &rarr;</a></p>
+    </div>
+</section>
+
+<!-- ===================== SECONDARY RSVP (no donation) ===================== -->
+<section class="ph-rsvp-section" id="rsvp">
+    <div class="wrap-narrow">
+        <div class="ph-rsvp">
+            <form id="rsvpForm" data-launch-form data-source="pride-hour-cincinnati">
+                <h2>Can't give right now?</h2>
+                <p class="rsvp-sub">No problem &mdash; contributions are appreciated but not required to attend. Drop your info and we'll add you to the guest list.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name">First name</label>
+                        <input type="text" id="first_name" name="first_name" autocomplete="given-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last name</label>
+                        <input type="text" id="last_name" name="last_name" autocomplete="family-name" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label for="organization">Organization <span style="text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label>
+                        <input type="text" id="organization" name="organization" autocomplete="organization">
+                    </div>
+                </div>
+                <button type="submit" class="btn-rsvp" id="rsvpBtn">Add Me to the List</button>
+            </form>
+
+            <div class="ph-success" data-launch-success>
+                <div class="check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4 10-10"/></svg>
+                </div>
+                <h3>You're on the list! &#10024;</h3>
+                <p>Thanks for RSVPing to Cincinnati's Pride Hour. We can't wait to see you on August 26 at Cobblestone OTR.</p>
+            </div>
+        </div>
     </div>
 </section>
 
