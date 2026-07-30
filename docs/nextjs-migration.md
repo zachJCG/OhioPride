@@ -4,9 +4,19 @@ Status: **phase 0 landed, July 30, 2026.** The repo is a Next.js app that
 serves the existing static site unchanged. Phases 1 to 3 are still ahead, and
 phase 1 is blocked on two decisions listed below.
 
-Decided and done: JavaScript, not TypeScript (decision 3); incremental, not
-big bang (decision 4). Still open: where gated content lives (decision 1) and
-password versus magic links (decision 2). Both are phase 1 blockers.
+All four decisions are made:
+
+1. **Gated content lives in Supabase.** Table `public.gated_pages`, migration
+   `20260730120000_gated_pages.sql` (written, **not yet applied**). RLS on,
+   no anon or authenticated policy, service-role read only.
+2. **Magic links for `/governor-guide`, shared password for `/PRTraining`.**
+   The guide is a coordination-firewall race, so access should be per person
+   and auditable; the media-prep page is low stakes.
+3. JavaScript, not TypeScript.
+4. Incremental, not big bang.
+
+Phase 1 is unblocked except for one step that touches production state:
+applying the migration to Supabase. See "What Zach needs to do".
 
 ## What Next.js buys us (and what it does not)
 
@@ -78,14 +88,30 @@ request time (service key, RLS locked), which is decision 1 below.
   static assets, security and cache headers, `/api/*` reachability, and
   404s. `npm run check:brand` still passes.
 
-### Phase 1: chrome and the gated pages
+### Phase 1: chrome and the gated pages (next)
 
-- `app/layout` rebuilt from `js/site-template.js` and
-  `css/site-template.css` (wordmark rules live in `docs/brand-system.md`).
-- `/governor-guide` becomes the first real route: middleware gate, content
-  from the gated-content store, `X-Robots-Tag` kept, Open Graph tags added
-  only when the page goes public. Retire the encrypted blob and
-  `scripts/encrypt-page.mjs` once `/PRTraining` moves too.
+Ordered so the risky part is first and provable:
+
+1. Apply `20260730120000_gated_pages.sql`, then seed the guide's current body
+   into it. The body is the plaintext the encrypted page is built from; it is
+   not in the repo, so seeding runs from the working copy, once.
+2. `middleware.js`: `/governor-guide` requires a Supabase session whose email
+   is in `admin_emails` (the check `/admin` already makes, moved server side);
+   `/PRTraining` requires a cookie set by a password form reading
+   `PRTRAINING_PASSWORD`. Unauthenticated requests never reach the route, so
+   the body is never sent.
+3. `app/governor-guide/page.js` renders the stored body server side. The
+   generated rewrite for `public/governor-guide.html` stops firing the moment
+   this route exists, so the cutover is the commit that adds the file.
+4. Delete the encrypted `public/governor-guide.html`, and once `/PRTraining`
+   moves too, `scripts/encrypt-page.mjs` with it.
+5. `app/layout` rebuilt from `js/site-template.js` and `css/site-template.css`
+   (wordmark rules live in `docs/brand-system.md`) so ported pages inherit the
+   header and footer instead of mounting them with client JS.
+
+Open Graph tags and an indexable robots directive stay off until
+`gated_pages.is_public` flips, which remains a deliberate act after counsel
+signs off.
 
 ### Phase 2: data-driven public pages
 
@@ -104,19 +130,21 @@ request time (service key, RLS locked), which is decision 1 below.
 
 ## What Zach needs to do (nothing else moves without these)
 
-1. Make the calls on decisions 1 through 4 above.
-2. In the Vercel dashboard, nothing up front: the framework preset flips
-   to Next.js automatically on the first deploy containing the app, and
-   the existing project env vars (`SUPABASE_*`, `MAILERLITE_*`,
-   `RESEND_*`, `ACTBLUE_*`) carry over. Add `GOVERNOR_GUIDE_PASSWORD`
-   (or nothing, if we go magic-links).
-3. Rotate the governor-guide password when the gate moves server-side.
-   The current shared password is short enough to brute-force offline,
-   and the encrypted blob sits in a public repo; a long passphrase costs
-   nothing. (This is worth doing even if the Next.js work waits.)
-4. Review each phase on its Vercel preview URL before it merges; a merge
-   to `main` is a production deploy.
+1. **Review the phase 0 preview before merging.** A merge to `main` is a
+   production deploy. `BASE=<preview-url> npm run check:routes` asserts the
+   55 route behaviours automatically; then click through a few pages.
+2. **Nothing to change in the Vercel dashboard up front.** `vercel.json` sets
+   `"framework": "nextjs"`, and the existing env vars (`SUPABASE_*`,
+   `MAILERLITE_*`, `RESEND_*`, `ACTBLUE_*`) carry over untouched. The build
+   command becomes `next build` automatically.
+3. **Apply `20260730120000_gated_pages.sql`** when you want phase 1 to start.
+   This is the only step that changes production state, which is why it is
+   not done already.
+4. **Add `PRTRAINING_PASSWORD`** as a Vercel env var during phase 1.
+5. **Retire the current guide password.** It is short enough to brute-force
+   offline and the encrypted blob is in a public repo, so it should be
+   treated as compromised and never reused; phase 1 removes the blob
+   entirely, which closes this out.
 
-Phase 0 plus the governor-guide route in Phase 1 is roughly a day of
-work; phases 2 and 3 are best taken a page at a time. Any Claude Code
-session can execute a phase from this document on a fresh branch.
+Phases 2 and 3 are best taken a page at a time. Any Claude Code session can
+execute a phase from this document on a fresh branch.
