@@ -1,0 +1,42 @@
+# =====================================================================
+# Add these redirects to netlify.toml — sits next to the existing
+# /admin/* redirects so the new pages are routable.
+#
+# Paste in the same [[redirects]] block region. Status is 200 so the
+# URL stays clean.
+# =====================================================================
+
+[[redirects]]
+  from = "/admin/board"
+  to   = "/admin/board/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/bills"
+  to   = "/admin/bills/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/legislators"
+  to   = "/admin/legislators/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/news"
+  to   = "/admin/news/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/launch"
+  to   = "/admin/launch/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/users"
+  to   = "/admin/users/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/settings"
+  to   = "/admin/settings/index.html"
+  status = 200
