@@ -99,14 +99,16 @@
         .btn-donate:hover { transform: translateY(-2px); box-shadow: 0 18px 44px rgba(0,77,255,0.55); }
         .btn-donate.lg { font-size: 1.15rem; padding: 1.15rem 2.6rem; }
         .ph-hero .donate-note { margin-top: 0.9rem; color: var(--text-soft); font-size: 0.92rem; text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
-        .ph-featuring {
-            display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;
-            font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700;
-            letter-spacing: 1.5px; text-transform: uppercase; color: #fff;
-            border: 1px solid rgba(255,255,255,0.22); border-radius: 999px; padding: 0.5rem 1.2rem;
-            background: rgba(10,20,32,0.35); text-shadow: 0 1px 10px rgba(0,0,0,0.5);
+        .ph-featuring { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; margin-bottom: 1.6rem; }
+        .ph-featuring .feat-label {
+            font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-soft);
+            text-shadow: 0 1px 10px rgba(0,0,0,0.5);
         }
-        .ph-featuring strong { color: var(--accent); font-weight: 800; }
+        .ph-featuring .feat-logo {
+            width: min(280px, 66%); height: auto; display: block;
+            filter: drop-shadow(0 2px 16px rgba(0,0,0,0.45));
+        }
 
         /* ---------- Main layout ---------- */
         .ph-main { padding: 2.5rem 0 1rem; }
@@ -224,7 +226,10 @@
     <span class="ph-eyebrow"><span class="dot"></span> Cincinnati · Happy Hour</span>
     <h1>Cincinnati's<br>Pride Hour</h1>
     <p class="tagline">Join us for a happy hour in support of Ohio Pride PAC. Your contribution reserves your spot &mdash; and powers LGBTQ+ political action across Ohio.</p>
-    <p class="ph-featuring">Featuring <strong>DJ Boywife</strong></p>
+    <div class="ph-featuring">
+        <span class="feat-label">Featuring</span>
+        <img class="feat-logo" src="/assets/img/events/boywife-logo.png" alt="DJ Boywife" width="1170" height="879">
+    </div>
     <a class="btn-donate lg" href="https://secure.actblue.com/donate/26-Pride-hourcincy" target="_blank" rel="noopener">Donate &amp; RSVP &rarr;</a>
     <p class="donate-note">Wednesday, August 26, 2026 &nbsp;·&nbsp; 6&ndash;8 PM &nbsp;·&nbsp; Cobblestone OTR</p>
 </section>
