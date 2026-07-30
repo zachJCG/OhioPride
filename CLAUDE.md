@@ -20,9 +20,22 @@ The **live website files live in a Git repo**, not in this Drive folder.
 
 **If a Drive read fails with `Resource deadlock avoided`, do NOT retry.** Pivot immediately to `git clone` from the repo URL above. The deadlock isn't fixable from inside the session.
 
-## Repo layout (as of 2026-04-27, after `git clone`)
+## Repo layout (as of 2026-07-30, after `git clone`)
 
-Top-level pages:
+**The site is a Next.js app now.** Migration phase 0 landed: Next serves the
+existing static site untouched, and pages move to the App Router one at a time.
+Two things to know before editing:
+
+- **Every static page and asset lives under `public/`.** Paths below are
+  relative to it, and URLs are unchanged: `public/about.html` still answers on
+  `/about`. Clean URLs, redirects, and headers are generated in
+  `next.config.mjs` by walking `public/`, so adding a page needs no config edit.
+- **A ported page beats the static one automatically.** The generated rewrites
+  are `afterFiles`, so the moment `app/scorecard/page.js` exists it wins and
+  `public/scorecard.html` stops being served. That is the migration mechanism;
+  see `docs/nextjs-migration.md`.
+
+Top-level pages (under `public/`):
 - `index.html`, `about.html`, `board.html`, `connect.html`, `contact.html`, `donate.html`, `donate/founding-member.html`, `founding-members.html`, `index.html`, `issues.html`, `launch-day.html`, `methodology.html`, `privacy.html`, `scorecard.html`, `terms.html`
 - `issues/<bill_id>.html` — one detail page per bill (hb262, sb113, hjr4, etc.)
 
@@ -37,7 +50,13 @@ JS (in `js/`):
 
 CSS: `css/style.css`, `css/site-template.css`
 
-Vercel functions (`api/`):
+API functions. The implementations live in `lib/functions/*.mjs` and are
+exported as App Router route handlers by one-line wrappers in
+`app/api/<name>/route.js`. They are plain web handlers,
+`(Request) => Response`, so the wrapper just re-exports them as GET and POST.
+There is deliberately no root `api/` directory: under a framework preset the
+framework owns `/api/*`, and keeping both invites a routing conflict.
+Endpoints (`/api/<name>`):
 - `actblue-sync.mjs` — pulls ActBlue donors into `founding_members`
 - `board-members.mjs` — feeds `/board`
 - `founding-member-tiers.mjs` — feeds tier cards on `/founding-members` and `/donate/founding-member`
@@ -88,7 +107,7 @@ Public donor display order is set explicitly via `display_order` column on `foun
 - **DB:** Supabase (Postgres). RLS enabled by default; public read where pages need it.
 - **Hosting:** Vercel. Functions in `api/*.mjs` (Node ESM, web handler signature); config in `vercel.json` (cleanUrls, redirects, headers, hourly `actblue-sync` cron).
 - **Donations:** ActBlue. Donor sync runs via `api/actblue-sync.mjs` (Vercel cron) into `founding_members`.
-- **Frontend:** plain HTML + vanilla JS (no framework). Pages fetch from the `/api/*` functions, which proxy to Supabase using the service-role key (kept server-side).
+- **Frontend:** Next.js (App Router, JavaScript, no TypeScript) wrapping the existing plain HTML + vanilla JS pages, which are served from `public/` until each one is ported. Pages fetch from the `/api/*` route handlers, which proxy to Supabase using the service-role key (kept server-side). Run it with `npm run dev`; `npm run build` must pass before a PR lands.
 
 ## Things to never do
 

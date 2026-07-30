@@ -2,12 +2,19 @@
   "name": "ohiopride-web",
   "private": true,
   "version": "1.0.0",
-  "description": "Ohio Pride PAC website. Static HTML deployed by Vercel, backed by Supabase for dynamic content.",
+  "description": "Ohio Pride PAC website. Next.js on Vercel, backed by Supabase for dynamic content.",
   "scripts": {
-    "check:brand": "node scripts/check-brand-consistency.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "check:brand": "node scripts/check-brand-consistency.js",
+    "check:routes": "node scripts/check-routes.mjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0"
+    "@supabase/supabase-js": "^2.45.0",
+    "next": "^15.5.22",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "sharp": "^0.35.3"

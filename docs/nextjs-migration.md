@@ -1,9 +1,12 @@
 # Remaking ohiopride.org as Next.js on Vercel
 
-Status: proposal, July 30, 2026. The site already runs on Vercel as plain
-HTML plus `api/*.mjs` functions. This is the staged path to a Next.js app
-without ever breaking production, and the list of decisions and dashboard
-steps only Zach can do.
+Status: **phase 0 landed, July 30, 2026.** The repo is a Next.js app that
+serves the existing static site unchanged. Phases 1 to 3 are still ahead, and
+phase 1 is blocked on two decisions listed below.
+
+Decided and done: JavaScript, not TypeScript (decision 3); incremental, not
+big bang (decision 4). Still open: where gated content lives (decision 1) and
+password versus magic links (decision 2). Both are phase 1 blockers.
 
 ## What Next.js buys us (and what it does not)
 
@@ -50,18 +53,30 @@ request time (service key, RLS locked), which is decision 1 below.
 
 ## Phases
 
-### Phase 0: scaffold without breaking anything
+### Phase 0: scaffold without breaking anything (done)
 
-- `npx create-next-app@latest` in the repo root (App Router, no src dir),
-  with the existing `*.html`, `css/`, `js/`, `assets/` moved under
-  `public/` so URLs keep resolving while pages are unported.
-- Port the redirects and headers from `vercel.json` into `next.config.mjs`
-  (`redirects()`, `headers()`); keep `vercel.json` only for the cron.
-  Clean URLs for the not-yet-ported HTML files become explicit rewrites
-  (`/about` to `/about.html` and so on); generate the list from the repo
-  root at build time rather than typing 40 rules by hand.
-- `api/` stays where it is. No function changes.
-- Ship it on a preview branch and click through every page before merging.
+- Next 15 App Router, JavaScript. Every static page and asset moved under
+  `public/`; `app/layout.js` is the (so far unused) root layout.
+- `next.config.mjs` generates the clean-URL rewrites by walking `public/`,
+  so adding a bill page needs no config edit. Redirects and headers ported
+  from `vercel.json`, which now carries only the framework and the cron.
+- The functions moved out of the root `api/` directory to
+  `lib/functions/*.mjs`, re-exported as route handlers from
+  `app/api/<name>/route.js`. Under a framework preset the framework owns
+  `/api/*`, so keeping a root `api/` alongside it invites a routing
+  conflict; this removes the ambiguity and makes the endpoints runnable
+  under `npm run dev`, which they never were before.
+- Two real bugs fell out of the port, both fixed:
+  `zip-county-lookup.mjs` built its Supabase client at module scope, so
+  importing it without credentials threw and would equally have thrown on
+  a cold start with a missing env var; and the `/prtraining` redirect
+  looped forever, because Next matches redirect sources case-insensitively
+  and the rule matched its own destination.
+- Verified by a 52-check parity suite against `next start`
+  (`scripts/check-routes.mjs`): clean URLs, folder index pages, canonical
+  `.html` redirects with no loops, every configured redirect and rewrite,
+  static assets, security and cache headers, `/api/*` reachability, and
+  404s. `npm run check:brand` still passes.
 
 ### Phase 1: chrome and the gated pages
 
