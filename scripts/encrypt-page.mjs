@@ -166,6 +166,7 @@ const page = `<!doctype html>
   var IV = "${iv.toString('base64')}";
   var DATA = "${enc.toString('base64')}";
   var ITER = ${ITERATIONS};
+  var CHUNK = 16384;
   var KEY_CACHE = "ohp-gate-${output.replace(/[^A-Za-z0-9]/g, '')}";
 
   function b64(s) {
@@ -189,8 +190,13 @@ const page = `<!doctype html>
       .then(function (buf) {
         var html = new TextDecoder().decode(buf);
         try { sessionStorage.setItem(KEY_CACHE, password); } catch (e) { /* private mode */ }
+        // A single document.write() of a large payload gets truncated: the
+        // tail of the document is dropped and any inline script in it never
+        // runs. Feeding the parser in chunks keeps the whole document intact.
         document.open();
-        document.write(html);
+        for (var i = 0; i < html.length; i += CHUNK) {
+          document.write(html.slice(i, i + CHUNK));
+        }
         document.close();
       });
   }

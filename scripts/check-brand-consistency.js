@@ -39,7 +39,16 @@ const SCAN_ROOTS = [
 // Pages that legitimately don't use the shared chrome (e.g. embedded
 // fragments, redirect stubs). None today; placeholder for the future.
 const ALLOW_LIST = new Set([
-  // 'some/special-page.html',
+  // Self-contained pages that legitimately cannot mount the shared chrome.
+  //
+  // The two gate pages ship as AES-256-GCM ciphertext plus a small unlock
+  // form (see scripts/encrypt-page.mjs). The real page, header and footer
+  // included, only exists after the visitor decrypts it in the browser, so
+  // there is no shared wiring in the served file to check.
+  'PRTraining.html',
+  'governor-guide.html',
+  // Standalone error page: served by the host outside the normal page flow.
+  '404.html',
 ]);
 
 // Pages must link the shared template stylesheet AND at least one of
