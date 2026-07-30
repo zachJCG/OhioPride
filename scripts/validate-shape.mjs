@@ -7,7 +7,7 @@
  *
  *   1. SQL migrations      (supabase/migrations/2026051000000*_volunteers.sql,
  *                           supabase/migrations/20260511000000_intern_applications.sql)
- *   2. Netlify function    (netlify/functions/volunteer-submit.mjs)
+ *   2. Vercel function     (api/volunteer-submit.mjs)
  *   3. Browser form        (volunteer.html, js/volunteer-form.js)
  *
  * No network. No supabase. Just file reads + regex. Run from the repo root:
@@ -89,8 +89,8 @@ assertContainsAll('  intern SQL has status enum', internSql, [
 console.log('');
 
 // ---------------------------------------------------------------------
-console.log('[4] Netlify function references the right tables and enums');
-const fn = read('netlify/functions/volunteer-submit.mjs');
+console.log('[4] Vercel function references the right tables and enums');
+const fn = read('api/volunteer-submit.mjs');
 assertContainsAll('  function targets both tables', fn, [
   ".from('volunteers')",
   ".from('intern_applications')"
@@ -126,7 +126,7 @@ assertContainsAll('  HTML has internships section anchor', html, [
   'id="internships"', 'id="internGrid"'
 ]);
 assertContainsAll('  JS posts to right endpoint', js, [
-  "'/.netlify/functions/volunteer-submit'"
+  "'/api/volunteer-submit'"
 ]);
 assertContainsAll('  JS branches by application_type', js, [
   "application_type: 'volunteer'",

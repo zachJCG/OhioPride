@@ -1,12 +1,12 @@
 /* =============================================================================
- * Netlify Function: founding-member-tiers (round 3)
+ * Vercel Function: founding-member-tiers (round 3)
  * -----------------------------------------------------------------------------
  * Returns the active founding-member tiers, including an ActBlue URL for each
  * tier so any surface that lists tiers can wrap them in real anchor tags
  * (the /founding-members tier-legend cards, the /donate/founding-member tier
  * buttons, future email blasts, etc.) without re-hardcoding the URLs.
  *
- *   GET /.netlify/functions/founding-member-tiers
+ *   GET /api/founding-member-tiers
  *   -> { ok: true, tiers: [
  *        { name, slug, amount_cents, amount_display, recurrence,
  *          match_mode, description, display_order,

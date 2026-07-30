@@ -1,5 +1,5 @@
 /* =============================================================================
- * Netlify Scheduled Function: actblue-sync (v2)
+ * Vercel Cron Function: actblue-sync (v2)
  * -----------------------------------------------------------------------------
  * Replaces the v1 sync function from migration round 1. The key changes:
  *

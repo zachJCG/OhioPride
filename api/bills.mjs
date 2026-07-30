@@ -1,12 +1,12 @@
 /* =============================================================================
- * Netlify Function: bills
+ * Vercel Function: bills
  * -----------------------------------------------------------------------------
  * Replaces /js/bill-data.js as the live data source for /issues and the
  * per-bill detail pages under /issues/<slug>.html.
  *
  * Responses are shaped to be a drop-in for the existing front-end:
- *   - GET /.netlify/functions/bills          -> { ok: true, last_updated, bills: [...] }
- *   - GET /.netlify/functions/bills?slug=hb249 -> { ok: true, bill: {..., votes: [...], pipeline: [...] } }
+ *   - GET /api/bills          -> { ok: true, last_updated, bills: [...] }
+ *   - GET /api/bills?slug=hb249 -> { ok: true, bill: {..., votes: [...], pipeline: [...] } }
  *
  * The `bills` array fields match the keys the existing `BILLS` constant uses
  * in /js/bill-data.js (id, bill, title, nickname, stance, status,

@@ -1,7 +1,7 @@
 /* =============================================================================
  * Vercel Function: form-submit
  * -----------------------------------------------------------------------------
- * Replaces Netlify Forms for the contact, connect, and launch-day-rsvp forms.
+ * Replaces the legacy hosted form handling for the contact, connect, and launch-day-rsvp forms.
  * Accepts urlencoded (default from the site JS) or JSON bodies.
  *
  *   POST /api/form-submit

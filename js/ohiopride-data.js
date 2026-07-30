@@ -1,7 +1,7 @@
 /* =============================================================================
  * Ohio Pride PAC — Data Client (consolidated through Round 2)
  * -----------------------------------------------------------------------------
- * Thin client-side helper for fetching dynamic data from Netlify functions
+ * Thin client-side helper for fetching dynamic data from the /api functions
  * that sit in front of Supabase. This single file covers every Supabase-
  * backed surface on the public website as of Round 2:
  *

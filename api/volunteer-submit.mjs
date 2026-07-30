@@ -1,5 +1,5 @@
 /* =============================================================================
- * Netlify Function: volunteer-submit
+ * Vercel Function: volunteer-submit
  * -----------------------------------------------------------------------------
  * Receives JSON POSTs from the multi-step form on /volunteer.
  *
@@ -8,7 +8,7 @@
  *   - "internship"           -> public.intern_applications (UPSERT on (email, position))
  *
  * Endpoint:
- *   POST /.netlify/functions/volunteer-submit
+ *   POST /api/volunteer-submit
  *   body: { application_type: "volunteer" | "internship", website, ... }
  *   -> { ok: true,  id, kind }                            on success
  *   -> { ok: false, error }                                on failure

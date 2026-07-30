@@ -16,7 +16,7 @@ Wires MailerLite into the site for two jobs:
 > and letting a group-join automation fire. The group is created automatically
 > the first time a form is submitted.
 
-## Environment variables (set in the Netlify dashboard)
+## Environment variables (set in the Vercel dashboard)
 
 | Variable | Required | Purpose |
 |---|---|---|
@@ -39,12 +39,12 @@ Wires MailerLite into the site for two jobs:
 
 ## Code map
 
-- `netlify/functions/lib/mailerlite.mjs` — shared API client (subscribers,
+- `lib/mailerlite.mjs` — shared API client (subscribers,
   groups, campaigns) + `syncSubscriberSafe()` fire-and-forget helper.
-- `netlify/functions/newsletter-submit.mjs`,
-  `netlify/functions/volunteer-submit.mjs` — sync submitters into MailerLite
+- `api/newsletter-submit.mjs`,
+  `api/volunteer-submit.mjs` — sync submitters into MailerLite
   after the DB write (best-effort; never blocks or fails the form).
-- `netlify/functions/admin-email-send.mjs` — auth-gated
+- `api/admin-email-send.mjs` — auth-gated
   (`has_permission('news','write')`) endpoint that lists groups/campaigns and
   sends a campaign.
 - `admin/email/index.html` — the composer UI (linked in the admin sidebar under

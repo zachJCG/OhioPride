@@ -57,7 +57,7 @@ the record.
 
 1. **Authentication > URL Configuration > Redirect URLs**: add
    `https://ohiopride.org/admin/endorsements` (and any preview URL you want
-   magic links to land on, e.g. `https://deploy-preview-XXX--ohiopride.netlify.app/admin/endorsements`).
+   magic links to land on, e.g. `https://ohiopride-git-your-branch.vercel.app/admin/endorsements`).
 2. **Authentication > Providers > Email**: enable magic links if not already on.
 3. **Storage**: create a private bucket named `endorsement-pdfs` (used by the
    Phase 4 PDF generator; the storage RLS policies in the migration kick in
@@ -91,7 +91,7 @@ true for their JWT and the dashboard renders.
 
 ## Phase 4 / 5 (not in this PR)
 
-The PDF generator (`/.netlify/functions/generate-endorsement-pdf`) and the
+The PDF generator (`/api/generate-endorsement-pdf`) and the
 Resend-backed email triggers from PR #74's bundle are intentionally out of
 scope for this PR. The "Generate PDF" button on the detail page shows a
 friendly toast until that function is deployed.

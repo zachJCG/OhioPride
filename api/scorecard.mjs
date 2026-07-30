@@ -1,10 +1,10 @@
 /* =============================================================================
- * Netlify Function: scorecard
+ * Vercel Function: scorecard
  * -----------------------------------------------------------------------------
  * Replaces /js/scorecard-data.js + /js/voting-records.js as the live data
  * source for /scorecard.html.
  *
- *   GET /.netlify/functions/scorecard
+ *   GET /api/scorecard
  *   -> {
  *        ok: true,
  *        last_updated,

@@ -1,5 +1,5 @@
 /* =============================================================================
- * Netlify Function: newsletter-submit
+ * Vercel Function: newsletter-submit
  * -----------------------------------------------------------------------------
  * Receives JSON POSTs from the newsletter capture form on /signup.
  *
@@ -8,7 +8,7 @@
  * the columns a visitor provides; we never set status/consent directly.
  *
  * Endpoint:
- *   POST /.netlify/functions/newsletter-submit
+ *   POST /api/newsletter-submit
  *   body: { website, email, first_name, last_name, zip, source, referrer }
  *   -> { ok: true,  id }      on success
  *   -> { ok: false, error }   on failure

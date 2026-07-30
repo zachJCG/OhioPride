@@ -1,10 +1,10 @@
 /* =============================================================================
- * Netlify Function: pride-volunteer-submit
+ * Vercel Function: pride-volunteer-submit
  * -----------------------------------------------------------------------------
  * Receives JSON POSTs from the /pride/signup road-tour volunteer form and
  * inserts into public.pride_volunteers using the service-role key.
  *
- *   POST /.netlify/functions/pride-volunteer-submit
+ *   POST /api/pride-volunteer-submit
  *   body: { website (honeypot), first_name, last_name, email, ... }
  *   -> { ok: true,  id }                       on success
  *   -> { ok: false, error, [message] }         on failure

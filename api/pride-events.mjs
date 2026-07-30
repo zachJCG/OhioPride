@@ -1,9 +1,9 @@
 /* =============================================================================
- * Netlify Function: pride-events
+ * Vercel Function: pride-events
  * -----------------------------------------------------------------------------
  * Live data source for /pride and /pride/signup.
  *
- *   GET /.netlify/functions/pride-events
+ *   GET /api/pride-events
  *   -> { ok: true, events: [...], tour_status: {...} | null, fetched_at }
  *
  * Reads the public-safe view public.pride_events_public plus the single

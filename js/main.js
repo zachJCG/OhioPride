@@ -155,11 +155,11 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  /* --- Contact Form Submission (Netlify) --- */
+  /* --- Contact Form Submission (/api/form-submit) --- */
   var contactForm = document.getElementById("contactForm");
   var formSuccess = document.getElementById("formSuccess");
 
-  function netlifyFormEndpoint() {
+  function formEndpoint() {
     var host = window.location.hostname;
     return "/api/form-submit";
   }
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       var formData = new FormData(contactForm);
 
-      fetch(netlifyFormEndpoint(), {
+      fetch(formEndpoint(), {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams(formData).toString(),

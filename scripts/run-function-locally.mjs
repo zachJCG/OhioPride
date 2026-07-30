@@ -2,7 +2,7 @@
 /**
  * scripts/run-function-locally.mjs
  * --------------------------------
- * Loads netlify/functions/volunteer-submit.mjs with a stubbed Supabase
+ * Loads api/volunteer-submit.mjs with a stubbed Supabase
  * client and exercises both the volunteer and intern code paths in
  * memory. Proves the function's routing, validation, and payload shape
  * are correct before deploy. No network needed.
@@ -68,7 +68,7 @@ process.env.SUPABASE_URL = 'https://stub.supabase.co';
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'stub-service-role';
 
 const stub = await import(pathToFileURL(resolve(stubDir, 'index.mjs')).href);
-const fnUrl = pathToFileURL(resolve(repoRoot, 'netlify/functions/volunteer-submit.mjs')).href;
+const fnUrl = pathToFileURL(resolve(repoRoot, 'api/volunteer-submit.mjs')).href;
 const fnMod = await import(fnUrl);
 const handler = fnMod.default;
 
@@ -137,7 +137,7 @@ console.log('[2] Intern happy path');
     email: 'local+intern@ohiopride.test',
     phone: '513-555-0101', pronouns: 'she/her',
     city: 'Columbus', county: 'Franklin', zip: '43215',
-    position: 'legislative_director',
+    position: 'legislative_internship',
     term: 'summer_2026',
     weekly_hours: 12, credit_hours: 3,
     institution: 'Ohio State', program_major: 'Polisci',
@@ -150,7 +150,7 @@ console.log('[2] Intern happy path');
   const last = stub._stubLastCall();
   if (last && last.table === 'intern_applications') pass('  wrote to intern_applications table');
   else fail('  expected intern_applications write, got ' + JSON.stringify(last));
-  if (last?.row?.position === 'legislative_director' && last?.row?.term === 'summer_2026') pass('  position + term routed');
+  if (last?.row?.position === 'legislative_internship' && last?.row?.term === 'summer_2026') pass('  position + term routed');
   else fail('  position/term wrong: ' + JSON.stringify(last?.row));
   if (last?.opts?.onConflict === 'email,position') pass('  upsert on (email, position)');
   else fail('  expected onConflict=email,position, got ' + JSON.stringify(last?.opts));
@@ -189,7 +189,7 @@ console.log('[5] Validation: bad URL on intern path');
     application_type: 'internship',
     first_name: 'X', last_name: 'Y',
     email: 'ok@y.test',
-    position: 'policy_aide', term: 'fall_2026',
+    position: 'digital_internship', term: 'fall_2026',
     statement_of_interest: 'A long enough statement of interest.',
     resume_url: 'not-a-url'
   }));

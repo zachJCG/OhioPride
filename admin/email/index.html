@@ -135,7 +135,7 @@
 
               if (!b.configured) {
                 banner('warn', '<strong>MailerLite is not configured.</strong> Set the ' +
-                  '<code>MAILERLITE_API_KEY</code> environment variable in Netlify to enable sending.');
+                  '<code>MAILERLITE_API_KEY</code> environment variable in Vercel to enable sending.');
               }
               renderGroups(b.groups || []);
               renderRecent(b.campaigns || []);
