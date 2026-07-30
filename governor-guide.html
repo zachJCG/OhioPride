@@ -244,6 +244,12 @@
       line-height: 1.55; text-align: center; color: rgba(255,255,255,0.88);
     }
     .gg-tape-row dd .gg-cell-sub { display: block; font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .gg-tape-note {
+      font-family: "Montserrat", sans-serif; font-size: 12px; line-height: 1.8;
+      color: var(--text-muted); margin-top: 14px;
+    }
+    .gg-tape-note a { color: var(--text-accent); text-decoration: none; }
+    .gg-tape-note a:hover { text-decoration: underline; }
     @media (max-width: 640px) {
       .gg-tape-head { grid-template-columns: 1fr 1fr; padding: 0 8px 10px; }
       .gg-tape-head .gg-tape-label { display: none; }
@@ -554,7 +560,9 @@
         <p class="gg-lede">
           What each candidate has actually said or published, topic by topic. Tap an issue
           to compare. Where there's no public position, the card says so — and
-          <a href="#pen">we've asked</a>.
+          <a href="#pen">we've asked</a>. Read both platforms in full:
+          <a href="https://actonforgovernor.com/issues/" target="_blank" rel="noopener">Acton's</a> ·
+          <a href="https://vivekforohio.com/the-plan/" target="_blank" rel="noopener">Ramaswamy's</a>.
         </p>
         <div class="gg-topic-tabs" role="tablist" aria-label="Issue topics" id="ggTopicTabs"></div>
         <p class="gg-topic-intro" id="ggTopicIntro"></p>
@@ -692,18 +700,441 @@
           imgAlt: "Portrait of Vivek Ramaswamy",
         },
       },
-      heroChips: [],
+      heroChips: [
+        "Every claim dated, sourced &amp; linked",
+        "Two Ohio-born, first-time candidates",
+      ],
+
       /* Editorial note — the PAC's voice, kept visually separate from the
          neutral comparison sections. { kicker, title, paras: [html], sig } */
-      statement: null,
-      tape: [],
-      topics: [],
-      quotes: [],
-      timeline: [],
-      pen: [],
-      askQuestions: [],
-      askStatus: "",
-      planTiles: [],
+      statement: {
+        kicker: "Where We Stand",
+        title: "Why we built this guide",
+        paras: [
+          'Ohio Pride PAC is disappointed by recent statements from Democratic candidate Dr. Amy Acton. <a href="https://www.nbc4i.com/news/your-local-election-hq/some-progressive-ohioans-frustrated-by-amy-actons-comment-on-trans-athletes/" target="_blank" rel="noopener">Describing trans girls in school sports as &ldquo;boys&rdquo;</a> invalidates the identity of trans Ohioans — and it flies in the face of the <a href="https://publications.aap.org/pediatrics/article/142/4/e20182162/37381/Ensuring-Comprehensive-Care-and-Support-for" target="_blank" rel="noopener">long-standing position</a> of the <a href="https://www.ama-assn.org/public-health/population-health/advocating-lgbtq-community" target="_blank" rel="noopener">medical profession</a> on the validity of trans people.',
+          'At the same time, Republican candidate Vivek Ramaswamy spent his 2024 presidential campaign calling being transgender <a data-fill="vivek-mhd" href="#" target="_blank" rel="noopener">a &ldquo;mental health disorder&rdquo;</a> — and his 2026 platform for governor <a data-fill="vivek-silence" href="#" target="_blank" rel="noopener">does not mention LGBTQ+ Ohioans at all</a>.',
+          "Each of these candidates has a road to walk to earn the full-throated support of Ohio&rsquo;s LGBTQ+ community. Ohio Pride exists to shine a light on the record of any candidate toward our community — so we prepared this point-by-point guide to where each stands on the issues we hold most dear: <strong>for us, against us, or deafeningly silent</strong>.",
+          "Take a look, and decide for yourself.",
+        ],
+        sig: "— Ohio Pride PAC",
+      },
+
+      tape: [
+        {
+          label: "Age on Election Day",
+          acton: '60 <span class="gg-cell-sub">b. Feb 16, 1966 · Youngstown</span>',
+          vivek: '41 <span class="gg-cell-sub">b. Aug 9, 1985 · Cincinnati</span>',
+        },
+        {
+          label: "Education",
+          acton: 'B.S. Youngstown State · M.D. NEOMED &rsquo;90 · M.P.H. Ohio State',
+          vivek: 'B.A. biology, Harvard &rsquo;07 · J.D. Yale Law &rsquo;13',
+        },
+        {
+          label: "Before politics",
+          acton: 'Physician &amp; public-health professor; Ohio Dept. of Health director, 2019&ndash;20; Columbus Foundation; RAPID&nbsp;5 parks nonprofit',
+          vivek: 'Hedge-fund partner (QVT); founded Roivant Sciences &rsquo;14; co-founded Strive Asset Management &rsquo;22; author of <em>Woke,&nbsp;Inc.</em>',
+        },
+        {
+          label: "Elected office held",
+          acton: 'None — first run for office <span class="gg-cell-sub">appointed, not elected, as health director</span>',
+          vivek: 'None — first state run <span class="gg-cell-sub">2024 presidential bid; co-led DOGE, Nov 2024&ndash;Jan 2025</span>',
+        },
+        {
+          label: "Running mate",
+          acton: 'David Pepper <span class="gg-cell-sub">ex-Ohio Democratic Party chair · named Jan 7, 2026</span>',
+          vivek: 'Rob McColley <span class="gg-cell-sub">Ohio Senate President · named Jan 6, 2026</span>',
+        },
+        {
+          label: "May 5, 2026 primary",
+          acton: 'Won unopposed <span class="gg-cell-sub">762,457 votes (Gongwer)</span>',
+          vivek: 'Won with ~86% <span class="gg-cell-sub">over Casey Putsch · election-night returns</span>',
+        },
+        {
+          label: "Home & family",
+          acton: 'Bexley · husband Eric, a teacher · blended family of six kids',
+          vivek: 'Columbus area · wife Dr. Apoorva Ramaswamy, an Ohio State surgeon · two sons',
+        },
+        {
+          label: "Endorsements include",
+          acton: 'Planned Parenthood Advocates of Ohio · Reproductive Freedom for All <span class="gg-cell-sub">March &amp; July 2026</span>',
+          vivek: 'President Donald Trump · Ohio Chamber of Commerce PAC <span class="gg-cell-sub">February 2025 · July 2026</span>',
+        },
+      ],
+      tapeNote:
+        'Table sources: <a href="https://en.wikipedia.org/wiki/Amy_Acton" target="_blank" rel="noopener">Wikipedia</a>, <a href="https://actonforgovernor.com/meet-amy/" target="_blank" rel="noopener">Acton campaign bio</a>, <a href="https://www.britannica.com/biography/Vivek-Ramaswamy" target="_blank" rel="noopener">Britannica</a>, <a href="https://pdsoros.org/fellows/vivek-ramaswamy/" target="_blank" rel="noopener">Soros Fellowship profile</a>, <a href="https://www.statenews.org/government-politics/2025-01-07/amy-acton-former-odh-director-during-covid-launches-run-for-governor" target="_blank" rel="noopener">Statehouse News Bureau</a>, <a href="https://ohiocapitaljournal.com/2026/01/07/amy-acton-chooses-former-ohio-democratic-party-chair-david-pepper-as-running-mate/" target="_blank" rel="noopener">Ohio Capital Journal</a>, <a href="https://www.nbcnews.com/politics/2026-election/vivek-ramaswamy-taps-ohio-state-senate-president-rob-mccolley-running-mate" target="_blank" rel="noopener">NBC News</a>, <a href="https://www.forbes.com/sites/saradorn/2026/05/05/vivek-ramaswamy-wins-ohios-republican-gubernatorial-primary/" target="_blank" rel="noopener">Forbes</a>, <a href="https://www.plannedparenthoodaction.org/planned-parenthood-advocates-ohio/media/planned-parenthood-advocates-of-ohio-endorses-amy-acton-for-governor" target="_blank" rel="noopener">Planned Parenthood Advocates of Ohio</a>, <a href="https://thehill.com/homenews/state-watch/5162524-donald-trump-elon-musk-vivek-ramaswamy-ohio-governor/" target="_blank" rel="noopener">The Hill</a>, <a href="https://www.statenews.org/government-politics/2026-07-14/ramaswamy-touts-income-capital-gains-plan" target="_blank" rel="noopener">Statehouse News Bureau (Chamber PAC endorsement)</a>.',
+
+      topics: [
+        {
+          id: "lgbtq",
+          label: "LGBTQ+ Ohioans",
+          intro:
+            'What each candidate has said about LGBTQ+ Ohioans, with the receipts. The <a href="#pen">Governor&rsquo;s Pen</a> section below covers the specific laws and bills the next governor will be asked to sign or veto.',
+          acton: [
+            {
+              quote:
+                "I do not support boys playing in girls sports. This is already settled law in Ohio, and as governor I will enforce and uphold the law. As a doctor, public servant, and a mom, I will always stand up for fairness and protect kids' health and safety.",
+              text:
+                'Statement to The Toledo Blade after the U.S. Supreme Court ruled June 30, 2026 that states may bar transgender girls from girls&rsquo; school sports. Wording as reported by NBC4; LGBTQ+ advocates criticized the statement for describing trans girls as &ldquo;boys.&rdquo;',
+              source: "The Toledo Blade, via NBC4",
+              url: "https://www.nbc4i.com/news/your-local-election-hq/some-progressive-ohioans-frustrated-by-amy-actons-comment-on-trans-athletes/",
+              date: "June 30, 2026",
+              flag: "direct",
+            },
+            {
+              quote:
+                "Nonetheless, this is settled law in Ohio as well as now the Supreme Court, and what I am hearing from Ohioans is they want me to focus on lowering costs in this state.",
+              text: "Addressing criticism of the Blade statement a week later, she restated the position rather than walking it back.",
+              source: "NBC4",
+              url: "https://www.nbc4i.com/news/your-local-election-hq/some-progressive-ohioans-frustrated-by-amy-actons-comment-on-trans-athletes/",
+              date: "July 8, 2026",
+              flag: "direct",
+            },
+            {
+              quote:
+                "All Ohioans deserve to be treated fairly and equally under the law. As governor, I am committed to standing up against discrimination and ensuring that every Ohioan – including members of the LGBT community – receives equal protection under the law.",
+              text: "Language her campaign added to its platform in mid-July, without an accompanying statement, after two weeks of criticism.",
+              source: "The Buckeye Flame",
+              url: "https://thebuckeyeflame.com/2026/07/16/amy-acton-adds-lgbtq-equality-language-to-campaign-platform/",
+              date: "July 16, 2026",
+              flag: "attributed",
+            },
+            {
+              text:
+                'Context: Equality Ohio (a separate organization, not affiliated with Ohio Pride PAC) moved Acton&rsquo;s grade on its 2026 candidate scorecard from &ldquo;A&rdquo; to &ldquo;Pending&rdquo; after the Blade statement; the same scorecard lists Ramaswamy at &ldquo;F.&rdquo;',
+              source: "The Buckeye Flame",
+              url: "https://thebuckeyeflame.com/2026/07/28/equality-ohio-changes-grade-for-dr-amy-acton-from-a-to-pending/",
+              date: "July 28, 2026",
+            },
+          ],
+          vivek: [
+            /* FILL: five verified 2023 quote items from lgbtq-records verify pass */
+            {
+              text:
+                'His 2026 platform for governor does not mention LGBTQ+ Ohioans. The Buckeye Flame reported the omission on July 16, 2026; a direct text search of <a href="https://vivekforohio.com/the-plan/" target="_blank" rel="noopener">the platform page</a> and homepage on July 30, 2026 found zero occurrences of &ldquo;LGBT,&rdquo; &ldquo;transgender,&rdquo; &ldquo;gay,&rdquo; &ldquo;lesbian,&rdquo; &ldquo;queer,&rdquo; &ldquo;sexual orientation,&rdquo; or &ldquo;gender identity.&rdquo;',
+              source: "The Buckeye Flame",
+              url: "https://thebuckeyeflame.com/2026/07/16/amy-acton-adds-lgbtq-equality-language-to-campaign-platform/",
+              date: "July 16, 2026",
+              flag: "record",
+            },
+          ],
+        },
+        {
+          id: "healthcare",
+          label: "Healthcare",
+          intro: "Each candidate's stated healthcare agenda, from their own platforms and campaign events.",
+          acton: [
+            {
+              quote:
+                "I'll reduce prescription drug prices by launching Ohio Rx, an online platform that will leverage Ohio's purchasing power from its Medicaid single pharmacy benefit manager to drive down drug prices",
+              text: "Her platform's lead healthcare plank, alongside simplifying Medicaid enrollment, price transparency, and a crackdown on surprise billing.",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/affordable-healthcare-for-all-ohioans/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              quote: "On my first day in office, I'll direct our state to work to relieve medical debt for pennies on the dollar",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/affordable-healthcare-for-all-ohioans/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              quote:
+                "But the number one thing I am hearing about, and data is now showing this, it's the rising cost of health care that is really putting people over the edge",
+              text: "At a February 2026 campaign event, naming healthcare costs the top concern she hears from voters.",
+              source: "Campaign event, via Yahoo News",
+              url: "https://www.yahoo.com/news/articles/ohio-democratic-governor-candidate-amy-095527582.html",
+              date: "February 12, 2026",
+              flag: "direct",
+            },
+          ],
+          vivek: [
+            {
+              quote: "If I am elected governor of Ohio in November, my state will be ready to commit in January.",
+              text: "His principal published healthcare item: a Medicaid anti-fraud proposal, from a Wall Street Journal op-ed reposted on his campaign site.",
+              source: "WSJ op-ed, via campaign site",
+              url: "https://vivekforohio.com/an-easy-way-to-defeat-medicaid-fraud/",
+              date: "May 19, 2026",
+              flag: "direct",
+            },
+            {
+              none: "Beyond the Medicaid anti-fraud proposal, his platform page lists no other healthcare planks as of July 30, 2026.",
+              source: "Vivek for Ohio — The Plan (accessed July 30, 2026)",
+              url: "https://vivekforohio.com/the-plan/",
+              flag: "record",
+            },
+          ],
+        },
+        {
+          id: "education",
+          label: "Education",
+          intro: "Where each candidate stands on school funding, vouchers, and what happens inside Ohio classrooms.",
+          acton: [
+            {
+              quote: "restoring public school funding to a constitutional level and implement the bipartisan Fair School Funding Plan",
+              text: "Her platform's top education commitment.",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/education/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              quote:
+                "bring reform to our corrupt school voucher system, which funnels billions of hardworking Ohio taxpayer dollars to private schools with no transparency or accountability",
+              text: "On Ohio's EdChoice voucher program — her words, from the platform.",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/education/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              quote: "fighting for free breakfast and lunch. No child in Ohio should go hungry",
+              text: "Supports universal free school breakfast and lunch.",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/education/",
+              date: "July 2026",
+              flag: "direct",
+            },
+          ],
+          vivek: [
+            {
+              quote: "Raise academic standards with a focus on 3rd-grade literacy, 8th-grade numeracy, and 12th-grade civics.",
+              text: "His &ldquo;Educational Achievement&rdquo; pillar also pledges expanded school choice and merit pay for teachers.",
+              source: "Vivek for Ohio — The Plan (accessed July 30, 2026)",
+              url: "https://vivekforohio.com/the-plan/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              quote: "We are going to bring a radical revolution of standards to our public schools.",
+              text: "At an Americans for Prosperity event in Hilliard, where he also pitched performance-based teacher pay: &ldquo;What I&rsquo;m talking about is pro-teacher. May not be pro-teacher union.&rdquo;",
+              source: "WOSU",
+              url: "https://www.wosu.org/politics-government/2025-08-21/ohio-governor-candidate-vivek-ramaswamy-gives-education-plan-at-hilliard-town-hall",
+              date: "August 20, 2025",
+              flag: "direct",
+            },
+            {
+              quote: "I love universities in Ohio. But we have too many of them. They need to be consolidated",
+              text: "Proposing consolidation of Ohio's public universities, in a video posted to Threads.",
+              source: "Signal Ohio",
+              url: "https://signalohio.org/vivek-ramaswamy-provocative-ideas-give-democrats-ammunition-in-ohio-governors-race/",
+              date: "March 13, 2026",
+              flag: "direct",
+            },
+          ],
+        },
+        {
+          id: "economy",
+          label: "Economy & Taxes",
+          intro: "Jobs, taxes, and the cost of living — each candidate's published plans, with the reporting around them.",
+          acton: [
+            {
+              quote: "on my first day as Governor, I will work with leaders across the state to do a full, top-to-bottom review of Jobs Ohio",
+              text: "A day-one review of the state's private economic-development corporation.",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/growing-ohio-jobs-and-businesses/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              text:
+                'Her April 2026 affordability agenda proposes a state child tax credit — $1,000 per child ages 0&ndash;6 and $500 for ages 7&ndash;18 for families earning up to $85,000 — plus a refundable state EITC. The Statehouse News Bureau noted the plan &ldquo;offered few specifics&rdquo; on funding.',
+              source: "Statehouse News Bureau",
+              url: "https://www.statenews.org/government-politics/2026-04-06/ohio-governor-race-acton-releases",
+              date: "April 6, 2026",
+              flag: "direct",
+            },
+            {
+              text:
+                "Her July 2026 property-tax plan: raise the homestead-exemption income limit to $50,000, and a circuit-breaker rebate of up to $1,000 for households under $132,000 (homes at or below $350,000) when bills jump more than 4%.",
+              source: "Statehouse News Bureau",
+              url: "https://www.statenews.org/government-politics/2026-07-23/acton-releases-plan-of-targeted-property-tax-relief",
+              date: "July 20, 2026",
+              flag: "direct",
+            },
+          ],
+          vivek: [
+            {
+              quote: "Phase out the state income tax—starting with eliminating capital gains taxes—so every Ohioan keeps more of what they earn.",
+              text: 'At a July 14 press conference he put a date on it: &ldquo;We will start with the first step of that march to zero income taxation with elimination of taxation on capital gains that goes into effect next year.&rdquo; (<a href="https://www.statenews.org/government-politics/2026-07-14/ramaswamy-touts-income-capital-gains-plan" target="_blank" rel="noopener">Statehouse News Bureau</a>)',
+              source: "Vivek for Ohio — The Plan (accessed July 30, 2026)",
+              url: "https://vivekforohio.com/the-plan/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              quote: "Vivek Ramaswamy will deliver immediate relief by rolling back property tax levels to where they were before the end of the Covid pandemic.",
+              text: "His property-tax plan page; the platform pledges to &ldquo;slash property taxes immediately.&rdquo;",
+              source: "Vivek for Ohio (accessed July 30, 2026)",
+              url: "https://vivekforohio.com/viveks-plan-for-historic-property-tax-rollbacks/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              text: 'Mission statement: make Ohio &ldquo;the Most Affordable, Opportunity-Rich State in America.&rdquo; His campaign also accepts cryptocurrency donations, and he applauded a January 2025 bill to create an Ohio Bitcoin reserve. (<a href="https://prospect.org/2026/04/04/with-millions-from-industry-ramaswamy-backs-ohio-crypto-gamble/" target="_blank" rel="noopener">The American Prospect</a>)',
+              source: "Vivek for Ohio — The Plan (accessed July 30, 2026)",
+              url: "https://vivekforohio.com/the-plan/",
+              date: "July 2026",
+              flag: "direct",
+            },
+          ],
+        },
+        {
+          id: "repro",
+          label: "Reproductive Rights",
+          intro: "Ohio voters enshrined reproductive rights in the state constitution with Issue 1 in November 2023. Where the candidates stand now.",
+          acton: [
+            {
+              quote: "Every Ohioan deserves the right to make their own reproductive health care decisions, free from government interference, plain and simple.",
+              text: "Platform pledges to defend the 2023 Issue 1 amendment and protect access to abortion, contraception, fertility treatments, and miscarriage care.",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/ensuring-reproductive-freedom/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              text: "Endorsed by Planned Parenthood Advocates of Ohio (March 2026) and Reproductive Freedom for All (July 2026).",
+              source: "Planned Parenthood Advocates of Ohio",
+              url: "https://www.plannedparenthoodaction.org/planned-parenthood-advocates-ohio/media/planned-parenthood-advocates-of-ohio-endorses-amy-acton-for-governor",
+              date: "March 5, 2026",
+              flag: "record",
+            },
+          ],
+          vivek: [
+            {
+              quote: "unapologetically pro-life",
+              text: "How he described himself during his 2023 presidential run. His 2026 platform does not mention abortion, and as of May 12, 2026 his campaign had not responded to Heartland Signal's request for comment on whether those positions still stand.",
+              source: "Heartland Signal",
+              url: "https://heartlandsignal.com/2026/05/12/vivek-ramaswamys-anti-abortion-record-clashes-with-ohios-status-quo/",
+              date: "2023; reported May 12, 2026",
+              flag: "direct",
+            },
+            {
+              none: "No position on abortion appears in his 2026 platform as of July 30, 2026.",
+              noneNote: 'Platform: <a href="https://vivekforohio.com/the-plan/" target="_blank" rel="noopener">vivekforohio.com/the-plan</a>',
+              flag: "record",
+            },
+          ],
+        },
+        {
+          id: "energy",
+          label: "Energy",
+          intro: "Power bills, power plants, and who pays for the data-center boom.",
+          acton: [
+            {
+              quote: "I'll stand up for consumers by appointing PUCO commissioners who put ratepayers first and are not beholden to utility companies.",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/lowering-energy-costs/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              quote: "Data centers must pay for the entirety of their energy so the burden doesn't fall onto Ohio families or businesses.",
+              text: "Also proposes reinstating the efficiency and renewable-portfolio standards rolled back under 2019's House Bill 6.",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/lowering-energy-costs/",
+              date: "July 2026",
+              flag: "direct",
+            },
+          ],
+          vivek: [
+            {
+              quote: "Expand natural gas and deploy innovative energy technologies to strengthen Ohio's energy supply and reduce electric bills for every family.",
+              source: "Vivek for Ohio — The Plan (accessed July 30, 2026)",
+              url: "https://vivekforohio.com/the-plan/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              text: "At a September 2025 Columbus event, he announced policy priorities that included boosting energy production by promoting fracking and new nuclear plants.",
+              source: "Signal Ohio",
+              url: "https://signalohio.org/vivek-ramaswamy-amy-acton-talk-up-policies-in-ohio-gubernatorial-race/",
+              date: "September 25, 2025",
+              flag: "attributed",
+            },
+          ],
+        },
+        {
+          id: "democracy",
+          label: "Democracy & Elections",
+          intro: "Redistricting, transparency, and how Ohio runs its own democracy.",
+          acton: [
+            {
+              text: "Says she'll help push a new redistricting-reform amendment in 2027, after 2024's Issue 1 failed; she signed a business-leader letter backing that measure before becoming a candidate.",
+              source: "Signal Cleveland",
+              url: "https://signalcleveland.org/amy-acton-says-shell-push-for-new-redistricting-amendment-as-governor/",
+              date: "April 7, 2026",
+              flag: "direct",
+            },
+            {
+              quote:
+                "As Governor, I will shine light on the process, insisting on transparency, mandating more disclosure, reforming our campaign finance system, and opening bidding, contracting, and appointment processes",
+              source: "Acton platform (accessed July 30, 2026)",
+              url: "https://actonforgovernor.com/issue/cleaning-up-corruption/",
+              date: "July 2026",
+              flag: "direct",
+            },
+          ],
+          vivek: [
+            {
+              quote: "He will restore a political culture where we can respectfully disagree, while still seeing each other as neighbors, friends, and fellow citizens.",
+              text: "From the &ldquo;One Ohio — Unity Over Division&rdquo; pillar of his platform.",
+              source: "Vivek for Ohio — The Plan (accessed July 30, 2026)",
+              url: "https://vivekforohio.com/the-plan/",
+              date: "July 2026",
+              flag: "direct",
+            },
+            {
+              none: "We found no published position on redistricting reform or campaign-finance rules as of July 30, 2026.",
+              noneNote: 'Platform: <a href="https://vivekforohio.com/the-plan/" target="_blank" rel="noopener">vivekforohio.com/the-plan</a>',
+            },
+          ],
+        },
+      ],
+
+      quotes: [
+        /* FILL: balanced, verbatim, sourced quote pool from verified research */
+      ],
+
+      timeline: [
+        { year: "1966", who: "acton", title: "Born in Youngstown", detail: 'Grew up on the city&rsquo;s north side in a steel-mill family; she has spoken publicly about surviving childhood abuse and a period of homelessness. <a href="https://actonforgovernor.com/meet-amy/" target="_blank" rel="noopener">Campaign bio</a>' },
+        { year: "1985", who: "vivek", title: "Born in Cincinnati", detail: 'Parents immigrated from Kerala, India — his father an engineer and patent lawyer at GE, his mother a geriatric psychiatrist. <a href="https://www.britannica.com/biography/Vivek-Ramaswamy" target="_blank" rel="noopener">Britannica</a>' },
+        { year: "1990", who: "acton", title: "M.D., Northeast Ohio Medical University", detail: 'Residencies in pediatrics and preventive medicine followed, then years teaching public health at Ohio State — including a 2015 Excellence in Teaching Award. <a href="https://en.wikipedia.org/wiki/Amy_Acton" target="_blank" rel="noopener">Wikipedia</a>' },
+        { year: "2003", who: "vivek", title: "Valedictorian, St. Xavier High School", detail: 'Graduated first in his class at the Cincinnati Jesuit school — while playing nationally ranked junior tennis. <a href="https://en.wikipedia.org/wiki/Vivek_Ramaswamy" target="_blank" rel="noopener">Wikipedia</a>' },
+        { year: "2007", who: "vivek", title: "Harvard, then Wall Street", detail: 'B.A. in biology, summa cum laude; spent seven years at hedge fund QVT Financial, becoming a partner — and picked up a Yale Law J.D. (2013) along the way. <a href="https://pdsoros.org/fellows/vivek-ramaswamy/" target="_blank" rel="noopener">Soros Fellowship profile</a>' },
+        { year: "2014", who: "vivek", title: "Founds Roivant Sciences", detail: 'Built and led the biopharmaceutical company as CEO until 2021. <a href="https://www.britannica.com/biography/Vivek-Ramaswamy" target="_blank" rel="noopener">Britannica</a>' },
+        { year: "2019", who: "acton", title: "First woman to lead the Ohio Department of Health", detail: 'Appointed February 26, 2019 by Gov. Mike DeWine — his final cabinet pick. <a href="https://www.statenews.org/government-politics/2019-02-26/dewine-appoints-first-woman-to-head-ohio-department-of-health" target="_blank" rel="noopener">Statehouse News Bureau</a>' },
+        { year: "2020", who: "acton", title: "The 2 p.m. briefings", detail: 'Ohio&rsquo;s daily televised COVID-19 briefings made her a household name — a fan-club Facebook group hit roughly 73,000 members — while her health orders also drew protests and pushback from lawmakers. She resigned as director on June 11, 2020. <a href="https://www.wosu.org/ideastream/2020-03-27/inside-dr-amy-actons-internet-fan-club" target="_blank" rel="noopener">WOSU</a> · <a href="https://www.statenews.org/government-politics/2020-06-11/as-pandemic-continues-acton-resigns-as-health-director-but-stays-as-advisor" target="_blank" rel="noopener">Statehouse News Bureau</a>' },
+        { year: "2021", who: "acton", title: "JFK Profile in Courage Award", detail: 'Honored for the early-pandemic response; back at the Columbus Foundation, she weighed — then passed on — a U.S. Senate run. <a href="https://en.wikipedia.org/wiki/Amy_Acton" target="_blank" rel="noopener">Wikipedia</a>' },
+        { year: "2021", who: "vivek", title: "Woke, Inc. published", detail: 'His first book made him a national voice against corporate ESG politics; <em>Nation of Victims</em> followed in 2022. <a href="https://www.hachettebookgroup.com/contributor/vivek-ramaswamy/" target="_blank" rel="noopener">Hachette</a>' },
+        { year: "2022", who: "vivek", title: "Co-founds Strive Asset Management", detail: 'The Columbus-based anti-ESG fund manager crossed $1&nbsp;billion in assets a year after its first fund launched. <a href="https://www.crainscleveland.com/banking-finance/vivek-ramaswamys-columbus-based-strive-hits-1b-assets" target="_blank" rel="noopener">Crain&rsquo;s</a>' },
+        { year: "2022", who: "acton", title: "Leads RAPID 5", detail: 'President &amp; CEO of the Franklin County parks-and-greenways nonprofit until May 2023. <a href="https://en.wikipedia.org/wiki/Amy_Acton" target="_blank" rel="noopener">Wikipedia</a>' },
+        { year: "2023", who: "vivek", title: "Runs for president", detail: 'Launched February 21, 2023 on national TV; appeared in the first four Republican debates. <a href="https://www.npr.org/2024/01/15/1224751138/vivek-ramaswamy-suspends-campaign-and-endorses-trump" target="_blank" rel="noopener">NPR</a>' },
+        { year: "2024", who: "vivek", title: "Fourth in Iowa; endorses Trump; DOGE", detail: 'Suspended his campaign January 15 after taking about 8% in the caucuses and endorsed Donald Trump that night; in November, Trump named him DOGE co-lead alongside Elon Musk. <a href="https://www.npr.org/2024/01/15/1224751138/vivek-ramaswamy-suspends-campaign-and-endorses-trump" target="_blank" rel="noopener">NPR</a> · <a href="https://www.presidency.ucsb.edu/documents/statement-president-elect-donald-j-trump-establishing-the-department-government-efficiency" target="_blank" rel="noopener">American Presidency Project</a>' },
+        { year: "2025", who: "acton", title: "First out of the gate", detail: 'Announced her run for governor January 7, 2025 — her first campaign for any elected office. <a href="https://www.statenews.org/government-politics/2025-01-07/amy-acton-former-odh-director-during-covid-launches-run-for-governor" target="_blank" rel="noopener">Statehouse News Bureau</a>' },
+        { year: "2025", who: "vivek", title: "From DOGE to the trail", detail: 'Left DOGE on Inauguration Day; launched his campaign February 24 in West Chester, and President Trump endorsed him within hours. <a href="https://ohiocapitaljournal.com/2025/02/24/vivek-ramaswamy-officially-launches-bid-for-ohio-governor/" target="_blank" rel="noopener">Ohio Capital Journal</a> · <a href="https://thehill.com/homenews/state-watch/5162524-donald-trump-elon-musk-vivek-ramaswamy-ohio-governor/" target="_blank" rel="noopener">The Hill</a>' },
+        { year: "2026", who: "both", title: "Primary night, May 5", detail: 'Acton won the Democratic primary unopposed with <a href="https://app.gongwer-oh.com/candidate.php?id=402&amp;id2=primary&amp;id3=272302&amp;id4=" target="_blank" rel="noopener">762,457 votes</a>; Ramaswamy took the Republican primary with <a href="https://www.forbes.com/sites/saradorn/2026/05/05/vivek-ramaswamy-wins-ohios-republican-gubernatorial-primary/" target="_blank" rel="noopener">about 86%</a> of election-night returns.' },
+        { year: "Nov 3", who: "both", title: "Election Day", detail: 'Gov. Mike DeWine is term-limited, so Ohio picks a new governor either way — and if Acton wins, she would be the <a href="https://cawp.rutgers.edu/blog/results-may-5th-primaries-indiana-and-ohio" target="_blank" rel="noopener">first woman ever elected</a> to the job. <a href="#plan">Make your plan →</a>' },
+      ],
+
+      pen: [
+        /* FILL: HB 68 / SB 104 / HB 8 / HB 693 / Fairness Act / conversion therapy — statuses + on-record stances from verify pass */
+      ],
+
+      askQuestions: [
+        "Would you sign or veto HB 693, which shields parents who reject their child's gender identity?",
+        "Would you sign a ban on gender-affirming care for adults if the legislature passed one?",
+        "Do you support or oppose the Ohio Fairness Act?",
+        "Would you sign or veto a statewide conversion-therapy ban?",
+        "As governor, would you keep, expand, or roll back HB 68, SB 104, and HB 8?",
+      ],
+      askStatus: "Status: questionnaire goes to every gubernatorial campaign in August 2026 — answers and non-answers will be published here.",
+
+      planTiles: [
+        /* FILL: countdown tiles once registration/early-vote dates are verified */
+      ],
     };
 
     /* =====================================================================
@@ -762,9 +1193,12 @@
         });
 
         const chips = $("ggHeroChips");
-        chips.innerHTML = GUIDE.heroChips
-          .map((c) => '<span class="gg-chip">' + c + "</span>")
-          .join("");
+        const days = Math.max(0, Math.ceil((new Date(GUIDE.electionISO) - new Date()) / 86400000));
+        const countdown =
+          '<span class="gg-chip"><strong>' + days + "</strong>&nbsp;days until Election Day</span>";
+        chips.innerHTML =
+          countdown +
+          GUIDE.heroChips.map((c) => '<span class="gg-chip">' + c + "</span>").join("");
       }
 
       /* ---------- where we stand (editorial note) ---------- */
@@ -799,6 +1233,7 @@
               "</dl>"
           )
           .join("");
+        if (GUIDE.tapeNote) html += '<p class="gg-tape-note">' + GUIDE.tapeNote + "</p>";
         host.innerHTML = html;
       }
 
