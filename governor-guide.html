@@ -172,6 +172,34 @@
     .gg-flag--attributed { background: rgba(255, 255, 255, 0.10); color: rgba(255,255,255,0.75); }
     .gg-flag--record     { background: rgba(255, 255, 255, 0.06); color: rgba(255,255,255,0.6); }
 
+    /* =================== WHERE WE STAND (editorial note) =================== */
+    .gg-stand { padding: 56px 0; border-bottom: 1px solid var(--gg-line); }
+    .gg-stand-box {
+      position: relative; max-width: 860px; margin: 0 auto;
+      border: 1px solid var(--gg-line-strong); border-radius: 14px;
+      background: var(--gg-card); padding: 28px 30px 26px 34px; overflow: hidden;
+    }
+    .gg-stand-box::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+      background: var(--brand-pride-gradient, linear-gradient(180deg,#e40303,#ffbc00,#ffed00,#008026,#004dff,#750787));
+    }
+    .gg-stand-kicker {
+      font-family: "Montserrat", sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 2.4px; text-transform: uppercase; color: var(--text-accent);
+      margin-bottom: 10px;
+    }
+    .gg-stand-box h2 { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: clamp(20px, 3vw, 26px); margin-bottom: 12px; }
+    .gg-stand-box p {
+      font-family: "Roboto Slab", serif; font-size: 15px; line-height: 1.75;
+      color: rgba(255,255,255,0.85); margin-bottom: 12px;
+    }
+    .gg-stand-box p:last-of-type { margin-bottom: 0; }
+    .gg-stand-box a { color: var(--text-accent); }
+    .gg-stand-sig {
+      font-family: "Montserrat", sans-serif; font-size: 13px; font-weight: 700;
+      color: var(--text-muted); margin-top: 16px;
+    }
+
     /* =================== SECTION SHELL =================== */
     .gg-section { padding: 72px 0; border-bottom: 1px solid var(--gg-line); }
     .gg-section:last-of-type { border-bottom: none; }
@@ -499,6 +527,13 @@
       </div>
     </section>
 
+    <!-- ============ WHERE WE STAND ============ -->
+    <section class="gg-stand" id="stand">
+      <div class="gg-wrap">
+        <div class="gg-stand-box gg-reveal" id="ggStand"></div>
+      </div>
+    </section>
+
     <!-- ============ TALE OF THE TAPE ============ -->
     <section class="gg-section" id="tape">
       <div class="gg-wrap">
@@ -658,6 +693,9 @@
         },
       },
       heroChips: [],
+      /* Editorial note — the PAC's voice, kept visually separate from the
+         neutral comparison sections. { kicker, title, paras: [html], sig } */
+      statement: null,
       tape: [],
       topics: [],
       quotes: [],
@@ -727,6 +765,18 @@
         chips.innerHTML = GUIDE.heroChips
           .map((c) => '<span class="gg-chip">' + c + "</span>")
           .join("");
+      }
+
+      /* ---------- where we stand (editorial note) ---------- */
+      function renderStand() {
+        const box = $("ggStand");
+        const s = GUIDE.statement;
+        if (!s) { box.closest("section").hidden = true; return; }
+        box.innerHTML =
+          '<p class="gg-stand-kicker">' + esc(s.kicker || "Where We Stand") + "</p>" +
+          "<h2>" + esc(s.title) + "</h2>" +
+          s.paras.map((p) => "<p>" + p + "</p>").join("") +
+          (s.sig ? '<p class="gg-stand-sig">' + esc(s.sig) + "</p>" : "");
       }
 
       /* ---------- tale of the tape ---------- */
@@ -1030,6 +1080,7 @@
       }
 
       renderHero();
+      renderStand();
       renderTape();
       renderTopicTabs();
       renderTopicPanel();
