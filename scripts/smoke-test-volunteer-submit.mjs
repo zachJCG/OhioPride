@@ -2,7 +2,7 @@
 /**
  * scripts/smoke-test-volunteer-submit.mjs
  * --------------------------------------
- * End-to-end smoke test for /.netlify/functions/volunteer-submit.
+ * End-to-end smoke test for /api/volunteer-submit.
  *
  * What it does:
  *   1. POSTs a fake volunteer signup, asserts ok=true and gets back the row id.
@@ -13,7 +13,7 @@
  *      stay clean.
  *
  * Usage:
- *   ENDPOINT=https://www.ohiopride.org/.netlify/functions/volunteer-submit \
+ *   ENDPOINT=https://www.ohiopride.org/api/volunteer-submit \
  *   SUPABASE_URL=https://dkdxefzhttkmjhdbkvqn.supabase.co \
  *   SUPABASE_SERVICE_ROLE_KEY=<service_role_key> \
  *   node scripts/smoke-test-volunteer-submit.mjs --cleanup
@@ -25,7 +25,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 const ENDPOINT = process.env.ENDPOINT
-  || 'https://www.ohiopride.org/.netlify/functions/volunteer-submit';
+  || 'https://www.ohiopride.org/api/volunteer-submit';
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const CLEANUP = process.argv.includes('--cleanup');

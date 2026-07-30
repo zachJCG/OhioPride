@@ -1,5 +1,5 @@
 /* =============================================================================
- * Netlify Function: admin-user-manage
+ * Vercel Function: admin-user-manage
  * -----------------------------------------------------------------------------
  * Service-role bridge for the /admin/users module. Lets a super-admin do the
  * things that need privileged auth APIs:
@@ -18,7 +18,7 @@
  *   anything privileged.
  *
  * REQUEST:
- *   POST /.netlify/functions/admin-user-manage
+ *   POST /api/admin-user-manage
  *   { "action": "...", "email": "...", ...action-specific fields }
  *
  * RESPONSE:

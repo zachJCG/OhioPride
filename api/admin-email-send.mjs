@@ -1,5 +1,5 @@
 /* =============================================================================
- * Netlify Function: admin-email-send
+ * Vercel Function: admin-email-send
  * -----------------------------------------------------------------------------
  * Powers the /admin/email composer. Lets a comms-permitted admin send a one-off
  * email blast to one or more MailerLite groups.
@@ -10,10 +10,10 @@
  *   module is the comms/outbound module in the role matrix.)
  *
  * REQUEST:
- *   GET  /.netlify/functions/admin-email-send
+ *   GET  /api/admin-email-send
  *        -> { ok, configured, default_from, default_from_name, groups, campaigns }
  *
- *   POST /.netlify/functions/admin-email-send
+ *   POST /api/admin-email-send
  *        { subject, html, group_ids: [..], from?, from_name?, reply_to? }
  *        -> { ok, campaign_id }
  *

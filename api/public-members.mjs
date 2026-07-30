@@ -1,5 +1,5 @@
 /* =============================================================================
- * Netlify Function: public-members
+ * Vercel Function: public-members
  * -----------------------------------------------------------------------------
  * Returns the list of founding members who have both consented to public
  * listing AND been vetted by an organizer. Grouped by tier so the front-end

@@ -1,5 +1,5 @@
 /* =============================================================================
- * Netlify Function: admin-dashboard
+ * Vercel Function: admin-dashboard
  * -----------------------------------------------------------------------------
  * Aggregated stats + recent activity for the /admin/dashboard page.
  *
@@ -23,7 +23,7 @@
  *   }
  *
  * ENDPOINT:
- *   GET /.netlify/functions/admin-dashboard
+ *   GET /api/admin-dashboard
  * ============================================================================= */
 
 import { createClient } from '@supabase/supabase-js';

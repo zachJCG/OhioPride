@@ -37,7 +37,7 @@ JS (in `js/`):
 
 CSS: `css/style.css`, `css/site-template.css`
 
-Netlify functions (`netlify/functions/`):
+Vercel functions (`api/`):
 - `actblue-sync.mjs` — pulls ActBlue donors into `founding_members`
 - `board-members.mjs` — feeds `/board`
 - `founding-member-tiers.mjs` — feeds tier cards on `/founding-members` and `/donate/founding-member`
@@ -86,9 +86,9 @@ Public donor display order is set explicitly via `display_order` column on `foun
 ## Standing platform decisions
 
 - **DB:** Supabase (Postgres). RLS enabled by default; public read where pages need it.
-- **Hosting:** Netlify. Functions in `netlify/functions/*.mjs` (Node ESM).
-- **Donations:** ActBlue. Donor sync runs via `netlify/functions/actblue-sync.mjs` into `founding_members`.
-- **Frontend:** plain HTML + vanilla JS (no framework). Pages fetch from Netlify functions, which proxy to Supabase using the service-role key (kept server-side).
+- **Hosting:** Vercel. Functions in `api/*.mjs` (Node ESM, web handler signature); config in `vercel.json` (cleanUrls, redirects, headers, hourly `actblue-sync` cron).
+- **Donations:** ActBlue. Donor sync runs via `api/actblue-sync.mjs` (Vercel cron) into `founding_members`.
+- **Frontend:** plain HTML + vanilla JS (no framework). Pages fetch from the `/api/*` functions, which proxy to Supabase using the service-role key (kept server-side).
 
 ## Things to never do
 

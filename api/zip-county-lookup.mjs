@@ -1,5 +1,5 @@
-// netlify/functions/zip-county-lookup.mjs
-// GET /.netlify/functions/zip-county-lookup?zip=45420
+// api/zip-county-lookup.mjs
+// GET /api/zip-county-lookup?zip=45420
 // Returns { zip, county_name, county_fips, usps_city, usps_state } or 404.
 //
 // Reads from public.ohio_zip_county via Supabase service role.

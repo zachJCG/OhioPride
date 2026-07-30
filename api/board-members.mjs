@@ -1,5 +1,5 @@
 /* =============================================================================
- * Netlify Function: board-members
+ * Vercel Function: board-members
  * -----------------------------------------------------------------------------
  * Returns the public list of active board members from Supabase. This is the
  * endpoint the /board page hits to hydrate its grid.
@@ -12,7 +12,7 @@
  *   - a clean swap-out path if we ever move off Supabase
  *
  * Endpoint (after deploy):
- *   GET /.netlify/functions/board-members
+ *   GET /api/board-members
  *   -> { ok: true, members: [ { name, role, chip, img_path, bio: [...] }, ... ] }
  * ============================================================================= */
 
@@ -67,7 +67,7 @@ export default async (_req, _context) => {
       headers: {
         'content-type': 'application/json',
         // Board changes rarely. Cache for 5 min at edge, 2 min in browser.
-        // When a board member is added/removed, trigger a Netlify deploy or
+        // When a board member is added/removed, trigger a redeploy or
         // purge — both will invalidate the edge cache.
         'cache-control': 'public, max-age=120, s-maxage=300, stale-while-revalidate=600',
       },

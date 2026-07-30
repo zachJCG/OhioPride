@@ -201,7 +201,7 @@
               if (!r.ok || !r.body || r.body.ok === false) {
                 var e = (r.body && r.body.error) || ('http_' + r.status);
                 if (e === 'not_admin') return showError('Your account is signed in but does not have admin access to these results.');
-                if (e === 'server_misconfigured') return showError('Server is missing Supabase credentials. Set SUPABASE_SERVICE_ROLE_KEY in Netlify.');
+                if (e === 'server_misconfigured') return showError('Server is missing Supabase credentials. Set SUPABASE_SERVICE_ROLE_KEY in Vercel.');
                 return showError('Could not load results (' + esc(e) + ').');
               }
               render(r.body);

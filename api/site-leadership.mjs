@@ -1,5 +1,5 @@
 /* =============================================================================
- * Netlify Function: site-leadership
+ * Vercel Function: site-leadership
  * -----------------------------------------------------------------------------
  * Returns the active officer roster for a given legal entity, defaulting to
  * the PAC. Used by the website footer template and by any page that needs
@@ -78,7 +78,7 @@ export default async (req, _context) => {
     );
   }
 
-  // Parse ?entity= from the URL. req.url is a full URL on Netlify Functions.
+  // Parse ?entity= from the URL. req.url is a full URL under the web handler signature.
   let entity = 'pac';
   try {
     const url = new URL(req.url);

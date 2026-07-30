@@ -55,7 +55,7 @@ flags pages missing the canonical wiring.
 | Header + footer **styling**            | `css/site-template.css`                         |
 | Inline page styles (one-off layouts)   | per-page `<style>` block — **must use tokens**  |
 | Animated Progress Pride banner         | `js/enhancements.js`                            |
-| Footer leadership/disclaimer data      | `netlify/functions/site-leadership.mjs` + DB    |
+| Footer leadership/disclaimer data      | `api/site-leadership.mjs` + DB    |
 | Consistency check                      | `scripts/check-brand-consistency.js`            |
 
 `css/brand-tokens.css` is `@import`-ed by both `style.css` and
@@ -193,7 +193,7 @@ Single source of truth: `FOOTER_HTML` in `js/site-template.js`.
 What the shared footer gives you for free:
 - Four-column nav (Organization / Get Involved / Connect / Legal)
 - Leadership block populated from Supabase via
-  `netlify/functions/site-leadership.mjs` (with hardcoded fallback)
+  `api/site-leadership.mjs` (with hardcoded fallback)
 - "Paid for by" disclaimer populated from the same source (with fallback)
 - Progress Pride top-border stripe
 - Responsive collapse to a single column on narrow viewports
@@ -233,7 +233,7 @@ or CI gate when ready.
 ## Pages intentionally outside the system
 
 The legacy snapshots under `Update/` and `OhioPride-Refocused/` are
-historical artifacts. They are not deployed (Netlify publish root is
+historical artifacts. They are not deployed (the Vercel deploy root is
 `.`, and they are not linked from any active page or `sitemap.xml`).
 The brand-consistency check ignores them by default.
 

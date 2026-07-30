@@ -3,7 +3,7 @@
    Drop-in handler for any Ohio Pride PAC RSVP / signup form.
 
    Inserts the submission into public.launch_signups (Supabase) and
-   keeps the existing Netlify Forms post for redundancy + email
+   also posts to /api/form-submit for redundancy + email
    notification. No backend code required.
 
    USAGE
@@ -38,14 +38,14 @@
     });
   }
 
-  function netlifyFormEndpoint() {
+  function formEndpoint() {
     var host = window.location.hostname;
     return "/api/form-submit";
   }
 
-  function postToNetlify(form) {
+  function postToFormApi(form) {
     var fd = new FormData(form);
-    return fetch(netlifyFormEndpoint(), {
+    return fetch(formEndpoint(), {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams(fd).toString()
@@ -75,7 +75,7 @@
       };
 
       var calls = [postToSupabase(payload)];
-      if (form.hasAttribute("data-netlify")) calls.push(postToNetlify(form));
+      if (form.hasAttribute("data-form-api")) calls.push(postToFormApi(form));
 
       Promise.allSettled(calls).then(function (results) {
         var resp = results[0].status === "fulfilled" ? results[0].value : null;

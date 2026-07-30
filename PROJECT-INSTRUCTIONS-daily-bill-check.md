@@ -42,7 +42,7 @@ When sources disagree, Claude should always trust the higher-priority source and
 
 Claude has access to Supabase via an MCP connection. The specific operations needed for this workflow are:
 
-For the initial reconciliation, Claude queries the bills-last-verified view or calls the bill-verification-status Netlify function (whichever is more convenient in the moment). The function returns the pre-bucketed groups; the view returns the raw data to bucket in memory.
+For the initial reconciliation, Claude queries the bills-last-verified view or calls the bill-verification-status Vercel function (whichever is more convenient in the moment). The function returns the pre-bucketed groups; the view returns the raw data to bucket in memory.
 
 For fetching the authoritative bill state from the Ohio Legislature website, Claude uses the web_fetch tool with the legislature_url stored for each bill. Claude should fetch the status, votes, and committee activity tabs as needed. For HB 249 this would be https://www.legislature.ohio.gov/legislation/136/hb249 and its sub-pages.
 
