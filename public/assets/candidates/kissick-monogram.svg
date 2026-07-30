@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img"
+     aria-label="Monogram standing in for a portrait of Don Kissick">
+  <!-- No licensed photograph of this candidate was available. A monogram is
+       used rather than a stand-in likeness. Brand Guide v2.0 tokens. -->
+  <circle cx="60" cy="60" r="57" fill="#1B2C41" stroke="#70D6EC" stroke-opacity="0.42" stroke-width="2"/>
+  <text x="60" y="60" fill="#E8F6FB" font-family="Montserrat, Helvetica, Arial, sans-serif"
+        font-size="40" font-weight="800" letter-spacing="1"
+        text-anchor="middle" dominant-baseline="central">DK</text>
+</svg>
