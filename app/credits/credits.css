@@ -1,0 +1,80 @@
+/* Photo credits page styles.
+ *
+ * Lifted verbatim from the <style> block in public/credits.html so the ported
+ * route renders identically. Plain CSS rather than a CSS module on purpose:
+ * the class names are shared with the static page until it is deleted, and
+ * module hashing would break that.
+ */
+
+.legal-hero {
+  padding: calc(var(--nav-height) + 3rem) 2rem 2rem;
+  text-align: center;
+}
+.legal-hero h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.5rem;
+}
+.legal-hero .hero-divider {
+  width: 80px;
+  height: 4px;
+  background: var(--pride-gradient);
+  margin: 1.5rem auto;
+  border-radius: 2px;
+}
+.legal-hero p {
+  font-family: 'Roboto Slab', serif;
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+.legal-body {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.legal-body p {
+  font-family: 'Roboto Slab', serif;
+  color: var(--text-light);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+.legal-body a {
+  color: var(--color-light-blue, #60a5fa);
+  text-decoration: underline;
+}
+
+.credit-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+.credit-list li {
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg-light);
+  padding: 1.1rem 1.3rem;
+  margin-bottom: 0.9rem;
+  font-family: 'Roboto Slab', serif;
+  color: var(--text-light);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.credit-list .credit-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: var(--text-white);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.credit-list .credit-license {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-light-blue);
+}

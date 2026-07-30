@@ -22,7 +22,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+// Static pages live under public/ now that Next.js serves the site; the
+// scanned paths below are relative to that.
+const ROOT = path.resolve(__dirname, '..', 'public');
 
 // Directories that ship to production. Anything outside these is
 // ignored — legacy snapshots (Update/, OhioPride-Refocused/) are not
