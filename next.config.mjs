@@ -147,7 +147,10 @@ const nextConfig = {
       { source: '/admin/:path*', headers: [noindex] },
       { source: '/board-retreat/:path*', headers: [noindex] },
       { source: '/PRTraining', headers: [noindex] },
+      // Covers /governor-guide and its companion pages, such as
+      // /governor-guide/other-candidates, in one rule.
       { source: '/governor-guide', headers: [noindex] },
+      { source: '/governor-guide/:path*', headers: [noindex] },
     ];
   },
 };
