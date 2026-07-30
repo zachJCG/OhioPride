@@ -59,7 +59,8 @@ const header = (name, needle) => (res) => {
 };
 
 // One page per routing shape rather than all hundred: root, top level, nested
-// file, folder index, deep folder index, and the two gated pages.
+// file, folder index, deep folder index, the remaining gated page, and the
+// governor guide, which is public and asserts on its own copy.
 const PAGES = [
   ['/', '<!doctype html'],
   ['/about', 'html'],
@@ -77,7 +78,9 @@ const PAGES = [
   ['/admin/finance/budget', 'html'],
   ['/endorsement/screening/thank-you', 'html'],
   ['/volunteer/events/columbus2026', 'html'],
-  ['/governor-guide', 'Unlock'],
+  // Public since launch: assert on real page copy, not the unlock form.
+  ['/governor-guide', 'Two roads to the Governor'],
+  ['/governor-guide/other-candidates', 'Other candidates'],
   ['/PRTraining', 'Unlock'],
 ];
 
@@ -90,6 +93,7 @@ const ASSETS = [
   '/sitemap.xml',
   '/assets/candidates/acton-cutout.webp',
   '/assets/social/og-governor-guide.png',
+  '/assets/social/og-governor-guide-others.png',
 ];
 
 const API = [
@@ -134,7 +138,6 @@ for (const path of ASSETS)
 
 await check('header   ', '/about', header('x-frame-options', 'DENY'));
 await check('header   ', '/about', header('strict-transport-security', 'max-age='));
-await check('noindex  ', '/governor-guide', header('x-robots-tag', 'noindex'));
 await check('noindex  ', '/admin/login', header('x-robots-tag', 'noindex'));
 await check('cache    ', '/css/style.css', header('cache-control', 'max-age=600'));
 

@@ -33,6 +33,7 @@ const SCAN_ROOTS = [
   '.',
   'issues',
   'donate',
+  'governor-guide',
   'endorsements',
   'endorsement/screening',
   'endorsement/screening/thank-you',
@@ -43,12 +44,15 @@ const SCAN_ROOTS = [
 const ALLOW_LIST = new Set([
   // Self-contained pages that legitimately cannot mount the shared chrome.
   //
-  // The two gate pages ship as AES-256-GCM ciphertext plus a small unlock
-  // form (see scripts/encrypt-page.mjs). The real page, header and footer
+  // A gate page ships as AES-256-GCM ciphertext plus a small unlock form
+  // (see scripts/encrypt-page.mjs). The real page, header and footer
   // included, only exists after the visitor decrypts it in the browser, so
   // there is no shared wiring in the served file to check.
   'PRTraining.html',
-  'governor-guide.html',
+  // governor-guide.html is not here any more: it came off the gate and now
+  // ships as ordinary HTML with the shared header and footer, so it is held
+  // to the same standard as every other page.
+  //
   // Standalone error page: served by the host outside the normal page flow.
   '404.html',
 ]);

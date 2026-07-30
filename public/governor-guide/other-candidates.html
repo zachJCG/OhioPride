@@ -1,194 +1,387 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow, noarchive">
-<title>Other Candidates | Ohio Pride</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Fetched without blocking the parser. A render-blocking stylesheet also
-     blocks every parser-inserted script beneath it, so a visitor whose network
-     stalls on fonts.googleapis.com (corporate proxy, privacy blocker) would sit
-     on a blank gate instead of an unlock form. media="print" makes the fetch
-     non-blocking; onload promotes it once it lands. -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet"></noscript>
-<style>
-  :root {
-    --navy: #152233;
-    --navy-deep: #0d1726;
-    --blue: #70D6EC;
-    --pride: linear-gradient(90deg, #E40303, #FFBC00, #FFED00, #008026, #004DFF, #750787);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    min-height: 100vh;
-    background: var(--navy);
-    color: #fff;
-    font-family: 'Roboto Slab', serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
-  .stripe { position: fixed; top: 0; left: 0; right: 0; height: 6px; background: var(--pride); }
-  .card {
-    width: 100%;
-    max-width: 420px;
-    background: rgba(19, 45, 68, 0.6);
-    border: 1px solid rgba(112, 214, 236, 0.25);
-    border-radius: 16px;
-    padding: 2.4rem 2rem 2.2rem;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-  }
-  .card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--pride); }
-  .brand {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--blue);
-    margin-bottom: 12px;
-  }
-  h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.45rem; margin-bottom: 8px; }
-  .sub { font-size: 0.92rem; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 1.5rem; }
-  label {
-    display: block;
-    text-align: left;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 0.4rem;
-  }
-  input[type="password"] {
-    width: 100%;
-    padding: 0.85rem 0.95rem;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(8, 21, 33, 0.6);
-    color: #fff;
-    font-family: 'Roboto Slab', serif;
-    font-size: 1rem;
-  }
-  input[type="password"]:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(112,214,236,0.18); }
-  button {
-    width: 100%;
-    margin-top: 0.9rem;
-    padding: 0.9rem;
-    border: none;
-    border-radius: 8px;
-    background: var(--blue);
-    color: var(--navy-deep);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 800;
-    font-size: 0.9rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  button:hover { filter: brightness(1.08); }
-  button[disabled] { opacity: 0.6; cursor: wait; }
-  .err {
-    display: none;
-    margin-top: 0.9rem;
-    padding: 0.65rem 0.9rem;
-    border-radius: 8px;
-    background: rgba(228, 3, 3, 0.14);
-    border: 1px solid rgba(228, 3, 3, 0.45);
-    color: #ffd3d3;
-    font-size: 0.85rem;
-  }
-  .err.show { display: block; }
-  .foot { margin-top: 1.6rem; font-size: 0.72rem; color: rgba(255,255,255,0.35); font-family: 'Montserrat', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Other Candidates for Governor | Ohio Pride PAC</title>
+  <!-- "field", not "certified field": this page covers a write-in who is
+       deliberately documented as not on the certified ballot. -->
+  <meta name="description" content="The rest of the field for Ohio governor, November 3, 2026, with ballot status and every claim sourced." />
+  <link rel="canonical" href="https://www.ohiopride.org/governor-guide/other-candidates" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="The Other Candidates for Governor | Ohio Pride PAC" />
+  <meta property="og:description" content="Don Kissick and Tim Grady: ballot status and record, held to the same sourcing standard as the main guide." />
+  <meta property="og:url" content="https://www.ohiopride.org/governor-guide/other-candidates" />
+  <meta property="og:site_name" content="Ohio Pride PAC" />
+  <!-- Its own card: the guide's shows the two major-party candidates, who are
+       not who this page is about. -->
+  <meta property="og:image" content="https://www.ohiopride.org/assets/social/og-governor-guide-others.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="The other candidates for governor: Don Kissick and Tim Grady, from Ohio Pride PAC." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Other Candidates for Governor | Ohio Pride PAC" />
+  <meta name="twitter:description" content="Don Kissick and Tim Grady: ballot status and record, held to the same sourcing standard as the main guide." />
+  <meta name="twitter:image" content="https://www.ohiopride.org/assets/social/og-governor-guide-others.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Non-blocking: a render-blocking stylesheet also blocks the scripts
+       beneath it, so a stalled fonts.googleapis.com would hold up the page. -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto+Slab:wght@400;500;700&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto+Slab:wght@400;500;700&display=swap" rel="stylesheet" />
+  </noscript>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/site-template.css" />
+
+  <style>
+    /* =================================================================
+       Other Candidates. A companion page to /governor-guide.
+
+       Everything this page needs is inlined, exactly as on the guide.
+       That began as a workaround for the password gate, which wrote the
+       decrypted document in a way iOS Safari would not carry external
+       stylesheets through; the gate is gone, and the rules stay because
+       they are used by this page alone.
+       ================================================================= */
+:root {
+      --gg-acton: #4A8CE8;
+      --gg-acton-soft: #9EC3F5;
+      --gg-acton-dim: rgba(74, 140, 232, 0.16);
+      --gg-vivek: #E06E45;
+      --gg-vivek-soft: #F5A98C;
+      --gg-vivek-dim: rgba(224, 110, 69, 0.16);
+      --gg-card: rgba(255, 255, 255, 0.04);
+      --gg-card-hover: rgba(255, 255, 255, 0.07);
+      --gg-line: rgba(255, 255, 255, 0.10);
+      --gg-line-strong: rgba(255, 255, 255, 0.18);
+    }
+
+body { background: var(--dark-bg); color: var(--text-white); }
+
+.gg-wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+@media (min-width: 768px) { .gg-wrap { padding: 0 24px; } }
+
+.gg-hero {
+      padding: 80px 0 30px;
+      background: var(--dark-bg);
+      border-bottom: 1px solid var(--gg-line);
+    }
+
+.gg-hero-label {
+      font-family: "Montserrat", sans-serif; font-size: 12px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--text-accent);
+      text-align: center; margin-bottom: 14px;
+    }
+
+.gg-hero h1 {
+      font-family: "Montserrat", sans-serif; font-weight: 800;
+      font-size: clamp(28px, 4.6vw, 44px); line-height: 1.08;
+      text-align: center; margin: 0 auto 14px; max-width: 820px;
+    }
+
+.gg-hero-sub {
+      font-family: "Roboto Slab", serif; color: var(--text-muted);
+      font-size: clamp(15px, 2vw, 18px); line-height: 1.65;
+      text-align: center; max-width: 680px; margin: 0 auto 10px;
+    }
+
+.gg-hero-sub strong { color: var(--text-white); font-weight: 500; }
+
+.gg-section { padding: clamp(40px, 6vw, 72px) 0; }
+
+.gg-kicker {
+      font-family: "Montserrat", sans-serif; font-size: 12px; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-accent);
+      margin-bottom: 10px;
+    }
+
+.gg-h2 {
+      font-family: Montserrat, system-ui, sans-serif;
+      font-weight: 800;
+      font-size: clamp(24px, 3.4vw, 34px);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0 0 12px;
+    }
+
+.gg-lede {
+      font-family: "Roboto Slab", Georgia, serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--gg-text-soft);
+      max-width: 62ch;
+      margin: 0;
+    }
+
+.gg-lede a { color: var(--text-accent); }
+
+.gg-rule {
+      height: 4px;
+      border: 0;
+      margin: 0;
+      border-radius: 2px;
+      background: var(--gg-pride);
+    }
+
+.gg-rule--short { width: 88px; }
+
+.gg-flag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: "Montserrat", sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 4px; white-space: nowrap;
+    }
+
+.gg-flag--direct     { background: rgba(112, 214, 236, 0.14); color: var(--text-accent); }
+
+.gg-flag--attributed { background: rgba(255, 255, 255, 0.10); color: rgba(255,255,255,0.75); }
+
+.gg-flag--record     { background: rgba(255, 255, 255, 0.06); color: rgba(255,255,255,0.6); }
+
+.gg-fact-src {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px;
+      font-family: "Montserrat", sans-serif; font-size: 12px; color: var(--text-muted);
+    }
+
+.gg-fact-src a { color: var(--text-accent); text-decoration: none; border-bottom: 1px solid rgba(112,214,236,0.35); }
+
+.gg-fact-src a:hover { border-bottom-color: var(--text-accent); }
+
+.gg-tape-note {
+      font-family: "Montserrat", sans-serif; font-size: 12px; line-height: 1.8;
+      color: var(--text-muted); margin-top: 14px;
+    }
+
+.gg-tape-note a { color: var(--text-accent); text-decoration: none; }
+
+.gg-tape-note a:hover { text-decoration: underline; }
+
+.gg-hero,
+    .gg-section,
+    .gg-stand {
+      position: relative;
+      background-image: var(--gg-grain), var(--gg-stripe);
+      background-size: 140px 140px, auto;
+      background-blend-mode: soft-light, normal;
+    }
+
+/* ==================================================================
+       OTHER CANDIDATES
+       The rest of the field, kept deliberately secondary: this tier sits
+       below the two major-party tickets and states each candidate's
+       ballot status plainly, including where that status is "not on the
+       ballot". Monograms stand in for portraits because no licensed
+       photograph of either candidate was available. A candidate with
+       no sourced record on our issues says exactly that, the same
+       standard the record table applies to Acton and Ramaswamy.
+       ================================================================== */
+    .gg-others { display: grid; gap: 14px; max-width: 900px; }
+    .gg-other {
+      border: 1px solid var(--gg-line);
+      border-left: 3px solid var(--gg-line-strong);
+      border-radius: 12px;
+      padding: 18px 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01));
+      box-shadow: var(--gg-shadow-card);
+    }
+    /* A monogram, not a stand-in likeness: no licensed photograph of either
+       candidate was available, and inventing one would be worse than none. */
+    .gg-other__id { display: flex; align-items: flex-start; gap: 14px; }
+    .gg-other__mono { flex: 0 0 56px; width: 56px; height: 56px; margin-top: 2px; }
+    .gg-other__head {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px;
+      margin-bottom: 4px; flex: 1 1 auto; min-width: 0;
+    }
+    @media (max-width: 620px) {
+      .gg-other__id { gap: 11px; }
+      .gg-other__mono { flex-basis: 46px; width: 46px; height: 46px; }
+    }
+    .gg-other__name {
+      font-family: "Montserrat", sans-serif; font-weight: 800;
+      font-size: 18px; letter-spacing: -0.01em; margin: 0;
+    }
+    .gg-other__party {
+      font-family: "Montserrat", sans-serif; font-weight: 600; font-size: 12px;
+      letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-muted);
+    }
+    /* ballot status carries an icon and a word, never colour alone */
+    .gg-other__status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 10.5px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 999px; border: 1px solid currentColor;
+    }
+    .gg-other__status--ballot { color: var(--brand-text-accent, #70d6ec); }
+    .gg-other__status--ballot::before { content: "\2713"; }
+    .gg-other__status--writein { color: var(--text-muted); }
+    .gg-other__status--writein::before { content: "\270E"; }
+    .gg-other__body {
+      font-family: "Roboto Slab", Georgia, serif; font-size: 14.5px;
+      line-height: 1.65; color: rgba(255,255,255,0.86); margin: 8px 0 0;
+    }
+    .gg-other__record {
+      margin-top: 10px; padding-top: 10px;
+      border-top: 1px solid var(--gg-line);
+      font-family: "Roboto Slab", Georgia, serif; font-size: 14px;
+      line-height: 1.6; color: var(--text-muted);
+    }
+    .gg-other__record strong { color: rgba(255,255,255,0.86); font-weight: 500; }
+    .gg-other .gg-fact-src { margin-top: 8px; }
+    @media (max-width: 620px) {
+      .gg-other { padding: 16px; }
+      .gg-other__name { font-size: 16.5px; }
+    }
+  
+
+    .gg-section { scroll-margin-top: 84px; }
+
+    /* back to the guide, top and bottom */
+    .gg-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: "Montserrat", sans-serif; font-size: 13px; font-weight: 700;
+      color: var(--text-accent); text-decoration: none;
+      border: 1px solid var(--gg-line); border-radius: 999px;
+      padding: 10px 18px; margin-bottom: 22px;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .gg-back:hover { border-color: var(--text-accent); background: rgba(112,214,236,0.08); }
+    .gg-back--foot { margin: 26px 0 0; }
+
+  </style>
 </head>
 <body>
-<div class="stripe" aria-hidden="true"></div>
-<main class="card">
-  <div class="brand">Ohio Pride</div>
-  <h1>Other Candidates</h1>
-  <p class="sub">This page is for the Ohio Pride team. Enter the shared password to continue.</p>
-  <form id="gate">
-    <label for="pw">Password</label>
-    <input type="password" id="pw" autocomplete="current-password" autofocus required>
-    <button type="submit" id="go">Unlock</button>
-    <p class="err" id="err" role="alert">That password did not work. Check with Zach and try again.</p>
-  </form>
-</main>
-<p class="foot">Internal · Not for distribution</p>
-<script>
-(function () {
-  "use strict";
-  var SALT = "u4mWedulQhEu6wf79AeJ5A==";
-  var IV = "hJLllkjgYE0IIfAd";
-  var DATA = "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";
-  var ITER = 310000;
-  var CHUNK = 16384;
-  var KEY_CACHE = "ohp-gate-publicgovernorguideothercandidateshtml";
+  <div id="site-header"></div>
 
-  function b64(s) {
-    var bin = atob(s), arr = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-    return arr;
-  }
+  <main id="main">
 
-  function unlock(password) {
-    var enc = new TextEncoder();
-    return crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveKey"])
-      .then(function (base) {
-        return crypto.subtle.deriveKey(
-          { name: "PBKDF2", salt: b64(SALT), iterations: ITER, hash: "SHA-256" },
-          base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]
-        );
-      })
-      .then(function (key) {
-        return crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(IV) }, key, b64(DATA));
-      })
-      .then(function (buf) {
-        var html = new TextDecoder().decode(buf);
-        try { sessionStorage.setItem(KEY_CACHE, password); } catch (e) { /* private mode */ }
-        // A single document.write() of a large payload gets truncated: the
-        // tail of the document is dropped and any inline script in it never
-        // runs. Feeding the parser in chunks keeps the whole document intact.
-        document.open();
-        for (var i = 0; i < html.length; i += CHUNK) {
-          document.write(html.slice(i, i + CHUNK));
-        }
-        document.close();
-      });
-  }
+    <section class="gg-hero">
+      <div class="gg-wrap">
+        <p class="gg-hero-label">November 3, 2026 &middot; Ohio Votes for Governor</p>
+        <h1>Other candidates.</h1>
+        <p class="gg-hero-sub">
+          The <a href="/governor-guide" style="color:var(--text-accent)">main guide</a> compares
+          the two major-party tickets, because that is where the documented record is.
+          They are not the whole ballot. <strong>Here is everyone else running for
+          governor</strong>, with the same sourcing standard applied.
+        </p>
+      </div>
+    </section>
 
-  var form = document.getElementById("gate");
-  var btn = document.getElementById("go");
-  var err = document.getElementById("err");
+    <section class="gg-section" id="others">
+      <div class="gg-wrap">
+        <a class="gg-back" href="/governor-guide">&larr; Back to the Governor Guide</a>
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    err.classList.remove("show");
-    btn.disabled = true;
-    btn.textContent = "Unlocking...";
-    unlock(document.getElementById("pw").value)
-      .catch(function () {
-        btn.disabled = false;
-        btn.textContent = "Unlock";
-        err.classList.add("show");
-      });
-  });
+        <div class="gg-others">
 
-  // Re-unlock automatically within the same tab session.
-  try {
-    var cached = sessionStorage.getItem(KEY_CACHE);
-    if (cached) unlock(cached).catch(function () { sessionStorage.removeItem(KEY_CACHE); });
-  } catch (e) { /* private mode */ }
-})();
-</script>
+          <article class="gg-other">
+            <div class="gg-other__id">
+              <img class="gg-other__mono" src="/assets/candidates/kissick-monogram.svg"
+                   alt="" width="56" height="56" loading="lazy" decoding="async" />
+            <div class="gg-other__head">
+              <p class="gg-other__name">Don Kissick</p>
+              <span class="gg-other__party">Libertarian &middot; with James L. Mills</span>
+              <span class="gg-other__status gg-other__status--ballot">On the ballot</span>
+            </div>
+            </div>
+            <p class="gg-other__body">
+              A Navy veteran of six years with two Middle East deployments, now a
+              television station control room operator in Ottawa, in Putnam County.
+              He was the Libertarian nominee for U.S. Senate in 2024 and for Ohio's
+              5th congressional district in 2018, and won the May 5, 2026 Libertarian
+              primary with roughly 98 percent against a write-in challenger.
+              <span class="gg-fact-src"><a href="https://ballotpedia.org/Don_Kissick" target="_blank" rel="noopener">Ballotpedia</a> &middot; <a href="https://donkissick.com/" target="_blank" rel="noopener">Campaign site</a> &middot; <a href="https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_650" target="_blank" rel="noopener">Cuyahoga County certified candidate list</a> &middot; <span class="gg-flag gg-flag--record">Record</span></span>
+            </p>
+            <p class="gg-other__record">
+              <strong>On marriage,</strong> his platform states support for a proposed
+              state constitutional amendment protecting marriage rights in Ohio:
+              &ldquo;We are in favor of the state constitutional amendment that is on
+              the ballot for 2026 where it protects the language for for [sic] gay
+              marriage in Ohio if the Supreme Court overturns their prior ruling.&rdquo;
+              For accuracy: that amendment did not make the 2026 ballot. Organizers
+              are now targeting 2027.
+              <span class="gg-fact-src"><a href="https://donkissick.com/" target="_blank" rel="noopener">Campaign platform, accessed July 30, 2026</a> &middot; <a href="https://ohiocapitaljournal.com/2026/06/22/ohio-equal-rights-will-try-to-get-two-amendments-on-2027-ballot/" target="_blank" rel="noopener">Ohio Capital Journal on the 2027 timing</a> &middot; <span class="gg-flag gg-flag--direct">Direct</span></span>
+            </p>
+            <p class="gg-other__record">
+              <strong>On transgender athletes,</strong> his campaign posted what it
+              called its &ldquo;official response&rdquo; to the controversy over Amy
+              Acton&rsquo;s remarks on July 17, 2026. The campaign, it said, is
+              &ldquo;built &mdash; in part &mdash; on a platform of human dignity,&rdquo;
+              and &ldquo;it is not the State of Ohio&rsquo;s job to micromanage high
+              school and collegiate sports.&rdquo; It named the OHSAA, NCAA and NAIA as
+              the bodies that &ldquo;should have the final say on athletic
+              participation, not the General Assembly or Governor.&rdquo; For precision:
+              the statement addresses who should set eligibility rules rather than what
+              those rules should be, and it does not name HB 68, the Ohio law currently
+              in force.
+              <span class="gg-fact-src"><a href="https://www.facebook.com/DonKissickLiberty/" target="_blank" rel="noopener">Kissick campaign Facebook page, July 17, 2026</a> &middot; <span class="gg-flag gg-flag--direct">Direct</span></span>
+            </p>
+            <p class="gg-other__record">
+              <strong>Everywhere else, no public position found</strong> as of July 30,
+              2026: the Ohio Fairness Act, HB 68, and a conversion therapy ban.
+              Writing the day before the athletics statement above, The Buckeye Flame
+              reported that he &ldquo;supports a state constitutional amendment to
+              protect marriage equality &ndash; but does not mention civil rights for
+              transgender Ohioans in his official campaign platform.&rdquo; That
+              remains true of the published platform, which the campaign has not
+              updated.
+              <span class="gg-fact-src"><a href="https://thebuckeyeflame.com/2026/07/16/amy-acton-adds-lgbtq-equality-language-to-campaign-platform/" target="_blank" rel="noopener">The Buckeye Flame, July 16, 2026</a> &middot; <span class="gg-flag gg-flag--attributed">Attributed</span></span>
+            </p>
+          </article>
+
+          <article class="gg-other">
+            <div class="gg-other__id">
+              <img class="gg-other__mono" src="/assets/candidates/grady-monogram.svg"
+                   alt="" width="56" height="56" loading="lazy" decoding="async" />
+            <div class="gg-other__head">
+              <p class="gg-other__name">Tim Grady</p>
+              <span class="gg-other__party">Independent &middot; with Andrea Neutzling</span>
+              <span class="gg-other__status gg-other__status--writein">Not on the ballot</span>
+            </div>
+            </div>
+            <p class="gg-other__body">
+              Grady founded the Heartland Party and previously chaired the Ohio
+              Forward Party. He sought a ballot line by petition, which required
+              5,000 valid signatures, and did not appear on the certified list. He
+              has been reported as a declared write-in candidate. Under Ohio law
+              write-in candidates must file by <strong>August 24, 2026</strong>, so no
+              write-in for governor can be certified before that date. We will
+              update this entry once the write-in field is certified.
+              <span class="gg-fact-src"><a href="https://ballotpedia.org/Tim_Grady" target="_blank" rel="noopener">Ballotpedia</a> &middot; <a href="https://spectrumnews1.com/oh/columbus/news/2025/06/25/timothy-grady-another-bid-governor" target="_blank" rel="noopener">Spectrum News 1</a> &middot; <span class="gg-flag gg-flag--record">Record</span></span>
+            </p>
+            <p class="gg-other__record">
+              <strong>No public position found</strong> on any of the issues this
+              guide tracks, as of July 30, 2026. We checked his campaign site,
+              platform pages, blog, party newsletter archive, and his Ballotpedia
+              candidate survey. His platform is built on anti-corruption, economic
+              revival, and ballot-initiative reform.
+              <span class="gg-fact-src"><a href="https://timgradyforohio.com/" target="_blank" rel="noopener">Campaign site, accessed July 30, 2026</a> &middot; <span class="gg-flag gg-flag--record">Record</span></span>
+            </p>
+          </article>
+
+        </div>
+
+        <p class="gg-tape-note">
+          Ohio's Secretary of State website was unreachable on July 30, 2026, so
+          ballot status here is sourced to county board of elections filings rather
+          than the state's own records. Every candidate for governor receives the
+          same questionnaire, and answers will be published on this page.
+        </p>
+      
+        <a class="gg-back gg-back--foot" href="/governor-guide">&larr; Back to the Governor Guide</a>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="/js/site-template.js" defer></script>
+  <script src="/js/ohiopride-data.js" defer></script>
 </body>
 </html>

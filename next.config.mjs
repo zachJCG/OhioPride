@@ -142,15 +142,13 @@ const nextConfig = {
         headers: [{ key: 'Cache-Control', value: 'public, max-age=600, stale-while-revalidate=86400' }],
       },
 
-      // Internal surfaces stay out of the index. /governor-guide also carries
-      // a robots meta tag; the header is what covers non-rendering crawlers.
+      // Internal surfaces stay out of the index. Each also carries a robots
+      // meta tag; the header is what covers crawlers that do not render.
+      // /governor-guide is deliberately absent: it went public with the
+      // 2026 guide and is in sitemap.xml.
       { source: '/admin/:path*', headers: [noindex] },
       { source: '/board-retreat/:path*', headers: [noindex] },
       { source: '/PRTraining', headers: [noindex] },
-      // Covers /governor-guide and its companion pages, such as
-      // /governor-guide/other-candidates, in one rule.
-      { source: '/governor-guide', headers: [noindex] },
-      { source: '/governor-guide/:path*', headers: [noindex] },
     ];
   },
 };
