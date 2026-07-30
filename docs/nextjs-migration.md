@@ -1,8 +1,10 @@
 # Remaking ohiopride.org as Next.js on Vercel
 
-Status: **phase 0 landed, July 30, 2026.** The repo is a Next.js app that
-serves the existing static site unchanged. Phases 1 to 3 are still ahead, and
-phase 1 is blocked on two decisions listed below.
+Status: **phase 0 landed, July 30, 2026**, plus the shared layout and the
+first ported page. The repo is a Next.js app that serves the existing static
+site unchanged; `/credits` is now a real route and renders pixel-identical to
+the static page it replaced. The remaining phase 1 work is the gated pages,
+which needs the migration below applied.
 
 All four decisions are made:
 
@@ -105,13 +107,48 @@ Ordered so the risky part is first and provable:
    this route exists, so the cutover is the commit that adds the file.
 4. Delete the encrypted `public/governor-guide.html`, and once `/PRTraining`
    moves too, `scripts/encrypt-page.mjs` with it.
-5. `app/layout` rebuilt from `js/site-template.js` and `css/site-template.css`
-   (wordmark rules live in `docs/brand-system.md`) so ported pages inherit the
-   header and footer instead of mounting them with client JS.
+5. ~~`app/layout` rebuilt from `js/site-template.js`~~ **done.**
+   `app/components/SiteHeader.js` (client, for the menu and dropdown) and
+   `app/components/SiteFooter.js` (server) emit the same class names as
+   `public/js/site-template.js`, so both the ported and unported pages share
+   `public/css/site-template.css`. Keep the two in step until the static
+   pages are gone. The footer resolves leadership and the legally required
+   disclaimer on the server now, so the disclaimer is in the first byte of
+   HTML instead of being patched in after load; the layout revalidates hourly
+   so a `site_leadership` edit still lands without a deploy.
 
 Open Graph tags and an indexable robots directive stay off until
 `gated_pages.is_public` flips, which remains a deliberate act after counsel
 signs off.
+
+### Porting a page: the recipe
+
+`/credits` is the worked example (`app/credits/`). Every page port is these
+six steps, and the last one is what makes it safe:
+
+1. `app/<route>/page.js`, with the body as JSX and the `<head>` contents
+   moved into an exported `metadata` object. Drop the `#site-header` and
+   `#site-footer` divs and the `site-template.js` script tag: the layout
+   supplies all three.
+2. Move the page's `<style>` block into `app/<route>/<route>.css` and import
+   it from the page. Plain CSS, not a CSS module: the class names are shared
+   with the static pages until those are deleted, and module hashing breaks
+   that.
+3. Keep `<main id="main">` on the outermost element so the layout's skip link
+   still has a target.
+4. Turn repeated markup into data where it is obviously a list. The credits
+   entries became an array, which is what lets that content move to Supabase
+   later without touching the markup.
+5. Delete `public/<route>.html` and add the clean URL to `PORTED` in
+   `next.config.mjs`, so the old `.html` link still redirects.
+6. **Diff it against the original.** Serve `public/` on another port, screenshot
+   both at the same width with `reducedMotion: 'reduce'` (the header gradient
+   animates, so without this the diff is noise), and compare. `/credits` came
+   out at zero differing pixels. Anything above a handful means something was
+   lost in translation.
+
+Then `npm run check:routes`, which asserts the ported page still answers both
+its clean URL and its old `.html` URL.
 
 ### Phase 2: data-driven public pages
 

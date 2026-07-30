@@ -51,6 +51,12 @@ function cleanUrlFor(file) {
   return path.slice(0, -'.html'.length);
 }
 
+/* Pages already ported to real App Router routes. Their public/*.html file is
+ * deleted, so the generated rules below no longer cover them, but the old
+ * .html URL should still land on the page rather than 404 for anyone holding
+ * an old link. Add a clean URL here when you delete its static file. */
+const PORTED = ['/credits'];
+
 // 404.html is served by Next's not-found handling, not by a rewrite, so it
 // must not claim the /404 URL.
 const pages = htmlFiles()
@@ -67,6 +73,7 @@ const nextConfig = {
       // Requesting the file directly lands on the canonical clean URL, which
       // is what cleanUrls did. Without this the same page answers on two URLs.
       ...pages.map((p) => ({ source: p.file, destination: p.url, permanent: true })),
+      ...PORTED.map((url) => ({ source: `${url}.html`, destination: url, permanent: true })),
 
       // Section landing pages.
       { source: '/admin', destination: '/admin/login', permanent: false },

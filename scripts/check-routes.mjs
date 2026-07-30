@@ -68,7 +68,7 @@ const PAGES = [
   ['/issues/hb96', 'html'],
   ['/donate/founding-member', 'html'],
   ['/methodology', 'html'],
-  ['/credits', 'html'],
+  ['/credits', 'Photo Credits'],   // ported to app/credits/page.js
   ['/brand', 'html'],
   ['/pride/signup', 'html'],
   ['/signup', 'html'],
@@ -106,6 +106,8 @@ for (const [path, needle] of PAGES) await check('page     ', path, serves(needle
 // The file path must send you to the canonical clean URL, and that URL must
 // then serve the page rather than bouncing back.
 await check('canonical', '/about.html', redirectsTo('/about', 308));
+// A ported page keeps answering its old .html URL even though the file is gone.
+await check('ported   ', '/credits.html', redirectsTo('/credits', 308));
 await check('canonical', '/admin/login/index.html', redirectsTo('/admin/login', 308));
 await check('no-loop  ', '/about', serves('html'));
 
