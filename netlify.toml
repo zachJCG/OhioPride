@@ -104,6 +104,12 @@
   to = "/scorecard.html"
   status = 200
 
+# 2026 Governor Guide — password-gated during pre-launch review
+[[headers]]
+  for = "/governor-guide*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
 # 2026 Governor Guide (canonical: /governor-guide) + spelling variants
 [[redirects]]
   from = "/governor-guide"

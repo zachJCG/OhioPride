@@ -108,7 +108,9 @@
     '          <li role="none"><a role="menuitem" href="/board">Board</a></li>',
     '          <li role="none"><a role="menuitem" href="/volunteer">Volunteer</a></li>',
     '          <li role="none"><a role="menuitem" href="/endorsements">Endorsements</a></li>',
-    '          <li role="none"><a role="menuitem" href="/governor-guide">Governor Guide 2026</a></li>',
+    // Governor Guide 2026 is password-gated during pre-launch review; restore
+    // this nav item when the page goes fully public:
+    // '          <li role="none"><a role="menuitem" href="/governor-guide">Governor Guide 2026</a></li>',
     '          <li role="none"><a role="menuitem" href="/elected-resources">Officials Toolkit</a></li>',
     '        </ul>',
     '      </li>',

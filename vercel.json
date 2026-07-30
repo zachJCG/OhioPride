@@ -51,6 +51,12 @@
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
       ]
+    },
+    {
+      "source": "/governor-guide",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
+      ]
     }
   ],
   "redirects": [
