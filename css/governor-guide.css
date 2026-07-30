@@ -406,3 +406,327 @@
   .gg-table thead th { position: static; }
   .gg-ix__card, .gg-table tbody tr { break-inside: avoid; }
 }
+
+/* ==========================================================================
+   v2.1 REFINEMENT LAYER
+   --------------------------------------------------------------------------
+   Restores the texture, contrast, and depth that the v2 rebuild dropped,
+   and fixes the phone layout. Applied on top of the v2 lineup and table
+   structure rather than replacing it: the semantic table, the citations,
+   and the everyday-life tier all stay exactly as they are.
+
+   Appended last so these win at equal specificity.
+   ========================================================================== */
+
+:root {
+  /* Depth scale. Alternating bands give a long page a rhythm so sections
+     read as distinct planes instead of one flat scroll. */
+  --gg-band-deep: #101b2b;
+  --gg-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.30), 0 8px 24px rgba(0, 0, 0, 0.22);
+  --gg-shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.32), 0 16px 40px rgba(0, 0, 0, 0.34);
+
+  /* Texture. The stripe matches the site-wide body pattern at a slightly
+     higher amplitude; the grain is one inline SVG so it costs no request.
+     Both live in section backgrounds and never sit over text. */
+  --gg-stripe: repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 40px,
+    rgba(255, 255, 255, 0.02) 40px, rgba(255, 255, 255, 0.02) 80px
+  );
+  --gg-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.13'/%3E%3C/svg%3E");
+}
+
+/* --- band surfaces: texture and contrast --------------------------------- */
+.gg-hero,
+.gg-section,
+.gg-stand {
+  position: relative;
+  background-image: var(--gg-grain), var(--gg-stripe);
+  background-size: 140px 140px, auto;
+  background-blend-mode: soft-light, normal;
+}
+.gg-section--alt {
+  background-color: var(--gg-band-deep);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
+              inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+/* a thin pride hairline where bands meet: the gradient only ever appears
+   as a rule, a divider, or the donate fill */
+.gg-section--alt::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--gg-pride, linear-gradient(90deg,#e40303,#ffbc00,#ffed00,#008026,#004dff,#750787));
+  opacity: 0.55;
+}
+/* the module draws its own divider; with bands it doubles up */
+.gg-section--alt + .gg-section,
+.gg-section--alt { border-top: 0; }
+
+/* --- the lineup gets a stage ---------------------------------------------
+   v2 put the cutouts on bare navy, which read as unfinished. This is a
+   single stage behind both figures rather than a card each: it keeps the
+   shared pride baseline and the lineup metaphor intact while giving the
+   portraits somewhere to stand. */
+.gg-lineup {
+  position: relative;
+  padding: clamp(14px, 2.6vw, 26px) clamp(12px, 2.6vw, 30px) 0;
+  border-radius: 20px;
+  border: 1px solid var(--gg-line);
+  background:
+    radial-gradient(120% 74% at 50% 100%, rgba(112, 214, 236, 0.10), transparent 64%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
+  box-shadow: var(--gg-shadow-card);
+  overflow: hidden;
+}
+/* candidate-keyed backlight, kept well clear of the faces */
+.gg-lineup__figures > .gg-figure:nth-child(1)::before {
+  background: radial-gradient(closest-side, rgba(74, 140, 232, 0.30), transparent 70%);
+}
+.gg-lineup__figures > .gg-figure:nth-child(2)::before {
+  background: radial-gradient(closest-side, rgba(224, 110, 69, 0.30), transparent 70%);
+}
+
+/* --- nameplates ----------------------------------------------------------- */
+.gg-name__name { letter-spacing: -0.02em; }
+.gg-lineup__names > .gg-name:nth-child(1) .gg-name__meta { color: var(--gg-acton-soft, #9ec3f5); }
+.gg-lineup__names > .gg-name:nth-child(2) .gg-name__meta { color: var(--gg-vivek-soft, #f5a98c); }
+
+/* --- the equality record table reads as a card ---------------------------- */
+.gg-table-wrap {
+  border: 1px solid var(--gg-line);
+  border-radius: var(--gg-radius);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.012));
+  box-shadow: var(--gg-shadow-card);
+  /* clip, not hidden: hidden would make this a scroll container and the
+     table's sticky candidate header would stop pinning to the viewport */
+  overflow: clip;
+}
+.gg-table tbody tr { transition: background 0.18s ease; }
+.gg-table tbody tr:hover td,
+.gg-table tbody tr:hover th { background: rgba(255, 255, 255, 0.055); }
+.gg-table thead th { background: var(--gg-band-deep); }
+
+/* --- everyday-life cards -------------------------------------------------- */
+.gg-ix__card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012));
+  box-shadow: var(--gg-shadow-card);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.gg-ix__card:hover { transform: translateY(-2px); box-shadow: var(--gg-shadow-lift); }
+
+/* --- the sections that predate v2 get the same depth ---------------------- */
+.gg-tape-row dd {
+  background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+  box-shadow: var(--gg-shadow-card);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.gg-tape-row dd:hover { transform: translateY(-2px); box-shadow: var(--gg-shadow-lift); }
+
+.gg-quiz-shell {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(90% 120% at 50% 0%, rgba(112, 214, 236, 0.09), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+  box-shadow: var(--gg-shadow-lift);
+}
+.gg-quiz-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--gg-pride, linear-gradient(90deg,#e40303,#ffbc00,#ffed00,#008026,#004dff,#750787));
+  opacity: 0.8;
+}
+.gg-quiz-btn { box-shadow: var(--gg-shadow-card); }
+
+/* timeline: gradient spine, dots haloed in the candidate accent */
+.gg-tl { border-left: 0; }
+.gg-tl::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 4px; bottom: 4px;
+  width: 2px;
+  background: linear-gradient(180deg,
+    rgba(112, 214, 236, 0.55), rgba(255, 255, 255, 0.14) 42%, rgba(255, 255, 255, 0.05));
+}
+.gg-tl-item--acton::before { box-shadow: 0 0 0 4px rgba(74, 140, 232, 0.16); }
+.gg-tl-item--vivek::before { box-shadow: 0 0 0 4px rgba(224, 110, 69, 0.16); }
+.gg-tl-item--both::before  { box-shadow: 0 0 0 4px rgba(112, 214, 236, 0.18); }
+
+/* voter tiles: the numeral is the hero of the tile */
+.gg-tile {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(100% 120% at 50% 0%, rgba(112, 214, 236, 0.10), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+  box-shadow: var(--gg-shadow-card);
+}
+.gg-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--gg-pride, linear-gradient(90deg,#e40303,#ffbc00,#ffed00,#008026,#004dff,#750787));
+  opacity: 0.7;
+}
+.gg-tile-num {
+  color: var(--brand-text-accent, #70d6ec);
+  text-shadow: 0 0 26px rgba(112, 214, 236, 0.35);
+}
+
+.gg-stand-box { box-shadow: var(--gg-shadow-lift); }
+.gg-topic-tab { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.22); }
+.gg-topic-tab[aria-selected="true"],
+.gg-topic-tab[aria-pressed="true"] {
+  box-shadow: 0 0 0 1px rgba(112, 214, 236, 0.55), 0 8px 22px rgba(0, 0, 0, 0.30);
+}
+
+/* ==========================================================================
+   NAVIGATION
+   The page runs past 11,000px. Without an in-page index most readers never
+   reach the record table, so the hero carries jump buttons and a slim
+   section nav pins under the site nav for the rest of the scroll.
+   ========================================================================== */
+.gg-jump {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  max-width: 980px;
+  margin: 24px auto 0;
+}
+.gg-jump a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px 12px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 12px;
+  border: 1px solid var(--gg-line);
+  background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+  box-shadow: var(--gg-shadow-card);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.gg-jump a:hover,
+.gg-jump a:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--gg-accent);
+  box-shadow: 0 0 0 1px rgba(112, 214, 236, 0.5), 0 10px 28px rgba(0, 0, 0, 0.34);
+}
+.gg-jump__icon { font-size: 20px; line-height: 1; }
+.gg-jump__label {
+  font-family: Montserrat, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: #fff;
+  line-height: 1.3;
+}
+.gg-jump__sub {
+  font-family: "Roboto Slab", Georgia, serif;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--gg-text-mute, rgba(255,255,255,0.55));
+}
+
+.gg-subnav {
+  position: sticky;
+  top: var(--nav-height, 72px);
+  z-index: 90;
+  background: rgba(13, 23, 38, 0.90);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--gg-line);
+  border-bottom: 1px solid var(--gg-line);
+}
+.gg-subnav__inner {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.gg-subnav__inner::-webkit-scrollbar { display: none; }
+.gg-subnav a {
+  flex: none;
+  padding: 13px 14px;
+  text-decoration: none;
+  font-family: Montserrat, system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--gg-text-mute, rgba(255,255,255,0.55));
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.gg-subnav a:hover { color: #fff; }
+.gg-subnav a[aria-current="true"] {
+  color: var(--gg-accent);
+  border-bottom-color: var(--gg-accent);
+}
+
+/* anchors clear the site nav plus the pinned section nav */
+.gg-section, .gg-stand { scroll-margin-top: 126px; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ==========================================================================
+   PHONE LAYOUT
+   The v2 lineup squeezed both cutouts into a 390px row and dropped a full
+   credit paragraph directly under them, so the first screen was portraits
+   the size of a thumbnail followed by a wall of licence text.
+   ========================================================================== */
+@media (max-width: 620px) {
+  /* give the figures the full gutter back and a touch more height */
+  .gg-lineup {
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 16px;
+  }
+  .gg-lineup { --gg-fig-gap: 6px; }
+
+  /* a two word name must not cost three lines under a 170px portrait */
+  .gg-name__name { font-size: 16px; line-height: 1.15; }
+  .gg-name__meta { font-size: 11px; line-height: 1.4; }
+
+  /* the licence block stays visible and uncollapsed, as CC BY-SA requires,
+     but recedes so it is not the loudest thing on the first screen */
+  .gg-hero .gg-credit {
+    font-size: 11px;
+    line-height: 1.55;
+    opacity: 0.72;
+    margin-top: 16px;
+  }
+
+  .gg-jump { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .gg-jump a { padding: 12px 8px 10px; }
+  .gg-jump__label { font-size: 11.5px; }
+  .gg-jump__sub { display: none; }
+
+  .gg-subnav a { padding: 12px 12px; font-size: 12px; }
+}
+
+/* Nameplate meta carries party, running mate and role, which is three lines
+   at lineup width. Tighten it so the hero still ends above the fold; the
+   same facts appear in full in the tale of the tape. */
+.gg-name__meta { font-size: 12px; line-height: 1.4; }
+
+/* Keep both names on one line so the two nameplates start at the same
+   height: a wrapped surname was pushing one column's meta out of line. */
+.gg-name__name { font-size: clamp(16px, 2.1vw, 24px); }
+.gg-lineup__names { align-items: start; }
+
+/* The table's sticky candidate header predates the section nav and pinned to
+   the same offset, so the nav sat on top of it and the names disappeared.
+   Stack it below the nav instead. */
+.gg-table thead th {
+  top: calc(var(--nav-height, 72px) + 47px);
+  background: var(--gg-band-deep);
+  box-shadow: inset 0 -1px 0 var(--gg-line-strong);
+}
