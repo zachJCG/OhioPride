@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Issues Admin | Ohio Pride PAC</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/site-template.css" />
+  <link rel="stylesheet" href="/admin/admin-shared.css" />
+  <style>
+    body { background: var(--dark-bg); color: var(--text-light); }
+    .iss-wrap { max-width: 1280px; margin: 0 auto; padding: 24px 20px 140px; }
+    .iss-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 14px 0; }
+    .iss-toolbar input, .iss-toolbar select { background: var(--bg-light); color: var(--text-white); border: 1px solid var(--border-medium); border-radius: 4px; padding: 8px 12px; }
+    .iss-toolbar button { background: var(--accent-gold, #f59e0b); color: #000; border: 0; border-radius: 4px; padding: 9px 16px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; cursor: pointer; }
+    .iss-toolbar button.is-ghost { background: transparent; color: var(--text-light); border: 1px solid var(--border-medium); }
+    .iss-toolbar button.is-danger { background: #dc2626; color: #fff; }
+    .iss-list { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    .bill-card { background: var(--bg-light); border: 1px solid var(--border-light); border-radius: 6px; padding: 18px; }
+    .bill-card.is-dirty { border-color: var(--accent-gold, #f59e0b); box-shadow: 0 0 0 1px var(--accent-gold, #f59e0b); }
+    .bill-card.is-new   { border-color: #22c55e; }
+    .bill-head { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+    .bill-head h3 { margin: 0; color: var(--text-white); font-size: 18px; }
+    .bill-head .pill { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+    .pill.stance-pro   { background: #22c55e; color: #000; }
+    .pill.stance-anti  { background: #dc2626; color: #fff; }
+    .pill.stance-mixed { background: #facc15; color: #000; }
+    .pill.ga-135 { background: #6b7280; color: #fff; }
+    .pill.ga-136 { background: #3b82f6; color: #fff; }
+    .bill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 12px; }
+    .bill-grid label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
+    .bill-grid input, .bill-grid select, .bill-grid textarea { width: 100%; background: var(--dark-bg); color: var(--text-white); border: 1px solid var(--border-medium); border-radius: 4px; padding: 7px 9px; font-size: 13px; font-family: inherit; box-sizing: border-box; }
+    .bill-grid textarea { min-height: 72px; resize: vertical; }
+    .pipeline-row { display: grid; grid-template-columns: 60px 1fr 180px 60px; gap: 8px; align-items: center; margin-top: 6px; }
+    .pipeline-row input { padding: 5px 7px; font-size: 12px; }
+    .step-name-0::after { content: " · Introduced"; color: var(--text-muted); font-size: 11px; }
+    .publish-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-light); border-top: 2px solid var(--accent-gold, #f59e0b); padding: 14px 20px; display: flex; gap: 16px; align-items: center; z-index: 50; }
+    .publish-bar.is-hidden { transform: translateY(100%); transition: transform 0.25s; }
+    .publish-count { font-weight: 700; color: var(--text-white); }
+    .publish-spacer { flex: 1; }
+  </style>
+</head>
+<body>
+  <div class="admin-meta-bar">
+    <div class="container" style="display:flex; justify-content:space-between; padding:14px 0;">
+      <div>
+        <a href="/admin/dashboard" class="admin-meta-user" style="text-decoration:none">&larr; Dashboard</a>
+        <span style="margin: 0 12px; color: var(--text-muted);">/</span>
+        <span class="admin-meta-user"><strong>Issues</strong></span>
+      </div>
+      <div>
+        <span class="admin-meta-user">Signed in as <strong id="adminEmail">&hellip;</strong></span>
+        <button class="admin-signout-btn" id="signOutBtn" style="margin-left:14px">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading" class="iss-wrap"><p style="color: var(--text-muted)">Loading bills&hellip;</p></div>
+
+  <div id="panel" class="iss-wrap" hidden>
+    <h1 style="margin: 0 0 4px; color: var(--text-white)">Issues</h1>
+    <p style="color: var(--text-muted); margin: 0">
+      Add, edit, or retire tracked bills. Pipeline steps are 0&ndash;8 (Introduced &rarr; Signed). Changes preview live; nothing is saved until you hit Publish.
+    </p>
+
+    <div class="iss-toolbar">
+      <input type="text" id="search" placeholder="Search bill, title, or nickname&hellip;" style="flex:1; min-width:280px" />
+      <select id="stanceFilter">
+        <option value="all">All stances</option>
+        <option value="anti">Anti only</option>
+        <option value="pro">Pro only</option>
+        <option value="mixed">Mixed only</option>
+      </select>
+      <select id="activeFilter">
+        <option value="active">Active only</option>
+        <option value="all">Include archived</option>
+      </select>
+      <button id="addBtn">+ Add Bill</button>
+    </div>
+
+    <div id="list" class="iss-list"></div>
+  </div>
+
+  <div class="publish-bar is-hidden" id="publishBar">
+    <span class="publish-count" id="publishCount">0 pending changes</span>
+    <span style="color: var(--text-muted); font-size: 13px" id="publishSummary"></span>
+    <span class="publish-spacer"></span>
+    <button class="iss-toolbar" style="background:transparent;color:var(--text-light);border:1px solid var(--border-medium);border-radius:4px;padding:9px 16px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:1.2px;cursor:pointer" id="discardBtn">Discard</button>
+    <button class="iss-toolbar" style="background:var(--accent-gold, #f59e0b);color:#000;border:0;border-radius:4px;padding:9px 16px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:1.2px;cursor:pointer" id="publishBtn">Save &amp; Publish</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+  <script src="/admin/admin-auth.js"></script>
+  <script>
+    document.addEventListener('admin-auth-ready', async (e) => {
+      const session = e.detail.session;
+      const headers = { 'content-type': 'application/json', 'authorization': 'Bearer ' + session.access_token };
+      const FN = '/.netlify/functions/admin-issues';
+
+      let baseline;
+      try {
+        const res = await fetch(FN, { headers });
+        if (!res.ok) throw new Error('Load failed: ' + res.status);
+        baseline = await res.json();
+        if (!baseline.ok) throw new Error(baseline.error);
+      } catch (err) {
+        document.getElementById('loading').innerHTML = '<p style="color:#f87171">Could not load: ' + err.message + '</p>';
+        return;
+      }
+
+      const state = {
+        bills: JSON.parse(JSON.stringify(baseline.bills)),
+        pipeline: JSON.parse(JSON.stringify(baseline.pipeline_steps)),
+        changes: [],
+        dirtySlugs: new Set(),
+        newSlugs: new Set(),
+      };
+      window.__issState = state;
+
+      function pushChange(c) { state.changes.push(c); renderPublishBar(); }
+      function renderPublishBar() {
+        const bar = document.getElementById('publishBar');
+        if (!state.changes.length) { bar.classList.add('is-hidden'); return; }
+        bar.classList.remove('is-hidden');
+        document.getElementById('publishCount').textContent =
+          state.changes.length + ' pending change' + (state.changes.length === 1 ? '' : 's');
+        const grouped = {};
+        for (const c of state.changes) grouped[c.action] = (grouped[c.action] || 0) + 1;
+        document.getElementById('publishSummary').textContent =
+          Object.entries(grouped).map(([k, v]) => v + ' ' + k.replace(/_/g, ' ')).join(', ');
+      }
+
+      const list = document.getElementById('list');
+      const STEP_LABELS = ['Introduced','Committee Assigned','Hearings','Reported by Committee','Floor Vote','Sent to Other Chamber','Other Chamber Passed','Concur / Conference','Signed/Enacted'];
+
+      function pipelineFor(slug) {
+        return state.pipeline.filter(p => p.bill_slug === slug).sort((a, b) => a.step_index - b.step_index);
+      }
+
+      function arrEq(a, b) {
+        if (a === b) return true;
+        if (!Array.isArray(a) || !Array.isArray(b)) return false;
+        if (a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+        return true;
+      }
+
+      function stageBillChange(slug) {
+        const b = state.bills.find(x => x.slug === slug);
+        if (!b) return;
+        // Strip server-generated fields
+        const row = Object.assign({}, b);
+        delete row.created_at;
+        delete row.updated_at;
+        delete row.id;
+        // Replace any pending upsert for the same slug
+        state.changes = state.changes.filter(c => !(c.action === 'upsert_bill' && c.row.slug === slug));
+        pushChange({ action: 'upsert_bill', row });
+        state.dirtySlugs.add(slug);
+      }
+
+      function render() {
+        const q = (document.getElementById('search').value || '').trim().toLowerCase();
+        const stance = document.getElementById('stanceFilter').value;
+        const activeOnly = document.getElementById('activeFilter').value === 'active';
+        const filtered = state.bills.filter(b => {
+          if (activeOnly && b.is_active === false) return false;
+          if (stance !== 'all' && b.stance !== stance) return false;
+          if (q) {
+            const hay = (b.slug + ' ' + (b.label || '') + ' ' + (b.title || '') + ' ' + (b.nickname || '')).toLowerCase();
+            if (!hay.includes(q)) return false;
+          }
+          return true;
+        });
+
+        list.innerHTML = filtered.map(b => renderCard(b)).join('') || '<p style="color:var(--text-muted)">No bills match.</p>';
+        attachCardHandlers();
+      }
+
+      function renderCard(b) {
+        const pipeline = pipelineFor(b.slug);
+        const dirty = state.dirtySlugs.has(b.slug);
+        const isNew = state.newSlugs.has(b.slug);
+        return '<div class="bill-card ' + (dirty ? 'is-dirty' : '') + ' ' + (isNew ? 'is-new' : '') + '" data-slug="' + b.slug + '">' +
+          '<div class="bill-head">' +
+            '<h3>' + (b.label || b.slug) + '</h3>' +
+            '<span class="pill stance-' + (b.stance || 'mixed') + '">' + (b.stance || 'mixed') + '</span>' +
+            '<span class="pill ga-' + (b.ga || '136').replace('th','') + '">' + (b.ga || '136th') + '</span>' +
+            '<span style="color:var(--text-muted)">' + (b.nickname || '') + '</span>' +
+            '<span style="margin-left:auto"><label style="display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-size:12px"><input type="checkbox" data-f="is_active" ' + (b.is_active === false ? '' : 'checked') + ' /> Active</label></span>' +
+          '</div>' +
+          '<div class="bill-grid">' +
+            field(b, 'slug',  'Slug',  'text', { readonly: !isNew }) +
+            field(b, 'label', 'Label', 'text') +
+            field(b, 'title', 'Title', 'text') +
+            selectField(b, 'stance', 'Stance', [['anti','anti'],['pro','pro'],['mixed','mixed']]) +
+            selectField(b, 'ga',     'GA',     [['136th','136th'],['135th','135th']]) +
+            selectField(b, 'chamber','Chamber',[['house','house'],['senate','senate'],['joint','joint']]) +
+            numField(b, 'current_step', 'Pipeline step (0–8)', 0, 8) +
+            field(b, 'status_label',  'Status label', 'text') +
+            field(b, 'status_color',  'Status color (hex)', 'text') +
+            field(b, 'nickname',      'Nickname', 'text') +
+            field(b, 'official_title','Official title', 'text') +
+            field(b, 'sponsors_text', 'Sponsors text', 'text') +
+            field(b, 'last_action',   'Last action', 'text') +
+            field(b, 'next_date',     'Next date', 'text') +
+            field(b, 'house_vote',    'House vote summary', 'text') +
+            field(b, 'url',           'Internal URL', 'text') +
+            field(b, 'legislature_url','Legislature URL', 'text') +
+            field(b, 'text_url',      'Bill text URL', 'text') +
+            arrField(b, 'categories',      'Categories (comma)') +
+            arrField(b, 'category_labels', 'Category labels (comma)') +
+            textareaField(b, 'summary', 'Summary', 2) +
+          '</div>' +
+          '<h4 style="margin: 18px 0 6px; color:var(--text-white); font-size:14px">Pipeline timeline</h4>' +
+          pipeline.map(p => pipelineRow(b.slug, p)).join('') +
+          '<button class="iss-toolbar is-ghost" style="margin-top:8px;background:transparent;color:var(--text-light);border:1px solid var(--border-medium);border-radius:4px;padding:6px 12px;font-size:11px;cursor:pointer" data-act="add-step" data-slug="' + b.slug + '">+ Add pipeline step</button> ' +
+          '<button class="iss-toolbar is-danger" style="margin-top:8px;background:#dc2626;color:#fff;border:0;border-radius:4px;padding:6px 12px;font-size:11px;cursor:pointer" data-act="del-bill" data-slug="' + b.slug + '">Archive Bill</button>' +
+        '</div>';
+      }
+
+      function field(b, f, label, type, opts) {
+        opts = opts || {};
+        const v = b[f] == null ? '' : b[f];
+        return '<div><label>' + label + '</label><input type="' + type + '" data-f="' + f + '" value="' + String(v).replace(/"/g, '&quot;') + '" ' + (opts.readonly ? 'readonly' : '') + ' /></div>';
+      }
+      function numField(b, f, label, min, max) {
+        return '<div><label>' + label + '</label><input type="number" data-f="' + f + '" min="' + min + '" max="' + max + '" value="' + (b[f] ?? 0) + '" /></div>';
+      }
+      function selectField(b, f, label, opts) {
+        return '<div><label>' + label + '</label><select data-f="' + f + '">' + opts.map(o => '<option value="' + o[0] + '" ' + (b[f] === o[0] ? 'selected' : '') + '>' + o[1] + '</option>').join('') + '</select></div>';
+      }
+      function arrField(b, f, label) {
+        const v = (b[f] || []).join(', ');
+        return '<div><label>' + label + '</label><input type="text" data-f="' + f + '" data-arr="1" value="' + v.replace(/"/g, '&quot;') + '" /></div>';
+      }
+      function textareaField(b, f, label, span) {
+        const v = b[f] == null ? '' : b[f];
+        return '<div style="grid-column: span ' + (span || 1) + '"><label>' + label + '</label><textarea data-f="' + f + '">' + String(v).replace(/</g, '&lt;') + '</textarea></div>';
+      }
+      function pipelineRow(slug, p) {
+        return '<div class="pipeline-row" data-slug="' + slug + '" data-idx="' + p.step_index + '">' +
+          '<input type="number" min="0" max="8" value="' + p.step_index + '" data-pf="step_index" />' +
+          '<input type="text"  value="' + (p.step_label || STEP_LABELS[p.step_index] || '').replace(/"/g, '&quot;') + '" data-pf="step_label" placeholder="' + (STEP_LABELS[p.step_index] || '') + '" />' +
+          '<input type="date"  value="' + (p.happened_on || '') + '" data-pf="happened_on" />' +
+          '<button class="iss-toolbar is-danger" style="background:#dc2626;color:#fff;border:0;border-radius:4px;padding:5px 9px;cursor:pointer" data-act="del-step">&times;</button>' +
+        '</div>';
+      }
+
+      function attachCardHandlers() {
+        list.querySelectorAll('.bill-card').forEach(card => {
+          const slug = card.dataset.slug;
+          const b = state.bills.find(x => x.slug === slug);
+          if (!b) return;
+
+          card.querySelectorAll('input[data-f], select[data-f], textarea[data-f]').forEach(inp => {
+            inp.addEventListener('change', () => commitField(card, b, inp));
+            if (inp.type === 'text' || inp.tagName === 'TEXTAREA' || inp.type === 'number') {
+              inp.addEventListener('input', () => commitField(card, b, inp));
+            }
+            if (inp.type === 'checkbox') {
+              inp.addEventListener('change', () => commitField(card, b, inp));
+            }
+          });
+          card.querySelectorAll('[data-act="del-bill"]').forEach(btn => btn.addEventListener('click', () => {
+            if (!confirm('Archive ' + b.slug + '? (soft delete — sets is_active=false)')) return;
+            b.is_active = false;
+            stageBillChange(slug);
+            render();
+          }));
+          card.querySelectorAll('[data-act="add-step"]').forEach(btn => btn.addEventListener('click', () => {
+            const existing = pipelineFor(slug);
+            const taken = new Set(existing.map(p => p.step_index));
+            let next = 0; while (taken.has(next) && next < 9) next++;
+            if (next > 8) { alert('All 9 steps already exist for this bill.'); return; }
+            const row = { bill_slug: slug, step_index: next, step_label: STEP_LABELS[next], happened_on: null };
+            state.pipeline.push(row);
+            pushChange({ action: 'upsert_pipeline_step', row });
+            render();
+          }));
+          card.querySelectorAll('.pipeline-row').forEach(row => {
+            const idx0 = parseInt(row.dataset.idx, 10);
+            const inputs = row.querySelectorAll('[data-pf]');
+            inputs.forEach(inp => {
+              inp.addEventListener('change', () => {
+                const p = pipelineFor(slug).find(x => x.step_index === idx0);
+                if (!p) return;
+                const f = inp.dataset.pf;
+                if (f === 'step_index') {
+                  const newIdx = parseInt(inp.value, 10);
+                  if (Number.isNaN(newIdx) || newIdx < 0 || newIdx > 8) { inp.value = idx0; return; }
+                  // remove old, push new
+                  pushChange({ action: 'delete_pipeline_step', row: { bill_slug: slug, step_index: idx0 } });
+                  state.pipeline = state.pipeline.filter(x => !(x.bill_slug === slug && x.step_index === idx0));
+                  const np = { bill_slug: slug, step_index: newIdx, step_label: p.step_label, happened_on: p.happened_on };
+                  state.pipeline.push(np);
+                  pushChange({ action: 'upsert_pipeline_step', row: np });
+                  render();
+                } else {
+                  p[f] = inp.value || null;
+                  pushChange({ action: 'upsert_pipeline_step', row: { bill_slug: slug, step_index: idx0, step_label: p.step_label, happened_on: p.happened_on } });
+                }
+              });
+            });
+            row.querySelector('[data-act="del-step"]').addEventListener('click', () => {
+              state.pipeline = state.pipeline.filter(x => !(x.bill_slug === slug && x.step_index === idx0));
+              pushChange({ action: 'delete_pipeline_step', row: { bill_slug: slug, step_index: idx0 } });
+              render();
+            });
+          });
+        });
+      }
+
+      function commitField(card, b, inp) {
+        const f = inp.dataset.f;
+        let val;
+        if (inp.type === 'checkbox') val = inp.checked;
+        else if (inp.dataset.arr)    val = inp.value.split(',').map(s => s.trim()).filter(Boolean);
+        else if (inp.type === 'number') val = parseInt(inp.value, 10);
+        else val = inp.value;
+
+        if (Array.isArray(val) ? !arrEq(val, b[f]) : val !== b[f]) {
+          b[f] = val;
+          stageBillChange(b.slug);
+        }
+      }
+
+      document.getElementById('search').addEventListener('input', render);
+      document.getElementById('stanceFilter').addEventListener('change', render);
+      document.getElementById('activeFilter').addEventListener('change', render);
+
+      document.getElementById('addBtn').addEventListener('click', () => {
+        const slug = (prompt('Bill slug (e.g. hb1234) — must be unique:') || '').trim().toLowerCase();
+        if (!slug) return;
+        if (state.bills.some(b => b.slug === slug)) { alert('Slug already exists.'); return; }
+        const label = prompt('Label (e.g. HB 1234):') || slug.toUpperCase();
+        const title = prompt('Short title:') || '';
+        const b = {
+          slug, label, title, ga: '136th', stance: 'anti',
+          summary: '', status: 'introduced', is_active: true, display_order: 100,
+          nickname: '', official_title: title, status_label: 'Introduced', status_color: '#3b82f6',
+          categories: [], category_labels: [], sponsors_text: '', last_action: 'Introduced',
+          next_date: 'Awaiting committee assignment', house_vote: '', chamber: 'house',
+          current_step: 0, url: '/issues/' + slug, legislature_url: '', text_url: '',
+        };
+        state.bills.unshift(b);
+        state.newSlugs.add(slug);
+        stageBillChange(slug);
+        render();
+      });
+
+      document.getElementById('discardBtn').addEventListener('click', () => {
+        if (!state.changes.length) return;
+        if (!confirm('Discard ' + state.changes.length + ' pending changes?')) return;
+        location.reload();
+      });
+      document.getElementById('publishBtn').addEventListener('click', async () => {
+        const btn = document.getElementById('publishBtn');
+        btn.disabled = true; btn.textContent = 'Publishing…';
+        try {
+          const res = await fetch(FN, { method: 'POST', headers, body: JSON.stringify({ action: 'publish', changes: state.changes }) });
+          const data = await res.json();
+          if (!res.ok || !data.ok) throw new Error(data.error || ('HTTP ' + res.status));
+          alert('Published ' + data.applied + ' changes. The public site refreshes within ~5 minutes.');
+          location.reload();
+        } catch (err) {
+          alert('Publish failed: ' + err.message);
+          btn.disabled = false; btn.textContent = 'Save & Publish';
+        }
+      });
+
+      render();
+    });
+  </script>
+</body>
+</html>
