@@ -104,6 +104,24 @@
   to = "/scorecard.html"
   status = 200
 
+# 2026 Governor Guide (canonical: /governor-guide) + spelling variants
+[[redirects]]
+  from = "/governor-guide"
+  to = "/governor-guide.html"
+  status = 200
+
+[[redirects]]
+  from = "/governorguide"
+  to = "/governor-guide"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/govenorguide"
+  to = "/governor-guide"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/methodology"
   to = "/methodology.html"
