@@ -48,7 +48,13 @@ const page = `<!doctype html>
 <title>${esc(title)} | Ohio Pride</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet">
+<!-- Fetched without blocking the parser. A render-blocking stylesheet also
+     blocks every parser-inserted script beneath it, so a visitor whose network
+     stalls on fonts.googleapis.com (corporate proxy, privacy blocker) would sit
+     on a blank gate instead of an unlock form. media="print" makes the fetch
+     non-blocking; onload promotes it once it lands. -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto+Slab:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <style>
   :root {
     --navy: #152233;
