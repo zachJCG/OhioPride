@@ -873,7 +873,7 @@
           acton: [
             {
               quote:
-                "I'll reduce prescription drug prices by launching Ohio Rx, an online platform that will leverage Ohio's purchasing power from its Medicaid single pharmacy benefit manager to drive down drug prices",
+                "I'll reduce prescription drug prices by launching Ohio Rx, an online platform that will leverage Ohio's purchasing power from its Medicaid single pharmacy benefit manager to drive down drug prices for all Ohioans.",
               text: "Her platform's lead healthcare plank, alongside simplifying Medicaid enrollment, price transparency, and a crackdown on surprise billing.",
               source: "Acton platform (accessed July 30, 2026)",
               url: "https://actonforgovernor.com/issue/affordable-healthcare-for-all-ohioans/",
@@ -881,7 +881,7 @@
               flag: "direct",
             },
             {
-              quote: "On my first day in office, I'll direct our state to work to relieve medical debt for pennies on the dollar",
+              quote: "On my first day in office, I'll direct our state to work to relieve medical debt for pennies on the dollar to give our families some breathing room and the fresh start they need.",
               source: "Acton platform (accessed July 30, 2026)",
               url: "https://actonforgovernor.com/issue/affordable-healthcare-for-all-ohioans/",
               date: "July 2026",
@@ -987,7 +987,7 @@
             },
             {
               text:
-                'Her April 2026 affordability agenda proposes a state child tax credit — $1,000 per child ages 0&ndash;6 and $500 for ages 7&ndash;18 for families earning up to $85,000 — plus a refundable state EITC. The Statehouse News Bureau noted the plan &ldquo;offered few specifics&rdquo; on funding.',
+                'Her April 2026 affordability agenda proposes a state child tax credit — $1,000 per child ages 0&ndash;6 and $500 for ages 7&ndash;18 for families earning up to $85,000 — plus a state Earned Income Credit. The Statehouse News Bureau noted she offered few specifics on how the plan would be funded.',
               source: "Statehouse News Bureau",
               url: "https://www.statenews.org/government-politics/2026-04-06/ohio-governor-race-acton-releases",
               date: "April 6, 2026",
@@ -1164,7 +1164,7 @@
         },
         {
           who: "acton",
-          quote: "On my first day in office, I'll direct our state to work to relieve medical debt for pennies on the dollar",
+          quote: "On my first day in office, I'll direct our state to work to relieve medical debt for pennies on the dollar…",
           topic: "On healthcare",
           context: "A plank of her healthcare platform, alongside the Ohio Rx drug-purchasing plan.",
           source: "Acton platform",
@@ -1453,34 +1453,43 @@
 
       /* ---------- topic explorer ---------- */
       let activeTopic = 0;
+      function syncTopicTabs() {
+        document.querySelectorAll("#ggTopicTabs .gg-topic-tab").forEach((b) =>
+          b.setAttribute("aria-selected", String(Number(b.dataset.i) === activeTopic))
+        );
+      }
       function renderTopicTabs() {
         const tabs = $("ggTopicTabs");
         if (!GUIDE.topics.length) { tabs.closest("section").hidden = true; return; }
-        tabs.innerHTML = GUIDE.topics
-          .map(
-            (t, i) =>
-              '<button class="gg-topic-tab" role="tab" id="ggTab' + i + '" aria-selected="' +
-              (i === activeTopic) + '" aria-controls="ggCompare" data-i="' + i + '">' +
-              esc(t.label) + "</button>"
-          )
-          .join("");
-        tabs.querySelectorAll(".gg-topic-tab").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            activeTopic = Number(btn.dataset.i);
-            renderTopicTabs();
-            renderTopicPanel();
+        // Buttons are built once and kept — rebuilding them on every click
+        // would destroy the focused element and break keyboard navigation.
+        if (!tabs.childElementCount) {
+          tabs.innerHTML = GUIDE.topics
+            .map(
+              (t, i) =>
+                '<button class="gg-topic-tab" role="tab" id="ggTab' + i + '" aria-selected="' +
+                (i === activeTopic) + '" aria-controls="ggCompare" data-i="' + i + '">' +
+                esc(t.label) + "</button>"
+            )
+            .join("");
+          tabs.querySelectorAll(".gg-topic-tab").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              activeTopic = Number(btn.dataset.i);
+              syncTopicTabs();
+              renderTopicPanel();
+            });
           });
-        });
-        // roving arrow-key support
-        tabs.addEventListener("keydown", (e) => {
-          if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-          e.preventDefault();
-          const n = GUIDE.topics.length;
-          activeTopic = (activeTopic + (e.key === "ArrowRight" ? 1 : n - 1)) % n;
-          renderTopicTabs();
-          renderTopicPanel();
-          $("ggTab" + activeTopic).focus();
-        });
+          tabs.addEventListener("keydown", (e) => {
+            if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+            e.preventDefault();
+            const n = GUIDE.topics.length;
+            activeTopic = (activeTopic + (e.key === "ArrowRight" ? 1 : n - 1)) % n;
+            syncTopicTabs();
+            renderTopicPanel();
+            $("ggTab" + activeTopic).focus();
+          });
+        }
+        syncTopicTabs();
       }
 
       function factCardHtml(f, who) {
@@ -1622,23 +1631,30 @@
         const host = $("ggTl");
         if (!GUIDE.timeline.length) { host.closest("section").hidden = true; return; }
 
-        const filters = [
-          { id: "all", label: "Both" },
-          { id: "acton", label: GUIDE.candidates.acton.name },
-          { id: "vivek", label: GUIDE.candidates.vivek.name },
-        ];
-        $("ggTlFilters").innerHTML = filters
-          .map(
-            (f) =>
-              '<button class="gg-topic-tab" aria-pressed="' + (tlFilter === f.id) +
-              '" data-f="' + f.id + '">' + esc(f.label) + "</button>"
-          )
-          .join("");
-        $("ggTlFilters").querySelectorAll("button").forEach((b) =>
-          b.addEventListener("click", () => {
-            tlFilter = b.dataset.f;
-            renderTimeline();
-          })
+        // Filter buttons build once (rebuilding would drop focus mid-click).
+        const fhost = $("ggTlFilters");
+        if (!fhost.childElementCount) {
+          const filters = [
+            { id: "all", label: "Both" },
+            { id: "acton", label: GUIDE.candidates.acton.name },
+            { id: "vivek", label: GUIDE.candidates.vivek.name },
+          ];
+          fhost.innerHTML = filters
+            .map(
+              (f) =>
+                '<button class="gg-topic-tab" aria-pressed="' + (tlFilter === f.id) +
+                '" data-f="' + f.id + '">' + esc(f.label) + "</button>"
+            )
+            .join("");
+          fhost.querySelectorAll("button").forEach((b) =>
+            b.addEventListener("click", () => {
+              tlFilter = b.dataset.f;
+              renderTimeline();
+            })
+          );
+        }
+        fhost.querySelectorAll("button").forEach((b) =>
+          b.setAttribute("aria-pressed", String(b.dataset.f === tlFilter))
         );
 
         host.innerHTML = GUIDE.timeline
