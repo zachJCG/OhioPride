@@ -1,9 +1,24 @@
 # Remaking ohiopride.org as Next.js on Vercel
 
-Status: proposal, July 30, 2026. The site already runs on Vercel as plain
-HTML plus `api/*.mjs` functions. This is the staged path to a Next.js app
-without ever breaking production, and the list of decisions and dashboard
-steps only Zach can do.
+Status: **phase 0 landed, July 30, 2026**, plus the shared layout and the
+first ported page. The repo is a Next.js app that serves the existing static
+site unchanged; `/credits` is now a real route and renders pixel-identical to
+the static page it replaced. The remaining phase 1 work is the gated pages,
+which needs the migration below applied.
+
+All four decisions are made:
+
+1. **Gated content lives in Supabase.** Table `public.gated_pages`, migration
+   `20260730120000_gated_pages.sql` (written, **not yet applied**). RLS on,
+   no anon or authenticated policy, service-role read only.
+2. **Magic links for `/governor-guide`, shared password for `/PRTraining`.**
+   The guide is a coordination-firewall race, so access should be per person
+   and auditable; the media-prep page is low stakes.
+3. JavaScript, not TypeScript.
+4. Incremental, not big bang.
+
+Phase 1 is unblocked except for one step that touches production state:
+applying the migration to Supabase. See "What Zach needs to do".
 
 ## What Next.js buys us (and what it does not)
 
@@ -50,27 +65,90 @@ request time (service key, RLS locked), which is decision 1 below.
 
 ## Phases
 
-### Phase 0: scaffold without breaking anything
+### Phase 0: scaffold without breaking anything (done)
 
-- `npx create-next-app@latest` in the repo root (App Router, no src dir),
-  with the existing `*.html`, `css/`, `js/`, `assets/` moved under
-  `public/` so URLs keep resolving while pages are unported.
-- Port the redirects and headers from `vercel.json` into `next.config.mjs`
-  (`redirects()`, `headers()`); keep `vercel.json` only for the cron.
-  Clean URLs for the not-yet-ported HTML files become explicit rewrites
-  (`/about` to `/about.html` and so on); generate the list from the repo
-  root at build time rather than typing 40 rules by hand.
-- `api/` stays where it is. No function changes.
-- Ship it on a preview branch and click through every page before merging.
+- Next 15 App Router, JavaScript. Every static page and asset moved under
+  `public/`; `app/layout.js` is the (so far unused) root layout.
+- `next.config.mjs` generates the clean-URL rewrites by walking `public/`,
+  so adding a bill page needs no config edit. Redirects and headers ported
+  from `vercel.json`, which now carries only the framework and the cron.
+- The functions moved out of the root `api/` directory to
+  `lib/functions/*.mjs`, re-exported as route handlers from
+  `app/api/<name>/route.js`. Under a framework preset the framework owns
+  `/api/*`, so keeping a root `api/` alongside it invites a routing
+  conflict; this removes the ambiguity and makes the endpoints runnable
+  under `npm run dev`, which they never were before.
+- Two real bugs fell out of the port, both fixed:
+  `zip-county-lookup.mjs` built its Supabase client at module scope, so
+  importing it without credentials threw and would equally have thrown on
+  a cold start with a missing env var; and the `/prtraining` redirect
+  looped forever, because Next matches redirect sources case-insensitively
+  and the rule matched its own destination.
+- Verified by a 52-check parity suite against `next start`
+  (`scripts/check-routes.mjs`): clean URLs, folder index pages, canonical
+  `.html` redirects with no loops, every configured redirect and rewrite,
+  static assets, security and cache headers, `/api/*` reachability, and
+  404s. `npm run check:brand` still passes.
 
-### Phase 1: chrome and the gated pages
+### Phase 1: chrome and the gated pages (next)
 
-- `app/layout` rebuilt from `js/site-template.js` and
-  `css/site-template.css` (wordmark rules live in `docs/brand-system.md`).
-- `/governor-guide` becomes the first real route: middleware gate, content
-  from the gated-content store, `X-Robots-Tag` kept, Open Graph tags added
-  only when the page goes public. Retire the encrypted blob and
-  `scripts/encrypt-page.mjs` once `/PRTraining` moves too.
+Ordered so the risky part is first and provable:
+
+1. Apply `20260730120000_gated_pages.sql`, then seed the guide's current body
+   into it. The body is the plaintext the encrypted page is built from; it is
+   not in the repo, so seeding runs from the working copy, once.
+2. `middleware.js`: `/governor-guide` requires a Supabase session whose email
+   is in `admin_emails` (the check `/admin` already makes, moved server side);
+   `/PRTraining` requires a cookie set by a password form reading
+   `PRTRAINING_PASSWORD`. Unauthenticated requests never reach the route, so
+   the body is never sent.
+3. `app/governor-guide/page.js` renders the stored body server side. The
+   generated rewrite for `public/governor-guide.html` stops firing the moment
+   this route exists, so the cutover is the commit that adds the file.
+4. Delete the encrypted `public/governor-guide.html`, and once `/PRTraining`
+   moves too, `scripts/encrypt-page.mjs` with it.
+5. ~~`app/layout` rebuilt from `js/site-template.js`~~ **done.**
+   `app/components/SiteHeader.js` (client, for the menu and dropdown) and
+   `app/components/SiteFooter.js` (server) emit the same class names as
+   `public/js/site-template.js`, so both the ported and unported pages share
+   `public/css/site-template.css`. Keep the two in step until the static
+   pages are gone. The footer resolves leadership and the legally required
+   disclaimer on the server now, so the disclaimer is in the first byte of
+   HTML instead of being patched in after load; the layout revalidates hourly
+   so a `site_leadership` edit still lands without a deploy.
+
+Open Graph tags and an indexable robots directive stay off until
+`gated_pages.is_public` flips, which remains a deliberate act after counsel
+signs off.
+
+### Porting a page: the recipe
+
+`/credits` is the worked example (`app/credits/`). Every page port is these
+six steps, and the last one is what makes it safe:
+
+1. `app/<route>/page.js`, with the body as JSX and the `<head>` contents
+   moved into an exported `metadata` object. Drop the `#site-header` and
+   `#site-footer` divs and the `site-template.js` script tag: the layout
+   supplies all three.
+2. Move the page's `<style>` block into `app/<route>/<route>.css` and import
+   it from the page. Plain CSS, not a CSS module: the class names are shared
+   with the static pages until those are deleted, and module hashing breaks
+   that.
+3. Keep `<main id="main">` on the outermost element so the layout's skip link
+   still has a target.
+4. Turn repeated markup into data where it is obviously a list. The credits
+   entries became an array, which is what lets that content move to Supabase
+   later without touching the markup.
+5. Delete `public/<route>.html` and add the clean URL to `PORTED` in
+   `next.config.mjs`, so the old `.html` link still redirects.
+6. **Diff it against the original.** Serve `public/` on another port, screenshot
+   both at the same width with `reducedMotion: 'reduce'` (the header gradient
+   animates, so without this the diff is noise), and compare. `/credits` came
+   out at zero differing pixels. Anything above a handful means something was
+   lost in translation.
+
+Then `npm run check:routes`, which asserts the ported page still answers both
+its clean URL and its old `.html` URL.
 
 ### Phase 2: data-driven public pages
 
@@ -89,19 +167,21 @@ request time (service key, RLS locked), which is decision 1 below.
 
 ## What Zach needs to do (nothing else moves without these)
 
-1. Make the calls on decisions 1 through 4 above.
-2. In the Vercel dashboard, nothing up front: the framework preset flips
-   to Next.js automatically on the first deploy containing the app, and
-   the existing project env vars (`SUPABASE_*`, `MAILERLITE_*`,
-   `RESEND_*`, `ACTBLUE_*`) carry over. Add `GOVERNOR_GUIDE_PASSWORD`
-   (or nothing, if we go magic-links).
-3. Rotate the governor-guide password when the gate moves server-side.
-   The current shared password is short enough to brute-force offline,
-   and the encrypted blob sits in a public repo; a long passphrase costs
-   nothing. (This is worth doing even if the Next.js work waits.)
-4. Review each phase on its Vercel preview URL before it merges; a merge
-   to `main` is a production deploy.
+1. **Review the phase 0 preview before merging.** A merge to `main` is a
+   production deploy. `BASE=<preview-url> npm run check:routes` asserts the
+   55 route behaviours automatically; then click through a few pages.
+2. **Nothing to change in the Vercel dashboard up front.** `vercel.json` sets
+   `"framework": "nextjs"`, and the existing env vars (`SUPABASE_*`,
+   `MAILERLITE_*`, `RESEND_*`, `ACTBLUE_*`) carry over untouched. The build
+   command becomes `next build` automatically.
+3. **Apply `20260730120000_gated_pages.sql`** when you want phase 1 to start.
+   This is the only step that changes production state, which is why it is
+   not done already.
+4. **Add `PRTRAINING_PASSWORD`** as a Vercel env var during phase 1.
+5. **Retire the current guide password.** It is short enough to brute-force
+   offline and the encrypted blob is in a public repo, so it should be
+   treated as compromised and never reused; phase 1 removes the blob
+   entirely, which closes this out.
 
-Phase 0 plus the governor-guide route in Phase 1 is roughly a day of
-work; phases 2 and 3 are best taken a page at a time. Any Claude Code
-session can execute a phase from this document on a fresh branch.
+Phases 2 and 3 are best taken a page at a time. Any Claude Code session can
+execute a phase from this document on a fresh branch.
