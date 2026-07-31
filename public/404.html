@@ -133,6 +133,8 @@
         <a class="nf-primary" href="/donate/founding-member">Become a Founding Member</a>
       </nav>
     </main>
-    <script defer src="/_vercel/insights/script.js"></script>
+    <!-- This page renders without the shared shell, so it loads the
+         analytics tags itself. See /js/vercel-insights.js. -->
+    <script defer src="/js/vercel-insights.js"></script>
   </body>
 </html>
