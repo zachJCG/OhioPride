@@ -69,6 +69,11 @@ export default function RootLayout({ children }) {
             behaviours are ported into components. */}
         <Script src="/js/main.js" strategy="afterInteractive" />
         <Script src="/js/enhancements.js" strategy="afterInteractive" />
+
+        {/* Two day promotion for /governor-guide. The static pages get this
+            from site-template.js; ported pages get it here. Self expiring, so
+            it needs no deadline cleanup. Delete both loaders with the file. */}
+        <Script src="/js/guide-popup.js" strategy="afterInteractive" />
       </body>
     </html>
   );
