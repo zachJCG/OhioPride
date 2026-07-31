@@ -22,8 +22,11 @@
 (function () {
   'use strict';
 
-  // Ohio is on EDT in July and August, so this is local end of day.
-  var CAMPAIGN_END = '2026-08-01T23:59:59-04:00';
+  // Ohio is on EDT in July and August, so this is local end of day. Set to run
+  // the weekend out: it goes live Friday July 31 and stops after Sunday
+  // August 2. Moving this date is the only thing needed to extend or end the
+  // run early; nothing else reads it.
+  var CAMPAIGN_END = '2026-08-02T23:59:59-04:00';
   var SHOW_DELAY_MS = 5000;
   var STORAGE_KEY = 'ohp-guide-popup-v1';
 
