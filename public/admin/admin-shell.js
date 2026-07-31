@@ -186,16 +186,15 @@
   if (document.readyState !== 'loading') boot();
 
   // Vercel Web Analytics + Speed Insights for admin pages, which do not
-  // load site-template.js. Cookieless; quietly 404s until the products are
-  // enabled on the Vercel project.
-  ['/_vercel/insights/script.js', '/_vercel/speed-insights/script.js']
-    .forEach(function (src) {
-      if (document.querySelector('script[src="' + src + '"]')) return;
-      var s = document.createElement('script');
-      s.src = src;
-      s.defer = true;
-      (document.body || document.head).appendChild(s);
-    });
+  // load site-template.js. Shared loader; see /js/vercel-insights.js.
+  (function () {
+    var src = '/js/vercel-insights.js';
+    if (document.querySelector('script[src="' + src + '"]')) return;
+    var s = document.createElement('script');
+    s.src = src;
+    s.defer = true;
+    (document.body || document.head).appendChild(s);
+  })();
 
   // -------------------------------------------------------------------
   // Boot sequence

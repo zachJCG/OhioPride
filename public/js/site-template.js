@@ -310,19 +310,18 @@
     });
   }
 
-  // Vercel Web Analytics + Speed Insights. Cookieless, so no consent banner
-  // is needed. Script tags inside injected innerHTML never execute, so these
-  // are appended programmatically. Until the two products are enabled on the
-  // Vercel project the scripts 404 quietly and nothing else changes.
+  // Vercel Web Analytics + Speed Insights. The tags themselves live in
+  // /js/vercel-insights.js so that the pages which do not load this shell
+  // can carry the same loader; see the header of that file. Script tags
+  // inside injected innerHTML never execute, so it is appended
+  // programmatically rather than written into the footer markup.
   function injectVercelInsights() {
-    ['/_vercel/insights/script.js', '/_vercel/speed-insights/script.js']
-      .forEach(function (src) {
-        if (document.querySelector('script[src="' + src + '"]')) return;
-        var s = document.createElement('script');
-        s.src = src;
-        s.defer = true;
-        document.body.appendChild(s);
-      });
+    var src = '/js/vercel-insights.js';
+    if (document.querySelector('script[src="' + src + '"]')) return;
+    var s = document.createElement('script');
+    s.src = src;
+    s.defer = true;
+    document.body.appendChild(s);
   }
 
   // Two day promotion for /governor-guide. Self contained and self expiring;

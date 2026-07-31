@@ -130,7 +130,9 @@ six steps, and the last one is what makes it safe:
 1. `app/<route>/page.js`, with the body as JSX and the `<head>` contents
    moved into an exported `metadata` object. Drop the `#site-header` and
    `#site-footer` divs and the `site-template.js` script tag: the layout
-   supplies all three.
+   supplies all three. Analytics comes with them — the layout renders
+   `<Analytics />`, so a ported page needs nothing added and must not also
+   pull in `/js/vercel-insights.js`, which would double count every view.
 2. Move the page's `<style>` block into `app/<route>/<route>.css` and import
    it from the page. Plain CSS, not a CSS module: the class names are shared
    with the static pages until those are deleted, and module hashing breaks

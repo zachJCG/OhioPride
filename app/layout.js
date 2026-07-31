@@ -11,6 +11,7 @@
  */
 
 import Script from 'next/script';
+import { Analytics } from '@vercel/analytics/next';
 import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
 
@@ -74,6 +75,19 @@ export default function RootLayout({ children }) {
             from site-template.js; ported pages get it here. Self expiring, so
             it needs no deadline cleanup. Delete both loaders with the file. */}
         <Script src="/js/guide-popup.js" strategy="afterInteractive" />
+
+        {/* Vercel Web Analytics. The static pages under public/ load the raw
+            tag through /js/vercel-insights.js; ported pages use the component
+            instead, because it reports the matched App Router route rather
+            than the resolved path. That keeps a dynamic page from spraying
+            one analytics row per URL — /issues/[id] stays a single row.
+
+            Do NOT also load /js/vercel-insights.js here. Both send the same
+            pageview, and the shared header this layout renders is React, not
+            site-template.js, so nothing pulls that file in on these routes.
+
+            Cookieless and IP truncating, so no consent banner is required. */}
+        <Analytics />
       </body>
     </html>
   );

@@ -178,5 +178,9 @@
   } catch (e) { /* private mode */ }
 })();
 </script>
+<!-- This page renders without the shared shell, so it loads the analytics
+     tags itself. See /js/vercel-insights.js. Pageviews only — the gate above
+     never reports whether it was passed. -->
+<script defer src="/js/vercel-insights.js"></script>
 </body>
 </html>
