@@ -325,6 +325,17 @@
       });
   }
 
+  // Two day promotion for /governor-guide. Self contained and self expiring;
+  // see the header of guide-popup.js. Delete this call and the file together.
+  function injectGuidePopup() {
+    var src = '/js/guide-popup.js';
+    if (document.querySelector('script[src="' + src + '"]')) return;
+    var s = document.createElement('script');
+    s.src = src;
+    s.defer = true;
+    document.body.appendChild(s);
+  }
+
   function render() {
     injectInto('site-header', HEADER_HTML);
     injectInto('site-footer', FOOTER_HTML);
@@ -332,6 +343,7 @@
     wireMenuToggle();
     wireNavGroups();
     injectVercelInsights();
+    injectGuidePopup();
 
     // Populate the leadership-driven parts of the footer if the data helper
     // is available. Guard with a typeof check so pages that forget to load

@@ -31,13 +31,15 @@ function Wordmark() {
   );
 }
 
-// Governor Guide 2026 is gated during pre-launch review, so it is absent from
-// the Info menu on purpose. Restore it when the page goes public.
+// Keep in step with HEADER_HTML in public/js/site-template.js, which serves
+// the pages that have not been ported yet. The Governor Guide entry was held
+// back while the page was gated and is restored now that it is public.
 const INFO_LINKS = [
   { href: '/about', label: 'About' },
   { href: '/board', label: 'Board' },
   { href: '/volunteer', label: 'Volunteer' },
   { href: '/endorsements', label: 'Endorsements' },
+  { href: '/governor-guide', label: 'Governor Guide 2026' },
   { href: '/elected-resources', label: 'Officials Toolkit' },
 ];
 
