@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleveland's Pride Hour | Ohio Pride PAC</title>
+    <meta name="description" content="A happy hour in support of Ohio Pride PAC. Sunday, September 20, 2026, 4:00 to 6:00 PM at the Leather Stallion Saloon in Cleveland. RSVP today.">
+    <link rel="canonical" href="https://www.ohiopride.org/sunday-funday">
+
+    <!-- Remove this line when ACTBLUE_LIVE flips to true. -->
+    <meta name="robots" content="noindex">
+
+    <meta property="og:title" content="Cleveland's Pride Hour | Ohio Pride PAC">
+    <meta property="og:description" content="A happy hour in support of Ohio Pride PAC. Sunday, September 20, 2026, 4:00 to 6:00 PM at the Leather Stallion Saloon in Cleveland. RSVP today.">
+    <meta property="og:image" content="https://www.ohiopride.org/assets/img/events/cleveland-pride-hour.jpg">
+    <meta property="og:url" content="https://www.ohiopride.org/sunday-funday">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://www.ohiopride.org/assets/img/events/cleveland-pride-hour.jpg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <meta name="theme-color" content="#152233">
+
+    <link rel="stylesheet" href="/css/site-template.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --navy: #152233;
+            --navy-deep: #0a1929;
+            --navy-light: #132d44;
+            --navy-card: rgba(19,45,68,0.5);
+            --text-white: #ffffff;
+            --text-soft: rgba(255,255,255,0.85);
+            --text-dim: rgba(255,255,255,0.6);
+            --accent: #70D6EC;
+            --action-blue: #004dff;
+            --border: rgba(255,255,255,0.08);
+            --rainbow: linear-gradient(90deg, #e40303 0%, #FFBC00 17%, #ffed00 33%, #008026 50%, #004dff 67%, #750787 84%, #e40303 100%);
+            --transition: all 0.3s ease;
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        html { scroll-behavior: smooth; }
+        /* Deep near-black navy to match the flyer field */
+        body {
+            font-family: 'Roboto Slab', Georgia, serif; color: var(--text-white); line-height: 1.6; overflow-x: hidden;
+            background-color: #0a1420;
+            background-image: radial-gradient(120% 70% at 50% 0%, #14283d 0%, #0a1420 58%);
+        }
+        a { color: inherit; text-decoration: none; }
+
+        .wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+
+        /* ---------- Hero ---------- */
+        .ph-hero { position: relative; text-align: center; padding: 4rem 1.5rem 1.25rem; overflow: hidden; }
+        /* Rainbow-heart aura, lifted straight from the flyer: a warm gold/orange
+           core bleeding out through red, green, blue and purple into the navy. */
+        .ph-hero::before {
+            content: ""; position: absolute; z-index: 0; pointer-events: none;
+            left: 50%; top: 40%; transform: translate(-50%, -50%);
+            width: min(900px, 128%); height: 620px;
+            background:
+                radial-gradient(38% 34% at 50% 40%, rgba(255,216,122,0.42), transparent 70%),
+                radial-gradient(48% 42% at 50% 46%, rgba(245,124,58,0.36), transparent 72%),
+                radial-gradient(62% 54% at 50% 52%, rgba(233,63,94,0.30), transparent 72%),
+                radial-gradient(72% 62% at 33% 46%, rgba(0,170,98,0.24), transparent 70%),
+                radial-gradient(72% 62% at 67% 46%, rgba(26,122,216,0.28), transparent 70%),
+                radial-gradient(90% 82% at 50% 55%, rgba(122,22,142,0.30), transparent 76%);
+            filter: blur(18px);
+        }
+        .ph-hero > * { position: relative; z-index: 1; }
+        .ph-eyebrow {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.72rem;
+            letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent);
+            border: 1px solid rgba(112,214,236,0.35); border-radius: 999px;
+            padding: 0.45rem 1.1rem; margin-bottom: 1.4rem;
+        }
+        .ph-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+        .ph-hero h1 {
+            font-family: 'Montserrat', sans-serif; font-weight: 900; line-height: 0.94;
+            font-size: clamp(2.8rem, 8vw, 5rem); letter-spacing: -1px; text-transform: uppercase;
+            color: #fff; margin-bottom: 1rem; text-shadow: 0 2px 24px rgba(0,0,0,0.35);
+        }
+        .ph-hero .tagline { max-width: 640px; margin: 0 auto 1.9rem; color: #fff; font-size: 1.12rem; text-shadow: 0 1px 12px rgba(0,0,0,0.55); }
+
+        /* Primary donate button, the main call to action */
+        .btn-donate {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.05rem;
+            letter-spacing: 0.5px; text-transform: uppercase; color: #fff;
+            background: var(--action-blue); border-radius: 12px; padding: 1rem 2.1rem;
+            box-shadow: 0 12px 34px rgba(0,77,255,0.42); transition: var(--transition);
+        }
+        .btn-donate:hover { transform: translateY(-2px); box-shadow: 0 18px 44px rgba(0,77,255,0.55); }
+        .btn-donate.lg { font-size: 1.15rem; padding: 1.15rem 2.6rem; }
+        .ph-hero .donate-note { margin-top: 0.9rem; color: var(--text-soft); font-size: 0.92rem; text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
+
+        /* ---------- Main layout ---------- */
+        .ph-main { padding: 2.5rem 0 1rem; }
+        .ph-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 2.5rem; align-items: start; }
+        @media (max-width: 860px) { .ph-grid { grid-template-columns: 1fr; gap: 2rem; } }
+
+        .ph-figure { position: relative; }
+        .ph-figure img {
+            width: 100%; height: auto; display: block; border-radius: 18px;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.55); border: 1px solid var(--border);
+        }
+        .ph-figure figcaption { margin-top: 0.9rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
+
+        /* Fact list */
+        .ph-facts { display: grid; gap: 0.85rem; margin-bottom: 1.8rem; }
+        .ph-fact {
+            display: flex; gap: 0.95rem; align-items: flex-start;
+            background: var(--navy-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem 1.15rem;
+        }
+        .ph-fact .ico {
+            flex: 0 0 40px; width: 40px; height: 40px; border-radius: 10px;
+            display: grid; place-items: center; background: rgba(112,214,236,0.12); color: var(--accent);
+        }
+        .ph-fact .ico svg { width: 20px; height: 20px; }
+        .ph-fact .label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 2px; }
+        .ph-fact .value { font-size: 1.05rem; color: var(--text-white); font-weight: 700; }
+        .ph-fact .value a { color: var(--accent); }
+        .ph-fact .value a:hover { text-decoration: underline; }
+        .ph-fact .sub { font-size: 0.9rem; color: var(--text-soft); font-weight: 400; }
+
+        /* RSVP card */
+        .ph-rsvp {
+            background: linear-gradient(180deg, rgba(19,45,68,0.75), rgba(10,25,41,0.75));
+            border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem 1.6rem 1.8rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35); position: relative; overflow: hidden;
+        }
+        .ph-rsvp::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--rainbow); background-size: 200% auto; }
+        .ph-rsvp h2 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.5rem; margin-bottom: 0.3rem; }
+        .ph-rsvp .rsvp-sub { color: var(--text-soft); font-size: 0.96rem; margin-bottom: 1.25rem; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-bottom: 0.9rem; }
+        .form-row.full { grid-template-columns: 1fr; }
+        @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.66rem; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.4rem; }
+        .form-group input {
+            font-family: 'Roboto Slab', serif; font-size: 1rem; color: var(--text-white);
+            background: rgba(10,25,41,0.6); border: 1px solid var(--border); border-radius: 9px; padding: 0.75rem 0.9rem;
+            transition: var(--transition);
+        }
+        .form-group input::placeholder { color: rgba(255,255,255,0.35); }
+        .form-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(112,214,236,0.18); }
+
+        .btn-rsvp {
+            width: 100%; margin-top: 0.4rem; font-family: 'Montserrat', sans-serif; font-weight: 800;
+            font-size: 1rem; letter-spacing: 0.5px; text-transform: uppercase; color: #fff;
+            background: var(--action-blue); border: 0; border-radius: 10px; padding: 0.95rem 1rem; cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-rsvp:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,77,255,0.4); }
+        .btn-rsvp:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
+        .rsvp-fineprint { margin-top: 0.9rem; text-align: center; color: var(--text-dim); font-size: 0.82rem; }
+
+        .ph-success { display: none; text-align: center; padding: 1.5rem 0.5rem; }
+        .ph-success .check { width: 56px; height: 56px; border-radius: 50%; background: rgba(74,222,128,0.15); color: #4ade80; display: grid; place-items: center; margin: 0 auto 1rem; }
+        .ph-success h3 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.35rem; margin-bottom: 0.4rem; }
+        .ph-success p { color: var(--text-soft); }
+
+        /* Secondary RSVP (end of page) */
+        .wrap-narrow { max-width: 620px; margin: 0 auto; padding: 0 1.5rem; }
+        .ph-rsvp-section { padding: 3.5rem 0 1rem; }
+
+        /* ---------- Giving levels ---------- */
+        .ph-give { padding: 3.5rem 0 1rem; }
+        .ph-section-head { text-align: center; max-width: 640px; margin: 0 auto 2rem; }
+        .ph-section-head .eyebrow { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); }
+        .ph-section-head h2 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0.5rem 0 0.6rem; }
+        .ph-section-head p { color: var(--text-soft); }
+
+        .ph-levels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+        @media (max-width: 900px) { .ph-levels { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .ph-levels { grid-template-columns: 1fr; } }
+        .ph-level {
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; text-align: center;
+            background: var(--navy-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.6rem 1rem 1.4rem;
+            transition: var(--transition);
+        }
+        .ph-level::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--rainbow); background-size: 200% auto; }
+        .ph-level:hover { transform: translateY(-4px); border-color: rgba(112,214,236,0.5); box-shadow: 0 16px 40px rgba(0,0,0,0.35); }
+        .ph-level .amt { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 2.1rem; color: #fff; }
+        .ph-level .name { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin: 0.4rem 0 1.1rem; }
+        .ph-level .give-btn {
+            margin-top: auto; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.82rem; letter-spacing: 0.5px;
+            text-transform: uppercase; color: #fff; background: var(--action-blue); border: 1px solid var(--action-blue); border-radius: 8px;
+            padding: 0.7rem 0.5rem; transition: var(--transition);
+        }
+        .ph-level .give-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,77,255,0.4); }
+        .ph-give-note { text-align: center; color: var(--text-soft); font-size: 0.92rem; margin-top: 1.6rem; }
+        .ph-give-note a { color: var(--accent); font-weight: 700; }
+        .ph-give-note a:hover { text-decoration: underline; }
+
+        /* Pending state for the ActBlue links. The page ships in this state and
+           the inline script upgrades it once ACTBLUE_LIVE flips to true, so a
+           script failure leaves the safe state rather than a dead link. */
+        .ph-give-pending {
+            text-align: center; color: var(--text-soft); font-size: 0.95rem;
+            max-width: 560px; margin: 0 auto 1.6rem;
+        }
+        /* 0.75 reads as clearly dimmed against the live tiles while every label
+           still clears WCAG AA against the navy. */
+        .ph-level.is-pending { opacity: 0.75; }
+        .ph-level.is-pending .give-btn { pointer-events: none; cursor: default; }
+        .ph-give-note.is-pending { display: none; }
+
+        /* ---------- Questions ---------- */
+        .ph-questions { text-align: center; padding: 3rem 1.5rem 4.5rem; }
+        .ph-questions p { color: var(--text-soft); font-size: 1.05rem; }
+        .ph-questions a { color: var(--accent); font-weight: 700; }
+        .ph-questions a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<!-- ===================== HERO ===================== -->
+<section class="ph-hero">
+    <span class="ph-eyebrow"><span class="dot"></span> Cleveland &middot; Sunday Funday</span>
+    <h1>Cleveland's<br>Pride Hour</h1>
+    <p class="tagline">We are bringing Ohio Pride Hour to the Leather Stallion Saloon during Sunday Funday, the tea dance Cleveland has been showing up for on that patio for years. Your contribution is your RSVP, and it powers LGBTQ+ political action across Ohio. Regular bar hours, open patio, everyone welcome.</p>
+    <a class="btn-donate lg" id="heroCta" data-actblue-bare href="#rsvp">RSVP for September 20 &rarr;</a>
+    <p class="donate-note">Sunday, September 20, 2026 &nbsp;&middot;&nbsp; 4:00 to 6:00 PM &nbsp;&middot;&nbsp; Leather Stallion Saloon</p>
+</section>
+
+<!-- ===================== MAIN ===================== -->
+<section class="ph-main">
+    <div class="wrap">
+        <div class="ph-grid">
+            <!-- The invitation graphic -->
+            <figure class="ph-figure">
+                <img src="/assets/img/events/cleveland-pride-hour.jpg"
+                     alt="Cleveland's Pride Hour, a happy hour in support of Ohio Pride PAC. Sunday, September 20, 2026, 4:00 to 6:00 PM at the Leather Stallion Saloon, 2205 St. Clair Avenue NE, Cleveland, during Sunday Funday. Giving levels: $26 Young Professional, $50 Friend, $100 Ally, $250 Champion, $500 Advocate.">
+                <figcaption>Paid for by Ohio Pride PAC.</figcaption>
+            </figure>
+
+            <!-- Details -->
+            <div>
+                <div class="ph-facts">
+                    <div class="ph-fact">
+                        <span class="ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>
+                        </span>
+                        <div>
+                            <div class="label">Date</div>
+                            <div class="value">Sunday, September 20, 2026</div>
+                        </div>
+                    </div>
+                    <div class="ph-fact">
+                        <span class="ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                        </span>
+                        <div>
+                            <div class="label">Time</div>
+                            <div class="value">4:00 to 6:00 PM</div>
+                            <div class="sub">Sunday Funday runs all afternoon. This is not a private event.</div>
+                        </div>
+                    </div>
+                    <div class="ph-fact">
+                        <span class="ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                        </span>
+                        <div>
+                            <div class="label">Location</div>
+                            <div class="value"><a href="https://www.google.com/maps/search/?api=1&query=Leather+Stallion+Saloon+Cleveland" target="_blank" rel="noopener">Leather Stallion Saloon</a></div>
+                            <div class="sub">2205 St. Clair Ave NE, Cleveland, OH 44114. Ohio's oldest continuously operating gay bar.</div>
+                        </div>
+                    </div>
+                    <div class="ph-fact">
+                        <span class="ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20"/><circle cx="10" cy="8" r="3.5"/><path d="M20 20v-1.5a3.5 3.5 0 0 0-2.6-3.4"/><path d="M15.4 4.6a3.5 3.5 0 0 1 0 6.8"/></svg>
+                        </span>
+                        <div>
+                            <div class="label">Partner</div>
+                            <div class="value">CLEather &amp; Kink</div>
+                            <div class="sub">Hosted with the Leather Stallion Saloon.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== GIVING LEVELS (primary) ===================== -->
+<section class="ph-give" id="give">
+    <div class="wrap">
+        <div class="ph-section-head">
+            <span class="eyebrow">Contribute to Attend</span>
+            <h2>Choose your level</h2>
+            <p>Your gift is your RSVP. Select a giving level to contribute securely through ActBlue.</p>
+        </div>
+        <p class="ph-give-pending" data-actblue-pending>Contribution links open soon. Add your name below and we will send them to you.</p>
+        <div class="ph-levels">
+            <div class="ph-level is-pending" data-actblue-level>
+                <div class="amt">$26</div>
+                <div class="name">Young Professional</div>
+                <a class="give-btn" data-actblue-amount="26" role="link" aria-disabled="true" tabindex="-1">Give $26</a>
+            </div>
+            <div class="ph-level is-pending" data-actblue-level>
+                <div class="amt">$50</div>
+                <div class="name">Friend</div>
+                <a class="give-btn" data-actblue-amount="50" role="link" aria-disabled="true" tabindex="-1">Give $50</a>
+            </div>
+            <div class="ph-level is-pending" data-actblue-level>
+                <div class="amt">$100</div>
+                <div class="name">Ally</div>
+                <a class="give-btn" data-actblue-amount="100" role="link" aria-disabled="true" tabindex="-1">Give $100</a>
+            </div>
+            <div class="ph-level is-pending" data-actblue-level>
+                <div class="amt">$250</div>
+                <div class="name">Champion</div>
+                <a class="give-btn" data-actblue-amount="250" role="link" aria-disabled="true" tabindex="-1">Give $250</a>
+            </div>
+            <div class="ph-level is-pending" data-actblue-level>
+                <div class="amt">$500</div>
+                <div class="name">Advocate</div>
+                <a class="give-btn" data-actblue-amount="500" role="link" aria-disabled="true" tabindex="-1">Give $500</a>
+            </div>
+        </div>
+        <p class="ph-give-note is-pending"><a data-actblue-bare role="link" aria-disabled="true" tabindex="-1">Give another amount &rarr;</a></p>
+    </div>
+</section>
+
+<!-- ===================== SECONDARY RSVP (no donation) ===================== -->
+<section class="ph-rsvp-section" id="rsvp">
+    <div class="wrap-narrow">
+        <div class="ph-rsvp">
+            <form id="rsvpForm" data-launch-form data-source="pride-hour-cleveland">
+                <h2>Can't give right now?</h2>
+                <p class="rsvp-sub">No problem. Contributions are appreciated but not required to attend. Drop your info and we'll add you to the guest list.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name">First name</label>
+                        <input type="text" id="first_name" name="first_name" autocomplete="given-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last name</label>
+                        <input type="text" id="last_name" name="last_name" autocomplete="family-name" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label for="organization">Organization <span style="text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label>
+                        <input type="text" id="organization" name="organization" autocomplete="organization">
+                    </div>
+                </div>
+                <button type="submit" class="btn-rsvp" id="rsvpBtn">Add Me to the List</button>
+            </form>
+
+            <div class="ph-success" data-launch-success>
+                <div class="check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4 10-10"/></svg>
+                </div>
+                <h3>You're on the list! &#10024;</h3>
+                <p>Thanks for RSVPing to Cleveland's Pride Hour. We can't wait to see you on September 20 at the Leather Stallion.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== QUESTIONS ===================== -->
+<section class="ph-questions">
+    <p>Questions? Reach Zach at <a href="mailto:zach@ohiopride.org">zach@ohiopride.org</a>.</p>
+</section>
+
+<div id="site-footer"></div>
+
+<script>
+/* ---------------------------------------------------------------------------
+   ActBlue wiring for Cleveland's Pride Hour.
+
+   The Cleveland form does not exist yet, so the markup above ships in the
+   pending state: the giving tiles carry no href at all, which is what keeps a
+   dead link off the page. When the form is created, set both constants below
+   in the same commit and the tiles become real links on load.
+   ------------------------------------------------------------------------ */
+(function () {
+    const ACTBLUE_URL = null;   // TODO: set to the Cleveland form URL
+    const ACTBLUE_LIVE = false; // flip to true in the same commit
+
+    var live = ACTBLUE_LIVE && typeof ACTBLUE_URL === 'string' && ACTBLUE_URL.length > 0;
+
+    var amountLinks = document.querySelectorAll('[data-actblue-amount]');
+    var bareLinks = document.querySelectorAll('[data-actblue-bare]');
+    var tiles = document.querySelectorAll('[data-actblue-level]');
+    var pending = document.querySelector('[data-actblue-pending]');
+    var giveNote = document.querySelector('.ph-give-note');
+    var heroCta = document.getElementById('heroCta');
+
+    function enable(link, href) {
+        link.setAttribute('href', href);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener');
+        link.removeAttribute('aria-disabled');
+        link.removeAttribute('tabindex');
+        link.removeAttribute('role');
+    }
+
+    function disable(link) {
+        link.removeAttribute('href');
+        link.removeAttribute('target');
+        link.removeAttribute('rel');
+        link.setAttribute('role', 'link');
+        link.setAttribute('aria-disabled', 'true');
+        link.setAttribute('tabindex', '-1');
+    }
+
+    if (live) {
+        amountLinks.forEach(function (link) {
+            enable(link, ACTBLUE_URL + '?amount=' + link.getAttribute('data-actblue-amount'));
+        });
+        bareLinks.forEach(function (link) { enable(link, ACTBLUE_URL); });
+        tiles.forEach(function (tile) { tile.classList.remove('is-pending'); });
+        if (giveNote) giveNote.classList.remove('is-pending');
+        if (pending) pending.remove();
+        if (heroCta) heroCta.textContent = 'Donate & RSVP \u2192';
+    } else {
+        amountLinks.forEach(disable);
+        tiles.forEach(function (tile) { tile.classList.add('is-pending'); });
+        if (giveNote) giveNote.classList.add('is-pending');
+        // The hero button is the one control that stays usable while the form
+        // is pending: it drops people at the signup card instead of nowhere.
+        bareLinks.forEach(function (link) {
+            if (link === heroCta) return;
+            disable(link);
+        });
+        if (heroCta) {
+            heroCta.setAttribute('href', '#rsvp');
+            heroCta.removeAttribute('target');
+            heroCta.removeAttribute('rel');
+        }
+    }
+})();
+</script>
+
+<script src="/js/enhancements.js"></script>
+<script src="/js/launch-signup.js" defer></script>
+<script src="/js/site-template.js" defer></script>
+<script src="/js/ohiopride-data.js" defer></script>
+</body>
+</html>
