@@ -1,7 +1,12 @@
 /* Admin root layout. A separate root layout from the public site's
  * app/(site)/layout.js: no marketing header/footer, no migration bridge
- * scripts, its own theme and PWA manifest. Board members can add
- * /admin/dashboard to their phone home screen and get a standalone app.
+ * scripts, its own theme.
+ *
+ * No web app manifest is linked on purpose. Linking one made browsers offer
+ * to install the admin as an app, which is confusing on the way to a login
+ * screen. public/admin/manifest.webmanifest is still in the repo; add
+ * `manifest: '/admin/manifest.webmanifest'` back to the metadata below if the
+ * board ever wants the installable version.
  */
 import { Analytics } from '@vercel/analytics/next';
 import './admin-theme.css';
@@ -14,7 +19,6 @@ export const metadata = {
     template: '%s · Ohio Pride Admin',
   },
   robots: { index: false, follow: false, noarchive: true },
-  manifest: '/admin/manifest.webmanifest',
   icons: {
     icon: [
       { url: '/assets/favicon/favicon-32.png', sizes: '32x32', type: 'image/png' },
@@ -22,11 +26,6 @@ export const metadata = {
       { url: '/favicon.ico' },
     ],
     apple: '/assets/favicon/apple-touch-icon.png',
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: 'OP Admin',
   },
 };
 

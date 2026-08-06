@@ -11,12 +11,14 @@
  * case-sensitive — a '/admin/:path*' matcher alone would let mixed-case URLs
  * skip the gate. Non-admin requests exit after one string check.
  *
- * Fails open when the Supabase env is missing (e.g. a preview without env
- * vars): pages then fall back to their client-side gates, and RLS remains the
- * real enforcement layer either way.
+ * Connection values come from lib/supabase-public.mjs, which falls back to the
+ * public project literals, so the gate does not quietly stop running when a
+ * deploy lacks the NEXT_PUBLIC_* build vars. RLS remains the real enforcement
+ * layer regardless.
  */
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './lib/supabase-public.mjs';
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
@@ -27,12 +29,8 @@ export async function middleware(req) {
   // Static assets under /admin/ (shell css/js, manifest, images) pass through.
   if (/\.[\w]+$/.test(lower)) return NextResponse.next();
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return NextResponse.next();
-
   const res = NextResponse.next();
-  const supabase = createServerClient(url, key, {
+  const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     cookies: {
       getAll: () => req.cookies.getAll(),
       setAll: (cookies) =>
