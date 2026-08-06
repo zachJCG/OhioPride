@@ -5,6 +5,7 @@
 // Requires: npm i @react-pdf/renderer   Runtime: nodejs (not edge).
 import React from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../../../lib/supabase-public.mjs';
 import { renderToBuffer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 export const runtime = 'nodejs';
@@ -138,7 +139,7 @@ export async function GET(req) {
   const auth = (req.headers.get('authorization') || '').match(/^Bearer (.+)$/i);
   if (!auth) return new Response(JSON.stringify({ ok: false, error: 'missing_bearer' }), { status: 401 });
 
-  const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: { persistSession: false }, global: { headers: { Authorization: `Bearer ${auth[1]}` } },
   });
   const { data: allowed } = await sb.rpc('has_permission', { p_module: 'endorsements', p_action: 'read' });
