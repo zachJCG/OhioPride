@@ -30,7 +30,7 @@
   padding: 8px 0 10px; border-bottom: 1px solid var(--op-line); margin-bottom: 12px;
   top: 0;
 }
-@media (max-width: 767px) { .tx-sticky { top: calc(42px + env(safe-area-inset-top)); } }
+@media (max-width: 767px) { .tx-sticky { top: calc(60px + env(safe-area-inset-top)); } }
 .tx-queue-count { font: 800 1.05rem var(--op-font-head); color: var(--op-navy); font-variant-numeric: tabular-nums; }
 .tx-queue-sub { font-size: .8rem; color: var(--op-muted); font-variant-numeric: tabular-nums; }
 
@@ -78,7 +78,7 @@
 /* Undo toast: must clear the bottom tab bar on phones */
 .tx-undo {
   position: fixed; left: 50%; transform: translateX(-50%);
-  bottom: calc(78px + env(safe-area-inset-bottom)); z-index: 60;
+  bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 60;
   display: flex; align-items: center; gap: 12px; max-width: 92vw;
   background: var(--op-navy); color: #fff; padding: 10px 12px 10px 16px;
   border-radius: 12px; box-shadow: 0 6px 20px rgba(15, 34, 51, .35); font-size: .86rem;
