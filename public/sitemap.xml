@@ -33,6 +33,14 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.ohiopride.org/pride-hour</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.ohiopride.org/sunday-funday</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.ohiopride.org/pride/signup</loc>
     <priority>0.8</priority>
   </url>
