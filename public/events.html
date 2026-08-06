@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events | Ohio Pride PAC</title>
+    <meta
+      name="description"
+      content="Ohio Pride PAC is taking Pride Hour city by city. Find the next happy hour near you in Cincinnati and Cleveland, and RSVP."
+    />
+    <link rel="canonical" href="https://www.ohiopride.org/events" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Events | Ohio Pride PAC" />
+    <meta
+      property="og:description"
+      content="Ohio Pride PAC is taking Pride Hour city by city. Find the next happy hour near you in Cincinnati and Cleveland, and RSVP."
+    />
+    <meta property="og:url" content="https://www.ohiopride.org/events" />
+    <meta property="og:site_name" content="Ohio Pride" />
+    <meta property="og:image" content="https://www.ohiopride.org/assets/img/events/cincinnati-pride-hour.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Events | Ohio Pride PAC" />
+    <meta
+      name="twitter:description"
+      content="Ohio Pride PAC is taking Pride Hour city by city. Find the next happy hour near you in Cincinnati and Cleveland, and RSVP."
+    />
+    <meta name="twitter:image" content="https://www.ohiopride.org/assets/img/events/cincinnati-pride-hour.jpg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/site-template.css" />
+    <style>
+      body {
+        background: var(--dark-bg);
+      }
+
+      /* Photo band: progress pride flag under the standard navy scrim
+         (see .photo-band in style.css). */
+      .events-hero {
+        --band-image-fallback: url("/assets/img/progress-pride-flag-1280.jpg");
+        --band-image: image-set(
+          url("/assets/img/progress-pride-flag-1280.avif") type("image/avif"),
+          url("/assets/img/progress-pride-flag-1280.webp") type("image/webp"),
+          url("/assets/img/progress-pride-flag-1280.jpg") type("image/jpeg")
+        );
+        min-height: 260px;
+        display: flex;
+        align-items: center;
+      }
+      .events-hero .container { width: 100%; }
+      @media (max-width: 767px) {
+        .events-hero {
+          --band-image-fallback: url("/assets/img/progress-pride-flag-768.jpg");
+          --band-image: image-set(
+            url("/assets/img/progress-pride-flag-768.avif") type("image/avif"),
+            url("/assets/img/progress-pride-flag-768.webp") type("image/webp"),
+            url("/assets/img/progress-pride-flag-768.jpg") type("image/jpeg")
+          );
+        }
+      }
+
+      /* ---------- City card grid ---------- */
+      .events-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 28px;
+        margin-top: 32px;
+      }
+      @media (min-width: 900px) {
+        /* Two flyers read best side by side. auto-fit would stretch a lone
+           card to full width once a third city lands, so cap the columns. */
+        .events-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+
+      .event-card {
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: box-shadow 0.3s, transform 0.3s;
+      }
+      .event-card:hover {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        transform: translateY(-2px);
+      }
+
+      /* The flyers are 4:5. Reserving the ratio keeps the card from jumping
+         while the image loads, and gives the fallback panel a shape to fill
+         if a flyer is not in the repo yet. */
+      .event-card-media {
+        position: relative;
+        aspect-ratio: 4 / 5;
+        background: var(--dark-bg-light);
+      }
+      .event-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .event-card-media.no-flyer {
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 24px;
+        background:
+          linear-gradient(180deg, rgba(21, 34, 51, 0.72), rgba(21, 34, 51, 0.92)),
+          var(--pride-gradient);
+      }
+      .event-card-media.no-flyer .no-flyer-text {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-light);
+      }
+
+      .event-card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 24px;
+        gap: 6px;
+      }
+      .event-card-city {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-accent);
+      }
+      .event-card-body h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 22px;
+        color: var(--text-white);
+        margin: 0;
+      }
+      .event-card-when {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--text-white);
+        margin-top: 6px;
+      }
+      .event-card-where {
+        font-size: 15px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+      .event-card-note {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-top: 4px;
+      }
+      /* Pushed to the bottom of the body so the buttons line up across cards
+         even when one city carries an extra line of detail. */
+      .event-card-actions {
+        margin-top: auto;
+        padding-top: 20px;
+      }
+
+      .events-aside {
+        margin-top: 32px;
+        font-size: 15px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .events-aside a {
+        color: var(--text-accent);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .events-aside a:hover { text-decoration: underline; }
+
+      /* ---------- Host CTA ---------- */
+      .host-cta {
+        margin-top: 44px;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 36px 28px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .host-cta::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--pride-gradient);
+      }
+      .host-cta h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 24px;
+        color: var(--text-white);
+        margin-bottom: 12px;
+      }
+      .host-cta p {
+        font-size: 16px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        max-width: 640px;
+        margin: 0 auto 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+    <main id="main">
+      <!-- Hero -->
+      <header class="events-hero photo-band">
+        <div class="container">
+          <h1 class="section-title">Ohio Pride Events</h1>
+          <p class="subpage-hero-sub">
+            We are taking Pride Hour city by city. Find the next one near you.
+          </p>
+        </div>
+      </header>
+
+      <!-- City cards -->
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">Upcoming</h2>
+          <p class="subpage-hero-sub">
+            Every stop is a happy hour in support of Ohio Pride PAC, hosted in a
+            bar that has been part of its city's LGBTQ+ life for years.
+            Contributions are appreciated but never required to attend.
+          </p>
+
+          <div class="events-grid">
+            <!-- Cincinnati -->
+            <article class="event-card">
+              <a class="event-card-media" href="/pride-hour" aria-label="Cincinnati's Pride Hour, August 26, 2026">
+                <img
+                  src="/assets/img/events/cincinnati-pride-hour.jpg"
+                  width="1080"
+                  height="1350"
+                  loading="lazy"
+                  alt="Cincinnati's Pride Hour, a happy hour in support of Ohio Pride PAC. Wednesday, August 26, 2026, 6:00 to 8:00 PM at Cobblestone OTR in Over-the-Rhine, Cincinnati. Giving levels: $26 Young Professional, $50 Friend, $100 Ally, $250 Champion, $500 Advocate."
+                />
+              </a>
+              <div class="event-card-body">
+                <span class="event-card-city">Cincinnati</span>
+                <h2>Cincinnati's Pride Hour</h2>
+                <p class="event-card-when">Wednesday, August 26, 2026, 6:00 to 8:00 PM</p>
+                <p class="event-card-where">Cobblestone OTR<br />Over-the-Rhine, Cincinnati</p>
+                <div class="event-card-actions">
+                  <a class="btn btn-primary" href="/pride-hour">Details and RSVP</a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Cleveland -->
+            <article class="event-card">
+              <a class="event-card-media" href="/sunday-funday" aria-label="Cleveland's Pride Hour, September 20, 2026">
+                <img
+                  src="/assets/img/events/cleveland-pride-hour.jpg"
+                  width="1080"
+                  height="1350"
+                  loading="lazy"
+                  alt="Cleveland's Pride Hour, a happy hour in support of Ohio Pride PAC. Sunday, September 20, 2026, 4:00 to 6:00 PM at the Leather Stallion Saloon, 2205 St. Clair Ave NE, Cleveland, during Sunday Funday. Giving levels: $26 Young Professional, $50 Friend, $100 Ally, $250 Champion, $500 Advocate. In partnership with the Leather Stallion Saloon and CLEather and Kink."
+                />
+              </a>
+              <div class="event-card-body">
+                <span class="event-card-city">Cleveland</span>
+                <h2>Cleveland's Pride Hour</h2>
+                <p class="event-card-when">Sunday, September 20, 2026, 4:00 to 6:00 PM</p>
+                <p class="event-card-where">Leather Stallion Saloon<br />2205 St. Clair Ave NE, Cleveland</p>
+                <p class="event-card-note">
+                  We are joining Sunday Funday, in partnership with CLEather and Kink.
+                </p>
+                <div class="event-card-actions">
+                  <a class="btn btn-primary" href="/sunday-funday">Details and RSVP</a>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <p class="events-aside">
+            Looking for the festivals instead? The
+            <a href="/pride">Ohio Pride Road Tour</a> lists every Pride we are
+            showing up to this year, and you can sign up to work a stop.
+          </p>
+
+          <!-- Host CTA -->
+          <div class="host-cta">
+            <h2>Want Ohio Pride in your city?</h2>
+            <p>
+              If you run a bar, own a business, or just know the room worth
+              being in, tell us. We are looking for hosts and partners in every
+              corner of the state, and the next stop on this list could be
+              yours.
+            </p>
+            <a class="btn btn-primary" href="/contact?subject=host-an-event">
+              Talk to us about hosting
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer"></div>
+
+    <a href="/donate" class="mobile-donate-fab">Donate</a>
+
+    <script>
+      /* A flyer that is not in the repo yet would otherwise render as a broken
+         image icon. Swap the media box for a branded panel instead. Checking
+         .complete catches images that already failed before this ran. */
+      (function () {
+        function fallback(img) {
+          var media = img.closest('.event-card-media');
+          if (!media) return;
+          img.remove();
+          media.classList.add('no-flyer');
+          var span = document.createElement('span');
+          span.className = 'no-flyer-text';
+          span.textContent = 'Flyer coming soon';
+          media.appendChild(span);
+        }
+        document.querySelectorAll('.event-card-media img').forEach(function (img) {
+          if (img.complete && img.naturalWidth === 0) fallback(img);
+          else img.addEventListener('error', function () { fallback(img); });
+        });
+      })();
+    </script>
+
+    <script src="/js/main.js" defer></script>
+    <script src="/js/enhancements.js" defer></script>
+    <script src="/js/site-template.js" defer></script>
+  </body>
+</html>
