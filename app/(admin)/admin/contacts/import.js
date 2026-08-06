@@ -72,6 +72,9 @@ export default function ImportCsv({ notify, onClose }) {
                 </>
               )}
               <div><div className="lbl">Rows without email</div><div className="val">{result.rows_no_email}</div></div>
+              {result.rows_skipped_bad_money > 0 && (
+                <div><div className="lbl">Rows with bad amount/receipt</div><div className="val">{result.rows_skipped_bad_money}</div></div>
+              )}
             </div>
             {result.conflicts?.length > 0 && (
               <>

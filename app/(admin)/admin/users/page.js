@@ -12,7 +12,7 @@ import RolesMatrix from './roles-matrix';
 
 export default function UsersPage() {
   const { loading: authLoading, me, can, superAdmin } = useAdmin();
-  const canManage = can('users', 'manage_users') || can('users', 'admin');
+  const canManage = can('users', 'manage_users');
 
   const [tab, setTab] = useState('users');
   const [users, setUsers] = useState(null);

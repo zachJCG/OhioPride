@@ -90,14 +90,24 @@ export default function UserDrawer({ user, userRoleSlugs, roles, perms, canManag
         const { error } = await sb.from('admin_users').update(rowPatch).eq('id', user.id);
         if (error) throw new Error(error.message);
       }
+      changedRef.v = true;
 
-      // Role sync: replace the user's role set.
-      const { error: delErr } = await sb.from('admin_user_roles').delete().eq('user_id', userId);
-      if (delErr) throw new Error(delErr.message);
-      if (roleSet.size) {
+      // Role sync as a diff, additions FIRST: a delete-everything-then-
+      // reinsert pass on your own account would drop the role that grants
+      // users:manage_users and RLS would then refuse the re-insert,
+      // locking you out mid-save.
+      const wanted = [...roleSet];
+      const toAdd = wanted.filter(slug => !userRoleSlugs.includes(slug));
+      const toRemove = userRoleSlugs.filter(slug => !roleSet.has(slug));
+      if (toAdd.length) {
         const { error: insErr } = await sb.from('admin_user_roles')
-          .insert([...roleSet].map(slug => ({ user_id: userId, role_slug: slug, assigned_by: selfEmail || null })));
+          .insert(toAdd.map(slug => ({ user_id: userId, role_slug: slug, assigned_by: selfEmail || null })));
         if (insErr) throw new Error(insErr.message);
+      }
+      if (toRemove.length) {
+        const { error: delErr } = await sb.from('admin_user_roles')
+          .delete().eq('user_id', userId).in('role_slug', toRemove);
+        if (delErr) throw new Error(delErr.message);
       }
 
       // Auth account: explicit password, or an invite email for new users.

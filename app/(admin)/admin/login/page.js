@@ -1,16 +1,23 @@
 'use client';
 // Admin sign-in. Sessions are cookie-based (@supabase/ssr), so the /admin
 // middleware gate and the not-yet-ported static admin pages all see the same
-// sign-in. Also handles the password-recovery flow: Supabase reset links land
-// here with type=recovery in the URL hash.
+// sign-in. Also handles the set-password flows: Supabase reset links land
+// here with type=recovery in the URL hash, and invite links with type=invite.
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 
 export default function LoginPage() {
-  // Capture recovery mode synchronously, before detectSessionInUrl strips the hash.
-  const [view, setView] = useState(() =>
-    typeof window !== 'undefined' && window.location.hash.indexOf('type=recovery') !== -1
-      ? 'reset' : 'signin');
+  // Capture email-link arrivals synchronously, before the auth client strips
+  // them: implicit-flow links put type=recovery/invite in the hash, and the
+  // PKCE flow (what @supabase/ssr uses) lands with ?code=. Either one means
+  // "finish by setting a password", never a bounce to the dashboard.
+  const [cameFromEmailLink] = useState(() =>
+    typeof window !== 'undefined' && (
+      window.location.hash.indexOf('type=recovery') !== -1 ||
+      window.location.hash.indexOf('type=invite') !== -1 ||
+      new URLSearchParams(window.location.search).has('code')
+    ));
+  const [view, setView] = useState(() => (cameFromEmailLink ? 'reset' : 'signin'));
   const [busy, setBusy] = useState(false);
   const [alert, setAlert] = useState(null); // { kind: 'error'|'ok', msg }
 
@@ -20,6 +27,16 @@ export default function LoginPage() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  // The middleware deliberately never bounces /admin/login (it would strip
+  // the PKCE ?code=). Forward already-signed-in visitors from here instead,
+  // but never while they are mid set-password.
+  useEffect(() => {
+    if (cameFromEmailLink) return;
+    supabase().auth.getSession().then(({ data: { session } }) => {
+      if (session) window.location.replace(nextPath());
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const nextPath = () => {
     const next = new URLSearchParams(window.location.search).get('next');
@@ -107,8 +124,8 @@ export default function LoginPage() {
           </>
         ) : (
           <>
-            <h1>Set a new password</h1>
-            <p className="muted small" style={{ margin: '0 0 12px' }}>You followed a reset link. Choose a new password to finish.</p>
+            <h1>Set your password</h1>
+            <p className="muted small" style={{ margin: '0 0 12px' }}>You followed a reset or invite link. Choose a password to finish.</p>
             {alert && <div className={`alert alert-${alert.kind === 'ok' ? 'ok' : 'error'}`} role="alert">{alert.msg}</div>}
             <form onSubmit={setNewPassword}>
               <label className="field"><span>New password</span>

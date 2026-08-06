@@ -79,8 +79,8 @@ export default function PersonDrawer({ contactId, seedRow, canWrite, notify, onC
     if ((patch.first_name !== undefined) || (patch.last_name !== undefined)) {
       const fn = patch.first_name !== undefined ? patch.first_name : row.first_name;
       const ln = patch.last_name !== undefined ? patch.last_name : row.last_name;
+      // contacts.name is a generated column; only full_name is writable.
       patch.full_name = [fn, ln].filter(Boolean).join(' ') || null;
-      patch.name = patch.full_name;
     }
     if ((notes.trim() || null) !== (row.notes || null)) patch.notes = notes.trim() || null;
     const tagArr = tags.split(',').map(t => t.trim()).filter(Boolean);

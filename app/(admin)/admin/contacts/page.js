@@ -73,6 +73,7 @@ export default function ContactsPage() {
   const [showImport, setShowImport] = useState(false);
   const [toast, setToast] = useState(null);
   const toastTimer = useRef(null);
+  const loadSeq = useRef(0);
 
   const notify = useCallback((msg) => {
     setToast(msg);
@@ -86,18 +87,22 @@ export default function ContactsPage() {
   }, [q]);
 
   const load = useCallback(async (offset = 0) => {
+    const seq = ++loadSeq.current;
     setLoading(true);
     let query = supabase().from('contacts_directory').select('*', { count: 'exact' });
     query = applySegment(query, seg);
     query = applySearch(query, debouncedQ);
     query = applySort(query, sort).range(offset, offset + PAGE_SIZE - 1);
     const { data, count, error } = await query;
-    if (!error) {
+    if (seq !== loadSeq.current) return; // a newer filter/search superseded this request
+    if (error) {
+      notify('Could not load contacts: ' + error.message);
+    } else {
       setRows(prev => offset === 0 ? (data || []) : [...prev, ...(data || [])]);
       setTotal(count || 0);
     }
     setLoading(false);
-  }, [seg, debouncedQ, sort]);
+  }, [seg, debouncedQ, sort, notify]);
 
   useEffect(() => { load(0); }, [load]);
 
@@ -108,12 +113,19 @@ export default function ContactsPage() {
   }, [view]);
 
   async function exportCsv() {
-    let query = supabase().from('contacts_directory').select('*').limit(10000);
-    query = applySegment(query, seg);
-    query = applySearch(query, debouncedQ);
-    query = applySort(query, sort);
-    const { data, error } = await query;
-    if (error || !data) { notify('Export failed.'); return; }
+    // Page in blocks of 500: PostgREST caps a single response (default 1000
+    // rows on Supabase), so one big .limit() would silently truncate.
+    const data = [];
+    for (let from = 0; from < 10000; from += 500) {
+      let query = supabase().from('contacts_directory').select('*');
+      query = applySegment(query, seg);
+      query = applySearch(query, debouncedQ);
+      query = applySort(query, sort).range(from, from + 499);
+      const { data: page, error } = await query;
+      if (error) { notify('Export failed: ' + error.message); return; }
+      data.push(...(page || []));
+      if (!page || page.length < 500) break;
+    }
     const cols = ['full_name','email','phone','employer','occupation','address1','city','county','region','state','zip','total_cents','gifts','first_gift_at','last_gift_at','is_founding_member','founding_number','is_volunteer','is_network','is_newsletter','do_not_contact','needs_review','tags'];
     const esc = (v) => { const s = v == null ? '' : Array.isArray(v) ? v.join('; ') : String(v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
     const csv = [cols.join(','), ...data.map(r => cols.map(c => esc(r[c])).join(','))].join('\n');

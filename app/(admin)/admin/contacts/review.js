@@ -28,6 +28,7 @@ export default function ReviewQueue({ canWrite, notify, onExit, toast }) {
   useEffect(() => {
     setMode(null); setMergeQ(''); setMergeHits([]);
     if (!current) return;
+    let cancelled = false;
     const sb = supabase();
     (async () => {
       const [bounce, sheets, dupes] = await Promise.all([
@@ -37,12 +38,14 @@ export default function ReviewQueue({ canWrite, notify, onExit, toast }) {
         sb.from('signup_sheet_imports').select('source_file, page_no, row_no, raw_name, raw_email, raw_phone, raw_zip, confidence').eq('contact_id', current.id).limit(3),
         sb.rpc('contacts_possible_duplicates', { p_id: current.id }),
       ]);
+      if (cancelled) return;
       setContext({
         bounce: bounce.data || [],
         sheets: sheets.data || [],
         dupes: (dupes.data || []).filter(d => d.id !== current.id).slice(0, 5),
       });
     })();
+    return () => { cancelled = true; };
   }, [current?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const advance = useCallback(() => {

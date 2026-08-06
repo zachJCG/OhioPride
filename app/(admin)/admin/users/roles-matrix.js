@@ -8,11 +8,17 @@ import { supabase } from '../../lib/supabase';
 
 const GUARDED_MODULES = ['users', 'settings'];
 
+// Union with the live module list so a module row survives having its last
+// grant unchecked (rows derived from role_permissions alone would vanish).
+const KNOWN_MODULES = ['bills', 'board', 'contacts', 'dashboard', 'donors', 'endorsements',
+  'fundraising', 'legislators', 'members', 'networking', 'pac_prospects', 'prospects',
+  'settings', 'tasks', 'texting', 'users', 'volunteers'];
+
 export default function RolesMatrix({ roles, perms, canManage, superAdmin, notify, onChanged }) {
   const [busyCell, setBusyCell] = useState(null);
 
   const modules = useMemo(() =>
-    [...new Set(perms.map(p => p.module))].sort((a, b) => a.localeCompare(b)),
+    [...new Set([...KNOWN_MODULES, ...perms.map(p => p.module)])].sort((a, b) => a.localeCompare(b)),
   [perms]);
 
   const permSet = useMemo(() =>

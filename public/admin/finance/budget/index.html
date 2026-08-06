@@ -174,7 +174,7 @@
                 type="search"
                 class="admin-input"
                 id="revSearch"
-                placeholder="Search donor, refcode, payment&hellip;"
+                placeholder="Search donor, city, county&hellip;"
                 autocomplete="off"
               />
               <span class="admin-toolbar-spacer"></span>
@@ -202,8 +202,8 @@
                   <tr>
                     <th>Date</th>
                     <th>Donor</th>
-                    <th>Refcode</th>
-                    <th>Payment</th>
+                    <th>City</th>
+                    <th>County</th>
                     <th class="fin-num">Amount</th>
                   </tr>
                 </thead>
@@ -217,7 +217,7 @@
               Source of truth: <code>founding_members</code> (fed hourly by
               <code>api/actblue-sync.mjs</code>). Refunded
               contributions are excluded. Read-only here &mdash; manage donors
-              under <a href="/admin/donors">Donors</a>.
+              under <a href="/admin/contacts?seg=founding">Contacts</a>.
             </p>
           </div>
 
@@ -465,7 +465,7 @@
           state.revFiltered = !q ? state.revenue.slice() : state.revenue.filter(function (r) {
             return (
               (r.full_name || '') + ' ' + (r.display_name || '') + ' ' +
-              (r.refcode || '') + ' ' + (r.payment_method || '')
+              (r.city || '') + ' ' + (r.county || '')
             ).toLowerCase().indexOf(q) !== -1;
           });
           renderRevenue();
@@ -513,8 +513,8 @@
             return '<tr>' +
               '<td>' + escapeHtml(fmtDate(r.contributed_at)) + '</td>' +
               '<td>' + name + '</td>' +
-              '<td>' + dash(r.refcode) + '</td>' +
-              '<td>' + dash(r.payment_method) + '</td>' +
+              '<td>' + dash(r.city) + '</td>' +
+              '<td>' + dash(r.county) + '</td>' +
               '<td class="fin-num">' + amt + '</td>' +
               '</tr>';
           }).join('');
@@ -523,11 +523,10 @@
         async function loadRevenue(client) {
           var resp = await client
             .from('founding_members')
-            .select('id, full_name, display_name, amount_cents, recurrence, ' +
-                    'contributed_at, refcode, payment_method, is_refunded')
+            .select('id, full_name, display_name, amount_cents, recurrence, contributed_at, city, county')
             .order('contributed_at', { ascending: false, nullsFirst: false });
           if (resp.error) throw resp.error;
-          return (resp.data || []).filter(function (r) { return !r.is_refunded; });
+          return resp.data || [];
         }
 
         // -------------------------------------------------------------

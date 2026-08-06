@@ -4,7 +4,7 @@
 // board reviews, assignments, director controls, and the activity trail.
 // Copy stays descriptive throughout (board firewall policy): this is a
 // deliberation record about a candidate, never advocacy for one.
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import { useAdmin } from '../../../lib/permissions';
@@ -75,11 +75,18 @@ export default function CandidatePage() {
       setNotes(a.data.reviewer_notes || '');
       setQuestions(qs.data || []);
       setAdmins(ad.data || []);
-      const revs = await loadDrawerData();
-      const mine = revs.find(r => String(r.reviewer_email || '').toLowerCase() === String(me?.email || '__').toLowerCase());
-      if (mine?.recommendation) setRecommendation(mine.recommendation);
+      await loadDrawerData();
     })();
-  }, [id, me?.email]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Seed the recommendation box from the caller's existing vote once both the
+  // reviews and the caller's identity have resolved; never clobber typing.
+  const seededRec = useRef(false);
+  useEffect(() => {
+    if (seededRec.current || !me || !reviews.length) return;
+    const mine = reviews.find(r => String(r.reviewer_email || '').toLowerCase() === me.email.toLowerCase());
+    if (mine?.recommendation) { setRecommendation(mine.recommendation); seededRec.current = true; }
+  }, [me, reviews]);
 
   const qByKey = useMemo(() => Object.fromEntries(questions.map(x => [x.question_key, x])), [questions]);
 
@@ -123,7 +130,7 @@ export default function CandidatePage() {
       application_id: id,
       actor_email: me?.email || null,
       actor_name: me?.full_name || null,
-      event_type, summary, detail: detail || null,
+      event_type, summary, detail: detail || {},
     });
   }
 
@@ -206,11 +213,11 @@ export default function CandidatePage() {
     if (err) notify(err);
   }
 
-  if (notFound) return <div className="alert alert-error">Application not found. <a href="/admin/endorsements">Back to the queue</a>.</div>;
-  if (!app) return <div className="card">Loading…</div>;
   if (!authLoading && !can('endorsements', 'read')) {
     return <div className="alert alert-error">The endorsements module is limited by role.</div>;
   }
+  if (notFound) return <div className="alert alert-error">Application not found. <a href="/admin/endorsements">Back to the queue</a>.</div>;
+  if (!app) return <div className="card">Loading…</div>;
 
   const name = app.candidate_name || [app.first_name, app.last_name].filter(Boolean).join(' ');
 

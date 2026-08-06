@@ -162,11 +162,17 @@ export async function GET(req) {
   }
 
   const ids = apps.map(a => a.id);
-  const [{ data: questions }, { data: reviews }, { data: activity }] = await Promise.all([
+  const [qRes, rRes, aRes] = await Promise.all([
     sb.from('endorsement_questions').select('*'),
     sb.from('endorsement_reviews').select('*').in('application_id', ids),
     sb.from('endorsement_activity').select('*').in('application_id', ids).order('created_at', { ascending: false }),
   ]);
+  const failed = [qRes, rRes, aRes].find(r => r.error);
+  if (failed) {
+    // A packet that silently claims zero votes is worse than no packet.
+    return new Response(JSON.stringify({ ok: false, error: 'packet_query_failed', detail: failed.error.message }), { status: 500 });
+  }
+  const questions = qRes.data, reviews = rRes.data, activity = aRes.data;
 
   const doc = (
     <Document title="Ohio Pride PAC — Endorsement Packet" author="Ohio Pride PAC">
