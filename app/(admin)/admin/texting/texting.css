@@ -1,0 +1,114 @@
+/* Text Blast, built to be worked one-handed on a phone: big targets, single
+   column, sticky progress. The Progress Pride gradient is used for the
+   progress meter only, never behind text. */
+
+.tx-gradient {
+  height: 3px; border-radius: 3px; margin-bottom: 12px;
+  background: linear-gradient(135deg, #E40303, #FFBC00, #FFED00, #008026, #004DFF, #750787);
+}
+
+/* Blast list */
+.tx-blast-card {
+  display: block; width: 100%; text-align: left; cursor: pointer;
+  background: var(--op-card); border: 1px solid var(--op-line);
+  border-radius: var(--op-radius); padding: 14px; margin-bottom: 10px; font: inherit;
+}
+.tx-blast-name { font: 800 1.02rem var(--op-font-head); color: var(--op-navy); }
+.tx-blast-meta { font-size: .8rem; color: var(--op-muted); margin-top: 2px; }
+.tx-blast-count { font-size: .8rem; color: var(--op-muted); font-variant-numeric: tabular-nums; margin-top: 6px; }
+
+/* Meter (the one place the gradient appears) */
+.tx-meter { height: 8px; border-radius: 999px; background: #E7EEF3; overflow: hidden; margin-top: 6px; }
+.tx-meter-fill {
+  display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(135deg, #E40303, #FFBC00, #FFED00, #008026, #004DFF, #750787);
+}
+
+/* Sticky progress header. Sits under the mobile topbar, at the top on desktop. */
+.tx-sticky {
+  position: sticky; z-index: 12; background: var(--op-paper);
+  padding: 8px 0 10px; border-bottom: 1px solid var(--op-line); margin-bottom: 12px;
+  top: 0;
+}
+@media (max-width: 767px) { .tx-sticky { top: calc(42px + env(safe-area-inset-top)); } }
+.tx-queue-count { font: 800 1.05rem var(--op-font-head); color: var(--op-navy); font-variant-numeric: tabular-nums; }
+.tx-queue-sub { font-size: .8rem; color: var(--op-muted); font-variant-numeric: tabular-nums; }
+
+/* Person card */
+.tx-card { background: var(--op-card); border: 1px solid var(--op-line); border-radius: var(--op-radius); padding: 16px; }
+.tx-card.is-sent { border-color: var(--op-ok); opacity: .62; }
+.tx-card.is-skipped { opacity: .62; }
+.tx-person-name { font: 800 1.35rem var(--op-font-head); color: var(--op-navy); line-height: 1.15; }
+@media (max-width: 640px) { .tx-person-name { font-size: 1.15rem; } }
+.tx-person-sub { font-size: .85rem; color: var(--op-muted); margin-top: 2px; overflow-wrap: anywhere; }
+
+.tx-badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+.tx-badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: .68rem; font-weight: 800; letter-spacing: .03em; }
+.tx-badge-ok    { background: #E8F6EF; color: var(--op-ok); }
+.tx-badge-warn  { background: #FDF3E7; color: var(--op-warn); }
+.tx-badge-alert { background: #FBEDEC; color: var(--op-bad); }
+
+.tx-warn { border-radius: 10px; padding: 10px 12px; font-size: .84rem; margin-top: 10px; background: #FDF3E7; color: #7A5312; }
+.tx-warn-alert { background: #FBEDEC; color: #8C2F28; }
+
+.tx-phone-row { margin: 12px 0 0; }
+.tx-phone-big { font: 800 1.25rem var(--op-font-head); color: var(--op-navy); font-variant-numeric: tabular-nums; }
+.tx-phone-raw { font-size: .75rem; color: var(--op-muted); font-variant-numeric: tabular-nums; }
+
+.tx-msg {
+  width: 100%; min-height: 150px; margin-top: 12px; padding: 12px 13px;
+  border: 1px solid var(--op-line); border-radius: 10px; background: #fff;
+  font-family: var(--op-font-body); font-size: 16px; /* 16px prevents iOS zoom */
+  line-height: 1.5; color: var(--op-ink); box-sizing: border-box; resize: vertical;
+}
+.tx-msg-meta { display: flex; justify-content: space-between; gap: 8px; font-size: .74rem; color: var(--op-muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.tx-edited { color: var(--op-warn); font-weight: 700; }
+
+/* Actions: full-width and thumb-sized on phones */
+.tx-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.tx-actions .btn { flex: 1 1 auto; min-height: 50px; min-width: 132px; }
+.tx-next {
+  width: 100%; min-height: 58px; margin-top: 10px;
+  background: var(--op-ok); border-color: var(--op-ok); color: #fff;
+  font-weight: 800; font-size: 1rem;
+}
+.tx-minor { display: flex; gap: 8px; margin-top: 8px; }
+.tx-minor .btn { flex: 1 1 0; min-height: 42px; font-size: .82rem; }
+
+/* Undo toast: must clear the bottom tab bar on phones */
+.tx-undo {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(78px + env(safe-area-inset-bottom)); z-index: 60;
+  display: flex; align-items: center; gap: 12px; max-width: 92vw;
+  background: var(--op-navy); color: #fff; padding: 10px 12px 10px 16px;
+  border-radius: 12px; box-shadow: 0 6px 20px rgba(15, 34, 51, .35); font-size: .86rem;
+}
+@media (min-width: 768px) { .tx-undo { bottom: 24px; } }
+.tx-undo button {
+  background: var(--op-blue); color: var(--op-navy); border: 0; border-radius: 8px;
+  padding: 8px 14px; font: 800 .8rem var(--op-font-body); cursor: pointer; min-height: 38px;
+}
+
+/* Full list mode */
+.tx-row {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  background: var(--op-card); border: 1px solid var(--op-line); border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 8px; font: inherit; cursor: pointer; min-height: var(--op-tap);
+}
+.tx-row-dot { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 50%; background: #C8D5DE; }
+.tx-row-dot.is-sent { background: var(--op-ok); }
+.tx-row-dot.is-skipped { background: var(--op-warn); }
+.tx-row-main { flex: 1 1 auto; min-width: 0; }
+.tx-row-name { font-weight: 700; font-size: .94rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tx-row-sub { font-size: .78rem; color: var(--op-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tx-row-idx { flex: 0 0 auto; font-size: .78rem; color: var(--op-muted); font-variant-numeric: tabular-nums; }
+
+/* Build drawer */
+.tx-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 640px) { .tx-grid2 { grid-template-columns: 1fr; } }
+.tx-preview {
+  background: #F2F7FA; border: 1px solid var(--op-line); border-radius: 10px;
+  padding: 12px; font-size: .88rem; line-height: 1.5; white-space: pre-wrap; margin-top: 6px;
+}
+.tx-check { display: flex; gap: 9px; align-items: start; font-size: .84rem; margin: 10px 0; line-height: 1.4; }
+.tx-check input { margin-top: 3px; flex: 0 0 auto; width: 18px; height: 18px; }

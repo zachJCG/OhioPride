@@ -44,9 +44,18 @@ Top-level pages (under `public/`):
 ### Admin console (2026-08 overhaul)
 
 - **Ported to the App Router** under `app/(admin)/admin/`: login, dashboard,
-  menu, contacts, endorsements (+ `[id]` candidate pages), users. Everything
-  else still serves from `public/admin/` through the old shell
+  menu, contacts, endorsements (+ `[id]` candidate pages), users, texting.
+  Everything else still serves from `public/admin/` through the old shell
   (`admin-shell.js`) until ported.
+- **Supabase connection values** for the browser, the middleware, and every
+  caller-JWT server function come from `lib/supabase-public.mjs` (env with a
+  public-literal fallback). Do not reintroduce a hard dependency on
+  `NEXT_PUBLIC_SUPABASE_*` or `SUPABASE_ANON_KEY`: both were unset in
+  production and took the admin down on 2026-08-06.
+- **GRANTs are a separate layer from RLS.** `contacts_directory` is
+  security_invoker, so a missing `GRANT SELECT ... TO authenticated` on a
+  joined table (that was `donors`) breaks the whole module before any policy
+  runs.
 - **Sessions are cookies** (`@supabase/ssr` format). Root `middleware.js`
   gates `/admin/*` server-side; the static pages share the same session via a
   format-compatible cookie storage adapter inlined in `admin-shell.js` and
