@@ -143,6 +143,7 @@ await check('redirect ', '/admin', (res) => {
   return loc.startsWith('/admin/login') ? null : `location ${loc}, want /admin/login`;
 });
 await check('redirect ', '/admin/finance', gated(redirectsTo('/admin/finance/budget', 307)));
+await check('redirect ', '/admin/donors', gated(redirectsTo('/admin/contacts?seg=founding', 307)));
 
 // Next matches sources case-insensitively, so /prtraining is served directly.
 // A redirect here would match its own destination and loop.
@@ -155,6 +156,7 @@ await check('rewrite  ', '/admin/finance/budget/revenue', gated(serves('html')))
 // Ported App Router admin pages.
 await check('app-route', '/admin/dashboard', gated(serves('html')));
 await check('app-route', '/admin/menu', gated(serves('html')));
+await check('app-route', '/admin/contacts', gated(serves('html')));
 
 for (const path of ASSETS)
   await check('asset    ', path, (res) => (res.status === 200 ? null : `status ${res.status}, want 200`));

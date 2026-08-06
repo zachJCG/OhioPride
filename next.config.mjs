@@ -97,6 +97,9 @@ const nextConfig = {
       { source: '/launch-day', destination: '/', permanent: true },
       { source: '/launch-day.html', destination: '/', permanent: true },
       { source: '/rsvp', destination: '/', permanent: true },
+      // Donors folded into the streamlined Contacts module (2026-08).
+      { source: '/admin/donors', destination: '/admin/contacts?seg=founding', permanent: false },
+      { source: '/admin/fundraising/donors', destination: '/admin/contacts?seg=donors', permanent: false },
     ];
   },
 

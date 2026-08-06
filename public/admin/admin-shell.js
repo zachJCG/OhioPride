@@ -62,7 +62,6 @@
       items: [
         { id: 'volunteers',   href: '/admin/volunteers',   label: 'Volunteers',   icon: 'users',      permission: ['volunteers','read'] },
         { id: 'internships',  href: '/admin/internships',  label: 'Internships',  icon: 'briefcase',  permission: ['internships','read'] },
-        { id: 'donors',       href: '/admin/donors',      label: 'Donors',       icon: 'heart',      permission: ['donors','read'] },
         { id: 'contacts',     href: '/admin/contacts',     label: 'Contacts',     icon: 'idcard',     permission: ['contacts','read'] },
         { id: 'networking',   href: '/admin/networking',   label: 'Networking',   icon: 'network',    permission: ['networking','read'] },
         { id: 'pride',        href: '/admin/pride',        label: 'Events',       icon: 'flag',       permission: ['pride','read'] },
@@ -94,7 +93,6 @@
         { id: 'fundraising',             href: '/admin/fundraising',               label: 'Dashboard',       icon: 'dollar',    permission: ['fundraising','read'] },
         { id: 'events',                  href: '/admin/events',                     label: 'Events',          icon: 'calendar',  permission: ['events','read'] },
         { id: 'fundraising_individuals', href: '/admin/fundraising/individuals',    label: 'PAC Individuals', icon: 'funnel',    permission: ['pac_prospects','read'] },
-        { id: 'fundraising_donors',      href: '/admin/fundraising/donors',         label: 'Secured Donors',  icon: 'heart',     permission: ['donors','read'] },
       ]
     },
     {
