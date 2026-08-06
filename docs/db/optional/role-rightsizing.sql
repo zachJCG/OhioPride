@@ -1,0 +1,11 @@
+-- OPTIONAL. Everyone active is currently super_admin (plus the correct granular roles added 2026-08-06).
+-- When the board is ready, remove blanket super_admin from non-officers so module permissions actually bite.
+-- Review before running; keep at least Zach as super_admin.
+--
+-- delete from public.admin_user_roles aur
+-- using public.admin_users au
+-- where aur.user_id = au.id
+--   and aur.role_slug = 'super_admin'
+--   and lower(au.email::text) not in (
+--     'zach@ohiopride.org'          -- Director
+--   );

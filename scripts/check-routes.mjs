@@ -125,7 +125,7 @@ for (const [path, needle] of PAGES) {
 await check('canonical', '/about.html', redirectsTo('/about', 308));
 // A ported page keeps answering its old .html URL even though the file is gone.
 await check('ported   ', '/credits.html', redirectsTo('/credits', 308));
-await check('canonical', '/admin/users/index.html', redirectsTo('/admin/users', 308));
+await check('canonical', '/admin/tasks/index.html', redirectsTo('/admin/tasks', 308));
 await check('no-loop  ', '/about', serves('html'));
 
 await check('redirect ', '/governorguide', redirectsTo('/governor-guide', 308));
@@ -159,6 +159,7 @@ await check('app-route', '/admin/menu', gated(serves('html')));
 await check('app-route', '/admin/contacts', gated(serves('html')));
 await check('app-route', '/admin/endorsements', gated(serves('html')));
 await check('redirect ', '/admin/endorsements/detail', gated(redirectsTo('/admin/endorsements', 307)));
+await check('app-route', '/admin/users', gated(serves('html')));
 
 for (const path of ASSETS)
   await check('asset    ', path, (res) => (res.status === 200 ? null : `status ${res.status}, want 200`));
