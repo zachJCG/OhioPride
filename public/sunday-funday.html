@@ -107,6 +107,23 @@
         .btn-donate.lg { font-size: 1.15rem; padding: 1.15rem 2.6rem; }
         .ph-hero .donate-note { margin-top: 0.9rem; color: var(--text-soft); font-size: 0.92rem; text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
 
+        /* Partner credits, same slot the Cincinnati page gives its guest
+           artist. Both marks are white on transparent, so the knockout inside
+           the Ohio outline reads as navy exactly like it does on the flyer. */
+        .ph-featuring { display: flex; flex-direction: column; align-items: center; gap: 0.85rem; margin-bottom: 1.7rem; }
+        .ph-featuring .feat-label {
+            font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-soft);
+            text-shadow: 0 1px 10px rgba(0,0,0,0.5);
+        }
+        .ph-featuring .feat-logos { display: flex; align-items: center; justify-content: center; gap: 2.6rem; flex-wrap: wrap; }
+        /* Sized by height, not width: the two marks have different aspect
+           ratios and matching their heights is what makes them look paired. */
+        .ph-featuring .feat-logo {
+            height: clamp(70px, 11vw, 100px); width: auto; display: block;
+            filter: drop-shadow(0 2px 16px rgba(0,0,0,0.45));
+        }
+
         /* ---------- Main layout ---------- */
         .ph-main { padding: 2.5rem 0 1rem; }
         .ph-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 2.5rem; align-items: start; }
@@ -236,6 +253,13 @@
     <span class="ph-eyebrow"><span class="dot"></span> Cleveland &middot; Sunday Funday</span>
     <h1>Cleveland's<br>Pride Hour</h1>
     <p class="tagline">We are bringing Ohio Pride Hour to the Leather Stallion Saloon during Sunday Funday, the tea dance Cleveland has been showing up for on that patio for years. Your contribution is your RSVP, and it powers LGBTQ+ political action across Ohio. Regular bar hours, open patio, everyone welcome.</p>
+    <div class="ph-featuring">
+        <span class="feat-label">In partnership with</span>
+        <div class="feat-logos">
+            <img class="feat-logo" src="/assets/img/events/leather-stallion-logo.png" alt="Leather Stallion Saloon" width="186" height="219">
+            <img class="feat-logo" src="/assets/img/events/cleather-kink-logo.png" alt="CLEather &amp; Kink" width="273" height="300">
+        </div>
+    </div>
     <a class="btn-donate lg" id="heroCta" data-actblue-bare href="#rsvp">RSVP for September 20 &rarr;</a>
     <p class="donate-note">Sunday, September 20, 2026 &nbsp;&middot;&nbsp; 4:00 to 6:00 PM &nbsp;&middot;&nbsp; Leather Stallion Saloon</p>
 </section>
