@@ -1,0 +1,120 @@
+/* Scorecard: grade pills, vote controls, and the draft versus published
+   compare block. Everything else uses admin-theme.css. */
+
+.lg-grade {
+  display: inline-block; min-width: 2.4em; text-align: center;
+  font-weight: 800; font-size: .8rem; padding: 3px 8px;
+  border-radius: 7px; border: 1px solid transparent; white-space: nowrap;
+}
+.lg-grade-aplus  { background: #E3F5EA; color: #146C43; border-color: #BCE3CD; }
+.lg-grade-a      { background: #E8F6EF; color: #1D8A5B; border-color: #C4E6D6; }
+.lg-grade-aminus { background: #EFF6E2; color: #4F7A1E; border-color: #D5E7B9; }
+.lg-grade-b      { background: #F5F8DF; color: #6B7A16; border-color: #E2E8B3; }
+.lg-grade-c      { background: #FBF1DA; color: #8A6100; border-color: #EEDBB0; }
+.lg-grade-d      { background: #FBECDD; color: #A85B12; border-color: #EFD3B6; }
+.lg-grade-f      { background: #FBEDEC; color: #B3372F; border-color: #EFC9C5; }
+.lg-grade-na     { background: #EEF3F7; color: var(--op-muted); border-color: var(--op-line); }
+
+.lg-num { font-variant-numeric: tabular-nums; }
+
+/* Publish-all banner. Warm background so it reads as a pending action. */
+.lg-banner {
+  background: #FDF3E7; border-color: #F2DFC5; margin-bottom: 10px;
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+}
+.lg-banner-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* Filter grid: one column on a phone, wider as room allows. */
+.lg-filters { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0 0 10px; }
+@media (min-width: 560px) { .lg-filters { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .lg-filters { grid-template-columns: repeat(4, 1fr); } }
+
+/* Methodology callout */
+.lg-method { margin-bottom: 12px; }
+.lg-method > summary {
+  cursor: pointer; min-height: var(--op-tap); display: flex; align-items: center;
+  font: 800 .74rem var(--op-font-head); text-transform: uppercase;
+  letter-spacing: .06em; color: var(--op-navy);
+}
+.lg-formula {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--op-paper); border: 1px solid var(--op-line); border-radius: 8px;
+  padding: 10px 12px; margin: 10px 0; font-size: .78rem;
+  overflow-x: auto; white-space: nowrap;
+}
+.lg-scale { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; }
+@media (min-width: 560px) { .lg-scale { grid-template-columns: repeat(2, 1fr); } }
+.lg-scale-row { display: flex; align-items: center; gap: 8px; font-size: .8rem; }
+.lg-scale-row .lg-range { color: var(--op-muted); font-variant-numeric: tabular-nums; }
+.lg-scale-row .lg-meaning { margin-left: auto; color: var(--op-muted); }
+
+/* Draft versus published compare block inside the drawer */
+.lg-compare {
+  display: grid; grid-template-columns: 1fr; gap: 10px;
+  background: var(--op-paper); border: 1px solid var(--op-line);
+  border-radius: var(--op-radius); padding: 12px; margin: 10px 0;
+}
+@media (min-width: 560px) { .lg-compare { grid-template-columns: 1fr 1fr; } }
+.lg-compare .lbl {
+  display: block; font-size: .68rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--op-muted);
+}
+.lg-compare .val {
+  display: flex; align-items: center; gap: 8px; margin-top: 2px;
+  font: 800 1.25rem var(--op-font-head); color: var(--op-navy);
+}
+
+/* Section headers inside the drawer */
+.lg-section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin: 18px 0 6px;
+}
+.lg-section-head h4 {
+  margin: 0; font: 800 .76rem var(--op-font-head);
+  text-transform: uppercase; letter-spacing: .06em; color: var(--op-navy);
+}
+
+/* One recorded roll call */
+.lg-vote {
+  border: 1px solid var(--op-line); border-radius: var(--op-radius);
+  padding: 10px 12px; margin-bottom: 8px;
+}
+.lg-vote-btns { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+.lg-vote-btn {
+  min-width: 44px; min-height: 44px; padding: 0 10px;
+  border: 1px solid var(--op-line); background: #fff; color: var(--op-ink);
+  border-radius: 10px; font: 700 .82rem var(--op-font-body); cursor: pointer;
+}
+.lg-vote-btn.is-active { background: var(--op-navy); border-color: var(--op-navy); color: #fff; }
+.lg-vote-btn:disabled { opacity: .55; cursor: default; }
+.lg-vote-reset { font-weight: 600; font-size: .78rem; }
+.lg-vote-pill {
+  display: inline-block; min-width: 2.2em; text-align: center; padding: 3px 8px;
+  border-radius: 7px; font-weight: 700; font-size: .8rem; border: 1px solid transparent;
+}
+.lg-vote-Y  { background: #E8F6EF; color: #1D8A5B; border-color: #C4E6D6; }
+.lg-vote-N  { background: #FBEDEC; color: #B3372F; border-color: #EFC9C5; }
+.lg-vote-NV { background: #EEF3F7; color: var(--op-muted); border-color: var(--op-line); }
+.lg-vote-E  { background: #FDF3E7; color: var(--op-warn); border-color: #F2DFC5; }
+.lg-exc { font-size: .7rem; font-weight: 800; color: var(--op-warn); text-transform: uppercase; letter-spacing: .04em; }
+
+/* Sponsorship rows */
+.lg-spon {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 0; border-bottom: 1px solid var(--op-line);
+}
+.lg-spon:last-of-type { border-bottom: 0; }
+.lg-spon-bill { flex: 1 1 170px; min-width: 0; }
+.lg-spon .select { width: auto; min-width: 160px; flex: 0 0 auto; }
+
+/* Add-vote form: stacks on a phone, two up when there is room */
+.lg-form { display: grid; grid-template-columns: 1fr; gap: 0 10px; }
+@media (min-width: 520px) { .lg-form { grid-template-columns: 1fr 1fr; } }
+.lg-form .lg-wide { grid-column: 1 / -1; }
+.lg-form-actions { display: flex; gap: 8px; flex-wrap: wrap; grid-column: 1 / -1; margin-top: 4px; }
+
+.lg-confirm {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  background: #FDF3E7; border: 1px solid #F2DFC5; border-radius: 10px;
+  padding: 10px 12px; margin-top: 8px;
+}

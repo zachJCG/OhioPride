@@ -1,0 +1,33 @@
+/* Bills: the shared theme covers the cards, rows, badges, and drawer. Only the
+   editor form grid, the monospaced bill number, and the wrapped prose blocks in
+   the detail view need anything extra. */
+
+.bl-num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 700;
+  color: var(--op-navy);
+}
+
+.bl-figure { font-variant-numeric: tabular-nums; }
+
+/* Filter panel: one column on a phone, wider grids as room allows. */
+.bl-filters { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0 0 10px; }
+@media (min-width: 560px) { .bl-filters { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .bl-filters { grid-template-columns: repeat(4, 1fr); } }
+
+/* Editor form: single column on a phone, two from 520px. */
+.bl-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 520px) { .bl-form { grid-template-columns: 1fr; } }
+.bl-span2 { grid-column: 1 / -1; }
+
+.bl-check {
+  display: flex; align-items: center; gap: 9px;
+  min-height: var(--op-tap); font-size: .88rem;
+}
+.bl-check input { width: 20px; height: 20px; flex: 0 0 auto; }
+
+/* Editorial copy keeps its line breaks. */
+.bl-prose { white-space: pre-wrap; font-size: .88rem; line-height: 1.55; margin: 4px 0 10px; }
+
+.bl-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.bl-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }

@@ -1,0 +1,37 @@
+/* Budget: the month by month rollup table and ledger number alignment.
+   Everything else comes from admin-theme.css. */
+
+/* The rollup is the one place a real table beats stacked cards, so it gets
+   its own scroller instead of letting the page scroll sideways. */
+.fin-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--op-line);
+  border-radius: var(--op-radius);
+  background: #fff;
+}
+
+.fin-table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: .84rem; }
+.fin-table th,
+.fin-table td { padding: 9px 12px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--op-line); }
+.fin-table thead th {
+  font: 700 .68rem var(--op-font-head);
+  text-transform: uppercase; letter-spacing: .05em;
+  color: var(--op-muted); background: var(--op-paper);
+}
+.fin-table tbody tr:last-child td { border-bottom: 0; }
+.fin-table tfoot td { font-weight: 700; background: var(--op-paper); border-bottom: 0; border-top: 1px solid var(--op-line); }
+
+.fin-num { text-align: right; font-variant-numeric: tabular-nums; }
+.fin-table th.fin-num,
+.fin-table td.fin-num { text-align: right; }
+@media (max-width: 767px) { .rowlist .fin-num { text-align: left; } }
+
+.fin-pos { color: var(--op-ok); }
+.fin-neg { color: var(--op-bad); }
+
+/* Expense form: one column on a phone, two up when there is room. */
+.fin-form { display: grid; grid-template-columns: 1fr; gap: 0 10px; }
+@media (min-width: 520px) { .fin-form { grid-template-columns: 1fr 1fr; } }
+.fin-form .fin-wide { grid-column: 1 / -1; }
+.fin-form-actions { display: flex; gap: 8px; flex-wrap: wrap; grid-column: 1 / -1; margin-top: 4px; }
