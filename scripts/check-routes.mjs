@@ -121,6 +121,8 @@ await check('redirect ', '/scorecard/methodology', redirectsTo('/methodology', 3
 await check('redirect ', '/gala', redirectsTo('/', 308));
 await check('redirect ', '/sponsorship', redirectsTo('/', 308));
 await check('redirect ', '/priorities', redirectsTo('/', 308));
+await check('redirect ', '/launch-day', redirectsTo('/', 308));
+await check('redirect ', '/rsvp', redirectsTo('/', 308));
 await check('redirect ', '/admin', redirectsTo('/admin/login', 307));
 await check('redirect ', '/admin/finance', redirectsTo('/admin/finance/budget', 307));
 
@@ -128,7 +130,6 @@ await check('redirect ', '/admin/finance', redirectsTo('/admin/finance/budget', 
 // A redirect here would match its own destination and loop.
 await check('alias    ', '/prtraining', serves('Unlock'));
 
-await check('rewrite  ', '/rsvp', serves('html'));
 await check('rewrite  ', '/internships', serves('html'));
 await check('rewrite  ', '/apply/legislative_internship', serves('html'));
 await check('rewrite  ', '/admin/finance/budget/revenue', serves('html'));

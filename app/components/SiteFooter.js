@@ -64,7 +64,6 @@ const FOOTER_COLUMNS = [
     links: [
       ['/donate', 'Donate'],
       ['/donate/founding-member', 'Founding Membership'],
-      ['/launch-day', 'Launch Day RSVP'],
       ['/volunteer', 'Volunteer'],
       ['/endorsements', 'Endorsed Candidates'],
       ['/endorsement/screening', 'Candidate Endorsement'],

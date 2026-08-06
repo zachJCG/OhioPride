@@ -60,7 +60,7 @@ const ALLOW_LIST = new Set([
 // Pages must link the shared template stylesheet AND at least one of
 // the brand stylesheets (each of which @imports the canonical
 // brand-tokens). Most pages link both; a couple of self-contained
-// pages (connect, launch-day) opt out of style.css.
+// pages (connect) opt out of style.css.
 const REQUIRED_LINKS = [
   '/css/site-template.css',
 ];

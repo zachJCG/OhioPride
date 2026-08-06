@@ -2,25 +2,17 @@
    Ohio Pride :: Fundraising section
    Layered on top of admin-shared.css. Brand v2.0:
      PAC accent = Navy  #152233   (data-fund-side="pac")
-     c4  accent = Light Blue #70D6EC (data-fund-side="c4")
    The Pride gradient appears ONLY as a thin accent rule — never on text.
    ========================================================================= */
 
 /* Per-side accent tokens. Navy is dark, so on the dark admin canvas the PAC
-   accent reads through a light keyline; c4's light blue reads as a solid fill. */
+   accent reads through a light keyline. */
 [data-fund-side="pac"] {
   --fund-accent: #152233;
   --fund-accent-strong: #25405c;
   --fund-accent-line: #70D6EC;   /* light keyline so navy stays visible */
   --fund-accent-ink: #ffffff;
   --fund-chip: rgba(112, 214, 236, 0.28);
-}
-[data-fund-side="c4"] {
-  --fund-accent: #70D6EC;
-  --fund-accent-strong: #70D6EC;
-  --fund-accent-line: #152233;
-  --fund-accent-ink: #152233;
-  --fund-chip: rgba(112, 214, 236, 0.18);
 }
 
 /* Thin Pride gradient rule (accent only). */
@@ -56,7 +48,6 @@
   background: var(--fund-accent-line);
   color: var(--fund-accent);
 }
-[data-fund-side="c4"] .fund-wall-tag { color: #fff; }
 .fund-wall-title { font-size: 13px; font-weight: 800; }
 .fund-wall-body  { font-size: 12px; font-weight: 600; opacity: 0.92; }
 
@@ -162,15 +153,11 @@ td.fund-cell-next { white-space: normal; min-width: 150px; }
 .fund-side-panel[data-side="pac"] .fund-side-panel-head {
   background: #152233; color: #fff; border-bottom: 3px solid #70D6EC;
 }
-.fund-side-panel[data-side="c4"] .fund-side-panel-head {
-  background: #70D6EC; color: #152233; border-bottom: 3px solid #152233;
-}
 .fund-side-panel-tag {
   font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
   padding: 3px 9px; border-radius: 999px;
 }
 .fund-side-panel[data-side="pac"] .fund-side-panel-tag { background:#70D6EC; color:#152233; }
-.fund-side-panel[data-side="c4"]  .fund-side-panel-tag { background:#152233; color:#fff; }
 .fund-side-panel-title { font-size: 15px; font-weight: 800; }
 .fund-side-panel-body { padding: 16px 18px; }
 

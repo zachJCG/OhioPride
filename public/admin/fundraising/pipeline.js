@@ -1,10 +1,9 @@
 /* =========================================================================
-   Ohio Pride :: Fundraising pipeline (shared by PAC individuals + c4 companies)
+   Ohio Pride :: Fundraising pipeline (PAC individuals)
    -------------------------------------------------------------------------
-   THE LEGAL WALL: PAC (pac_prospects / pac_pipeline) and c4 (c4_prospects /
-   c4_pipeline) are legally separate. This module is instantiated ONCE per page
-   bound to exactly one side via init(cfg). It never reads or writes the other
-   side's tables, and each page is gated on its own module permission.
+   Instantiated once per page bound to one prospect table via init(cfg);
+   the page is gated on its own module permission. PAC money is tracked on
+   its own and never combined with any other entity's figures.
 
    Frontend only — schema, RLS, RPCs, and views are already wired + verified.
    ========================================================================= */
@@ -126,7 +125,7 @@
           '<div class="admin-panel-empty-eyebrow">Restricted</div>' +
           '<h2>You don’t have access to this pipeline</h2>' +
           '<p>The <code>' + escapeHtml(cfg.module) + '</code> module is limited by role. ' +
-          'PAC and c4 access are granted separately. Ask the Director if you need it.</p>' +
+          'Ask the Director if you need it.</p>' +
         '</div></div>';
     }
 
@@ -150,7 +149,7 @@
         '<div class="fund-gradient-bar" aria-hidden="true"></div>',
 
         '<div class="fund-wall" role="note">',
-          '<span class="fund-wall-tag">' + (cfg.side === 'pac' ? 'PAC' : 'c4') + '</span>',
+          '<span class="fund-wall-tag">PAC</span>',
           '<span>',
             '<span class="fund-wall-title">' + escapeHtml(cfg.wallTitle) + '</span><br/>',
             '<span class="fund-wall-body">' + escapeHtml(cfg.wallBody) + '</span>',
@@ -198,9 +197,7 @@
         '<p class="admin-panel-foot">',
           'Source of truth: <code>' + escapeHtml(cfg.baseTable) + '</code> &middot; ',
           'Stage changes log automatically via <code>' + escapeHtml(cfg.setStageRpc) + '</code>. ',
-          cfg.side === 'pac'
-            ? 'PAC data is never combined with Ohio Pride Action (c4).'
-            : 'c4 data is never combined with Ohio Pride PAC.',
+          'PAC data is never combined with any other entity.',
         '</p>'
       ].join('');
     }
@@ -261,16 +258,6 @@
         var opt = document.createElement('option');
         opt.value = c; opt.textContent = c; cSel.appendChild(opt);
       });
-      // Dynamic type options (c4)
-      if (cfg.typeField && cfg.typeOptions === 'dynamic') {
-        var types = {};
-        state.rows.forEach(function (r) { if (r[cfg.typeField]) types[r[cfg.typeField]] = true; });
-        var tSel = $('filterType');
-        Object.keys(types).sort().forEach(function (t) {
-          var opt = document.createElement('option');
-          opt.value = t; opt.textContent = titleize(t); tSel.appendChild(opt);
-        });
-      }
     }
 
     function renderStats() {
@@ -522,19 +509,13 @@
       var ro = !state.canWrite;
       var dis = ro ? ' disabled' : '';
 
-      // Identity / context block (read-only — side-specific fields).
+      // Identity / context block (read-only).
       var identity = '<dl class="admin-detail-grid">';
       identity += detailRow('Name', row.full_name);
-      if (cfg.side === 'pac') {
-        identity += detailRow('Type', titleize(row.prospect_type));
-        if (row.committee_type) identity += detailRow('Committee type', titleize(row.committee_type));
-        identity += detailRow('Employer', row.employer);
-        identity += detailRow('Occupation', row.occupation);
-      } else {
-        identity += detailRow('Type', titleize(row.prospect_type));
-        identity += detailRow('Sector', titleize(row.sector));
-        if (row.sponsorship_tier) identity += detailRow('Sponsorship tier', titleize(row.sponsorship_tier));
-      }
+      identity += detailRow('Type', titleize(row.prospect_type));
+      if (row.committee_type) identity += detailRow('Committee type', titleize(row.committee_type));
+      identity += detailRow('Employer', row.employer);
+      identity += detailRow('Occupation', row.occupation);
       identity += detailRow('Email', row.email);
       identity += detailRow('Phone', row.phone);
       identity += detailRow('City', row.city);
@@ -584,7 +565,7 @@
         : '<button type="button" class="shell-btn shell-btn-outline" data-drawer-close>Close</button>';
 
       window.AdminShell.openDrawer({
-        eyebrow: (cfg.side === 'pac' ? 'PAC' : 'c4') + ' · ' + (STAGE_LABEL[row.stage] || 'Prospect'),
+        eyebrow: 'PAC · ' + (STAGE_LABEL[row.stage] || 'Prospect'),
         title: row.full_name || 'Prospect',
         bodyHtml:
           '<div class="shell-drawer-section"><h4>Profile</h4>' + identity + '</div>' +

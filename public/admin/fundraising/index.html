@@ -26,7 +26,7 @@
       data-active-nav="fundraising"
       data-page-eyebrow="Fundraising"
       data-page-title="Fundraising Dashboard"
-      data-page-sub="PAC and c4 are legally separate — figures are never combined."
+      data-page-sub="PAC money: founding members, secured gifts, and the individual pipeline."
     ></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -54,7 +54,7 @@
           });
         }
 
-        var state = { client: null, canPac: false, canC4: false };
+        var state = { client: null, canPac: false };
 
         document.addEventListener('admin-shell-ready', function (ev) {
           state.client = (ev.detail || {}).client;
@@ -62,12 +62,10 @@
 
           Promise.all([
             state.client.rpc('has_permission', { p_module: 'fundraising',  p_action: 'read' }),
-            state.client.rpc('has_permission', { p_module: 'pac_prospects', p_action: 'read' }),
-            state.client.rpc('has_permission', { p_module: 'c4_prospects',  p_action: 'read' })
+            state.client.rpc('has_permission', { p_module: 'pac_prospects', p_action: 'read' })
           ]).then(function (res) {
             var canRead = res[0] && res[0].data === true;
             state.canPac = res[1] && res[1].data === true;
-            state.canC4  = res[2] && res[2].data === true;
             if (!canRead) { renderDenied(); return; }
             renderShell();
             loadDashboard();
@@ -90,9 +88,9 @@
           $('shellBody').innerHTML = [
             '<div class="fund-gradient-bar" aria-hidden="true"></div>',
             '<div class="fund-wall" data-fund-side="pac" role="note">',
-              '<span class="fund-wall-tag">Legal wall</span>',
-              '<span><span class="fund-wall-title">PAC and c4 are legally separate entities.</span><br/>',
-              '<span class="fund-wall-body">Ohio Pride PAC (political committee) and Ohio Pride Action (501(c)(4)) money is never combined into a single figure.</span></span>',
+              '<span class="fund-wall-tag">Scope</span>',
+              '<span><span class="fund-wall-title">This dashboard tracks Ohio Pride PAC money only.</span><br/>',
+              '<span class="fund-wall-body">Political committee funds. Figures here are never combined with any other entity.</span></span>',
             '</div>',
             '<div id="raisedRow"></div>',
             '<div class="fund-dash-grid" id="dashGrid"></div>'
@@ -102,15 +100,13 @@
         function loadDashboard() {
           var jobs = [ state.client.from('fundraising_dashboard').select('*').maybeSingle() ];
           jobs.push(state.canPac ? state.client.from('pac_pipeline_by_stage').select('*') : Promise.resolve({ data: [] }));
-          jobs.push(state.canC4  ? state.client.from('c4_pipeline_by_stage').select('*')  : Promise.resolve({ data: [] }));
 
           Promise.all(jobs).then(function (res) {
             if (res[0].error) throw res[0].error;
             var d = res[0].data || {};
             var pacByStage = (res[1] && res[1].data) || [];
-            var c4ByStage  = (res[2] && res[2].data) || [];
             renderRaised(d);
-            renderPanels(d, pacByStage, c4ByStage);
+            renderPanels(d, pacByStage);
           }).catch(function (err) {
             console.error('dashboard load failed', err);
             $('dashGrid').innerHTML = '<div class="admin-panel admin-error">Could not load the fundraising dashboard.</div>';
@@ -139,20 +135,15 @@
             '</div>';
         }
 
-        function renderPanels(d, pacByStage, c4ByStage) {
+        function renderPanels(d, pacByStage) {
           var html = '';
           if (state.canPac) {
             html += sidePanel('pac', 'Ohio Pride PAC', 'PAC', {
               count: d.pac_pipeline_count, committed: d.pac_committed_cents, capacity: d.pac_capacity_cents
             }, pacByStage, '#152233');
           }
-          if (state.canC4) {
-            html += sidePanel('c4', 'Ohio Pride Action', 'c4', {
-              count: d.c4_pipeline_count, committed: d.c4_committed_cents, capacity: d.c4_capacity_cents
-            }, c4ByStage, '#70D6EC');
-          }
           if (!html) {
-            html = '<div class="admin-panel"><p class="admin-muted">You have fundraising access but no PAC or c4 pipeline permission. Ask the Director to grant the side you need.</p></div>';
+            html = '<div class="admin-panel"><p class="admin-muted">You have fundraising access but no pipeline permission. Ask the Director if you need it.</p></div>';
           }
           $('dashGrid').innerHTML = html;
         }

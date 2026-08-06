@@ -2,7 +2,7 @@
 
 Wires MailerLite into the site for two jobs:
 
-1. **Email from `/admin`** — the `/admin/email` page lets a comms admin compose an
+1. **Email from `/admin`** (RETIRED 2026-08 — the composer and its API were removed; kept here for history) — the `/admin/email` page let a comms admin compose an
    email and instant-send it as a campaign to one or more MailerLite groups.
 2. **Email after form submissions** — when someone submits the newsletter,
    volunteer, or internship form, we upsert them into MailerLite and add them to
@@ -44,8 +44,8 @@ Wires MailerLite into the site for two jobs:
 - `api/newsletter-submit.mjs`,
   `api/volunteer-submit.mjs` — sync submitters into MailerLite
   after the DB write (best-effort; never blocks or fails the form).
-- `api/admin-email-send.mjs` — auth-gated
+- `api/admin-email-send.mjs` — auth-gated (removed 2026-08)
   (`has_permission('news','write')`) endpoint that lists groups/campaigns and
   sends a campaign.
-- `admin/email/index.html` — the composer UI (linked in the admin sidebar under
+- `admin/email/index.html` — the composer UI (removed 2026-08; was linked in the admin sidebar under
   **Comms → Email**).

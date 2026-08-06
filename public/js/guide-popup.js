@@ -43,7 +43,6 @@
     '/endorsement',
     '/connect',
     '/contact',
-    '/launch-day',
     '/pride/signup',
   ];
 

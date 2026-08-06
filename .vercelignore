@@ -4,14 +4,9 @@
 #  should not ship as static assets on Vercel.)
 netlify/
 
-# Internal working files, stale site snapshots, and source materials that must
-# never be served publicly from ohiopride.org. The /api functions import from
-# lib/, so lib/ is deliberately NOT ignored here.
-Update/
-OhioPride-Refocused/
-oppr-fix/
-patches/
-ohiopride-pr-bundle 3/
+# Internal working files and source materials that must never be served
+# publicly from ohiopride.org. The /api functions import from lib/, so lib/
+# is deliberately NOT ignored here.
 docs/
 scripts/
 supabase/

@@ -93,6 +93,10 @@ const nextConfig = {
       { source: '/gala', destination: '/', permanent: true },
       { source: '/sponsorship', destination: '/', permanent: true },
       { source: '/priorities', destination: '/', permanent: true },
+      // Launch Day (2026-05-22) is over; page + signup form removed 2026-08.
+      { source: '/launch-day', destination: '/', permanent: true },
+      { source: '/launch-day.html', destination: '/', permanent: true },
+      { source: '/rsvp', destination: '/', permanent: true },
     ];
   },
 
@@ -104,7 +108,6 @@ const nextConfig = {
         ...pages.map((p) => ({ source: p.url, destination: p.file })),
 
         // Aliases that serve another page's HTML without changing the URL.
-        { source: '/rsvp', destination: '/launch-day.html' },
         { source: '/internships', destination: '/volunteer.html?path=internship' },
         { source: '/apply/:position', destination: '/volunteer.html?path=internship&position=:position' },
         { source: '/admin/finance/budget/revenue', destination: '/admin/finance/budget/index.html' },

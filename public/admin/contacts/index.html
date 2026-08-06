@@ -194,15 +194,6 @@
               if (Array.isArray(r.events_interested) && r.events_interested.length) bits.push(r.events_interested.length + ' event(s)');
               return bits.join(' · ') || 'Pride event volunteer';
             } },
-          { table: 'launch_signups', kind: 'Launch sign-up',
-            select: 'organization, title, created_at',
-            when: function (r) { return r.created_at; },
-            body: function (r) {
-              var bits = [];
-              if (r.title) bits.push(esc(r.title));
-              if (r.organization) bits.push(esc(r.organization));
-              return bits.join(', ') || 'Launch sign-up';
-            } },
           { table: 'newsletter_subscribers', kind: 'Newsletter',
             select: 'status, created_at',
             when: function (r) { return r.created_at; },

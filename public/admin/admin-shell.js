@@ -66,14 +66,12 @@
         { id: 'contacts',     href: '/admin/contacts',     label: 'Contacts',     icon: 'idcard',     permission: ['contacts','read'] },
         { id: 'networking',   href: '/admin/networking',   label: 'Networking',   icon: 'network',    permission: ['networking','read'] },
         { id: 'pride',        href: '/admin/pride',        label: 'Events',       icon: 'flag',       permission: ['pride','read'] },
-        { id: 'launch',       href: '/admin/launch-day',   label: 'Launch Day',   icon: 'megaphone',  permission: ['launch','read'] },
         { id: 'users',        href: '/admin/users',        label: 'Admin Users',  icon: 'key',        permission: ['users','read'] },
       ]
     },
     {
       group: 'Comms',
       items: [
-        { id: 'email',        href: '/admin/email',        label: 'Email',        icon: 'mail',       permission: ['news','write'] },
         { id: 'texting',      href: '/admin/texting',      label: 'Text Blast',   icon: 'chat',       permission: ['texting','read'] },
       ]
     },
@@ -91,15 +89,11 @@
       ]
     },
     {
-      // The LEGAL WALL lives here: PAC (pac_prospects) and c4 (c4_prospects)
-      // are gated independently, so a user only sees the side(s) they may access.
       group: 'Fundraising',
       items: [
         { id: 'fundraising',             href: '/admin/fundraising',               label: 'Dashboard',       icon: 'dollar',    permission: ['fundraising','read'] },
         { id: 'events',                  href: '/admin/events',                     label: 'Events',          icon: 'calendar',  permission: ['events','read'] },
-        { id: 'fundraising_calltime',    href: '/admin/fundraising/call-time',      label: 'Call Time',       icon: 'phone',     permission: ['pac_prospects','read'] },
         { id: 'fundraising_individuals', href: '/admin/fundraising/individuals',    label: 'PAC Individuals', icon: 'funnel',    permission: ['pac_prospects','read'] },
-        { id: 'fundraising_companies',   href: '/admin/fundraising/companies',      label: 'c4 Companies',    icon: 'building',  permission: ['c4_prospects','read'] },
         { id: 'fundraising_donors',      href: '/admin/fundraising/donors',         label: 'Secured Donors',  icon: 'heart',     permission: ['donors','read'] },
       ]
     },
@@ -131,7 +125,6 @@
     star:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><polygon points="12 3 14.5 9 21 9.7 16 14 17.5 20.5 12 17 6.5 20.5 8 14 3 9.7 9.5 9 12 3"/></svg>',
     gavel:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="m14 4 6 6"/><path d="m11 7 6 6"/><path d="m5 13 6 6"/><path d="m8 10 6 6"/><path d="M14.5 14.5 4 21"/></svg>',
     capitol:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 21h18"/><path d="M5 21V11"/><path d="M19 21V11"/><path d="M9 21V11"/><path d="M15 21V11"/><path d="M3 11h18"/><path d="M12 3 4 8h16l-8-5z"/></svg>',
-    megaphone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 11v2c0 .55.45 1 1 1h2l5 4V6L6 10H4c-.55 0-1 .45-1 1z"/><path d="M14 7c1.5 1 2.5 2.7 2.5 5s-1 4-2.5 5"/></svg>',
     flag:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/></svg>',
     funnel:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 5h18l-7 8.5V20l-4 1v-7.5L3 5z"/></svg>',
     network:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="7" r="2.4"/><circle cx="12" cy="18" r="2.4"/><path d="M7.8 7.4 10.4 16M16.5 8.8 12.9 16.2M8 6.4h7.6"/></svg>',
@@ -139,10 +132,7 @@
     briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>',
     wallet:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 13h.01"/><path d="M3 11h18"/></svg>',
     dollar:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><line x1="12" y1="3" x2="12" y2="21"/><path d="M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3 2 2.7 4.5 3 4.5 1.3 4.5 3-2 3-4.5 3-4.5-1.3-4.5-3"/></svg>',
-    phone:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7A2 2 0 0 1 22 16.9z"/></svg>',
-    building:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="4" y="3" width="11" height="18" rx="1"/><path d="M15 9h5v12h-5"/><path d="M8 7h3M8 11h3M8 15h3"/></svg>',
     check:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="m8 12 2.5 2.5L16 9"/></svg>',
-    mail:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
     chat:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><path d="M21 12a8 8 0 0 1-8 8H8l-4 3v-4.6A8 8 0 0 1 13 4a8 8 0 0 1 8 8z"/><path d="M9 11h8M9 15h5"/></svg>',
     calendar:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="shell-nav-icon"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v4"/><path d="M16 3v4"/><path d="m9 15 2 2 4-4"/></svg>',
     menu:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="4" y1="7"  x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>',
@@ -166,11 +156,10 @@
 
   var state = {
     session: null,
-    adminUser: null,         // row from public.admin_users (or pseudo-row from admin_emails)
+    adminUser: null,         // row from public.admin_users
     roles: [],               // [{slug, label}]
     permSet: new Set(),      // "<module>:<action>" lookup
     activeNav: 'dashboard',
-    isLegacyAdmin: false,    // true when only in admin_emails, not in admin_users
   };
 
   window.AdminShell = {
@@ -251,51 +240,25 @@
   // -------------------------------------------------------------------
   // Load user + roles + permissions
   // -------------------------------------------------------------------
+  // Access truth lives in admin_users + admin_user_roles + role_permissions.
+  // (The old admin_emails allowlist was retired 2026-08-06.)
   function loadUserAndPermissions() {
     var email = (state.session.user.email || '').toLowerCase();
 
-    // 1) Try admin_users (post-migration).
     return client
       .from('admin_users')
       .select('id, email, full_name, title, is_active')
       .eq('email', email)
       .maybeSingle()
       .then(function (r) {
-        if (r.data) {
+        if (r.data && r.data.is_active) {
           state.adminUser = r.data;
           return loadRolesFor(r.data.id);
         }
-        // 2) Fall back to admin_emails (legacy / pre-migration).
-        return client
-          .from('admin_emails')
-          .select('email')
-          .eq('email', email)
-          .maybeSingle()
-          .then(function (r2) {
-            if (r2.data) {
-              state.isLegacyAdmin = true;
-              state.adminUser = {
-                id: null,
-                email: r2.data.email,
-                full_name: humanizeEmail(r2.data.email),
-                title: 'Super Admin',
-                is_active: true
-              };
-              state.roles = [{ slug: 'super_admin', label: 'Super Admin' }];
-              // Synthesize permissions for the legacy super_admin.
-              ['dashboard','tasks','volunteers','endorsements','donors','contacts','prospects','fundraising','pac_prospects','c4_prospects','networking','bills','legislators','news','board','launch','pride','finance','users','settings','internships']
-                .forEach(function (m) {
-                  ['read','write','admin','manage_users'].forEach(function (a) {
-                    state.permSet.add(m + ':' + a);
-                  });
-                });
-              return;
-            }
-            // Not in either table — kick to login.
-            return client.auth.signOut().then(function () {
-              window.location.replace(CONFIG.LOGIN_PATH);
-            });
-          });
+        // No active admin_users row — kick to login.
+        return client.auth.signOut().then(function () {
+          window.location.replace(CONFIG.LOGIN_PATH);
+        });
       });
   }
 
