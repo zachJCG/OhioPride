@@ -1,0 +1,104 @@
+/* Networking: the region strip, the path cards, the intro list, the activity
+   timeline, and the card capture screen are the only shapes admin-theme.css
+   does not already cover. Everything else reuses the shared classes. */
+
+/* Region rollup: scrolls sideways on a phone and doubles as the region filter. */
+.nw-strip {
+  display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 10px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.nw-strip::-webkit-scrollbar { display: none; }
+.nw-region {
+  flex: 0 0 auto; min-width: 132px; min-height: var(--op-tap);
+  display: block; text-align: left; cursor: pointer; font: inherit;
+  background: var(--op-card); border: 1px solid var(--op-line);
+  border-radius: var(--op-radius); padding: 8px 11px;
+}
+.nw-region[aria-pressed="true"] {
+  border-color: var(--op-navy); box-shadow: inset 0 0 0 1px var(--op-navy); background: #F2F7FA;
+}
+.nw-region-label {
+  display: block; font-size: .68rem; font-weight: 800; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--op-muted); white-space: nowrap;
+}
+.nw-region-count {
+  display: block; margin-top: 2px; font: 800 1.05rem var(--op-font-head);
+  color: var(--op-navy); font-variant-numeric: tabular-nums;
+}
+.nw-region-sub {
+  display: block; min-height: 1em; font-size: .72rem; color: var(--op-muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.nw-due { color: var(--op-warn); font-weight: 700; }
+
+/* Warmth pill on rows and in the drawer head. */
+.nw-pill {
+  display: inline-block; padding: 3px 9px; border-radius: 999px;
+  font-size: .68rem; font-weight: 800; letter-spacing: .02em; color: #fff; white-space: nowrap;
+}
+
+/* Filter panel: one column on a phone, wider grids as room allows. */
+.nw-filters { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0 0 10px; }
+@media (min-width: 560px) { .nw-filters { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .nw-filters { grid-template-columns: repeat(3, 1fr); } }
+
+/* Paths to targets. Stated as .card.nw-path so the tighter padding wins over
+   the shared .card rule no matter which stylesheet the bundler emits first. */
+.card.nw-path {
+  display: block; width: 100%; box-sizing: border-box; text-align: left; font: inherit;
+  cursor: pointer; margin-bottom: 8px; padding: 11px 13px;
+}
+.nw-path-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.nw-path-connectors { margin-top: 4px; font-size: .84rem; line-height: 1.45; overflow-wrap: anywhere; }
+.nw-stars { color: var(--op-warn); letter-spacing: 1px; font-size: .8rem; white-space: nowrap; }
+.nw-num { font-variant-numeric: tabular-nums; }
+
+/* Drawer form: one column on a phone, two side by side once there is room. */
+.nw-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 520px) { .nw-form { grid-template-columns: 1fr; } }
+.nw-span2 { grid-column: 1 / -1; }
+.nw-check { display: flex; align-items: center; gap: 9px; min-height: var(--op-tap); font-size: .88rem; }
+.nw-check input { width: 20px; height: 20px; flex: 0 0 auto; }
+
+/* Introduction paths list. */
+.nw-paths { list-style: none; margin: 6px 0 0; padding: 0; }
+.nw-paths li {
+  padding: 8px 0; border-bottom: 1px solid var(--op-line);
+  font-size: .88rem; overflow-wrap: anywhere;
+}
+.nw-paths li:last-child { border-bottom: 0; }
+
+/* Activity timeline. */
+.nw-timeline { list-style: none; margin: 10px 0 0; padding: 0; }
+.nw-act {
+  position: relative; margin-left: 6px; padding: 0 0 14px 22px;
+  border-left: 2px solid var(--op-line);
+}
+.nw-act:last-child { border-left-color: transparent; padding-bottom: 0; }
+.nw-act-dot {
+  position: absolute; left: -11px; top: 0; width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--op-card);
+  border: 2px solid var(--op-blue); font-size: 10px; line-height: 1;
+}
+.nw-act-subject { font-size: .92rem; font-weight: 700; }
+.nw-act-body { font-size: .88rem; margin-top: 2px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.nw-act-meta { font-size: .74rem; color: var(--op-muted); margin-top: 3px; overflow-wrap: anywhere; }
+.nw-act-type { text-transform: uppercase; letter-spacing: .05em; font-weight: 800; }
+
+/* Card capture. */
+.nw-cap { display: grid; gap: 14px; }
+@media (min-width: 900px) { .nw-cap { grid-template-columns: minmax(0, 380px) 1fr; align-items: start; } }
+.nw-drop {
+  display: block; width: 100%; box-sizing: border-box; text-align: center; font: inherit;
+  cursor: pointer; padding: 18px; min-height: var(--op-tap);
+  border: 2px dashed var(--op-line); border-radius: var(--op-radius); background: var(--op-card);
+}
+.nw-drop:hover { border-color: var(--op-blue); }
+.nw-preview { max-width: 100%; max-height: 220px; border-radius: 10px; margin-top: 12px; }
+.nw-cardtile { display: flex; gap: 12px; margin-bottom: 10px; }
+.nw-thumb {
+  display: block; width: 84px; height: 56px; flex: 0 0 auto; border-radius: 6px;
+  object-fit: cover; background: #EEF3F7; border: 1px solid var(--op-line);
+}
+.nw-cardtile-meta { flex: 1; min-width: 0; }
+.nw-cardtile-notes { font-size: .88rem; margin-top: 6px; white-space: pre-wrap; overflow-wrap: anywhere; }

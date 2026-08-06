@@ -1,0 +1,72 @@
+/* Volunteers: six stat cards, a row grid that carries two inline selects, and
+   the checkbox grids in the drawer. Everything else uses admin-theme.css. */
+
+/* Six stats: two up on a phone, three on a small tablet, one line on desktop.
+   The doubled class keeps these ahead of .kpi-grid whatever order the two
+   stylesheets load in. */
+.kpi-grid.vol-kpis { grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 560px) { .kpi-grid.vol-kpis { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 980px) { .kpi-grid.vol-kpis { grid-template-columns: repeat(6, 1fr); } }
+.kpi-grid.vol-kpis .num { font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+
+/* Filter panel: one column on a phone, wider grids as room allows. */
+.vol-filters { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0 0 10px; }
+@media (min-width: 560px) { .vol-filters { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 980px) { .vol-filters { grid-template-columns: repeat(4, 1fr); } }
+
+/* Rows: stacked cards on a phone, six columns from 768px. The extra class
+   raises specificity over .rowlist .row in the shared theme. */
+@media (min-width: 768px) {
+  .rowlist.vol-rows .row {
+    grid-template-columns: 1.9fr 1fr 1.5fr auto 128px 152px;
+    align-items: start;
+  }
+}
+
+.vol-name {
+  display: block; width: 100%; min-height: var(--op-tap);
+  background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.vol-name strong { display: block; }
+@media (min-width: 768px) { .vol-name { min-height: 0; } }
+
+.vol-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.badge-pride { background: #FDEBF3; color: #A3225C; }
+
+/* Inline selects keep the 16px font on phones so iOS does not zoom, then
+   shrink to row scale once there is a pointer and a wider viewport. */
+.select.vol-inline { width: 100%; }
+@media (min-width: 768px) {
+  .select.vol-inline { min-height: 34px; font-size: .82rem; padding: 0 8px; border-radius: 8px; }
+}
+.vol-status[data-status="new"]       { background: #EAF8FD; color: #0B5E74; }
+.vol-status[data-status="contacted"] { background: #FDF3E7; color: #B7791F; }
+.vol-status[data-status="assigned"]  { background: #E8F6EF; color: #1D8A5B; }
+.vol-status[data-status="inactive"]  { background: #EEF3F7; color: #5B6B77; }
+.vol-status[data-status="declined"]  { background: #FBEDEC; color: #B3372F; }
+
+.vol-cell-label {
+  display: block; font-size: .68rem; font-weight: 700; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--op-muted); margin-bottom: 2px;
+}
+@media (min-width: 768px) { .vol-cell-label { display: none; } }
+
+/* Drawer form */
+.vol-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 520px) { .vol-form { grid-template-columns: 1fr; } }
+.vol-span2 { grid-column: 1 / -1; }
+
+.vol-fieldset { border: 0; margin: 0 0 12px; padding: 0; min-width: 0; }
+.vol-fieldset legend {
+  padding: 0; font-size: .72rem; font-weight: 700; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--op-muted);
+}
+.vol-checks { display: grid; grid-template-columns: 1fr; gap: 2px 12px; }
+@media (min-width: 420px) { .vol-checks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.vol-check {
+  display: flex; align-items: center; gap: 9px; min-height: var(--op-tap);
+  font-size: .88rem; overflow-wrap: anywhere;
+}
+.vol-check input { width: 20px; height: 20px; flex: 0 0 auto; }

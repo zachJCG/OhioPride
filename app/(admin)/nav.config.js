@@ -20,6 +20,7 @@ export const NAV = [
     { id: 'bills',        href: '/admin/bills',        label: 'Bills',        permission: ['bills', 'read'] },
     { id: 'legislators',  href: '/admin/legislators',  label: 'Scorecard',    permission: ['legislators', 'read'] },
     { id: 'pride',        href: '/admin/pride',        label: 'Pride Events', permission: ['pride', 'read'] },
+    { id: 'events',       href: '/admin/events',       label: 'Events & RSVPs', permission: ['events', 'read'] },
   ]},
   { group: 'Comms', items: [
     { id: 'texting',      href: '/admin/texting',      label: 'Text Blast',   permission: ['texting', 'read'] },
