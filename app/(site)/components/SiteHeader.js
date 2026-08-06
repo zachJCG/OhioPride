@@ -37,6 +37,7 @@ function Wordmark() {
 const INFO_LINKS = [
   { href: '/about', label: 'About' },
   { href: '/board', label: 'Board' },
+  { href: '/events', label: 'Events' },
   { href: '/volunteer', label: 'Volunteer' },
   { href: '/endorsements', label: 'Endorsements' },
   { href: '/governor-guide', label: 'Governor Guide 2026' },

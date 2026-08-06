@@ -220,6 +220,7 @@
               <select id="subject" name="subject" required>
                 <option value="">Select a subject</option>
                 <option value="general">General Inquiry</option>
+                <option value="host-an-event">Hosting an Ohio Pride Event</option>
                 <option value="volunteering">Volunteering</option>
                 <option value="founding-membership">Founding Membership</option>
                 <option value="legislative">Legislative Issues</option>
@@ -284,6 +285,28 @@
 <div id="site-footer"></div>
 
     <a href="/donate" class="mobile-donate-fab">Donate</a>
+
+    <script>
+      /* Preselect the subject from ?subject=<value>, so a link like
+         /contact?subject=host-an-event arrives with the dropdown already set.
+         Only values that exist as options are honoured, which keeps arbitrary
+         query strings out of the submitted data. */
+      (function () {
+        var wanted = new URLSearchParams(window.location.search).get('subject');
+        if (!wanted) return;
+        var select = document.getElementById('subject');
+        if (!select) return;
+        var match = Array.prototype.find.call(select.options, function (o) {
+          return o.value && o.value === wanted;
+        });
+        if (!match) return;
+        select.value = match.value;
+        // Nudge focus to the message box: the part they still have to fill in.
+        var message = document.getElementById('message');
+        if (message) message.focus({ preventScroll: true });
+      })();
+    </script>
+
     <script src="/js/main.js" defer></script>
     <script src="/js/enhancements.js" defer></script>
     <script src="/js/site-template.js" defer></script>
