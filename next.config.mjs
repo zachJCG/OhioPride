@@ -100,6 +100,9 @@ const nextConfig = {
       // Donors folded into the streamlined Contacts module (2026-08).
       { source: '/admin/donors', destination: '/admin/contacts?seg=founding', permanent: false },
       { source: '/admin/fundraising/donors', destination: '/admin/contacts?seg=donors', permanent: false },
+      // Old endorsement detail links; ?id= carries through to the queue,
+      // which forwards to /admin/endorsements/<id>.
+      { source: '/admin/endorsements/detail', destination: '/admin/endorsements', permanent: false },
     ];
   },
 

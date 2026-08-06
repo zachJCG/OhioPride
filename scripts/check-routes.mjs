@@ -157,6 +157,8 @@ await check('rewrite  ', '/admin/finance/budget/revenue', gated(serves('html')))
 await check('app-route', '/admin/dashboard', gated(serves('html')));
 await check('app-route', '/admin/menu', gated(serves('html')));
 await check('app-route', '/admin/contacts', gated(serves('html')));
+await check('app-route', '/admin/endorsements', gated(serves('html')));
+await check('redirect ', '/admin/endorsements/detail', gated(redirectsTo('/admin/endorsements', 307)));
 
 for (const path of ASSETS)
   await check('asset    ', path, (res) => (res.status === 200 ? null : `status ${res.status}, want 200`));
