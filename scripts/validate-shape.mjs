@@ -7,8 +7,8 @@
  *
  *   1. SQL migrations      (supabase/migrations/2026051000000*_volunteers.sql,
  *                           supabase/migrations/20260511000000_intern_applications.sql)
- *   2. Vercel function     (api/volunteer-submit.mjs)
- *   3. Browser form        (volunteer.html, js/volunteer-form.js)
+ *   2. Vercel function     (lib/functions/volunteer-submit.mjs)
+ *   3. Browser form        (public/volunteer.html, public/js/volunteer-form.js)
  *
  * No network. No supabase. Just file reads + regex. Run from the repo root:
  *   node scripts/validate-shape.mjs
@@ -90,7 +90,7 @@ console.log('');
 
 // ---------------------------------------------------------------------
 console.log('[4] Vercel function references the right tables and enums');
-const fn = read('api/volunteer-submit.mjs');
+const fn = read('lib/functions/volunteer-submit.mjs');
 assertContainsAll('  function targets both tables', fn, [
   ".from('volunteers')",
   ".from('intern_applications')"
@@ -109,8 +109,8 @@ console.log('');
 
 // ---------------------------------------------------------------------
 console.log('[5] Browser form posts the expected payload');
-const html = read('volunteer.html');
-const js   = read('js/volunteer-form.js');
+const html = read('public/volunteer.html');
+const js   = read('public/js/volunteer-form.js');
 
 assertContainsAll('  HTML has tab toggles', html, [
   'data-path="volunteer"','data-path="internship"'
@@ -141,21 +141,12 @@ assertContainsAll('  JS hides submit until 100%', js, [
 console.log('');
 
 // ---------------------------------------------------------------------
-console.log('[6] Admin pages exist and use the shell');
-const adminVol    = read('admin/volunteers/index.html');
-const adminIntern = read('admin/internships/index.html');
-const adminDonors = read('admin/donors/index.html');
-const shellJs     = read('admin/admin-shell.js');
+console.log('[6] Admin pages read the tables this flow writes');
+const adminVol    = read('app/(admin)/admin/volunteers/page.js');
+const adminIntern = read('app/(admin)/admin/internships/page.js');
 
-assertContainsAll('  /admin/volunteers reads from volunteers',  adminVol,    [".from('volunteers')"]);
+assertContainsAll('  /admin/volunteers reads from volunteers', adminVol, [".from('volunteers')"]);
 assertContainsAll('  /admin/internships reads from intern_applications', adminIntern, [".from('intern_applications')"]);
-assertContainsAll('  /admin/donors reads from founding_members', adminDonors, [".from('founding_members')"]);
-assertContainsAll('  All three use admin-shell',                  adminVol + adminIntern + adminDonors, [
-  '<script src="/admin/admin-shell.js"></script>'
-]);
-assertContainsAll('  Shell nav has internships entry', shellJs, [
-  "id: 'internships'", "icon: 'briefcase'"
-]);
 console.log('');
 
 // ---------------------------------------------------------------------

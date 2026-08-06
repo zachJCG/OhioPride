@@ -78,7 +78,10 @@ const nextConfig = {
       // Section landing pages.
       { source: '/admin', destination: '/admin/login', permanent: false },
       { source: '/admin/finance', destination: '/admin/finance/budget', permanent: false },
-      { source: '/admin/compliance', destination: '/admin/compliance/contributions', permanent: false },
+      // Old per-schedule compliance URLs; the module is one page with tabs now.
+      { source: '/admin/compliance/contributions', destination: '/admin/compliance', permanent: false },
+      { source: '/admin/compliance/expense', destination: '/admin/compliance', permanent: false },
+      { source: '/admin/compliance/loan', destination: '/admin/compliance', permanent: false },
       { source: '/admin/endorsements/login', destination: '/admin/login', permanent: true },
 
       // Spelling variants and legacy URLs.
@@ -116,8 +119,6 @@ const nextConfig = {
         // Aliases that serve another page's HTML without changing the URL.
         { source: '/internships', destination: '/volunteer.html?path=internship' },
         { source: '/apply/:position', destination: '/volunteer.html?path=internship&position=:position' },
-        { source: '/admin/finance/budget/revenue', destination: '/admin/finance/budget/index.html' },
-        { source: '/admin/finance/budget/expense', destination: '/admin/finance/budget/index.html' },
 
         // Compatibility net for pages cached before the Netlify layer was
         // retired. Safe to delete once the logs stop showing hits.

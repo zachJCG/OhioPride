@@ -1,0 +1,72 @@
+/* Internships: six stat cards, a row grid carrying one inline status select,
+   and the long-form answer blocks in the drawer. Everything else comes from
+   admin-theme.css. */
+
+/* Six stats: two up on a phone, three on a small tablet, one line on desktop.
+   The doubled class keeps these ahead of .kpi-grid whatever order the two
+   stylesheets load in. */
+.kpi-grid.int-kpis { grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 560px) { .kpi-grid.int-kpis { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 980px) { .kpi-grid.int-kpis { grid-template-columns: repeat(6, 1fr); } }
+.kpi-grid.int-kpis .num { font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+
+/* Filter panel: one column on a phone, wider grids as room allows. */
+.int-filters { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0 0 10px; }
+@media (min-width: 560px) { .int-filters { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 980px) { .int-filters { grid-template-columns: repeat(4, 1fr); } }
+
+/* Rows: stacked cards on a phone, six columns from 768px. The extra class
+   raises specificity over .rowlist .row in the shared theme. */
+@media (min-width: 768px) {
+  .rowlist.int-rows .row {
+    grid-template-columns: 1.9fr 1.1fr 1.3fr auto auto 148px;
+    align-items: start;
+  }
+}
+
+.int-name {
+  display: block; width: 100%; min-height: var(--op-tap);
+  background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.int-name strong { display: block; }
+@media (min-width: 768px) { .int-name { min-height: 0; } }
+
+.int-cell-label {
+  display: block; font-size: .68rem; font-weight: 700; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--op-muted); margin-bottom: 2px;
+}
+@media (min-width: 768px) { .int-cell-label { display: none; } }
+
+/* Materials links stay a full tap target on phones, tighten on desktop. */
+.int-links { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.int-links a {
+  display: inline-flex; align-items: center; min-height: var(--op-tap);
+  font-size: .84rem; font-weight: 600; color: #0B5E74; text-decoration: underline;
+}
+@media (min-width: 768px) { .int-links a { min-height: 0; } }
+
+.badge-position { background: #EAF8FD; color: #0B5E74; box-shadow: inset 0 0 0 1px #BFE7F4; }
+
+/* Inline select keeps the 16px font on phones so iOS does not zoom, then
+   shrinks to row scale once there is more room. */
+.select.int-inline { width: 100%; }
+@media (min-width: 768px) {
+  .select.int-inline { min-height: 34px; font-size: .82rem; padding: 0 8px; border-radius: 8px; }
+}
+.int-status[data-status="new"]          { background: #EAF8FD; color: #0B5E74; }
+.int-status[data-status="contacted"]    { background: #FDF3E7; color: #B7791F; }
+.int-status[data-status="interviewing"] { background: #EFEBFB; color: #5B3FB5; }
+.int-status[data-status="offered"]      { background: #E8F6EF; color: #1D8A5B; }
+.int-status[data-status="hired"]        { background: var(--op-navy); color: #fff; }
+.int-status[data-status="declined"]     { background: #FBEDEC; color: #B3372F; }
+.int-status[data-status="withdrawn"]    { background: #EEF3F7; color: #5B6B77; }
+
+/* Long-form answers: preserve the applicant's own line breaks, and keep long
+   URLs pasted into an answer from pushing the sheet sideways. */
+.int-pre {
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  font-size: .88rem; line-height: 1.6; color: var(--op-ink);
+  background: var(--op-paper); border: 1px solid var(--op-line);
+  border-radius: 10px; padding: 10px 12px;
+}

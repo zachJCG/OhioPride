@@ -85,7 +85,6 @@ const PAGES = [
   ['/signup', 'html'],
   ['/board-retreat', 'html'],
   ['/admin/login', 'html'],
-  ['/admin/finance/budget', 'html'],
   ['/endorsement/screening/thank-you', 'html'],
   ['/volunteer/events/columbus2026', 'html'],
   // Public since launch: assert on real page copy, not the unlock form.
@@ -125,7 +124,6 @@ for (const [path, needle] of PAGES) {
 await check('canonical', '/about.html', redirectsTo('/about', 308));
 // A ported page keeps answering its old .html URL even though the file is gone.
 await check('ported   ', '/credits.html', redirectsTo('/credits', 308));
-await check('canonical', '/admin/tasks/index.html', redirectsTo('/admin/tasks', 308));
 await check('no-loop  ', '/about', serves('html'));
 
 await check('redirect ', '/governorguide', redirectsTo('/governor-guide', 308));
@@ -151,7 +149,6 @@ await check('alias    ', '/prtraining', serves('Unlock'));
 
 await check('rewrite  ', '/internships', serves('html'));
 await check('rewrite  ', '/apply/legislative_internship', serves('html'));
-await check('rewrite  ', '/admin/finance/budget/revenue', gated(serves('html')));
 
 // Ported App Router admin pages.
 await check('app-route', '/admin/dashboard', gated(serves('html')));
@@ -160,6 +157,12 @@ await check('app-route', '/admin/texting', gated(serves('html')));
 await check('app-route', '/admin/endorsements', gated(serves('html')));
 await check('redirect ', '/admin/endorsements/detail', gated(redirectsTo('/admin/endorsements', 307)));
 await check('app-route', '/admin/users', gated(serves('html')));
+for (const p of [
+  '/admin/members', '/admin/prospects', '/admin/volunteers', '/admin/networking',
+  '/admin/tasks', '/admin/bills', '/admin/legislators', '/admin/pride', '/admin/events',
+  '/admin/fundraising', '/admin/finance/budget', '/admin/compliance', '/admin/internships',
+  '/admin/board-retreat', '/admin/settings', '/admin/board',
+]) await check('app-route', p, gated(serves('html')));
 
 for (const path of ASSETS)
   await check('asset    ', path, (res) => (res.status === 200 ? null : `status ${res.status}, want 200`));

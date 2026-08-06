@@ -43,10 +43,24 @@ Top-level pages (under `public/`):
 
 ### Admin console (2026-08 overhaul)
 
-- **Ported to the App Router** under `app/(admin)/admin/`: login, dashboard,
-  menu, contacts, endorsements (+ `[id]` candidate pages), users, texting.
-  Everything else still serves from `public/admin/` through the old shell
-  (`admin-shell.js`) until ported.
+- **The whole admin is on the App Router** under `app/(admin)/admin/`. The
+  legacy static console is gone: `public/admin/` now holds only the PWA
+  manifest, and `admin-shell.js` / `admin-auth.js` (with their hardcoded anon
+  keys) were deleted with it.
+- **Navigation** is a hamburger-driven left drawer everywhere: it slides over a
+  scrim on phones and collapses to an icon rail on desktop. There is no bottom
+  tab bar. Nav lives in `app/(admin)/nav.config.js`.
+- **People modules share one person record.** Contacts is the spine; Members
+  (founding_members), Prospects (pac_prospects), Volunteers, Networking and
+  event RSVPs all carry `contact_id` and link through the generic
+  `link_or_create_contact` trigger. `person_modules` answers which modules a
+  person appears in. Users is the one administrative exception.
+- **Events** are rows, not code: `events.slug` is the form-name its public page
+  posts, and `/api/form-submit` accepts any form-name matching a slug and
+  records an RSVP. Adding a Pride Hour needs no deploy.
+- **Elections** was deleted rather than ported: its tables were never applied to
+  production, so the page could only error. It comes back when the migration
+  is applied.
 - **Supabase connection values** for the browser, the middleware, and every
   caller-JWT server function come from `lib/supabase-public.mjs` (env with a
   public-literal fallback). Do not reintroduce a hard dependency on
