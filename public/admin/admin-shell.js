@@ -91,7 +91,9 @@
       group: 'Fundraising',
       items: [
         { id: 'fundraising',             href: '/admin/fundraising',               label: 'Dashboard',       icon: 'dollar',    permission: ['fundraising','read'] },
-        { id: 'events',                  href: '/admin/events',                     label: 'Events',          icon: 'calendar',  permission: ['events','read'] },
+        // Events is hidden until the fundraising_events migrations are applied
+        // (the page queries tables that do not exist in production yet).
+        // { id: 'events',               href: '/admin/events',                     label: 'Events',          icon: 'calendar',  permission: ['events','read'] },
         { id: 'fundraising_individuals', href: '/admin/fundraising/individuals',    label: 'PAC Individuals', icon: 'funnel',    permission: ['pac_prospects','read'] },
       ]
     },
