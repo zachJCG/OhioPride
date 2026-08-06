@@ -20,24 +20,56 @@ The **live website files live in a Git repo**, not in this Drive folder.
 
 **If a Drive read fails with `Resource deadlock avoided`, do NOT retry.** Pivot immediately to `git clone` from the repo URL above. The deadlock isn't fixable from inside the session.
 
-## Repo layout (as of 2026-07-30, after `git clone`)
+## Repo layout (as of 2026-08-06, after the admin overhaul)
 
-**The site is a Next.js app now.** Migration phase 0 landed: Next serves the
-existing static site untouched, and pages move to the App Router one at a time.
-Two things to know before editing:
+**The site is a Next.js app.** Next serves the remaining static pages
+untouched and pages move to the App Router one at a time. Things to know
+before editing:
 
-- **Every static page and asset lives under `public/`.** Paths below are
-  relative to it, and URLs are unchanged: `public/about.html` still answers on
-  `/about`. Clean URLs, redirects, and headers are generated in
-  `next.config.mjs` by walking `public/`, so adding a page needs no config edit.
+- **Two root layouts via route groups.** `app/(site)/` carries the public
+  site's layout/components/credits; `app/(admin)/` is the admin console with
+  its own chrome (no marketing header/footer). Never add a top-level
+  `app/layout.js` back — it would collapse the split.
+- **Every remaining static page lives under `public/`.** URLs are unchanged:
+  `public/about.html` answers on `/about`. Clean URLs, redirects, and headers
+  are generated in `next.config.mjs` by walking `public/`.
 - **A ported page beats the static one automatically.** The generated rewrites
-  are `afterFiles`, so the moment `app/scorecard/page.js` exists it wins and
-  `public/scorecard.html` stops being served. That is the migration mechanism;
-  see `docs/nextjs-migration.md`.
+  are `afterFiles`, so the moment an `app/.../page.js` exists it wins. That is
+  the migration mechanism; see `docs/nextjs-migration.md`.
 
 Top-level pages (under `public/`):
-- `index.html`, `about.html`, `board.html`, `connect.html`, `contact.html`, `donate.html`, `donate/founding-member.html`, `founding-members.html`, `index.html`, `issues.html`, `launch-day.html`, `methodology.html`, `privacy.html`, `scorecard.html`, `terms.html`
+- `index.html`, `about.html`, `board.html`, `connect.html`, `contact.html`, `donate.html`, `donate/founding-member.html`, `founding-members.html`, `issues.html`, `methodology.html`, `privacy.html`, `scorecard.html`, `terms.html` (launch-day was removed 2026-08; `/launch-day` and `/rsvp` redirect to `/`)
 - `issues/<bill_id>.html` — one detail page per bill (hb262, sb113, hjr4, etc.)
+
+### Admin console (2026-08 overhaul)
+
+- **Ported to the App Router** under `app/(admin)/admin/`: login, dashboard,
+  menu, contacts, endorsements (+ `[id]` candidate pages), users. Everything
+  else still serves from `public/admin/` through the old shell
+  (`admin-shell.js`) until ported.
+- **Sessions are cookies** (`@supabase/ssr` format). Root `middleware.js`
+  gates `/admin/*` server-side; the static pages share the same session via a
+  format-compatible cookie storage adapter inlined in `admin-shell.js` and
+  `admin-auth.js`. New env: `NEXT_PUBLIC_SUPABASE_URL`,
+  `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- **Contacts is the one people module** (`/admin/contacts`, reads
+  `public.contacts_directory`): donors, founding members, volunteers, network,
+  newsletter, review queue, duplicate merge, ActBlue CSV import
+  (`/api/admin-contacts-import`). `/admin/donors` and
+  `/admin/fundraising/donors` redirect into it.
+- **Endorsements** are status-based (submitted/under_review/endorsed/
+  declined/withdrawn — there are no stage/decision columns live). Votes
+  upsert `endorsement_reviews` on (application_id, reviewer_email); packet
+  PDFs come from `/api/endorsement-pdf` (@react-pdf/renderer).
+- **Removed modules (2026-08-06, DB + code):** c4 companies, launch day,
+  admin email/news, call time. Their tables live in the locked `archive`
+  schema; `admin_emails` is retired — access truth is `admin_users` +
+  `admin_user_roles` + `role_permissions` only. Fundraising events
+  (`/admin/events`) and elections are hidden until their migrations are
+  applied (tables do not exist in production).
+- The 2026-08-06 applied-DB reference and advisor status live in `docs/db/`.
+  After the launch-day removal deploys, run
+  `docs/db/post-code-merge/drop_launch_signups.sql`.
 
 JS (in `js/`):
 - `bill-data.js` — static `BILLS` array (TO BE REPLACED by Supabase fetch)
@@ -57,13 +89,17 @@ exported as App Router route handlers by one-line wrappers in
 There is deliberately no root `api/` directory: under a framework preset the
 framework owns `/api/*`, and keeping both invites a routing conflict.
 Endpoints (`/api/<name>`):
-- `actblue-sync.mjs` — pulls ActBlue donors into `founding_members`
+- `actblue-sync.mjs` — hourly cron; ingests ALL ActBlue contributions (founding refcodes -> `founding_members`, rest -> `donors` with source `actblue`), maps employer/occupation/address, dedupes on the email + receipt pair
 - `board-members.mjs` — feeds `/board`
 - `founding-member-tiers.mjs` — feeds tier cards on `/founding-members` and `/donate/founding-member`
 - `founding-members-progress.mjs` — 1,969 progress bar
 - `public-members.mjs` — public donor roster, grouped by tier
 - `site-leadership.mjs` — footer disclaimer block
 - `submission-created.js` — legacy form handler
+- `admin-contacts-import.mjs` — ActBlue CSV reconciliation for /admin/contacts
+- `admin-user-manage.mjs` — invite / set_password / update_email / send_password_reset
+- `admin-dashboard.mjs` — aggregated stats for /admin/dashboard
+- `app/api/endorsement-pdf/route.js` — candidate packet PDF (implementation lives in the route; it needs JSX)
 
 Supabase migrations (`supabase/migrations/`, all dated 2026-04-22 onward):
 - `20260422015834_initial_schema.sql` — `board_members`, `founding_members` (+ `display_name`, `is_public`, `is_vetted`, `actblue_contribution_id`), `founding_member_tier()` fn, `founding_members_public` view, `founding_members_progress()` rpc
