@@ -53,6 +53,16 @@ const redirectsTo = (location, status) => (res) => {
   return null;
 };
 
+// Admin pages sit behind the session middleware. Without a session cookie
+// (always true in this suite) they answer 307 -> /admin/login when the
+// Supabase env is configured, or serve normally when it is not (local runs
+// without env, where the middleware fails open). Accept either.
+const gated = (assert) => (res, body) => {
+  const loc = res.headers.get('location') || '';
+  if (res.status === 307 && loc.startsWith('/admin/login')) return null;
+  return assert(res, body);
+};
+
 const header = (name, needle) => (res) => {
   const got = res.headers.get(name) || '';
   return got.includes(needle) ? null : `${name} is ${JSON.stringify(got)}, want it to contain ${JSON.stringify(needle)}`;
@@ -105,14 +115,17 @@ const API = [
   '/api/zip-county-lookup?zip=45420',
 ];
 
-for (const [path, needle] of PAGES) await check('page     ', path, serves(needle));
+for (const [path, needle] of PAGES) {
+  await check('page     ', path, path.startsWith('/admin') && path !== '/admin/login'
+    ? gated(serves(needle)) : serves(needle));
+}
 
 // The file path must send you to the canonical clean URL, and that URL must
 // then serve the page rather than bouncing back.
 await check('canonical', '/about.html', redirectsTo('/about', 308));
 // A ported page keeps answering its old .html URL even though the file is gone.
 await check('ported   ', '/credits.html', redirectsTo('/credits', 308));
-await check('canonical', '/admin/login/index.html', redirectsTo('/admin/login', 308));
+await check('canonical', '/admin/users/index.html', redirectsTo('/admin/users', 308));
 await check('no-loop  ', '/about', serves('html'));
 
 await check('redirect ', '/governorguide', redirectsTo('/governor-guide', 308));
@@ -123,8 +136,13 @@ await check('redirect ', '/sponsorship', redirectsTo('/', 308));
 await check('redirect ', '/priorities', redirectsTo('/', 308));
 await check('redirect ', '/launch-day', redirectsTo('/', 308));
 await check('redirect ', '/rsvp', redirectsTo('/', 308));
-await check('redirect ', '/admin', redirectsTo('/admin/login', 307));
-await check('redirect ', '/admin/finance', redirectsTo('/admin/finance/budget', 307));
+// With the middleware active the Location gains ?next=..., so match by prefix.
+await check('redirect ', '/admin', (res) => {
+  if (res.status !== 307) return `status ${res.status}, want 307`;
+  const loc = res.headers.get('location') || '';
+  return loc.startsWith('/admin/login') ? null : `location ${loc}, want /admin/login`;
+});
+await check('redirect ', '/admin/finance', gated(redirectsTo('/admin/finance/budget', 307)));
 
 // Next matches sources case-insensitively, so /prtraining is served directly.
 // A redirect here would match its own destination and loop.
@@ -132,7 +150,11 @@ await check('alias    ', '/prtraining', serves('Unlock'));
 
 await check('rewrite  ', '/internships', serves('html'));
 await check('rewrite  ', '/apply/legislative_internship', serves('html'));
-await check('rewrite  ', '/admin/finance/budget/revenue', serves('html'));
+await check('rewrite  ', '/admin/finance/budget/revenue', gated(serves('html')));
+
+// Ported App Router admin pages.
+await check('app-route', '/admin/dashboard', gated(serves('html')));
+await check('app-route', '/admin/menu', gated(serves('html')));
 
 for (const path of ASSETS)
   await check('asset    ', path, (res) => (res.status === 200 ? null : `status ${res.status}, want 200`));
