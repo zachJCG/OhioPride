@@ -22,7 +22,7 @@ adds the tracking layer on top of `endorsement_applications`:
 | Object | Purpose |
 |--------|---------|
 | `endorsement_applications.stage` | Internal pipeline: `new → screening → board_review → voting → endorsed / declined`, plus side states `tabled` / `withdrawn`. A trigger keeps the public `status` (and therefore `public_endorsements` / `/endorsements`) derived from `stage`. |
-| `endorsement_reviews` | One vote + recommendation per board member. Vote scale: `endorse, lean_endorse, neutral, lean_decline, decline, abstain, recuse`. Unique per `(application_id, reviewer_email)`. |
+| `endorsement_reviews` | One vote + recommendation per board member. Votes are `yes`, `no`, `abstain` — nothing else (the seven-point scale was collapsed on 2026-08-07; see `supabase/migrations/20260807000000_endorsement_votes_yes_no_abstain.sql`). Any nuance goes in `recommendation`. Unique per `(application_id, reviewer_email)`. |
 | `endorsement_assignments` | Which board members are assigned to weigh in on an application. |
 | `endorsement_activity` | Append-only progression timeline (votes, stage moves, assignments, director pushes, decisions). |
 

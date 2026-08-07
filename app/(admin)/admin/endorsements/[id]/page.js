@@ -254,11 +254,14 @@ export default function CandidatePage() {
       <div className="card" style={{ marginBottom: 12 }}>
         <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Your vote</strong>
         {myReview && <span className="badge badge-ok" style={{ marginLeft: 8 }}>Recorded: {VOTE_LABEL[myReview.vote]}</span>}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, margin: '10px 0' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, margin: '10px 0' }}>
           {VOTE_ORDER.map(v => (
             <button key={v}
               className={`btn ${myReview?.vote === v ? 'btn-primary' : ''}`}
-              style={v === 'recuse' ? { gridColumn: '1 / -1' } : undefined}
+              // Three across still clears the 44px tap target; the narrower
+              // padding keeps "Abstain" from clipping on a small phone.
+              style={{ padding: '0 6px' }}
+              aria-pressed={myReview?.vote === v}
               disabled={busyVote != null}
               onClick={() => castVote(v)}>
               {busyVote === v ? 'Saving…' : VOTE_LABEL[v]}
@@ -274,7 +277,7 @@ export default function CandidatePage() {
       <div className="card" style={{ marginBottom: 12 }}>
         <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Board review</strong>
         <div style={{ display: 'flex', gap: 10, margin: '8px 0' }}>
-          {[['For', tally.for], ['Against', tally.against], ['Other', tally.other]].map(([l, n]) => (
+          {[['Yes', tally.yes], ['No', tally.no], ['Abstain', tally.abstain]].map(([l, n]) => (
             <div key={l} className="kpi" style={{ flex: 1, textAlign: 'center', padding: '8px 6px' }}>
               <div className="num">{n}</div><div className="lbl">{l}</div>
             </div>

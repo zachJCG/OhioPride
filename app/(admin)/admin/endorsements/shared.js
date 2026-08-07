@@ -6,18 +6,17 @@ export const STATUS_LABEL = {
   declined: 'Declined', withdrawn: 'Withdrawn',
 };
 export const PATH_LABEL = { statewide: 'Statewide', federal: 'Federal', local: 'Local', judicial: 'Judicial' };
-export const VOTE_ORDER = ['endorse', 'lean_endorse', 'neutral', 'lean_decline', 'decline', 'abstain', 'recuse'];
-export const VOTE_LABEL = {
-  endorse: 'Endorse', lean_endorse: 'Lean endorse', neutral: 'Neutral',
-  lean_decline: 'Lean decline', decline: 'Decline', abstain: 'Abstain', recuse: 'Recuse',
-};
+// A board vote is a decision, not a temperature. Anything a member wants to
+// say beyond yes/no/abstain goes in the recommendation line next to the vote.
+export const VOTE_ORDER = ['yes', 'no', 'abstain'];
+export const VOTE_LABEL = { yes: 'Yes', no: 'No', abstain: 'Abstain' };
 
 export function tallyOf(reviews) {
-  const t = { for: 0, against: 0, other: 0 };
+  const t = { yes: 0, no: 0, abstain: 0 };
   for (const r of reviews) {
-    if (r.vote === 'endorse' || r.vote === 'lean_endorse') t.for++;
-    else if (r.vote === 'decline' || r.vote === 'lean_decline') t.against++;
-    else t.other++;
+    if (r.vote === 'yes') t.yes++;
+    else if (r.vote === 'no') t.no++;
+    else t.abstain++;
   }
   return t;
 }

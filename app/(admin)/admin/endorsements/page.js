@@ -107,7 +107,7 @@ export default function EndorsementsQueue() {
                     {a.is_incumbent && <span className="badge badge-muted">Incumbent</span>}
                     {rs.length > 0 && (
                       <span className="small muted">
-                        {t.for} for · {t.against} against{t.other ? ` · ${t.other} other` : ''}
+                        {t.yes} yes · {t.no} no{t.abstain ? ` · ${t.abstain} abstain` : ''}
                       </span>
                     )}
                     <span style={{ flex: 1 }} />

@@ -8,6 +8,8 @@ create table public.endorsement_reviews (
   reviewer_user_id uuid,
   reviewer_email citext not null,
   reviewer_name text,
+  -- Superseded 2026-08-07: the vote scale is now ('yes','no','abstain'). See
+  -- supabase/migrations/20260807000000_endorsement_votes_yes_no_abstain.sql.
   vote text not null check (vote in ('endorse','lean_endorse','neutral','lean_decline','decline','abstain','recuse')),
   recommendation text,
   created_at timestamptz not null default now(),
