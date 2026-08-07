@@ -277,7 +277,7 @@ export default function CandidatePage() {
       <div className="card" style={{ marginBottom: 12 }}>
         <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Board review</strong>
         <div style={{ display: 'flex', gap: 10, margin: '8px 0' }}>
-          {[['Yes', tally.yes], ['No', tally.no], ['Abstain', tally.abstain]].map(([l, n]) => (
+          {[['Endorse', tally.endorse], ['Decline', tally.decline], ['Abstain', tally.abstain]].map(([l, n]) => (
             <div key={l} className="kpi" style={{ flex: 1, textAlign: 'center', padding: '8px 6px' }}>
               <div className="num">{n}</div><div className="lbl">{l}</div>
             </div>

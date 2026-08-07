@@ -32,10 +32,10 @@ const s = StyleSheet.create({
   foot: { position: 'absolute', bottom: 20, left: 44, right: 44, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7.5, color: MUTED },
 });
 
-// Votes are yes / no / abstain, matching the endorsement_reviews CHECK and
-// the admin vote bar. Keep the three in step: the packet is the record the
-// board signs off on.
-const label = (k) => ({ yes: 'Yes', no: 'No', abstain: 'Abstain' }[k] || k);
+// Votes are endorse / decline / abstain, matching the endorsement_reviews
+// CHECK and the admin vote bar. Keep the three in step: the packet is the
+// record the board signs off on.
+const label = (k) => ({ endorse: 'Endorse', decline: 'Decline', abstain: 'Abstain' }[k] || k);
 const yn = (v) => v === true ? 'Yes' : v === false ? 'No' : '—';
 const dt = (v) => v ? new Date(v).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 
@@ -68,10 +68,10 @@ function Packet({ app, questions, reviews, activity }) {
     for (const [k, prompt] of LEGACY_TEXT) if (app[k]) qa.push({ prompt, value: '', explanation: app[k] });
   }
 
-  const buckets = { yes: 0, no: 0, abstain: 0 };
+  const buckets = { endorse: 0, decline: 0, abstain: 0 };
   for (const r of reviews) {
-    if (r.vote === 'yes') buckets.yes++;
-    else if (r.vote === 'no') buckets.no++;
+    if (r.vote === 'endorse') buckets.endorse++;
+    else if (r.vote === 'decline') buckets.decline++;
     else buckets.abstain++;
   }
 
@@ -111,8 +111,8 @@ function Packet({ app, questions, reviews, activity }) {
 
       <Text style={s.h2}>Board review</Text>
       <View style={s.tallyRow}>
-        <View style={s.tallyBox}><Text style={{ fontSize: 14, fontFamily: 'Helvetica-Bold' }}>{buckets.yes}</Text><Text style={s.lbl}>Yes</Text></View>
-        <View style={s.tallyBox}><Text style={{ fontSize: 14, fontFamily: 'Helvetica-Bold' }}>{buckets.no}</Text><Text style={s.lbl}>No</Text></View>
+        <View style={s.tallyBox}><Text style={{ fontSize: 14, fontFamily: 'Helvetica-Bold' }}>{buckets.endorse}</Text><Text style={s.lbl}>Endorse</Text></View>
+        <View style={s.tallyBox}><Text style={{ fontSize: 14, fontFamily: 'Helvetica-Bold' }}>{buckets.decline}</Text><Text style={s.lbl}>Decline</Text></View>
         <View style={s.tallyBox}><Text style={{ fontSize: 14, fontFamily: 'Helvetica-Bold' }}>{buckets.abstain}</Text><Text style={s.lbl}>Abstain</Text></View>
       </View>
       {reviews.map(r => (
