@@ -1,97 +1,118 @@
 # Ohio Pride PAC :: Endorsement System
 
-Supabase-backed candidate endorsement workflow. Wired against the live
+Supabase-backed candidate endorsement workflow, wired against the live
 `Ohio Pride` Supabase project (ref `dkdxefzhttkmjhdbkvqn`).
+
+## The process, in one place
+
+**Apply → Screening Committee review → Board vote → notify.** Four steps, and
+**no candidate interview** — the Screening Committee works from the application
+and the public record. That sequence is written down in exactly three places,
+and they must not drift apart:
+
+| Where | What it drives |
+|---|---|
+| `ENDORSEMENT_PROCESS` in `lib/endorsements.mjs` | `/endorsements` and the confirmation page |
+| `.apply-steps` in `public/endorsement/screening/index.html` | the strip above the application form |
+| `endorsement_path_meta.process_note` (Supabase) | the per-office note inside the form |
+
+The column was called `interview_note` until 2026-08-08. If you find interview
+language anywhere in this flow, it is a bug.
 
 ## Pages
 
-| Path                              | Audience       | What it does                                             |
-|-----------------------------------|----------------|----------------------------------------------------------|
-| `/endorsement/screening`          | Public         | Multi-step questionnaire. Inserts into `endorsement_applications` as anon. |
-| `/endorsement/screening/thank-you`| Public         | Confirmation page after submit.                          |
-| `/endorsements`                   | Public         | Grid of endorsed candidates from `public_endorsements`, plus a shareable profile view per candidate at `/endorsements/#<slug>`. Photos, card blurbs, and full endorsement copy live in `js/endorsement-content.js` (see the walkthrough at the top of that file). |
-| `/admin/endorsements/login`       | Admin          | Magic-link sign-in via Supabase Auth.                    |
-| `/admin/endorsements`             | Admin          | ATS-style review console: list/filter/sort applications, per-member voting, reviewer assignment, pipeline progression, and the director decision/push controls (all in the slide-out drawer). |
-| `/admin/endorsements/detail`      | Admin          | Legacy deep link — redirects into the console drawer (`?id=`). |
+| Path | Audience | What it does |
+|---|---|---|
+| `/endorsement/screening` | Public | Multi-step questionnaire (still static HTML under `public/`). Inserts into `endorsement_applications` as anon; the question set is loaded from the `endorsement_*` catalog tables, so changing a question needs no deploy. |
+| `/endorsement/screening/thank-you` | Public | App Router. Confirmation, with the four steps and step one marked done. |
+| `/endorsements` | Public | App Router, server rendered from the `public_endorsements` view. Card grid, office/year filters, and the "How endorsements work" explainer. |
+| `/endorsements/<slug>` | Public | App Router. One candidate, with its own title, meta description, and OG card. Statically generated at build and revalidated every 10 minutes, so a new endorsement appears without a deploy. |
+| `/admin/endorsements` | Admin | The queue: **Needs your vote / Open / All**, grouped by status, with the board packet export. |
+| `/admin/endorsements/<id>` | Admin | One candidate: vote bar, board tally, questionnaire, assignments, decision panel, activity trail. |
 
-## Review workflow (ATS for the board)
+`/admin/endorsements/login` and `/admin/endorsements/detail` are legacy URLs and
+redirect (see `next.config.mjs`).
 
-Migration `supabase/migrations/20260703000000_endorsement_review_workflow.sql`
-adds the tracking layer on top of `endorsement_applications`:
+## Adding an endorsement
+
+1. `/admin/endorsements/<id>` → **Record the decision** → **Endorsed**. This
+   stamps `endorsed_at` (a database trigger does it) and, because
+   `is_published` defaults to true, publishes the candidate.
+   Untick **Show on the public endorsements page** to hold an announcement.
+2. Drop the campaign photo in `public/assets/endorsements/<slug>.jpg`.
+3. Add an entry to `lib/endorsement-content.mjs` — photo, one-line `summary`
+   for the card, and the `profile` statement. Read the rule at the top of that
+   file first: **the card summary and the profile must not restate each other.**
+4. Add the candidate's URL to `public/sitemap.xml`.
+
+A candidate with no editorial entry still renders: initial-letter avatar, their
+own bio clearly attributed to them, and a "statement coming soon" line.
+
+## Data model
 
 | Object | Purpose |
-|--------|---------|
-| `endorsement_applications.stage` | Internal pipeline: `new → screening → board_review → voting → endorsed / declined`, plus side states `tabled` / `withdrawn`. A trigger keeps the public `status` (and therefore `public_endorsements` / `/endorsements`) derived from `stage`. |
-| `endorsement_reviews` | One vote + recommendation per board member. Votes are `endorse`, `decline`, `abstain` — nothing else (the seven-point scale was collapsed on 2026-08-07; see `supabase/migrations/20260807001000_endorsement_votes_endorse_decline_abstain.sql`). Any nuance goes in `recommendation`. Unique per `(application_id, reviewer_email)`. |
-| `endorsement_assignments` | Which board members are assigned to weigh in on an application. |
-| `endorsement_activity` | Append-only progression timeline (votes, stage moves, assignments, director pushes, decisions). |
+|---|---|
+| `endorsement_applications` | One row per application. `status` is `submitted → under_review → endorsed / declined`, plus `withdrawn`. There is no `stage` column; the admin drives `status` directly. |
+| `endorsement_applications.endorsed_at` | When the Board endorsed. Stamped by `trg_endorsement_stamp_endorsed_at` on the status change and cleared if the row is reopened. **This is the date the public page shows** — it used to be `updated_at`, so fixing a typo in a bio moved the endorsement date. |
+| `endorsement_applications.is_published` | Whether an endorsed candidate shows publicly. Lets a decision be recorded before it is announced. |
+| `endorsement_reviews` | One vote + recommendation per board member. Votes are `endorse`, `decline`, `abstain` — nothing else. Unique per `(application_id, reviewer_email)`. |
+| `endorsement_assignments` | Which board members are assigned to weigh in. |
+| `endorsement_activity` | Append-only timeline: votes, status moves, assignments. |
+| `endorsement_path_meta`, `endorsement_office_options`, `endorsement_questions` | The application form's catalog: office types, offices, and the per-path question set. |
+| `public_endorsements` | The **only** public surface. Owner-privileged view over the published columns of `status='endorsed' AND is_published` rows. |
 
-### Who can do what (RLS)
+### Questionnaire answers span three eras
 
-- **`endorsements:read`** (board members, chair, director, …) — read every
-  application, every vote, and the timeline; **cast / update their own vote**
-  (their `reviewer_email` is pinned to their JWT email — they can't vote as
-  anyone else, and can't change the application itself).
-- **`endorsements:write`** (`endorsements_chair`, `super_admin` / director) —
-  move the `stage`, assign reviewers, record the decision, edit reviewer
-  notes, and **"Push endorsement"** — publish the endorsement whenever the
-  vote makes the outcome clear, regardless of how many members have voted.
+`lib/endorsement-answers.mjs` is the single reader, shared by the admin
+candidate page and the PDF packet:
 
-Application UPDATE is now gated on `endorsements:write` (previously any active
-admin). Board members influence the outcome through their vote, not by editing
-the record.
+1. `responses` keyed to the path's question catalog (every application since
+   the path-aware form).
+2. The legacy `q1..q10` columns. Some of those rows also carry a `legacy_q*`
+   mirror in `responses`, but the mirror lost the `q*_explanation` text, so the
+   columns win and the mirror is suppressed. **Do not drop those columns** —
+   the mirror is not a complete substitute and the original prompts are no
+   longer recoverable.
+3. Anything else left in `responses`, rendered last so nothing a candidate
+   wrote silently disappears.
+
+## Who can do what (RLS)
+
+- **anon** — may `INSERT` an application with `status='submitted'` and no
+  reviewer fields. **No `SELECT` on `endorsement_applications` at all** (closed
+  2026-08-08: the published anon key could read campaign emails, phone numbers,
+  typed signatures, conflict disclosures, internal reviewer notes, and
+  endorsements that had not been announced yet). Public reads go through
+  `public_endorsements`, which is owner-privileged and therefore unaffected.
+- **`endorsements:read`** (board members, chair, director) — read every
+  application, vote, and timeline entry, and cast/update **their own** vote
+  (`reviewer_email` is pinned to their JWT email).
+- **`endorsements:write`** (`endorsements_chair`, `super_admin`) — record the
+  decision, publish/unpublish, assign reviewers, edit reviewer notes.
+
+Board members influence the outcome through their vote, not by editing the
+record.
 
 ## Supabase wiring
 
-- All pages use the published anon key (already pasted in the inline `CONFIG`
-  block at the top of each `index.html`).
-- RLS policies (live in Supabase, mirrored in
-  `supabase/migrations/20260505000000_endorsement_system.sql`) enforce:
-  - anon may `INSERT` only with `status = 'submitted'` and no reviewer fields.
-  - anon may `SELECT` only rows where `status = 'endorsed'`.
-  - authenticated users may `SELECT`/`UPDATE` all rows iff
-    `is_admin()` returns true (their JWT email is in `public.admin_emails`).
-- No service-role key is ever exposed to the browser.
+- Public connection values come from `lib/supabase-public.mjs` (env with a
+  public-literal fallback). Do not reintroduce a hard dependency on
+  `NEXT_PUBLIC_SUPABASE_*` — both were unset in production and took the admin
+  down on 2026-08-06.
+- `/endorsements` reads the view with the anon key from the server. No anon key
+  and no supabase-js CDN bundle ship to the browser from that page any more.
+- The service-role key is never exposed to the browser.
+- The PDF packet (`/api/endorsement-pdf`) runs on the caller's JWT; RLS and
+  `has_permission('endorsements','read')` gate the data.
 
-## One-time Supabase Auth setup
+## Verifying a change
 
-1. **Authentication > URL Configuration > Redirect URLs**: add
-   `https://ohiopride.org/admin/endorsements` (and any preview URL you want
-   magic links to land on, e.g. `https://ohiopride-git-your-branch.vercel.app/admin/endorsements`).
-2. **Authentication > Providers > Email**: enable magic links if not already on.
-3. **Storage**: create a private bucket named `endorsement-pdfs` (used by the
-   Phase 4 PDF generator; the storage RLS policies in the migration kick in
-   once the bucket exists).
-4. **`admin_emails`**: insert the email(s) of every staffer who needs admin
-   access. Already seeded with `zach@ohiopride.org`.
-
-## Adding an admin
-
-```sql
-insert into public.admin_emails (email, added_by)
-values ('newadmin@ohiopride.org', 'manual')
-on conflict (email) do nothing;
+```bash
+npm run build && npm start &
+node scripts/check-routes.mjs
 ```
 
-That's it. The next time they sign in via magic link, `is_admin()` returns
-true for their JWT and the dashboard renders.
-
-## Local / preview verification
-
-1. Visit `/endorsements` &mdash; should render the empty-state copy ("No
-   endorsements yet"), since `public_endorsements` is empty until a row in
-   `endorsement_applications` flips to `status = 'endorsed'`.
-2. Visit `/endorsement/screening` &mdash; submit a test row. The form
-   redirects to `/endorsement/screening/thank-you`.
-3. Visit `/admin/endorsements` &mdash; should redirect to the login page.
-4. Sign in with a seeded admin email. Magic link arrives via Supabase Auth.
-5. After clicking the link, you land back on the list with your test row.
-6. Open the row, change `status` to `endorsed`, save. Refresh `/endorsements`
-   &mdash; the candidate now appears.
-
-## Phase 4 / 5 (not in this PR)
-
-The PDF generator (`/api/generate-endorsement-pdf`) and the
-Resend-backed email triggers from PR #74's bundle are intentionally out of
-scope for this PR. The "Generate PDF" button on the detail page shows a
-friendly toast until that function is deployed.
+The suite asserts real page copy for `/endorsements`,
+`/endorsements/jeff-givan`, and the confirmation page, plus the folder-index
+redirects. `/endorsements/index.html` has to redirect: without it the URL falls
+through to `/endorsements/[slug]` and 404s as an unknown candidate.

@@ -54,8 +54,14 @@ function cleanUrlFor(file) {
 /* Pages already ported to real App Router routes. Their public/*.html file is
  * deleted, so the generated rules below no longer cover them, but the old
  * .html URL should still land on the page rather than 404 for anyone holding
- * an old link. Add a clean URL here when you delete its static file. */
-const PORTED = ['/credits'];
+ * an old link. Add a clean URL here when you delete its static file.
+ *
+ * Both spellings are redirected because a static page could have been either
+ * `<name>.html` or `<name>/index.html`, and the caller does not know which.
+ * For /endorsements the second form is load bearing rather than cosmetic:
+ * /endorsements/index.html would otherwise be matched by the new
+ * /endorsements/[slug] route and 404 as an unknown candidate. */
+const PORTED = ['/credits', '/endorsements', '/endorsement/screening/thank-you'];
 
 // 404.html is served by Next's not-found handling, not by a rewrite, so it
 // must not claim the /404 URL.
@@ -73,7 +79,10 @@ const nextConfig = {
       // Requesting the file directly lands on the canonical clean URL, which
       // is what cleanUrls did. Without this the same page answers on two URLs.
       ...pages.map((p) => ({ source: p.file, destination: p.url, permanent: true })),
-      ...PORTED.map((url) => ({ source: `${url}.html`, destination: url, permanent: true })),
+      ...PORTED.flatMap((url) => [
+        { source: `${url}.html`, destination: url, permanent: true },
+        { source: `${url}/index.html`, destination: url, permanent: true },
+      ]),
 
       // Section landing pages.
       { source: '/admin', destination: '/admin/login', permanent: false },

@@ -20,8 +20,9 @@ File naming
 - Prefer JPG, ~1080px wide, portrait orientation, face centered.
 - The endorsements grid (`/endorsements`) crops cards to a square with
   `object-position: center 20%`, so keep the subject's face in the
-  upper half. The profile view (`/endorsements/#<slug>`) shows the
-  photo uncropped.
+  upper half. The profile page (`/endorsements/<slug>`) shows the photo
+  uncropped, and uses it as the link-preview image when the page is
+  shared, so it is worth getting right.
 
-These paths are referenced from `js/endorsement-content.js` — see the
+These paths are referenced from `lib/endorsement-content.mjs` — see the
 "HOW TO ADD AN ENDORSEMENT" walkthrough at the top of that file.

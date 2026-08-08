@@ -9,22 +9,9 @@ import { useParams } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import { useAdmin } from '../../../lib/permissions';
 import { exportPdf } from '../pdf-client';
-import { STATUS_ORDER, STATUS_LABEL, PATH_LABEL, VOTE_ORDER, VOTE_LABEL, tallyOf } from '../shared';
-
-const LEGACY_BOOL = [
-  ['q1_nondiscrimination', 'q1_explanation', 'Supports comprehensive nondiscrimination protections'],
-  ['q2_anti_lgbtq_legislation', 'q2_explanation', 'Will oppose anti-LGBTQ+ legislation'],
-  ['q3_conversion_therapy', 'q3_explanation', 'Supports banning conversion therapy'],
-  ['q4_inclusive_education', 'q4_explanation', 'Supports inclusive education'],
-  ['q5_vote_against_rollbacks', 'q5_explanation', 'Will vote against rollbacks of existing protections'],
-];
-const LEGACY_TEXT = [
-  ['q6_priorities', 'Top priorities'],
-  ['q7_legislation', 'Legislation they would champion'],
-  ['q8_safety', 'Community safety'],
-  ['q9_intersection', 'Intersectional equity'],
-  ['q10_why_endorsement', 'Why they seek this endorsement'],
-];
+import { answersFor } from '../../../../../lib/endorsement-answers.mjs';
+import { slugify } from '../../../../../lib/endorsement-slug.mjs';
+import { STATUS_LABEL, PATH_LABEL, VOTE_ORDER, VOTE_LABEL, tallyOf } from '../shared';
 
 const yn = (v) => v === true ? 'Yes' : v === false ? 'No' : 'No answer';
 const dt = (v) => v ? new Date(v).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
@@ -88,38 +75,9 @@ export default function CandidatePage() {
     if (mine?.recommendation) { setRecommendation(mine.recommendation); seededRec.current = true; }
   }, [me, reviews]);
 
-  const qByKey = useMemo(() => Object.fromEntries(questions.map(x => [x.question_key, x])), [questions]);
-
-  const qa = useMemo(() => {
-    if (!app) return [];
-    const responses = app.responses || {};
-    const catalogKeys = Object.keys(responses).filter(k => qByKey[k]);
-    if (catalogKeys.length) {
-      return catalogKeys
-        .sort((a, b) => (qByKey[a].sort_order ?? 999) - (qByKey[b].sort_order ?? 999) || a.localeCompare(b))
-        .map(k => {
-          const raw = responses[k];
-          const ans = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : { value: raw };
-          const type = qByKey[k].response_type || (typeof ans.value === 'boolean' ? 'boolean' : 'long_text');
-          return {
-            key: k,
-            prompt: qByKey[k].prompt,
-            value: type === 'boolean' || typeof ans.value === 'boolean' ? yn(ans.value) : String(ans.value ?? ''),
-            isBool: type === 'boolean' || typeof ans.value === 'boolean',
-            boolVal: ans.value,
-            explanation: ans.explanation || '',
-          };
-        });
-    }
-    const out = [];
-    for (const [k, ek, prompt] of LEGACY_BOOL) {
-      if (app[k] !== null && app[k] !== undefined) out.push({ key: k, prompt, value: yn(app[k]), isBool: true, boolVal: app[k], explanation: app[ek] || '' });
-    }
-    for (const [k, prompt] of LEGACY_TEXT) {
-      if (app[k]) out.push({ key: k, prompt, value: '', isBool: false, explanation: app[k] });
-    }
-    return out;
-  }, [app, qByKey]);
+  // Shared with /api/endorsement-pdf so the packet the board signs off on and
+  // the screen they voted from can never show different answers.
+  const qa = useMemo(() => answersFor(app, questions), [app, questions]);
 
   const myEmail = (me?.email || '').toLowerCase();
   const myReview = reviews.find(r => String(r.reviewer_email || '').toLowerCase() === myEmail);
@@ -154,18 +112,25 @@ export default function CandidatePage() {
     notify('Vote recorded: ' + VOTE_LABEL[vote]);
   }
 
-  async function setStatus(status) {
+  async function setStatus(status, { confirm: confirmText } = {}) {
+    if (confirmText && !window.confirm(confirmText)) return;
     const patch = { status };
     if (status === 'endorsed' || status === 'declined') {
       patch.reviewed_by = me?.email || null;
       patch.reviewed_at = new Date().toISOString();
     }
-    const { error } = await supabase().from('endorsement_applications').update(patch).eq('id', id);
+    // Select the row back rather than merging the patch locally: endorsed_at
+    // is stamped by a database trigger on the status change, so the value the
+    // page should show does not exist until the write lands.
+    const { data, error } = await supabase().from('endorsement_applications')
+      .update(patch).eq('id', id).select().maybeSingle();
     if (error) { notify('Status change failed: ' + error.message); return; }
     await logActivity('status_change', `Status set to ${STATUS_LABEL[status] || status}`);
-    setApp(a => ({ ...a, ...patch }));
+    setApp(a => data || { ...a, ...patch });
     await loadDrawerData();
-    notify('Status updated.');
+    notify(status === 'endorsed' ? 'Recorded as endorsed.'
+         : status === 'declined' ? 'Recorded as declined.'
+         : 'Status updated.');
   }
 
   async function togglePublished() {
@@ -220,6 +185,10 @@ export default function CandidatePage() {
   if (!app) return <div className="card">Loading…</div>;
 
   const name = app.candidate_name || [app.first_name, app.last_name].filter(Boolean).join(' ');
+  // "Open" means the Board has not recorded an outcome yet, so the decision
+  // panel offers Endorse/Decline; the closed states offer Reopen instead.
+  const open = app.status === 'submitted' || app.status === 'under_review';
+  const publicSlug = slugify(name);
 
   return (
     <>
@@ -248,7 +217,11 @@ export default function CandidatePage() {
             </span>
           )}
         </div>
-        <div className="muted small" style={{ marginTop: 6 }}>Submitted {dt(app.created_at)}{app.reviewed_at ? ` · decided ${dt(app.reviewed_at)}` : ''}</div>
+        <div className="muted small" style={{ marginTop: 6 }}>
+          Submitted {dt(app.created_at)}
+          {app.reviewed_at ? ` · decided ${dt(app.reviewed_at)}` : ''}
+          {app.endorsed_at ? ` · endorsement dated ${dt(app.endorsed_at)}` : ''}
+        </div>
       </div>
 
       <div className="card" style={{ marginBottom: 12 }}>
@@ -310,8 +283,8 @@ export default function CandidatePage() {
           <div key={x.key} style={{ padding: '8px 0', borderBottom: '1px solid var(--op-line)' }}>
             <div style={{ fontWeight: 600, fontSize: '.9rem' }}>{x.prompt}</div>
             {x.isBool && (
-              <span className={`badge ${x.boolVal === true ? 'badge-ok' : x.boolVal === false ? 'badge-bad' : 'badge-muted'}`} style={{ marginTop: 4 }}>
-                {x.value}
+              <span className={`badge ${x.boolValue === true ? 'badge-ok' : x.boolValue === false ? 'badge-bad' : 'badge-muted'}`} style={{ marginTop: 4 }}>
+                {yn(x.boolValue)}
               </span>
             )}
             {!x.isBool && x.value && <div style={{ marginTop: 2 }}>{x.value}</div>}
@@ -342,20 +315,68 @@ export default function CandidatePage() {
 
       {canWrite && (
         <div className="card" style={{ marginBottom: 12 }}>
-          <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Director controls</strong>
-          <div style={{ display: 'flex', gap: 8, margin: '8px 0', flexWrap: 'wrap', alignItems: 'center' }}>
-            <label className="muted small" htmlFor="statusSel">Status</label>
-            <select id="statusSel" className="select" style={{ width: 'auto' }} value={app.status} onChange={e => setStatus(e.target.value)}>
-              {STATUS_ORDER.map(s => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
-            </select>
-            {app.status === 'endorsed' && (
-              <label className="small" style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                <input type="checkbox" checked={!!app.is_published} onChange={togglePublished} />
-                Show on the public endorsements page
+          <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Record the decision</strong>
+
+          {/* The status used to be a bare <select> of database values, which
+              made "endorsed" one mis-tap away and said nothing about what the
+              choice does. Each state now offers only the moves that make sense
+              from it, and the two that publish or unpublish a candidate ask
+              first. The states themselves are unchanged — see STATUS_ORDER in
+              ../shared.js, which still mirrors the table's CHECK constraint. */}
+          {open ? (
+            <>
+              <p className="muted small" style={{ margin: '6px 0 10px' }}>
+                {tally.endorse + tally.decline + tally.abstain === 0
+                  ? 'No votes recorded yet. Record the outcome once the Board has voted.'
+                  : `Board so far: ${tally.endorse} endorse · ${tally.decline} decline${tally.abstain ? ` · ${tally.abstain} abstain` : ''}.`}
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <button className="btn btn-primary" onClick={() => setStatus('endorsed', {
+                  confirm: `Record ${name} as ENDORSED?\n\nThis publishes them at ohiopride.org/endorsements and stamps today as the endorsement date.`,
+                })}>Endorsed</button>
+                <button className="btn" onClick={() => setStatus('declined', {
+                  confirm: `Record ${name} as DECLINED?\n\nNothing is published. Remember to email the campaign.`,
+                })}>Declined</button>
+              </div>
+              <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
+                {app.status === 'submitted' && (
+                  <button className="btn btn-sm" onClick={() => setStatus('under_review')}>Move to under review</button>
+                )}
+                <button className="btn btn-sm" onClick={() => setStatus('withdrawn', {
+                  confirm: `Mark ${name} withdrawn? Use this when the campaign pulls out or the candidate leaves the race.`,
+                })}>Candidate withdrew</button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="muted small" style={{ margin: '6px 0 10px' }}>
+                Recorded as <strong>{STATUS_LABEL[app.status] || app.status}</strong>
+                {app.reviewed_at ? ` on ${dt(app.reviewed_at)}` : ''}
+                {app.reviewed_by ? ` by ${app.reviewed_by}` : ''}.
+              </p>
+              <button className="btn btn-sm" onClick={() => setStatus('under_review', {
+                confirm: app.status === 'endorsed'
+                  ? `Reopen ${name}?\n\nThis removes them from the public endorsements page and clears the endorsement date.`
+                  : `Reopen ${name} for review?`,
+              })}>Reopen for review</button>
+            </>
+          )}
+
+          {app.status === 'endorsed' && (
+            <div className={`alert ${app.is_published ? '' : 'alert-error'}`} style={{ marginTop: 12 }}>
+              <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <input type="checkbox" checked={!!app.is_published} onChange={togglePublished} style={{ marginTop: 2 }} />
+                <span>
+                  <strong>Show on the public endorsements page.</strong>{' '}
+                  {app.is_published
+                    ? <>Live at <a href={`/endorsements/${publicSlug}`} target="_blank" rel="noopener">/endorsements/{publicSlug}</a>. Their photo and endorsement statement come from <code>lib/endorsement-content.mjs</code>; without an entry there they show an initial and their own bio.</>
+                    : <>Endorsed but hidden from the public page. Untick until the announcement, then tick to publish.</>}
+                </span>
               </label>
-            )}
-          </div>
-          <label className="field"><span>Reviewer notes (internal)</span>
+            </div>
+          )}
+
+          <label className="field" style={{ marginTop: 12 }}><span>Reviewer notes (internal, never public)</span>
             <textarea className="textarea" value={notes} onChange={e => setNotes(e.target.value)} />
           </label>
           <button className="btn btn-sm" onClick={saveNotes}>Save notes</button>

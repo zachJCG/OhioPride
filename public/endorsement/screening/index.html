@@ -80,6 +80,58 @@
     }
     .apply-hero p + p { margin-top: 0.5rem; font-size: 0.9rem; color: var(--form-text-gray); }
 
+    /* The four-step process, above the form so an applicant knows what they
+       are signing up for before they start typing. Numbers come from the
+       ordered list, so the steps cannot drift out of sequence. */
+    .apply-steps {
+      list-style: none;
+      counter-reset: apply-step;
+      max-width: 900px;
+      margin: 1.6rem auto 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      text-align: left;
+    }
+    .apply-steps li {
+      counter-increment: apply-step;
+      position: relative;
+      padding: 12px 14px 12px 42px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: var(--form-text-gray);
+    }
+    .apply-steps li::before {
+      content: counter(apply-step);
+      position: absolute;
+      left: 12px;
+      top: 11px;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(112, 214, 236, 0.14);
+      border: 1px solid rgba(112, 214, 236, 0.4);
+      color: var(--text-accent);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+    .apply-steps strong {
+      color: var(--text-white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: block;
+    }
+
     /* ── Form shell ───────────────────────────────────────────────────── */
     .form-shell {
       max-width: 760px;
@@ -639,6 +691,7 @@
       }
       .apply-hero h1 { font-size: 1.55rem; }
       .apply-hero p { font-size: 0.9rem; }
+      .apply-steps { grid-template-columns: 1fr; gap: 8px; margin-top: 1.2rem; }
       .form-shell { padding: 0 0.85rem 3rem; }
       .form-step { padding: 22px 18px; }
       .step-nav { padding: 16px 18px; gap: 8px; }
@@ -673,8 +726,19 @@
     <section class="apply-hero" aria-labelledby="page-title">
       <p class="eyebrow">Endorsement Application</p>
       <h1 id="page-title">Apply for an Ohio Pride PAC endorsement.</h1>
-      <p>Ohio Pride PAC endorses candidates who demonstrate strong, consistent support for LGBTQ+ equality. Our Screening Committee does its own research, and the interview is where we go deep.</p>
+      <p>Ohio Pride PAC endorses candidates who demonstrate strong, consistent support for LGBTQ+ equality. Our Screening Committee reads your answers against your public record, and our Board votes.</p>
       <p id="heroPlan">Start by choosing the office you are running for. Your progress autosaves locally as you go, so you can return later on the same device.</p>
+
+      <!-- The same four steps as /endorsements and the confirmation page. If
+           this list changes, change ENDORSEMENT_PROCESS in lib/endorsements.mjs
+           with it, and endorsement_path_meta.process_note in Supabase. There is
+           no interview step in any of them. -->
+      <ol class="apply-steps" aria-label="How the endorsement process works">
+        <li><strong>You apply.</strong> This form, one time. No interview.</li>
+        <li><strong>We review.</strong> Your answers against your public record.</li>
+        <li><strong>The Board votes.</strong> Endorse, decline, or abstain.</li>
+        <li><strong>You hear back.</strong> By email, either way.</li>
+      </ol>
     </section>
 
     <div class="form-shell">
@@ -863,7 +927,7 @@
           <div class="path-intro">
             <h3 class="path-intro-title" id="pathIntroTitle"></h3>
             <p class="path-intro-body" id="pathIntroBody"></p>
-            <p class="path-intro-note" id="pathInterviewNote"></p>
+            <p class="path-intro-note" id="pathProcessNote"></p>
           </div>
 
           <!-- Judicial neutrality callout (rendered above question one). -->
@@ -1142,7 +1206,9 @@
 
       $('#pathIntroTitle').textContent = meta.intro_title || '';
       $('#pathIntroBody').textContent = meta.intro_body || '';
-      $('#pathInterviewNote').textContent = meta.interview_note || '';
+      // Renamed from interview_note on 2026-08-08: we review the application
+      // against the public record and the Board votes. There is no interview.
+      $('#pathProcessNote').textContent = meta.process_note || '';
 
       const noteWrap = $('#neutralityNote');
       if (meta.neutrality_note) {
@@ -1232,7 +1298,7 @@
       const meta = pathMeta(state.path);
       const el = $('#heroPlan');
       if (meta) {
-        el.textContent = 'Plan for about ' + meta.estimated_minutes + ' minutes. Our committee does its own research, and the interview is where we go deep.';
+        el.textContent = 'Plan for about ' + meta.estimated_minutes + ' minutes. Your answers autosave on this device, so you can stop and come back.';
       }
     }
 
