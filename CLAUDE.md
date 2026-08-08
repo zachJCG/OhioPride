@@ -41,6 +41,10 @@ Top-level pages (under `public/`):
 - `index.html`, `about.html`, `board.html`, `connect.html`, `contact.html`, `donate.html`, `donate/founding-member.html`, `founding-members.html`, `issues.html`, `methodology.html`, `privacy.html`, `scorecard.html`, `terms.html` (launch-day was removed 2026-08; `/launch-day` and `/rsvp` redirect to `/`)
 - `issues/<bill_id>.html` — one detail page per bill (hb262, sb113, hjr4, etc.)
 
+Ported public pages (under `app/(site)/`): `/credits`, `/endorsements`,
+`/endorsements/[slug]`, `/endorsement/screening/thank-you`. Add a page's clean
+URL to `PORTED` in `next.config.mjs` when you delete its static file.
+
 ### Admin console (2026-08 overhaul)
 
 - **The whole admin is on the App Router** under `app/(admin)/admin/`. The
@@ -83,7 +87,15 @@ Top-level pages (under `public/`):
 - **Endorsements** are status-based (submitted/under_review/endorsed/
   declined/withdrawn — there are no stage/decision columns live). Votes
   upsert `endorsement_reviews` on (application_id, reviewer_email); packet
-  PDFs come from `/api/endorsement-pdf` (@react-pdf/renderer).
+  PDFs come from `/api/endorsement-pdf` (@react-pdf/renderer). The process is
+  **apply → Screening Committee review → Board vote → notify, with no
+  candidate interview**; that wording lives in `ENDORSEMENT_PROCESS`
+  (`lib/endorsements.mjs`), the `.apply-steps` list on the application form,
+  and `endorsement_path_meta.process_note`. `endorsed_at` is a real column
+  stamped by a trigger — never publish `updated_at` as the endorsement date.
+  Anon has **no SELECT** on `endorsement_applications`; the only public
+  surface is the `public_endorsements` view. Full notes:
+  `docs/endorsements-admin-setup.md`.
 - **Removed modules (2026-08-06, DB + code):** c4 companies, launch day,
   admin email/news, call time. Their tables live in the locked `archive`
   schema; `admin_emails` is retired — access truth is `admin_users` +

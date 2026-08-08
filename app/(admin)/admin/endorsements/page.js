@@ -3,7 +3,7 @@
 // reviewing on their phones. Tap a card for the candidate page + vote bar.
 // Copy stays descriptive throughout (board firewall policy: deliberation
 // records describe candidates; they never carry advocacy language).
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAdmin } from '../../lib/permissions';
 import { exportPdf } from './pdf-client';
@@ -14,11 +14,14 @@ const daysIn = (ts) => {
   return d <= 0 ? 'today' : d === 1 ? '1 day' : `${d} days`;
 };
 
+const isOpen = (a) => a.status === 'submitted' || a.status === 'under_review';
+
 export default function EndorsementsQueue() {
   const { loading: authLoading, me, can } = useAdmin();
   const [apps, setApps] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [q, setQ] = useState('');
+  const [seg, setSeg] = useState('mine');
   const [exporting, setExporting] = useState(false);
   const [toast, setToast] = useState(null);
 
@@ -39,16 +42,51 @@ export default function EndorsementsQueue() {
     })();
   }, []);
 
+  const myEmail = (me?.email || '').toLowerCase();
+
+  /* An open application this member has not voted on. This is the whole reason
+   * a board member opens the module, so it is the default view and its count
+   * is the first thing on the page. */
+  const needsMyVote = useMemo(() => {
+    if (!apps || !myEmail) return [];
+    return apps.filter(a => isOpen(a) && !reviews.some(
+      r => r.application_id === a.id && String(r.reviewer_email || '').toLowerCase() === myEmail,
+    ));
+  }, [apps, reviews, myEmail]);
+
+  /* Land on the queue that has something in it: your votes if you owe any,
+   * otherwise everything still open. Runs once, so it never yanks the view out
+   * from under someone who has picked a tab. */
+  const segChosen = useRef(false);
+  useEffect(() => {
+    if (segChosen.current || !apps || !me) return;
+    segChosen.current = true;
+    if (!needsMyVote.length) setSeg(apps.some(isOpen) ? 'open' : 'all');
+  }, [apps, me, needsMyVote]);
+
+  const counts = useMemo(() => ({
+    mine: needsMyVote.length,
+    open: (apps || []).filter(isOpen).length,
+    all: (apps || []).length,
+  }), [apps, needsMyVote]);
+
   const grouped = useMemo(() => {
     if (!apps) return null;
     const term = q.trim().toLowerCase();
+    const inSeg = seg === 'mine' ? needsMyVote : seg === 'open' ? apps.filter(isOpen) : apps;
     const filtered = term
-      ? apps.filter(a => [a.candidate_name, a.office_sought, a.district, a.party]
+      ? inSeg.filter(a => [a.candidate_name, a.office_sought, a.district, a.party]
           .some(v => String(v || '').toLowerCase().includes(term)))
-      : apps;
+      : inSeg;
     return STATUS_ORDER.map(s => ({ status: s, items: filtered.filter(a => a.status === s) }))
                        .filter(g => g.items.length);
-  }, [apps, q]);
+  }, [apps, q, seg, needsMyVote]);
+
+  const SEGMENTS = [
+    ['mine', 'Needs your vote'],
+    ['open', 'Open'],
+    ['all', 'All'],
+  ];
 
   async function exportAll() {
     setExporting(true);
@@ -61,16 +99,29 @@ export default function EndorsementsQueue() {
     return <div className="alert alert-error">The endorsements module is limited by role. Ask the Director if you need it.</div>;
   }
 
-  const myEmail = (me?.email || '').toLowerCase();
-
   return (
     <>
       <div className="page-head">
         <h2>Endorsements</h2>
-        <p className="sub">Candidate applications, board review, and votes.</p>
+        <p className="sub">
+          {counts.mine
+            ? `${counts.mine} application${counts.mine === 1 ? '' : 's'} waiting on your vote.`
+            : 'Applications, review against the public record, board vote. No candidate interviews.'}
+        </p>
       </div>
 
       <div className="sticky-tools">
+        {/* Three views, not three lists: a card belongs to exactly one, so
+            nothing is shown twice and the counts always add up. */}
+        <div style={{ display: 'flex', gap: 6, marginBottom: 8 }} role="group" aria-label="Which applications">
+          {SEGMENTS.map(([key, label]) => (
+            <button key={key} className={`btn btn-sm ${seg === key ? 'btn-primary' : ''}`}
+                    style={{ flex: 1, padding: '0 6px' }}
+                    aria-pressed={seg === key} onClick={() => setSeg(key)}>
+              {label} ({counts[key]})
+            </button>
+          ))}
+        </div>
         <input className="input" placeholder="Search candidate, office, district…" value={q}
                onChange={e => setQ(e.target.value)} inputMode="search" aria-label="Search applications" />
       </div>
@@ -82,7 +133,11 @@ export default function EndorsementsQueue() {
       </div>
 
       {apps == null ? <div className="card">Loading…</div> : !grouped.length ? (
-        <div className="card muted">No applications match.</div>
+        <div className="card muted">
+          {seg === 'mine' && !q.trim()
+            ? 'You have voted on every open application. Nothing is waiting on you.'
+            : 'No applications match.'}
+        </div>
       ) : grouped.map(g => (
         <section key={g.status} style={{ marginBottom: 16 }}>
           <h3 style={{ font: '700 .8rem var(--op-font-head)', textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--op-muted)', margin: '0 0 8px' }}>

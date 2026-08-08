@@ -85,7 +85,13 @@ const PAGES = [
   ['/signup', 'html'],
   ['/board-retreat', 'html'],
   ['/admin/login', 'html'],
-  ['/endorsement/screening/thank-you', 'html'],
+  // Ported to app/(site)/endorsements. Server rendered now, so the assertion
+  // is on real page copy: if the Supabase read broke, the old page still
+  // served its shell and only the cards went missing.
+  ['/endorsements', 'Pro-equality leadership for Ohio'],
+  ['/endorsements/jeff-givan', 'Why we endorsed Jeff'],
+  ['/endorsement/screening/thank-you', 'Where your application goes next'],
+  ['/endorsement/screening', 'Apply for an Ohio Pride PAC endorsement'],
   ['/volunteer/events/columbus2026', 'html'],
   // Public since launch: assert on real page copy, not the unlock form.
   ['/governor-guide', 'Two roads to the Governor'],
@@ -124,6 +130,15 @@ for (const [path, needle] of PAGES) {
 await check('canonical', '/about.html', redirectsTo('/about', 308));
 // A ported page keeps answering its old .html URL even though the file is gone.
 await check('ported   ', '/credits.html', redirectsTo('/credits', 308));
+// The folder-index spelling matters for /endorsements specifically: without
+// this redirect, /endorsements/index.html falls through to the new
+// /endorsements/[slug] route and 404s as an unknown candidate.
+await check('ported   ', '/endorsements/index.html', redirectsTo('/endorsements', 308));
+await check('ported   ', '/endorsement/screening/thank-you/index.html',
+  redirectsTo('/endorsement/screening/thank-you', 308));
+// An unknown candidate is a 404, not a soft landing on the list.
+await check('404      ', '/endorsements/nobody-by-that-name',
+  (res) => (res.status === 404 ? null : `status ${res.status}, want 404`));
 await check('no-loop  ', '/about', serves('html'));
 
 await check('redirect ', '/governorguide', redirectsTo('/governor-guide', 308));

@@ -6,6 +6,7 @@
 import React from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../../../lib/supabase-public.mjs';
+import { answersFor } from '../../../lib/endorsement-answers.mjs';
 import { renderToBuffer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 export const runtime = 'nodejs';
@@ -39,34 +40,14 @@ const label = (k) => ({ endorse: 'Endorse', decline: 'Decline', abstain: 'Abstai
 const yn = (v) => v === true ? 'Yes' : v === false ? 'No' : '—';
 const dt = (v) => v ? new Date(v).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 
-const LEGACY_QS = [
-  ['q1_nondiscrimination', 'q1_explanation', 'Supports comprehensive nondiscrimination protections'],
-  ['q2_anti_lgbtq_legislation', 'q2_explanation', 'Will oppose anti-LGBTQ+ legislation'],
-  ['q3_conversion_therapy', 'q3_explanation', 'Supports banning conversion therapy'],
-  ['q4_inclusive_education', 'q4_explanation', 'Supports inclusive education'],
-  ['q5_vote_against_rollbacks', 'q5_explanation', 'Will vote against rollbacks of existing protections'],
-];
-const LEGACY_TEXT = [
-  ['q6_priorities', 'Top priorities'], ['q7_legislation', 'Legislation they would champion'],
-  ['q8_safety', 'Community safety'], ['q9_intersection', 'Intersectional equity'], ['q10_why_endorsement', 'Why they seek this endorsement'],
-];
-
 function Packet({ app, questions, reviews, activity }) {
-  const qa = [];
-  const responses = app.responses || {};
-  const pathQs = (questions || []).filter(q => q.path === app.endorsement_path && q.active !== false)
-                                  .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-  if (pathQs.length && Object.keys(responses).length) {
-    for (const q of pathQs) {
-      const r = responses[q.question_key];
-      if (r === undefined || r === null || r === '') continue;
-      const ans = typeof r === 'object' ? r : { value: r };
-      qa.push({ prompt: q.prompt, value: typeof ans.value === 'boolean' ? yn(ans.value) : String(ans.value ?? ''), explanation: ans.explanation || '' });
-    }
-  } else {
-    for (const [k, ek, prompt] of LEGACY_QS) if (app[k] !== null && app[k] !== undefined) qa.push({ prompt, value: yn(app[k]), explanation: app[ek] || '' });
-    for (const [k, prompt] of LEGACY_TEXT) if (app[k]) qa.push({ prompt, value: '', explanation: app[k] });
-  }
+  // Shared with the admin candidate page so the packet the board signs off on
+  // and the screen they voted from can never show different answers.
+  const qa = answersFor(app, questions).map(a => ({
+    prompt: a.prompt,
+    value: a.isBool ? yn(a.boolValue) : a.value,
+    explanation: a.explanation,
+  }));
 
   const buckets = { endorse: 0, decline: 0, abstain: 0 };
   for (const r of reviews) {

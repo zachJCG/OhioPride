@@ -1,0 +1,974 @@
+/* Endorsements — dark theme, mirrors /issues and /scorecard.
+ *
+ * Ported from the <style> block of public/endorsements/index.html. The one
+ * structural change: the profile is a real route now, not a hidden div the
+ * hash router swapped in, so the two views no longer share a stylesheet
+ * scope and nothing here needs [hidden] handling.
+ *
+ * New here: .endorse-process, the four-step explainer. It replaces the loose
+ * "vetted by our Screening Committee and approved by our Board" sentence that
+ * used to be the only description of how any of this works.
+ */
+
+.endorse-page {
+  background: var(--dark-bg);
+}
+
+.endorse-page {
+  --end-card-bg: #132d44;
+  --end-card-border: rgba(255, 255, 255, 0.08);
+  --end-card-border-hover: rgba(255, 255, 255, 0.18);
+  --end-text-gray: #a0b4c8;
+  --end-text-dim: #6889a6;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+.endorse-hero {
+  padding: calc(var(--nav-height) + 56px) 2rem 40px;
+  text-align: center;
+  background: var(--dark-bg);
+}
+.endorse-hero .eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  margin: 0 0 0.85rem;
+}
+.endorse-hero h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 800;
+  color: var(--text-white);
+  margin: 0 0 0.65rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.endorse-hero p {
+  color: var(--text-light);
+  font-size: 1.05rem;
+  max-width: 720px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.endorse-hero .hero-kicker {
+  margin-top: 0.6rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--end-text-dim);
+}
+
+/* ── Filters ──────────────────────────────────────────────────────────── */
+.endorse-controls {
+  position: sticky;
+  top: var(--nav-height);
+  z-index: 90;
+  background: rgba(15, 34, 51, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 14px 0;
+  margin-bottom: 24px;
+}
+.endorse-controls-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.endorse-controls-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--end-text-dim);
+  flex: 0 0 auto;
+}
+.endorse-pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.endorse-pill {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 8px 14px;
+  min-height: 36px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.endorse-pill:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--text-white);
+}
+.endorse-pill:focus-visible {
+  outline: 2px solid var(--text-accent);
+  outline-offset: 2px;
+}
+.endorse-pill.active {
+  background: var(--color-blue);
+  border-color: var(--color-blue);
+  color: var(--text-white);
+}
+.endorse-pill .count {
+  margin-left: 6px;
+  font-weight: 500;
+  opacity: 0.75;
+  font-size: 0.7rem;
+}
+.endorse-year-select {
+  padding: 8px 32px 8px 14px;
+  min-height: 36px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a0b4c8' d='M6 8L0 0h12z'/%3E%3C/svg%3E")
+    right 12px center / 10px 7px no-repeat;
+  color: var(--text-white);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.endorse-year-select:focus {
+  outline: none;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(112, 214, 236, 0.25);
+}
+.endorse-year-select option {
+  background: #1a3a52;
+  color: #fff;
+}
+.endorse-count {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  margin-left: auto;
+  white-space: nowrap;
+}
+.endorse-count strong {
+  color: var(--text-white);
+}
+
+/* ── Card grid ────────────────────────────────────────────────────────── */
+.endorse-grid-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 2rem 3rem;
+}
+.endorse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.endorse-card {
+  background: var(--end-card-bg);
+  border: 1px solid var(--end-card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.endorse-card:hover {
+  border-color: var(--end-card-border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+.endorse-card-stripe {
+  height: 4px;
+  background: var(--brand-pride-gradient-h, var(--ohp-rainbow));
+  flex: 0 0 auto;
+}
+.endorse-card-photolink {
+  display: block;
+  text-decoration: none;
+  background: #152233;
+}
+.endorse-card-photolink:focus-visible {
+  outline: 2px solid var(--text-accent);
+  outline-offset: -2px;
+}
+.endorse-card-photo {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-bottom: 1px solid var(--end-card-border);
+}
+.endorse-card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.endorse-card:hover .endorse-card-photo img {
+  transform: scale(1.02);
+}
+.endorse-card-photo.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, #1a3a52 0%, #234a66 100%);
+  color: var(--text-white);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 4rem;
+  letter-spacing: -0.02em;
+}
+
+.endorse-card-body {
+  padding: 1.25rem 1.4rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+}
+.endorse-card-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0;
+  word-break: break-word;
+}
+.endorse-card-name a {
+  color: var(--text-white);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.endorse-card-name a:hover {
+  color: var(--text-accent);
+}
+.endorse-card-pronouns {
+  font-size: 0.8rem;
+  color: var(--end-text-dim);
+  margin: 4px 0 0;
+  font-family: 'Roboto Slab', Georgia, serif;
+}
+.endorse-card-office {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-light);
+  margin: 6px 0 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+.endorse-card-meta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--end-text-dim);
+  margin: 4px 0 0;
+}
+.endorsed-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 5px 11px 5px 9px;
+  background: rgba(112, 214, 236, 0.12);
+  color: var(--text-accent);
+  border: 1px solid rgba(112, 214, 236, 0.35);
+  border-radius: 999px;
+  align-self: flex-start;
+}
+.endorsed-pill svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+.endorse-card-bio {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--end-text-gray);
+  margin: 0;
+}
+.endorse-card-bio.empty {
+  font-style: italic;
+  color: var(--end-text-dim);
+}
+
+.endorse-card-foot {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--end-card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.endorse-read-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  background: rgba(112, 214, 236, 0.12);
+  color: var(--text-accent);
+  border: 1px solid rgba(112, 214, 236, 0.4);
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+.endorse-read-btn:hover {
+  background: rgba(112, 214, 236, 0.2);
+  color: var(--text-white);
+  border-color: var(--text-accent);
+}
+.endorse-campaign-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--end-text-gray);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.15s;
+}
+.endorse-campaign-link:hover {
+  color: var(--text-white);
+}
+.endorse-campaign-link::after {
+  content: '\2192';
+  font-size: 1rem;
+  transition: transform 0.15s;
+}
+.endorse-campaign-link:hover::after {
+  transform: translateX(3px);
+}
+
+/* Coming-soon slot */
+.endorse-card.soon {
+  border-style: dashed;
+  background: rgba(19, 45, 68, 0.55);
+  justify-content: center;
+  text-align: center;
+  min-height: 320px;
+  padding: 2rem 1.5rem;
+}
+.endorse-card.soon:hover {
+  transform: none;
+  box-shadow: none;
+}
+.endorse-card.soon h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--text-white);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.01em;
+}
+.endorse-card.soon p {
+  color: var(--end-text-gray);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0 auto 1.1rem;
+  max-width: 34ch;
+}
+.endorse-card.soon a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  text-decoration: none;
+}
+.endorse-card.soon a:hover {
+  color: var(--text-white);
+}
+
+/* ── How endorsements work ────────────────────────────────────────────── */
+.endorse-process {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  padding: 0 2rem;
+}
+.endorse-process-head {
+  border-top: 1px solid var(--end-card-border);
+  padding-top: 2.25rem;
+  margin-bottom: 1.5rem;
+}
+.endorse-process-head p.eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  margin: 0 0 0.55rem;
+}
+.endorse-process-head h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--text-white);
+  margin: 0 0 0.55rem;
+}
+.endorse-process-head p.lede {
+  color: var(--end-text-gray);
+  font-size: 0.98rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 62ch;
+}
+.endorse-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  counter-reset: step;
+}
+.endorse-step {
+  background: var(--end-card-bg);
+  border: 1px solid var(--end-card-border);
+  border-radius: 12px;
+  padding: 1.25rem 1.35rem 1.35rem;
+}
+.endorse-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(112, 214, 236, 0.14);
+  border: 1px solid rgba(112, 214, 236, 0.4);
+  color: var(--text-accent);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  margin-bottom: 0.7rem;
+}
+.endorse-step h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin: 0 0 0.45rem;
+  letter-spacing: -0.005em;
+}
+.endorse-step p {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--end-text-gray);
+  margin: 0;
+}
+
+/* ── Profile page ─────────────────────────────────────────────────────── */
+.endorse-profile {
+  padding: calc(var(--nav-height) + 40px) 2rem 4rem;
+}
+.endorse-profile-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.endorse-back {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--end-text-gray);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.75rem;
+  transition: color 0.15s;
+}
+.endorse-back::before {
+  content: '\2190';
+  font-size: 1rem;
+}
+.endorse-back:hover {
+  color: var(--text-white);
+}
+
+.endorse-profile-head {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: 2.25rem;
+  align-items: start;
+  margin-bottom: 2.5rem;
+}
+.endorse-profile-photo {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--end-card-border);
+  background: #152233;
+  position: relative;
+}
+.endorse-profile-photo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--brand-pride-gradient-h, var(--ohp-rainbow));
+  z-index: 1;
+}
+.endorse-profile-photo img {
+  width: 100%;
+  display: block;
+}
+.endorse-profile-photo.placeholder {
+  aspect-ratio: 4 / 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a3a52 0%, #234a66 100%);
+  color: var(--text-white);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 5rem;
+}
+.endorse-profile-idcard {
+  min-width: 0;
+}
+.endorse-profile-idcard h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+  font-weight: 800;
+  color: var(--text-white);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0.85rem 0 0.35rem;
+}
+.endorse-profile-pronouns {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.9rem;
+  color: var(--end-text-dim);
+  margin: 0 0 0.75rem;
+}
+.endorse-profile-office {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-light);
+  margin: 0 0 1.1rem;
+  line-height: 1.45;
+}
+.endorse-profile-tagline {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text-accent);
+  border-left: 3px solid rgba(112, 214, 236, 0.45);
+  padding-left: 14px;
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+}
+.endorse-facts {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.endorse-facts li {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--end-text-gray);
+  font-family: 'Roboto Slab', Georgia, serif;
+}
+.endorse-facts .fact-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--end-text-dim);
+  display: block;
+  margin-bottom: 1px;
+}
+.endorse-profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.endorse-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.endorse-btn.primary {
+  background: var(--text-accent);
+  color: var(--dark-bg);
+  border: 1px solid var(--text-accent);
+}
+.endorse-btn.primary:hover {
+  background: var(--text-white);
+  border-color: var(--text-white);
+  transform: translateY(-1px);
+}
+.endorse-btn.secondary {
+  background: rgba(112, 214, 236, 0.12);
+  color: var(--text-accent);
+  border: 1px solid rgba(112, 214, 236, 0.4);
+}
+.endorse-btn.secondary:hover {
+  background: rgba(112, 214, 236, 0.2);
+  color: var(--text-white);
+  border-color: var(--text-accent);
+}
+
+.endorse-profile-body {
+  max-width: 68ch;
+}
+.endorse-profile-body h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text-white);
+  margin: 2.25rem 0 1rem;
+}
+.endorse-profile-body h2:first-child {
+  margin-top: 0;
+}
+.endorse-profile-body p {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: var(--text-light);
+  margin: 0 0 1.15rem;
+}
+.endorse-profile-body ul {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--text-light);
+  margin: 0 0 1.15rem;
+  padding-left: 1.35rem;
+}
+.endorse-profile-body li {
+  margin-bottom: 0.4rem;
+}
+.endorse-profile-body li::marker {
+  color: var(--text-accent);
+}
+.endorse-profile-ctarow {
+  margin-top: 2.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--end-card-border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+}
+.endorse-profile-ctarow a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.15s;
+}
+.endorse-profile-ctarow a::after {
+  content: '\2192';
+}
+.endorse-profile-ctarow a:hover {
+  color: var(--text-white);
+}
+.endorse-profile-ctarow .ctadiv {
+  color: var(--end-text-dim);
+  user-select: none;
+}
+
+/* How this endorsement was decided, on the profile. */
+.endorse-profile-provenance {
+  margin-top: 2rem;
+  padding: 1.1rem 1.25rem;
+  background: rgba(19, 45, 68, 0.6);
+  border: 1px solid var(--end-card-border);
+  border-radius: 10px;
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--end-text-gray);
+}
+.endorse-profile-provenance a {
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.endorse-profile-provenance a:hover {
+  color: var(--text-white);
+}
+
+/* ── Empty / error states ─────────────────────────────────────────────── */
+.endorse-state {
+  grid-column: 1 / -1;
+  max-width: 720px;
+  margin: 1rem auto 2rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: var(--end-card-bg);
+  border: 1px dashed var(--end-card-border);
+  border-radius: 12px;
+}
+.endorse-state h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--text-white);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.01em;
+}
+.endorse-state p {
+  color: var(--end-text-gray);
+  font-size: 0.95rem;
+  max-width: 50ch;
+  margin: 0 auto 1.25rem;
+  line-height: 1.55;
+}
+.endorse-state .btn-action {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 11px 22px;
+  background: rgba(112, 214, 236, 0.12);
+  color: var(--text-accent);
+  border: 1px solid rgba(112, 214, 236, 0.45);
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.15s;
+}
+.endorse-state .btn-action:hover {
+  background: rgba(112, 214, 236, 0.2);
+  color: var(--text-white);
+  border-color: var(--text-accent);
+}
+.endorse-state.error {
+  background: rgba(220, 38, 38, 0.08);
+  border-color: rgba(220, 38, 38, 0.3);
+  border-style: solid;
+}
+.endorse-state.error h2 {
+  color: #fecaca;
+}
+
+/* ── CTA banner ───────────────────────────────────────────────────────── */
+.endorse-cta {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding: 0 2rem;
+}
+.endorse-cta-card {
+  background: linear-gradient(135deg, rgba(19, 45, 68, 0.85), rgba(26, 58, 82, 0.6));
+  border: 1px solid rgba(112, 214, 236, 0.25);
+  border-radius: 14px;
+  padding: 2.5rem 2.25rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.endorse-cta-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--brand-pride-gradient-h, var(--ohp-rainbow));
+}
+.endorse-cta-text {
+  flex: 1;
+  min-width: 260px;
+}
+.endorse-cta-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  margin: 0 0 0.6rem;
+}
+.endorse-cta-card h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--text-white);
+  margin: 0 0 0.6rem;
+}
+.endorse-cta-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-light);
+  margin: 0;
+  max-width: 56ch;
+}
+.endorse-cta-actions {
+  flex: 0 0 auto;
+}
+
+/* ── Mobile ───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .endorse-hero {
+    padding: calc(var(--nav-height) + 24px) 1rem 24px;
+  }
+  .endorse-hero h1 {
+    font-size: 1.65rem;
+  }
+  .endorse-hero p {
+    font-size: 0.95rem;
+  }
+  .endorse-controls-inner {
+    padding: 0 1rem;
+    gap: 8px;
+  }
+  .endorse-controls-label {
+    flex-basis: 100%;
+    margin-bottom: 0.1rem;
+  }
+  .endorse-pill-group {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .endorse-pill {
+    flex-shrink: 0;
+  }
+  .endorse-year-select {
+    flex: 1 1 auto;
+    min-width: 130px;
+  }
+  .endorse-count {
+    flex-basis: 100%;
+    margin-left: 0;
+    text-align: right;
+  }
+  .endorse-grid-wrap {
+    padding: 8px 1rem 2rem;
+  }
+  .endorse-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .endorse-process {
+    padding: 0 1rem;
+  }
+  .endorse-process-head {
+    padding-top: 1.75rem;
+  }
+
+  .endorse-profile {
+    padding: calc(var(--nav-height) + 24px) 1rem 2.5rem;
+  }
+  .endorse-profile-head {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .endorse-profile-photo {
+    max-width: 420px;
+  }
+  .endorse-profile-actions .endorse-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .endorse-cta {
+    padding: 0 1rem;
+  }
+  .endorse-cta-card {
+    padding: 1.75rem 1.25rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .endorse-cta-actions {
+    width: 100%;
+  }
+  .endorse-cta-actions .endorse-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .endorse-card {
+    transition: none;
+  }
+  .endorse-card-photo img {
+    transition: none;
+  }
+}
