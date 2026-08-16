@@ -17,6 +17,7 @@ import {
   getEndorsements,
   initial,
 } from '../../../../lib/endorsements.mjs';
+import { SITE_NAME, SITE_URL, absolute, breadcrumbJsonLd } from '../../../../lib/seo.mjs';
 import { EndorsedPill } from '../shared';
 import '../endorsements.css';
 
@@ -81,8 +82,40 @@ export default async function EndorsementProfile({ params }) {
   const sections = Array.isArray(content.profile) ? content.profile : [];
   const ctaLinks = Array.isArray(content.cta) ? content.cta : [];
 
+  /* Structured data for the profile. The candidate is a Person, and the
+   * endorsement itself is an EndorseAction by the PAC, which is the vocabulary
+   * that actually says "Ohio Pride PAC endorsed this person" rather than
+   * leaving a crawler to infer it from the page copy. Only fields the page
+   * itself states are included. */
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: c.name,
+      url: absolute(`/endorsements/${c.slug}`),
+      image: content.photo ? absolute(content.photo) : undefined,
+      description: content.meta || c.bio || undefined,
+      jobTitle: officeLine || undefined,
+      sameAs: c.website ? [c.website] : undefined,
+      subjectOf: {
+        '@type': 'EndorseAction',
+        agent: { '@type': 'Organization', name: SITE_NAME, url: `${SITE_URL}/` },
+        startTime: c.endorsedAt || undefined,
+      },
+    },
+    breadcrumbJsonLd({
+      url: `/endorsements/${c.slug}`,
+      crumb: c.name,
+      breadcrumb: [{ name: 'Endorsed Candidates', url: '/endorsements' }],
+    }),
+  ];
+
   return (
     <main id="main" className="endorse-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <article className="endorse-profile">
         <div className="endorse-profile-inner">
           <Link className="endorse-back" href="/endorsements">

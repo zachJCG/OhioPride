@@ -15,6 +15,7 @@
 
 import Link from 'next/link';
 import { ENDORSEMENT_PROCESS, getEndorsements } from '../../../lib/endorsements.mjs';
+import { absolute, breadcrumbJsonLd } from '../../../lib/seo.mjs';
 import EndorsementGrid from './grid';
 import './endorsements.css';
 
@@ -48,8 +49,31 @@ export const metadata = {
 export default async function EndorsementsPage() {
   const { ok, candidates } = await getEndorsements();
 
+  /* An ItemList of the profiles, so the slate can surface as a list in search
+   * results rather than four unrelated pages that happen to link to each
+   * other. Order matches the rendered grid. */
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Candidates endorsed by Ohio Pride PAC',
+      numberOfItems: candidates.length,
+      itemListElement: candidates.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: c.name,
+        url: absolute(`/endorsements/${c.slug}`),
+      })),
+    },
+    breadcrumbJsonLd({ url: '/endorsements', crumb: 'Endorsed Candidates' }),
+  ];
+
   return (
     <main id="main" className="endorse-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <section className="endorse-hero" aria-labelledby="page-title">
         <p className="eyebrow">Endorsed Candidates</p>
         <h1 id="page-title">Pro-equality leadership for Ohio.</h1>

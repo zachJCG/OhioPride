@@ -14,20 +14,54 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
+import {
+  DEFAULT_OG_IMAGE,
+  DEFAULT_OG_IMAGE_ALT,
+  SITE_NAME,
+  SITE_URL,
+  organizationJsonLd,
+  websiteJsonLd,
+} from '../../lib/seo.mjs';
 
+/* The site-wide defaults every ported page inherits.
+ *
+ * A page only has to declare what makes it different. In particular the OG and
+ * Twitter blocks below mean a new route gets a valid share card without doing
+ * anything, which is the failure the static pages kept repeating: 45 of the 57
+ * of them shipped with no og:image at all.
+ *
+ * Values come from lib/seo.mjs so these routes and the generated <head> blocks
+ * on the static pages agree on the host, the brand name, and the card image. */
 export const metadata = {
-  metadataBase: new URL('https://www.ohiopride.org'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Ohio Pride | Ohio's Only Statewide LGBTQ+ Political Action Committee",
     template: '%s | Ohio Pride',
   },
   description:
     'Ohio Pride PAC elects pro-equality leaders and scores all 132 state legislators on LGBTQ+ rights.',
+  applicationName: SITE_NAME,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+  },
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'en_US',
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: DEFAULT_OG_IMAGE_ALT }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: [{ url: DEFAULT_OG_IMAGE, alt: DEFAULT_OG_IMAGE_ALT }],
+  },
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/assets/favicon/favicon.svg', type: 'image/svg+xml' },
       { url: '/assets/favicon/favicon-32.png', sizes: '32x32', type: 'image/png' },
       { url: '/assets/favicon/favicon-16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon.ico' },
     ],
     apple: '/assets/favicon/apple-touch-icon.png',
   },
@@ -58,6 +92,17 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="/css/site-template.css" />
       </head>
       <body>
+        {/* Who publishes this site, stated once per page. It is what lets a
+            search engine tie /endorsements/<candidate> back to the PAC rather
+            than treating each profile as an orphan page. The static pages get
+            the identical graph from their generated <head> block. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([organizationJsonLd(), websiteJsonLd()]),
+          }}
+        />
+
         <SiteHeader />
         {children}
         <SiteFooter />

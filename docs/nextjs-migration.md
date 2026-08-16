@@ -143,7 +143,12 @@ six steps, and the last one is what makes it safe:
    entries became an array, which is what lets that content move to Supabase
    later without touching the markup.
 5. Delete `public/<route>.html` and add the clean URL to `PORTED` in
-   `next.config.mjs`, so the old `.html` link still redirects.
+   `next.config.mjs`, so the old `.html` link still redirects. In the same
+   commit, move the route's entry in `lib/seo.mjs` from `PAGES` to
+   `APP_ROUTES`: `PAGES` describes static files, and the page's title,
+   description and cards now live in its `metadata` export. `npm run check:seo`
+   fails until you do — a `PAGES` entry with no file under `public/` is an
+   error, exactly so a port cannot silently drop a page out of the sitemap.
 6. **Diff it against the original.** Serve `public/` on another port, screenshot
    both at the same width with `reducedMotion: 'reduce'` (the header gradient
    animates, so without this the diff is noise), and compare. `/credits` came

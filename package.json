@@ -7,8 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "seo:build": "node scripts/build-seo.mjs",
     "check:brand": "node scripts/check-brand-consistency.js",
-    "check:routes": "node scripts/check-routes.mjs"
+    "check:routes": "node scripts/check-routes.mjs",
+    "check:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",

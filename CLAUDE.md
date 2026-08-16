@@ -117,6 +117,28 @@ JS (in `js/`):
 
 CSS: `css/style.css`, `css/site-template.css`
 
+### SEO is generated, not hand written (2026-08-16)
+
+**`lib/seo.mjs` is the one place page metadata lives.** One entry per URL —
+title, description, social card, sitemap priority — read by four consumers:
+
+- `scripts/build-seo.mjs` writes the `<!-- seo:start -->` … `<!-- seo:end -->`
+  block into every `public/**/*.html`. Run `npm run seo:build`. Editing that
+  block by hand is pointless; the next run overwrites it.
+- `app/sitemap.js` and `app/robots.js` serve `/sitemap.xml` and `/robots.txt`.
+  The old `public/sitemap.xml` and `public/robots.txt` are **deleted** — do not
+  bring them back, they would shadow the routes and drift again.
+- `scripts/check-seo.mjs` (`npm run check:seo`) fails when any of it drifts,
+  including when a new page under `public/` has no registry entry.
+
+Bill pages are **derived from `public/js/bill-data.js`**, not listed by hand, so
+a bill's title, description and JSON-LD follow its status automatically. The
+generator also prefills the bill hero (`billTitle`, `statusBadge`, sponsors,
+outbound links) that `js/bill-detail.js` used to write only at runtime.
+
+Adding a page: create it, add an entry to `PAGES` (or `noindex: true` for
+internal pages), run `npm run seo:build`, commit both. Full notes: `docs/seo.md`.
+
 API functions. The implementations live in `lib/functions/*.mjs` and are
 exported as App Router route handlers by one-line wrappers in
 `app/api/<name>/route.js`. They are plain web handlers,
