@@ -282,6 +282,44 @@
         .ph-give-note a { color: var(--accent); font-weight: 700; }
         .ph-give-note a:hover { text-decoration: underline; }
 
+        /* ---------- Host committee ---------- */
+        /* The roster is text, not the invitation graphic: it grows as members
+           sign on, it reads on a phone, and search engines and screen readers
+           get the names. */
+        .ph-hosts { padding: 3.5rem 0 0.5rem; }
+        .ph-host-grid {
+            list-style: none; display: grid; gap: 0.85rem; margin: 0;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        }
+        @media (max-width: 560px) { .ph-host-grid { grid-template-columns: 1fr; } }
+        .ph-host {
+            display: flex; flex-direction: column; gap: 0.3rem;
+            background: var(--navy-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 1.05rem 1.2rem; transition: var(--transition);
+        }
+        .ph-host:hover { border-color: rgba(112,214,236,0.45); transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,0.32); }
+        .ph-host .host-name {
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.02rem;
+            line-height: 1.25; color: #fff;
+        }
+        a.host-name { color: #fff; }
+        a.host-name:hover { color: var(--accent); text-decoration: underline; }
+        /* Title and endorsed chip share a wrapping line, so a chip costs the
+           card no extra height and the rows stay even. */
+        .ph-host .host-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.55rem; }
+        .ph-host .host-role {
+            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.68rem;
+            letter-spacing: 1.3px; text-transform: uppercase; color: var(--accent); line-height: 1.5;
+        }
+        .ph-host .host-tag {
+            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.6rem;
+            letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-soft);
+            border: 1px solid var(--border); border-radius: 999px; padding: 0.28rem 0.62rem;
+        }
+        .ph-host-note { text-align: center; color: var(--text-dim); font-size: 0.84rem; margin-top: 1.5rem; }
+        .ph-host-note a { color: var(--accent); font-weight: 700; }
+        .ph-host-note a:hover { text-decoration: underline; }
+
         /* ---------- Questions ---------- */
         .ph-questions { text-align: center; padding: 3rem 1.5rem 4.5rem; }
         .ph-questions p { color: var(--text-soft); font-size: 1.05rem; }
@@ -359,6 +397,125 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- ===================== HOST COMMITTEE ===================== -->
+<section class="ph-hosts" id="hosts">
+    <div class="wrap">
+        <div class="ph-section-head">
+            <span class="eyebrow">Hosted By</span>
+            <h2>Host Committee</h2>
+            <p>These leaders are opening the door for Cincinnati's Pride Hour. Join them on August 26.</p>
+        </div>
+        <ul class="ph-host-grid">
+            <li class="ph-host">
+                <span class="host-name">Jessica Miranda</span>
+                <div class="host-meta">
+                    <span class="host-role">Hamilton County Auditor</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Jill Schiller</span>
+                <div class="host-meta">
+                    <span class="host-role">Hamilton County Treasurer</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Denise Driehaus</span>
+                <div class="host-meta">
+                    <span class="host-role">Hamilton County Commissioner</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Pavan Parikh</span>
+                <div class="host-meta">
+                    <span class="host-role">Hamilton County Clerk of Courts</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Ashley Bryant Bailey</span>
+                <div class="host-meta">
+                    <span class="host-role">State Representative, House District 26</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <a class="host-name" href="/endorsements/karen-brownlee">Karen Brownlee</a>
+                <div class="host-meta">
+                    <span class="host-role">State Representative, House District 28</span>
+                    <span class="host-tag">Ohio Pride endorsed</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Jan-Michele Kearney</span>
+                <div class="host-meta">
+                    <span class="host-role">Vice Mayor of Cincinnati</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <a class="host-name" href="/endorsements/seth-walsh">Seth Walsh</a>
+                <div class="host-meta">
+                    <span class="host-role">Cincinnati Councilmember &middot; Candidate for State Treasurer</span>
+                    <span class="host-tag">Ohio Pride endorsed</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Meeka Owens</span>
+                <div class="host-meta">
+                    <span class="host-role">Cincinnati Councilmember &middot; Candidate for County Commissioner</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Anna Albi</span>
+                <div class="host-meta">
+                    <span class="host-role">Cincinnati Councilmember</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Jeff Cramerding</span>
+                <div class="host-meta">
+                    <span class="host-role">Cincinnati Councilmember</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Mark Jeffreys</span>
+                <div class="host-meta">
+                    <span class="host-role">Cincinnati Councilmember</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Ryan James</span>
+                <div class="host-meta">
+                    <span class="host-role">Cincinnati Councilmember</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Evan Nolan</span>
+                <div class="host-meta">
+                    <span class="host-role">Cincinnati Councilmember</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Connor Moreton</span>
+                <div class="host-meta">
+                    <span class="host-role">St. Bernard Councilmember</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <span class="host-name">Jodi Whitted</span>
+                <div class="host-meta">
+                    <span class="host-role">Madeira Councilmember</span>
+                </div>
+            </li>
+            <li class="ph-host">
+                <a class="host-name" href="/endorsements/caleb-price">Caleb Price</a>
+                <div class="host-meta">
+                    <span class="host-role">Candidate for Ohio House District 30</span>
+                    <span class="host-tag">Ohio Pride endorsed</span>
+                </div>
+            </li>
+        </ul>
+        <p class="ph-host-note">Titles are listed for identification purposes only. Host committee in formation &mdash; to add your name, reach Zach at <a href="mailto:zach@ohiopride.org">zach@ohiopride.org</a>.</p>
     </div>
 </section>
 
