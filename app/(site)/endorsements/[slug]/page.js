@@ -37,7 +37,9 @@ export async function generateMetadata({ params }) {
   const description =
     c.content?.meta || `Ohio Pride PAC endorses ${c.name} for ${office}.`;
   const title = `${c.name} | Endorsed Candidates`;
-  const image = c.content?.photo || '/assets/social/og-image.png';
+  /* A portrait photo is the wrong aspect ratio for a 1.91:1 social card and
+   * gets cropped to a sliver, so a profile may supply a built `ogImage`. */
+  const image = c.content?.ogImage || c.content?.photo || '/assets/social/og-image.png';
 
   return {
     title,

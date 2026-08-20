@@ -14,6 +14,16 @@ Drop campaign photos here named by candidate slug:
   photo: green quarter-zip, brick background. Landscape orientation.
 - `seth-walsh-card.jpg` — square crop of the above for the grid card
   (the full photo is landscape, which would clip his face in a 1:1 crop).
+- `cara-jacob.jpg` — Dr. Cara Jacob, OH Senate District 7 (2026). Approved
+  campaign portrait from caraforohio.com: white coat, garden path, yellow
+  blooms. Cropped to 4:5 so the grid's 1:1 crop lands on her face.
+
+Link-preview cards
+- A tall portrait is the wrong shape for a 1.91:1 social card and gets
+  center-cropped to a sliver, so a profile may also supply a built
+  1200x630 card via the `ogImage` field. Cara's lives at
+  `/assets/social/og-endorsement-cara-jacob.png`. Without `ogImage` the
+  profile falls back to `photo`, then to the site's default OG image.
 
 File naming
 - Use lowercase, hyphen-separated: `first-last.jpg`
