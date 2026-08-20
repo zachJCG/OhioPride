@@ -1071,6 +1071,7 @@
       SUPABASE_URL:        'https://dkdxefzhttkmjhdbkvqn.supabase.co',
       SUPABASE_ANON_KEY:   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4',
       THANK_YOU_PATH:      '/endorsement/screening/thank-you',
+      NOTIFY_ENDPOINT:     '/api/endorsement-notify',
       // Draft is keyed by path so switching offices never bleeds answers
       // across question sets: op_endorsement_draft_v3_<path>.
       STORAGE_PREFIX:      'op_endorsement_draft_v3_',
@@ -1684,6 +1685,40 @@
       };
     }
 
+    /**
+     * Ping the server so staff get an email about this application.
+     *
+     * The insert above runs in the browser under the anon key, so there is no
+     * server hop to hang the notification off. This is that hop. It carries
+     * only the address — the endpoint reads the row itself under the service
+     * role, which is also why the anon key never needs SELECT here.
+     *
+     * Deliberately not awaited: the redirect follows immediately, so the call
+     * goes out via sendBeacon (which survives navigation by design) and falls
+     * back to a keepalive fetch. Delivery is best-effort in the browser; the
+     * optional Supabase database webhook on endorsement_applications is the
+     * backstop for a tab that closes before either lands.
+     */
+    function notifyStaff(email) {
+      if (!email) return;
+      const body = JSON.stringify({ email });
+      try {
+        if (navigator.sendBeacon) {
+          const blob = new Blob([body], { type: 'application/json' });
+          if (navigator.sendBeacon(CONFIG.NOTIFY_ENDPOINT, blob)) return;
+        }
+        fetch(CONFIG.NOTIFY_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body,
+          keepalive: true
+        }).catch(() => {});
+      } catch (err) {
+        // Never block the candidate on a notification we cannot send.
+        console.warn('Staff notification failed:', err);
+      }
+    }
+
     async function submitApplication(e) {
       e.preventDefault();
       if (state.submitting) return;
@@ -1725,6 +1760,7 @@
         const { error } = await state.client.from('endorsement_applications').insert([payload]);
         if (error) throw error;
 
+        notifyStaff(payload.email);
         clearDraft();
         window.location.href = CONFIG.THANK_YOU_PATH;
       } catch (err) {

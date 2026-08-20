@@ -117,6 +117,28 @@ JS (in `js/`):
 
 CSS: `css/style.css`, `css/site-template.css`
 
+### Submission notifications (2026-08-20)
+
+**Every public form emails staff on submit**, through `lib/notify.mjs`
+(Resend) — contact, connect, event RSVPs, newsletter, volunteer, internship,
+Pride road tour, and endorsements. Recipients default to `zach@ohiopride.org`
+(contact also keeps `info@ohiopride.org`) and are overridable per kind by env.
+
+Two things to keep straight:
+
+- **Staff alerts are Resend; the submitter's confirmation is still MailerLite.**
+  MailerLite has no transactional send, which is why the two channels differ.
+- **Endorsements have no server hop of their own.** `/endorsement/screening`
+  inserts into `endorsement_applications` from the browser with the anon key,
+  so the page pings `/api/endorsement-notify` with just the candidate's email
+  and that endpoint re-reads the row under the service role. Never build the
+  email from the request body. An optional Supabase database webhook (gated on
+  `SUBMISSION_WEBHOOK_SECRET`) is the backstop for a tab that closes early.
+
+Notifications are best-effort by design: `notifySubmission()` never throws and
+never fails a submission that already reached the database. Full notes:
+`docs/submission-notifications.md`.
+
 ### SEO is generated, not hand written (2026-08-16)
 
 **`lib/seo.mjs` is the one place page metadata lives.** One entry per URL —
@@ -153,6 +175,8 @@ Endpoints (`/api/<name>`):
 - `public-members.mjs` — public donor roster, grouped by tier
 - `site-leadership.mjs` — footer disclaimer block
 - `submission-created.js` — legacy form handler
+- `endorsement-notify.mjs` — staff email for a new endorsement application (the
+  screening form inserts from the browser, so this is its only server hop)
 - `admin-contacts-import.mjs` — ActBlue CSV reconciliation for /admin/contacts
 - `admin-user-manage.mjs` — invite / set_password / update_email / send_password_reset
 - `admin-dashboard.mjs` — aggregated stats for /admin/dashboard
