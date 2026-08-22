@@ -76,6 +76,10 @@ export default async function EndorsementProfile({ params }) {
    * and two rows both labelled District said different things. */
   const facts = [
     content.region && { label: 'District covers', value: content.region },
+    /* Standing facts the header does not carry: current role, experience,
+     * recognition. Placed before the election rows so the two dated facts
+     * stay together at the bottom. */
+    ...(Array.isArray(content.facts) ? content.facts : []),
     content.opponent && { label: 'Running against', value: content.opponent },
     c.electionYear && { label: 'Election', value: String(c.electionYear) },
     endorsedOn && { label: 'Endorsed', value: endorsedOn },
@@ -209,6 +213,16 @@ export default async function EndorsementProfile({ params }) {
                 </p>
               </section>
             ) : null}
+            {content.pullQuote?.text && (
+              /* Ours is the statement above; this is the candidate's, so it
+                 is attributed rather than folded into our copy. */
+              <figure className="endorse-pullquote">
+                <blockquote>{content.pullQuote.text}</blockquote>
+                {content.pullQuote.attribution && (
+                  <figcaption>{content.pullQuote.attribution}</figcaption>
+                )}
+              </figure>
+            )}
           </div>
 
           {ctaLinks.length > 0 && (

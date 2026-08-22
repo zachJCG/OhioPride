@@ -693,6 +693,38 @@
   color: var(--text-light);
   margin: 0 0 1.15rem;
 }
+/* The candidate in their own words, closing the statement. Quiet enough not
+   to compete with the tagline in the header, which is the other quoted line
+   on the page. */
+.endorse-pullquote {
+  margin: 2.25rem 0 0;
+  padding: 1.4rem 1.6rem;
+  border-left: 3px solid rgba(112, 214, 236, 0.45);
+  border-radius: 0 12px 12px 0;
+  background: rgba(112, 214, 236, 0.05);
+}
+.endorse-pullquote blockquote {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--text-white);
+  margin: 0;
+}
+.endorse-pullquote figcaption {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--end-text-dim);
+  margin-top: 0.9rem;
+}
+@media (max-width: 560px) {
+  .endorse-pullquote { padding: 1.15rem 1.2rem; }
+  .endorse-pullquote blockquote { font-size: 1.02rem; }
+}
+
 .endorse-profile-body ul {
   font-family: 'Roboto Slab', Georgia, serif;
   font-size: 1.02rem;

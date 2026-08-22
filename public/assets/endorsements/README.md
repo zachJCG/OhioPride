@@ -17,6 +17,20 @@ Drop campaign photos here named by candidate slug:
 - `cara-jacob.jpg` — Dr. Cara Jacob, OH Senate District 7 (2026). Approved
   campaign portrait from caraforohio.com: white coat, garden path, yellow
   blooms. Cropped to 4:5 so the grid's 1:1 crop lands on her face.
+- `christine-cockley.jpg` — Rep. Christine Cockley, OH House District 6
+  (2026). Approved campaign photo: light blazer, painted mural wall.
+- `stacie-baker.jpg` — Stacie Baker, OH Senate District 3 (2026). Official
+  portrait: navy suit, patterned tie, white background.
+- `rose-lounsbury.jpg` — Rose Lounsbury, OH House District 36 (2026).
+  Approved campaign photo: navy turtleneck, tree-lined brick path.
+- `karl-keith.jpg` — Karl Keith, Montgomery County Auditor (2026). Approved
+  photo: navy suit, framed certificate, wall of award plaques.
+- `job-perry.jpg` — Job Esau Perry, Summit County Common Pleas (2026).
+  Approved campaign photo: blue suit, carved doors of the county courthouse.
+
+The August 22 slate above arrived square (1080x1080), which needs no
+`cardPhoto`: a square photo is already the grid card's crop, and the profile
+shows the same file uncropped.
 
 Link-preview cards
 - A tall portrait is the wrong shape for a 1.91:1 social card and gets
