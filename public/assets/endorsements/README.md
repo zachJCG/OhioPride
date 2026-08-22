@@ -16,7 +16,10 @@ Drop campaign photos here named by candidate slug:
   (the full photo is landscape, which would clip his face in a 1:1 crop).
 - `cara-jacob.jpg` — Dr. Cara Jacob, OH Senate District 7 (2026). Approved
   campaign portrait from caraforohio.com: white coat, garden path, yellow
-  blooms. Cropped to 4:5 so the grid's 1:1 crop lands on her face.
+  blooms.
+- `cara-jacob-card.jpg` — square crop of the above for the grid card. She
+  stands left of the frame's centre and low in it, so the 1:1 crop of the
+  full portrait put her small beneath a band of sky.
 - `christine-cockley.jpg` — Rep. Christine Cockley, OH House District 6
   (2026). Approved campaign photo: light blazer, painted mural wall.
 - `stacie-baker.jpg` — Stacie Baker, OH Senate District 3 (2026). Official
