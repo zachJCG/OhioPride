@@ -93,6 +93,11 @@ const nextConfig = {
       { source: '/admin/compliance/loan', destination: '/admin/compliance', permanent: false },
       { source: '/admin/endorsements/login', destination: '/admin/login', permanent: true },
 
+      // Until his editorial entry landed, Job Esau Perry had no `slug` of his
+      // own, so /endorsements derived one from his Supabase name and linked
+      // people at /endorsements/job-esau-perry. The entry names him job-perry.
+      { source: '/endorsements/job-esau-perry', destination: '/endorsements/job-perry', permanent: true },
+
       // Spelling variants and legacy URLs.
       { source: '/governorguide', destination: '/governor-guide', permanent: true },
       { source: '/govenorguide', destination: '/governor-guide', permanent: true },
