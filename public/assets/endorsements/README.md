@@ -26,8 +26,8 @@ Drop campaign photos here named by candidate slug:
   portrait: navy suit, patterned tie, white background.
 - `rose-lounsbury.jpg` — Rose Lounsbury, OH House District 36 (2026).
   Approved campaign photo: navy turtleneck, tree-lined brick path.
-- `karl-keith.jpg` — Karl Keith, Montgomery County Auditor (2026). Approved
-  photo: navy suit, framed certificate, wall of award plaques.
+- `karl-keith.jpg` — Karl Keith, Montgomery County Auditor (2026). Official
+  portrait: navy suit, striped shirt, red patterned tie, studio backdrop.
 - `job-perry.jpg` — Job Esau Perry, Summit County Common Pleas (2026).
   Approved campaign photo: blue suit, carved doors of the county courthouse.
 
