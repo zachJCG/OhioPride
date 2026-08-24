@@ -75,6 +75,19 @@
     </script>
     <!-- seo:end -->
 
+    <script>
+      /* The opening flag-wipe plays once per browser session. This runs
+         before first paint so returning visitors never see a flash of the
+         overlay. Fails open: blocked storage just means it plays again. */
+      try {
+        if (sessionStorage.getItem("ohpIntroSeen")) {
+          document.documentElement.classList.add("hp-intro-seen");
+        } else {
+          sessionStorage.setItem("ohpIntroSeen", "1");
+        }
+      } catch (e) {}
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -95,15 +108,74 @@
       }
 
       /* =====================================================
-         HERO: headline left, animated Ohio rainbow burgee right
+         OPENING EFFECT
+         A Pride flag covers the page for a beat, then each
+         stripe wipes off to the right while the hero rises in.
+         Pure CSS so it cannot strand the page if JS fails;
+         the head script skips it after the first view.
+         ===================================================== */
+      .hp-intro {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: flex;
+        flex-direction: column;
+        pointer-events: none;
+        animation: hpIntroDone 0s linear 1.4s forwards;
+      }
+      .hp-intro i { flex: 1; }
+      .hp-intro i:nth-child(1) { background: #E40303; }
+      .hp-intro i:nth-child(2) { background: #FFBC00; }
+      .hp-intro i:nth-child(3) { background: #FFED00; }
+      .hp-intro i:nth-child(4) { background: #008026; }
+      .hp-intro i:nth-child(5) { background: #004DFF; }
+      .hp-intro i:nth-child(6) { background: #750787; }
+      @media screen {
+        .hp-intro i { animation: hpIntroSlide 0.7s cubic-bezier(0.7, 0, 0.3, 1) forwards; }
+        .hp-intro i:nth-child(1) { animation-delay: 0.30s; }
+        .hp-intro i:nth-child(2) { animation-delay: 0.36s; }
+        .hp-intro i:nth-child(3) { animation-delay: 0.42s; }
+        .hp-intro i:nth-child(4) { animation-delay: 0.48s; }
+        .hp-intro i:nth-child(5) { animation-delay: 0.54s; }
+        .hp-intro i:nth-child(6) { animation-delay: 0.60s; }
+      }
+      @keyframes hpIntroSlide { to { transform: translateX(102%); } }
+      @keyframes hpIntroDone { to { visibility: hidden; } }
+
+      @media screen {
+        html:not(.hp-intro-seen) .hp-hero-copy > * {
+          animation: hpRise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(1) { animation-delay: 0.60s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(2) { animation-delay: 0.70s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(3) { animation-delay: 0.80s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(4) { animation-delay: 0.90s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(5) { animation-delay: 1.00s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(6) { animation-delay: 1.10s; }
+        html:not(.hp-intro-seen) .hp-flag-wrap {
+          animation: hpFlagIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.85s both;
+        }
+      }
+      html.hp-intro-seen .hp-intro { display: none; }
+      @keyframes hpRise {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: none; }
+      }
+      @keyframes hpFlagIn {
+        from { opacity: 0; transform: scale(0.95) translateY(12px); }
+        to   { opacity: 1; transform: none; }
+      }
+
+      /* =====================================================
+         HERO: headline left, Ohio rainbow cutout right
          ===================================================== */
       .hp-hero {
         position: relative;
-        padding: calc(var(--nav-height) + 4.5rem) 2rem 4.5rem;
+        padding: calc(var(--nav-height) + 4rem) 2rem 3.5rem;
         overflow: hidden;
         background-color: var(--dark-bg);
       }
-      /* Ambient aurora in brand hues, very low opacity */
+      /* Still ambient glow in brand hues, very low opacity */
       .hp-hero::before,
       .hp-hero::after {
         content: "";
@@ -128,18 +200,6 @@
         left: -15%;
         background: radial-gradient(circle,
           rgba(117, 7, 135, 0.16), rgba(228, 3, 3, 0.06) 50%, transparent 72%);
-      }
-      @media (prefers-reduced-motion: no-preference) {
-        .hp-hero::before { animation: hpDriftA 22s ease-in-out infinite alternate; }
-        .hp-hero::after  { animation: hpDriftB 26s ease-in-out infinite alternate; }
-      }
-      @keyframes hpDriftA {
-        from { transform: translate(0, 0) scale(1); }
-        to   { transform: translate(-6%, 8%) scale(1.12); }
-      }
-      @keyframes hpDriftB {
-        from { transform: translate(0, 0) scale(1.08); }
-        to   { transform: translate(7%, -6%) scale(1); }
       }
 
       .hp-hero-grid {
@@ -248,20 +308,14 @@
       .hp-ohio-inner { transform-origin: 50% 50%; }
       @media (prefers-reduced-motion: no-preference) {
         .hp-ohio-inner { animation: hpOhioFloat 9s ease-in-out infinite; }
-        .hp-ohio .hp-ohio-sheen rect { animation: hpSheen 8s ease-in-out infinite; }
       }
       @keyframes hpOhioFloat {
         0%, 100% { transform: translateY(0) rotate(0deg); }
         50%      { transform: translateY(-12px) rotate(0.4deg); }
       }
-      @keyframes hpSheen {
-        0%   { transform: translateX(0); }
-        55%  { transform: translateX(1500px); }
-        100% { transform: translateX(1500px); }
-      }
 
       @media (max-width: 920px) {
-        .hp-hero { padding: calc(var(--nav-height) + 2.5rem) 1.5rem 3.5rem; }
+        .hp-hero { padding: calc(var(--nav-height) + 2.5rem) 1.5rem 2.75rem; }
         .hp-hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
         .hp-hero-copy { text-align: center; }
         .hp-hero-sub { margin-left: auto; margin-right: auto; }
@@ -271,92 +325,140 @@
       }
 
       /* =====================================================
-         88-COUNTY TICKER
+         SIGNUP BAND (top of page, right under the hero)
          ===================================================== */
-      .hp-counties {
+      .hp-signup { padding: 0.5rem 0 1rem; }
+      .hp-signup-band {
         position: relative;
-        border-top: 1px solid var(--border-light);
-        border-bottom: 1px solid var(--border-light);
-        background: rgba(13, 23, 38, 0.6);
+        display: grid;
+        grid-template-columns: minmax(250px, 0.85fr) 1.15fr;
+        gap: 1.25rem 2.5rem;
+        align-items: center;
+        border-radius: 14px;
+        padding: 1.6rem 2rem 1.5rem;
+        background: rgba(19, 45, 68, 0.6);
+        border: 1px solid var(--dark-bg-lighter);
         overflow: hidden;
-        padding: 0.85rem 0;
       }
-      .hp-counties::before,
-      .hp-counties::after {
+      .hp-signup-band::before {
         content: "";
         position: absolute;
-        top: 0; bottom: 0;
-        width: 90px;
-        z-index: 2;
-        pointer-events: none;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: var(--pride-gradient);
       }
-      .hp-counties::before {
-        left: 0;
-        background: linear-gradient(90deg, var(--dark-bg), transparent);
+      .hp-signup-band h2 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: var(--text-white);
+        margin-bottom: 0.4rem;
       }
-      .hp-counties::after {
-        right: 0;
-        background: linear-gradient(270deg, var(--dark-bg), transparent);
+      .hp-signup-sub {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.88rem;
+        color: var(--text-light);
+        line-height: 1.6;
       }
-      .hp-counties-track {
+      .hp-signup-row {
         display: flex;
-        width: max-content;
-        gap: 0;
+        gap: 0.7rem;
+        align-items: flex-start;
       }
-      /* The marquee only runs when JS confirms it can also be paused
-         (WCAG 2.2.2). Without JS the strip renders as a static row. */
-      @media (prefers-reduced-motion: no-preference) {
-        .hp-counties.js-on .hp-counties-track { animation: hpMarquee 160s linear infinite; }
-        .hp-counties.js-on .hp-counties-toggle { display: flex; }
+      .hp-field { margin: 0; }
+      .hp-field--email { flex: 1 1 220px; min-width: 0; }
+      .hp-field--zip { flex: 0 1 120px; min-width: 90px; }
+      .hp-field input {
+        width: 100%;
+        padding: 0.78rem 0.95rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(8, 21, 33, 0.6);
+        color: var(--text-white);
+        font-family: "Roboto Slab", serif;
+        font-size: 0.95rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
       }
-      .hp-counties:hover .hp-counties-track,
-      .hp-counties.is-paused .hp-counties-track { animation-play-state: paused; }
-      .hp-counties-toggle {
+      .hp-field input::placeholder { color: rgba(255, 255, 255, 0.6); }
+      .hp-field input:focus {
+        outline: none;
+        border-color: var(--color-light-blue);
+        box-shadow: 0 0 0 3px rgba(112, 214, 236, 0.18);
+      }
+      .hp-field.hp-invalid input {
+        border-color: var(--text-danger);
+        box-shadow: 0 0 0 3px rgba(228, 3, 3, 0.14);
+      }
+      .hp-field-err {
         display: none;
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        transform: translateY(-50%);
-        z-index: 3;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.78rem;
+        color: var(--text-danger);
+        margin-top: 0.35rem;
+      }
+      .hp-field.hp-invalid .hp-field-err { display: block; }
+      .hp-form-err {
+        display: none;
+        background: rgba(228, 3, 3, 0.12);
+        border: 1px solid rgba(228, 3, 3, 0.45);
+        color: #ffd3d3;
+        border-radius: 8px;
+        padding: 0.6rem 0.9rem;
+        margin-bottom: 0.8rem;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.85rem;
+      }
+      .hp-form-err.show { display: block; }
+      .hp-submit { flex: 0 0 auto; padding: 12px 24px; font-size: 14px; }
+      .hp-submit[disabled] { opacity: 0.75; cursor: wait; }
+      .hp-form-fine {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 0.6rem;
+      }
+      .hp-signup-success {
+        display: none;
+        text-align: left;
+      }
+      .hp-signup-success.show { display: flex; align-items: center; gap: 1rem; }
+      .hp-success-ring {
+        flex-shrink: 0;
+        width: 48px; height: 48px;
+        border-radius: 50%;
+        padding: 3px;
+        background: var(--pride-gradient);
+      }
+      .hp-success-ring div {
+        width: 100%; height: 100%;
+        border-radius: 50%;
+        background: var(--dark-bg);
+        display: flex;
         align-items: center;
         justify-content: center;
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: 1px solid rgba(112, 214, 236, 0.4);
-        background: rgba(13, 23, 38, 0.85);
-        color: var(--color-light-blue);
-        cursor: pointer;
-        padding: 0;
+        color: var(--text-success);
       }
-      .hp-counties-toggle:hover { background: rgba(19, 45, 68, 0.95); }
-      .hp-counties-toggle:focus-visible {
-        outline: 2px solid var(--color-light-blue);
-        outline-offset: 2px;
-      }
-      .hp-counties-toggle .icon-play { display: none; }
-      .hp-counties.is-paused .icon-play { display: block; }
-      .hp-counties.is-paused .icon-pause { display: none; }
-      @keyframes hpMarquee {
-        from { transform: translateX(0); }
-        to   { transform: translateX(-50%); }
-      }
-      .hp-counties-list {
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
+      .hp-signup-success h3 {
         font-family: "Montserrat", sans-serif;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.5);
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: var(--text-white);
+        margin-bottom: 0.2rem;
       }
-      .hp-counties-list span { padding: 0 0.9rem; }
-      .hp-counties-list i {
-        font-style: normal;
-        color: var(--color-light-blue);
-        font-size: 0.55rem;
+      .hp-signup-success p {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        font-size: 0.88rem;
+        line-height: 1.55;
+      }
+      @media (max-width: 860px) {
+        .hp-signup-band { grid-template-columns: 1fr; padding: 1.5rem 1.4rem; }
+      }
+      @media (max-width: 560px) {
+        .hp-signup-row { flex-wrap: wrap; }
+        .hp-field--email { flex: 1 1 100%; }
+        .hp-field--zip { flex: 1 1 100px; }
+        .hp-submit { flex: 1 1 auto; }
       }
 
       /* =====================================================
@@ -365,7 +467,7 @@
       .hp-stats {
         max-width: var(--container-max);
         margin: 0 auto;
-        padding: 3.5rem 2rem 3rem;
+        padding: 2.75rem 2rem 2.5rem;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 2rem;
@@ -395,7 +497,7 @@
         color: var(--text-muted);
       }
       @media (max-width: 760px) {
-        .hp-stats { grid-template-columns: repeat(2, 1fr); padding: 2.75rem 1.25rem 2rem; gap: 1.75rem 1rem; }
+        .hp-stats { grid-template-columns: repeat(2, 1fr); padding: 2.25rem 1.25rem 1.75rem; gap: 1.75rem 1rem; }
       }
 
       /* =====================================================
@@ -412,7 +514,7 @@
         overflow: hidden;
         border: 1px solid var(--dark-bg-light);
         border-radius: 10px;
-        padding: 1.75rem 1.5rem;
+        padding: 1.6rem 1.5rem;
         background: rgba(19, 45, 68, 0.5);
         transition: transform 0.3s ease, border-color 0.3s ease;
       }
@@ -465,7 +567,7 @@
       @media (max-width: 600px)  { .hp-wwd-grid { grid-template-columns: 1fr; } }
 
       /* =====================================================
-         SCORECARD + FOUNDING SPLITS (shared)
+         SCORECARD SPLIT
          ===================================================== */
       .hp-split {
         display: grid;
@@ -473,7 +575,6 @@
         gap: 3.5rem;
         align-items: center;
       }
-      .hp-split.hp-split-flip { grid-template-columns: 0.95fr 1.05fr; }
       .hp-photo {
         border-radius: 16px;
         padding: 3px;
@@ -488,9 +589,6 @@
         border-radius: 13px;
         aspect-ratio: 4 / 3;
       }
-      /* The Columbus skyline source is a wide panorama; a 16:10 frame keeps
-         more of it than the 4:3 default (the sides still crop under cover). */
-      .hp-photo--wide img { aspect-ratio: 16 / 10; }
       .hp-photo-credit {
         font-family: "Montserrat", sans-serif;
         font-size: 0.7rem;
@@ -500,44 +598,34 @@
         text-align: right;
       }
       @media (max-width: 920px) {
-        .hp-split, .hp-split.hp-split-flip { grid-template-columns: 1fr; gap: 2.25rem; }
+        .hp-split { grid-template-columns: 1fr; gap: 2.25rem; }
         .hp-split-media { order: 2; max-width: 560px; margin: 0 auto; width: 100%; }
       }
 
-      .hp-grades {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 0.45rem;
-        margin: 1.5rem 0;
+      /* Compact grade legend: colored letters, tiny labels, no boxes. */
+      .hp-gradeline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem 1.1rem;
+        margin: 1.4rem 0 1.5rem;
         max-width: 560px;
-      }
-      .hp-grade {
-        text-align: center;
-        padding: 0.55rem 0.15rem;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .hp-grade b {
-        display: block;
         font-family: "Montserrat", sans-serif;
-        font-weight: 800;
-        font-size: 1.05rem;
-        line-height: 1;
-      }
-      .hp-grade span {
-        display: block;
-        margin-top: 0.3rem;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.56rem;
+        font-size: 0.7rem;
         font-weight: 600;
-        letter-spacing: 0.07em;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
         color: var(--text-muted);
+      }
+      .hp-gradeline span {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.35rem;
         white-space: nowrap;
       }
-      @media (max-width: 700px) {
-        .hp-grades { grid-template-columns: repeat(4, 1fr); max-width: 420px; }
+      .hp-gradeline b {
+        font-weight: 800;
+        font-size: 0.95rem;
+        letter-spacing: 0;
       }
 
       /* Find-your-legislator quick search. Submits to the scorecard, which
@@ -587,19 +675,18 @@
       .hp-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; }
 
       /* =====================================================
-         GOVERNOR GUIDE
-         A band, not another split: the marquee race gets its own
-         edge so it does not read as a third scorecard row.
+         GOVERNOR GUIDE — one slim band, not a full split.
          ===================================================== */
-      .hp-gov { position: relative; }
+      .hp-gov.section { padding: 0; }
       .hp-gov__inner {
         position: relative;
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem 3rem;
         align-items: center;
-        padding: clamp(1.75rem, 4vw, 2.75rem);
-        border-radius: 18px;
+        justify-content: space-between;
+        padding: 1.75rem 2rem;
+        border-radius: 16px;
         overflow: clip;
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
@@ -613,102 +700,67 @@
         height: 4px;
         background: linear-gradient(90deg, #E40303, #FFBC00, #FFED00, #008026, #004DFF, #750787);
       }
-      .hp-gov__lede {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        line-height: 1.75;
-        max-width: 560px;
-        margin-bottom: 1.25rem;
-      }
-      .hp-gov__points {
-        list-style: none;
-        margin: 0 0 1.5rem;
-        padding: 0;
-        display: grid;
-        gap: 0.6rem;
-        max-width: 560px;
-      }
-      .hp-gov__points li {
-        position: relative;
-        padding-left: 1.5rem;
-        font-family: "Roboto Slab", serif;
-        font-size: 0.94rem;
-        line-height: 1.6;
-        color: var(--text-light);
-      }
-      .hp-gov__points li::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0.62em;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--text-accent, #70d6ec);
-      }
-      .hp-gov__points strong { color: #fff; font-weight: 600; }
-
-      .hp-gov__mark {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 190px;
-      }
-      .hp-gov__ohio {
-        width: min(62%, 260px);
-        height: auto;
-        opacity: 0.22;
-      }
-      .hp-gov__count {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-      }
-      .hp-gov__days {
+      .hp-gov__copy { flex: 1 1 420px; max-width: 660px; }
+      .hp-gov__copy .section-label { margin-bottom: 0.6rem; }
+      .hp-gov__title {
         font-family: "Montserrat", sans-serif;
         font-weight: 800;
-        font-size: clamp(3rem, 9vw, 4.5rem);
+        font-size: clamp(1.25rem, 2.4vw, 1.55rem);
+        line-height: 1.2;
+        color: var(--text-white);
+        margin-bottom: 0.55rem;
+      }
+      .hp-gov__lede {
+        font-family: "Roboto Slab", serif;
+        font-size: 0.94rem;
+        color: var(--text-light);
+        line-height: 1.7;
+        margin-bottom: 1.1rem;
+      }
+      .hp-gov__count {
+        flex: 0 0 auto;
+        text-align: center;
+        min-width: 150px;
+      }
+      .hp-gov__days {
+        display: block;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: clamp(2.2rem, 5vw, 3rem);
         line-height: 1;
         color: #fff;
         font-variant-numeric: tabular-nums;
-        text-shadow: 0 2px 18px rgba(13, 23, 38, 0.85);
       }
       .hp-gov__days-label {
+        display: block;
         font-family: "Montserrat", sans-serif;
         font-weight: 700;
-        font-size: 0.72rem;
-        letter-spacing: 0.16em;
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--text-accent, #70d6ec);
-        margin-top: 0.5rem;
+        margin-top: 0.4rem;
       }
-      @media (min-width: 900px) {
-        .hp-gov__inner {
-          grid-template-columns: 1.35fr 0.65fr;
-          gap: 3rem;
-        }
-        .hp-gov__mark { min-height: 240px; }
+      @media (max-width: 720px) {
+        .hp-gov__inner { padding: 1.5rem 1.4rem; }
+        .hp-gov__count { width: 100%; }
       }
 
       /* =====================================================
-         ENDORSED SLATE
+         ENDORSED SLATE — compact cards: face, name, race.
+         The full case for each candidate lives on /endorsements.
          ===================================================== */
       .hp-slate-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
-        margin: 2rem 0;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1rem;
+        margin: 1.75rem 0;
       }
       .hp-slate-card {
         position: relative;
         display: block;
         border: 1px solid var(--dark-bg-light);
-        border-radius: 12px;
+        border-radius: 10px;
         background: rgba(19, 45, 68, 0.5);
         overflow: hidden;
         text-decoration: none;
@@ -725,18 +777,15 @@
       }
       .hp-slate-card:hover,
       .hp-slate-card:focus-visible {
-        transform: translateY(-5px);
+        transform: translateY(-4px);
         border-color: var(--color-light-blue);
-        box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
       }
       .hp-slate-card:focus-visible {
         outline: 2px solid var(--color-light-blue);
         outline-offset: 3px;
       }
-      .hp-slate-photo {
-        position: relative;
-        background: rgba(8, 21, 33, 0.6);
-      }
+      .hp-slate-photo { background: rgba(8, 21, 33, 0.6); }
       .hp-slate-photo img {
         display: block;
         width: 100%;
@@ -744,80 +793,52 @@
         object-fit: cover;
         object-position: center 25%;
       }
-      .hp-slate-photo::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, transparent 62%, rgba(13, 23, 38, 0.85));
-      }
-      .hp-slate-body { padding: 1.15rem 1.3rem 1.35rem; }
-      .hp-slate-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.66rem;
-        font-weight: 700;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--color-light-blue);
-        margin-bottom: 0.7rem;
-      }
-      .hp-slate-tag::before {
-        content: "";
-        width: 7px; height: 7px;
-        border-radius: 50%;
-        background: var(--color-light-blue);
-      }
+      .hp-slate-body { padding: 0.75rem 0.85rem 0.85rem; }
       .hp-slate-name {
         font-family: "Montserrat", sans-serif;
-        font-weight: 800;
-        font-size: 1.35rem;
-        line-height: 1.15;
+        font-weight: 700;
+        font-size: 0.95rem;
+        line-height: 1.2;
         color: var(--text-white);
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.3rem;
       }
       .hp-slate-race {
         font-family: "Montserrat", sans-serif;
-        font-size: 0.8rem;
+        font-size: 0.66rem;
         font-weight: 600;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
+        line-height: 1.4;
         color: var(--text-muted);
-        margin-bottom: 0.6rem;
       }
-      .hp-slate-hook {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.88rem;
-        line-height: 1.6;
-        color: var(--text-light);
-        margin-bottom: 0.85rem;
-      }
-      .hp-slate-link {
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--color-light-blue);
-      }
-      .hp-slate-card:hover .hp-slate-link { text-decoration: underline; }
-      @media (max-width: 1000px) { .hp-slate-grid { grid-template-columns: repeat(2, 1fr); } }
-      @media (max-width: 560px)  { .hp-slate-grid { grid-template-columns: 1fr; } }
+      @media (max-width: 1000px) { .hp-slate-grid { grid-template-columns: repeat(3, 1fr); } }
+      @media (max-width: 620px)  { .hp-slate-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; } }
 
       /* =====================================================
-         FOUNDING MEMBERS
+         FOUNDING MEMBERS — centered, carried by the goal bar.
          ===================================================== */
       .hp-founding {
         border-top: 3px solid;
         border-image: var(--pride-gradient) 1;
+        text-align: center;
       }
-      .hp-founding .goal-block { max-width: 520px; margin: 1.75rem 0; }
+      .hp-founding-inner { max-width: 660px; margin: 0 auto; }
+      .hp-founding-lede {
+        font-family: "Roboto Slab", serif;
+        color: var(--text-light);
+        line-height: 1.75;
+        max-width: 560px;
+        margin: 0 auto;
+      }
+      .hp-founding .goal-block { max-width: 520px; margin: 1.75rem auto; }
+      .hp-founding .hp-actions { justify-content: center; align-items: center; }
       .hp-founding-note {
         font-family: "Roboto Slab", serif;
         font-size: 0.9rem;
         font-style: italic;
         line-height: 1.65;
         color: var(--text-muted);
-        margin-top: 1rem;
+        margin: 1.1rem auto 0;
         max-width: 520px;
       }
       .hp-founding-link {
@@ -827,164 +848,8 @@
         font-size: 0.9rem;
         font-weight: 600;
         text-decoration: none;
-        align-self: center;
       }
       .hp-founding-link:hover { text-decoration: underline; }
-      @media (max-width: 920px) {
-        .hp-founding .goal-block { margin-left: auto; margin-right: auto; }
-        .hp-founding-note { margin-left: auto; margin-right: auto; }
-        .hp-founding .hp-split-copy { text-align: center; }
-        .hp-founding .hp-actions { justify-content: center; }
-      }
-
-      /* =====================================================
-         SIGNUP
-         ===================================================== */
-      .hp-signup-card {
-        position: relative;
-        max-width: 620px;
-        margin: 0 auto;
-        border-radius: 16px;
-        padding: 2.5rem 2.25rem;
-        background: rgba(19, 45, 68, 0.6);
-        border: 1px solid var(--dark-bg-lighter);
-        overflow: hidden;
-      }
-      .hp-signup-card::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 4px;
-        background: var(--pride-gradient);
-      }
-      .hp-signup-card h2 {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 800;
-        font-size: 1.6rem;
-        color: var(--text-white);
-        text-align: center;
-        margin-bottom: 0.6rem;
-      }
-      .hp-signup-sub {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.95rem;
-        color: var(--text-light);
-        text-align: center;
-        line-height: 1.65;
-        margin-bottom: 1.75rem;
-      }
-      .hp-form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-      }
-      .hp-field { margin-bottom: 1rem; }
-      .hp-field label {
-        display: block;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        margin-bottom: 0.4rem;
-      }
-      .hp-field label em {
-        font-style: normal;
-        text-transform: none;
-        letter-spacing: 0.02em;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.6);
-      }
-      .hp-field input {
-        width: 100%;
-        padding: 0.8rem 0.95rem;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        background: rgba(8, 21, 33, 0.6);
-        color: var(--text-white);
-        font-family: "Roboto Slab", serif;
-        font-size: 0.98rem;
-        transition: border-color 0.2s, box-shadow 0.2s;
-      }
-      .hp-field input::placeholder { color: rgba(255, 255, 255, 0.6); }
-      .hp-field input:focus {
-        outline: none;
-        border-color: var(--color-light-blue);
-        box-shadow: 0 0 0 3px rgba(112, 214, 236, 0.18);
-      }
-      .hp-field.hp-invalid input {
-        border-color: var(--text-danger);
-        box-shadow: 0 0 0 3px rgba(228, 3, 3, 0.14);
-      }
-      .hp-field-err {
-        display: none;
-        font-family: "Roboto Slab", serif;
-        font-size: 0.8rem;
-        color: var(--text-danger);
-        margin-top: 0.35rem;
-      }
-      .hp-field.hp-invalid .hp-field-err { display: block; }
-      .hp-form-err {
-        display: none;
-        background: rgba(228, 3, 3, 0.12);
-        border: 1px solid rgba(228, 3, 3, 0.45);
-        color: #ffd3d3;
-        border-radius: 8px;
-        padding: 0.7rem 0.95rem;
-        margin-bottom: 1rem;
-        font-family: "Roboto Slab", serif;
-        font-size: 0.88rem;
-      }
-      .hp-form-err.show { display: block; }
-      .hp-submit { width: 100%; margin-top: 0.35rem; padding: 14px 28px; font-size: 15px; position: relative; }
-      .hp-submit[disabled] { opacity: 0.75; cursor: wait; }
-      .hp-form-fine {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.78rem;
-        color: var(--text-muted);
-        text-align: center;
-        margin-top: 0.9rem;
-      }
-      .hp-signup-success {
-        display: none;
-        text-align: center;
-        padding: 1.5rem 0 0.5rem;
-      }
-      .hp-signup-success.show { display: block; }
-      .hp-success-ring {
-        width: 62px; height: 62px;
-        margin: 0 auto 1.1rem;
-        border-radius: 50%;
-        padding: 3px;
-        background: var(--pride-gradient);
-      }
-      .hp-success-ring div {
-        width: 100%; height: 100%;
-        border-radius: 50%;
-        background: var(--dark-bg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-success);
-      }
-      .hp-signup-success h3 {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 800;
-        font-size: 1.3rem;
-        color: var(--text-white);
-        margin-bottom: 0.5rem;
-      }
-      .hp-signup-success p {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        font-size: 0.95rem;
-        line-height: 1.65;
-      }
-      @media (max-width: 560px) {
-        .hp-signup-card { padding: 2rem 1.4rem; }
-        .hp-form-grid { grid-template-columns: 1fr; gap: 0; }
-      }
 
       /* =====================================================
          DONATE BAND
@@ -1027,16 +892,22 @@
         transition: opacity 0.5s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         transition-delay: 0s;
       }
-      html.reveal-ready .reveal-stagger.visible > .hp-wwd-card:nth-child(n):hover,
+      html.reveal-ready .reveal-stagger.visible > .hp-wwd-card:nth-child(n):hover {
+        transform: translateY(-5px);
+      }
       html.reveal-ready .reveal-stagger.visible > .hp-slate-card:nth-child(n):hover,
       html.reveal-ready .reveal-stagger.visible > .hp-slate-card:nth-child(n):focus-visible {
-        transform: translateY(-5px);
+        transform: translateY(-4px);
       }
 
       /* The shared layer (style.css + enhancements.js) animates buttons,
          goal bars, and reveal transitions without a reduced-motion guard.
-         Cover everything this page uses. */
+         Cover everything this page uses, including the opening effect. */
       @media (prefers-reduced-motion: reduce) {
+        .hp-intro { display: none; }
+        .hp-hero-copy > *, .hp-flag-wrap {
+          animation: none !important;
+        }
         .btn-primary, .btn-pride-shimmer, .goal-fill, .nav-logo {
           animation: none !important;
         }
@@ -1052,6 +923,9 @@
   <link rel="stylesheet" href="/css/site-template.css">
   </head>
   <body>
+    <!-- Opening effect: a Pride flag that wipes away. Decorative only. -->
+    <div class="hp-intro" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
 <div id="site-header"></div>
 
   <main id="main">
@@ -1088,11 +962,6 @@
                aria-label="Ohio state outline filled with the Progress Pride flag design">
             <defs>
               <clipPath id="hpOhioClip"><path d="M575.5,672.4L569.9,680.9L571.8,701.0L566.2,705.8L559.1,705.6L561.1,713.3L568.3,721.2L565.1,733.5L569.1,743.0L565.2,743.2L556.6,738.1L551.3,751.0L543.4,755.5L537.9,750.8L543.4,742.1L536.9,727.9L528.3,726.6L524.1,718.1L517.8,718.7L514.9,726.3L507.5,731.3L497.9,749.7L497.6,763.8L483.3,776.7L489.5,789.7L491.5,821.4L486.3,824.3L475.8,822.7L470.3,827.4L467.9,847.5L463.1,860.2L449.2,861.4L422.2,870.2L415.1,867.2L411.0,853.6L402.3,847.4L394.3,835.9L388.6,832.2L375.7,831.3L367.5,824.5L361.3,800.3L362.5,788.4L359.1,784.3L342.4,791.6L332.8,791.7L328.6,799.0L317.6,804.9L312.0,816.2L300.9,818.2L292.8,815.5L283.8,823.1L272.2,809.2L251.5,803.9L241.6,797.2L221.9,803.0L217.7,814.3L212.1,815.0L195.4,808.9L192.1,798.1L182.9,793.6L180.0,785.4L176.1,782.8L159.6,776.7L139.2,780.8L112.9,772.2L109.5,766.2L108.9,750.9L98.9,735.7L95.9,723.3L88.2,715.9L73.4,712.0L71.5,700.0L67.8,695.6L64.0,695.9L57.7,702.1L50.1,700.7L39.5,707.1L25.2,700.5L18.9,691.6L14.1,689.0L6.0,696.8L0.0,699.2L3.3,359.3L2.6,68.5L254.1,59.6L255.6,65.9L262.4,69.7L272.1,70.5L277.7,67.2L295.4,81.1L322.5,90.3L333.3,102.7L350.7,112.8L361.7,109.0L365.2,104.5L364.6,97.7L369.4,94.9L378.4,106.4L391.0,106.1L391.7,115.8L396.6,118.1L409.8,133.7L428.9,144.4L435.0,145.1L457.2,134.1L477.1,132.2L490.1,122.6L522.3,112.5L547.3,120.3L562.8,117.1L573.1,119.0L598.9,101.5L628.2,74.1L657.1,52.9L664.2,52.6L708.5,30.1L729.0,26.4L747.5,16.5L762.4,14.1L799.9,0.0L799.9,325.9L789.2,331.9L785.1,329.2L779.8,330.5L772.2,339.6L785.7,365.7L782.6,383.4L778.6,386.4L783.1,390.2L784.9,404.1L781.3,416.9L775.2,421.8L772.2,432.8L765.4,443.8L764.6,456.8L759.1,463.0L758.8,488.6L754.3,493.6L755.8,502.4L746.6,501.6L749.4,513.8L742.8,519.4L742.8,530.5L734.8,538.3L741.8,553.1L735.8,556.5L732.7,573.8L724.3,574.6L716.0,581.2L697.4,599.3L685.8,616.3L675.9,620.1L670.1,630.6L660.1,631.0L645.8,640.7L640.6,641.7L637.2,639.3L633.7,628.8L625.7,625.3L606.8,642.4L604.4,659.7L584.3,658.3L581.0,662.3L581.7,669.8L575.5,672.4Z" /></clipPath>
-              <linearGradient id="hpOhioSheenGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#ffffff" stop-opacity="0" />
-                <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.16" />
-                <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
-              </linearGradient>
             </defs>
             <g class="hp-ohio-inner">
               <g clip-path="url(#hpOhioClip)">
@@ -1107,9 +976,6 @@
                 <polygon points="-40,45 350,435 -40,825" fill="#70D6EC" />
                 <polygon points="-40,130 265,435 -40,740" fill="#ffafc8" />
                 <polygon points="-40,215 180,435 -40,655" fill="#ffffff" />
-                <g class="hp-ohio-sheen" transform="rotate(14)">
-                  <rect x="-460" y="-160" width="320" height="1290" fill="url(#hpOhioSheenGrad)" />
-                </g>
               </g>
               <path d="M575.5,672.4L569.9,680.9L571.8,701.0L566.2,705.8L559.1,705.6L561.1,713.3L568.3,721.2L565.1,733.5L569.1,743.0L565.2,743.2L556.6,738.1L551.3,751.0L543.4,755.5L537.9,750.8L543.4,742.1L536.9,727.9L528.3,726.6L524.1,718.1L517.8,718.7L514.9,726.3L507.5,731.3L497.9,749.7L497.6,763.8L483.3,776.7L489.5,789.7L491.5,821.4L486.3,824.3L475.8,822.7L470.3,827.4L467.9,847.5L463.1,860.2L449.2,861.4L422.2,870.2L415.1,867.2L411.0,853.6L402.3,847.4L394.3,835.9L388.6,832.2L375.7,831.3L367.5,824.5L361.3,800.3L362.5,788.4L359.1,784.3L342.4,791.6L332.8,791.7L328.6,799.0L317.6,804.9L312.0,816.2L300.9,818.2L292.8,815.5L283.8,823.1L272.2,809.2L251.5,803.9L241.6,797.2L221.9,803.0L217.7,814.3L212.1,815.0L195.4,808.9L192.1,798.1L182.9,793.6L180.0,785.4L176.1,782.8L159.6,776.7L139.2,780.8L112.9,772.2L109.5,766.2L108.9,750.9L98.9,735.7L95.9,723.3L88.2,715.9L73.4,712.0L71.5,700.0L67.8,695.6L64.0,695.9L57.7,702.1L50.1,700.7L39.5,707.1L25.2,700.5L18.9,691.6L14.1,689.0L6.0,696.8L0.0,699.2L3.3,359.3L2.6,68.5L254.1,59.6L255.6,65.9L262.4,69.7L272.1,70.5L277.7,67.2L295.4,81.1L322.5,90.3L333.3,102.7L350.7,112.8L361.7,109.0L365.2,104.5L364.6,97.7L369.4,94.9L378.4,106.4L391.0,106.1L391.7,115.8L396.6,118.1L409.8,133.7L428.9,144.4L435.0,145.1L457.2,134.1L477.1,132.2L490.1,122.6L522.3,112.5L547.3,120.3L562.8,117.1L573.1,119.0L598.9,101.5L628.2,74.1L657.1,52.9L664.2,52.6L708.5,30.1L729.0,26.4L747.5,16.5L762.4,14.1L799.9,0.0L799.9,325.9L789.2,331.9L785.1,329.2L779.8,330.5L772.2,339.6L785.7,365.7L782.6,383.4L778.6,386.4L783.1,390.2L784.9,404.1L781.3,416.9L775.2,421.8L772.2,432.8L765.4,443.8L764.6,456.8L759.1,463.0L758.8,488.6L754.3,493.6L755.8,502.4L746.6,501.6L749.4,513.8L742.8,519.4L742.8,530.5L734.8,538.3L741.8,553.1L735.8,556.5L732.7,573.8L724.3,574.6L716.0,581.2L697.4,599.3L685.8,616.3L675.9,620.1L670.1,630.6L660.1,631.0L645.8,640.7L640.6,641.7L637.2,639.3L633.7,628.8L625.7,625.3L606.8,642.4L604.4,659.7L584.3,658.3L581.0,662.3L581.7,669.8L575.5,672.4Z" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="4" stroke-linejoin="round" />
             </g>
@@ -1118,18 +984,59 @@
       </div>
     </section>
 
-    <!-- ============ 88 COUNTIES TICKER ============ -->
-    <div class="hp-counties">
-      <p class="sr-only">Ohio Pride organizes in all 88 Ohio counties.</p>
-      <button type="button" class="hp-counties-toggle" id="hpCountiesToggle" aria-pressed="false" aria-label="Pause the scrolling county list">
-        <svg class="icon-pause" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg>
-        <svg class="icon-play" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l14 8-14 8z"/></svg>
-      </button>
-      <div class="hp-counties-track" aria-hidden="true">
-        <div class="hp-counties-list"><span>Adams</span><i>&#9670;</i><span>Allen</span><i>&#9670;</i><span>Ashland</span><i>&#9670;</i><span>Ashtabula</span><i>&#9670;</i><span>Athens</span><i>&#9670;</i><span>Auglaize</span><i>&#9670;</i><span>Belmont</span><i>&#9670;</i><span>Brown</span><i>&#9670;</i><span>Butler</span><i>&#9670;</i><span>Carroll</span><i>&#9670;</i><span>Champaign</span><i>&#9670;</i><span>Clark</span><i>&#9670;</i><span>Clermont</span><i>&#9670;</i><span>Clinton</span><i>&#9670;</i><span>Columbiana</span><i>&#9670;</i><span>Coshocton</span><i>&#9670;</i><span>Crawford</span><i>&#9670;</i><span>Cuyahoga</span><i>&#9670;</i><span>Darke</span><i>&#9670;</i><span>Defiance</span><i>&#9670;</i><span>Delaware</span><i>&#9670;</i><span>Erie</span><i>&#9670;</i><span>Fairfield</span><i>&#9670;</i><span>Fayette</span><i>&#9670;</i><span>Franklin</span><i>&#9670;</i><span>Fulton</span><i>&#9670;</i><span>Gallia</span><i>&#9670;</i><span>Geauga</span><i>&#9670;</i><span>Greene</span><i>&#9670;</i><span>Guernsey</span><i>&#9670;</i><span>Hamilton</span><i>&#9670;</i><span>Hancock</span><i>&#9670;</i><span>Hardin</span><i>&#9670;</i><span>Harrison</span><i>&#9670;</i><span>Henry</span><i>&#9670;</i><span>Highland</span><i>&#9670;</i><span>Hocking</span><i>&#9670;</i><span>Holmes</span><i>&#9670;</i><span>Huron</span><i>&#9670;</i><span>Jackson</span><i>&#9670;</i><span>Jefferson</span><i>&#9670;</i><span>Knox</span><i>&#9670;</i><span>Lake</span><i>&#9670;</i><span>Lawrence</span><i>&#9670;</i><span>Licking</span><i>&#9670;</i><span>Logan</span><i>&#9670;</i><span>Lorain</span><i>&#9670;</i><span>Lucas</span><i>&#9670;</i><span>Madison</span><i>&#9670;</i><span>Mahoning</span><i>&#9670;</i><span>Marion</span><i>&#9670;</i><span>Medina</span><i>&#9670;</i><span>Meigs</span><i>&#9670;</i><span>Mercer</span><i>&#9670;</i><span>Miami</span><i>&#9670;</i><span>Monroe</span><i>&#9670;</i><span>Montgomery</span><i>&#9670;</i><span>Morgan</span><i>&#9670;</i><span>Morrow</span><i>&#9670;</i><span>Muskingum</span><i>&#9670;</i><span>Noble</span><i>&#9670;</i><span>Ottawa</span><i>&#9670;</i><span>Paulding</span><i>&#9670;</i><span>Perry</span><i>&#9670;</i><span>Pickaway</span><i>&#9670;</i><span>Pike</span><i>&#9670;</i><span>Portage</span><i>&#9670;</i><span>Preble</span><i>&#9670;</i><span>Putnam</span><i>&#9670;</i><span>Richland</span><i>&#9670;</i><span>Ross</span><i>&#9670;</i><span>Sandusky</span><i>&#9670;</i><span>Scioto</span><i>&#9670;</i><span>Seneca</span><i>&#9670;</i><span>Shelby</span><i>&#9670;</i><span>Stark</span><i>&#9670;</i><span>Summit</span><i>&#9670;</i><span>Trumbull</span><i>&#9670;</i><span>Tuscarawas</span><i>&#9670;</i><span>Union</span><i>&#9670;</i><span>Van Wert</span><i>&#9670;</i><span>Vinton</span><i>&#9670;</i><span>Warren</span><i>&#9670;</i><span>Washington</span><i>&#9670;</i><span>Wayne</span><i>&#9670;</i><span>Williams</span><i>&#9670;</i><span>Wood</span><i>&#9670;</i><span>Wyandot</span><i>&#9670;</i></div>
-        <div class="hp-counties-list"><span>Adams</span><i>&#9670;</i><span>Allen</span><i>&#9670;</i><span>Ashland</span><i>&#9670;</i><span>Ashtabula</span><i>&#9670;</i><span>Athens</span><i>&#9670;</i><span>Auglaize</span><i>&#9670;</i><span>Belmont</span><i>&#9670;</i><span>Brown</span><i>&#9670;</i><span>Butler</span><i>&#9670;</i><span>Carroll</span><i>&#9670;</i><span>Champaign</span><i>&#9670;</i><span>Clark</span><i>&#9670;</i><span>Clermont</span><i>&#9670;</i><span>Clinton</span><i>&#9670;</i><span>Columbiana</span><i>&#9670;</i><span>Coshocton</span><i>&#9670;</i><span>Crawford</span><i>&#9670;</i><span>Cuyahoga</span><i>&#9670;</i><span>Darke</span><i>&#9670;</i><span>Defiance</span><i>&#9670;</i><span>Delaware</span><i>&#9670;</i><span>Erie</span><i>&#9670;</i><span>Fairfield</span><i>&#9670;</i><span>Fayette</span><i>&#9670;</i><span>Franklin</span><i>&#9670;</i><span>Fulton</span><i>&#9670;</i><span>Gallia</span><i>&#9670;</i><span>Geauga</span><i>&#9670;</i><span>Greene</span><i>&#9670;</i><span>Guernsey</span><i>&#9670;</i><span>Hamilton</span><i>&#9670;</i><span>Hancock</span><i>&#9670;</i><span>Hardin</span><i>&#9670;</i><span>Harrison</span><i>&#9670;</i><span>Henry</span><i>&#9670;</i><span>Highland</span><i>&#9670;</i><span>Hocking</span><i>&#9670;</i><span>Holmes</span><i>&#9670;</i><span>Huron</span><i>&#9670;</i><span>Jackson</span><i>&#9670;</i><span>Jefferson</span><i>&#9670;</i><span>Knox</span><i>&#9670;</i><span>Lake</span><i>&#9670;</i><span>Lawrence</span><i>&#9670;</i><span>Licking</span><i>&#9670;</i><span>Logan</span><i>&#9670;</i><span>Lorain</span><i>&#9670;</i><span>Lucas</span><i>&#9670;</i><span>Madison</span><i>&#9670;</i><span>Mahoning</span><i>&#9670;</i><span>Marion</span><i>&#9670;</i><span>Medina</span><i>&#9670;</i><span>Meigs</span><i>&#9670;</i><span>Mercer</span><i>&#9670;</i><span>Miami</span><i>&#9670;</i><span>Monroe</span><i>&#9670;</i><span>Montgomery</span><i>&#9670;</i><span>Morgan</span><i>&#9670;</i><span>Morrow</span><i>&#9670;</i><span>Muskingum</span><i>&#9670;</i><span>Noble</span><i>&#9670;</i><span>Ottawa</span><i>&#9670;</i><span>Paulding</span><i>&#9670;</i><span>Perry</span><i>&#9670;</i><span>Pickaway</span><i>&#9670;</i><span>Pike</span><i>&#9670;</i><span>Portage</span><i>&#9670;</i><span>Preble</span><i>&#9670;</i><span>Putnam</span><i>&#9670;</i><span>Richland</span><i>&#9670;</i><span>Ross</span><i>&#9670;</i><span>Sandusky</span><i>&#9670;</i><span>Scioto</span><i>&#9670;</i><span>Seneca</span><i>&#9670;</i><span>Shelby</span><i>&#9670;</i><span>Stark</span><i>&#9670;</i><span>Summit</span><i>&#9670;</i><span>Trumbull</span><i>&#9670;</i><span>Tuscarawas</span><i>&#9670;</i><span>Union</span><i>&#9670;</i><span>Van Wert</span><i>&#9670;</i><span>Vinton</span><i>&#9670;</i><span>Warren</span><i>&#9670;</i><span>Washington</span><i>&#9670;</i><span>Wayne</span><i>&#9670;</i><span>Williams</span><i>&#9670;</i><span>Wood</span><i>&#9670;</i><span>Wyandot</span><i>&#9670;</i></div>
+    <!-- ============ SIGNUP (moved to the top of the page) ============ -->
+    <section class="hp-signup" aria-labelledby="hpSignupTitle">
+      <div class="container">
+        <div class="hp-signup-band">
+          <div class="hp-signup-copy">
+            <h2 id="hpSignupTitle">Get the Ohio Pride briefing</h2>
+            <p class="hp-signup-sub">
+              Action alerts, endorsements, and scorecard updates. A few emails
+              a month. Unsubscribe anytime.
+            </p>
+          </div>
+
+          <div class="hp-signup-formwrap">
+            <form id="hp-signup-form" novalidate>
+              <div class="hp-form-err" id="hpFormErr" role="alert"></div>
+
+              <!-- Honeypot -->
+              <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;">
+                <label for="hp-website">Website</label>
+                <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="hp-signup-row">
+                <div class="hp-field hp-field--email">
+                  <label class="sr-only" for="hp-email">Email address</label>
+                  <input type="email" id="hp-email" name="email" required aria-required="true"
+                         autocomplete="email" placeholder="you@example.com" aria-describedby="hp-email-err" />
+                  <div class="hp-field-err" id="hp-email-err">Please enter a valid email address.</div>
+                </div>
+                <div class="hp-field hp-field--zip">
+                  <label class="sr-only" for="hp-zip">ZIP code</label>
+                  <input type="text" id="hp-zip" name="zip" required inputmode="numeric" maxlength="10"
+                         autocomplete="postal-code" placeholder="ZIP" aria-describedby="hp-zip-err" />
+                  <div class="hp-field-err" id="hp-zip-err">Please enter a valid ZIP code.</div>
+                </div>
+                <button type="submit" class="btn btn-primary hp-submit" id="hpSubmit">Sign Me Up</button>
+              </div>
+              <p class="hp-form-fine">We never sell, trade, or rent your information.</p>
+            </form>
+
+            <div class="hp-signup-success" id="hpSignupSuccess" role="status" tabindex="-1">
+              <div class="hp-success-ring"><div>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div></div>
+              <div>
+                <h3>You're on the list.</h3>
+                <p>Thanks for joining Ohio Pride. Watch your inbox for the next briefing.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
     <!-- ============ LIVE NUMBERS ============ -->
     <section class="hp-stats" aria-label="Ohio Pride by the numbers">
@@ -1213,14 +1120,14 @@
               bill sponsorships. Find your state senator and representative,
               see their grade, and share it with your community.
             </p>
-            <div class="hp-grades">
-              <div class="hp-grade"><b style="color:var(--text-success)">A+</b><span>Champion</span></div>
-              <div class="hp-grade"><b style="color:#22c55e">A</b><span>Strong Ally</span></div>
-              <div class="hp-grade"><b style="color:#65a30d">A-</b><span>Reliable Ally</span></div>
-              <div class="hp-grade"><b style="color:#84cc16">B</b><span>Supportive</span></div>
-              <div class="hp-grade"><b style="color:#eab308">C</b><span>Mixed Record</span></div>
-              <div class="hp-grade"><b style="color:#f97316">D</b><span>Unfriendly</span></div>
-              <div class="hp-grade"><b style="color:var(--text-danger)">F</b><span>Hostile</span></div>
+            <div class="hp-gradeline">
+              <span><b style="color:var(--text-success)">A+</b> Champion</span>
+              <span><b style="color:#22c55e">A</b> Strong Ally</span>
+              <span><b style="color:#65a30d">A-</b> Reliable Ally</span>
+              <span><b style="color:#84cc16">B</b> Supportive</span>
+              <span><b style="color:#eab308">C</b> Mixed Record</span>
+              <span><b style="color:#f97316">D</b> Unfriendly</span>
+              <span><b style="color:var(--text-danger)">F</b> Hostile</span>
             </div>
             <form class="hp-find" action="/scorecard" method="get">
               <label class="hp-find-label" for="hpFindInput">Look up your legislators</label>
@@ -1256,42 +1163,26 @@
          Sits between the scorecard (which grades) and the slate (which
          endorses) on purpose, and says plainly that it does neither. The
          guide documents a race in which neither candidate has an Ohio
-         voting record to grade.
-
-         The gate came off and the guide is public, so this band links
-         straight to it. /js/guide-popup.js runs a short promotion for the
-         same page on top of this; it expires on its own. -->
+         voting record to grade. -->
     <section class="section hp-gov" aria-labelledby="hpGovTitle">
       <div class="container">
         <div class="hp-gov__inner reveal">
           <div class="hp-gov__copy">
             <div class="section-label">November 3, 2026 &middot; Ohio Votes for Governor</div>
-            <h2 class="section-title" id="hpGovTitle" style="margin-bottom: 1rem;">
-              Two roads to the Governor&rsquo;s Mansion.
-            </h2>
+            <h2 class="hp-gov__title" id="hpGovTitle">Acton and Ramaswamy, side by side.</h2>
             <p class="hp-gov__lede">
-              Amy Acton and Vivek Ramaswamy are asking for the same job, and the
-              next governor signs or vetoes every equality bill that reaches the
-              desk. We put their records side by side &mdash; every line dated,
-              sourced, and linked.
+              The next governor signs or vetoes every equality bill that
+              reaches the desk. Our guide puts both records on one page
+              &mdash; every line dated, sourced, and linked. No grades, no
+              endorsement, and where a candidate has taken no position, we
+              say so.
             </p>
-            <ul class="hp-gov__points">
-              <li><strong>No grades.</strong> Neither candidate has an Ohio voting record to score.</li>
-              <li><strong>No endorsement.</strong> This guide takes no side in the race.</li>
-              <li><strong>Silence counts.</strong> Where a candidate has taken no position, we say so.</li>
-            </ul>
-            <div class="hp-actions">
-              <a href="/governor-guide" class="btn btn-primary">Read the Governor Guide</a>
-            </div>
+            <a href="/governor-guide" class="btn btn-primary">Read the Governor Guide</a>
           </div>
 
-          <div class="hp-gov__mark" aria-hidden="true">
-            <img class="hp-gov__ohio" src="/assets/img/ohio-pride-outline.svg" alt=""
-                 loading="lazy" decoding="async" width="800" height="870" />
-            <div class="hp-gov__count">
-              <span class="hp-gov__days" id="hpGovDays">&mdash;</span>
-              <span class="hp-gov__days-label">days until Election Day</span>
-            </div>
+          <div class="hp-gov__count">
+            <span class="hp-gov__days" id="hpGovDays">&mdash;</span>
+            <span class="hp-gov__days-label">days until Election Day</span>
           </div>
         </div>
       </div>
@@ -1303,7 +1194,7 @@
         <div class="hp-section-head hp-center">
           <div class="section-label">The 2026 Slate</div>
           <h2 class="section-title" style="margin-bottom: 0.75rem;">Endorsed by Ohio Pride</h2>
-          <p>Pro-equality candidates we are proud to stand behind this cycle.</p>
+          <p>Pro-equality candidates we are proud to stand behind this cycle. The full case for each is on the endorsements page.</p>
         </div>
         <div class="hp-slate-grid reveal-stagger">
           <a class="hp-slate-card" href="/endorsements/christine-cockley">
@@ -1311,11 +1202,8 @@
               <img src="/assets/endorsements/christine-cockley.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Christine Cockley</div>
               <div class="hp-slate-race">Ohio House, District 6</div>
-              <p class="hp-slate-hook">The only out LGBTQ+ member of the Ohio House, running for reelection.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
           <a class="hp-slate-card" href="/endorsements/stacie-baker">
@@ -1323,11 +1211,8 @@
               <img src="/assets/endorsements/stacie-baker.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Stacie Baker</div>
               <div class="hp-slate-race">Ohio Senate, District 3</div>
-              <p class="hp-slate-hook">Three-term Reynoldsburg councilmember running to flip a winnable seat.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
           <a class="hp-slate-card" href="/endorsements/rose-lounsbury">
@@ -1335,11 +1220,8 @@
               <img src="/assets/endorsements/rose-lounsbury.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Rose Lounsbury</div>
               <div class="hp-slate-race">Ohio House, District 36</div>
-              <p class="hp-slate-hook">Former public school teacher in one of Ohio's most flippable districts.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
           <a class="hp-slate-card" href="/endorsements/karl-keith">
@@ -1347,11 +1229,8 @@
               <img src="/assets/endorsements/karl-keith.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Karl Keith</div>
               <div class="hp-slate-race">Montgomery County Auditor</div>
-              <p class="hp-slate-hook">Longtime auditor whose office sets the state standard for fair appraisals.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
           <a class="hp-slate-card" href="/endorsements/job-perry">
@@ -1359,11 +1238,8 @@
               <img src="/assets/endorsements/job-perry.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Job Esau Perry</div>
               <div class="hp-slate-race">Summit County Common Pleas</div>
-              <p class="hp-slate-hook">Probate magistrate and 20-year trial attorney running for the bench.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
           <a class="hp-slate-card" href="/endorsements/cara-jacob">
@@ -1371,11 +1247,8 @@
               <img src="/assets/endorsements/cara-jacob-card.jpg" alt="" loading="lazy" decoding="async" width="920" height="920" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Cara Jacob</div>
               <div class="hp-slate-race">Ohio Senate, District 7</div>
-              <p class="hp-slate-hook">A UC neurologist running for the open seat that helps decide the Senate.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
           <a class="hp-slate-card" href="/endorsements/seth-walsh">
@@ -1383,11 +1256,8 @@
               <img src="/assets/endorsements/seth-walsh-card.jpg" alt="" loading="lazy" decoding="async" width="540" height="540" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Seth Walsh</div>
               <div class="hp-slate-race">Ohio Treasurer</div>
-              <p class="hp-slate-hook">Cincinnati councilmember and Ohio Pride founding member, running statewide.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
           <a class="hp-slate-card" href="/endorsements/karen-brownlee">
@@ -1395,11 +1265,8 @@
               <img src="/assets/endorsements/karen-brownlee.jpg" alt="" loading="lazy" decoding="async" width="380" height="526" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Karen Brownlee</div>
               <div class="hp-slate-race">Ohio House, District 28</div>
-              <p class="hp-slate-hook">PRIDE Act sponsor with the top score on our legislative scorecard.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
           <a class="hp-slate-card" href="/endorsements/caleb-price">
@@ -1407,11 +1274,8 @@
               <img src="/assets/endorsements/caleb-price.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1081" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Caleb Price</div>
               <div class="hp-slate-race">Ohio House, District 30</div>
-              <p class="hp-slate-hook">Born and raised Westsider running to write marriage equality into Ohio law.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
           <a class="hp-slate-card" href="/endorsements/jeff-givan">
@@ -1419,11 +1283,8 @@
               <img src="/assets/endorsements/jeff-givan-card.jpg" alt="" loading="lazy" decoding="async" width="880" height="880" />
             </div>
             <div class="hp-slate-body">
-              <div class="hp-slate-tag">Endorsed</div>
               <div class="hp-slate-name">Jeff Givan</div>
               <div class="hp-slate-race">Ohio House, District 78</div>
-              <p class="hp-slate-hook">Lima Pride Alliance co-founder challenging the Speaker of the Ohio House.</p>
-              <span class="hp-slate-link">Read why &rarr;</span>
             </div>
           </a>
         </div>
@@ -1437,119 +1298,34 @@
     <!-- ============ FOUNDING MEMBERS ============ -->
     <section class="section hp-founding">
       <div class="container">
-        <div class="hp-split hp-split-flip">
-          <div class="hp-split-media reveal">
-            <div class="hp-photo hp-photo--wide">
-              <picture>
-                <source type="image/avif" srcset="/assets/img/columbus-skyline-768.avif 768w, /assets/img/columbus-skyline-1280.avif 1280w" sizes="(max-width: 920px) 92vw, 540px" />
-                <source type="image/webp" srcset="/assets/img/columbus-skyline-768.webp 768w, /assets/img/columbus-skyline-1280.webp 1280w" sizes="(max-width: 920px) 92vw, 540px" />
-                <img src="/assets/img/columbus-skyline-1280.jpg"
-                     srcset="/assets/img/columbus-skyline-768.jpg 768w, /assets/img/columbus-skyline-1280.jpg 1280w"
-                     sizes="(max-width: 920px) 92vw, 540px"
-                     alt="Downtown Columbus skyline above the Scioto River" loading="lazy" decoding="async" width="1280" height="498" />
-              </picture>
-            </div>
-            <div class="hp-photo-credit">Columbus on the Scioto River</div>
-          </div>
-          <div class="hp-split-copy reveal">
-            <div class="section-label">Join Us</div>
-            <h2 class="section-title" style="margin-bottom: 1rem;">Be one of the first 1,969.</h2>
-            <p style="font-family:'Roboto Slab',serif; color:var(--text-light); line-height:1.75; max-width:540px;">
-              Founding membership stays open until 1,969 Ohioans have signed on.
-              Every founding member powers our work to elect pro-equality
-              candidates and protect LGBTQ+ rights across the state.
-            </p>
-
-            <div class="goal-block">
-              <div class="goal-top">
-                <span class="goal-text">Founding Members</span>
-                <span class="goal-amt">1,969</span>
-              </div>
-              <div class="goal-track">
-                <div class="goal-fill" id="goalFill" style="width: 8%"></div>
-              </div>
-              <div class="goal-note" id="progressText">158 of 1,969 Founding Members</div>
-            </div>
-
-            <div class="hp-actions">
-              <a href="/donate/founding-member" class="btn btn-pride-shimmer">Become a Founding Member</a>
-              <a href="/founding-members" class="hp-founding-link">Meet the Founding Members &rarr;</a>
-            </div>
-            <p class="hp-founding-note">
-              The number honors 1969, the year of the Stonewall uprising that
-              sparked the modern LGBTQ+ rights movement.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ SIGNUP ============ -->
-    <section class="section">
-      <div class="container">
-        <div class="hp-signup-card reveal">
-          <h2>Get the Ohio Pride briefing</h2>
-          <p class="hp-signup-sub">
-            Action alerts, endorsements, and scorecard updates. A few emails a
-            month. Unsubscribe anytime.
+        <div class="hp-founding-inner reveal">
+          <div class="section-label">Join Us</div>
+          <h2 class="section-title" style="margin-bottom: 1rem;">Be one of the first 1,969.</h2>
+          <p class="hp-founding-lede">
+            Founding membership stays open until 1,969 Ohioans have signed on.
+            Every founding member powers our work to elect pro-equality
+            candidates and protect LGBTQ+ rights across the state.
           </p>
 
-          <form id="hp-signup-form" novalidate>
-            <div class="hp-form-err" id="hpFormErr" role="alert"></div>
-
-            <!-- Honeypot -->
-            <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;">
-              <label for="hp-website">Website</label>
-              <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off" />
+          <div class="goal-block">
+            <div class="goal-top">
+              <span class="goal-text">Founding Members</span>
+              <span class="goal-amt">1,969</span>
             </div>
-
-            <div class="hp-form-grid">
-              <div class="hp-field">
-                <label for="hp-first">First Name</label>
-                <input type="text" id="hp-first" name="first_name" required maxlength="100"
-                       autocomplete="given-name" placeholder="Jane" aria-describedby="hp-first-err" />
-                <div class="hp-field-err" id="hp-first-err">Please enter your first name.</div>
-              </div>
-              <div class="hp-field">
-                <label for="hp-last">Last Name</label>
-                <input type="text" id="hp-last" name="last_name" required maxlength="100"
-                       autocomplete="family-name" placeholder="Buckeye" aria-describedby="hp-last-err" />
-                <div class="hp-field-err" id="hp-last-err">Please enter your last name.</div>
-              </div>
+            <div class="goal-track">
+              <div class="goal-fill" id="goalFill" style="width: 8%"></div>
             </div>
-
-            <div class="hp-field">
-              <label for="hp-email">Email</label>
-              <input type="email" id="hp-email" name="email" required aria-required="true"
-                     autocomplete="email" placeholder="you@example.com" aria-describedby="hp-email-err" />
-              <div class="hp-field-err" id="hp-email-err">Please enter a valid email address.</div>
-            </div>
-
-            <div class="hp-form-grid">
-              <div class="hp-field">
-                <label for="hp-phone">Phone <em>(optional)</em></label>
-                <input type="tel" id="hp-phone" name="phone" maxlength="40"
-                       autocomplete="tel" placeholder="(614) 555-0188" />
-              </div>
-              <div class="hp-field">
-                <label for="hp-zip">ZIP Code</label>
-                <input type="text" id="hp-zip" name="zip" required inputmode="numeric" maxlength="10"
-                       autocomplete="postal-code" placeholder="43215" aria-describedby="hp-zip-err" />
-                <div class="hp-field-err" id="hp-zip-err">Please enter a valid ZIP code.</div>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary hp-submit" id="hpSubmit">Sign Me Up</button>
-            <p class="hp-form-fine">We never sell, trade, or rent your information.</p>
-          </form>
-
-          <div class="hp-signup-success" id="hpSignupSuccess" role="status" tabindex="-1">
-            <div class="hp-success-ring"><div>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            </div></div>
-            <h3>You're on the list.</h3>
-            <p>Thanks for joining Ohio Pride. Watch your inbox for the next briefing.</p>
+            <div class="goal-note" id="progressText">158 of 1,969 Founding Members</div>
           </div>
+
+          <div class="hp-actions">
+            <a href="/donate/founding-member" class="btn btn-pride-shimmer">Become a Founding Member</a>
+            <a href="/founding-members" class="hp-founding-link">Meet the Founding Members &rarr;</a>
+          </div>
+          <p class="hp-founding-note">
+            The number honors 1969, the year of the Stonewall uprising that
+            sparked the modern LGBTQ+ rights movement.
+          </p>
         </div>
       </div>
     </section>
@@ -1578,19 +1354,6 @@
 
         var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-        /* ---- 88-county ticker (markup is static; JS only adds pause) ---- */
-        var counties = document.querySelector(".hp-counties");
-        var countiesToggle = document.getElementById("hpCountiesToggle");
-        if (counties && countiesToggle) {
-          counties.classList.add("js-on");
-          countiesToggle.addEventListener("click", function () {
-            var paused = counties.classList.toggle("is-paused");
-            countiesToggle.setAttribute("aria-pressed", paused ? "true" : "false");
-            countiesToggle.setAttribute("aria-label",
-              paused ? "Resume the scrolling county list" : "Pause the scrolling county list");
-          });
-        }
-
         /* ---- Days until Election Day (governor guide band) ----
            Counted from the browser's own clock, so it stays right without a
            deploy. Polls open 6:30 a.m. Eastern on November 3, 2026. */
@@ -1608,7 +1371,7 @@
             govDays.nextElementSibling.textContent = "Polls close at 7:30 p.m.";
           } else {
             /* After the election the countdown is noise; drop it and let the
-               Ohio mark carry the panel on its own. */
+               copy carry the band on its own. */
             govDays.closest(".hp-gov__count").hidden = true;
           }
         }
@@ -1704,7 +1467,7 @@
           })
           .catch(function () { /* fail open: static numbers stay */ });
 
-        /* ---- Signup form ---- */
+        /* ---- Signup form (email + ZIP; the API needs nothing more) ---- */
         var form = document.getElementById("hp-signup-form");
         if (!form) return;
         var submitBtn = document.getElementById("hpSubmit");
@@ -1730,7 +1493,7 @@
           return ok;
         }
 
-        ["hp-first", "hp-last", "hp-email", "hp-zip"].forEach(function (id) {
+        ["hp-email", "hp-zip"].forEach(function (id) {
           var input = document.getElementById(id);
           if (!input) return;
           input.addEventListener("blur", function () { if (input.value) validateField(input); });
@@ -1743,7 +1506,7 @@
           e.preventDefault();
           formErr.classList.remove("show");
 
-          var inputs = ["hp-first", "hp-last", "hp-email", "hp-zip"].map(function (id) {
+          var inputs = ["hp-email", "hp-zip"].map(function (id) {
             return document.getElementById(id);
           });
           var allOk = true;
@@ -1765,10 +1528,7 @@
 
           var payload = {
             website: (document.getElementById("hp-website") || {}).value || "",
-            first_name: document.getElementById("hp-first").value.trim(),
-            last_name: document.getElementById("hp-last").value.trim(),
             email: document.getElementById("hp-email").value.trim().toLowerCase(),
-            phone: (document.getElementById("hp-phone").value || "").trim() || null,
             zip: document.getElementById("hp-zip").value.trim(),
             referrer: document.referrer || null,
             source: "homepage"
