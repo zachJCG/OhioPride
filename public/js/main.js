@@ -74,6 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ".reveal, .reveal-left, .reveal-stagger",
   );
   if (revealEls.length) {
+    /* threshold must stay 0: a ratio threshold can never be reached by an
+       element taller than the viewport (a stagger grid on a phone), which
+       left those sections permanently hidden. The negative bottom margin
+       keeps the "meaningfully in view" feel instead. */
     var revealObserver = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
@@ -83,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+      { threshold: 0, rootMargin: "0px 0px -80px 0px" },
     );
     revealEls.forEach(function (el) {
       revealObserver.observe(el);
