@@ -76,14 +76,19 @@
     <!-- seo:end -->
 
     <script>
-      /* The opening flag-wipe plays once per browser session. This runs
-         before first paint so returning visitors never see a flash of the
-         overlay. Fails open: blocked storage just means it plays again. */
+      /* The opening effect plays once per browser session: on a first visit
+         the hero's Ohio cutout waits as a bare outline until the visitor
+         scrolls, which flies the flag into it. This runs before first paint
+         so there is no flash either way. Fails open: blocked storage just
+         means it plays again; no JS means the flag simply starts full. */
       try {
         if (sessionStorage.getItem("ohpIntroSeen")) {
           document.documentElement.classList.add("hp-intro-seen");
         } else {
           sessionStorage.setItem("ohpIntroSeen", "1");
+          if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            document.documentElement.classList.add("hp-flag-wait");
+          }
         }
       } catch (e) {}
     </script>
@@ -108,61 +113,87 @@
       }
 
       /* =====================================================
-         OPENING EFFECT
-         A Pride flag covers the page for a beat, then each
-         stripe wipes off to the right while the hero rises in.
-         Pure CSS so it cannot strand the page if JS fails;
-         the head script skips it after the first view.
+         OPENING EFFECT — fly the flag.
+         First visit in a session: the Ohio cutout waits as a
+         bare outline with a small cue, and the visitor's first
+         scroll (or tap on the cue, or six quiet seconds) slides
+         the Progress Pride stripes into it. Nothing covers the
+         page and nothing blocks scrolling. The head script only
+         adds .hp-flag-wait when JS runs, motion is allowed, and
+         this session has not seen it — everyone else gets the
+         full flag straight away.
          ===================================================== */
-      .hp-intro {
-        position: fixed;
-        inset: 0;
-        z-index: 2000;
-        display: flex;
-        flex-direction: column;
-        pointer-events: none;
-        animation: hpIntroDone 0s linear 1.4s forwards;
+      .hp-ohio .hp-stripe {
+        transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
       }
-      .hp-intro i { flex: 1; }
-      .hp-intro i:nth-child(1) { background: #E40303; }
-      .hp-intro i:nth-child(2) { background: #FFBC00; }
-      .hp-intro i:nth-child(3) { background: #FFED00; }
-      .hp-intro i:nth-child(4) { background: #008026; }
-      .hp-intro i:nth-child(5) { background: #004DFF; }
-      .hp-intro i:nth-child(6) { background: #750787; }
-      @media screen {
-        .hp-intro i { animation: hpIntroSlide 0.7s cubic-bezier(0.7, 0, 0.3, 1) forwards; }
-        .hp-intro i:nth-child(1) { animation-delay: 0.30s; }
-        .hp-intro i:nth-child(2) { animation-delay: 0.36s; }
-        .hp-intro i:nth-child(3) { animation-delay: 0.42s; }
-        .hp-intro i:nth-child(4) { animation-delay: 0.48s; }
-        .hp-intro i:nth-child(5) { animation-delay: 0.54s; }
-        .hp-intro i:nth-child(6) { animation-delay: 0.60s; }
+      /* Stripes land left to right, chevrons follow, layered. */
+      .hp-ohio rect.hp-stripe:nth-of-type(1) { transition-delay: 0s; }
+      .hp-ohio rect.hp-stripe:nth-of-type(2) { transition-delay: 0.05s; }
+      .hp-ohio rect.hp-stripe:nth-of-type(3) { transition-delay: 0.10s; }
+      .hp-ohio rect.hp-stripe:nth-of-type(4) { transition-delay: 0.15s; }
+      .hp-ohio rect.hp-stripe:nth-of-type(5) { transition-delay: 0.20s; }
+      .hp-ohio rect.hp-stripe:nth-of-type(6) { transition-delay: 0.25s; }
+      .hp-ohio polygon.hp-stripe:nth-of-type(1) { transition-delay: 0.30s; }
+      .hp-ohio polygon.hp-stripe:nth-of-type(2) { transition-delay: 0.36s; }
+      .hp-ohio polygon.hp-stripe:nth-of-type(3) { transition-delay: 0.42s; }
+      .hp-ohio polygon.hp-stripe:nth-of-type(4) { transition-delay: 0.48s; }
+      .hp-ohio polygon.hp-stripe:nth-of-type(5) { transition-delay: 0.54s; }
+      html.hp-flag-wait .hp-ohio .hp-stripe {
+        transform: translateX(-870px);
+        transition: none;
       }
-      @keyframes hpIntroSlide { to { transform: translateX(102%); } }
-      @keyframes hpIntroDone { to { visibility: hidden; } }
 
+      .hp-scroll-cue {
+        display: none;
+        position: absolute;
+        left: 50%;
+        bottom: 0.9rem;
+        transform: translateX(-50%);
+        z-index: 2;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 1rem;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--text-muted);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .hp-scroll-cue:hover, .hp-scroll-cue:focus-visible { color: var(--color-light-blue); }
+      .hp-scroll-cue:focus-visible {
+        outline: 2px solid var(--color-light-blue);
+        outline-offset: 2px;
+      }
+      .hp-scroll-cue svg { display: block; }
+      html.hp-flag-wait .hp-scroll-cue { display: inline-flex; }
+      @media (prefers-reduced-motion: no-preference) {
+        html.hp-flag-wait .hp-scroll-cue svg { animation: hpCueBob 1.8s ease-in-out infinite; }
+      }
+      @keyframes hpCueBob {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(4px); }
+      }
+
+      /* Gentle first-visit rise for the hero copy. */
       @media screen {
         html:not(.hp-intro-seen) .hp-hero-copy > * {
-          animation: hpRise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+          animation: hpRise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
-        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(1) { animation-delay: 0.60s; }
-        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(2) { animation-delay: 0.70s; }
-        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(3) { animation-delay: 0.80s; }
-        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(4) { animation-delay: 0.90s; }
-        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(5) { animation-delay: 1.00s; }
-        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(6) { animation-delay: 1.10s; }
-        html:not(.hp-intro-seen) .hp-flag-wrap {
-          animation: hpFlagIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.85s both;
-        }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(1) { animation-delay: 0.05s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(2) { animation-delay: 0.13s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(3) { animation-delay: 0.21s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(4) { animation-delay: 0.29s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(5) { animation-delay: 0.37s; }
+        html:not(.hp-intro-seen) .hp-hero-copy > *:nth-child(6) { animation-delay: 0.45s; }
       }
-      html.hp-intro-seen .hp-intro { display: none; }
       @keyframes hpRise {
-        from { opacity: 0; transform: translateY(18px); }
-        to   { opacity: 1; transform: none; }
-      }
-      @keyframes hpFlagIn {
-        from { opacity: 0; transform: scale(0.95) translateY(12px); }
+        from { opacity: 0; transform: translateY(14px); }
         to   { opacity: 1; transform: none; }
       }
 
@@ -368,9 +399,21 @@
       .hp-field { margin: 0; }
       .hp-field--email { flex: 1 1 220px; min-width: 0; }
       .hp-field--zip { flex: 0 1 120px; min-width: 90px; }
+      .hp-field--submit { flex: 0 0 auto; }
+      .hp-field-label {
+        display: block;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.4rem;
+      }
       .hp-field input {
         width: 100%;
-        padding: 0.78rem 0.95rem;
+        height: 48px;
+        padding: 0 0.95rem;
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.18);
         background: rgba(8, 21, 33, 0.6);
@@ -409,7 +452,7 @@
         font-size: 0.85rem;
       }
       .hp-form-err.show { display: block; }
-      .hp-submit { flex: 0 0 auto; padding: 12px 24px; font-size: 14px; }
+      .hp-submit { height: 48px; padding: 0 24px; font-size: 14px; }
       .hp-submit[disabled] { opacity: 0.75; cursor: wait; }
       .hp-form-fine {
         font-family: "Roboto Slab", serif;
@@ -456,9 +499,9 @@
       }
       @media (max-width: 560px) {
         .hp-signup-row { flex-wrap: wrap; }
-        .hp-field--email { flex: 1 1 100%; }
-        .hp-field--zip { flex: 1 1 100px; }
-        .hp-submit { flex: 1 1 auto; }
+        .hp-field--email, .hp-field--zip, .hp-field--submit { flex: 1 1 100%; }
+        .hp-field--submit .hp-field-label { display: none; }
+        .hp-submit { width: 100%; }
       }
 
       /* =====================================================
@@ -687,7 +730,7 @@
         justify-content: space-between;
         padding: 1.75rem 2rem;
         border-radius: 16px;
-        overflow: clip;
+        overflow: hidden;
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
         border: 1px solid rgba(255, 255, 255, 0.12);
@@ -904,13 +947,19 @@
          goal bars, and reveal transitions without a reduced-motion guard.
          Cover everything this page uses, including the opening effect. */
       @media (prefers-reduced-motion: reduce) {
-        .hp-intro { display: none; }
-        .hp-hero-copy > *, .hp-flag-wrap {
+        /* The head script never adds .hp-flag-wait under reduced motion;
+           these two lines are the belt to that suspender. */
+        html.hp-flag-wait .hp-ohio .hp-stripe { transform: none; transition: none; }
+        .hp-scroll-cue { display: none !important; }
+        .hp-hero-copy > * {
           animation: none !important;
         }
         .btn-primary, .btn-pride-shimmer, .goal-fill, .nav-logo {
           animation: none !important;
         }
+        /* style.css pulses the goal bar's glow cap on the pseudo-element,
+           which `animation: none` on .goal-fill does not reach. */
+        .goal-fill::after { animation: none !important; }
         html.reveal-ready .reveal,
         html.reveal-ready .reveal-left,
         html.reveal-ready .reveal-stagger > * {
@@ -923,9 +972,6 @@
   <link rel="stylesheet" href="/css/site-template.css">
   </head>
   <body>
-    <!-- Opening effect: a Pride flag that wipes away. Decorative only. -->
-    <div class="hp-intro" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-
 <div id="site-header"></div>
 
   <main id="main">
@@ -965,23 +1011,30 @@
             </defs>
             <g class="hp-ohio-inner">
               <g clip-path="url(#hpOhioClip)">
-                <rect x="0" y="0" width="800" height="146" fill="#E40303" />
-                <rect x="0" y="145" width="800" height="146" fill="#FFBC00" />
-                <rect x="0" y="290" width="800" height="146" fill="#FFED00" />
-                <rect x="0" y="435" width="800" height="146" fill="#008026" />
-                <rect x="0" y="580" width="800" height="146" fill="#004DFF" />
-                <rect x="0" y="725" width="800" height="146" fill="#750787" />
-                <polygon points="-40,-125 520,435 -40,995" fill="#000000" />
-                <polygon points="-40,-40 435,435 -40,910" fill="#613915" />
-                <polygon points="-40,45 350,435 -40,825" fill="#70D6EC" />
-                <polygon points="-40,130 265,435 -40,740" fill="#ffafc8" />
-                <polygon points="-40,215 180,435 -40,655" fill="#ffffff" />
+                <rect class="hp-stripe" x="0" y="0" width="800" height="146" fill="#E40303" />
+                <rect class="hp-stripe" x="0" y="145" width="800" height="146" fill="#FFBC00" />
+                <rect class="hp-stripe" x="0" y="290" width="800" height="146" fill="#FFED00" />
+                <rect class="hp-stripe" x="0" y="435" width="800" height="146" fill="#008026" />
+                <rect class="hp-stripe" x="0" y="580" width="800" height="146" fill="#004DFF" />
+                <rect class="hp-stripe" x="0" y="725" width="800" height="146" fill="#750787" />
+                <polygon class="hp-stripe" points="-40,-125 520,435 -40,995" fill="#000000" />
+                <polygon class="hp-stripe" points="-40,-40 435,435 -40,910" fill="#613915" />
+                <polygon class="hp-stripe" points="-40,45 350,435 -40,825" fill="#70D6EC" />
+                <polygon class="hp-stripe" points="-40,130 265,435 -40,740" fill="#ffafc8" />
+                <polygon class="hp-stripe" points="-40,215 180,435 -40,655" fill="#ffffff" />
               </g>
               <path d="M575.5,672.4L569.9,680.9L571.8,701.0L566.2,705.8L559.1,705.6L561.1,713.3L568.3,721.2L565.1,733.5L569.1,743.0L565.2,743.2L556.6,738.1L551.3,751.0L543.4,755.5L537.9,750.8L543.4,742.1L536.9,727.9L528.3,726.6L524.1,718.1L517.8,718.7L514.9,726.3L507.5,731.3L497.9,749.7L497.6,763.8L483.3,776.7L489.5,789.7L491.5,821.4L486.3,824.3L475.8,822.7L470.3,827.4L467.9,847.5L463.1,860.2L449.2,861.4L422.2,870.2L415.1,867.2L411.0,853.6L402.3,847.4L394.3,835.9L388.6,832.2L375.7,831.3L367.5,824.5L361.3,800.3L362.5,788.4L359.1,784.3L342.4,791.6L332.8,791.7L328.6,799.0L317.6,804.9L312.0,816.2L300.9,818.2L292.8,815.5L283.8,823.1L272.2,809.2L251.5,803.9L241.6,797.2L221.9,803.0L217.7,814.3L212.1,815.0L195.4,808.9L192.1,798.1L182.9,793.6L180.0,785.4L176.1,782.8L159.6,776.7L139.2,780.8L112.9,772.2L109.5,766.2L108.9,750.9L98.9,735.7L95.9,723.3L88.2,715.9L73.4,712.0L71.5,700.0L67.8,695.6L64.0,695.9L57.7,702.1L50.1,700.7L39.5,707.1L25.2,700.5L18.9,691.6L14.1,689.0L6.0,696.8L0.0,699.2L3.3,359.3L2.6,68.5L254.1,59.6L255.6,65.9L262.4,69.7L272.1,70.5L277.7,67.2L295.4,81.1L322.5,90.3L333.3,102.7L350.7,112.8L361.7,109.0L365.2,104.5L364.6,97.7L369.4,94.9L378.4,106.4L391.0,106.1L391.7,115.8L396.6,118.1L409.8,133.7L428.9,144.4L435.0,145.1L457.2,134.1L477.1,132.2L490.1,122.6L522.3,112.5L547.3,120.3L562.8,117.1L573.1,119.0L598.9,101.5L628.2,74.1L657.1,52.9L664.2,52.6L708.5,30.1L729.0,26.4L747.5,16.5L762.4,14.1L799.9,0.0L799.9,325.9L789.2,331.9L785.1,329.2L779.8,330.5L772.2,339.6L785.7,365.7L782.6,383.4L778.6,386.4L783.1,390.2L784.9,404.1L781.3,416.9L775.2,421.8L772.2,432.8L765.4,443.8L764.6,456.8L759.1,463.0L758.8,488.6L754.3,493.6L755.8,502.4L746.6,501.6L749.4,513.8L742.8,519.4L742.8,530.5L734.8,538.3L741.8,553.1L735.8,556.5L732.7,573.8L724.3,574.6L716.0,581.2L697.4,599.3L685.8,616.3L675.9,620.1L670.1,630.6L660.1,631.0L645.8,640.7L640.6,641.7L637.2,639.3L633.7,628.8L625.7,625.3L606.8,642.4L604.4,659.7L584.3,658.3L581.0,662.3L581.7,669.8L575.5,672.4Z" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="4" stroke-linejoin="round" />
             </g>
           </svg>
         </div>
       </div>
+
+      <!-- Shown only while the flag waits on a first visit; any scroll,
+           key, or a tap here flies the flag. -->
+      <button type="button" class="hp-scroll-cue" id="hpScrollCue">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        <span>Scroll to fly the flag</span>
+      </button>
     </section>
 
     <!-- ============ SIGNUP (moved to the top of the page) ============ -->
@@ -997,7 +1050,9 @@
           </div>
 
           <div class="hp-signup-formwrap">
-            <form id="hp-signup-form" novalidate>
+            <!-- Without JS this degrades to a GET onto /signup, whose form
+                 prefills the email from the query string. -->
+            <form id="hp-signup-form" action="/signup" method="get" novalidate>
               <div class="hp-form-err" id="hpFormErr" role="alert"></div>
 
               <!-- Honeypot -->
@@ -1008,18 +1063,21 @@
 
               <div class="hp-signup-row">
                 <div class="hp-field hp-field--email">
-                  <label class="sr-only" for="hp-email">Email address</label>
+                  <label class="hp-field-label" for="hp-email">Email</label>
                   <input type="email" id="hp-email" name="email" required aria-required="true"
                          autocomplete="email" placeholder="you@example.com" aria-describedby="hp-email-err" />
                   <div class="hp-field-err" id="hp-email-err">Please enter a valid email address.</div>
                 </div>
                 <div class="hp-field hp-field--zip">
-                  <label class="sr-only" for="hp-zip">ZIP code</label>
+                  <label class="hp-field-label" for="hp-zip">ZIP Code</label>
                   <input type="text" id="hp-zip" name="zip" required inputmode="numeric" maxlength="10"
-                         autocomplete="postal-code" placeholder="ZIP" aria-describedby="hp-zip-err" />
+                         autocomplete="postal-code" placeholder="43215" aria-describedby="hp-zip-err" />
                   <div class="hp-field-err" id="hp-zip-err">Please enter a valid ZIP code.</div>
                 </div>
-                <button type="submit" class="btn btn-primary hp-submit" id="hpSubmit">Sign Me Up</button>
+                <div class="hp-field hp-field--submit">
+                  <span class="hp-field-label" aria-hidden="true">&nbsp;</span>
+                  <button type="submit" class="btn btn-primary hp-submit" id="hpSubmit">Sign Me Up</button>
+                </div>
               </div>
               <p class="hp-form-fine">We never sell, trade, or rent your information.</p>
             </form>
@@ -1353,6 +1411,35 @@
         "use strict";
 
         var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+        /* ---- Fly the flag on the first interaction ----
+           The head script put .hp-flag-wait on <html> for this session's
+           first visit; the first scroll gesture (or the cue button, or six
+           quiet seconds) removes it and the stripes glide into the Ohio
+           cutout. Removing the class is idempotent, so the leftover
+           once-listeners are harmless. */
+        var docEl = document.documentElement;
+        var cue = document.getElementById("hpScrollCue");
+        if (docEl.classList.contains("hp-flag-wait")) {
+          var flagTimer = null;
+          var flyFlag = function () {
+            docEl.classList.remove("hp-flag-wait");
+            if (flagTimer) clearTimeout(flagTimer);
+          };
+          ["wheel", "touchstart", "scroll", "keydown", "pointerdown"].forEach(function (t) {
+            window.addEventListener(t, flyFlag, { passive: true, once: true });
+          });
+          if (window.scrollY > 40) {
+            flyFlag(); /* arrived mid-page (restored scroll) — don't gate */
+          } else {
+            flagTimer = setTimeout(flyFlag, 6000);
+          }
+          if (cue) {
+            cue.addEventListener("click", function () {
+              flyFlag();
+            });
+          }
+        }
 
         /* ---- Days until Election Day (governor guide band) ----
            Counted from the browser's own clock, so it stays right without a
