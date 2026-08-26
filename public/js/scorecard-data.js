@@ -1,6 +1,6 @@
 /* ============================================================
    Ohio Pride PAC, Legislative Scorecard Data
-   Last updated: 04/22/26
+   Last updated: 08/26/26
 
    HOW TO UPDATE:
    1. Find the legislator in HOUSE_MEMBERS or SENATE_MEMBERS
@@ -47,7 +47,7 @@
      6. Advocacy or opposition statements
    ============================================================ */
 
-const SCORECARD_UPDATED = { date: "04/23/26", time: "3:55 PM EDT" };
+const SCORECARD_UPDATED = { date: "08/26/26", time: "1:45 PM EDT" };
 
 /* Grade thresholds (weighted score 0-100)
    7-grade scale (April 2026 rebalance), listed in order of the
@@ -80,18 +80,20 @@ const SCORED_BILLS = [
   { id: "sb34",  bill: "SB 34",   title: "Ten Commandments Classroom Displays",          ga: "136th", stance: "anti",  status: "Passed Senate 23-10",        date: "11/20/2025" },
 
   /* Active anti-equality, in committee or introduced */
-  { id: "hb798", bill: "HB 798",  title: "Omnibus Anti-Trans Bill",                      ga: "136th", stance: "anti",  status: "Introduced",                 date: "3/31/2026" },
-  { id: "hb796", bill: "HB 796",  title: "Prison Trans Housing Ban",                     ga: "136th", stance: "anti",  status: "Introduced",                 date: "3/25/2026" },
+  { id: "hb798", bill: "HB 798",  title: "Omnibus Anti-Trans Bill",                      ga: "136th", stance: "anti",  status: "In Committee",               date: "5/13/2026" },
+  { id: "hb796", bill: "HB 796",  title: "Prison Trans Housing Ban",                     ga: "136th", stance: "anti",  status: "In Committee",               date: "5/13/2026" },
+  { id: "hb838", bill: "HB 838",  title: "Adult Trans Care Coverage Ban",                ga: "136th", stance: "anti",  status: "In Committee",               date: "5/13/2026" },
+  { id: "hb112", bill: "HB 112",  title: "Healthcare Refusal / Right of Conscience",     ga: "136th", stance: "anti",  status: "In Committee",               date: "11/5/2025" },
   { id: "hb693", bill: "HB 693",  title: "Affirming Families First Act",                 ga: "136th", stance: "anti",  status: "In Committee",               date: "3/25/2026" },
-  { id: "hb602", bill: "HB 602",  title: "Pride Flag Ban on State Property",             ga: "136th", stance: "anti",  status: "In Committee",               date: "3/30/2026" },
-  { id: "hb457", bill: "HB 457",  title: "Politically-Motivated Crimes",                 ga: "136th", stance: "anti",  status: "In Committee",               date: "" },
+  { id: "hb602", bill: "HB 602",  title: "Pride Flag Ban on State Property",             ga: "136th", stance: "anti",  status: "In Committee",               date: "3/24/2026" },
+  { id: "hb457", bill: "HB 457",  title: "Politically-Motivated Crimes",                 ga: "136th", stance: "anti",  status: "In Committee",               date: "2/25/2026" },
   { id: "hb190", bill: "HB 190",  title: "Given Name Act (Forced Outing)",               ga: "136th", stance: "anti",  status: "In Committee",               date: "4/29/2025" },
   { id: "hb155", bill: "HB 155",  title: "K-12 DEI Ban",                                 ga: "136th", stance: "anti",  status: "In Committee",               date: "5/20/2025" },
-  { id: "sb113", bill: "SB 113",  title: "Senate DEI Ban (Schools)",                     ga: "136th", stance: "anti",  status: "In Committee",               date: "3/25/2026" },
+  { id: "sb113", bill: "SB 113",  title: "Senate DEI Ban (Schools)",                     ga: "136th", stance: "anti",  status: "In Committee",               date: "5/19/2026" },
   { id: "hb172", bill: "HB 172",  title: "Minor Mental Health Consent",                  ga: "136th", stance: "anti",  status: "In Committee",               date: "11/19/2025" },
-  { id: "sb274", bill: "SB 274",  title: "Senate Companion to HB 172",                   ga: "136th", stance: "anti",  status: "In Committee",               date: "10/1/2025" },
+  { id: "sb274", bill: "SB 274",  title: "Senate Companion to HB 172",                   ga: "136th", stance: "anti",  status: "In Committee",               date: "6/3/2026" },
   { id: "hb196", bill: "HB 196",  title: "Deadnaming Candidates Bill",                   ga: "136th", stance: "anti",  status: "In Committee",               date: "4/29/2025" },
-  { id: "hb262", bill: "HB 262",  title: "Designate Natural Family Month",               ga: "136th", stance: "anti",  status: "In Committee",               date: "9/30/2025" },
+  { id: "hb262", bill: "HB 262",  title: "Designate Natural Family Month",               ga: "136th", stance: "anti",  status: "In Committee",               date: "10/14/2025" },
 
   /* Anti-equality, signed or overridden into law (scorecard context) */
   { id: "sb1",   bill: "SB 1",    title: "DEI Ban (Higher Ed)",                          ga: "136th", stance: "anti",  status: "Signed Into Law",            date: "3/28/2025" },
@@ -103,10 +105,10 @@ const SCORED_BILLS = [
   { id: "sb70",      bill: "SB 70",        title: "Ohio Fairness Act",                            ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
   { id: "hb136",     bill: "HB 136",       title: "Ohio Fairness Act (House)",                    ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
   { id: "sb71",      bill: "SB 71",        title: "Conversion Therapy Ban",                       ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
-  { id: "hb300",     bill: "HB 300",       title: "Conversion Therapy Ban (House)",               ga: "136th", stance: "pro",   status: "Introduced",                 date: "" },
+  { id: "hb300",     bill: "HB 300",       title: "Conversion Therapy Ban (House)",               ga: "136th", stance: "pro",   status: "In Committee",               date: "5/28/2025" },
   { id: "hjr4",      bill: "HJR 4",        title: "Marriage Equality Act",                        ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
   { id: "hb327",     bill: "HB 327",       title: "PRIDE Act",                                    ga: "136th", stance: "pro",   status: "In Committee",               date: "" },
-  { id: "sb211",     bill: "SB 211",       title: "Love Makes a Family Week",                     ga: "136th", stance: "pro",   status: "Introduced",                 date: "10/14/2025" },
+  { id: "sb211",     bill: "SB 211",       title: "Love Makes a Family Week",                     ga: "136th", stance: "pro",   status: "In Committee",               date: "6/4/2025" },
   { id: "hb467-135", bill: "HB 467 (135th)", title: "Trans Candidate Name-Change Fix",            ga: "135th", stance: "pro",   status: "Died In Committee",          date: "3/27/2024" },
 
   /* Mixed bills */
@@ -140,8 +142,8 @@ const HOUSE_MEMBERS = [
   { d: 18, name: "Juanita O. Brent",            party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 19, name: "Phillip M. Robinson, Jr.",     party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 20, name: "Terrence Upchurch",           party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
-  { d: 21, name: "Eric Synenberg",              party: "D", v: 5,  s: 0,   n: 1,  notes: "Votes against anti-LGBTQ+ bills. Participated in Pride press conference." },
-  { d: 22, name: "Darnell T. Brewer",           party: "D", v: 5,  s: 2,   n: 1,  notes: "Co-sponsor HB 327 (PRIDE Act). Votes against anti-LGBTQ+ bills." },
+  { d: 21, name: "Eric Synenberg",              party: "D", v: 5,  s: 0,   n: 1,  notes: "Primary sponsor HJR 4 (Marriage Equality Act). Votes against anti-LGBTQ+ bills. Participated in Pride press conference." },
+  { d: 22, name: "Darnell T. Brewer",           party: "D", v: 5,  s: 2,   n: 1,  notes: "Primary sponsor HB 327 (PRIDE Act). Votes against anti-LGBTQ+ bills." },
   { d: 23, name: "Daniel P. Troy",              party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 24, name: "Dani Isaacsohn",              party: "D", v: 5,  s: 0,   n: 1,  notes: "Votes against anti-LGBTQ+ bills. Vocal opponent of HB 68 in 135th GA." },
   { d: 25, name: "Cecil Thomas",                party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
@@ -151,7 +153,7 @@ const HOUSE_MEMBERS = [
   { d: 29, name: "Cindy Abrams",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 30, name: "Mike Odioso",                 party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 31, name: "Bill Roemer",                 party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 32, name: "Jack K. Daniels",             party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
+  { d: 32, name: "Jack K. Daniels",             party: "R", v: -5, s: -2,  n: 0,  notes: "Primary sponsor HB 457 (politically-motivated crimes). Votes for anti-LGBTQ+ bills." },
   { d: 33, name: "Veronica R. Sims",            party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 34, name: "Derrick Hall",                party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 35, name: "Steve Demetriou",             party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
@@ -159,12 +161,12 @@ const HOUSE_MEMBERS = [
   { d: 37, name: "Tom Young",                   party: "R", v: -5, s: -2,  n: -1, notes: "Co-sponsor HB 6 (companion to SB 1 DEI ban). Votes for anti-LGBTQ+ bills." },
   { d: 38, name: "Desiree Tims",                party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 39, name: "Phil Plummer",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 40, name: "Rodney Creech",               party: "R", v: -5, s: -3,  n: -3, notes: "Primary sponsor HB 196 (trans candidate disclosure). Accused of sexual misconduct with minor relative (BCI documents)." },
+  { d: 40, name: "Rodney Creech",               party: "R", v: -5, s: -3,  n: -3, notes: "Primary sponsor HB 196 (trans candidate disclosure), HB 602 (Pride flag ban). Accused of sexual misconduct with minor relative (BCI documents)." },
   { d: 41, name: "Erika White",                 party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 42, name: "Elgin Rogers, Jr.",           party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 43, name: "Michele Grim",                party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
-  { d: 44, name: "Josh Williams",               party: "R", v: -5, s: -15, n: -3, notes: "Primary/co-sponsor of 8+ anti-LGBTQ+ bills: HB 249, 155, 190, 262, 693, 796, 798. Most prolific anti-LGBTQ+ bill author in 136th GA." },
-  { d: 45, name: "Jennifer Gross",              party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
+  { d: 44, name: "Josh Williams",               party: "R", v: -5, s: -15, n: -3, notes: "Primary/co-sponsor of 9 anti-LGBTQ+ bills: HB 249, 155, 190, 262, 457, 693, 796, 798, 838. Also primary sponsor HB 306 (Hate Crimes Act, which omits gender identity). Most prolific anti-LGBTQ+ bill author in 136th GA." },
+  { d: 45, name: "Jennifer Gross",              party: "R", v: -5, s: -2,  n: 0,  notes: "Primary sponsor HB 112 (healthcare refusal / right of conscience). Votes for anti-LGBTQ+ bills." },
   { d: 46, name: "Thomas Hall",                 party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 47, name: "Diane Mullins",               party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 48, name: "Scott Oelslager",             party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
@@ -180,7 +182,7 @@ const HOUSE_MEMBERS = [
   { d: 58, name: "Lauren McNally",              party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
   { d: 59, name: "Tex Fischer",                 party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 60, name: "Brian Lorenz",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 61, name: "Beth Lear",                   party: "R", v: -5, s: -6,  n: -2, notes: "Primary sponsor HB 155 (DEI ban), HB 262 (Natural Family Month). Anti-equality rhetoric." },
+  { d: 61, name: "Beth Lear",                   party: "R", v: -5, s: -6,  n: -2, notes: "Primary sponsor HB 155 (DEI ban), HB 262 (Natural Family Month), HB 112 (healthcare refusal). Anti-equality rhetoric." },
   { d: 62, name: "Jean Schmidt",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 63, name: "Adam C. Bird",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 64, name: "Nick Santucci",               party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
@@ -208,7 +210,7 @@ const HOUSE_MEMBERS = [
   { d: 86, name: "Tracy M. Richardson",         party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 87, name: "Riordan T. McClain",          party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 88, name: "Gary Click",                  party: "R", v: -5, s: -6,  n: -3, notes: "Primary sponsor HB 68 (135th GA, care ban) and HB 693 (affirming families). Compared trans people to 'Lucifer.' Misconduct-related allegations involving minors." },
-  { d: 89, name: "D. J. Swearingen",            party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
+  { d: 89, name: "D. J. Swearingen",            party: "R", v: -5, s: -2,  n: 0,  notes: "Primary sponsor HB 602 (Pride flag ban on state property). Votes for anti-LGBTQ+ bills." },
   { d: 90, name: "Justin Pizzulli",             party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 91, name: "Bob Peterson",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 92, name: "Mark Johnson",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
@@ -240,9 +242,9 @@ const SENATE_MEMBERS = [
   { d: 13, name: "Nathan H. Manning",         party: "R", v: -1, s: 0,   n: 2,  notes: "Only Republican senator to vote against HB 68 veto override. Notable crossover on major bill." },
   { d: 14, name: "Terry Johnson",             party: "R", v: -5, s: -3,  n: -1, notes: "Primary sponsor SB 34 (Ten Commandments in schools)." },
   { d: 15, name: "Hearcel F. Craig",          party: "D", v: 5,  s: 0,   n: 0,  notes: "Votes against anti-LGBTQ+ bills." },
-  { d: 16, name: "Beth Liston",               party: "D", v: 5,  s: 2,   n: 1,  notes: "Co-sponsor SB 71 (conversion therapy ban). Votes against anti-LGBTQ+ bills." },
+  { d: 16, name: "Beth Liston",               party: "D", v: 5,  s: 2,   n: 1,  notes: "Primary sponsor SB 71 (conversion therapy ban). Votes against anti-LGBTQ+ bills." },
   { d: 17, name: "Shane Wilkin",              party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 18, name: "Jerry C. Cirino",           party: "R", v: -5, s: -9,  n: -3, notes: "Primary sponsor SB 1 (DEI ban), co-sponsor SB 104 (bathroom ban), SB 274 (minor consent). Religious arguments for HB 68 override." },
+  { d: 18, name: "Jerry C. Cirino",           party: "R", v: -5, s: -9,  n: -3, notes: "Primary sponsor SB 1 (DEI ban), SB 274 (minor consent), co-sponsor SB 104 (bathroom ban). Religious arguments for HB 68 override." },
   { d: 19, name: "Andrew O. Brenner",         party: "R", v: -5, s: -9,  n: -2, notes: "Primary sponsor SB 113 (school DEI ban), SB 274 (minor consent), co-sponsor SB 104 (bathroom ban). Called DEI 'institutional discrimination.'" },
   { d: 20, name: "Tim Schaffer",              party: "R", v: -5, s: -3,  n: 0,  notes: "Primary sponsor SB 53 (anti-protest/vandalism)." },
   { d: 21, name: "Kent Smith",                party: "D", v: 5,  s: 0,   n: 1,  notes: "Criticized 'state-sponsored bullying of trans youth' during HB 68 debate." },
@@ -681,14 +683,23 @@ const LEGISLATOR_SPONSORSHIPS = {
 
   // Co-sponsors of HB 467 (135th), with notes-derived sponsorships preserved
   "house-1":   [{ id: "hb306",     role: "primary" }, { id: "hb467-135", role: "co" }], // Dontavius L. Jarrells
-  "house-8":   [{ id: "hb467-135", role: "co" }],                                       // Anita Somani
+  "house-8":   [{ id: "hjr4", role: "primary" }, { id: "hb467-135", role: "co" }],       // Anita Somani
   "house-9":   [{ id: "hb467-135", role: "co" }],                                       // Munira Abdullahi
-  "house-11":  [{ id: "hb136",     role: "primary" }, { id: "hb300", role: "co" }, { id: "hb467-135", role: "co" }], // Crystal Lett
+  "house-11":  [{ id: "hb136",     role: "primary" }, { id: "hb300", role: "primary" }, { id: "hb467-135", role: "co" }], // Crystal Lett
   "house-13":  [{ id: "hb136",     role: "primary" }, { id: "hb467-135", role: "co" }], // Tristan Rader
   "house-16":  [{ id: "hb467-135", role: "co" }],                                       // Bride Rose Sweeney
   "house-28":  [{ id: "hb300",     role: "primary" }, { id: "hb327", role: "primary" }, { id: "hb467-135", role: "co" }], // Karen Brownlee
   "house-53":  [{ id: "hb467-135", role: "co" }],                                       // Joseph A. Miller, III
   "senate-9":  [{ id: "hb467-135", role: "co" }],                                       // Catherine D. Ingram
+
+  /* Explicit overrides where the notes-derived parser mis-reads the role.
+     Both senators are primary sponsors of their own DEI / minor-consent
+     bills but only co-sponsors of SB 104; the 80-character context window
+     in deriveSponsorshipsFromNotes() cannot separate the two clauses. */
+  "senate-18": [{ id: "sb1", role: "primary" }, { id: "sb274", role: "primary" },
+                { id: "sb104", role: "co" }, { id: "hb68", role: "co" }],              // Jerry C. Cirino
+  "senate-19": [{ id: "sb113", role: "primary" }, { id: "sb274", role: "primary" },
+                { id: "sb104", role: "co" }],                                          // Andrew O. Brenner
   "senate-15": [{ id: "hb467-135", role: "co" }]                                        // Hearcel F. Craig
 };
 

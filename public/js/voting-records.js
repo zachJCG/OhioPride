@@ -1,6 +1,6 @@
 /* ============================================================
    Ohio Pride PAC, Voting Records
-   Last updated: 04/22/26
+   Last updated: 08/26/26
 
    Per-roll-call data for the scorecard, built from official
    Ohio General Assembly roll call records published at
@@ -39,7 +39,7 @@
        exceptions in VOTE_EXCEPTIONS always override the default.
    ============================================================ */
 
-const VOTING_RECORDS_UPDATED = { date: "04/23/26", time: "10:00 AM EDT" };
+const VOTING_RECORDS_UPDATED = { date: "08/26/26", time: "1:45 PM EDT" };
 
 /* -------------------------------------------------------
    EVENT WEIGHTS
@@ -98,6 +98,24 @@ const ROLL_CALLS = [
     sourceUrl: "https://www.legislature.ohio.gov/legislation/136/hb249/votes",
     verificationStatus: "verified",
     notes: "Rep. Jamie Callender (R-57) voted N, sole R crossover."
+  },
+
+  {
+    id: "hb249-h-cmte",
+    billSlug: "hb249",
+    billLabel: "HB 249",
+    billTitle: "Drag Performance Ban",
+    chamber: "house",
+    stage: "committee",
+    label: "House Judiciary Committee",
+    voteDate: "2026-03-25",
+    result: "Reported 7-4",
+    yeas: 7, nays: 4,
+    stance: "anti",
+    ga: "136th",
+    sourceUrl: "https://www.legislature.ohio.gov/legislation/136/hb249/votes",
+    verificationStatus: "verified",
+    notes: "Reported to the floor hours before House passage. Rep. Jamie Callender (R-57) voted N with the committee's three Democrats."
   },
 
   /* ───────── SB 1, higher-ed DEI ban ───────── */
@@ -213,7 +231,7 @@ const ROLL_CALLS = [
     chamber: "senate",
     stage: "pass",
     label: "Senate Passage",
-    voteDate: "2025-11-19",
+    voteDate: "2025-11-20",
     result: "Passed 23-10",
     yeas: 23, nays: 10,
     stance: "anti",
@@ -667,6 +685,8 @@ const VOTE_EXCEPTIONS = [
   /* HB 249 (136th, 2026-03-25), drag ban passage */
   { rollCallId: "hb249-h-pass", chamber: "house", district: 57, vote: "N",
     notes: "Callender, sole R to vote against drag ban." },
+  { rollCallId: "hb249-h-cmte", chamber: "house", district: 57, vote: "N",
+    notes: "Callender, sole R against reporting HB 249 out of House Judiciary." },
 
   /* HB 68 (135th), gender-affirming care + sports ban */
   { rollCallId: "hb68-s-pass", chamber: "senate", district: 13, vote: "N",

@@ -88,7 +88,7 @@ const BILLS = [
     categoryLabels: ["Healthcare", "Anti-Trans"],
     description:
       "Restricts Medicaid and public-employee health benefits from covering gender-affirming surgery for adult Ohioans. Extends the HB 68 framework from minors into adult care via state coverage rather than direct prohibition.",
-    sponsors: "Rep. Gross",
+    sponsors: "Rep. Josh Williams (R-44)",
     lastAction: "Assigned to House Insurance Committee — May 13, 2026",
     nextDate: "Awaiting first committee hearing",
     chamber: "house",
@@ -114,7 +114,7 @@ const BILLS = [
     categoryLabels: ["Healthcare"],
     description:
       "Lets providers, hospitals, pharmacists, and insurers refuse to participate in or pay for services on conscience or religious grounds. Pairs broad refusal protections with a healthcare sharing ministry framework outside standard insurance regulation — long-tail risk for LGBTQ+ patients.",
-    sponsors: "Rep. Gross",
+    sponsors: "Rep. Jennifer Gross (R-45), Rep. Beth Lear (R-61)",
     lastAction: "First hearing in House Judiciary — November 5, 2025",
     nextDate: "Additional hearings expected",
     chamber: "house",
@@ -533,7 +533,7 @@ const BILLS = [
     categoryLabels: ["Healthcare", "Youth / Family"],
     description:
       "Prohibits state-licensed mental health professionals from subjecting minors to conversion therapy — a discredited practice rejected by every major medical association.",
-    sponsors: "Sen. Nickie Antonio (D-23)",
+    sponsors: "Sen. Nickie J. Antonio (D-23), Sen. Beth Liston (D-16)",
     lastAction: "Referred to Senate Health Committee — February 12, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "senate",
@@ -609,7 +609,7 @@ const BILLS = [
     categoryLabels: ["Youth / Family", "Civil Rights"],
     description:
       "Protects parents who affirm and support their LGBTQ+ children from state interference. Ensures affirming parenting decisions cannot be used as grounds for custody challenges or abuse allegations.",
-    sponsors: "Rep. Karen Brownlee (D-28), Rep. Darnell Brewer (D-23)",
+    sponsors: "Rep. Karen Brownlee (D-28), Rep. Darnell T. Brewer (D-22)",
     lastAction: "Referred to House Children and Human Services Committee — June 11, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "house",
@@ -636,7 +636,7 @@ const BILLS = [
     categoryLabels: ["Civil Rights"],
     description:
       "Constitutional amendment to repeal Ohio's dormant 2004 same-sex marriage ban and recognize the right to interracial marriage in the Ohio Constitution. Would let Ohio voters codify marriage equality independent of federal precedent. No committee hearings have been held to date.",
-    sponsors: "Rep. Eric Synenberg (D-22), Rep. Anita Somani (D-11)",
+    sponsors: "Rep. Eric Synenberg (D-21), Rep. Anita Somani (D-8)",
     lastAction: "Referred to House Judiciary Committee — June 4, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "house",
@@ -663,7 +663,7 @@ const BILLS = [
     categoryLabels: ["Civil Rights"],
     description:
       "Creates enhanced penalties for hate crimes based on race, religion, national origin, disability, and sexual orientation — but notably excludes gender identity, leaving transgender Ohioans without protection.",
-    sponsors: "Rep. Brett Hillyer (R-37), Rep. Bride Rose Sweeney (D-16)",
+    sponsors: "Rep. Dontavius L. Jarrells (D-1), Rep. Josh Williams (R-44)",
     lastAction: "Sponsor testimony (first hearing) — February 25, 2026",
     nextDate: "Additional hearings expected",
     chamber: "house",
