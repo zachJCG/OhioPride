@@ -4,7 +4,7 @@
    ========================================================================== */
 
 // Update this constant whenever bill data changes
-const LAST_UPDATED = { date: "06/02/26", time: "10:35 PM EDT" };
+const LAST_UPDATED = { date: "08/26/26", time: "1:45 PM EDT" };
 
 const BILLS = [
   /* ===== ANTI-LGBTQ+ BILLS ===== */
@@ -23,12 +23,13 @@ const BILLS = [
     description:
       "Ohio's biennial state operating budget for FY 2026-2027. Contains anti-LGBTQ+ riders affecting K–12, higher education, and state agencies. DeWine line-item-vetoed select equality-related provisions on June 30, 2025; the legislature later overrode select vetoes (House 61–28, Senate 21–11).",
     sponsors: "Executive Budget (Gov. DeWine) / House Finance",
-    lastAction: "Signed with line-item vetoes; select overrides recorded — June 30, 2025",
+    lastAction:
+      "Select veto overrides completed — House July 21, 2025; Senate October 1, 2025",
     nextDate: "Provision-level mapping of surviving language pending",
     chamber: "house",
     currentStep: 8,
     pipelineDates: {
-      0: "Apr 1, 2025",
+      0: "Feb 11, 2025",
       4: "Apr 9, 2025",
       7: "Jun 11, 2025",
       8: "Jun 30, 2025",
@@ -92,7 +93,7 @@ const BILLS = [
     nextDate: "Awaiting first committee hearing",
     chamber: "house",
     currentStep: 1,
-    pipelineDates: { 0: "Apr 30, 2026", 1: "May 13, 2026" },
+    pipelineDates: { 0: "Apr 29, 2026", 1: "May 13, 2026" },
     url: "/issues/hb838",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb838",
     textUrl:
@@ -114,11 +115,11 @@ const BILLS = [
     description:
       "Lets providers, hospitals, pharmacists, and insurers refuse to participate in or pay for services on conscience or religious grounds. Pairs broad refusal protections with a healthcare sharing ministry framework outside standard insurance regulation — long-tail risk for LGBTQ+ patients.",
     sponsors: "Rep. Gross",
-    lastAction: "Referred to House Judiciary Committee — February 26, 2025",
-    nextDate: "Awaiting committee hearing",
+    lastAction: "First hearing in House Judiciary — November 5, 2025",
+    nextDate: "Additional hearings expected",
     chamber: "house",
-    currentStep: 1,
-    pipelineDates: { 0: "Feb 18, 2025", 1: "Feb 26, 2025" },
+    currentStep: 2,
+    pipelineDates: { 0: "Feb 18, 2025", 1: "Feb 26, 2025", 2: "Nov 5, 2025" },
     url: "/issues/hb112",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb112",
     textUrl:
@@ -168,7 +169,7 @@ const BILLS = [
     nextDate: "Awaiting first committee hearing",
     chamber: "house",
     currentStep: 1,
-    pipelineDates: { 0: "Mar 31, 2026", 1: "May 13, 2026" },
+    pipelineDates: { 0: "Mar 30, 2026", 1: "May 13, 2026" },
     url: "/issues/hb798",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb798",
     textUrl:
@@ -219,7 +220,7 @@ const BILLS = [
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
-    pipelineDates: { 0: "Mar 24, 2025", 1: "Mar 26, 2025", 2: "Apr 29, 2025" },
+    pipelineDates: { 0: "Mar 20, 2025", 1: "Mar 26, 2025", 2: "Apr 29, 2025" },
     url: "/issues/hb190",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb190",
     textUrl:
@@ -267,11 +268,11 @@ const BILLS = [
     description:
       "Senate companion to HB 155. Requires school boards to prohibit DEI structures, trainings, offices, and contracting. Suppresses LGBTQIA+-inclusive initiatives.",
     sponsors: "Sen. Andrew Brenner (R-19)",
-    lastAction: "2nd hearing in Senate Education — March 25, 2026",
-    nextDate: "Additional hearings expected",
+    lastAction: "3rd hearing in Senate Education — May 19, 2026",
+    nextDate: "Additional hearings or committee vote",
     chamber: "senate",
     currentStep: 2,
-    pipelineDates: { 2: "Mar 25, 2026" },
+    pipelineDates: { 0: "Feb 25, 2025", 1: "Feb 26, 2025", 2: "May 19, 2026" },
     url: "/issues/sb113",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/sb113",
     textUrl:
@@ -323,7 +324,7 @@ const BILLS = [
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
-    pipelineDates: { 0: "Mar 24, 2025", 1: "Mar 26, 2025", 2: "Apr 29, 2025" },
+    pipelineDates: { 0: "Mar 20, 2025", 1: "Mar 26, 2025", 2: "Apr 29, 2025" },
     url: "/issues/hb196",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb196",
     textUrl:
@@ -350,10 +351,11 @@ const BILLS = [
     chamber: "senate",
     currentStep: 6,
     pipelineDates: {
-      0: "Feb 2025",
-      3: "Apr 8, 2025",
+      0: "Jan 28, 2025",
+      1: "Jan 29, 2025",
+      3: "Nov 18, 2025",
       4: "Nov 20, 2025",
-      5: "Nov 20, 2025",
+      5: "Nov 25, 2025",
       6: "Feb 4, 2026",
     },
     url: "/issues/sb34",
@@ -377,11 +379,11 @@ const BILLS = [
     description:
       "Limits flags on state-owned property to the U.S., Ohio, POW/MIA, and pre-approved agency flags — effectively banning Pride flags from state buildings and grounds. Revives language that Gov. DeWine line-item-vetoed from the FY26-27 budget (HB 96).",
     sponsors: "Rep. D.J. Swearingen (R-89), Rep. Rodney Creech (R-40)",
-    lastAction: "Sponsor testimony in House General Government — week of March 30, 2026",
+    lastAction: "Sponsor testimony in House General Government — March 24, 2026",
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
-    pipelineDates: { 0: "Nov 18, 2025", 2: "Mar 30, 2026" },
+    pipelineDates: { 0: "Nov 18, 2025", 1: "Nov 19, 2025", 2: "Mar 24, 2026" },
     url: "/issues/hb602",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb602",
     textUrl:
@@ -403,11 +405,11 @@ const BILLS = [
     description:
       "Senate companion to HB 172. Repeals ORC 5122.04, eliminating the 1989-era provision that allows minors 14+ to access up to six outpatient mental-health sessions without parental consent. Closes a critical confidential-care pathway for LGBTQ+ youth.",
     sponsors: "Sen. Jerry Cirino (R-18), Sen. Andrew Brenner (R-19)",
-    lastAction: "Referred to Senate Health Committee — October 1, 2025",
-    nextDate: "Awaiting committee hearing",
+    lastAction: "1st hearing in Senate Health — June 3, 2026",
+    nextDate: "Additional hearings expected",
     chamber: "senate",
-    currentStep: 1,
-    pipelineDates: { 0: "Sep 30, 2025", 1: "Oct 1, 2025" },
+    currentStep: 2,
+    pipelineDates: { 0: "Sep 30, 2025", 1: "Oct 1, 2025", 2: "Jun 3, 2026" },
     url: "/issues/sb274",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/sb274",
     textUrl:
@@ -429,11 +431,11 @@ const BILLS = [
     description:
       "Creates new aggravated-murder offenses for politically motivated violence and mandatory prison terms. Adds 'biological sex' as an aggravating factor while removing 'sexual orientation' from Ohio's existing aggravating-factor list — a net loss for LGBTQ+ protections.",
     sponsors: "Rep. Jack K. Daniels (R-32), Rep. Josh Williams (R-44)",
-    lastAction: "Referred to House Criminal Justice Committee",
-    nextDate: "Awaiting committee hearing",
+    lastAction: "1st hearing in House Judiciary — February 25, 2026",
+    nextDate: "Additional hearings expected",
     chamber: "house",
-    currentStep: 1,
-    pipelineDates: {},
+    currentStep: 2,
+    pipelineDates: { 0: "Sep 17, 2025", 1: "Oct 1, 2025", 2: "Feb 25, 2026" },
     url: "/issues/hb457",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb457",
     textUrl:
@@ -454,11 +456,11 @@ const BILLS = [
     description:
       "Establishes 'Natural Family Month' promoting a heteronormative 'one biological born man, woman' family structure — excluding same-sex parents and nontraditional families.",
     sponsors: "Rep. Beth Lear (R-61), Rep. Josh Williams (R-44)",
-    lastAction: "Proponent testimony — September 30, 2025",
+    lastAction: "4th hearing in House Community Revitalization — October 14, 2025",
     nextDate: "Additional hearings or committee vote",
     chamber: "house",
     currentStep: 2,
-    pipelineDates: { 0: "May 13, 2025", 1: "May 14, 2025", 2: "Sep 30, 2025" },
+    pipelineDates: { 0: "May 12, 2025", 1: "May 14, 2025", 2: "Oct 14, 2025" },
     url: "/issues/hb262",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb262",
     textUrl:
@@ -481,11 +483,12 @@ const BILLS = [
     description:
       "Adds sexual orientation and gender identity to Ohio's existing nondiscrimination statutes, covering employment, housing, and public accommodations statewide.",
     sponsors: "Sen. Nickie Antonio (D-23)",
-    lastAction: "Referred to Senate Judiciary Committee",
+    lastAction:
+      "Referred to Senate Government Oversight and Reform Committee — February 12, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "senate",
     currentStep: 1,
-    pipelineDates: { 0: "Feb 11, 2025", 1: "Feb 19, 2025" },
+    pipelineDates: { 0: "Feb 4, 2025", 1: "Feb 12, 2025" },
     url: "/issues/sb70",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/sb70",
     textUrl:
@@ -531,11 +534,11 @@ const BILLS = [
     description:
       "Prohibits state-licensed mental health professionals from subjecting minors to conversion therapy — a discredited practice rejected by every major medical association.",
     sponsors: "Sen. Nickie Antonio (D-23)",
-    lastAction: "Referred to Senate Health Committee",
+    lastAction: "Referred to Senate Health Committee — February 12, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "senate",
     currentStep: 1,
-    pipelineDates: { 0: "Feb 11, 2025", 1: "Feb 19, 2025" },
+    pipelineDates: { 0: "Feb 4, 2025", 1: "Feb 12, 2025" },
     url: "/issues/sb71",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/sb71",
     textUrl:
@@ -560,7 +563,7 @@ const BILLS = [
     nextDate: "Awaiting first committee hearing",
     chamber: "house",
     currentStep: 1,
-    pipelineDates: { 0: "May 21, 2025", 1: "May 28, 2025" },
+    pipelineDates: { 0: "May 20, 2025", 1: "May 28, 2025" },
     url: "/issues/hb300",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb300",
     textUrl:
@@ -573,19 +576,20 @@ const BILLS = [
     nickname: "Celebrate Diverse Ohio Families",
     officialTitle: "Designate Love Makes a Family Week in Ohio",
     stance: "pro",
-    status: "introduced",
-    statusLabel: "Introduced",
+    status: "in-committee",
+    statusLabel: "In Committee",
     statusColor: "#22c55e",
     categories: ["youth"],
     categoryLabels: ["Youth / Family"],
     description:
       "Designates a week celebrating the diversity of Ohio families — including LGBTQ+ families, adoptive families, and nontraditional households. A direct counterpoint to HB 262's 'Natural Family Month.'",
     sponsors: "Sen. Nickie Antonio (D-23)",
-    lastAction: "Introduced — October 14, 2025",
-    nextDate: "Awaiting committee assignment",
+    lastAction:
+      "Referred to Senate Government Oversight and Reform Committee — June 4, 2025",
+    nextDate: "Awaiting committee hearing",
     chamber: "senate",
-    currentStep: 0,
-    pipelineDates: { 0: "Oct 14, 2025" },
+    currentStep: 1,
+    pipelineDates: { 0: "Jun 3, 2025", 1: "Jun 4, 2025" },
     url: "/issues/sb211",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/sb211",
     textUrl:
@@ -633,11 +637,11 @@ const BILLS = [
     description:
       "Constitutional amendment to repeal Ohio's dormant 2004 same-sex marriage ban and recognize the right to interracial marriage in the Ohio Constitution. Would let Ohio voters codify marriage equality independent of federal precedent. No committee hearings have been held to date.",
     sponsors: "Rep. Eric Synenberg (D-22), Rep. Anita Somani (D-11)",
-    lastAction: "Referred to House Judiciary Committee — June 2025",
+    lastAction: "Referred to House Judiciary Committee — June 4, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "house",
     currentStep: 1,
-    pipelineDates: { 0: "Jun 3, 2025", 1: "Jun 2025" },
+    pipelineDates: { 0: "Jun 3, 2025", 1: "Jun 4, 2025" },
     url: "/issues/hjr4",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hjr4",
     textUrl:
@@ -661,10 +665,10 @@ const BILLS = [
       "Creates enhanced penalties for hate crimes based on race, religion, national origin, disability, and sexual orientation — but notably excludes gender identity, leaving transgender Ohioans without protection.",
     sponsors: "Rep. Brett Hillyer (R-37), Rep. Bride Rose Sweeney (D-16)",
     lastAction: "Sponsor testimony (first hearing) — February 25, 2026",
-    nextDate: "Awaiting committee hearing",
+    nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
-    pipelineDates: { 0: "May 27, 2025", 1: "Jun 4, 2025", 2: "Feb 25, 2026" },
+    pipelineDates: { 0: "May 27, 2025", 1: "May 28, 2025", 2: "Feb 25, 2026" },
     url: "/issues/hb306",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/hb306",
     textUrl:
