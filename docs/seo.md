@@ -59,7 +59,7 @@ anything that reads the page without running its scripts.
 | every page | `BreadcrumbList` (all but `/`) |
 | `/` and every App Router page | `Organization`, `WebSite` |
 | `/issues/<slug>` | `Legislation` |
-| `/pride-hour`, `/sunday-funday` | `Event` |
+| `/sunday-funday` | `Event` |
 | `/endorsements` | `ItemList` |
 | `/endorsements/<slug>` | `Person` with an `EndorseAction` |
 

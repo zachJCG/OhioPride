@@ -110,6 +110,11 @@ const nextConfig = {
       { source: '/gala', destination: '/', permanent: true },
       { source: '/sponsorship', destination: '/', permanent: true },
       { source: '/priorities', destination: '/', permanent: true },
+      // Cincinnati's Pride Hour (2026-08-26) has happened; page removed
+      // 2026-08-31. The card stays on /events under Past, which is where the
+      // URL now lands so an old link still reaches the event it names.
+      { source: '/pride-hour', destination: '/events', permanent: true },
+      { source: '/pride-hour.html', destination: '/events', permanent: true },
       // Launch Day (2026-05-22) is over; page + signup form removed 2026-08.
       { source: '/launch-day', destination: '/', permanent: true },
       { source: '/launch-day.html', destination: '/', permanent: true },
