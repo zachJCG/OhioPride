@@ -313,7 +313,7 @@
         /* ---------- Host committee ---------- */
         /* The roster is text, not a second flyer image: it reads on a phone, it
            grows as names sign on, and screen readers and search engines get all
-           sixteen. Each card borrows one stop of the pride gradient through a
+           of them. Each card borrows one stop of the pride gradient through a
            --hue custom property, so the grid reads as a flag rather than a list
            of grey boxes. */
         .ph-hosts { padding: 3.5rem 0 0.5rem; }
@@ -423,7 +423,7 @@
     </div>
     <a class="btn-donate lg" id="heroCta" data-actblue-bare href="#rsvp">RSVP for September 20 &rarr;</a>
     <p class="donate-note">Sunday, September 20, 2026 &nbsp;&middot;&nbsp; 4:00 to 6:00 PM &nbsp;&middot;&nbsp; Leather Stallion Saloon</p>
-    <p class="donate-note">Hosted by <a href="#hosts" style="color:var(--accent);font-weight:700">16 Northeast Ohio leaders</a>.</p>
+    <p class="donate-note">Hosted by <a href="#hosts" style="color:var(--accent);font-weight:700">17 Northeast Ohio leaders</a>.</p>
 </section>
 
 <!-- ===================== MAIN ===================== -->
@@ -492,7 +492,7 @@
 <section class="ph-hosts" id="hosts">
     <div class="wrap">
         <div class="ph-section-head">
-            <span class="ph-host-count"><span>16 Leaders &middot; One Patio</span></span>
+            <span class="ph-host-count"><span>17 Leaders &middot; One Patio</span></span>
             <h2>Meet the Host Committee</h2>
             <p>State senators, representatives, county and city leaders, and school board members from across Northeast Ohio are opening the door. Come say hi to them on September 20.</p>
         </div>
@@ -536,6 +536,13 @@
                 <span class="host-mono" aria-hidden="true">ES</span>
                 <span class="host-text">
                     <span class="host-name">Eric Synenberg</span>
+                    <span class="host-role">State Representative</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">DH</span>
+                <span class="host-text">
+                    <span class="host-name">Derrick Hall</span>
                     <span class="host-role">State Representative</span>
                 </span>
             </li>
@@ -779,7 +786,7 @@
 
    The grid ships fully visible. This arms the animation only once it has an
    IntersectionObserver to un-hide the cards with, so an old browser or a
-   script error leaves sixteen readable names rather than an empty section.
+   script error leaves a readable roster rather than an empty section.
    ------------------------------------------------------------------------ */
 (function () {
     var grid = document.querySelector('[data-host-grid]');
