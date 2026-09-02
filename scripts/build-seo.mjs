@@ -55,6 +55,16 @@ const esc = (value) =>
 export function headBlock(page, indent = '    ') {
   const image = absolute(page.image || DEFAULT_OG_IMAGE);
   const imageAlt = page.imageAlt || DEFAULT_OG_IMAGE_ALT;
+  // The site card is 1200x630, so that stays the default. A page that names a
+  // differently shaped image (an event flyer is 4:5) has to declare its real
+  // size, or Facebook lays the card out against numbers the file contradicts.
+  const imageWidth = String(page.imageWidth || 1200);
+  const imageHeight = String(page.imageHeight || 630);
+  // X crops whatever it is given to 1.91:1, so a portrait og:image loses its
+  // top and bottom there. `twitterImage` is the escape hatch: a page can hand
+  // X a wide version of the same art and still share the tall one everywhere
+  // else. Most pages set neither and both tags name the one image.
+  const twitterImage = absolute(page.twitterImage || page.image || DEFAULT_OG_IMAGE);
   const lines = [];
   const meta = (attr, name, content) =>
     lines.push(`<meta ${attr}="${name}" content="${esc(content)}" />`);
@@ -85,15 +95,15 @@ export function headBlock(page, indent = '    ') {
   meta('property', 'og:description', page.ogDescription || page.description);
   meta('property', 'og:url', absolute(page.url));
   meta('property', 'og:image', image);
-  meta('property', 'og:image:width', '1200');
-  meta('property', 'og:image:height', '630');
+  meta('property', 'og:image:width', imageWidth);
+  meta('property', 'og:image:height', imageHeight);
   meta('property', 'og:image:alt', imageAlt);
 
   lines.push('');
   meta('name', 'twitter:card', 'summary_large_image');
   meta('name', 'twitter:title', page.ogTitle || page.title);
   meta('name', 'twitter:description', page.ogDescription || page.description);
-  meta('name', 'twitter:image', image);
+  meta('name', 'twitter:image', twitterImage);
   meta('name', 'twitter:image:alt', imageAlt);
 
   lines.push('');

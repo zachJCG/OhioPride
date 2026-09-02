@@ -17,9 +17,9 @@
     <meta property="og:title" content="Cleveland's Pride Hour | Ohio Pride PAC" />
     <meta property="og:description" content="A happy hour in support of Ohio Pride PAC. Sunday, September 20, 2026, 4:00 to 6:00 PM at the Leather Stallion Saloon in Cleveland. RSVP today." />
     <meta property="og:url" content="https://www.ohiopride.org/sunday-funday" />
-    <meta property="og:image" content="https://www.ohiopride.org/assets/img/events/cleveland-pride-hour-og.jpg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image" content="https://www.ohiopride.org/assets/img/events/cleveland-pride-hour.jpg" />
+    <meta property="og:image:width" content="1080" />
+    <meta property="og:image:height" content="1350" />
     <meta property="og:image:alt" content="Cleveland's Pride Hour, Sunday September 20, 2026, 4:00 to 6:00 PM at the Leather Stallion Saloon, 2205 St. Clair Ave NE, Cleveland." />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -45,7 +45,7 @@
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
       "description": "A happy hour in support of Ohio Pride PAC. Sunday, September 20, 2026, 4:00 to 6:00 PM at the Leather Stallion Saloon in Cleveland. RSVP today.",
       "url": "https://www.ohiopride.org/sunday-funday",
-      "image": "https://www.ohiopride.org/assets/img/events/cleveland-pride-hour-og.jpg",
+      "image": "https://www.ohiopride.org/assets/img/events/cleveland-pride-hour.jpg",
       "location": {
         "@type": "Place",
         "name": "Leather Stallion Saloon",
@@ -93,9 +93,12 @@
     </script>
     <!-- seo:end -->
 
-    <!-- Not the flyer itself: it is 4:5, and summary_large_image centre crops
-         to 1.91:1, which would cut the wordmark off the top and the giving
-         levels off the bottom. The -og card is the whole flyer at 1200x630. -->
+    <!-- og:image is the flyer at its native 4:5, which Facebook, LinkedIn,
+         Slack and iMessage all render tall and readable. X is the one consumer
+         that centre crops to 1.91:1, so twitter:image points at the -og
+         rendering instead: the same flyer, pillarboxed to 1200x630, rather
+         than a crop with the wordmark and the giving levels cut off. Both are
+         set in lib/seo.mjs; this block is generated. -->
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
 
@@ -307,6 +310,95 @@
         .ph-level.is-pending .give-btn { pointer-events: none; cursor: default; }
         .ph-give-note.is-pending { display: none; }
 
+        /* ---------- Host committee ---------- */
+        /* The roster is text, not a second flyer image: it reads on a phone, it
+           grows as names sign on, and screen readers and search engines get all
+           of them. Each card borrows one stop of the pride gradient through a
+           --hue custom property, so the grid reads as a flag rather than a list
+           of grey boxes. */
+        .ph-hosts { padding: 3.5rem 0 0.5rem; }
+        /* A rainbow ring rather than a rainbow fill: dark type over the red and
+           green stops of the flag gradient does not clear AA, white type on the
+           navy inside it clears it comfortably. */
+        .ph-host-count {
+            display: inline-block; background: var(--rainbow); background-size: 200% auto;
+            border-radius: 999px; padding: 2px; margin-bottom: 0.4rem;
+        }
+        .ph-host-count span {
+            display: block; background: #0d1c2b; border-radius: 999px; padding: 0.42rem 1.05rem;
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.72rem;
+            letter-spacing: 2px; text-transform: uppercase; color: #fff;
+        }
+        .ph-host-grid {
+            list-style: none; display: grid; gap: 0.85rem; margin: 0;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        }
+        @media (max-width: 560px) { .ph-host-grid { grid-template-columns: 1fr; } }
+        .ph-host {
+            --hue: 200;
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; gap: 0.95rem;
+            background: var(--navy-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 1rem 1.15rem; transition: var(--transition);
+        }
+        /* A hairline of the card's own hue down the leading edge. It is what
+           makes a two-column grid scan as a gradient top to bottom. */
+        .ph-host::before {
+            content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background: linear-gradient(180deg, hsl(var(--hue) 85% 62%), hsl(var(--hue) 85% 48%));
+        }
+        .ph-host:hover {
+            transform: translateY(-3px);
+            border-color: hsl(var(--hue) 80% 62% / 0.55);
+            box-shadow: 0 16px 38px rgba(0,0,0,0.34), 0 0 0 1px hsl(var(--hue) 80% 62% / 0.18);
+        }
+        /* Six stops around the flag, repeating. Ordered so no two neighbours in
+           a two-column row land on the same colour. */
+        .ph-host:nth-child(6n+1) { --hue: 352; }
+        .ph-host:nth-child(6n+2) { --hue: 28;  }
+        .ph-host:nth-child(6n+3) { --hue: 48;  }
+        .ph-host:nth-child(6n+4) { --hue: 148; }
+        .ph-host:nth-child(6n+5) { --hue: 212; }
+        .ph-host:nth-child(6n+6) { --hue: 284; }
+
+        .ph-host .host-mono {
+            flex: 0 0 46px; width: 46px; height: 46px; border-radius: 50%;
+            display: grid; place-items: center;
+            font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 0.92rem;
+            letter-spacing: 0.5px; color: #fff;
+            background: hsl(var(--hue) 70% 46% / 0.28);
+            border: 1px solid hsl(var(--hue) 80% 66% / 0.45);
+            text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+        }
+        .ph-host .host-text { min-width: 0; }
+        .ph-host .host-name {
+            display: block;
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem;
+            line-height: 1.25; color: #fff;
+        }
+        .ph-host .host-role {
+            display: block; margin-top: 0.22rem;
+            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.66rem;
+            letter-spacing: 1.3px; text-transform: uppercase;
+            color: hsl(var(--hue) 85% 78%); line-height: 1.5;
+        }
+        /* Entrance stagger. The cards ship visible and the inline observer adds
+           .is-armed only when it can watch them, so a failed script or a browser
+           without IntersectionObserver leaves a fully readable roster. */
+        .ph-host-grid.is-armed .ph-host { opacity: 0; transform: translateY(16px); }
+        .ph-host-grid.is-armed .ph-host.is-in {
+            opacity: 1; transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ph-host-grid.is-armed .ph-host { opacity: 1; transform: none; }
+            .ph-host-grid.is-armed .ph-host.is-in { transition: none; }
+            .ph-host:hover { transform: none; }
+        }
+        .ph-host-note { text-align: center; color: var(--text-dim); font-size: 0.84rem; margin-top: 1.5rem; }
+        .ph-host-note a { color: var(--accent); font-weight: 700; }
+        .ph-host-note a:hover { text-decoration: underline; }
+
         /* ---------- Questions ---------- */
         .ph-questions { text-align: center; padding: 3rem 1.5rem 4.5rem; }
         .ph-questions p { color: var(--text-soft); font-size: 1.05rem; }
@@ -331,6 +423,7 @@
     </div>
     <a class="btn-donate lg" id="heroCta" data-actblue-bare href="#rsvp">RSVP for September 20 &rarr;</a>
     <p class="donate-note">Sunday, September 20, 2026 &nbsp;&middot;&nbsp; 4:00 to 6:00 PM &nbsp;&middot;&nbsp; Leather Stallion Saloon</p>
+    <p class="donate-note">Hosted by <a href="#hosts" style="color:var(--accent);font-weight:700">17 Northeast Ohio leaders</a>.</p>
 </section>
 
 <!-- ===================== MAIN ===================== -->
@@ -389,6 +482,139 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- ===================== HOST COMMITTEE ===================== -->
+<!-- Names and titles are transcribed from the invitation, in the order the
+     flyer lists them. Three hosts carry no title there, so they carry none
+     here either. -->
+<section class="ph-hosts" id="hosts">
+    <div class="wrap">
+        <div class="ph-section-head">
+            <span class="ph-host-count"><span>17 Leaders &middot; One Patio</span></span>
+            <h2>Meet the Host Committee</h2>
+            <p>State senators, representatives, county and city leaders, and school board members from across Northeast Ohio are opening the door. Come say hi to them on September 20.</p>
+        </div>
+        <ul class="ph-host-grid" data-host-grid>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">NA</span>
+                <span class="host-text">
+                    <span class="host-name">Nickie Antonio</span>
+                    <span class="host-role">State Senator</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">KS</span>
+                <span class="host-text">
+                    <span class="host-name">Kent Smith</span>
+                    <span class="host-role">State Senator</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">CW</span>
+                <span class="host-text">
+                    <span class="host-name">Casey Weinstein</span>
+                    <span class="host-role">State Senator</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">TR</span>
+                <span class="host-text">
+                    <span class="host-name">Tristan Rader</span>
+                    <span class="host-role">State Representative</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">JB</span>
+                <span class="host-text">
+                    <span class="host-name">Juanita Brent</span>
+                    <span class="host-role">State Representative</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">ES</span>
+                <span class="host-text">
+                    <span class="host-name">Eric Synenberg</span>
+                    <span class="host-role">State Representative</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">DH</span>
+                <span class="host-text">
+                    <span class="host-name">Derrick Hall</span>
+                    <span class="host-role">State Representative</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">CR</span>
+                <span class="host-text">
+                    <span class="host-name">Chris Ronayne</span>
+                    <span class="host-role">Cuyahoga County Executive</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">RW</span>
+                <span class="host-text">
+                    <span class="host-name">Ross Widenor</span>
+                    <span class="host-role">Munroe Falls City Council</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">TD</span>
+                <span class="host-text">
+                    <span class="host-name">Tom Dufour</span>
+                    <span class="host-role">Brook Park City Council</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">FW</span>
+                <span class="host-text">
+                    <span class="host-name">Fran Wilson</span>
+                    <span class="host-role">Akron City Council</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">KH</span>
+                <span class="host-text">
+                    <span class="host-name">Kyle Herman</span>
+                    <span class="host-role">Stow City Council</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">EB</span>
+                <span class="host-text">
+                    <span class="host-name">Evan Botzki</span>
+                    <span class="host-role">Euclid School Board</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">PM</span>
+                <span class="host-text">
+                    <span class="host-name">Phil Montgomery</span>
+                    <span class="host-role">Akron School Board</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">EF</span>
+                <span class="host-text">
+                    <span class="host-name">Erin Fisher</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">BB</span>
+                <span class="host-text">
+                    <span class="host-name">Branden Burns</span>
+                </span>
+            </li>
+            <li class="ph-host">
+                <span class="host-mono" aria-hidden="true">CC</span>
+                <span class="host-text">
+                    <span class="host-name">Chris Clevenger</span>
+                </span>
+            </li>
+        </ul>
+        <p class="ph-host-note">Titles are listed for identification purposes only. Host committee in formation &mdash; to add your name, reach Zach at <a href="mailto:zach@ohiopride.org">zach@ohiopride.org</a>.</p>
     </div>
 </section>
 
@@ -551,6 +777,37 @@
             heroCta.removeAttribute('rel');
         }
     }
+})();
+</script>
+
+<script>
+/* ---------------------------------------------------------------------------
+   Host committee entrance stagger.
+
+   The grid ships fully visible. This arms the animation only once it has an
+   IntersectionObserver to un-hide the cards with, so an old browser or a
+   script error leaves a readable roster rather than an empty section.
+   ------------------------------------------------------------------------ */
+(function () {
+    var grid = document.querySelector('[data-host-grid]');
+    if (!grid || !('IntersectionObserver' in window)) return;
+
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('.ph-host'));
+    grid.classList.add('is-armed');
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            var i = cards.indexOf(entry.target);
+            // Capped so the last card of a long roster is not still waiting
+            // half a second after the reader has scrolled past it.
+            entry.target.style.transitionDelay = Math.min(i % 8, 7) * 45 + 'ms';
+            entry.target.classList.add('is-in');
+            observer.unobserve(entry.target);
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    cards.forEach(function (card) { observer.observe(card); });
 })();
 </script>
 
