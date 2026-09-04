@@ -30,6 +30,16 @@ Drop campaign photos here named by candidate slug:
   portrait: navy suit, striped shirt, red patterned tie, studio backdrop.
 - `job-perry.jpg` — Job Esau Perry, Summit County Common Pleas (2026).
   Approved campaign photo: blue suit, carved doors of the county courthouse.
+- `paul-kurtz.jpg`: Paul Kurtz, OH House District 55 (2026). Campaign
+  profile portrait (the cutout the campaign uses on paulmichaelkurtz.com and
+  BallotReady) composited on a gray studio backdrop at 1080x1350. He is a
+  side profile, flush right; the face sits in the upper 40 percent so the
+  grid's 1:1 crop holds. Ask the campaign for a front-facing headshot and
+  swap it in here when one exists.
+- `jordan-haire.jpg`: Jordan Haire, OH House District 47 (2026). Campaign
+  headshot: glasses, olive top, arms crossed, peach backdrop. Cropped to
+  1080x1350 from the 2396x3600 original the campaign supplied to the Butler
+  County Democratic Party.
 
 The August 22 slate above arrived square (1080x1080), which needs no
 `cardPhoto`: a square photo is already the grid card's crop, and the profile
@@ -39,7 +49,9 @@ Link-preview cards
 - A tall portrait is the wrong shape for a 1.91:1 social card and gets
   center-cropped to a sliver, so a profile may also supply a built
   1200x630 card via the `ogImage` field. Cara's lives at
-  `/assets/social/og-endorsement-cara-jacob.png`. Without `ogImage` the
+  `/assets/social/og-endorsement-cara-jacob.png`; Paul Kurtz and Jordan
+  Haire have cards on the same template at
+  `/assets/social/og-endorsement-<slug>.png`. Without `ogImage` the
   profile falls back to `photo`, then to the site's default OG image.
 
 File naming
