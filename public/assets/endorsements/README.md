@@ -31,11 +31,10 @@ Drop campaign photos here named by candidate slug:
 - `job-perry.jpg` — Job Esau Perry, Summit County Common Pleas (2026).
   Approved campaign photo: blue suit, carved doors of the county courthouse.
 - `paul-kurtz.jpg`: Paul Kurtz, OH House District 55 (2026). Campaign
-  profile portrait (the cutout the campaign uses on paulmichaelkurtz.com and
-  BallotReady) composited on a gray studio backdrop at 1080x1350. He is a
-  side profile, flush right; the face sits in the upper 40 percent so the
-  grid's 1:1 crop holds. Ask the campaign for a front-facing headshot and
-  swap it in here when one exists.
+  headshot: clear-framed glasses, navy blazer over a cream tee, gray studio
+  backdrop. Cropped to 4:5 from the 1024x1024 original and scaled to
+  1080x1350. Replaced the profile cutout the campaign uses on
+  paulmichaelkurtz.com, which shipped 2026-09-04 as a placeholder.
 - `jordan-haire.jpg`: Jordan Haire, OH House District 47 (2026). Campaign
   headshot: glasses, olive top, arms crossed, peach backdrop. Cropped to
   1080x1350 from the 2396x3600 original the campaign supplied to the Butler
