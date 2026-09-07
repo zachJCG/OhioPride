@@ -8,8 +8,9 @@ import { supabase } from '../../lib/supabase';
 import { useAdmin } from '../../lib/permissions';
 import { exportPdf } from './pdf-client';
 import { STATUS_ORDER, STATUS_LABEL, PATH_LABEL, VOTE_LABEL, tallyOf } from './shared';
+import { RaceLine } from './race-line';
 import {
-  raceLabel, cycleYearOf, currentCycleYear, isFutureCycle, daysInStage, daysInStageLabel,
+  cycleYearOf, currentCycleYear, isFutureCycle, daysInStage, daysInStageLabel,
 } from '../../../../lib/endorsement-race.mjs';
 
 const isOpen = (a) => a.status === 'submitted' || a.status === 'under_review';
@@ -197,7 +198,6 @@ export default function EndorsementsQueue() {
               const open = isOpen(a);
               const days = daysInStage(a);
               const stale = open && days != null && days >= STALE_DAYS;
-              const nextCycle = isFutureCycle(a);
               return (
                 <a key={a.id} className="item" href={`/admin/endorsements/${a.id}`} style={{ display: 'block' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'baseline' }}>
@@ -210,11 +210,8 @@ export default function EndorsementsQueue() {
                       {daysInStageLabel(a)} in stage
                     </span>
                   </div>
-                  <div className="muted small">
-                    {raceLabel(a, ' · ', { includeParty: true })}
-                  </div>
-                  <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                    {nextCycle && <span className="badge badge-founding">{cycleYearOf(a)} cycle</span>}
+                  <RaceLine app={a} />
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
                     {a.endorsement_path && <span className="badge badge-muted">{PATH_LABEL[a.endorsement_path] || a.endorsement_path}</span>}
                     {a.is_incumbent && <span className="badge badge-muted">Incumbent</span>}
                     {a.submitted_by_kind && a.submitted_by_kind !== 'candidate' && (

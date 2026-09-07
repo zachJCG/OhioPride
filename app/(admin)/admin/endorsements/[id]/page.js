@@ -12,8 +12,9 @@ import { exportPdf } from '../pdf-client';
 import { answersFor } from '../../../../../lib/endorsement-answers.mjs';
 import { slugify } from '../../../../../lib/endorsement-slug.mjs';
 import {
-  raceLabel, countyLabel, cycleYearOf, isFutureCycle, daysInStage, submittedByLabel, SUBMITTED_BY_LABEL,
+  countyLabel, cycleYearOf, isFutureCycle, daysInStage, submittedByLabel, SUBMITTED_BY_LABEL,
 } from '../../../../../lib/endorsement-race.mjs';
+import { RaceLine } from '../race-line';
 import { STATUS_LABEL, PATH_LABEL, VOTE_ORDER, VOTE_LABEL, PHOTO_BUCKET, tallyOf } from '../shared';
 
 const yn = (v) => v === true ? 'Yes' : v === false ? 'No' : 'No answer';
@@ -326,18 +327,14 @@ export default function CandidatePage() {
             <h2 style={{ font: '800 1.3rem var(--op-font-head)', margin: 0, color: 'var(--op-navy)' }}>
               {name}{app.pronouns ? <span className="muted" style={{ fontSize: '.9rem', fontWeight: 400 }}> · {app.pronouns}</span> : null}
             </h2>
-            <div className="muted" style={{ margin: '2px 0 8px' }}>
-              {raceLabel(app, ' · ', { includeParty: true })}
-            </div>
+            <RaceLine app={app} />
           </div>
         </div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           <span className="badge badge-muted">{STATUS_LABEL[app.status] || app.status}</span>
-          {nextCycle && <span className="badge badge-founding">{cycleYearOf(app)} cycle</span>}
           {app.endorsement_path && <span className="badge badge-muted">{PATH_LABEL[app.endorsement_path] || app.endorsement_path}</span>}
           <span className="badge badge-muted">{app.is_incumbent ? 'Incumbent' : 'Challenger/open'}</span>
           {app.is_out === 'yes' && <span className="badge badge-founding">Out</span>}
-          {app.is_special_election && <span className="badge badge-muted">Special election</span>}
           {filedByOther && <span className="badge badge-muted">{app.submitted_by_kind === 'pac_staff' ? 'Filed by PAC staff' : 'Filed by campaign'}</span>}
           {app.status === 'endorsed' && (
             <span className={`badge ${app.is_published ? 'badge-ok' : 'badge-review'}`}>
@@ -487,9 +484,10 @@ export default function CandidatePage() {
         )}
 
         {!editing && !app.county && (app.endorsement_path === 'judicial' || app.endorsement_path === 'local') && (
-          <p className="small" style={{ margin: '4px 0 0', color: 'var(--op-warn)' }}>
-            No county on file for a {app.endorsement_path} race.{canWrite ? ' Use Edit details to add it.' : ''}
-          </p>
+          <div className="alert alert-warn" style={{ margin: '8px 0 0' }}>
+            <strong>County not on file.</strong> This is a {app.endorsement_path} race, so the county is the jurisdiction.
+            {canWrite ? ' Open Edit details and pick it; it then shows on the queue card and the packet.' : ' A write user can add it under Edit details.'}
+          </div>
         )}
 
         {app.bio && <><div style={{ ...LBL, marginTop: 8 }}>Bio</div><p style={{ marginTop: 4, whiteSpace: 'pre-wrap' }}>{app.bio}</p></>}

@@ -56,6 +56,13 @@ staff email all call `raceLabel()`, which prints office, district, county, and
 year in that order, so a judge reads "Probate Court · Montgomery County · 2026"
 everywhere instead of a bare court name.
 
+In the admin, `race-line.js` renders that as the office on its own line and
+then chips: district and county in blue, the cycle boxed ("2027 · next cycle"
+when it is a later election), party in plain text. A judicial or local race
+with no county shows a warm **County not on file** chip on the queue card and
+an alert on the candidate page, so the gap is a thing a reader sees rather
+than a shorter line.
+
 The same module decides **which cycle** an application belongs to.
 `currentCycleYear()` is this calendar year until the polls close on the
 November general election, then next year. Anything with a later
