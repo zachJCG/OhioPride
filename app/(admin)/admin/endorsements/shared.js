@@ -12,6 +12,11 @@ export const PATH_LABEL = { statewide: 'Statewide', federal: 'Federal', local: '
 export const VOTE_ORDER = ['endorse', 'decline', 'abstain'];
 export const VOTE_LABEL = { endorse: 'Endorse', decline: 'Decline', abstain: 'Abstain' };
 
+// The private bucket the application form and the candidate page share.
+// Policies: anon may only insert under submissions/<application id>/, reads
+// need endorsements:read, and staff uploads go under staff/<application id>/.
+export const PHOTO_BUCKET = 'endorsement-photos';
+
 export function tallyOf(reviews) {
   const t = { endorse: 0, decline: 0, abstain: 0 };
   for (const r of reviews) {

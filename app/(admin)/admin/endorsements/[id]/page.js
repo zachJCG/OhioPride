@@ -11,10 +11,25 @@ import { useAdmin } from '../../../lib/permissions';
 import { exportPdf } from '../pdf-client';
 import { answersFor } from '../../../../../lib/endorsement-answers.mjs';
 import { slugify } from '../../../../../lib/endorsement-slug.mjs';
-import { STATUS_LABEL, PATH_LABEL, VOTE_ORDER, VOTE_LABEL, tallyOf } from '../shared';
+import {
+  raceLabel, countyLabel, cycleYearOf, isFutureCycle, daysInStage, submittedByLabel, SUBMITTED_BY_LABEL,
+} from '../../../../../lib/endorsement-race.mjs';
+import { STATUS_LABEL, PATH_LABEL, VOTE_ORDER, VOTE_LABEL, PHOTO_BUCKET, tallyOf } from '../shared';
 
 const yn = (v) => v === true ? 'Yes' : v === false ? 'No' : 'No answer';
 const dt = (v) => v ? new Date(v).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+
+// The facts a write user may correct in place. Everything the candidate
+// answered stays as filed; these are the race and contact details that
+// arrive mistyped ("82" for the district, the county in the district box).
+const EDITABLE = [
+  'office_sought', 'district', 'county', 'election_year', 'is_special_election', 'party',
+  'pronouns', 'website', 'email', 'phone',
+  'submitted_by_kind', 'submitted_by_name', 'submitted_by_role', 'submitted_by_email',
+];
+
+const CARD_TITLE = { font: '700 .95rem var(--op-font-head)' };
+const LBL = { fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--op-muted)' };
 
 export default function CandidatePage() {
   const { id } = useParams();
@@ -28,6 +43,12 @@ export default function CandidatePage() {
   const [assignments, setAssignments] = useState([]);
   const [activity, setActivity] = useState([]);
   const [admins, setAdmins] = useState([]);
+  const [counties, setCounties] = useState([]);
+  const [photoUrl, setPhotoUrl] = useState(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState({});
+  const [saving, setSaving] = useState(false);
   const [recommendation, setRecommendation] = useState('');
   const [notes, setNotes] = useState('');
   const [busyVote, setBusyVote] = useState(null);
@@ -52,19 +73,32 @@ export default function CandidatePage() {
   useEffect(() => {
     const sb = supabase();
     (async () => {
-      const [a, qs, ad] = await Promise.all([
+      const [a, qs, ad, co] = await Promise.all([
         sb.from('endorsement_applications').select('*').eq('id', id).maybeSingle(),
         sb.from('endorsement_questions').select('question_key, prompt, response_type, path, sort_order, has_explanation, active'),
         sb.from('admin_users').select('id, email, full_name').eq('is_active', true).order('full_name'),
+        sb.from('ohio_counties').select('name').order('sort_order'),
       ]);
       if (!a.data) { setNotFound(true); return; }
       setApp(a.data);
       setNotes(a.data.reviewer_notes || '');
       setQuestions(qs.data || []);
       setAdmins(ad.data || []);
+      setCounties((co.data || []).map(c => c.name));
       await loadDrawerData();
     })();
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // The bucket is private: the preview is a short-lived signed URL, minted
+  // again whenever the path changes (upload, replace, remove).
+  useEffect(() => {
+    let cancelled = false;
+    if (!app?.photo_path) { setPhotoUrl(null); return; }
+    supabase().storage.from(PHOTO_BUCKET).createSignedUrl(app.photo_path, 3600).then(({ data }) => {
+      if (!cancelled) setPhotoUrl(data?.signedUrl || null);
+    });
+    return () => { cancelled = true; };
+  }, [app?.photo_path]);
 
   // Seed the recommendation box from the caller's existing vote once both the
   // reviews and the caller's identity have resolved; never clobber typing.
@@ -120,8 +154,9 @@ export default function CandidatePage() {
       patch.reviewed_at = new Date().toISOString();
     }
     // Select the row back rather than merging the patch locally: endorsed_at
-    // is stamped by a database trigger on the status change, so the value the
-    // page should show does not exist until the write lands.
+    // and status_changed_at are stamped by database triggers on the status
+    // change, so the values the page should show do not exist until the write
+    // lands.
     const { data, error } = await supabase().from('endorsement_applications')
       .update(patch).eq('id', id).select().maybeSingle();
     if (error) { notify('Status change failed: ' + error.message); return; }
@@ -144,6 +179,86 @@ export default function CandidatePage() {
     const { error } = await supabase().from('endorsement_applications').update({ reviewer_notes: notes.trim() || null }).eq('id', id);
     if (error) { notify('Save failed: ' + error.message); return; }
     notify('Notes saved.');
+  }
+
+  /* ── Details editor ─────────────────────────────────────────────────── */
+  function startEditing() {
+    const d = {};
+    for (const k of EDITABLE) d[k] = app[k] == null ? '' : app[k];
+    d.is_special_election = !!app.is_special_election;
+    d.submitted_by_kind = app.submitted_by_kind || 'candidate';
+    setDraft(d);
+    setEditing(true);
+  }
+
+  async function saveDetails(e) {
+    e.preventDefault();
+    setSaving(true);
+    const patch = {};
+    const changed = [];
+    for (const k of EDITABLE) {
+      let v = draft[k];
+      if (k === 'is_special_election') v = !!v;
+      else if (k === 'election_year') v = v === '' || v == null ? null : Number(v);
+      else v = typeof v === 'string' ? (v.trim() || null) : v;
+      if (k === 'submitted_by_kind' && !v) v = 'candidate';
+      const before = app[k] == null ? null : app[k];
+      if (v !== before && !(k === 'is_special_election' && !!v === !!before)) {
+        patch[k] = v;
+        changed.push(k);
+      }
+    }
+    if (!changed.length) { setSaving(false); setEditing(false); return; }
+    if (patch.office_sought === null) { setSaving(false); notify('Office sought cannot be blank.'); return; }
+    if (patch.email === null) { setSaving(false); notify('Email cannot be blank.'); return; }
+    const { data, error } = await supabase().from('endorsement_applications')
+      .update(patch).eq('id', id).select().maybeSingle();
+    setSaving(false);
+    if (error) { notify('Save failed: ' + error.message); return; }
+    await logActivity('edit', `Details updated: ${changed.map(k => k.replace(/_/g, ' ')).join(', ')}`, { fields: changed });
+    setApp(a => data || { ...a, ...patch });
+    await loadDrawerData();
+    setEditing(false);
+    notify('Details saved.');
+  }
+
+  /* ── Photo ──────────────────────────────────────────────────────────── */
+  async function uploadPhoto(e) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { notify('Choose an image file.'); return; }
+    if (file.size > 8 * 1024 * 1024) { notify('That photo is over 8 MB. Resize it first.'); return; }
+    setPhotoBusy(true);
+    const ext = (file.name.match(/\.([a-z0-9]+)$/i)?.[1] || 'jpg').toLowerCase();
+    const path = `staff/${id}/${Date.now()}.${ext}`;
+    const sb = supabase();
+    const up = await sb.storage.from(PHOTO_BUCKET).upload(path, file, { contentType: file.type, upsert: false });
+    if (up.error) { setPhotoBusy(false); notify('Upload failed: ' + up.error.message); return; }
+    const old = app.photo_path;
+    const { error } = await sb.from('endorsement_applications').update({ photo_path: path }).eq('id', id);
+    if (error) { setPhotoBusy(false); notify('Upload saved but the record did not update: ' + error.message); return; }
+    if (old) await sb.storage.from(PHOTO_BUCKET).remove([old]);
+    await logActivity('photo', old ? 'Photo replaced' : 'Photo added', { path });
+    setApp(a => ({ ...a, photo_path: path }));
+    await loadDrawerData();
+    setPhotoBusy(false);
+    notify(old ? 'Photo replaced.' : 'Photo added.');
+  }
+
+  async function removePhoto() {
+    if (!window.confirm('Remove this photo from the application? The file is deleted.')) return;
+    setPhotoBusy(true);
+    const sb = supabase();
+    const old = app.photo_path;
+    const { error } = await sb.from('endorsement_applications').update({ photo_path: null }).eq('id', id);
+    if (error) { setPhotoBusy(false); notify('Remove failed: ' + error.message); return; }
+    await sb.storage.from(PHOTO_BUCKET).remove([old]);
+    await logActivity('photo', 'Photo removed', { path: old });
+    setApp(a => ({ ...a, photo_path: null }));
+    await loadDrawerData();
+    setPhotoBusy(false);
+    notify('Photo removed.');
   }
 
   async function addAssignment(e) {
@@ -189,6 +304,9 @@ export default function CandidatePage() {
   // panel offers Endorse/Decline; the closed states offer Reopen instead.
   const open = app.status === 'submitted' || app.status === 'under_review';
   const publicSlug = slugify(name);
+  const days = daysInStage(app);
+  const nextCycle = isFutureCycle(app);
+  const filedByOther = app.submitted_by_kind && app.submitted_by_kind !== 'candidate';
 
   return (
     <>
@@ -199,18 +317,28 @@ export default function CandidatePage() {
       </div>
 
       <div className="card" style={{ marginBottom: 12 }}>
-        <h2 style={{ font: '800 1.3rem var(--op-font-head)', margin: 0, color: 'var(--op-navy)' }}>
-          {name}{app.pronouns ? <span className="muted" style={{ fontSize: '.9rem', fontWeight: 400 }}> · {app.pronouns}</span> : null}
-        </h2>
-        <div className="muted" style={{ margin: '2px 0 8px' }}>
-          {[app.office_sought, app.district && `District ${app.district}`, app.party, app.election_year].filter(Boolean).join(' · ')}
+        <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+          {photoUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={photoUrl} alt="" style={{ width: 64, height: 64, borderRadius: 12, objectFit: 'cover', flex: 'none', border: '1px solid var(--op-line)' }} />
+          )}
+          <div style={{ minWidth: 0 }}>
+            <h2 style={{ font: '800 1.3rem var(--op-font-head)', margin: 0, color: 'var(--op-navy)' }}>
+              {name}{app.pronouns ? <span className="muted" style={{ fontSize: '.9rem', fontWeight: 400 }}> · {app.pronouns}</span> : null}
+            </h2>
+            <div className="muted" style={{ margin: '2px 0 8px' }}>
+              {raceLabel(app, ' · ', { includeParty: true })}
+            </div>
+          </div>
         </div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           <span className="badge badge-muted">{STATUS_LABEL[app.status] || app.status}</span>
+          {nextCycle && <span className="badge badge-founding">{cycleYearOf(app)} cycle</span>}
           {app.endorsement_path && <span className="badge badge-muted">{PATH_LABEL[app.endorsement_path] || app.endorsement_path}</span>}
           <span className="badge badge-muted">{app.is_incumbent ? 'Incumbent' : 'Challenger/open'}</span>
           {app.is_out === 'yes' && <span className="badge badge-founding">Out</span>}
           {app.is_special_election && <span className="badge badge-muted">Special election</span>}
+          {filedByOther && <span className="badge badge-muted">{app.submitted_by_kind === 'pac_staff' ? 'Filed by PAC staff' : 'Filed by campaign'}</span>}
           {app.status === 'endorsed' && (
             <span className={`badge ${app.is_published ? 'badge-ok' : 'badge-review'}`}>
               {app.is_published ? 'Published on site' : 'Not published'}
@@ -219,13 +347,19 @@ export default function CandidatePage() {
         </div>
         <div className="muted small" style={{ marginTop: 6 }}>
           Submitted {dt(app.created_at)}
+          {days != null && ` · in ${(STATUS_LABEL[app.status] || app.status).toLowerCase()} ${days === 0 ? 'since today' : days === 1 ? 'for 1 day' : `for ${days} days`}${app.status_changed_at ? ` (since ${dt(app.status_changed_at)})` : ''}`}
           {app.reviewed_at ? ` · decided ${dt(app.reviewed_at)}` : ''}
           {app.endorsed_at ? ` · endorsement dated ${dt(app.endorsed_at)}` : ''}
         </div>
+        {nextCycle && (
+          <p className="small muted" style={{ margin: '6px 0 0' }}>
+            Running in {cycleYearOf(app)}. This application sits under <strong>Next cycle</strong> in the queue and moves into the main queue on its own after this November&apos;s election.
+          </p>
+        )}
       </div>
 
       <div className="card" style={{ marginBottom: 12 }}>
-        <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Your vote</strong>
+        <strong style={CARD_TITLE}>Your vote</strong>
         {myReview && <span className="badge badge-ok" style={{ marginLeft: 8 }}>Recorded: {VOTE_LABEL[myReview.vote]}</span>}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, margin: '10px 0' }}>
           {VOTE_ORDER.map(v => (
@@ -248,7 +382,7 @@ export default function CandidatePage() {
       </div>
 
       <div className="card" style={{ marginBottom: 12 }}>
-        <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Board review</strong>
+        <strong style={CARD_TITLE}>Board review</strong>
         <div style={{ display: 'flex', gap: 10, margin: '8px 0' }}>
           {[['Endorse', tally.endorse], ['Decline', tally.decline], ['Abstain', tally.abstain]].map(([l, n]) => (
             <div key={l} className="kpi" style={{ flex: 1, textAlign: 'center', padding: '8px 6px' }}>
@@ -265,20 +399,130 @@ export default function CandidatePage() {
       </div>
 
       <div className="card" style={{ marginBottom: 12 }}>
-        <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Candidate details</strong>
-        <div className="detail-grid" style={{ marginTop: 8 }}>
-          {[['Current office', app.current_office], ['Office category', app.office_category],
-            ['Committee', app.committee_name], ['Treasurer', app.treasurer_name],
-            ['Email', app.email], ['Phone', app.phone], ['Website', app.website]]
-            .filter(([, v]) => v)
-            .map(([l, v]) => <div key={l}><div className="lbl">{l}</div><div className="val">{String(v)}</div></div>)}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <strong style={CARD_TITLE}>Candidate details</strong>
+          <span style={{ flex: 1 }} />
+          {canWrite && !editing && <button className="btn btn-sm" onClick={startEditing}>Edit details</button>}
         </div>
-        {app.bio && <><div className="lbl" style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--op-muted)' }}>Bio</div><p style={{ marginTop: 4, whiteSpace: 'pre-wrap' }}>{app.bio}</p></>}
-        {app.conflicts_disclosure && <><div className="lbl" style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--op-muted)' }}>Disclosures</div><p style={{ marginTop: 4, whiteSpace: 'pre-wrap' }}>{app.conflicts_disclosure}</p></>}
+
+        {editing ? (
+          <form onSubmit={saveDetails} style={{ marginTop: 10 }}>
+            <p className="muted small" style={{ margin: '0 0 10px' }}>
+              Corrects the race and contact facts on the record. The candidate&apos;s answers are never edited here.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0 12px' }}>
+              <label className="field"><span>Office sought</span>
+                <input className="input" value={draft.office_sought} onChange={e => setDraft(d => ({ ...d, office_sought: e.target.value }))} required />
+              </label>
+              <label className="field"><span>District</span>
+                <input className="input" value={draft.district} onChange={e => setDraft(d => ({ ...d, district: e.target.value }))} placeholder="e.g., 28 or Ward 3" />
+              </label>
+              <label className="field"><span>County</span>
+                <select className="select" value={draft.county} onChange={e => setDraft(d => ({ ...d, county: e.target.value }))}>
+                  <option value="">Not recorded</option>
+                  {counties.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </label>
+              <label className="field"><span>Election year</span>
+                <input className="input" type="number" min="2024" max="2040" value={draft.election_year}
+                       onChange={e => setDraft(d => ({ ...d, election_year: e.target.value }))} />
+              </label>
+              <label className="field"><span>Party</span>
+                <input className="input" value={draft.party} onChange={e => setDraft(d => ({ ...d, party: e.target.value }))} />
+              </label>
+              <label className="field"><span>Pronouns</span>
+                <input className="input" value={draft.pronouns} onChange={e => setDraft(d => ({ ...d, pronouns: e.target.value }))} />
+              </label>
+              <label className="field"><span>Email</span>
+                <input className="input" type="email" value={draft.email} onChange={e => setDraft(d => ({ ...d, email: e.target.value }))} required />
+              </label>
+              <label className="field"><span>Phone</span>
+                <input className="input" value={draft.phone} onChange={e => setDraft(d => ({ ...d, phone: e.target.value }))} />
+              </label>
+              <label className="field"><span>Website</span>
+                <input className="input" value={draft.website} onChange={e => setDraft(d => ({ ...d, website: e.target.value }))} />
+              </label>
+            </div>
+            <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '2px 0 12px' }}>
+              <input type="checkbox" checked={!!draft.is_special_election} onChange={e => setDraft(d => ({ ...d, is_special_election: e.target.checked }))} />
+              Special election
+            </label>
+
+            <div style={{ ...LBL, marginBottom: 6 }}>Who filled the application in</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0 12px' }}>
+              <label className="field"><span>Submitted by</span>
+                <select className="select" value={draft.submitted_by_kind} onChange={e => setDraft(d => ({ ...d, submitted_by_kind: e.target.value }))}>
+                  {Object.entries(SUBMITTED_BY_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+                </select>
+              </label>
+              {draft.submitted_by_kind !== 'candidate' && (<>
+                <label className="field"><span>Their name</span>
+                  <input className="input" value={draft.submitted_by_name} onChange={e => setDraft(d => ({ ...d, submitted_by_name: e.target.value }))} />
+                </label>
+                <label className="field"><span>Their role</span>
+                  <input className="input" value={draft.submitted_by_role} onChange={e => setDraft(d => ({ ...d, submitted_by_role: e.target.value }))} placeholder="e.g., Campaign manager" />
+                </label>
+                <label className="field"><span>Their email</span>
+                  <input className="input" type="email" value={draft.submitted_by_email} onChange={e => setDraft(d => ({ ...d, submitted_by_email: e.target.value }))} />
+                </label>
+              </>)}
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button className="btn btn-primary btn-sm" disabled={saving}>{saving ? 'Saving…' : 'Save details'}</button>
+              <button type="button" className="btn btn-sm" disabled={saving} onClick={() => setEditing(false)}>Cancel</button>
+            </div>
+          </form>
+        ) : (
+          <div className="detail-grid" style={{ marginTop: 8 }}>
+            {[['Office', app.office_sought], ['District', app.district], ['County', countyLabel(app.county)],
+              ['Election', app.is_special_election ? `${app.election_year || ''} special election`.trim() : app.election_year],
+              ['Party', app.party], ['Current office', app.current_office], ['Office category', app.office_category],
+              ['Committee', app.committee_name], ['Treasurer', app.treasurer_name],
+              ['Email', app.email], ['Phone', app.phone], ['Website', app.website],
+              ['Submitted by', submittedByLabel(app)],
+              ['Submitter email', filedByOther ? app.submitted_by_email : null]]
+              .filter(([, v]) => v)
+              .map(([l, v]) => <div key={l}><div className="lbl">{l}</div><div className="val">{String(v)}</div></div>)}
+          </div>
+        )}
+
+        {!editing && !app.county && (app.endorsement_path === 'judicial' || app.endorsement_path === 'local') && (
+          <p className="small" style={{ margin: '4px 0 0', color: 'var(--op-warn)' }}>
+            No county on file for a {app.endorsement_path} race.{canWrite ? ' Use Edit details to add it.' : ''}
+          </p>
+        )}
+
+        {app.bio && <><div style={{ ...LBL, marginTop: 8 }}>Bio</div><p style={{ marginTop: 4, whiteSpace: 'pre-wrap' }}>{app.bio}</p></>}
+        {app.conflicts_disclosure && <><div style={LBL}>Disclosures</div><p style={{ marginTop: 4, whiteSpace: 'pre-wrap' }}>{app.conflicts_disclosure}</p></>}
       </div>
 
       <div className="card" style={{ marginBottom: 12 }}>
-        <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Questionnaire</strong>
+        <strong style={CARD_TITLE}>Photo</strong>
+        <p className="muted small" style={{ margin: '4px 0 8px' }}>
+          {app.photo_path
+            ? `${app.photo_path.startsWith('staff/') ? 'Uploaded by staff' : 'Submitted with the application'}. The public page still uses the photo in lib/endorsement-content.mjs; download this one to prepare it.`
+            : 'No photo was submitted. A write user can add one here.'}
+        </p>
+        {photoUrl && (
+          <a href={photoUrl} target="_blank" rel="noopener" style={{ display: 'inline-block', marginBottom: 8 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={photoUrl} alt={`Photo submitted for ${name}`} style={{ maxWidth: 240, maxHeight: 240, borderRadius: 12, border: '1px solid var(--op-line)', display: 'block' }} />
+          </a>
+        )}
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {photoUrl && <a className="btn btn-sm" href={photoUrl} target="_blank" rel="noopener" download>Download</a>}
+          {canWrite && (
+            <label className={`btn btn-sm ${photoBusy ? 'disabled' : ''}`} style={{ cursor: 'pointer' }}>
+              {photoBusy ? 'Working…' : app.photo_path ? 'Replace' : 'Upload a photo'}
+              <input type="file" accept="image/*" onChange={uploadPhoto} disabled={photoBusy} style={{ display: 'none' }} />
+            </label>
+          )}
+          {canWrite && app.photo_path && <button className="btn btn-sm btn-danger" disabled={photoBusy} onClick={removePhoto}>Remove</button>}
+        </div>
+      </div>
+
+      <div className="card" style={{ marginBottom: 12 }}>
+        <strong style={CARD_TITLE}>Questionnaire</strong>
         {qa.length ? qa.map(x => (
           <div key={x.key} style={{ padding: '8px 0', borderBottom: '1px solid var(--op-line)' }}>
             <div style={{ fontWeight: 600, fontSize: '.9rem' }}>{x.prompt}</div>
@@ -294,7 +538,7 @@ export default function CandidatePage() {
       </div>
 
       <div className="card" style={{ marginBottom: 12 }}>
-        <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Assignments</strong>
+        <strong style={CARD_TITLE}>Assignments</strong>
         {assignments.length ? assignments.map(a => (
           <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 8, padding: '6px 0', borderBottom: '1px solid var(--op-line)', fontSize: '.9rem' }}>
             <span>{a.assignee_name || a.assignee_email}{a.role_label ? <span className="muted"> · {a.role_label}</span> : null}</span>
@@ -315,7 +559,7 @@ export default function CandidatePage() {
 
       {canWrite && (
         <div className="card" style={{ marginBottom: 12 }}>
-          <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Record the decision</strong>
+          <strong style={CARD_TITLE}>Record the decision</strong>
 
           {/* The status used to be a bare <select> of database values, which
               made "endorsed" one mis-tap away and said nothing about what the
@@ -385,10 +629,11 @@ export default function CandidatePage() {
 
       {activity.length > 0 && (
         <div className="card" style={{ marginBottom: 12 }}>
-          <strong style={{ font: '700 .95rem var(--op-font-head)' }}>Activity</strong>
+          <strong style={CARD_TITLE}>Activity</strong>
           {activity.map(a => (
             <div key={a.id} className="small" style={{ padding: '5px 0', borderBottom: '1px solid var(--op-line)' }}>
               <span className="muted">{dt(a.created_at)}</span> · {a.summary || a.event_type}
+              {a.actor_name && a.event_type !== 'vote' ? <span className="muted"> · {a.actor_name}</span> : null}
             </div>
           ))}
         </div>

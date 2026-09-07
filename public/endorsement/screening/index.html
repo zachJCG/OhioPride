@@ -498,6 +498,33 @@
     .field.has-error .yesno-option-label {
       border-color: var(--form-error);
     }
+    .who-group .yesno-option { min-width: 150px; }
+
+    /* Photo upload (Step 4) */
+    .photo-field { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+    .photo-preview {
+      width: 96px; height: 96px; border-radius: 8px; object-fit: cover; display: none;
+      border: 1px solid rgba(255, 255, 255, 0.15); background: var(--form-input-bg);
+    }
+    .photo-preview.visible { display: block; }
+    .photo-controls { flex: 1; min-width: 220px; }
+    .photo-controls input[type="file"] {
+      display: block; width: 100%; color: var(--form-text-gray);
+      font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
+    }
+    .photo-controls input[type="file"]::file-selector-button {
+      margin-right: 10px; padding: 10px 14px; border-radius: 6px; cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.25); background: var(--form-input-bg); color: var(--text-white);
+      font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .photo-controls input[type="file"]::file-selector-button:hover { border-color: var(--text-accent); }
+    .photo-remove {
+      display: none; margin-top: 8px; padding: 0; background: none; border: 0; cursor: pointer;
+      color: var(--text-accent); font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .photo-remove.visible { display: inline-block; }
+    .photo-controls .field-error.visible { display: block; }
 
     /* Position card: question + yes/no + explanation */
     .position {
@@ -819,7 +846,47 @@
           <div class="step-header">
             <p class="step-eyebrow">Step 2 of 4</p>
             <h2 id="step2-title" class="step-title">Candidate Information</h2>
-            <p class="step-desc">Tell us about you and your campaign. All fields marked with an asterisk are required.</p>
+            <p class="step-desc">Tell us about the candidate and the campaign. All fields marked with an asterisk are required.</p>
+          </div>
+
+          <div class="field who-group" data-required-radio="submitted_by_kind">
+            <label class="label">Who is filling out this application? <span class="required" aria-hidden="true">*</span></label>
+            <div class="yesno-group" role="radiogroup" aria-label="Who is filling out this application">
+              <label class="yesno-option">
+                <input type="radio" name="submitted_by_kind" value="candidate" required />
+                <span class="yesno-option-label">The candidate</span>
+              </label>
+              <label class="yesno-option">
+                <input type="radio" name="submitted_by_kind" value="campaign_staff" required />
+                <span class="yesno-option-label">Campaign staff</span>
+              </label>
+              <label class="yesno-option">
+                <input type="radio" name="submitted_by_kind" value="pac_staff" required />
+                <span class="yesno-option-label">Ohio Pride PAC staff</span>
+              </label>
+            </div>
+            <div class="field-error">Please tell us who is completing the form.</div>
+          </div>
+
+          <div id="field-submitter" hidden>
+            <p class="help">Thanks for helping. Tell us who you are so the Screening Committee knows whose words these are. The fields below this are about the candidate.</p>
+            <div class="field-row cols-3">
+              <div class="field">
+                <label class="label" for="submitted_by_name">Your name <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" type="text" id="submitted_by_name" name="submitted_by_name" autocomplete="off" />
+                <div class="field-error">Please enter your name.</div>
+              </div>
+              <div class="field">
+                <label class="label" for="submitted_by_role">Your role <span class="required" aria-hidden="true">*</span></label>
+                <input class="input" type="text" id="submitted_by_role" name="submitted_by_role" placeholder="e.g., Campaign manager" />
+                <div class="field-error">Please enter your role.</div>
+              </div>
+              <div class="field">
+                <label class="label" for="submitted_by_email">Your email <span class="optional">Optional</span></label>
+                <input class="input" type="email" id="submitted_by_email" name="submitted_by_email" inputmode="email" />
+                <div class="field-error">Please enter a valid email address.</div>
+              </div>
+            </div>
           </div>
 
           <div class="field-row cols-3">
@@ -865,6 +932,21 @@
               <label class="label" for="district">District / jurisdiction <span class="optional">Optional</span></label>
               <input class="input" type="text" id="district" name="district" placeholder="e.g., District 24, Ward 3" />
             </div>
+          </div>
+
+          <!-- Shown for every local and judicial office; required when the
+               office catalog says the race is a county race (a court, a county
+               row office). Values come from the ohio_counties table. -->
+          <div class="field" id="field-county" hidden>
+            <label class="label" for="county">County
+              <span class="optional" id="countyOptional">Optional</span>
+              <span class="required" id="countyRequired" aria-hidden="true" hidden>*</span>
+            </label>
+            <p class="help">The county the office serves. For a seat that covers more than one county, choose the one where you live.</p>
+            <select class="select" id="county" name="county">
+              <option value="">Choose one</option>
+            </select>
+            <div class="field-error">Please choose the county.</div>
           </div>
 
           <div class="field-row cols-3">
@@ -1001,6 +1083,19 @@
             <div class="field-error">Please respond, or type "None".</div>
           </div>
 
+          <div class="field">
+            <label class="label" for="photo">Campaign photo or headshot <span class="optional">Optional</span></label>
+            <p class="help">If we endorse you, this is the photo we start from for your page and social cards. JPG or PNG, up to 8 MB. A file is not kept with your saved draft, so add it when you are ready to submit.</p>
+            <div class="photo-field">
+              <img class="photo-preview" id="photoPreview" alt="" />
+              <div class="photo-controls">
+                <input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/*" />
+                <div class="field-error" id="photoError">That file could not be used. Choose a JPG or PNG under 8 MB.</div>
+                <button type="button" class="photo-remove" id="photoRemove">Remove photo</button>
+              </div>
+            </div>
+          </div>
+
           <div class="field" data-required-checkbox="attestation">
             <label class="attest">
               <input type="checkbox" id="attestation" name="attestation" required />
@@ -1072,6 +1167,11 @@
       SUPABASE_ANON_KEY:   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZHhlZnpodHRrbWpoZGJrdnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTk5NjksImV4cCI6MjA5MjM5NTk2OX0.l6wUMIdUX5Es4Jvh8fRTvnlYrMQKzYy_NEGBFJ1iMj4',
       THANK_YOU_PATH:      '/endorsement/screening/thank-you',
       NOTIFY_ENDPOINT:     '/api/endorsement-notify',
+      // Private bucket. Anon may only upload under submissions/<application id>/
+      // and cannot read anything back; staff view photos from the admin.
+      PHOTO_BUCKET:        'endorsement-photos',
+      PHOTO_MAX_BYTES:     8 * 1024 * 1024,
+      PHOTO_MAX_EDGE:      1600,
       // Draft is keyed by path so switching offices never bleeds answers
       // across question sets: op_endorsement_draft_v3_<path>.
       STORAGE_PREFIX:      'op_endorsement_draft_v3_',
@@ -1090,7 +1190,8 @@
       submitting: false,
       path: null,                 // 'statewide' | 'federal' | 'local' | 'judicial'
       office: null,               // selected office option object
-      catalog: { paths: [], offices: {}, questions: {} },
+      catalog: { paths: [], offices: {}, questions: {}, counties: [] },
+      photo: null,                // { blob, ext, type } ready to upload, or null
       client: null
     };
 
@@ -1134,14 +1235,24 @@
        CATALOG (path meta, office options, questions)
        ================================================================= */
     async function loadCatalog(client) {
-      const [pm, oo, qq] = await Promise.all([
+      const [pm, oo, qq, cc] = await Promise.all([
         client.from('endorsement_path_meta').select('*').eq('active', true).order('sort_order', { ascending: true }),
         client.from('endorsement_office_options').select('*').eq('active', true).order('sort_order', { ascending: true }),
-        client.from('endorsement_questions').select('*').eq('active', true).order('sort_order', { ascending: true })
+        client.from('endorsement_questions').select('*').eq('active', true).order('sort_order', { ascending: true }),
+        client.from('ohio_counties').select('name').order('sort_order', { ascending: true })
       ]);
       if (pm.error) throw pm.error;
       if (oo.error) throw oo.error;
       if (qq.error) throw qq.error;
+      // Counties are a convenience, not a dependency: a failed read leaves the
+      // dropdown empty and hidden rather than blocking the whole form.
+      state.catalog.counties = cc.error ? [] : (cc.data || []).map(c => c.name);
+      const countySel = $('#county');
+      if (countySel) {
+        countySel.innerHTML = '<option value="">Choose one</option>' + state.catalog.counties.map(n => (
+          '<option value="' + esc(n) + '">' + esc(n) + ' County</option>'
+        )).join('');
+      }
 
       state.catalog.paths = pm.data || [];
       state.catalog.offices = {};
@@ -1197,6 +1308,7 @@
       )).join('');
       state.office = null;
       updateDistrictVisibility();
+      updateCountyVisibility();
     }
 
     function syncOfficeFromSelect() {
@@ -1204,6 +1316,7 @@
       const offices = state.catalog.offices[state.path] || [];
       state.office = offices.find(o => o.label === label) || null;
       updateDistrictVisibility();
+      updateCountyVisibility();
     }
 
     function updateDistrictVisibility() {
@@ -1211,6 +1324,138 @@
       const show = !!(state.office && state.office.requires_district);
       wrap.hidden = !show;
       if (!show) { $('#district').value = ''; }
+    }
+
+    // Every local and judicial race happens somewhere, so the county is asked
+    // for on all of them; the office catalog's requires_county makes it
+    // mandatory for the county races (courts, county row offices). Statewide
+    // and federal offices only see it when the catalog says so.
+    function updateCountyVisibility() {
+      const wrap = $('#field-county');
+      const sel = $('#county');
+      if (!wrap || !sel) return;
+      const required = !!(state.office && state.office.requires_county);
+      const show = required || state.path === 'local' || state.path === 'judicial';
+      wrap.hidden = !show || !state.catalog.counties.length;
+      sel.required = required && !wrap.hidden;
+      $('#countyOptional').hidden = required;
+      $('#countyRequired').hidden = !required;
+      if (wrap.hidden) sel.value = '';
+    }
+
+    /* =================================================================
+       RENDER: who is filling the form in (Step 2)
+       ================================================================= */
+    function submitterKind() {
+      return (($('input[name="submitted_by_kind"]:checked') || {}).value) || '';
+    }
+
+    function updateSubmitterVisibility() {
+      const kind = submitterKind();
+      const wrap = $('#field-submitter');
+      const show = !!kind && kind !== 'candidate';
+      wrap.hidden = !show;
+      $('#submitted_by_name').required = show;
+      $('#submitted_by_role').required = show;
+      if (!show) {
+        ['submitted_by_name', 'submitted_by_role', 'submitted_by_email'].forEach(id => { $('#' + id).value = ''; });
+      }
+      // The typed signature is whoever is submitting. Say so when that is not
+      // the candidate, so a staffer does not sign the candidate's name.
+      const sigLabel = $('label[for="signature"]');
+      if (sigLabel) {
+        sigLabel.innerHTML = (show ? 'Your signature as the person submitting (typed full name)' : 'Signature (typed full name)') +
+          ' <span class="required" aria-hidden="true">*</span>';
+      }
+    }
+
+    /* =================================================================
+       PHOTO (Step 4)
+       Resized in the browser to a 1600px JPEG when the browser can decode
+       the file, so a 12 MB phone photo does not have to cross the wire.
+       Anything the browser cannot decode (HEIC outside Safari) goes up as
+       is; the bucket accepts it and staff open it from the admin.
+       ================================================================= */
+    async function prepareImage(file) {
+      try {
+        const bmp = await createImageBitmap(file);
+        const scale = Math.min(1, CONFIG.PHOTO_MAX_EDGE / Math.max(bmp.width, bmp.height));
+        const w = Math.max(1, Math.round(bmp.width * scale));
+        const h = Math.max(1, Math.round(bmp.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(bmp, 0, 0, w, h);
+        if (bmp.close) bmp.close();
+        const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.86));
+        if (blob) return { blob, ext: 'jpg', type: 'image/jpeg' };
+      } catch (_) { /* fall through */ }
+      const m = /\.([a-z0-9]+)$/i.exec(file.name || '');
+      return { blob: file, ext: (m ? m[1] : 'jpg').toLowerCase(), type: file.type || 'application/octet-stream' };
+    }
+
+    function setPhotoError(on) {
+      const err = $('#photoError');
+      if (err) err.classList.toggle('visible', !!on);
+    }
+
+    function clearPhoto() {
+      state.photo = null;
+      const input = $('#photo');
+      if (input) input.value = '';
+      const img = $('#photoPreview');
+      if (img) {
+        if (img.src && img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
+        img.removeAttribute('src');
+        img.classList.remove('visible');
+      }
+      const rm = $('#photoRemove');
+      if (rm) rm.classList.remove('visible');
+      setPhotoError(false);
+    }
+
+    async function handlePhotoChange(ev) {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) { clearPhoto(); return; }
+      const looksLikeImage = /^image\//.test(file.type) || /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name || '');
+      if (!looksLikeImage || file.size > CONFIG.PHOTO_MAX_BYTES) {
+        clearPhoto();
+        setPhotoError(true);
+        return;
+      }
+      setPhotoError(false);
+      const prepared = await prepareImage(file);
+      if (prepared.blob.size > CONFIG.PHOTO_MAX_BYTES) { clearPhoto(); setPhotoError(true); return; }
+      state.photo = prepared;
+      const img = $('#photoPreview');
+      if (img) {
+        if (img.src && img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
+        img.src = URL.createObjectURL(prepared.blob);
+        img.classList.add('visible');
+        // A format the browser cannot show (HEIC on Chrome) still uploads;
+        // hide the broken preview rather than a broken-image icon.
+        img.onerror = () => img.classList.remove('visible');
+      }
+      const rm = $('#photoRemove');
+      if (rm) rm.classList.add('visible');
+    }
+
+    async function uploadPhoto(appId) {
+      if (!state.photo || !state.client) return null;
+      const path = 'submissions/' + appId + '/photo-' + Date.now() + '.' + state.photo.ext.replace(/[^a-z0-9]/g, '');
+      const { error } = await state.client.storage
+        .from(CONFIG.PHOTO_BUCKET)
+        .upload(path, state.photo.blob, { contentType: state.photo.type, upsert: false });
+      if (error) throw error;
+      return path;
+    }
+
+    function newApplicationId() {
+      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      // Older WebViews: RFC 4122 v4 from getRandomValues.
+      const b = crypto.getRandomValues(new Uint8Array(16));
+      b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80;
+      const h = Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+      return h.slice(0, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) + '-' + h.slice(16, 20) + '-' + h.slice(20);
     }
 
     /* =================================================================
@@ -1350,7 +1595,7 @@
       const data = collectFormData();
       // Any candidate, question, or background content counts.
       for (const [k, v] of Object.entries(data)) {
-        if (k === 'company_url' || k === 'is_incumbent') continue;
+        if (k === 'company_url' || k === 'is_incumbent' || k === 'submitted_by_kind') continue;
         if (typeof v === 'string' && v.trim()) return true;
         if (v === true) return true;
       }
@@ -1398,20 +1643,25 @@
     function resetSharedFields() {
       const ids = [
         'first_name', 'middle_name', 'last_name', 'pronouns', 'office_sought',
-        'district', 'election_year', 'party', 'is_out', 'current_office',
+        'district', 'county', 'election_year', 'party', 'is_out', 'current_office',
         'committee_name', 'treasurer_name', 'email', 'phone', 'website',
+        'submitted_by_name', 'submitted_by_role', 'submitted_by_email',
         'bio', 'conflicts_disclosure', 'signature', 'company_url'
       ];
       ids.forEach(id => { const el = $('#' + id); if (el) el.value = ''; });
-      $$('input[name="is_incumbent"]').forEach(r => { r.checked = false; });
+      $$('input[name="is_incumbent"], input[name="submitted_by_kind"]').forEach(r => { r.checked = false; });
       const attest = $('#attestation'); if (attest) attest.checked = false;
+      clearPhoto();
       updateDistrictVisibility();
+      updateCountyVisibility();
       updateIncumbentVisibility();
+      updateSubmitterVisibility();
     }
 
     function syncDerivedFromForm() {
       syncOfficeFromSelect();
       updateIncumbentVisibility();
+      updateSubmitterVisibility();
     }
 
     /* =================================================================
@@ -1654,6 +1904,10 @@
       const isIncumbent = raw.is_incumbent === 'true' ? true
                         : raw.is_incumbent === 'false' ? false : null;
 
+      const kind = ['candidate', 'campaign_staff', 'pac_staff'].includes(raw.submitted_by_kind)
+        ? raw.submitted_by_kind : 'candidate';
+      const byOther = kind !== 'candidate';
+
       return {
         candidate_name:      candidateName,
         first_name:          firstName  || null,
@@ -1662,6 +1916,7 @@
         pronouns:            trim(raw.pronouns) || null,
         office_sought:       officeLabel,
         district:            trim(raw.district) || null,
+        county:              trim(raw.county) || null,
         election_year:       isSpecialElection ? null : toInt(electionYearRaw),
         is_special_election: isSpecialElection,
         party:               trim(raw.party) || null,
@@ -1676,6 +1931,10 @@
         is_incumbent:        isIncumbent,
         current_office:      isIncumbent ? (trim(raw.current_office) || null) : null,
         responses:           buildResponses(),
+        submitted_by_kind:   kind,
+        submitted_by_name:   byOther ? (trim(raw.submitted_by_name)  || null) : null,
+        submitted_by_role:   byOther ? (trim(raw.submitted_by_role)  || null) : null,
+        submitted_by_email:  byOther ? (trim(raw.submitted_by_email) || null) : null,
         bio:                 trim(raw.bio) || null,
         conflicts_disclosure: trim(raw.conflicts_disclosure),
         attestation:         !!raw.attestation,
@@ -1757,6 +2016,22 @@
       try {
         if (!state.client) throw new Error('Supabase library failed to load.');
         const payload = buildPayload();
+
+        // The row's id is chosen here so the photo can be filed under it
+        // before the row exists; the insert policy only accepts a photo_path
+        // inside this application's own folder. A failed upload never costs a
+        // candidate their application: the row goes in without the photo and
+        // staff can ask for it.
+        payload.id = newApplicationId();
+        if (state.photo) {
+          try {
+            payload.photo_path = await uploadPhoto(payload.id);
+          } catch (err) {
+            console.warn('Photo upload failed; submitting without it:', err);
+            payload.photo_path = null;
+          }
+        }
+
         const { error } = await state.client.from('endorsement_applications').insert([payload]);
         if (error) throw error;
 
@@ -1817,6 +2092,11 @@
       $$('input[name="is_incumbent"]').forEach(r => {
         r.addEventListener('change', updateIncumbentVisibility);
       });
+      $$('input[name="submitted_by_kind"]').forEach(r => {
+        r.addEventListener('change', updateSubmitterVisibility);
+      });
+      $('#photo').addEventListener('change', handlePhotoChange);
+      $('#photoRemove').addEventListener('click', clearPhoto);
 
       // Load the catalog, render the path cards, then restore any draft.
       try {
