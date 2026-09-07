@@ -94,7 +94,15 @@ URL to `PORTED` in `next.config.mjs` when you delete its static file.
   and `endorsement_path_meta.process_note`. `endorsed_at` is a real column
   stamped by a trigger — never publish `updated_at` as the endorsement date.
   Anon has **no SELECT** on `endorsement_applications`; the only public
-  surface is the `public_endorsements` view. Full notes:
+  surface is the `public_endorsements` view. Since 2026-09-07 the race line
+  (office · district · county · year), the election-cycle split (**Next
+  cycle** tab; "current" is computed from the date, never stored), and days
+  in stage (`status_changed_at`, never `updated_at`) all come from
+  `lib/endorsement-race.mjs`. The form records who filled it in
+  (`submitted_by_kind` candidate / campaign_staff / pac_staff plus name,
+  role, email) and takes an optional photo into the private
+  `endorsement-photos` bucket (`photo_path`); the public site still uses the
+  curated photo in `lib/endorsement-content.mjs`. Full notes:
   `docs/endorsements-admin-setup.md`.
 - **Removed modules (2026-08-06, DB + code):** c4 companies, launch day,
   admin email/news, call time. Their tables live in the locked `archive`

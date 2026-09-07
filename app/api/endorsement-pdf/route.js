@@ -7,7 +7,8 @@ import React from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../../../lib/supabase-public.mjs';
 import { answersFor } from '../../../lib/endorsement-answers.mjs';
-import { renderToBuffer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { raceLabel, countyLabel, submittedByLabel, cycleYearOf, daysInStage } from '../../../lib/endorsement-race.mjs';
+import { renderToBuffer, Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
 
 export const runtime = 'nodejs';
 
@@ -15,7 +16,9 @@ const NAVY = '#0F2233', BLUE = '#73D7EE', LINE = '#D8E2EA', MUTED = '#5B6B77';
 
 const s = StyleSheet.create({
   page: { paddingTop: 40, paddingBottom: 48, paddingHorizontal: 44, fontSize: 9.5, color: '#10202E', fontFamily: 'Helvetica' },
-  cover: { backgroundColor: NAVY, color: '#FFFFFF', margin: -44, marginTop: -40, padding: 44, paddingBottom: 22, marginBottom: 18 },
+  cover: { backgroundColor: NAVY, color: '#FFFFFF', margin: -44, marginTop: -40, padding: 44, paddingBottom: 22, marginBottom: 18, flexDirection: 'row', alignItems: 'center', gap: 16 },
+  coverText: { flexGrow: 1, flexShrink: 1 },
+  headshot: { width: 64, height: 64, borderRadius: 6, objectFit: 'cover', flexShrink: 0 },
   kicker: { fontSize: 8, letterSpacing: 2, color: BLUE, marginBottom: 6, textTransform: 'uppercase' },
   h1: { fontSize: 20, fontFamily: 'Helvetica-Bold' },
   sub: { fontSize: 10, marginTop: 4, color: '#D9E6EE' },
@@ -40,7 +43,7 @@ const label = (k) => ({ endorse: 'Endorse', decline: 'Decline', abstain: 'Abstai
 const yn = (v) => v === true ? 'Yes' : v === false ? 'No' : '—';
 const dt = (v) => v ? new Date(v).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 
-function Packet({ app, questions, reviews, activity }) {
+function Packet({ app, questions, reviews, activity, photo }) {
   // Shared with the admin candidate page so the packet the board signs off on
   // and the screen they voted from can never show different answers.
   const qa = answersFor(app, questions).map(a => ({
@@ -59,20 +62,28 @@ function Packet({ app, questions, reviews, activity }) {
   return (
     <Page size="LETTER" style={s.page} wrap>
       <View style={s.cover}>
-        <Text style={s.kicker}>Ohio Pride PAC · Endorsement File</Text>
-        <Text style={s.h1}>{app.candidate_name || [app.first_name, app.last_name].filter(Boolean).join(' ')}</Text>
-        <Text style={s.sub}>
-          {[app.office_sought, app.district && `District ${app.district}`, app.party, app.election_year].filter(Boolean).join('  ·  ')}
-        </Text>
-        <Text style={{ ...s.sub, marginTop: 6 }}>Status: {(app.status || 'submitted').replace(/_/g, ' ')}   ·   Submitted {dt(app.created_at)}</Text>
+        <View style={s.coverText}>
+          <Text style={s.kicker}>Ohio Pride PAC · Endorsement File</Text>
+          <Text style={s.h1}>{app.candidate_name || [app.first_name, app.last_name].filter(Boolean).join(' ')}</Text>
+          <Text style={s.sub}>{raceLabel(app, '  ·  ', { includeParty: true })}</Text>
+          <Text style={{ ...s.sub, marginTop: 6 }}>
+            Status: {(app.status || 'submitted').replace(/_/g, ' ')}
+            {daysInStage(app) != null ? ` (${daysInStage(app)} days)` : ''}
+            {'   ·   '}Submitted {dt(app.created_at)}
+          </Text>
+        </View>
+        {photo ? <Image src={photo} style={s.headshot} /> : null}
       </View>
 
       <Text style={s.h2}>Candidate</Text>
       <View style={s.grid}>
         {[['Pronouns', app.pronouns], ['Out', app.is_out], ['Incumbent', yn(app.is_incumbent)], ['Current office', app.current_office],
+          ['County', countyLabel(app.county)], ['Election cycle', cycleYearOf(app)],
           ['Committee', app.committee_name], ['Treasurer', app.treasurer_name], ['Email', app.email], ['Phone', app.phone],
           ['Website', app.website], ['Path', app.endorsement_path], ['Office category', app.office_category],
-          ['Special election', yn(app.is_special_election)]]
+          ['Special election', yn(app.is_special_election)],
+          ['Submitted by', submittedByLabel(app)],
+          ['Submitter email', app.submitted_by_kind && app.submitted_by_kind !== 'candidate' ? app.submitted_by_email : null]]
           .filter(([, v]) => v !== undefined && v !== null && v !== '' && v !== '—')
           .map(([l, v]) => (
             <View key={l} style={s.cell}><Text style={s.lbl}>{l}</Text><Text style={s.val}>{String(v)}</Text></View>
@@ -159,12 +170,25 @@ export async function GET(req) {
   }
   const questions = qRes.data, reviews = rRes.data, activity = aRes.data;
 
+  // Submitted photos ride along on the cover. Read through the caller's JWT
+  // like everything else, so the bucket policy (endorsements:read) applies.
+  // react-pdf renders JPEG and PNG only; anything else, or a failed download,
+  // just leaves the cover without a photo rather than failing the packet.
+  const photos = new Map();
+  await Promise.all(apps.filter(a => a.photo_path && /\.(jpe?g|png)$/i.test(a.photo_path)).map(async (a) => {
+    try {
+      const { data } = await sb.storage.from('endorsement-photos').download(a.photo_path);
+      if (data) photos.set(a.id, Buffer.from(await data.arrayBuffer()));
+    } catch { /* cover renders without it */ }
+  }));
+
   const doc = (
     <Document title="Ohio Pride PAC — Endorsement Packet" author="Ohio Pride PAC">
       {apps.map(app => (
         <Packet key={app.id} app={app} questions={questions || []}
           reviews={(reviews || []).filter(r => r.application_id === app.id)}
-          activity={(activity || []).filter(a => a.application_id === app.id)} />
+          activity={(activity || []).filter(a => a.application_id === app.id)}
+          photo={photos.get(app.id) || null} />
       ))}
     </Document>
   );
