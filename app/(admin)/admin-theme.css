@@ -147,6 +147,24 @@ body.admin a { color: inherit; }
 .badge-ok { background: #E8F6EF; color: var(--op-ok); }
 .badge-bad { background: #FBEDEC; color: var(--op-bad); }
 .badge-muted { background: #EEF3F7; color: var(--op-muted); }
+
+/* The race a candidate is in: the office on its own line, then the facts
+   that place it (district, county, cycle, party) as small chips so a judge's
+   county stands out instead of hiding in a run of dots. Used by the
+   endorsements queue card and the candidate page header. */
+.race { display: grid; gap: 5px; margin: 2px 0 8px; }
+.race-office { font-size: .92rem; font-weight: 600; color: var(--op-ink); line-height: 1.3; }
+.race-meta { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.race-pill {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px;
+  font-size: .74rem; font-weight: 600; line-height: 1.5; white-space: nowrap;
+  background: #EEF3F7; color: var(--op-muted);
+}
+.race-pill-place { background: #EAF8FD; color: #0B5E74; }
+.race-pill-missing { background: #FDF3E7; color: var(--op-warn); }
+.race-pill-cycle { background: #fff; border: 1px solid var(--op-line); }
+.race-pill-special { background: #FDF3E7; color: var(--op-warn); }
+.race-party { font-size: .78rem; color: var(--op-muted); }
 .muted { color: var(--op-muted); }
 .small { font-size: .82rem; }
 
