@@ -32,7 +32,8 @@
 --      `requires_district`, so the form can require a county for a county race
 --      without a deploy.
 --
--- Idempotent: safe to re-run.
+-- APPLIED TO PRODUCTION 2026-09-07 (as `endorsement_module_refinements` via
+-- MCP); see docs/db/CHANGES-2026-09-07.md. Idempotent: safe to re-run.
 -- =============================================================================
 
 -- ── 1. Ohio counties ────────────────────────────────────────────────────────
