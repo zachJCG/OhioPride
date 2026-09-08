@@ -39,6 +39,11 @@ Drop campaign photos here named by candidate slug:
   headshot: glasses, olive top, arms crossed, peach backdrop. Cropped to
   1080x1350 from the 2396x3600 original the campaign supplied to the Butler
   County Democratic Party.
+- `mike-baker.jpg`: Mike Baker, OH House District 52 (2026). Campaign
+  portrait: gray suit, blue tie, glasses, dark background. 1080x1080.
+- `sarah-henry.jpg`: Sarah Henry, Hamilton County Common Pleas (2026).
+  Campaign portrait: brown blazer, arms crossed, law library shelves behind
+  her. 1080x1080.
 
 The August 22 slate above arrived square (1080x1080), which needs no
 `cardPhoto`: a square photo is already the grid card's crop, and the profile
