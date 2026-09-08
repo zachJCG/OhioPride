@@ -11,6 +11,7 @@ import { supabase } from '../../lib/supabase';
 import { useAdmin } from '../../lib/permissions';
 import { money, shortDate } from '../../lib/format';
 import MemberDrawer from './member-drawer';
+import SyncPanel from './sync-panel';
 
 const GOAL = 1969;
 const BLOCK = 500;
@@ -22,6 +23,8 @@ const FILTERS = [
   { key: 'public',   label: 'On public roster' },
   { key: 'vetted',   label: 'Vetted' },
   { key: 'unvetted', label: 'Needs vetting' },
+  { key: 'refunded', label: 'Refunded' },
+  { key: 'cancelled', label: 'Cancelled monthly' },
 ];
 
 const SORTS = [
@@ -55,6 +58,8 @@ function matchesFilter(m, key) {
   if (key === 'public')   return !!m.is_public;
   if (key === 'vetted')   return !!m.is_vetted;
   if (key === 'unvetted') return !m.is_vetted;
+  if (key === 'refunded') return !!m.refunded_at;
+  if (key === 'cancelled') return m.recurrence === 'cancelled';
   return true;
 }
 
@@ -113,12 +118,16 @@ export default function MembersPage() {
 
   const stats = useMemo(() => {
     const rows = all || [];
+    // Refunded seats stay in the list (so they can be found) but do not count,
+    // which is the same rule founding_members_progress() applies on the site.
+    const seats = rows.filter(m => !m.refunded_at);
     return {
-      count: rows.length,
-      cents: rows.reduce((s, m) => s + (m.amount_cents || 0), 0),
-      publicCount: rows.filter(m => m.is_public).length,
-      unvetted: rows.filter(m => !m.is_vetted).length,
-      monthly: rows.filter(m => m.recurrence === 'monthly').length,
+      count: seats.length,
+      cents: seats.reduce((s, m) => s + (m.amount_cents || 0), 0),
+      publicCount: seats.filter(m => m.is_public).length,
+      unvetted: seats.filter(m => !m.is_vetted).length,
+      monthly: seats.filter(m => m.recurrence === 'monthly').length,
+      refunded: rows.length - seats.length,
     };
   }, [all]);
 
@@ -144,7 +153,8 @@ export default function MembersPage() {
     if (!data.length) { notify('Nothing to export with these filters.'); return; }
     const cols = ['founding_number', 'full_name', 'email', 'display_name', 'amount_cents', 'recurrence',
       'contributed_at', 'is_public', 'is_vetted', 'city', 'county', 'state', 'employer', 'occupation',
-      'elected_office', 'jurisdiction', 'actblue_contribution_id', 'actblue_receipt_id', 'notes'];
+      'elected_office', 'jurisdiction', 'refcode', 'refunded_at', 'recurring_cancelled_at',
+      'actblue_contribution_id', 'actblue_receipt_id', 'notes'];
     const esc = (v) => {
       const s = v == null ? '' : String(v);
       return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
@@ -175,11 +185,13 @@ export default function MembersPage() {
 
       {error && <div className="alert alert-error">{error}</div>}
 
+      {!authLoading && <SyncPanel canWrite={canWrite} notify={notify} onSynced={load} />}
+
       <div className="kpi-grid">
         <div className="kpi">
           <div className="num">{stats.count.toLocaleString()}</div>
           <div className="lbl">Members</div>
-          <div className="sub">{stats.monthly} giving monthly</div>
+          <div className="sub">{stats.monthly} giving monthly{stats.refunded ? ` · ${stats.refunded} refunded` : ''}</div>
         </div>
         <div className="kpi">
           <div className="num">{money(stats.cents)}</div>
@@ -254,6 +266,8 @@ export default function MembersPage() {
                 <span className={`badge ${m.is_vetted ? 'badge-ok' : 'badge-review'}`}>
                   {m.is_vetted ? 'Vetted' : 'Needs vetting'}
                 </span>
+                {m.refunded_at && <span className="badge badge-bad">Refunded</span>}
+                {m.recurrence === 'cancelled' && <span className="badge badge-muted">Monthly cancelled</span>}
               </div>
             </button>
           ))}

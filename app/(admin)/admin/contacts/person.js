@@ -40,7 +40,7 @@ export default function PersonDrawer({ contactId, seedRow, canWrite, notify, onC
       setNotes(r.notes || '');
       setTags((r.tags || []).join(', '));
       const [g, f, v, n, nl, d] = await Promise.all([
-        sb.from('donors').select('id, amount_cents, contributed_at, recurrence, source, refcode, reason, founding_member_id')
+        sb.from('donors').select('id, amount_cents, contributed_at, recurrence, source, refcode, reason, founding_member_id, refunded_at, recurrence_number')
           .eq('contact_id', contactId).order('contributed_at', { ascending: false }),
         sb.from('founding_members').select('id, founding_number, amount_cents, recurrence, display_name, is_public, is_vetted')
           .eq('contact_id', contactId).order('founding_number'),
@@ -168,7 +168,7 @@ export default function PersonDrawer({ contactId, seedRow, canWrite, notify, onC
     changed.current = true;
     setShowGift(false);
     const { data: g } = await supabase().from('donors')
-      .select('id, amount_cents, contributed_at, recurrence, source, refcode, reason, founding_member_id')
+      .select('id, amount_cents, contributed_at, recurrence, source, refcode, reason, founding_member_id, refunded_at, recurrence_number')
       .eq('contact_id', contactId).order('contributed_at', { ascending: false });
     setGifts(g || []);
     notify('Gift recorded.');
@@ -233,10 +233,11 @@ export default function PersonDrawer({ contactId, seedRow, canWrite, notify, onC
             <div key={g.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 8, padding: '7px 0', borderBottom: '1px solid var(--op-line)', fontSize: '.9rem' }}>
               <span>
                 {shortDate(g.contributed_at)}
-                <span className="muted"> · {g.source || 'gift'}{g.founding_member_id ? ' · founding' : ''}{g.recurrence === 'monthly' ? ' · monthly' : ''}</span>
+                <span className="muted"> · {g.source || 'gift'}{g.founding_member_id ? ' · founding' : ''}{g.recurrence === 'monthly' ? ' · monthly' : ''}{g.recurrence === 'cancelled' ? ' · monthly, cancelled' : ''}{g.recurrence_number > 1 ? ` · installment ${g.recurrence_number}` : ''}</span>
+                {g.refunded_at && <span className="badge badge-bad" style={{ marginLeft: 6 }}>Refunded</span>}
                 {g.reason && <span className="muted small" style={{ display: 'block' }}>{g.reason}</span>}
               </span>
-              <strong>{money(g.amount_cents)}</strong>
+              <strong style={g.refunded_at ? { textDecoration: 'line-through', color: 'var(--op-muted)' } : undefined}>{money(g.amount_cents)}</strong>
             </div>
           )) : <div className="muted small">No gifts on file.</div>}
         </section>

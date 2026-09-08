@@ -176,7 +176,12 @@ exported as App Router route handlers by one-line wrappers in
 There is deliberately no root `api/` directory: under a framework preset the
 framework owns `/api/*`, and keeping both invites a routing conflict.
 Endpoints (`/api/<name>`):
-- `actblue-sync.mjs` — hourly cron; ingests ALL ActBlue contributions (founding refcodes -> `founding_members`, rest -> `donors` with source `actblue`), maps employer/occupation/address, dedupes on the email + receipt pair
+- `actblue-sync.mjs` — hourly cron + admin "Sync now"; pulls ActBlue's CSV API
+  (`paid`, `refunded`, `cancelled_recurring`) with `ACTBLUE_CLIENT_UUID` /
+  `ACTBLUE_CLIENT_SECRET` and reconciles through `lib/actblue.mjs` (one founding
+  row per person, every payment in `donors` keyed on the lineitem, contacts
+  enriched fill-never-overwrite, refunds and cancellations stamped). Logs to
+  `actblue_sync_runs`. Protect with `CRON_SECRET`. Full notes: `docs/actblue-sync.md`
 - `board-members.mjs` — feeds `/board`
 - `founding-member-tiers.mjs` — feeds tier cards on `/founding-members` and `/donate/founding-member`
 - `founding-members-progress.mjs` — 1,969 progress bar
@@ -185,7 +190,7 @@ Endpoints (`/api/<name>`):
 - `submission-created.js` — legacy form handler
 - `endorsement-notify.mjs` — staff email for a new endorsement application (the
   screening form inserts from the browser, so this is its only server hop)
-- `admin-contacts-import.mjs` — ActBlue CSV reconciliation for /admin/contacts
+- `admin-contacts-import.mjs` — ActBlue CSV reconciliation for /admin/contacts (contribution files use the same `lib/actblue.mjs` reconciliation as the cron)
 - `admin-user-manage.mjs` — invite / set_password / update_email / send_password_reset
 - `admin-dashboard.mjs` — aggregated stats for /admin/dashboard
 - `app/api/endorsement-pdf/route.js` — candidate packet PDF (implementation lives in the route; it needs JSX)
@@ -231,12 +236,32 @@ Public donor display order is set explicitly via `display_order` column on `foun
 
 - **DB:** Supabase (Postgres). RLS enabled by default; public read where pages need it.
 - **Hosting:** Vercel. Functions in `api/*.mjs` (Node ESM, web handler signature); config in `vercel.json` (cleanUrls, redirects, headers, hourly `actblue-sync` cron).
-- **Donations:** ActBlue. Donor sync runs via `api/actblue-sync.mjs` (Vercel cron) into `founding_members`.
+- **Donations:** ActBlue. Donor sync runs via `/api/actblue-sync` (Vercel cron, hourly) into `founding_members`, `donors` and `contacts` through the CSV API; credentials live only in Vercel env (`ACTBLUE_CLIENT_UUID`, `ACTBLUE_CLIENT_SECRET`, `CRON_SECRET`). Never commit them.
 - **Frontend:** Next.js (App Router, JavaScript, no TypeScript) wrapping the existing plain HTML + vanilla JS pages, which are served from `public/` until each one is ported. Pages fetch from the `/api/*` route handlers, which proxy to Supabase using the service-role key (kept server-side). Run it with `npm run dev`; `npm run build` must pass before a PR lands.
+
+### ActBlue sync (2026-09-08)
+
+- **The sync is real now.** Before 2026-09-08 it called a non-existent
+  endpoint with unset credentials and had never ingested anything.
+  `lib/actblue.mjs` owns the CSV API client, row mapping and reconciliation;
+  the cron handler and the admin CSV import both call it.
+- **Founding members are people, not payments.** Recurrence Number 1 of a
+  founding refcode makes the row; installments and repeat gifts go to
+  `donors`. Admin-curated columns (`display_name`, `is_public`, `is_vetted`,
+  `notes`, `elected_office`, `jurisdiction`, `public_quote`,
+  `founding_number`) are never written by the sync after insert.
+- **Refunded seats do not count.** `refunded_at` is set by the sync;
+  `founding_members_progress()`, `founding_members_public` and
+  `contacts_directory` exclude refunded rows. Rows are never deleted.
+- **`founding_member_tiers.actblue_url` exists live** as of 2026-09-08; the
+  tiers endpoint had been 500ing without it.
+- New founding members are private until vetted unless
+  `ACTBLUE_SYNC_AUTO_PUBLISH=true`.
 
 ## Things to never do
 
 - Don't pull live ActBlue donor PII into the repo or a shared doc.
+- Don't commit ActBlue credentials or `CRON_SECRET`; they live only in Vercel env.
 - Don't read/write site code from Drive — always treat the Git repo as source of truth.
 - Don't put county into `founding_members` as free text. It's derived from ZIP via the trigger in migration `20260427000001_founding_members_county_from_zip.sql`.
 - Don't ship Donor zips/addresses on the public roster — only first name, last initial, city, county.

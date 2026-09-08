@@ -75,6 +75,15 @@ export default function DashboardPage() {
               <div className="num">{k.founding_members.toLocaleString()}<span className="muted" style={{ fontSize: '.85rem' }}> / {k.founding_target.toLocaleString()}</span></div>
               <div className="lbl">Founding members</div>
               <div className="meter" style={{ marginTop: 6 }}><span style={{ width: `${k.founding_progress_pct}%` }} /></div>
+              <div className="sub">
+                {k.actblue_last_sync
+                  ? (k.actblue_last_sync.status === 'ok'
+                      ? `ActBlue synced ${k.actblue_last_sync.when}`
+                      : k.actblue_last_sync.status === 'running'
+                        ? 'ActBlue sync running'
+                        : `ActBlue sync failed ${k.actblue_last_sync.when}`)
+                  : 'ActBlue sync has not run yet'}
+              </div>
             </div>
           )}
           {can('endorsements') && (
