@@ -48,6 +48,9 @@ export default function ImportCsv({ notify, onClose }) {
           Accepts a donor rollup (one row per donor) or a contribution export (one row per gift).
           Matching is by email. Existing values are never overwritten; blanks are filled, new
           contacts are created, and disagreements are reported below instead of applied.
+          Contribution exports go through the same reconciliation as the hourly ActBlue sync, so
+          founding refcodes create or match founding members and every payment lands in giving history.
+          For anything ActBlue still has, the Sync now button on Members is the easier path.
         </p>
         <form onSubmit={run}>
           <input className="input" type="file" name="file" accept=".csv,text/csv" style={{ padding: 10, minHeight: 0 }} />
@@ -67,6 +70,8 @@ export default function ImportCsv({ notify, onClose }) {
               <div><div className="lbl">Fields filled</div><div className="val">{result.fields_filled}</div></div>
               {result.file_kind === 'contributions' && (
                 <>
+                  <div><div className="lbl">Founding members added</div><div className="val">{result.founding_inserted ?? 0}</div></div>
+                  <div><div className="lbl">Founding members updated</div><div className="val">{result.founding_updated ?? 0}</div></div>
                   <div><div className="lbl">Gifts inserted</div><div className="val">{result.donors_inserted}</div></div>
                   <div><div className="lbl">Duplicates skipped</div><div className="val">{result.donors_skipped}</div></div>
                 </>

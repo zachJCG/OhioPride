@@ -72,7 +72,17 @@ export default function MemberDrawer({ member, canWrite, notify, onPatch, onClos
           <span className={`badge ${member.is_vetted ? 'badge-ok' : 'badge-review'}`}>
             {member.is_vetted ? 'Vetted' : 'Needs vetting'}
           </span>
+          {member.refunded_at && <span className="badge badge-bad">Refunded</span>}
+          {member.recurrence === 'cancelled' && <span className="badge badge-muted">Monthly cancelled</span>}
         </div>
+
+        {member.refunded_at && (
+          <div className="alert alert-warn">
+            ActBlue refunded this membership payment on {shortDate(member.refunded_at)}. The seat no longer counts
+            toward 1,969 and is not shown on ohiopride.org, but the record is kept. Clear the refund date in
+            Supabase if that is wrong.
+          </div>
+        )}
 
         <section style={{ marginBottom: 14 }}>
           <h4 style={{ margin: '4px 0' }}>Public roster</h4>
@@ -89,7 +99,7 @@ export default function MemberDrawer({ member, canWrite, notify, onPatch, onClos
             </label>
             <div className="muted small" style={{ marginTop: 4 }}>
               Both have to be on before this member appears on ohiopride.org. They show as
-              “{member.display_name || 'Anonymous'}”.
+              “{member.display_name || member.full_name || 'Anonymous'}”.
             </div>
             {!canWrite && <div className="muted small" style={{ marginTop: 6 }}>You have read access only.</div>}
           </div>
@@ -101,7 +111,12 @@ export default function MemberDrawer({ member, canWrite, notify, onPatch, onClos
             <Cell label="Amount">
               {money(member.amount_cents)}{member.recurrence === 'monthly' ? '/mo' : ''}
             </Cell>
-            <Cell label="Recurrence">{member.recurrence === 'monthly' ? 'Monthly' : 'One time'}</Cell>
+            <Cell label="Recurrence">
+              {member.recurrence === 'monthly' ? 'Monthly'
+                : member.recurrence === 'cancelled'
+                  ? `Monthly, cancelled${member.recurring_cancelled_at ? ` ${shortDate(member.recurring_cancelled_at)}` : ''}`
+                  : 'One time'}
+            </Cell>
             <Cell label="Contributed">{shortDate(member.contributed_at)}</Cell>
             <Cell label="Founding number">{member.founding_number != null ? `#${member.founding_number}` : null}</Cell>
           </div>
@@ -114,6 +129,9 @@ export default function MemberDrawer({ member, canWrite, notify, onPatch, onClos
             <Cell label="Public display name">{member.display_name}</Cell>
             <Cell label="Employer">{member.employer}</Cell>
             <Cell label="Occupation">{member.occupation}</Cell>
+            <Cell label="Phone">{member.phone}</Cell>
+            <Cell label="Address">{member.address1}</Cell>
+            <Cell label="ZIP">{member.zip}</Cell>
             <Cell label="City">{member.city}</Cell>
             <Cell label="County">{member.county ? `${member.county} County` : null}</Cell>
             <Cell label="State">{member.state}</Cell>
@@ -163,6 +181,9 @@ export default function MemberDrawer({ member, canWrite, notify, onPatch, onClos
           <div className="detail-grid">
             <Cell label="Contribution ID">{member.actblue_contribution_id}</Cell>
             <Cell label="Receipt ID">{member.actblue_receipt_id}</Cell>
+            <Cell label="Refcode">{member.refcode}</Cell>
+            <Cell label="ActBlue donor ID">{member.actblue_donor_id}</Cell>
+            <Cell label="Refunded">{member.refunded_at ? shortDate(member.refunded_at) : null}</Cell>
             <Cell label="Added">{shortDate(member.created_at)}</Cell>
             <Cell label="Last updated">{shortDate(member.updated_at)}</Cell>
           </div>
