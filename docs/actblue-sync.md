@@ -133,6 +133,23 @@ Migration `20260908000000_actblue_sync_runs_and_refunds.sql` (applied live
 - `fill_oh_county()` falls back from city to ZIP
 - `public.actblue_sync_runs` with RLS (`donors:read` to select)
 
+## Tests
+
+`npm test` runs the suite in `tests/actblue.test.mjs` (96 tests, Node's built-in
+runner, no network and no database). It covers the date conversion including
+both daylight-saving transitions, the money and recurrence parsing, the header
+aliases against the real 101-column and 49-column export headers, the CSV API
+client against a fake fetch (auth header, request body, polling, deadlines,
+range guard), and the whole reconciliation against an in-memory Supabase double
+that enforces the live unique constraints and emulates the fan-out and
+contact-linking triggers.
+
+Two of those tests exist because they caught real bugs before the first sync
+ever ran: two founding-refcode gifts from the same new email in one batch used
+to create two seats (`founding_members` has no unique on email to catch it),
+and an out-of-range date such as `2026-02-30` used to roll over to March 2
+instead of reading as missing.
+
 ## Troubleshooting
 
 | Symptom | Likely cause |
