@@ -6,6 +6,37 @@ export const STATUS_LABEL = {
   declined: 'Declined', withdrawn: 'Withdrawn',
 };
 export const PATH_LABEL = { statewide: 'Statewide', federal: 'Federal', local: 'Local', judicial: 'Judicial' };
+
+/* The race levels, in the order a ballot runs: statewide down to the local
+ * board. These are labels only. Whether a level is reviewed descriptive-only
+ * is decided by requires_descriptive_only() in SQL and reaches the queue as
+ * the computed `descriptive_only` column, so the rule is never restated here.
+ * Keep in step with the public.race_level enum. */
+export const RACE_LEVEL_ORDER = [
+  'statewide_executive',
+  'us_congress',
+  'general_assembly',
+  'state_board_of_education',
+  'judicial_appellate',
+  'judicial_trial',
+  'county',
+  'municipal',
+  'township',
+  'school_board',
+];
+
+export const RACE_LEVEL_LABEL = {
+  statewide_executive: 'Statewide executive',
+  us_congress: 'U.S. Congress',
+  general_assembly: 'General Assembly',
+  state_board_of_education: 'State Board of Education',
+  judicial_appellate: 'Judicial, appellate',
+  judicial_trial: 'Judicial, trial',
+  county: 'County',
+  municipal: 'Municipal',
+  township: 'Township',
+  school_board: 'School board',
+};
 // A board vote is a decision, not a temperature: endorse, decline, or abstain.
 // The words match the statuses the vote drives (endorsed / declined). Anything
 // a member wants to say beyond the three goes in the recommendation line.

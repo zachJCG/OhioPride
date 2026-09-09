@@ -1104,11 +1104,16 @@
   margin: 0 0 0.2rem;
   letter-spacing: -0.005em;
 }
-.cycle-jurisdiction {
+
+/* Where a race happens is a fact about the applicant, not the cycle, so there
+   is no jurisdiction line here any more. What sits under a card instead is the
+   carry-forward note, for the nonpartisan races that hold no primary. */
+.cycle-carry {
   font-family: 'Roboto Slab', Georgia, serif;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
   color: var(--end-text-gray);
-  margin: 0 0 0.5rem;
+  margin: 0.9rem 0 0;
 }
 
 .cycle-facts {
@@ -1151,6 +1156,11 @@
   text-align: center;
   margin: 1.5rem auto 0;
   max-width: 68ch;
+}
+/* Two standing lines in a row: the second is a continuation of the first, not
+   a new block, so it sits closer. */
+.cycle-doctrine + .cycle-doctrine {
+  margin-top: 0.8rem;
 }
 .cycle-empty {
   font-family: 'Roboto Slab', Georgia, serif;

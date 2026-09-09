@@ -24,6 +24,8 @@ import {
   cycleDate,
   cycleDateTime,
   cycleState,
+  filingDeadline,
+  nextReviewRound,
   CYCLE_STATE_LABEL,
 } from '../../../lib/election-cycles.mjs';
 
@@ -40,26 +42,37 @@ function Row({ label, value }) {
 function CycleCard({ cycle, screeningPath }) {
   const state = cycleState(cycle);
   const isOpen = state === 'open';
+  /* Applications open 18 months out, so an open cycle's own deadline can be
+     most of a year away. When a board review round is still ahead, that is the
+     date a candidate can actually act on, and it goes first. It is not a gate:
+     the form stays open until the deadline below it either way. */
+  const reviewRound = isOpen ? nextReviewRound(cycle) : null;
 
   return (
     <li className={`cycle-card is-${state}`}>
       <p className="cycle-state">{CYCLE_STATE_LABEL[state]}</p>
       <h3 className="cycle-label">{cycle.label}</h3>
-      {cycle.jurisdiction && cycle.jurisdiction !== 'Statewide' && (
-        <p className="cycle-jurisdiction">{cycle.jurisdiction}</p>
-      )}
 
       <dl className="cycle-facts">
         <Row label="Election Day" value={cycleDate(cycle.election_date)} />
+        {reviewRound && <Row label="Next board review" value={cycleDateTime(reviewRound)} />}
         {isOpen ? (
-          <Row label="Applications due" value={cycleDateTime(cycle.applications_close_at)} />
+          <Row label="Applications close" value={cycleDateTime(cycle.applications_close_at)} />
         ) : state === 'upcoming' ? (
           <Row label="Applications open" value={cycleDate(cycle.applications_open_at)} />
         ) : (
           <Row label="Applications closed" value={cycleDateTime(cycle.applications_close_at)} />
         )}
-        <Row label="Ohio filing deadline" value={cycleDateTime(cycle.filing_deadline)} />
+        <Row label="Ohio petition filing deadline" value={cycleDateTime(filingDeadline(cycle))} />
       </dl>
+
+      {cycle.carries_forward_to_label && (
+        /* A race that holds no primary is not a race with no cycle. Saying so
+           on the card is cheaper than answering it by email every spring. */
+        <p className="cycle-carry">
+          Races with no primary carry forward to the {cycle.carries_forward_to_label}.
+        </p>
+      )}
 
       {isOpen && (
         <Link
@@ -98,8 +111,8 @@ export default function CycleList({ cycles, loadFailed, screeningPath }) {
         <p className="eyebrow">Apply for Endorsement</p>
         <h2 id="cycles-title">Which elections we are taking applications for.</h2>
         <p className="lede">
-          Every election we endorse in has its own application window. Deadlines below are Eastern
-          time.
+          Applications open 18 months before Election Day and close when early voting starts.
+          Deadlines below are Eastern time.
         </p>
       </div>
 
@@ -111,7 +124,14 @@ export default function CycleList({ cycles, loadFailed, screeningPath }) {
 
       <p className="cycle-doctrine">
         We do not endorse candidates who have not applied, and we do not take final endorsement
-        action in any race until after the filing deadline has passed.
+        action in any race until candidates are certified.
+      </p>
+
+      <p className="cycle-doctrine">
+        Dates shown are the statewide deadlines set by the Ohio Secretary of State. Charter
+        municipalities and county boards of elections set their own signature requirements and can
+        vary certain deadlines. Candidates should confirm their own filing dates with their county
+        board of elections.
       </p>
     </section>
   );

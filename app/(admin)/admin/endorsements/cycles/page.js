@@ -18,9 +18,11 @@ import { useAdmin } from '../../../lib/permissions';
 const ET = 'America/New_York';
 
 const COLUMNS =
-  'id, slug, label, jurisdiction, election_type, election_date, filing_deadline, ' +
-  'applications_open_at, applications_close_at, board_action_earliest, is_open_override, ' +
-  'override_note, is_published, is_open, is_upcoming, application_count, late_count';
+  'id, slug, label, election_type, election_date, petition_filing_deadline, ' +
+  'independent_deadline, applications_open_at, early_review_close_at, applications_close_at, ' +
+  'board_action_earliest, carries_forward_to_slug, carries_forward_to_label, is_open_override, ' +
+  'override_note, is_published, is_open, is_upcoming, application_count, late_count, ' +
+  'judicial_count';
 
 /* A DATE column is a calendar day. Parsing "2027-11-02" as UTC midnight and
  * printing it in Eastern time would show November 1. */
@@ -104,12 +106,14 @@ function CycleRow({ cycle, canWrite, onSaved, notify }) {
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState(null);
   const [closeAt, setCloseAt] = useState(toLocalInput(cycle.applications_close_at));
+  const [reviewAt, setReviewAt] = useState(toLocalInput(cycle.early_review_close_at));
   const [override, setOverride] = useState(overrideValue(cycle));
   const [note, setNote] = useState(cycle.override_note || '');
   const [published, setPublished] = useState(!!cycle.is_published);
 
   useEffect(() => {
     setCloseAt(toLocalInput(cycle.applications_close_at));
+    setReviewAt(toLocalInput(cycle.early_review_close_at));
     setOverride(overrideValue(cycle));
     setNote(cycle.override_note || '');
     setPublished(!!cycle.is_published);
@@ -134,12 +138,20 @@ function CycleRow({ cycle, canWrite, onSaved, notify }) {
       setErr('Enter a closing date and time.');
       return;
     }
+    // Blank clears the round rather than failing. A cycle is allowed not to
+    // have one; 2026-general does not.
+    const reviewIso = reviewAt ? fromLocalInput(reviewAt) : null;
+    if (reviewAt && !reviewIso) {
+      setErr('That board review date could not be read. Clear it or enter a full date and time.');
+      return;
+    }
 
     setSaving(true);
     const { error } = await supabase()
       .from('election_cycles')
       .update({
         applications_close_at: closeIso,
+        early_review_close_at: reviewIso,
         is_open_override: nextOverride,
         override_note: nextOverride === null ? null : note.trim(),
         is_published: published,
@@ -153,7 +165,9 @@ function CycleRow({ cycle, canWrite, onSaved, notify }) {
           ? 'An override has to say why. Add a note explaining it.'
           : /window_valid/.test(error.message)
             ? 'The closing time has to be after the opening time.'
-            : `Could not save: ${error.message}`
+            : /early_review_in_window/.test(error.message)
+              ? 'The board review round has to fall inside the application window: after it opens and no later than the day it closes.'
+              : `Could not save: ${error.message}`
       );
       return;
     }
@@ -173,16 +187,23 @@ function CycleRow({ cycle, canWrite, onSaved, notify }) {
         )}
         <span className="muted small" style={{ marginLeft: 'auto' }}>
           {cycle.application_count} application{cycle.application_count === 1 ? '' : 's'}
+          {cycle.judicial_count > 0 ? ` · ${cycle.judicial_count} judicial` : ''}
           {cycle.late_count > 0 ? ` · ${cycle.late_count} late` : ''}
         </span>
       </div>
 
       <div className="muted small" style={{ marginTop: 4 }}>
-        {cycle.jurisdiction} · Election Day {etDate(cycle.election_date)} · closes{' '}
-        {etDateTime(cycle.applications_close_at)}
+        Election Day {etDate(cycle.election_date)} · closes {etDateTime(cycle.applications_close_at)}
         {cycle.is_open && days != null && (
           <> · {days <= 0 ? 'closing today' : `${days} day${days === 1 ? '' : 's'} left`}</>
         )}
+      </div>
+
+      <div className="muted small" style={{ marginTop: 4 }}>
+        Petition filing {etDateTime(cycle.petition_filing_deadline) || 'not set'}
+        {cycle.independent_deadline && <> · independent {etDateTime(cycle.independent_deadline)}</>}
+        {cycle.early_review_close_at && <> · board review {etDateTime(cycle.early_review_close_at)}</>}
+        {cycle.carries_forward_to_label && <> · carries forward to {cycle.carries_forward_to_label}</>}
       </div>
 
       {cycle.override_note && (
@@ -211,6 +232,20 @@ function CycleRow({ cycle, canWrite, onSaved, notify }) {
               onChange={(e) => setCloseAt(e.target.value)}
               required
             />
+          </label>
+          <label className="field">
+            <span>Next board review round (Eastern time, optional)</span>
+            <input
+              className="input"
+              type="datetime-local"
+              value={reviewAt}
+              onChange={(e) => setReviewAt(e.target.value)}
+            />
+            <span className="muted small">
+              The first round the Board reviews this cycle in. It applies to every race in the
+              cycle and is not a gate: the form stays open until the closing date above. Leave it
+              blank if there is no round scheduled.
+            </span>
           </label>
           <label className="field">
             <span>Open or closed</span>

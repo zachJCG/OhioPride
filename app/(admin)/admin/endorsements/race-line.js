@@ -10,6 +10,10 @@ export function RaceLine({ app, party = true }) {
   if (!app) return null;
   const district = districtLabel(app.district);
   const county = countyLabel(app.county);
+  /* What the applicant typed when asked where the race happens. It is their
+     words, not a lookup, so it can say "Ward 3" or the name of a school
+     district where the district and county chips cannot. */
+  const jurisdiction = String(app.jurisdiction || '').trim() || null;
   // County is the jurisdiction for every judicial and local race, so on those
   // its absence is a fact the reader needs, not a blank.
   const wantsCounty = app.endorsement_path === 'judicial' || app.endorsement_path === 'local';
@@ -21,6 +25,7 @@ export function RaceLine({ app, party = true }) {
       <div className="race-office">{app.office_sought || 'Office not recorded'}</div>
       <div className="race-meta">
         {district && <span className="race-pill race-pill-place">{district}</span>}
+        {jurisdiction && <span className="race-pill race-pill-place">{jurisdiction}</span>}
         {county && <span className="race-pill race-pill-place">{county}</span>}
         {!county && wantsCounty && <span className="race-pill race-pill-missing">County not on file</span>}
         {app.is_special_election

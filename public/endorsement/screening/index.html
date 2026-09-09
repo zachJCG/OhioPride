@@ -964,9 +964,61 @@
               <div class="field-error">Please choose the office you are seeking.</div>
             </div>
             <div class="field" id="field-district" hidden>
-              <label class="label" for="district">District / jurisdiction <span class="optional">Optional</span></label>
-              <input class="input" type="text" id="district" name="district" placeholder="e.g., District 24, Ward 3" />
+              <label class="label" for="district">District <span class="optional">Optional</span></label>
+              <input class="input" type="text" id="district" name="district" placeholder="e.g., District 24" />
             </div>
+          </div>
+
+          <!-- Race level and jurisdiction. The level is prefilled from the
+               office catalog's race_level, because a candidate should not have
+               to classify a race they already named, but it stays editable:
+               the catalog cannot tell a party committee seat from an "other
+               local office". Nothing is preseeded into jurisdiction; it is the
+               applicant's own words, which is the only place a place name
+               enters this system. -->
+          <div class="field-row cols-2">
+            <div class="field">
+              <label class="label" for="race_level">Level of race <span class="required" aria-hidden="true">*</span></label>
+              <select class="select" id="race_level" name="race_level" required>
+                <option value="">Choose one</option>
+                <option value="statewide_executive">Statewide executive</option>
+                <option value="us_congress">U.S. Congress</option>
+                <option value="general_assembly">Ohio General Assembly</option>
+                <option value="state_board_of_education">State Board of Education</option>
+                <option value="judicial_appellate">Judicial, appellate</option>
+                <option value="judicial_trial">Judicial, trial</option>
+                <option value="county">County</option>
+                <option value="municipal">Municipal</option>
+                <option value="township">Township</option>
+                <option value="school_board">School board</option>
+              </select>
+              <div class="field-error">Please choose the level of the race.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="jurisdiction">Jurisdiction <span class="optional">Optional</span></label>
+              <p class="help">The city, village, township, county, or district this seat serves, in your own words.</p>
+              <input class="input" type="text" id="jurisdiction" name="jurisdiction" maxlength="120" />
+            </div>
+          </div>
+
+          <!-- Board doctrine, shown the moment a judicial level is chosen, so
+               a judicial candidate knows before they answer a question how
+               their application will be read. -->
+          <p class="help" id="judicialNotice" hidden>
+            Judicial applications are reviewed under our descriptive-only standard. We do not ask
+            judicial candidates to pledge positions on matters that may come before them.
+          </p>
+
+          <div class="field">
+            <label class="label" for="ballot_path">Which petition are you filing? <span class="optional">Optional</span></label>
+            <p class="help">Confirm with your county board of elections if unsure. This tells us which statutory deadline applies to you; it does not affect whether we accept your application.</p>
+            <select class="select" id="ballot_path" name="ballot_path">
+              <option value="">Not sure yet</option>
+              <option value="party_petition">Party petition (declaration of candidacy)</option>
+              <option value="independent">Independent nominating petition</option>
+              <option value="nonpartisan">Nonpartisan petition</option>
+              <option value="write_in">Write-in declaration</option>
+            </select>
           </div>
 
           <!-- Shown for every local and judicial office; required when the
@@ -1226,6 +1278,7 @@
       submitting: false,
       path: null,                 // 'statewide' | 'federal' | 'local' | 'judicial'
       office: null,               // selected office option object
+      raceLevelTouched: false,    // the applicant has set the level themselves
       catalog: { paths: [], offices: {}, questions: {}, counties: [] },
       photo: null,                // { blob, ext, type } ready to upload, or null
       client: null
@@ -1353,6 +1406,31 @@
       state.office = offices.find(o => o.label === label) || null;
       updateDistrictVisibility();
       updateCountyVisibility();
+      prefillRaceLevel();
+    }
+
+    /* The office already answers "what level of race is this" for all but a
+       couple of catch-all entries, so the catalog's race_level fills the
+       select rather than asking the candidate to classify a race they just
+       named. It stays editable: a prefill is an answer offered, not imposed.
+       An answer the applicant has typed over is never overwritten. */
+    function prefillRaceLevel() {
+      const sel = $('#race_level');
+      if (!sel) return;
+      const implied = (state.office && state.office.race_level) || '';
+      if (implied && !state.raceLevelTouched) sel.value = implied;
+      updateJudicialNotice();
+    }
+
+    /* Board doctrine is that judicial candidates are not asked to pledge
+       positions on matters that may come before them. A judicial applicant
+       should read that before they answer, not after. The rule itself lives in
+       requires_descriptive_only() in SQL; these are the two levels it covers. */
+    function updateJudicialNotice() {
+      const note = $('#judicialNotice');
+      const sel = $('#race_level');
+      if (!note || !sel) return;
+      note.hidden = sel.value !== 'judicial_appellate' && sel.value !== 'judicial_trial';
     }
 
     function updateDistrictVisibility() {
@@ -1679,7 +1757,8 @@
     function resetSharedFields() {
       const ids = [
         'first_name', 'middle_name', 'last_name', 'pronouns', 'office_sought',
-        'district', 'county', 'party', 'is_out', 'current_office',
+        'district', 'county', 'race_level', 'jurisdiction', 'ballot_path',
+        'party', 'is_out', 'current_office',
         'committee_name', 'treasurer_name', 'email', 'phone', 'website',
         'submitted_by_name', 'submitted_by_role', 'submitted_by_email',
         'bio', 'conflicts_disclosure', 'signature', 'company_url'
@@ -2101,6 +2180,12 @@
         office_sought:       officeLabel,
         district:            trim(raw.district) || null,
         county:              trim(raw.county) || null,
+        /* The level drives descriptive-only handling downstream, and the
+           jurisdiction is the applicant's own words for where the race is.
+           Neither is preseeded and neither gates the submission. */
+        race_level:          trim(raw.race_level) || null,
+        jurisdiction:        trim(raw.jurisdiction) || null,
+        ballot_path:         trim(raw.ballot_path) || null,
         cycle_id:            chosenCycle ? chosenCycle.id : null,
         election_year:        isSpecialElection ? null : cycleYear,
         is_special_election: isSpecialElection,
@@ -2302,6 +2387,12 @@
 
       // Live wiring for office + incumbent dependent fields.
       $('#office_sought').addEventListener('change', syncOfficeFromSelect);
+      /* Once the applicant picks a level themselves, the office prefill stops
+         reaching in and changing it under them. */
+      $('#race_level').addEventListener('change', function () {
+        state.raceLevelTouched = true;
+        updateJudicialNotice();
+      });
       $$('input[name="is_incumbent"]').forEach(r => {
         r.addEventListener('change', updateIncumbentVisibility);
       });

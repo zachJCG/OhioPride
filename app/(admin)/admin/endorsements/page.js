@@ -7,7 +7,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAdmin } from '../../lib/permissions';
 import { exportPdf } from './pdf-client';
-import { STATUS_ORDER, STATUS_LABEL, PATH_LABEL, VOTE_LABEL, tallyOf } from './shared';
+import {
+  STATUS_ORDER, STATUS_LABEL, PATH_LABEL, VOTE_LABEL, tallyOf,
+  RACE_LEVEL_ORDER, RACE_LEVEL_LABEL,
+} from './shared';
 import { RaceLine } from './race-line';
 import {
   cycleYearOf, currentCycleYear, isFutureCycle, daysInStage, daysInStageLabel,
@@ -19,15 +22,13 @@ const isOpen = (a) => a.status === 'submitted' || a.status === 'under_review';
 // badge. Two weeks is roughly one board cycle.
 const STALE_DAYS = 14;
 
-const PATH_ORDER = ['statewide', 'federal', 'local', 'judicial'];
-
 export default function EndorsementsQueue() {
   const { loading: authLoading, me, can } = useAdmin();
   const [apps, setApps] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [q, setQ] = useState('');
   const [seg, setSeg] = useState('mine');
-  const [path, setPath] = useState('all');
+  const [level, setLevel] = useState('all');
   const [cycles, setCycles] = useState([]);
   const [cycleId, setCycleId] = useState('all');
   const [exporting, setExporting] = useState(false);
@@ -41,11 +42,11 @@ export default function EndorsementsQueue() {
     (async () => {
       const [a, r, c] = await Promise.all([
         sb.from('endorsement_applications')
-          .select('id, candidate_name, first_name, last_name, office_sought, district, county, party, election_year, is_special_election, status, endorsement_path, is_incumbent, submitted_by_kind, photo_path, status_changed_at, created_at, cycle_id, submitted_at, was_late')
+          .select('id, candidate_name, first_name, last_name, office_sought, district, county, jurisdiction, party, election_year, is_special_election, status, endorsement_path, race_level, ballot_path, descriptive_only, is_incumbent, submitted_by_kind, photo_path, status_changed_at, created_at, cycle_id, submitted_at, was_late')
           .order('created_at', { ascending: false }),
         sb.from('endorsement_reviews').select('application_id, reviewer_email, vote'),
         sb.from('admin_election_cycles')
-          .select('id, slug, label, jurisdiction, is_open, application_count')
+          .select('id, slug, label, is_open, application_count')
           .order('election_date', { ascending: true }),
       ]);
       setApps(a.data || []);
@@ -97,11 +98,11 @@ export default function EndorsementsQueue() {
     all: (apps || []).length,
   }), [apps, current, future, needsMyVote]);
 
-  /* Only offer a path filter once there is more than one path to filter by;
-   * the chip row is dead weight on a queue that is all statewide. */
-  const pathsPresent = useMemo(() => {
-    const seen = new Set((apps || []).map(a => a.endorsement_path).filter(Boolean));
-    return PATH_ORDER.filter(p => seen.has(p));
+  /* Only offer a level filter once there is more than one level to filter by;
+   * the chip row is dead weight on a queue that is all General Assembly. */
+  const levelsPresent = useMemo(() => {
+    const seen = new Set((apps || []).map(a => a.race_level).filter(Boolean));
+    return RACE_LEVEL_ORDER.filter(l => seen.has(l));
   }, [apps]);
 
   const grouped = useMemo(() => {
@@ -111,10 +112,10 @@ export default function EndorsementsQueue() {
                 : seg === 'open' ? current.filter(isOpen)
                 : seg === 'future' ? future
                 : apps;
-    let filtered = path === 'all' ? inSeg : inSeg.filter(a => a.endorsement_path === path);
+    let filtered = level === 'all' ? inSeg : inSeg.filter(a => a.race_level === level);
     if (cycleId !== 'all') filtered = filtered.filter(a => a.cycle_id === cycleId);
     if (term) {
-      filtered = filtered.filter(a => [a.candidate_name, a.office_sought, a.district, a.county, a.party, a.election_year]
+      filtered = filtered.filter(a => [a.candidate_name, a.office_sought, a.district, a.county, a.jurisdiction, a.party, a.election_year]
         .some(v => String(v || '').toLowerCase().includes(term)));
     }
     if (seg === 'future') {
@@ -129,7 +130,7 @@ export default function EndorsementsQueue() {
     }
     return STATUS_ORDER.map(s => ({ key: s, label: STATUS_LABEL[s], items: filtered.filter(a => a.status === s) }))
                        .filter(g => g.items.length);
-  }, [apps, q, seg, path, needsMyVote, current, future, cycleId]);
+  }, [apps, q, seg, level, needsMyVote, current, future, cycleId]);
 
   const SEGMENTS = [
     ['mine', 'Needs your vote'],
@@ -149,7 +150,7 @@ export default function EndorsementsQueue() {
     return <div className="alert alert-error">The endorsements module is limited by role. Ask the Director if you need it.</div>;
   }
 
-  const emptyCopy = q.trim() || path !== 'all' ? 'No applications match.'
+  const emptyCopy = q.trim() || level !== 'all' ? 'No applications match.'
     : seg === 'mine' ? `You have voted on every open ${cycle} application. Nothing is waiting on you.`
     : seg === 'future' ? `No applications for an election after ${cycle} yet. Anything filed for ${cycle + 1} or later lands here, and moves into the ${cycle} queue's place once this November is over.`
     : 'No applications match.';
@@ -177,7 +178,7 @@ export default function EndorsementsQueue() {
             </button>
           ))}
         </div>
-        <input className="input" placeholder="Search candidate, office, district, county…" value={q}
+        <input className="input" placeholder="Search candidate, office, district, county, jurisdiction…" value={q}
                onChange={e => setQ(e.target.value)} inputMode="search" aria-label="Search applications" />
         {cycles.length > 1 && (
           <select
@@ -190,17 +191,16 @@ export default function EndorsementsQueue() {
             <option value="all">Every election</option>
             {cycles.map(c => (
               <option key={c.id} value={c.id}>
-                {c.label}{c.jurisdiction && c.jurisdiction !== 'Statewide' ? ` (${c.jurisdiction})` : ''}
-                {c.is_open ? ' · open' : ''} · {c.application_count}
+                {c.label}{c.is_open ? ' · open' : ''} · {c.application_count}
               </option>
             ))}
           </select>
         )}
-        {pathsPresent.length > 1 && (
-          <div className="chip-row" role="group" aria-label="Office type" style={{ paddingTop: 8, paddingBottom: 4 }}>
-            {['all', ...pathsPresent].map(p => (
-              <button key={p} type="button" className="chip" aria-pressed={path === p} onClick={() => setPath(p)}>
-                {p === 'all' ? 'All offices' : PATH_LABEL[p]}
+        {levelsPresent.length > 1 && (
+          <div className="chip-row" role="group" aria-label="Race level" style={{ paddingTop: 8, paddingBottom: 4 }}>
+            {['all', ...levelsPresent].map(l => (
+              <button key={l} type="button" className="chip" aria-pressed={level === l} onClick={() => setLevel(l)}>
+                {l === 'all' ? 'All races' : RACE_LEVEL_LABEL[l] || l}
               </button>
             ))}
           </div>
@@ -248,7 +248,19 @@ export default function EndorsementsQueue() {
                   </div>
                   <RaceLine app={a} />
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                    {a.endorsement_path && <span className="badge badge-muted">{PATH_LABEL[a.endorsement_path] || a.endorsement_path}</span>}
+                    {/* descriptive_only is computed by the database from
+                        race_level, so this badge cannot drift from the rule the
+                        Board actually applies. */}
+                    {a.descriptive_only && (
+                      <span className="badge badge-review" title="Reviewed under the descriptive-only standard: no pledges on matters that may come before them">
+                        Descriptive only
+                      </span>
+                    )}
+                    {a.race_level
+                      ? <span className="badge badge-muted">{RACE_LEVEL_LABEL[a.race_level] || a.race_level}</span>
+                      : a.endorsement_path
+                        ? <span className="badge badge-muted">{PATH_LABEL[a.endorsement_path] || a.endorsement_path}</span>
+                        : null}
                     {a.is_incumbent && <span className="badge badge-muted">Incumbent</span>}
                     {a.submitted_by_kind && a.submitted_by_kind !== 'candidate' && (
                       <span className="badge badge-muted" title="Filled in on the candidate's behalf">
