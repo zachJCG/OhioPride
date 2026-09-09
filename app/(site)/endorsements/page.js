@@ -15,8 +15,10 @@
 
 import Link from 'next/link';
 import { ENDORSEMENT_PROCESS, getEndorsements } from '../../../lib/endorsements.mjs';
+import { getElectionCycles } from '../../../lib/election-cycles.mjs';
 import { absolute, breadcrumbJsonLd } from '../../../lib/seo.mjs';
 import EndorsementGrid from './grid';
+import CycleList from './cycles';
 import './endorsements.css';
 
 const SCREENING_PATH = '/endorsement/screening';
@@ -24,7 +26,10 @@ const SCREENING_PATH = '/endorsement/screening';
 const DESCRIPTION =
   'Candidates endorsed by Ohio Pride PAC for federal, state, and local office in Ohio, and how our endorsement process works.';
 
-export const revalidate = 600;
+/* The endorsement list changes a few times a cycle, but an application window
+ * closes on a clock. Five minutes keeps a deadline that has just passed from
+ * sitting on the page as an invitation to apply. */
+export const revalidate = 300;
 
 export const metadata = {
   title: 'Endorsed Candidates',
@@ -47,7 +52,10 @@ export const metadata = {
 };
 
 export default async function EndorsementsPage() {
-  const { ok, candidates } = await getEndorsements();
+  const [{ ok, candidates }, { ok: cyclesOk, cycles }] = await Promise.all([
+    getEndorsements(),
+    getElectionCycles({ revalidate: 300 }),
+  ]);
 
   /* An ItemList of the profiles, so the slate can surface as a list in search
    * results rather than four unrelated pages that happen to link to each
@@ -86,6 +94,8 @@ export default async function EndorsementsPage() {
       </section>
 
       <EndorsementGrid candidates={candidates} loadFailed={!ok} screeningPath={SCREENING_PATH} />
+
+      <CycleList cycles={cycles} loadFailed={!cyclesOk} screeningPath={SCREENING_PATH} />
 
       <section className="endorse-process" aria-labelledby="process-title">
         <div className="endorse-process-head">

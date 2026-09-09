@@ -28,6 +28,8 @@ export default function EndorsementsQueue() {
   const [q, setQ] = useState('');
   const [seg, setSeg] = useState('mine');
   const [path, setPath] = useState('all');
+  const [cycles, setCycles] = useState([]);
+  const [cycleId, setCycleId] = useState('all');
   const [exporting, setExporting] = useState(false);
   const [toast, setToast] = useState(null);
 
@@ -37,14 +39,24 @@ export default function EndorsementsQueue() {
     if (id) { window.location.replace(`/admin/endorsements/${id}`); return; }
     const sb = supabase();
     (async () => {
-      const [a, r] = await Promise.all([
+      const [a, r, c] = await Promise.all([
         sb.from('endorsement_applications')
-          .select('id, candidate_name, first_name, last_name, office_sought, district, county, party, election_year, is_special_election, status, endorsement_path, is_incumbent, submitted_by_kind, photo_path, status_changed_at, created_at')
+          .select('id, candidate_name, first_name, last_name, office_sought, district, county, party, election_year, is_special_election, status, endorsement_path, is_incumbent, submitted_by_kind, photo_path, status_changed_at, created_at, cycle_id, submitted_at, was_late')
           .order('created_at', { ascending: false }),
         sb.from('endorsement_reviews').select('application_id, reviewer_email, vote'),
+        sb.from('admin_election_cycles')
+          .select('id, slug, label, jurisdiction, is_open, application_count')
+          .order('election_date', { ascending: true }),
       ]);
       setApps(a.data || []);
       setReviews(r.data || []);
+      setCycles(c.data || []);
+      // /admin/endorsements/cycles links here with the cycle it wants shown.
+      const wanted = new URLSearchParams(window.location.search).get('cycle');
+      if (wanted) {
+        const match = (c.data || []).find(x => x.slug === wanted);
+        if (match) setCycleId(match.id);
+      }
     })();
   }, []);
 
@@ -100,6 +112,7 @@ export default function EndorsementsQueue() {
                 : seg === 'future' ? future
                 : apps;
     let filtered = path === 'all' ? inSeg : inSeg.filter(a => a.endorsement_path === path);
+    if (cycleId !== 'all') filtered = filtered.filter(a => a.cycle_id === cycleId);
     if (term) {
       filtered = filtered.filter(a => [a.candidate_name, a.office_sought, a.district, a.county, a.party, a.election_year]
         .some(v => String(v || '').toLowerCase().includes(term)));
@@ -116,7 +129,7 @@ export default function EndorsementsQueue() {
     }
     return STATUS_ORDER.map(s => ({ key: s, label: STATUS_LABEL[s], items: filtered.filter(a => a.status === s) }))
                        .filter(g => g.items.length);
-  }, [apps, q, seg, path, needsMyVote, current, future]);
+  }, [apps, q, seg, path, needsMyVote, current, future, cycleId]);
 
   const SEGMENTS = [
     ['mine', 'Needs your vote'],
@@ -166,6 +179,23 @@ export default function EndorsementsQueue() {
         </div>
         <input className="input" placeholder="Search candidate, office, district, county…" value={q}
                onChange={e => setQ(e.target.value)} inputMode="search" aria-label="Search applications" />
+        {cycles.length > 1 && (
+          <select
+            className="input"
+            style={{ marginTop: 8 }}
+            value={cycleId}
+            onChange={e => setCycleId(e.target.value)}
+            aria-label="Filter by election"
+          >
+            <option value="all">Every election</option>
+            {cycles.map(c => (
+              <option key={c.id} value={c.id}>
+                {c.label}{c.jurisdiction && c.jurisdiction !== 'Statewide' ? ` (${c.jurisdiction})` : ''}
+                {c.is_open ? ' · open' : ''} · {c.application_count}
+              </option>
+            ))}
+          </select>
+        )}
         {pathsPresent.length > 1 && (
           <div className="chip-row" role="group" aria-label="Office type" style={{ paddingTop: 8, paddingBottom: 4 }}>
             {['all', ...pathsPresent].map(p => (
@@ -178,6 +208,7 @@ export default function EndorsementsQueue() {
       </div>
 
       <div className="page-actions">
+        <a className="btn btn-sm" href="/admin/endorsements/cycles">Election cycles</a>
         <button className="btn btn-sm" disabled={exporting} onClick={exportAll}>
           {exporting ? 'Building packet…' : 'Export board packet (open applications)'}
         </button>
@@ -201,7 +232,12 @@ export default function EndorsementsQueue() {
               return (
                 <a key={a.id} className="item" href={`/admin/endorsements/${a.id}`} style={{ display: 'block' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'baseline' }}>
-                    <strong>{a.candidate_name || [a.first_name, a.last_name].filter(Boolean).join(' ')}</strong>
+                    <strong>
+                      {a.candidate_name || [a.first_name, a.last_name].filter(Boolean).join(' ')}
+                      {/* Staff accepted this one after its cycle closed. The
+                          board minutes should show that, so the queue does. */}
+                      {a.was_late && <span className="badge badge-review" style={{ marginLeft: 6 }}>Late</span>}
+                    </strong>
                     {/* Measured from status_changed_at, which the database stamps
                         only when the status moves. It used to read updated_at
                         and reset whenever anyone saved a note. */}

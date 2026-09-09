@@ -14,6 +14,7 @@
 
 import Link from 'next/link';
 import { ENDORSEMENT_PROCESS } from '../../../../../lib/endorsements.mjs';
+import Receipt from './receipt';
 import './thank-you.css';
 
 export const metadata = {
@@ -36,6 +37,8 @@ export default function EndorsementThankYou() {
 
           <p className="ty-eyebrow">Application Received</p>
           <h1>Thank you.</h1>
+          <Receipt />
+
           <p className="ty-lead">
             Your application is in front of our Screening Committee. There is nothing else you need
             to send us and no interview to schedule — watch your campaign email for the decision.
