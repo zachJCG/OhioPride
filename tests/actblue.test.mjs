@@ -19,7 +19,7 @@ import {
   CONTRIBUTION_COLUMNS, buildHeaderIndex, parseContributionCsv,
   detectRecurrence, isFoundingRefcode, DEFAULT_FOUNDING_MATCH,
   mapContribution, mapCancellation, mapContributionCsv, mapCancellationCsv,
-  reconcileContributions, applyRefunds, applyCancellations,
+  reconcileContributions, applyRefunds, applyCancellations, publicDisplayName,
 } from '../lib/actblue.mjs';
 import { parseCsv, parseCsvObjects } from '../lib/csv.mjs';
 import {
@@ -847,15 +847,29 @@ function mapCancelRows(rowObjs) {
 const ZERO_COUNTS = {
   founding_inserted: 0, founding_updated: 0, founding_adopted: 0,
   donors_inserted: 0, donors_updated: 0, donors_adopted: 0, donors_skipped: 0,
+  donors_deduped: 0,
   contacts_created: 0, contacts_enriched: 0, errors: 0,
 };
+
+describe('publicDisplayName', () => {
+  test('abbreviates to the roster convention and never returns a bare legal name', () => {
+    assert.equal(publicDisplayName({ first_name: 'Test', last_name: 'Person' }), 'Test P.');
+    assert.equal(publicDisplayName({ first_name: 'Test', last_name: 'person' }), 'Test P.');
+    assert.equal(publicDisplayName({ first_name: 'Test' }), 'Test');
+    // No first/last columns (a rollup file): fall back to the full name, still abbreviated.
+    assert.equal(publicDisplayName({ full_name: 'Test Q. Person' }), 'Test P.');
+    assert.equal(publicDisplayName({ full_name: 'Cher' }), 'Cher');
+    assert.equal(publicDisplayName({}), null);
+    assert.equal(publicDisplayName({ first_name: '  ', last_name: ' ' }), null);
+  });
+});
 
 describe('reconcileContributions: founding members', () => {
   test('a founding first installment for a new email inserts one founding row and only the fan-out donors row', async () => {
     const db = createFakeSupabase();
     const r = await reconcileContributions(db.admin, mapRows([stonewallFirst()]));
 
-    assert.deepEqual(r.counts, { ...ZERO_COUNTS, rows: 1, founding_inserted: 1, contacts_enriched: 1 });
+    assert.deepEqual(r.counts, { ...ZERO_COUNTS, rows: 1, founding_inserted: 1, contacts_created: 1 });
     assert.deepEqual(r.problems, []);
     assert.deepEqual(r.plan, [{ action: 'founding_insert', lineitem: '700000101', receipt: 'AB300000101', refcode: 'website_founding_stonewall', amount_cents: 1969, recurrence: 'monthly' }]);
 
@@ -863,7 +877,9 @@ describe('reconcileContributions: founding members', () => {
     assert.equal(fms.length, 1);
     const fm = fms[0];
     assert.equal(fm.full_name, 'Test Person');
-    assert.equal(fm.display_name, null);
+    // Not null: founding_members_public falls back to the full legal name when
+    // display_name is blank, so a blank here publishes it on vetting.
+    assert.equal(fm.display_name, 'Test P.');
     assert.equal(fm.email, 'test1@example.com');
     assert.equal(fm.amount_cents, 1969);
     assert.equal(fm.recurrence, 'monthly');
@@ -1112,7 +1128,7 @@ describe('reconcileContributions: donors', () => {
   test('a non-founding one-time gift and an event gift insert donors rows with source actblue', async () => {
     const db = createFakeSupabase();
     const r = await reconcileContributions(db.admin, mapRows([oneTime25(), eventGift()]));
-    assert.deepEqual(r.counts, { ...ZERO_COUNTS, rows: 2, donors_inserted: 2, contacts_enriched: 2 });
+    assert.deepEqual(r.counts, { ...ZERO_COUNTS, rows: 2, donors_inserted: 2, contacts_created: 2 });
     assert.deepEqual(r.plan.map((p) => p.action), ['donor_insert', 'donor_insert']);
     assert.equal(db.rows('founding_members').length, 0);
 
@@ -1334,11 +1350,12 @@ describe('reconcileContributions: dryRun', () => {
     const realDb = createFakeSupabase();
     const real = await reconcileContributions(realDb.admin, batch());
     assert.deepEqual(dry.plan.map(withoutFoundingFlag), real.plan.map(withoutFoundingFlag));
-    const noContacts = ({ contacts_created, contacts_enriched, ...rest }) => rest;
-    assert.deepEqual(noContacts(dry.counts), noContacts(real.counts));
-    // with the triggers on, the real run finds the contacts the triggers made and enriches instead of creating
-    assert.equal(real.counts.contacts_created, 0);
-    assert.equal(real.counts.contacts_enriched, 3);
+    // Contacts are counted against a snapshot taken before any write, so a run
+    // with the triggers on reports the three people it brought in as created,
+    // exactly as its own preview did, instead of "enriched".
+    assert.deepEqual(dry.counts, real.counts);
+    assert.equal(real.counts.contacts_created, 3);
+    assert.equal(real.counts.contacts_enriched, 0);
     assert.equal(realDb.rows('founding_members').length, 1);
     assert.equal(realDb.rows('donors').length, 4);
   });
@@ -1609,5 +1626,169 @@ describe('end to end', () => {
     assert.equal(db.rows('donors').length, 4);
     assert.equal(db.find('donors', (x) => x.actblue_contribution_id === '800000002').refunded_at, '2026-05-18T04:00:00.000Z');
     assert.equal(db.rows('contacts').length, 3);
+  });
+});
+
+/* ===========================================================================
+ * Regressions from the 2026-09-09 review. Each of these failed before the fix
+ * in the same commit, and each corresponds to live data or a live setting.
+ * ======================================================================== */
+
+describe('a founding seat carrying no ActBlue key at all (17 live rows)', () => {
+  /* Hand-entered and early-import seats have neither a lineitem nor a receipt.
+   * Matching them by email alone read the membership payment as a SECOND gift
+   * and recorded it twice: once through the fan-out trigger, once as an
+   * "additional gift", double-counting the person's giving and leaving the
+   * seat unreachable by a later refund. */
+  const seatWithNoKeys = (db, over = {}) => db.seed('founding_members', {
+    full_name: 'Test Person', display_name: 'Test P.', email: 'test1@example.com',
+    amount_cents: 1969, recurrence: 'monthly',
+    actblue_contribution_id: null, actblue_receipt_id: null,
+    contributed_at: '2026-04-16T16:10:46.000Z',
+    is_public: true, is_vetted: true, notes: 'entered by hand',
+    ...over,
+  });
+
+  test('adopts the keys of its own payment instead of recording it twice', async () => {
+    const db = createFakeSupabase();
+    seatWithNoKeys(db);
+    assert.equal(db.rows('donors').length, 1, 'the fan-out trigger made one donors row');
+
+    const r = await reconcileContributions(db.admin, mapRows([stonewallFirst()]));
+
+    assert.equal(db.rows('founding_members').length, 1, 'no second seat');
+    assert.equal(db.rows('donors').length, 1, 'the payment is not recorded a second time');
+    const fm = db.rows('founding_members')[0];
+    assert.equal(fm.actblue_contribution_id, '700000101');
+    assert.equal(fm.actblue_receipt_id, 'AB300000101');
+    // Curated fields survive the adoption.
+    assert.equal(fm.display_name, 'Test P.');
+    assert.equal(fm.notes, 'entered by hand');
+    assert.equal(fm.is_public, true);
+    assert.equal(r.counts.founding_inserted, 0);
+    assert.equal(r.counts.founding_adopted, 1);
+    assert.equal(r.counts.donors_inserted, 0);
+    assert.deepEqual(r.problems, []);
+  });
+
+  test('a genuinely different gift from the same person is still an additional gift', async () => {
+    const db = createFakeSupabase();
+    seatWithNoKeys(db, { amount_cents: 5000 });   // a $50 seat; the CSV row is $19.69
+
+    const r = await reconcileContributions(db.admin, mapRows([stonewallFirst()]));
+
+    assert.equal(db.rows('founding_members').length, 1);
+    assert.equal(r.counts.donors_inserted, 1, 'recorded as a gift, not merged into the seat');
+    assert.equal(db.rows('founding_members')[0].actblue_contribution_id, null, 'keys are not adopted on a mismatch');
+    assert.equal(r.plan.find((p) => p.action === 'donor_insert').refcode, 'website_founding_stonewall');
+  });
+});
+
+describe('a stray donors row already holding the new seat\'s lineitem', () => {
+  test('keys the seat on its receipt and reports the clash instead of failing every run', async () => {
+    const db = createFakeSupabase();
+    // A gift recorded under this lineitem but not owned by any founding member,
+    // e.g. ingested while the refcode was not yet treated as founding.
+    db.seed('donors', {
+      full_name: 'Test Person', email: 'test1@example.com', amount_cents: 1969,
+      recurrence: 'monthly', actblue_contribution_id: '700000101',
+      actblue_receipt_id: 'AB300000101', contributed_at: '2026-04-16T16:10:46.000Z',
+      source: 'actblue',
+    });
+
+    const r = await reconcileContributions(db.admin, mapRows([stonewallFirst()]));
+
+    assert.equal(r.counts.errors, 0, 'the fan-out trigger does not collide on the unique key');
+    assert.equal(r.counts.founding_inserted, 1);
+    const fm = db.rows('founding_members')[0];
+    assert.equal(fm.actblue_contribution_id, 'AB300000101', 'seat keyed on the receipt instead');
+    assert.equal(r.problems.filter((p) => p.kind === 'lineitem_clash').length, 1);
+  });
+});
+
+describe('applyCancellations: the email fallback', () => {
+  const seat = (db) => db.seed('founding_members', {
+    full_name: 'Test Person', display_name: 'Test P.', email: 'test1@example.com',
+    amount_cents: 1969, recurrence: 'monthly', refcode: 'website_founding_stonewall',
+    actblue_receipt_id: 'AB300000101', actblue_contribution_id: '700000101',
+    contributed_at: '2026-04-16T16:10:46.000Z', is_public: true, is_vetted: true,
+  });
+
+  test('does not cancel the membership when a different series is cancelled', async () => {
+    const db = createFakeSupabase();
+    seat(db);
+    const rows = mapCancelRows([cancelledRow({
+      'Receipt ID': 'AB999999', 'Donor Email': 'test1@example.com',
+      'Reference Code': 'website_donate_25', 'Recurrence Amount': '25.00',
+    })]);
+
+    const r = await applyCancellations(db.admin, rows);
+
+    assert.equal(db.rows('founding_members')[0].recurrence, 'monthly', 'ActBlue is still charging this membership');
+    assert.equal(r.counts.founding_cancelled, 0);
+    assert.equal(r.counts.unmatched, 1);
+  });
+
+  test('still cancels the membership when the founding series is the one cancelled', async () => {
+    const db = createFakeSupabase();
+    seat(db);
+    const rows = mapCancelRows([cancelledRow({
+      'Receipt ID': 'AB999999', 'Donor Email': 'test1@example.com',
+      'Reference Code': 'website_founding_stonewall', 'Recurrence Amount': '19.69',
+      'Cancelled On': '2026-06-01 10:00:00',
+    })]);
+
+    const r = await applyCancellations(db.admin, rows);
+
+    const fm = db.rows('founding_members')[0];
+    assert.equal(fm.recurrence, 'cancelled');
+    assert.equal(fm.recurring_cancelled_at, '2026-06-01T14:00:00.000Z');
+    assert.equal(r.counts.founding_cancelled, 1);
+  });
+});
+
+describe('fetchActBlueCsv retries', () => {
+  test('a transient 429 after many healthy polls does not abort the export', async () => {
+    const CSV = `${PAID_HEADER_LINE}\r\n`;
+    let polls = 0;
+    const fetchImpl = async (url, init) => {
+      if (init?.method === 'POST') return { ok: true, status: 202, text: async () => JSON.stringify({ id: 'job-1' }) };
+      if (url.includes('/csvs/job-1')) {
+        polls++;
+        // Ten healthy "still building" answers: exactly the shape of a large
+        // first-run export. The eleventh poll is rate limited.
+        if (polls <= 10) return { ok: true, status: 200, text: async () => JSON.stringify({ id: 'job-1', status: 'in_progress', download_url: null }) };
+        if (polls === 11) return { ok: false, status: 429, headers: { get: () => null }, text: async () => 'slow down' };
+        return { ok: true, status: 200, text: async () => JSON.stringify({ id: 'job-1', status: 'complete', download_url: 'https://s3.example/x.csv' }) };
+      }
+      return { ok: true, status: 200, text: async () => CSV };
+    };
+
+    const text = await fetchActBlueCsv({
+      clientUuid: 'u', clientSecret: 's', csvType: 'paid_contributions',
+      start: '2026-05-01T00:00:00.000Z', end: '2026-05-02T00:00:00.000Z',
+      fetchImpl, pollMs: 1, deadlineMs: Date.now() + 20_000,
+    });
+
+    assert.equal(text, CSV);
+    assert.ok(polls >= 12, 'polling continued past the rate limit');
+  });
+});
+
+describe('a contribution export with no Lineitem ID column', () => {
+  test('adopts the lineitem-keyed row for the same payment rather than duplicating it', async () => {
+    const db = createFakeSupabase();
+    db.seed('donors', {
+      full_name: 'Sample Donor', email: 'test2@example.com', amount_cents: 2500,
+      recurrence: 'one_time', actblue_contribution_id: '700000201',
+      actblue_receipt_id: 'AB300000201', contributed_at: '2026-05-09T21:33:08.000Z',
+      source: 'actblue',
+    });
+
+    const r = await reconcileContributions(db.admin, mapRows([oneTime25({ 'Lineitem ID': '' })]));
+
+    assert.equal(db.rows('donors').length, 1, 'the same payment is not recorded twice');
+    assert.equal(r.counts.donors_inserted, 0);
+    assert.equal(r.counts.donors_skipped, 1);
   });
 });

@@ -64,7 +64,10 @@ export default function MemberDrawer({ member, canWrite, notify, onPatch, onClos
             <span className="badge badge-founding">Founding #{member.founding_number}</span>
           )}
           <span className="badge badge-muted">
-            {money(member.amount_cents)}{member.recurrence === 'monthly' ? ' monthly' : ' one time'}
+            {money(member.amount_cents)}
+            {member.recurrence === 'monthly' ? ' monthly'
+              : member.recurrence === 'cancelled' ? ' monthly, cancelled'
+                : ' one time'}
           </span>
           <span className={`badge ${member.is_public ? 'badge-ok' : 'badge-muted'}`}>
             {member.is_public ? 'On public roster' : 'Not public'}
@@ -79,8 +82,8 @@ export default function MemberDrawer({ member, canWrite, notify, onPatch, onClos
         {member.refunded_at && (
           <div className="alert alert-warn">
             ActBlue refunded this membership payment on {shortDate(member.refunded_at)}. The seat no longer counts
-            toward 1,969 and is not shown on ohiopride.org, but the record is kept. Clear the refund date in
-            Supabase if that is wrong.
+            toward 1,969 and is not shown on ohiopride.org, but the record is kept. The date comes from ActBlue and
+            the next sync writes it back, so if it looks wrong, check the refund in ActBlue rather than editing it here.
           </div>
         )}
 
