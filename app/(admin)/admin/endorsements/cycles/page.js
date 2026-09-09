@@ -22,11 +22,19 @@ const COLUMNS =
   'applications_open_at, applications_close_at, board_action_earliest, is_open_override, ' +
   'override_note, is_published, is_open, is_upcoming, application_count, late_count';
 
+/* A DATE column is a calendar day. Parsing "2027-11-02" as UTC midnight and
+ * printing it in Eastern time would show November 1. */
+const BARE_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
+
 function etDate(value) {
   if (!value) return null;
-  const d = new Date(value);
+  const bare = BARE_DATE.exec(String(value));
+  const d = bare ? new Date(Date.UTC(+bare[1], +bare[2] - 1, +bare[3])) : new Date(value);
   if (Number.isNaN(d.getTime())) return null;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: ET });
+  return d.toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+    timeZone: bare ? 'UTC' : ET,
+  });
 }
 
 function etDateTime(value) {

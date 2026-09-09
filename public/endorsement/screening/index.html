@@ -1936,11 +1936,18 @@
     let cycleSelectionValid = function () { return false; };
 
     const ET_ZONE = 'America/New_York';
+    // A bare YYYY-MM-DD is a calendar day, not an instant. Converting one to
+    // Eastern time moves it back a day.
+    const BARE_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
     function cycleDate(value) {
       if (!value) return null;
-      const d = new Date(value);
+      const bare = BARE_DATE.exec(String(value));
+      const d = bare ? new Date(Date.UTC(+bare[1], +bare[2] - 1, +bare[3])) : new Date(value);
       if (isNaN(d.getTime())) return null;
-      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: ET_ZONE });
+      return d.toLocaleDateString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric',
+        timeZone: bare ? 'UTC' : ET_ZONE
+      });
     }
     function cycleDateTime(value) {
       if (!value) return null;
