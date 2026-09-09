@@ -44,6 +44,13 @@ Drop campaign photos here named by candidate slug:
 - `sarah-henry.jpg`: Sarah Henry, Hamilton County Common Pleas (2026).
   Campaign portrait: brown blazer, arms crossed, law library shelves behind
   her. 1080x1080.
+- `lora-covrett.jpg`: Lora Covrett, OH House District 87 (2026). Campaign
+  photo: plaid shirt, glasses, outdoors. 1080x1080.
+- `manisha-kotian.jpg`: Manisha Kotian, Hamilton County Common Pleas,
+  General Division (2026). Campaign portrait: cream blazer over a black
+  top. 1080x1080.
+- `tiffany-evans.jpg`: Tiffany Evans, Hamilton County Domestic Relations
+  Court (2026). Campaign portrait: green blazer, seated. 1080x1080.
 
 The August 22 slate above arrived square (1080x1080), which needs no
 `cardPhoto`: a square photo is already the grid card's crop, and the profile
