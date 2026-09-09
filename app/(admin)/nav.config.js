@@ -17,6 +17,7 @@ export const NAV = [
   ]},
   { group: 'Program', items: [
     { id: 'endorsements', href: '/admin/endorsements', label: 'Endorsements', permission: ['endorsements', 'read'] },
+    { id: 'cycles',       href: '/admin/endorsements/cycles', label: 'Election Cycles', permission: ['endorsements', 'read'] },
     { id: 'bills',        href: '/admin/bills',        label: 'Bills',        permission: ['bills', 'read'] },
     { id: 'legislators',  href: '/admin/legislators',  label: 'Scorecard',    permission: ['legislators', 'read'] },
     { id: 'pride',        href: '/admin/pride',        label: 'Pride Events', permission: ['pride', 'read'] },

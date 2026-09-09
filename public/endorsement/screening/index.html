@@ -240,6 +240,22 @@
       overflow: hidden;
     }
 
+    /* Shown instead of the form when no election is open. */
+    .closed-panel { padding: 30px 26px; }
+    .closed-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin: 0 0 0.7rem;
+    }
+    .closed-body {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin: 0 0 0.8rem;
+    }
+    .closed-actions { margin: 1.1rem 0 0; }
+
     .form-step {
       padding: 28px 26px;
       display: none;
@@ -822,6 +838,25 @@
         </div>
       </div>
 
+      <!-- Shown instead of the form when no election is currently accepting
+           applications. The form is removed from the page rather than left
+           visible and inert: a form that submits into a refusal wastes a
+           candidate's time twice. -->
+      <div id="cyclesClosed" class="form-card closed-panel" hidden>
+        <h2 class="closed-title">Applications are closed right now.</h2>
+        <p class="closed-body" id="closedBody">
+          We are between application windows. Each election opens its own window, and the dates are
+          listed on the endorsements page.
+        </p>
+        <p class="closed-body">
+          If you believe you are seeing this in error, or your race has a deadline we have not
+          posted, email <a href="mailto:zach@ohiopride.org">zach@ohiopride.org</a>.
+        </p>
+        <p class="closed-actions">
+          <a class="btn btn-primary" href="/endorsements">See application deadlines</a>
+        </p>
+      </div>
+
       <form id="endorsementForm" class="form-card" novalidate autocomplete="on">
 
         <!-- ============================================================
@@ -951,16 +986,17 @@
 
           <div class="field-row cols-3">
             <div class="field">
-              <label class="label" for="election_year">Election year</label>
-              <select class="select" id="election_year" name="election_year">
-                <option value="">Choose one</option>
-                <option value="2026">2026</option>
-                <option value="2027">2027</option>
-                <option value="2028">2028</option>
-                <option value="2029">2029</option>
-                <option value="2030">2030</option>
-                <option value="special">Special Election</option>
+              <label class="label" for="cycle_id">Election <span class="required" aria-hidden="true">*</span></label>
+              <!-- Populated from public_election_cycles: only elections that are
+                   open for applications right now appear. When exactly one is
+                   open the select is hidden and #cycleFixed states it instead,
+                   so there is no menu with a single item in it. -->
+              <select class="select" id="cycle_id" name="cycle_id" required>
+                <option value="">Loading elections</option>
               </select>
+              <p class="help" id="cycleFixed" hidden></p>
+              <p class="help" id="cycleDeadline" hidden></p>
+              <div class="field-error">Please choose the election you are running in.</div>
             </div>
             <div class="field">
               <label class="label" for="party">Party affiliation</label>
@@ -1643,7 +1679,7 @@
     function resetSharedFields() {
       const ids = [
         'first_name', 'middle_name', 'last_name', 'pronouns', 'office_sought',
-        'district', 'county', 'election_year', 'party', 'is_out', 'current_office',
+        'district', 'county', 'party', 'is_out', 'current_office',
         'committee_name', 'treasurer_name', 'email', 'phone', 'website',
         'submitted_by_name', 'submitted_by_role', 'submitted_by_email',
         'bio', 'conflicts_disclosure', 'signature', 'company_url'
@@ -1883,6 +1919,141 @@
       return out;
     }
 
+    /* =================================================================
+       ELECTION CYCLES
+       Which elections are taking applications, and until when.
+
+       Only the WORDING of a deadline is written here. Whether a cycle is
+       open is never recomputed in the browser: `is_open` arrives from
+       public_election_cycles, which the database computes with the same
+       function the insert policy enforces. A form that decided for itself
+       would eventually disagree with the database, and the candidate would
+       be the one to find out.
+       ================================================================= */
+    const cycles = { all: [], open: [] };
+    // Assigned by renderCycleField once the field exists.
+    let ensureCycleSelection = function () {};
+    let cycleSelectionValid = function () { return false; };
+
+    const ET_ZONE = 'America/New_York';
+    function cycleDate(value) {
+      if (!value) return null;
+      const d = new Date(value);
+      if (isNaN(d.getTime())) return null;
+      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: ET_ZONE });
+    }
+    function cycleDateTime(value) {
+      if (!value) return null;
+      const d = new Date(value);
+      if (isNaN(d.getTime())) return null;
+      const day = cycleDate(value);
+      const time = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: ET_ZONE });
+      return day + ' at ' + time.replace(/\s?([AP])M$/i, function (m, ap) { return ' ' + ap.toUpperCase() + 'M'; }) + ' ET';
+    }
+
+    async function loadCycles(client) {
+      const { data, error } = await client
+        .from('public_election_cycles')
+        .select('id,slug,label,jurisdiction,election_type,election_date,filing_deadline,applications_close_at,is_open')
+        .order('election_date', { ascending: true });
+      if (error) throw error;
+      cycles.all = Array.isArray(data) ? data : [];
+      cycles.open = cycles.all.filter(function (c) { return c.is_open; });
+      return cycles;
+    }
+
+    function cycleById(id) {
+      return cycles.all.find(function (c) { return c.id === id; }) || null;
+    }
+
+    /* Renders the field, or takes the whole form off the page when nothing is
+       open. Preselects from ?cycle=<slug> so the buttons on /endorsements land
+       a candidate on the right election. */
+    function renderCycleField() {
+      const select = $('#cycle_id');
+      const fixed = $('#cycleFixed');
+      const deadline = $('#cycleDeadline');
+      const form = $('#endorsementForm');
+      const closed = $('#cyclesClosed');
+      if (!select) return;
+
+      if (!cycles.open.length) {
+        if (form) form.hidden = true;
+        if (closed) {
+          closed.hidden = false;
+          const next = cycles.all
+            .filter(function (c) { return new Date(c.applications_close_at) > new Date(); })
+            .sort(function (a, b) { return new Date(a.applications_close_at) - new Date(b.applications_close_at); })[0];
+          const body = $('#closedBody');
+          if (next && body) {
+            body.textContent = 'We are between application windows. The next one we have posted is the '
+              + next.label + '. Deadlines for every election are listed on the endorsements page.';
+          }
+        }
+        return;
+      }
+
+      let wanted = '';
+      try {
+        const slug = new URLSearchParams(window.location.search).get('cycle');
+        if (slug) {
+          const match = cycles.open.find(function (c) { return c.slug === slug; });
+          if (match) wanted = match.id;
+        }
+      } catch (_) {}
+
+      select.innerHTML = '';
+      if (cycles.open.length > 1) {
+        const blank = document.createElement('option');
+        blank.value = '';
+        blank.textContent = 'Choose one';
+        select.appendChild(blank);
+      }
+      cycles.open.forEach(function (c) {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.jurisdiction && c.jurisdiction !== 'Statewide'
+          ? c.label + ' (' + c.jurisdiction + ')'
+          : c.label;
+        select.appendChild(opt);
+      });
+
+      if (cycles.open.length === 1) {
+        // One election open: state it rather than offering a menu of one.
+        const only = cycles.open[0];
+        select.value = only.id;
+        select.hidden = true;
+        if (fixed) {
+          fixed.hidden = false;
+          fixed.textContent = 'You are applying for the ' + only.label
+            + (only.jurisdiction && only.jurisdiction !== 'Statewide' ? ' (' + only.jurisdiction + ')' : '') + '.';
+        }
+      } else if (wanted) {
+        select.value = wanted;
+      }
+
+      cycleSelectionValid = function () {
+        return !!cycleById(select.value);
+      };
+      ensureCycleSelection = function () {
+        if (cycleSelectionValid()) { showDeadline(); return; }
+        // Exactly one election open: it is the only possible answer, so take it.
+        if (cycles.open.length === 1) select.value = cycles.open[0].id;
+        else select.value = '';
+        showDeadline();
+      };
+
+      function showDeadline() {
+        if (!deadline) return;
+        const c = cycleById(select.value);
+        if (!c) { deadline.hidden = true; return; }
+        deadline.hidden = false;
+        deadline.textContent = 'Applications close ' + cycleDateTime(c.applications_close_at) + '.';
+      }
+      select.addEventListener('change', showDeadline);
+      showDeadline();
+    }
+
     function buildPayload() {
       const raw = collectFormData();
       const trim = v => (typeof v === 'string' ? v.trim() : v);
@@ -1897,8 +2068,14 @@
       const lastName   = trim(raw.last_name)   || '';
       const candidateName = [firstName, middleName, lastName].filter(Boolean).join(' ');
 
-      const electionYearRaw = trim(raw.election_year) || '';
-      const isSpecialElection = electionYearRaw === 'special';
+      /* The cycle is the authoritative answer to "which election". election_year
+         and is_special_election are kept in step with it because the race line
+         on the admin and the board packet still read them. */
+      const chosenCycle = cycleById(trim(raw.cycle_id) || '');
+      const isSpecialElection = !!chosenCycle && chosenCycle.election_type === 'special';
+      const cycleYear = chosenCycle && chosenCycle.election_date
+        ? Number(String(chosenCycle.election_date).slice(0, 4))
+        : null;
 
       const officeLabel = (state.office && state.office.label) || trim(raw.office_sought) || '';
       const isIncumbent = raw.is_incumbent === 'true' ? true
@@ -1917,7 +2094,8 @@
         office_sought:       officeLabel,
         district:            trim(raw.district) || null,
         county:              trim(raw.county) || null,
-        election_year:       isSpecialElection ? null : toInt(electionYearRaw),
+        cycle_id:            chosenCycle ? chosenCycle.id : null,
+        election_year:        isSpecialElection ? null : cycleYear,
         is_special_election: isSpecialElection,
         party:               trim(raw.party) || null,
         committee_name:      trim(raw.committee_name) || null,
@@ -2013,9 +2191,12 @@
       submitBtn.classList.add('loading');
       submitBtn.disabled = true;
 
+      // Declared outside the try so the catch can name the election a refusal
+      // was about.
+      let payload = null;
       try {
         if (!state.client) throw new Error('Supabase library failed to load.');
-        const payload = buildPayload();
+        payload = buildPayload();
 
         // The row's id is chosen here so the photo can be filed under it
         // before the row exists; the insert policy only accepts a photo_path
@@ -2035,11 +2216,36 @@
         const { error } = await state.client.from('endorsement_applications').insert([payload]);
         if (error) throw error;
 
+        // The confirmation page states the election and the date, so the
+        // applicant has their own record of what they filed and when.
+        try {
+          const chosen = cycleById(payload.cycle_id);
+          sessionStorage.setItem('op_endorsement_receipt_v1', JSON.stringify({
+            cycle: chosen ? chosen.label : null,
+            submitted_at: new Date().toISOString(),
+          }));
+        } catch (_) {}
+
         notifyStaff(payload.email);
         clearDraft();
         window.location.href = CONFIG.THANK_YOU_PATH;
       } catch (err) {
         console.error('Submission error:', err);
+        // 42501 is the row-level security refusal. From this form the only way
+        // to earn it is a cycle that closed while the application was open in
+        // the tab, so say that rather than blaming the connection.
+        const chosen = cycleById(payload && payload.cycle_id);
+        if (err && err.code === '42501') {
+          errBanner.textContent = chosen
+            ? 'Applications for the ' + chosen.label + ' closed on '
+              + cycleDateTime(chosen.applications_close_at)
+              + '. If you believe you are receiving this in error, email zach@ohiopride.org.'
+            : 'This election is no longer accepting applications. '
+              + 'If you believe you are receiving this in error, email zach@ohiopride.org.';
+          errBanner.classList.add('visible');
+          errBanner.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          return;
+        }
         errBanner.textContent = 'We could not submit your application. ' +
           'Please check your connection and try again. If the issue persists, ' +
           'email screening@ohiopride.org.';
@@ -2101,8 +2307,12 @@
       // Load the catalog, render the path cards, then restore any draft.
       try {
         state.client = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
-        await loadCatalog(state.client);
+        await Promise.all([loadCatalog(state.client), loadCycles(state.client)]);
         renderPathCards();
+        renderCycleField();
+        // Nothing open: the form is gone, so there is no draft to restore and
+        // no step to resume into.
+        if (!cycles.open.length) return;
 
         // Resume: if a path draft exists, re-select it (without the switch
         // warning) and jump back to where the applicant left off.
@@ -2116,6 +2326,7 @@
         } else {
           showStep(1);
         }
+        ensureCycleSelection();
       } catch (err) {
         console.error('Failed to load application catalog:', err);
         const grid = $('#pathGrid');

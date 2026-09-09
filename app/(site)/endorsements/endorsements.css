@@ -1004,3 +1004,166 @@
     transition: none;
   }
 }
+
+/* ── Application cycles ───────────────────────────────────────────────── */
+/* Contrast, measured on --end-card-bg (#132d44):
+ *   --end-text-gray #a0b4c8   6.6:1   body text, every state
+ *   --text-accent   #70D6EC   8.4:1   labels and the open badge
+ *   --end-text-dim  #6889a6   3.8:1   FAILS 4.5:1, so it is not used here.
+ * The closed state is dimmed by lowering the card background, never by
+ * dimming the text. */
+.endorse-cycles {
+  padding: 8px 2rem 56px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.endorse-cycles-head {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+.endorse-cycles-head .eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  margin: 0 0 0.7rem;
+}
+.endorse-cycles-head h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 800;
+  color: var(--text-white);
+  margin: 0 0 0.6rem;
+  letter-spacing: -0.01em;
+}
+.endorse-cycles-head .lede {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.94rem;
+  line-height: 1.7;
+  color: var(--end-text-gray);
+  margin: 0 auto;
+  max-width: 60ch;
+}
+
+.cycle-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+  gap: 1rem;
+}
+
+.cycle-card {
+  background: var(--end-card-bg);
+  border: 1px solid var(--end-card-border);
+  border-radius: 12px;
+  padding: 1.2rem 1.3rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+}
+.cycle-card.is-open {
+  border-color: rgba(112, 214, 236, 0.4);
+}
+/* Closed and upcoming recede by dropping the card, not the type. */
+.cycle-card.is-closed,
+.cycle-card.is-upcoming {
+  background: rgba(19, 45, 68, 0.55);
+}
+
+.cycle-state {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+  color: var(--end-text-gray);
+}
+.cycle-card.is-open .cycle-state {
+  color: var(--text-accent);
+}
+.cycle-card.is-open .cycle-state::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--text-accent);
+  margin-right: 7px;
+  vertical-align: middle;
+}
+
+.cycle-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin: 0 0 0.2rem;
+  letter-spacing: -0.005em;
+}
+.cycle-jurisdiction {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.84rem;
+  color: var(--end-text-gray);
+  margin: 0 0 0.5rem;
+}
+
+.cycle-facts {
+  margin: 0.7rem 0 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.cycle-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+}
+.cycle-row dt {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--end-text-gray);
+  margin: 0;
+}
+.cycle-row dd {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-white);
+  margin: 0;
+}
+
+.cycle-cta {
+  margin-top: 1.1rem;
+  align-self: flex-start;
+}
+
+.cycle-doctrine {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--end-text-gray);
+  text-align: center;
+  margin: 1.5rem auto 0;
+  max-width: 68ch;
+}
+.cycle-empty {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.92rem;
+  color: var(--end-text-gray);
+  text-align: center;
+  margin: 0;
+}
+.cycle-empty a {
+  color: var(--text-accent);
+  font-weight: 700;
+}
+
+@media (max-width: 560px) {
+  .endorse-cycles { padding-inline: 1.15rem; }
+}

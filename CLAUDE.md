@@ -84,6 +84,18 @@ URL to `PORTED` in `next.config.mjs` when you delete its static file.
   newsletter, review queue, duplicate merge, ActBlue CSV import
   (`/api/admin-contacts-import`). `/admin/donors` and
   `/admin/fundraising/donors` redirect into it.
+- **Endorsement applications belong to an election cycle** (2026-09-09).
+  `public.election_cycles` holds one row per election with an enforced
+  application window; `cycle_is_open()` is the ONLY definition of open and
+  every surface reads it through `public_election_cycles.is_open` or
+  `admin_election_cycles`. Never recompute the rule in JavaScript. The anon
+  INSERT policy on `endorsement_applications` was rewritten (not supplemented,
+  since permissive policies are OR'd) to require a published, open cycle, so a
+  closed cycle cannot accept a submission. anon has INSERT but **no SELECT** on
+  that table, so the form must keep posting with `return=minimal`: adding
+  `.select()` fails with `42501 permission denied` before RLS is consulted.
+  Cycles are seeded by migration and edited at
+  `/admin/endorsements/cycles`. Full notes: `docs/README-WORK-ORDER.md`.
 - **Endorsements** are status-based (submitted/under_review/endorsed/
   declined/withdrawn — there are no stage/decision columns live). Votes
   upsert `endorsement_reviews` on (application_id, reviewer_email); packet
