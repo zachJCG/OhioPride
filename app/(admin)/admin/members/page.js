@@ -54,7 +54,7 @@ async function fetchAllMembers() {
 
 function matchesFilter(m, key) {
   if (key === 'monthly')  return m.recurrence === 'monthly';
-  if (key === 'one_time') return m.recurrence !== 'monthly';
+  if (key === 'one_time') return m.recurrence === 'one_time';
   if (key === 'public')   return !!m.is_public;
   if (key === 'vetted')   return !!m.is_vetted;
   if (key === 'unvetted') return !m.is_vetted;

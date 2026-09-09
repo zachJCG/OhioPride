@@ -230,7 +230,15 @@ Public donor display order is set explicitly via `display_order` column on `foun
 | 3     | Nicole Green      | $19.69  | 45420 | Montgomery  |
 | 4     | Matthew Joseph    | $100.00 | 45420 | Montgomery  |
 
-`county` is **derived from ZIP**, not free-text. Lookup table is `public.ohio_zip_county` (HUD Q1 2023 crosswalk, 1,359 Ohio ZIPs).
+`county` is **derived, not free-text**: the `fill_oh_county()` trigger on
+`founding_members` and `donors` looks the city up in `public.oh_city_county`
+(118 cities) and falls back to the ZIP in `public.zip_lookup` (45 ZIPs), taking
+only values that exist in `public.ohio_counties`. **`public.ohio_zip_county`
+(the 1,359-ZIP HUD crosswalk) is NOT applied in production** — its migration
+`20260427000000_ohio_zip_county.sql` sits unapplied, so `county_for_zip()`
+answers null for most Ohio ZIPs. Applying it is the fix if county coverage
+matters; until then a member outside those 118 cities and 45 ZIPs gets a null
+county and the sync leaves it null rather than guessing.
 
 ## Standing platform decisions
 
@@ -256,7 +264,14 @@ Public donor display order is set explicitly via `display_order` column on `foun
 - **`founding_member_tiers.actblue_url` exists live** as of 2026-09-08; the
   tiers endpoint had been 500ing without it.
 - New founding members are private until vetted unless
-  `ACTBLUE_SYNC_AUTO_PUBLISH=true`.
+  `ACTBLUE_SYNC_AUTO_PUBLISH=true`, and the sync sets `display_name` to
+  "First L." on insert. `founding_members_public` falls back to `full_name`
+  when `display_name` is blank, so a row left blank publishes a legal name the
+  moment someone vets it. (111 pre-existing rows are in exactly that state.)
+- **`/api/actblue-sync` refuses unauthenticated calls.** Without `CRON_SECRET`
+  the hourly cron cannot authenticate and only a signed-in admin with
+  `donors:write` can sync. A contribution-level CSV import needs
+  `donors:write` too, because it creates members and gifts.
 
 ## Things to never do
 
@@ -275,7 +290,7 @@ FROM   public.founding_members
 ORDER  BY display_order;
 
 -- ZIP -> primary county
-SELECT public.county_for_zip('45420');  -- Montgomery County
+SELECT public.county_for_zip('45420');  -- null today: zip_lookup holds 45 ZIPs and 45420 is not one
 
 -- Legislator scorecard
 SELECT * FROM public.legislator_scorecard ORDER BY chamber, district;

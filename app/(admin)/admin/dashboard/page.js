@@ -80,7 +80,11 @@ export default function DashboardPage() {
                   ? (k.actblue_last_sync.status === 'ok'
                       ? `ActBlue synced ${k.actblue_last_sync.when}`
                       : k.actblue_last_sync.status === 'running'
-                        ? 'ActBlue sync running'
+                        // A run is released after 15 minutes; past that it died
+                        // rather than still working.
+                        ? (Date.now() - new Date(k.actblue_last_sync.at).getTime() > 15 * 60 * 1000
+                            ? `ActBlue sync stalled ${k.actblue_last_sync.when}`
+                            : 'ActBlue sync running')
                         : `ActBlue sync failed ${k.actblue_last_sync.when}`)
                   : 'ActBlue sync has not run yet'}
               </div>

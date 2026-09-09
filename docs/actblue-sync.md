@@ -16,7 +16,7 @@ imports. This document describes the rewrite.
 |----------|----------|------------|
 | `ACTBLUE_CLIENT_UUID` | **yes** | The client UUID from ActBlue (entity dashboard → API credentials). |
 | `ACTBLUE_CLIENT_SECRET` | **yes** | The matching client secret. Treat like a password. |
-| `CRON_SECRET` | strongly recommended | Any long random string. Vercel sends it as `Authorization: Bearer …` on cron calls; the endpoint refuses unauthenticated calls once it is set. Without it, anyone can trigger a sync (harmless, but it hits the ActBlue API). |
+| `CRON_SECRET` | **yes, for the cron** | Any long random string. Vercel sends it as `Authorization: Bearer …` on cron calls. The endpoint refuses every unauthenticated call, so without this the hourly cron cannot authenticate and only a signed-in admin with `donors:write` can sync. |
 | `ACTBLUE_SYNC_AUTO_PUBLISH` | no | `true` to insert new founding members already vetted and public. Default: private until an admin vets them on the Members page. |
 | `ACTBLUE_FOUNDING_REFCODE_MATCH` | no | Default `founding`. A refcode containing it is a founding-member contribution. |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | **yes** | Already set. |
@@ -49,7 +49,13 @@ Vercel variable.
      order.
    - **Matching** is by ActBlue Lineitem ID, then Receipt ID (older imports
      keyed rows on the receipt; the lineitem is adopted so the next run matches
-     on the stable key), then email. Nothing is inserted twice.
+     on the stable key), then email. Nothing is inserted twice. A seat carrying
+     no ActBlue key at all (17 such rows, entered by hand or by an early
+     import) adopts the keys of the payment that matches its amount and time
+     rather than recording that payment a second time.
+   - **New seats get a `display_name`** of "First L.". The public roster view
+     falls back to the full legal name when `display_name` is blank, so leaving
+     it null would publish a legal name the moment an organizer vets the row.
    - **Admin-curated fields are never touched** after a row exists:
      `display_name`, `is_public`, `is_vetted`, `notes`, `elected_office`,
      `jurisdiction`, `public_quote`, `founding_number`. ActBlue-owned fields
@@ -81,7 +87,9 @@ Auth, one of:
 - `Authorization: Bearer <CRON_SECRET>` (the Vercel cron)
 - `Authorization: Bearer <Supabase access token>` for an admin whose role has
   `donors:write` (the Members page button)
-- no header, only while `CRON_SECRET` is unset (the response carries a warning)
+
+There is no third case. An unauthenticated call is a 401 and learns nothing
+about the server's configuration; with `CRON_SECRET` unset the 401 says so.
 
 Parameters (query string, or JSON body on POST):
 
@@ -144,8 +152,8 @@ range guard), and the whole reconciliation against an in-memory Supabase double
 that enforces the live unique constraints and emulates the fan-out and
 contact-linking triggers.
 
-Two of those tests exist because they caught real bugs before the first sync
-ever ran: two founding-refcode gifts from the same new email in one batch used
+Several of those tests exist because they caught real bugs before the first
+sync ever ran: two founding-refcode gifts from the same new email in one batch used
 to create two seats (`founding_members` has no unique on email to catch it),
 and an out-of-range date such as `2026-02-30` used to roll over to March 2
 instead of reading as missing.
@@ -161,20 +169,25 @@ instead of reading as missing.
 
 ## What the first run will do
 
-A zero-write dry run on 2026-09-08 (180-day window, 234 ActBlue payments
+A zero-write dry run on 2026-09-09 (180-day window, 235 ActBlue payments
 against the live tables) planned:
 
 - 3 new founding members (two $25 Founding Members, one $100/mo Founding
   Circle) that had never been entered;
-- 139 existing founding rows re-keyed from receipt id to ActBlue lineitem id,
-  with ZIP, address, refcode and phone filled in where blank (about 145 rows
-  each for ZIP and address, 61 for phone);
-- 65 new giving-history rows: mostly monthly installments that were never
-  recorded (52), plus event-form and QR-code contributions and a few repeat
-  gifts from existing members;
+- 144 existing founding rows re-keyed to their ActBlue lineitem id, with ZIP,
+  address, refcode and phone filled in where blank. 5 of those are seats that
+  carried no ActBlue key at all and would otherwise have had their membership
+  payment recorded a second time;
+- 62 new giving-history rows: mostly monthly installments that were never
+  recorded, plus event-form and QR-code contributions and a few repeat gifts;
 - 1 monthly series marked cancelled;
-- no refunds (the one refunded payment ActBlue lists was never on the roster).
+- no refunds (the one refunded payment ActBlue lists was never on the roster);
+- 1 reported problem, a lineitem already held by an unrelated gift row. The
+  seat is keyed on its receipt instead and the clash is reported, rather than
+  the insert failing on the unique key every hour.
 
 Nothing is deleted, no admin-curated field changes, and every write is
 idempotent: running it again is a no-op.
-| `already_running` (409) | A run started less than 15 minutes ago. Wait, or pass `force=1`. |
+| `already_running` (409) | A run started less than 15 minutes ago. Wait, or pass `force=1`. A run that dies mid-flight is released after 15 minutes by the next run. |
+| `401 missing_bearer` on the cron | `CRON_SECRET` is not set, or was changed without a redeploy. |
+| `403 donors_write_required` on a CSV import | The file is contribution-level, which creates members and gifts. That needs `donors:write`, not just `contacts:write`. |

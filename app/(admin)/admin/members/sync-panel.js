@@ -29,6 +29,7 @@ const TRIGGER_LABEL = { cron: 'hourly cron', manual: 'Sync now', backfill: 'back
 
 function summary(r) {
   if (!r) return '';
+  if (r.status === 'running') return 'in progress';
   const parts = [];
   if (r.founding_inserted) parts.push(`${r.founding_inserted} new member${r.founding_inserted === 1 ? '' : 's'}`);
   if (r.donors_inserted) parts.push(`${r.donors_inserted} new gift${r.donors_inserted === 1 ? '' : 's'}`);
@@ -71,7 +72,7 @@ export default function SyncPanel({ canWrite, notify, onSynced }) {
         body: JSON.stringify({ dry_run: dryRun }),
       });
       const body = await resp.json().catch(() => ({}));
-      if (resp.status === 409) throw new Error('A sync is already running. Try again in a minute.');
+      if (resp.status === 409) throw new Error('A sync is already running. Wait for it to finish; a run that dies is released after 15 minutes.');
       if (resp.status === 403) throw new Error('Your role cannot run the sync.');
       if (body.error === 'missing_env') {
         throw new Error(`The server is missing ${(body.missing || []).join(', ')}. Add them in Vercel and redeploy.`);
