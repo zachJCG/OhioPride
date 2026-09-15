@@ -1177,3 +1177,86 @@
 @media (max-width: 560px) {
   .endorse-cycles { padding-inline: 1.15rem; }
 }
+
+/* ── Out candidate ring ─────────────────────────────────────────────────
+ * A rotating pride ring on cards and profile photos where
+ * endorsement_applications.is_out = 'yes'. Drawn with a masked ::after so it
+ * works over any card background and is not clipped by overflow: hidden.
+ * Fallback colors mirror public/css/brand-tokens.css, so the ring stays on
+ * system even if the token sheet has not loaded.
+ */
+@property --op-ring-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes op-ring-spin {
+  to { --op-ring-angle: 360deg; }
+}
+
+.endorse-card.is-out,
+.endorse-profile-photo.is-out {
+  position: relative;
+  border-color: transparent;
+}
+
+.endorse-card.is-out:hover {
+  border-color: transparent;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25),
+              0 0 24px rgba(115, 215, 238, 0.25);
+}
+
+.endorse-card.is-out::after,
+.endorse-profile-photo.is-out::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 3px; /* ring thickness */
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--op-ring-angle),
+    var(--brand-pride-red, #e40303),
+    var(--brand-pride-orange, #ffbc00),
+    var(--brand-pride-yellow, #ffed00),
+    var(--brand-pride-green, #008026),
+    var(--brand-pride-blue, #004dff),
+    var(--brand-pride-violet, #750787),
+    var(--brand-pride-red, #e40303)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  animation: op-ring-spin 6s linear infinite;
+}
+
+/* Speed up on hover so the card feels alive without being loud at rest. */
+.endorse-card.is-out:hover::after {
+  animation-duration: 2.5s;
+}
+
+/* Accessibility floor: hold the ring still for reduced motion users. */
+@media (prefers-reduced-motion: reduce) {
+  .endorse-card.is-out::after,
+  .endorse-profile-photo.is-out::after {
+    animation: none;
+  }
+}
+
+.endorse-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

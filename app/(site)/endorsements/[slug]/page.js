@@ -130,12 +130,15 @@ export default async function EndorsementProfile({ params }) {
 
           <header className="endorse-profile-head">
             {content.photo ? (
-              <div className="endorse-profile-photo">
+              <div className={`endorse-profile-photo${c.isOut ? ' is-out' : ''}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={content.photo} alt={content.photoAlt || c.name} />
               </div>
             ) : (
-              <div className="endorse-profile-photo placeholder" aria-hidden="true">
+              <div
+                className={`endorse-profile-photo placeholder${c.isOut ? ' is-out' : ''}`}
+                aria-hidden="true"
+              >
                 {initial(c.name)}
               </div>
             )}

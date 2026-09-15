@@ -24,7 +24,7 @@ function Card({ c }) {
   const meta = [c.district, c.electionYear].filter(Boolean).join(' · ');
 
   return (
-    <article className="endorse-card">
+    <article className={c.isOut ? 'endorse-card is-out' : 'endorse-card'}>
       <div className="endorse-card-stripe" aria-hidden="true" />
       <Link className="endorse-card-photolink" href={href} tabIndex={-1} aria-hidden="true">
         {photo ? (
@@ -45,6 +45,7 @@ function Card({ c }) {
             <Link href={href}>{c.name}</Link>
           </h3>
           {c.pronouns && <p className="endorse-card-pronouns">{c.pronouns}</p>}
+          {c.isOut && <span className="endorse-sr-only">Out LGBTQ+ candidate</span>}
           <p className="endorse-card-office">{c.office}</p>
           {meta && <p className="endorse-card-meta">{meta}</p>}
         </div>
