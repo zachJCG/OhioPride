@@ -1260,3 +1260,54 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* Legend for the ring above, rendered only when a ringed card is on screen.
+ * The swatch is the same masked conic-gradient as the ring, held still, so
+ * the note shows the exact mark it describes. */
+.endorse-ring-note {
+  display: flex;
+  gap: .7rem;
+  align-items: flex-start;
+  max-width: 62ch;
+  margin: 0 auto 1.4rem;
+  padding: .85rem 1.05rem;
+  border: 1px solid rgba(115, 215, 238, 0.3);
+  border-radius: 12px;
+  background: rgba(115, 215, 238, 0.07);
+}
+
+.endorse-ring-note p {
+  margin: 0;
+  font-size: .9rem;
+  line-height: 1.55;
+}
+
+.endorse-ring-swatch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin-top: .1rem;
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(
+    var(--brand-pride-red, #e40303),
+    var(--brand-pride-orange, #ffbc00),
+    var(--brand-pride-yellow, #ffed00),
+    var(--brand-pride-green, #008026),
+    var(--brand-pride-blue, #004dff),
+    var(--brand-pride-violet, #750787),
+    var(--brand-pride-red, #e40303)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+@media (max-width: 560px) {
+  .endorse-ring-note { margin-inline: 1.15rem; }
+}

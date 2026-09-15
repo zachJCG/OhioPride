@@ -25,9 +25,19 @@ const dt = (v) => v ? new Date(v).toLocaleDateString('en-US', { month: 'short', 
 // arrive mistyped ("82" for the district, the county in the district box).
 const EDITABLE = [
   'office_sought', 'district', 'county', 'election_year', 'is_special_election', 'party',
-  'pronouns', 'website', 'email', 'phone',
+  'pronouns', 'is_out', 'website', 'email', 'phone',
   'submitted_by_kind', 'submitted_by_name', 'submitted_by_role', 'submitted_by_email',
 ];
+
+/* Mirrors the check constraint on endorsement_applications.is_out. Blank saves
+ * as null, which the constraint also allows. Only 'yes' rings the candidate on
+ * the public site, so leaving this alone can never out anyone. */
+const IS_OUT_LABEL = {
+  '': 'Not answered',
+  yes: 'Yes — publicly out',
+  no: 'No',
+  prefer_not_to_say: 'Prefer not to say',
+};
 
 const CARD_TITLE = { font: '700 .95rem var(--op-font-head)' };
 const LBL = { fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--op-muted)' };
@@ -429,6 +439,11 @@ export default function CandidatePage() {
               </label>
               <label className="field"><span>Pronouns</span>
                 <input className="input" value={draft.pronouns} onChange={e => setDraft(d => ({ ...d, pronouns: e.target.value }))} />
+              </label>
+              <label className="field"><span>Out as LGBTQ+</span>
+                <select className="select" value={draft.is_out} onChange={e => setDraft(d => ({ ...d, is_out: e.target.value }))}>
+                  {Object.entries(IS_OUT_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+                </select>
               </label>
               <label className="field"><span>Email</span>
                 <input className="input" type="email" value={draft.email} onChange={e => setDraft(d => ({ ...d, email: e.target.value }))} required />

@@ -119,6 +119,11 @@ export default function EndorsementGrid({ candidates, loadFailed, screeningPath 
   // Filters earn their screen space only once the list needs them.
   const showControls = candidates.length > 3 || years.length > 1 || levels.length > 1;
 
+  /* The ring legend explains a mark that is actually on screen, so it appears
+   * only when some endorsed candidate answered "yes". Keyed to the unfiltered
+   * list: the note stays put while someone pages through the office filters. */
+  const showRingLegend = useMemo(() => candidates.some((c) => c.isOut), [candidates]);
+
   function clearFilters() {
     setLevel('all');
     setYear('');
@@ -126,6 +131,17 @@ export default function EndorsementGrid({ candidates, loadFailed, screeningPath 
 
   return (
     <>
+      {showRingLegend && (
+        <aside className="endorse-ring-note">
+          <span className="endorse-ring-swatch" aria-hidden="true" />
+          <p>
+            <strong>The rainbow ring</strong> marks candidates who told us on their application
+            that they are publicly out as LGBTQ+. Answering that question is optional, so a card
+            without a ring says nothing about a candidate&apos;s identity.
+          </p>
+        </aside>
+      )}
+
       {showControls && (
         <section className="endorse-controls" aria-label="Filters">
           <div className="endorse-controls-inner">
