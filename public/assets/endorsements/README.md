@@ -51,6 +51,9 @@ Drop campaign photos here named by candidate slug:
   top. 1080x1080.
 - `tiffany-evans.jpg`: Tiffany Evans, Hamilton County Domestic Relations
   Court (2026). Campaign portrait: green blazer, seated. 1080x1080.
+- `noah-spinner.jpg`: J. Noah Spinner, OH House District 31 (2026). Campaign
+  photo courtesy of Spinner for Ohio, by Angelo Merendino: charcoal
+  quarter-zip, Cuyahoga River behind him. 1080x1080.
 
 The August 22 slate above arrived square (1080x1080), which needs no
 `cardPhoto`: a square photo is already the grid card's crop, and the profile
