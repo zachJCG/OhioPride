@@ -110,6 +110,18 @@ const nextConfig = {
       { source: '/gala', destination: '/', permanent: true },
       { source: '/sponsorship', destination: '/', permanent: true },
       { source: '/priorities', destination: '/', permanent: true },
+      /* The Cincinnati (2026-08-26) and Cleveland (2026-09-20) Pride Hours have
+       * happened and their pages are hidden, so both paths land on /events.
+       * Deliberately temporary, unlike the launch-day rules below: Pride Hour
+       * is a running series, and /pride-hour in particular is the obvious path
+       * to reuse for the next stop. A 308 would be cached in every browser
+       * that ever followed it and would be painful to take back. */
+      { source: '/pride-hour', destination: '/events', permanent: false },
+      { source: '/sunday-funday', destination: '/events', permanent: false },
+      // The .html spellings too: their generated file-to-clean-URL redirect
+      // went away with the files, so without these the old links 404.
+      { source: '/pride-hour.html', destination: '/events', permanent: false },
+      { source: '/sunday-funday.html', destination: '/events', permanent: false },
       // Launch Day (2026-05-22) is over; page + signup form removed 2026-08.
       { source: '/launch-day', destination: '/', permanent: true },
       { source: '/launch-day.html', destination: '/', permanent: true },

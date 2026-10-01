@@ -147,6 +147,11 @@ await check('redirect ', '/scorecard/methodology', redirectsTo('/methodology', 3
 await check('redirect ', '/gala', redirectsTo('/', 308));
 await check('redirect ', '/sponsorship', redirectsTo('/', 308));
 await check('redirect ', '/priorities', redirectsTo('/', 308));
+// Past Pride Hours. 307, not 308: these paths may host a future stop.
+await check('redirect ', '/pride-hour', redirectsTo('/events', 307));
+await check('redirect ', '/sunday-funday', redirectsTo('/events', 307));
+await check('redirect ', '/pride-hour.html', redirectsTo('/events', 307));
+await check('redirect ', '/sunday-funday.html', redirectsTo('/events', 307));
 await check('redirect ', '/launch-day', redirectsTo('/', 308));
 await check('redirect ', '/rsvp', redirectsTo('/', 308));
 // With the middleware active the Location gains ?next=..., so match by prefix.
