@@ -1,0 +1,643 @@
+/* =============================================================================
+ * public/vote/vote.css
+ * -----------------------------------------------------------------------------
+ * Campaign look for /vote and /dragoutthevote, layered on top of the brand
+ * tokens that /css/style.css and /css/site-template.css already load.
+ *
+ *   Field        Navy #152233 (--brand-navy), grain texture on hero fields
+ *   Accents      Light Blue #70D6EC (--brand-light-blue) and one campaign hot
+ *                accent, magenta #FF2D95, a placeholder until design picks
+ *   Rainbow      135 degree Progress Pride gradient, divider bars and card
+ *                tops only, never a background field
+ *   Display      Bowlby One (Google Fonts) for the campaign name, section
+ *                headlines and the stage lines
+ *   Body         Roboto Slab, 18px minimum
+ *
+ * Contrast notes (measured, WCAG 2.x):
+ *   magenta on navy field        4.63:1  passes AA for text of any size
+ *   magenta on card (#1c2d44)    4.02:1  large text only, so magenta text on
+ *                                        a card is always 24px or bigger
+ *   navy text on magenta button  4.63:1  passes; white on magenta does not
+ *   light blue on navy           9.57:1
+ *
+ * Nothing in this file is date-shaped. Dates live in config.js.
+ * ========================================================================== */
+
+:root {
+  --dotv-hot: #ff2d95;
+  --dotv-field: var(--brand-navy, #152233);
+  --dotv-footer: var(--brand-navy-footer, #0d1726);
+  --dotv-blue: var(--brand-light-blue, #70d6ec);
+  --dotv-card: #1c2d44;
+  --dotv-ink: #0d1726;
+  --dotv-line: rgba(255, 255, 255, 0.14);
+  --dotv-soft: rgba(255, 255, 255, 0.84);
+  --dotv-rainbow: var(--brand-pride-gradient, linear-gradient(135deg, #e40303, #ffbc00, #ffed00, #008026, #004dff, #750787, #ffafc8));
+  --dotv-display: "Bowlby One", "Montserrat", Impact, sans-serif;
+  --dotv-body: "Roboto Slab", Georgia, serif;
+  --dotv-ui: "Montserrat", Arial, sans-serif;
+  --dotv-radius: 14px;
+}
+
+/* 1rem = 18px on these two pages. The shared footer scales up with it, which
+   is fine: nothing in it drops below its usual size. */
+html.dotv-root {
+  font-size: 112.5%;
+}
+
+body.dotv {
+  font-family: var(--dotv-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #fff;
+  background: var(--dotv-field);
+  overflow-x: hidden;
+}
+
+/* style.css paints the site's diagonal stripe pattern over every body. The
+   campaign field is plain navy with grain on the hero only, and the stripes
+   would also outline the wordmark's square canvas in the colophon. */
+body.dotv::before {
+  display: none;
+}
+
+.dotv *:focus-visible {
+  outline: 3px solid var(--dotv-blue);
+  outline-offset: 3px;
+}
+
+.dotv-wrap {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.dotv-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------- Type ---- */
+
+.dotv h1,
+.dotv h2,
+.dotv .dotv-stage-line {
+  font-family: var(--dotv-display);
+  font-weight: 400;
+  color: #fff;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+
+.dotv h1 {
+  font-size: clamp(2.5rem, 10vw, 4.75rem);
+  line-height: 0.98;
+  margin: 0 0 0.5em;
+}
+
+.dotv h2 {
+  font-size: clamp(1.75rem, 6.5vw, 2.6rem);
+  line-height: 1.05;
+  margin: 0 0 0.6em;
+}
+
+.dotv h3 {
+  font-family: var(--dotv-ui);
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  color: #fff;
+  margin: 0 0 0.5em;
+}
+
+.dotv p {
+  margin: 0 0 1em;
+}
+
+.dotv p:last-child {
+  margin-bottom: 0;
+}
+
+.dotv a {
+  color: var(--dotv-blue);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 2px;
+}
+
+.dotv a:hover {
+  color: #fff;
+}
+
+.dotv-eyebrow,
+.dotv-label {
+  font-family: var(--dotv-ui);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dotv-blue);
+  margin: 0 0 0.75em;
+}
+
+.dotv-lede {
+  font-size: 1.15rem;
+  color: var(--dotv-soft);
+  max-width: 34em;
+}
+
+.dotv-support {
+  font-family: var(--dotv-display);
+  font-size: clamp(1.4rem, 5.5vw, 2.1rem);
+  line-height: 1.1;
+  color: var(--dotv-hot);
+  margin: 0 0 0.75em;
+}
+
+/* --------------------------------------------------------- Layout ---- */
+
+.dotv-hero {
+  position: relative;
+  isolation: isolate;
+  padding: 3.5rem 0 2.75rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--dotv-line);
+}
+
+/* Grain. An inline SVG turbulence filter, so there is no image to load and
+   nothing to swap when design changes the palette. */
+.dotv-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+  background-size: 240px 240px;
+}
+
+.dotv-section {
+  padding: 2.75rem 0 0.5rem;
+}
+
+.dotv-section:last-of-type {
+  padding-bottom: 2.5rem;
+}
+
+/* Divider bar: the only place the rainbow runs as a line. */
+.dotv-rule {
+  height: 8px;
+  width: 96px;
+  border-radius: 999px;
+  background: var(--dotv-rainbow);
+  margin: 0 0 1.25rem;
+}
+
+.dotv-cards {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 720px) {
+  .dotv-cards--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Card: navy-light surface, rainbow top edge. */
+.dotv-card {
+  position: relative;
+  background: var(--dotv-card);
+  border: 1px solid var(--dotv-line);
+  border-radius: var(--dotv-radius);
+  padding: 1.5rem 1.25rem 1.25rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dotv-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 7px;
+  background: var(--dotv-rainbow);
+}
+
+.dotv-card > * {
+  margin: 0;
+}
+
+.dotv-card .dotv-btn {
+  margin-top: 0.25rem;
+}
+
+.dotv-say {
+  font-style: italic;
+  color: var(--dotv-soft);
+  border-left: 4px solid var(--dotv-hot);
+  padding-left: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* -------------------------------------------------------- Buttons ---- */
+
+.dotv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  width: 100%;
+  min-height: 52px;
+  padding: 0.8rem 1.25rem;
+  border: 0;
+  border-radius: 12px;
+  font-family: var(--dotv-ui);
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--dotv-blue);
+  color: var(--dotv-ink);
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+/* Written as `.dotv a.dotv-btn` on purpose: the page-wide `.dotv a` rule
+   (light blue, underlined) would otherwise outrank `.dotv-btn` and paint
+   light blue text on a light blue button. */
+.dotv a.dotv-btn,
+.dotv button.dotv-btn {
+  color: var(--dotv-ink);
+  text-decoration: none;
+}
+
+.dotv a.dotv-btn:hover,
+.dotv button.dotv-btn:hover {
+  color: var(--dotv-ink);
+  filter: brightness(1.06);
+}
+
+.dotv-btn:active {
+  transform: translateY(1px);
+}
+
+.dotv-btn--hot {
+  background: var(--dotv-hot);
+  color: var(--dotv-ink);
+}
+
+.dotv a.dotv-btn--ghost,
+.dotv button.dotv-btn--ghost {
+  background: transparent;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+}
+
+.dotv a.dotv-btn--ghost:hover,
+.dotv button.dotv-btn--ghost:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+.dotv-btn--big {
+  min-height: 60px;
+  font-size: 1.1rem;
+}
+
+.dotv-links {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0 0 1.5rem;
+}
+
+/* --------------------------------------------------------- Countdown ---- */
+
+.dotv-countdown {
+  margin: 0 0 1.25rem;
+}
+
+.dotv-count {
+  font-family: var(--dotv-display);
+  font-size: clamp(3rem, 15vw, 5.5rem);
+  line-height: 1;
+  color: var(--dotv-hot);
+  margin: 0;
+}
+
+.dotv-count-label {
+  font-family: var(--dotv-ui);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  margin: 0.25rem 0 0;
+}
+
+/* ------------------------------------------------------------ Tables ---- */
+
+.dotv-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.dotv-table th,
+.dotv-table td {
+  text-align: left;
+  padding: 0.7rem 0.25rem;
+  border-bottom: 1px solid var(--dotv-line);
+  vertical-align: top;
+}
+
+.dotv-table thead th {
+  font-family: var(--dotv-ui);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dotv-blue);
+  border-bottom-color: rgba(255, 255, 255, 0.35);
+}
+
+.dotv-table tbody th {
+  font-weight: 500;
+  color: #fff;
+  width: 50%;
+}
+
+.dotv-table td {
+  color: var(--dotv-soft);
+}
+
+.dotv-table td:last-child,
+.dotv-table thead th:last-child {
+  text-align: right;
+}
+
+/* ------------------------------------------------------------- Lists ---- */
+
+.dotv-list {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.dotv-list li {
+  position: relative;
+  padding: 0.55rem 0 0.55rem 2rem;
+  border-bottom: 1px solid var(--dotv-line);
+  color: var(--dotv-soft);
+}
+
+.dotv-list li::before {
+  position: absolute;
+  left: 0.15rem;
+  top: 0.5rem;
+  font-family: var(--dotv-ui);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.dotv-list--yes li::before {
+  content: "\2713";
+  color: var(--dotv-blue);
+}
+
+.dotv-list--no li::before {
+  content: "\00d7";
+  color: var(--dotv-hot);
+  font-size: 1.3rem;
+  top: 0.3rem;
+}
+
+.dotv-list--dot li::before {
+  content: "\25cf";
+  color: var(--dotv-blue);
+  font-size: 0.8rem;
+  top: 0.75rem;
+  left: 0.35rem;
+}
+
+.dotv-steps {
+  margin: 0 0 1.5rem;
+  padding: 0 0 0 1.5rem;
+  color: var(--dotv-soft);
+}
+
+.dotv-steps li {
+  padding: 0.3rem 0;
+}
+
+.dotv-steps li::marker {
+  font-family: var(--dotv-ui);
+  font-weight: 800;
+  color: var(--dotv-blue);
+}
+
+/* ------------------------------------------------------ Stage lines ---- */
+
+.dotv-stages {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: grid;
+  gap: 1.75rem;
+}
+
+.dotv-stage {
+  padding: 0 0 1.5rem;
+  border-bottom: 1px solid var(--dotv-line);
+}
+
+.dotv-stage .dotv-label {
+  color: var(--dotv-hot);
+  margin-bottom: 0.5em;
+}
+
+.dotv-stage-line {
+  font-size: clamp(1.55rem, 6vw, 2.35rem);
+  line-height: 1.12;
+  margin: 0;
+}
+
+.dotv-make-it-yours {
+  font-size: 1.15rem;
+  color: var(--dotv-soft);
+}
+
+/* ------------------------------------------------------------- Posts ---- */
+
+.dotv-posts {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.dotv-post .dotv-label {
+  margin-bottom: 0;
+}
+
+.dotv-graphics {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 560px) {
+  .dotv-graphics {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.dotv-graphics figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.dotv-graphics img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--dotv-line);
+  background: var(--dotv-field);
+}
+
+.dotv-graphics figcaption {
+  font-family: var(--dotv-ui);
+  font-size: 0.95rem;
+  color: var(--dotv-soft);
+  text-align: center;
+}
+
+.dotv-caption-box {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 10px;
+  padding: 1rem 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.dotv-caption-box .dotv-label {
+  margin: 0;
+}
+
+.dotv-caption,
+.dotv-caption-url,
+.dotv-caption-tags {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.dotv-caption-url {
+  color: var(--dotv-blue);
+}
+
+.dotv-caption-tags {
+  color: var(--dotv-soft);
+}
+
+/* -------------------------------------------------- Dates at a glance ---- */
+
+.dotv-dates {
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.dotv-dates > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--dotv-line);
+}
+
+.dotv-dates dt {
+  color: var(--dotv-soft);
+}
+
+.dotv-dates dd {
+  margin: 0;
+  font-family: var(--dotv-ui);
+  font-weight: 800;
+  color: #fff;
+  text-align: right;
+}
+
+/* --------------------------------------------------------- Big link ---- */
+
+.dotv-biglink {
+  font-family: var(--dotv-display);
+  /* Bowlby One runs wide. 6vw keeps the whole URL on one line at 375px. */
+  font-size: clamp(1.25rem, 6vw, 3rem);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  margin: 0 0 0.75rem;
+}
+
+.dotv-biglink a {
+  color: #fff;
+  text-decoration-color: var(--dotv-hot);
+  text-decoration-thickness: 0.12em;
+}
+
+.dotv-status {
+  min-height: 1.6em;
+  color: var(--dotv-soft);
+  margin-top: 0.75rem;
+}
+
+/* ---------------------------------------------------------- Colophon ---- */
+
+.dotv-colophon {
+  padding: 2.5rem 0 1.5rem;
+  text-align: center;
+  border-top: 1px solid var(--dotv-line);
+}
+
+/* The official transparent wordmark export. The SVG exports in /assets/logo
+   sit on an opaque navy square whose navy is a shade off the page field, so
+   they read as a visible tile on top of it; the transparent PNG is the same
+   v2.0 mark without the tile. */
+.dotv-wordmark {
+  display: block;
+  width: 172px;
+  height: auto;
+  margin: 0 auto 1rem;
+}
+
+.dotv-source {
+  font-family: var(--dotv-ui);
+  font-size: 0.95rem;
+  color: var(--dotv-soft);
+  margin: 0 0 0.5rem;
+}
+
+/* The shared site footer follows. Pull it flush to the colophon. */
+.dotv .ohp-footer {
+  margin-top: 0;
+}

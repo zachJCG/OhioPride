@@ -37,6 +37,8 @@ const SCAN_ROOTS = [
   'endorsements',
   'endorsement/screening',
   'endorsement/screening/thank-you',
+  'vote',
+  'dragoutthevote',
 ];
 
 // Pages that legitimately don't use the shared chrome (e.g. embedded
@@ -55,6 +57,13 @@ const ALLOW_LIST = new Set([
   //
   // Standalone error page: served by the host outside the normal page flow.
   '404.html',
+  // Drag Out The Vote (2026 GOTV). Campaign pages by design: the voter page is
+  // opened from a story sticker and the performer guide reads as the campaign,
+  // not as Ohio Pride, so neither mounts the shared header. Both still link
+  // site-template.css, mount <div id="site-footer"> and load site-template.js,
+  // which is what puts the standard footer and disclaimer on them.
+  'vote/index.html',
+  'dragoutthevote/index.html',
 ]);
 
 // Pages must link the shared template stylesheet AND at least one of
