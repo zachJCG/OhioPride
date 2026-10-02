@@ -137,6 +137,18 @@ JS (in `js/`):
 
 CSS: `css/style.css`, `css/site-template.css`
 
+### Drag Out The Vote Ohio (2026-10-02)
+
+Two static GOTV pages, `/vote` (voter resource) and `/dragoutthevote`
+(performer guide), under `public/vote/` and `public/dragoutthevote/`.
+**Every date, hour, link and line of weekly copy lives in
+`public/vote/config.js`**; `npm run vote:build` writes it into both pages and
+`npm run check:vote` (also in `npm test`) fails when they drift. Never type a
+date into those HTML files. Copy rules enforced by `tests/vote-pages.test.mjs`:
+"absentee ballot" only, no em or en dashes, no candidate names, no "Paid for
+by". The ten graphics under `public/dragoutthevote/assets/` are placeholders
+design swaps in place. Full notes: `docs/drag-out-the-vote/README-WORK-ORDER.md`.
+
 ### Submission notifications (2026-08-20)
 
 **Every public form emails staff on submit**, through `lib/notify.mjs`

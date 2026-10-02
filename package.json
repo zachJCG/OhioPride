@@ -9,6 +9,8 @@
     "start": "next start",
     "test": "node --test \"tests/*.test.mjs\"",
     "seo:build": "node scripts/build-seo.mjs",
+    "vote:build": "node scripts/build-vote.mjs",
+    "check:vote": "node scripts/build-vote.mjs --check",
     "check:brand": "node scripts/check-brand-consistency.js",
     "check:routes": "node scripts/check-routes.mjs",
     "check:seo": "node scripts/check-seo.mjs"
