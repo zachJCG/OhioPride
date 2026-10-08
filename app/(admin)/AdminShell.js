@@ -8,9 +8,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { AdminSessionProvider, useAdmin } from './lib/permissions';
+import { supabase } from './lib/supabase';
 import { NAV } from './nav.config';
 
 const COLLAPSE_KEY = 'opAdminNavCollapsed';
+
+/* Counters a nav item can show. Each loads once per page view, only when the
+ * caller can see the item it belongs to. Keep these to cheap head counts. */
+const BADGES = {
+  candidates_new: async (sb) => {
+    const { count } = await sb.from('candidate_applications')
+      .select('id', { count: 'exact', head: true }).eq('status', 'new');
+    return count || 0;
+  },
+};
 
 function Icon({ name }) {
   const paths = {
@@ -30,6 +41,7 @@ function Chrome({ children }) {
   const { loading, me, roles, can, signOut } = useAdmin();
   const [open, setOpen] = useState(false);        // mobile drawer
   const [collapsed, setCollapsed] = useState(false); // desktop rail
+  const [badges, setBadges] = useState({});
 
   useEffect(() => {
     try { setCollapsed(localStorage.getItem(COLLAPSE_KEY) === '1'); } catch { /* ignore */ }
@@ -37,6 +49,19 @@ function Chrome({ children }) {
 
   // Close the mobile drawer on navigation and on Escape.
   useEffect(() => { setOpen(false); }, [path]);
+
+  // Nav badges, refreshed on every navigation so a handled application drops
+  // off the count without a reload.
+  useEffect(() => {
+    if (loading || !me) return;
+    let alive = true;
+    const sb = supabase();
+    const wanted = NAV.flatMap(g => g.items).filter(i => i.badge && BADGES[i.badge] && can(...i.permission));
+    Promise.all(wanted.map(async i => [i.badge, await BADGES[i.badge](sb).catch(() => 0)]))
+      .then(pairs => { if (alive) setBadges(Object.fromEntries(pairs)); });
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, me, path]);
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
     window.addEventListener('keydown', onKey);
@@ -95,6 +120,9 @@ function Chrome({ children }) {
                   <a key={i.id} href={i.href} aria-current={current(i.href)} title={i.label}>
                     <span className="dot" aria-hidden="true" />
                     <span className="lbl">{i.label}</span>
+                    {i.badge && badges[i.badge] > 0 && (
+                      <span className="nav-badge" aria-label={`${badges[i.badge]} new`}>{badges[i.badge]}</span>
+                    )}
                   </a>
                 ))}
               </div>

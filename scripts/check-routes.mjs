@@ -94,6 +94,9 @@ const PAGES = [
   ['/endorsements/jeff-givan', 'Why we endorsed Jeff'],
   ['/endorsement/screening/thank-you', 'Where your application goes next'],
   ['/endorsement/screening', 'Apply for an Ohio Pride PAC endorsement'],
+  // Race to 100 (app/(site)/2027/races and /candidate-apply), server rendered.
+  ['/2027/races', 'The 2027 Races We Are Targeting'],
+  ['/candidate-apply', 'Apply to Run in 2027'],
   ['/volunteer/events/columbus2026', 'html'],
   // Public since launch: assert on real page copy, not the unlock form.
   ['/governor-guide', 'Two roads to the Governor'],
@@ -130,6 +133,8 @@ for (const [path, needle] of PAGES) {
 await check('canonical', '/about.html', redirectsTo('/about', 308));
 // A ported page keeps answering its old .html URL even though the file is gone.
 await check('ported   ', '/credits.html', redirectsTo('/credits', 308));
+// /2027 is the races list until the year has more pages. Temporary on purpose.
+await check('redirect ', '/2027', redirectsTo('/2027/races', 307));
 // The folder-index spelling matters for /endorsements specifically: without
 // this redirect, /endorsements/index.html falls through to the new
 // /endorsements/[slug] route and 404s as an unknown candidate.

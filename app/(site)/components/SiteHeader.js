@@ -19,11 +19,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+/* No aria-label on the link: its name is its visible text, "OHIO PRIDE PAC".
+ * A label that differs from the visible text fails WCAG 2.5.3 (label in name)
+ * for voice control users. The space between the two words is a text node
+ * that flex layout does not render but screen readers need. */
 function Wordmark() {
   return (
-    <Link href="/" className="ohp-nav-logo" aria-label="Ohio Pride PAC home">
+    <Link href="/" className="ohp-nav-logo">
       <span className="ohp-logo-row">
-        <span className="ohp-logo-ohio">OHIO</span>
+        <span className="ohp-logo-ohio">OHIO</span>{' '}
         <span className="ohp-logo-pride">PRIDE</span>
       </span>
       <span className="ohp-logo-pac">PAC</span>

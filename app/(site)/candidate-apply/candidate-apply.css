@@ -1,0 +1,102 @@
+/* /candidate-apply: five step recruitment form. Dark theme like the
+ * endorsement application; inputs are 16px so iOS does not zoom. */
+.capply-page { background: var(--dark-bg); color: var(--text-white); }
+.capply-shell { max-width: 760px; margin: 0 auto; padding: calc(var(--nav-height) + 32px) 1.25rem 64px; scroll-margin-top: var(--nav-height); }
+.capply-loading { color: var(--text-light); }
+.capply-head { margin-bottom: 18px; }
+.capply-kicker {
+  font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.78rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #73D7EE; margin: 0 0 0.6rem;
+}
+.capply-head h1, .capply-done h1 {
+  font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: clamp(1.8rem, 5.5vw, 2.5rem);
+  line-height: 1.1; color: #fff; margin: 0 0 0.6rem;
+}
+.capply-lede { font-family: 'Roboto Slab', serif; font-size: 1rem; line-height: 1.6; color: var(--text-light); margin: 0; }
+
+/* Progress */
+.capply-progress { margin: 18px 0 14px; }
+.capply-progress-bar { height: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.capply-progress-bar > span { display: block; height: 100%; background: #73D7EE; border-radius: 999px; transition: width 0.25s ease; }
+.capply-steps { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.capply-steps li { display: grid; justify-items: center; gap: 3px; font-size: 0.68rem; color: #a0b4c8; text-align: center; }
+.capply-steps li.is-current { color: #fff; }
+.capply-steps li.is-done { color: #73D7EE; }
+.capply-step-num {
+  display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+  border: 1px solid currentColor; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.74rem;
+}
+.capply-steps li.is-current .capply-step-num { background: #73D7EE; border-color: #73D7EE; color: #0F2233; }
+.capply-step-label { display: none; }
+@media (min-width: 560px) { .capply-step-label { display: block; } }
+
+/* Cards and fields */
+.capply-card {
+  background: #132d44; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
+  padding: 20px 18px; display: grid; gap: 14px;
+}
+.capply-card h2 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.25rem; margin: 0; color: #fff; }
+.capply-row { display: grid; gap: 14px; }
+@media (min-width: 560px) { .capply-row { grid-template-columns: 1fr 1fr; } .capply-row.three { grid-template-columns: 1.2fr 1.2fr 0.8fr; } }
+.capply-field { display: grid; gap: 5px; }
+.capply-field label, .capply-fieldset legend {
+  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.82rem; color: #fff;
+}
+.capply-req { color: #73D7EE; }
+.capply-hint { font-size: 0.8rem; color: #a0b4c8; margin: 0; }
+.capply-input {
+  width: 100%; min-height: 46px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06); color: #fff; font-size: 16px; padding: 0 12px;
+  box-sizing: border-box; font-family: inherit;
+}
+.capply-input:focus { outline: 2px solid #73D7EE; outline-offset: 1px; }
+.capply-input::placeholder { color: rgba(255, 255, 255, 0.5); }
+select.capply-input { appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, #a0b4c8 50%), linear-gradient(135deg, #a0b4c8 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 34px; }
+select.capply-input option, select.capply-input optgroup { color: #0F2233; background: #fff; }
+.capply-textarea { padding: 10px 12px; min-height: 96px; resize: vertical; line-height: 1.5; }
+.capply-fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+.capply-choice {
+  display: flex; align-items: flex-start; gap: 10px; min-height: 44px; padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 10px; cursor: pointer;
+  font-size: 0.92rem; line-height: 1.45; color: #fff;
+}
+.capply-choice:hover { border-color: rgba(255, 255, 255, 0.35); }
+.capply-choice input { margin-top: 4px; width: 18px; height: 18px; flex: 0 0 auto; accent-color: #73D7EE; }
+.capply-choice:has(input:checked) { border-color: #73D7EE; background: rgba(115, 215, 238, 0.08); }
+.capply-consent { align-items: flex-start; }
+.capply-subcard { border: 1px dashed rgba(255, 255, 255, 0.22); border-radius: 12px; padding: 12px; display: grid; gap: 12px; }
+.capply-subcard-head { display: flex; justify-content: space-between; align-items: baseline; }
+.capply-race-card {
+  display: grid; gap: 2px; border-left: 4px solid #73D7EE; background: rgba(115, 215, 238, 0.08);
+  border-radius: 0 12px 12px 0; padding: 10px 14px;
+}
+.capply-race-card strong { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.05rem; }
+.capply-race-office { font-family: 'Montserrat', sans-serif; font-weight: 700; color: #73D7EE; font-size: 0.92rem; }
+.capply-race-meta { font-size: 0.82rem; color: #a0b4c8; }
+.capply-race-why { font-size: 0.88rem; color: var(--text-light); margin-top: 4px; line-height: 1.45; }
+.capply-error { color: #ff8a80; font-size: 0.82rem; margin: 0; }
+.capply-error-block { padding: 10px 12px; border-radius: 10px; background: rgba(255, 107, 107, 0.12); }
+.has-error .capply-input, .capply-choice.has-error { border-color: #ff8a80; }
+.capply-hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+/* Buttons and nav */
+.capply-btn {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px;
+  border-radius: 999px; border: 2px solid rgba(255, 255, 255, 0.55); background: transparent;
+  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.95rem; color: #fff;
+  cursor: pointer; text-decoration: none;
+}
+.capply-btn.primary { background: #73D7EE; border-color: #73D7EE; color: #0F2233; }
+.capply-btn.primary:hover, .capply-btn.primary:focus-visible { background: #8fe0f2; }
+.capply-btn.ghost { border-color: rgba(255, 255, 255, 0.35); }
+.capply-btn.wide { width: 100%; }
+.capply-btn:disabled { opacity: 0.6; cursor: default; }
+.capply-link { background: none; border: 0; padding: 0; color: #73D7EE; font: inherit; cursor: pointer; text-decoration: underline; }
+.capply-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.capply-fine { font-size: 0.82rem; color: #a0b4c8; line-height: 1.5; margin: 0; }
+.capply-fine a, .capply-sidefoot a { color: #73D7EE; text-decoration: underline; }
+.capply-sidefoot { margin: 22px 0 0; font-size: 0.86rem; color: #a0b4c8; line-height: 1.5; }
+
+/* Success */
+.capply-done { display: grid; gap: 14px; }
+.capply-done-links { margin: 6px 0 0; }

@@ -22,7 +22,8 @@
     "@vercel/analytics": "^2.0.1",
     "next": "^15.5.22",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "sharp": "^0.35.3"

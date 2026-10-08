@@ -86,6 +86,8 @@ const nextConfig = {
 
       // Section landing pages.
       { source: '/admin', destination: '/admin/login', permanent: false },
+      // Race to 100: /2027 is the races list until the year has more pages.
+      { source: '/2027', destination: '/2027/races', permanent: false },
       { source: '/admin/finance', destination: '/admin/finance/budget', permanent: false },
       // Old per-schedule compliance URLs; the module is one page with tabs now.
       { source: '/admin/compliance/contributions', destination: '/admin/compliance', permanent: false },

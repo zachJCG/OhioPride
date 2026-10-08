@@ -68,6 +68,12 @@ body.admin a { color: inherit; }
   font-size: .92rem; font-weight: 600;
 }
 .shell-side a .dot { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: #46708C; }
+.shell-side a .nav-badge {
+  margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  display: inline-grid; place-items: center; background: var(--op-blue); color: var(--op-navy);
+  font: 700 .7rem var(--op-font-head);
+}
+.shell.is-collapsed .shell-side a .nav-badge { display: none; }
 .shell-side a[aria-current="page"] { background: var(--op-navy-800); color: #fff; }
 .shell-side a[aria-current="page"] .dot { background: var(--op-blue); }
 .shell-side a:hover { background: var(--op-navy-800); color: #fff; }
@@ -243,3 +249,55 @@ body.admin a { color: inherit; }
 /* Sticky search header inside a page */
 .sticky-tools { position: sticky; top: 0; z-index: 10; background: var(--op-paper); padding: 4px 0 2px; }
 @media (max-width: 767px) { .sticky-tools { top: calc(60px + env(safe-area-inset-top)); } }
+
+/* Candidates module (Race to 100): the application list. Cards on a phone,
+   a ten column table from 900px. */
+.cand-list { display: grid; gap: 10px; }
+.cand-head { display: none; }
+.cand-row {
+  display: grid; gap: 4px 10px; grid-template-columns: auto 1fr; align-items: start;
+  background: var(--op-card); border: 1px solid var(--op-line); border-radius: var(--op-radius); padding: 12px 14px;
+  font-size: .88rem;
+}
+.cand-row.is-new { border-left: 4px solid var(--op-blue); }
+.cand-row > span { min-width: 0; overflow-wrap: anywhere; }
+.cand-row .cand-check { grid-row: 1; }
+.cand-row .cand-name { grid-row: 1; }
+.cand-row > span:not(.cand-check):not(.cand-name) { grid-column: 2; }
+.cand-lbl { display: inline-block; min-width: 72px; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--op-muted); }
+.cand-row a { text-decoration: none; }
+@media (min-width: 900px) {
+  .cand-list { gap: 0; border: 1px solid var(--op-line); border-radius: var(--op-radius); overflow: hidden; background: #fff; }
+  .cand-head, .cand-row {
+    display: grid; grid-template-columns: 28px 1.4fr 1.6fr .8fr .9fr 1.2fr .9fr .9fr .7fr .7fr;
+    gap: 10px; align-items: center; padding: 10px 12px; border-radius: 0; border: 0; border-bottom: 1px solid var(--op-line);
+  }
+  .cand-head { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--op-muted); background: var(--op-paper); }
+  .cand-row:last-child { border-bottom: 0; }
+  .cand-row.is-new { border-left: 0; background: #F3FBFD; }
+  .cand-row > span:not(.cand-check):not(.cand-name) { grid-column: auto; }
+  .cand-lbl { display: none; }
+}
+      
+/* Candidates module: detail page. One column on a phone; from 900px the
+   actions sit in a sticky right column so status and notes stay in reach. */
+.cand-detail { display: grid; gap: 12px; }
+.cand-detail-side .card { position: static; }
+@media (min-width: 900px) {
+  .cand-detail { grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
+  .cand-detail-side { position: sticky; top: 16px; }
+}
+.cand-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.cand-table th, .cand-table td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--op-line); vertical-align: top; }
+.cand-table th { font-size: .66rem; text-transform: uppercase; letter-spacing: .05em; color: var(--op-muted); }
+
+/* Candidates module: target race grid. */
+.race-grid { display: grid; gap: 8px; }
+.race-row { background: var(--op-card); border: 1px solid var(--op-line); border-radius: var(--op-radius); padding: 10px 12px; }
+.race-row-main { display: grid; grid-template-columns: 36px 1fr auto; gap: 8px; align-items: start; }
+.race-rank { font: 800 .95rem var(--op-font-head); color: var(--op-navy); }
+.race-title { font-weight: 600; font-size: .92rem; }
+.race-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.race-edit { display: grid; gap: 8px; grid-template-columns: 1fr; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--op-line); }
+@media (min-width: 720px) { .race-edit { grid-template-columns: repeat(3, 1fr); } .race-edit .span-3 { grid-column: 1 / -1; } }
+.race-apps { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--op-line); font-size: .85rem; }

@@ -149,6 +149,42 @@ date into those HTML files. Copy rules enforced by `tests/vote-pages.test.mjs`:
 by". The ten graphics under `public/dragoutthevote/assets/` are placeholders
 design swaps in place. Full notes: `docs/drag-out-the-vote/README-WORK-ORDER.md`.
 
+### Race to 100: 2027 candidate recruitment (2026-10-08)
+
+Three surfaces on top of the already-applied
+`candidate_recruitment_and_target_races_2027` migration (`target_races`,
+`candidate_applications`, `candidate_application_activity`, module
+`candidates` in `role_permissions`):
+
+- **`/2027/races`** (`app/(site)/2027/races/`) lists the 100 target races
+  from `public_target_races` (public AND vetted only), server rendered with
+  5 minute revalidation. Filters live in the query string but are read after
+  mount, never through `useSearchParams`, which would turn the static page
+  into a client-only render with no cards in the HTML. `/2027` redirects here.
+- **`/candidate-apply`** (`app/(site)/candidate-apply/`) is the five step
+  recruitment form; `?race=<slug>` pre-selects. It posts to
+  `/api/candidate-apply` (`lib/functions/candidate-apply.mjs`): zod, honeypot,
+  2 second minimum, service-role insert, contact link by email (never writes
+  `contacts.name`), activity row, staff email (`candidate` kind in
+  `lib/notify.mjs`, plus every active `endorsements_chair`). Once the row
+  exists the API answers 200 no matter what fails after.
+- **`/admin/candidate`** (`app/(admin)/admin/candidate/`): list, detail,
+  `races` grid with the Race to 100 scoreboard. Every staff action writes an
+  activity row. "Refer to endorsement process" goes through
+  `/api/admin-candidate-refer` because `authenticated` has no INSERT on
+  `endorsement_applications`; it creates `status = 'submitted'`,
+  `is_published = false`, `submitted_by_kind = 'pac_staff'` because the CHECK
+  constraints allow no `draft` / `staff` values.
+- Vocabulary and date helpers: `lib/candidates.mjs`. Queries:
+  `lib/db/candidates.mjs` (every function takes a supabase client).
+  **Never type a 2027 date into the UI**: key dates come from
+  `election_cycles`, filing lines from `target_races.filing_deadline`;
+  `tests/candidates.test.mjs` fails on a literal date and on an em or en dash,
+  "openly", "first", or "Paid for by" in any Race to 100 file.
+- Nav items can carry `badge: '<name>'`; `BADGES` in `AdminShell.js` loads
+  the count (today: new candidate applications). Full notes:
+  `docs/race-to-100.md`.
+
 ### Submission notifications (2026-08-20)
 
 **Every public form emails staff on submit**, through `lib/notify.mjs`

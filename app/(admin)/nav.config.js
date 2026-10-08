@@ -18,6 +18,9 @@ export const NAV = [
   { group: 'Program', items: [
     { id: 'endorsements', href: '/admin/endorsements', label: 'Endorsements', permission: ['endorsements', 'read'] },
     { id: 'cycles',       href: '/admin/endorsements/cycles', label: 'Election Cycles', permission: ['endorsements', 'read'] },
+    // Race to 100 recruitment. `badge` names a counter AdminShell knows how
+    // to load (see BADGES there); here it is the number of new applications.
+    { id: 'candidates',   href: '/admin/candidate',    label: 'Candidates',   permission: ['candidates', 'read'], badge: 'candidates_new' },
     { id: 'bills',        href: '/admin/bills',        label: 'Bills',        permission: ['bills', 'read'] },
     { id: 'legislators',  href: '/admin/legislators',  label: 'Scorecard',    permission: ['legislators', 'read'] },
     { id: 'pride',        href: '/admin/pride',        label: 'Pride Events', permission: ['pride', 'read'] },

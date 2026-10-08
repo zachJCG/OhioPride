@@ -105,7 +105,7 @@ export default async function SiteFooter() {
       <div className="ohp-footer-inner">
         {FOOTER_COLUMNS.map((col) => (
           <div className="ohp-footer-col" key={col.heading}>
-            <h4>{col.heading}</h4>
+            <h2 className="ohp-footer-heading">{col.heading}</h2>
             <ul>
               {col.links.map(([href, label, extra]) => (
                 <li key={href}>
@@ -123,7 +123,7 @@ export default async function SiteFooter() {
         ))}
 
         <div className="ohp-footer-col">
-          <h4>Leadership</h4>
+          <h2 className="ohp-footer-heading">Leadership</h2>
           <div className="ohp-directors" data-ohp-entity="pac">
             {officers.map((o, i) => (
               <span key={`${o.title}-${o.full_name}`}>

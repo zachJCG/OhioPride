@@ -451,7 +451,8 @@
   gap: 2rem;
 }
 
-.ohp-footer-col h4 {
+.ohp-footer-col h4,
+.ohp-footer-col .ohp-footer-heading {
   font-family: 'Montserrat', Arial, sans-serif;
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -501,7 +502,10 @@
 .ohp-footer-bottom .ohp-disclaimer {
   font-style: italic;
   margin-top: 0.5rem;
-  color: var(--ohp-text-faint);
+  /* Same shade as the copyright line above it. The fainter tone read at
+     3.8:1 on the footer navy, under the 4.5:1 floor for legally required
+     text. */
+  color: var(--ohp-text-dim);
 }
 
 @media (max-width: 768px) {

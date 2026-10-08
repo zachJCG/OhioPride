@@ -1,0 +1,27 @@
+/* Key dates strip (2027). Dark theme, mirrors the endorsements page. */
+.keydates { max-width: 1140px; margin: 0 auto; padding: 8px 1.25rem 0; }
+.keydates-title {
+  font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.8rem;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-accent);
+  margin: 0 0 12px;
+}
+.keydates-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+}
+@media (min-width: 720px) { .keydates-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.keydates-card {
+  background: #132d44; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px;
+  padding: 14px 14px 12px; display: grid; gap: 2px; min-width: 0;
+}
+.keydates-date {
+  font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.15rem;
+  color: var(--text-white); line-height: 1.2;
+}
+.keydates-label {
+  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.78rem;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-accent);
+}
+.keydates-note { font-family: 'Roboto Slab', serif; font-size: 0.84rem; color: var(--text-light); line-height: 1.45; }
+.keydates-foot { font-size: 0.8rem; color: var(--text-muted); margin: 10px 0 0; }
+.keydates.is-compact { padding-left: 0; padding-right: 0; }

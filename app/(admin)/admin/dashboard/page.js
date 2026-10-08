@@ -4,10 +4,12 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAdmin } from '../../lib/permissions';
+import { listApplicationsByRace, scoreboard } from '../../../../lib/db/candidates.mjs';
 
 const QUICK_ACTIONS = [
   { href: '/admin/contacts', label: 'Contacts', permission: ['contacts', 'read'] },
   { href: '/admin/endorsements', label: 'Endorsements', permission: ['endorsements', 'read'] },
+  { href: '/admin/candidate', label: 'Candidates', permission: ['candidates', 'read'] },
   { href: '/admin/tasks', label: 'Tasks', permission: ['tasks', 'read'] },
   { href: '/admin/texting', label: 'Text Blast', permission: ['texting', 'read'] },
   { href: '/admin/volunteers', label: 'Volunteers', permission: ['volunteers', 'read'] },
@@ -23,6 +25,25 @@ export default function DashboardPage() {
   const { loading: authLoading, me, can } = useAdmin();
   const [data, setData] = useState(null);
   const [err, setErr] = useState(null);
+  const [race100, setRace100] = useState(null);
+
+  /* Race to 100: read directly, the way the module's own pages do. Only when
+   * the caller can see the module, so the query never runs for a role that
+   * RLS would refuse anyway. */
+  useEffect(() => {
+    if (authLoading || !can('candidates')) return;
+    const sb = supabase();
+    (async () => {
+      const [races, apps, total] = await Promise.all([
+        sb.from('target_races').select('id, tier, recruit_status'),
+        listApplicationsByRace(sb),
+        sb.from('candidate_applications').select('id', { count: 'exact', head: true }),
+      ]);
+      if (races.error) return;
+      setRace100({ ...scoreboard(races.data, apps.data), applications: total.count || 0 });
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading]);
 
   useEffect(() => {
     (async () => {
@@ -103,6 +124,15 @@ export default function DashboardPage() {
               <div className="lbl">Active bills</div>
               <div className="sub">{k.bills_total} tracked</div>
             </div>
+          )}
+          {race100 && (
+            <a className="kpi" href="/admin/candidate" style={{ textDecoration: 'none', display: 'block' }}>
+              <div className="num">{race100.withApplicant}<span className="muted" style={{ fontSize: '.85rem' }}> / {race100.total || 100}</span></div>
+              <div className="lbl">Race to 100</div>
+              <div className="sub">
+                {race100.applications} application{race100.applications === 1 ? '' : 's'}, {race100.withApplicant} of {race100.total || 100} races with a candidate, {race100.filed} filed, {race100.endorsed} endorsed
+              </div>
+            </a>
           )}
         </div>
       )}
