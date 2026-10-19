@@ -2040,7 +2040,7 @@
     async function loadCycles(client) {
       const { data, error } = await client
         .from('public_election_cycles')
-        .select('id,slug,label,jurisdiction,election_type,election_date,filing_deadline,applications_close_at,is_open')
+        .select('id,slug,label,election_type,election_date,applications_close_at,is_open')
         .order('election_date', { ascending: true });
       if (error) throw error;
       cycles.all = Array.isArray(data) ? data : [];
@@ -2098,9 +2098,7 @@
       cycles.open.forEach(function (c) {
         const opt = document.createElement('option');
         opt.value = c.id;
-        opt.textContent = c.jurisdiction && c.jurisdiction !== 'Statewide'
-          ? c.label + ' (' + c.jurisdiction + ')'
-          : c.label;
+        opt.textContent = c.label;
         select.appendChild(opt);
       });
 
@@ -2111,8 +2109,7 @@
         select.hidden = true;
         if (fixed) {
           fixed.hidden = false;
-          fixed.textContent = 'You are applying for the ' + only.label
-            + (only.jurisdiction && only.jurisdiction !== 'Statewide' ? ' (' + only.jurisdiction + ')' : '') + '.';
+          fixed.textContent = 'You are applying for the ' + only.label + '.';
         }
       } else if (wanted) {
         select.value = wanted;
