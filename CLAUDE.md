@@ -141,6 +141,9 @@ CSS: `css/style.css`, `css/site-template.css`
 
 Two static GOTV pages, `/vote` (voter resource) and `/dragoutthevote`
 (performer guide), under `public/vote/` and `public/dragoutthevote/`.
+`/vote` uses the full site chrome (shared header and footer, subpage hero,
+`public/vote/vote-page.css`); only the guide keeps the campaign look in
+`vote.css`.
 **Every date, hour, link and line of weekly copy lives in
 `public/vote/config.js`**; `npm run vote:build` writes it into both pages and
 `npm run check:vote` (also in `npm test`) fails when they drift. Never type a

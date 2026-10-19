@@ -122,12 +122,15 @@ the two things that would also need a decision.
   footer only on both pages. The brand SVG is a square canvas with the
   wordmark across its middle; `object-fit: cover` crops it to a wordmark-shaped
   box without touching the file.
-- **Chrome**: neither page mounts the shared site header. The voter page is
-  opened from a story sticker and the guide reads as the campaign, not as Ohio
-  Pride. Both mount `<div id="site-footer">` and load `site-template.js`, so
-  they carry the standard footer and its disclaimer like every other page.
-  `scripts/check-brand-consistency.js` allow-lists the two files for the
-  missing header and says why.
+- **Chrome**: the voter page (`/vote`) was redone on 2026-10-19 to sit inside
+  the site: shared header and footer from `site-template.js`, the subpage
+  photo hero, section labels, cards and buttons from `style.css`, Montserrat
+  and Roboto Slab. Its own layout lives in `public/vote/vote-page.css`; it no
+  longer loads `vote.css` or Bowlby One, and it is held to the normal brand
+  check. The design notes above (magenta, Bowlby One, grain) now describe the
+  performer guide only, which still skips the shared header and stays on the
+  `scripts/check-brand-consistency.js` allow list. Both pages keep every
+  `data-dotv` binding, so `config.js` still drives every date.
 
 ## Copy rules, enforced
 

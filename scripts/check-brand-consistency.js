@@ -57,12 +57,11 @@ const ALLOW_LIST = new Set([
   //
   // Standalone error page: served by the host outside the normal page flow.
   '404.html',
-  // Drag Out The Vote (2026 GOTV). Campaign pages by design: the voter page is
-  // opened from a story sticker and the performer guide reads as the campaign,
-  // not as Ohio Pride, so neither mounts the shared header. Both still link
-  // site-template.css, mount <div id="site-footer"> and load site-template.js,
-  // which is what puts the standard footer and disclaimer on them.
-  'vote/index.html',
+  // Drag Out The Vote performer guide (2026 GOTV). It reads as the campaign,
+  // not as Ohio Pride, so it does not mount the shared header. It still links
+  // site-template.css, mounts <div id="site-footer"> and loads
+  // site-template.js, which puts the standard footer and disclaimer on it.
+  // The voter page at /vote uses the full site chrome and is checked normally.
   'dragoutthevote/index.html',
 ]);
 
