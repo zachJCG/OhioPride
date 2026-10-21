@@ -1208,10 +1208,16 @@
           </div>
 
           <!-- Honeypot field. Hidden from humans, attractive to bots. If
-               filled, the submission is silently dropped. -->
+               filled, the submission is silently dropped. The name is
+               deliberately meaningless: a field called company_url was being
+               filled by Chrome's address autofill, which ignores
+               autocomplete="off", and the candidate then saw the thank-you
+               page with nothing saved. It is also never written to the draft
+               (see collectFormData), so a stray value cannot follow someone
+               across visits. -->
           <div class="hp-field" aria-hidden="true">
-            <label for="company_url">Company URL</label>
-            <input type="text" id="company_url" name="company_url" tabindex="-1" autocomplete="off" />
+            <label for="op_field_check">Leave this field empty</label>
+            <input type="text" id="op_field_check" name="op_field_check" tabindex="-1" autocomplete="off" />
           </div>
 
           <div class="submit-error" id="submitError" role="alert"></div>
@@ -1265,7 +1271,8 @@
       STORAGE_PREFIX:      'op_endorsement_draft_v3_',
       LAST_PATH_KEY:       'op_endorsement_last_path_v3',
       AUTOSAVE_DEBOUNCE_MS: 600,
-      MIN_FILL_TIME_MS:    4000  // submissions faster than this are dropped as bots
+      MIN_FILL_TIME_MS:    4000, // submissions faster than this are dropped as bots
+      HONEYPOT_NAME:       'op_field_check'
     };
 
     /* =================================================================
@@ -1709,7 +1716,7 @@
       const data = collectFormData();
       // Any candidate, question, or background content counts.
       for (const [k, v] of Object.entries(data)) {
-        if (k === 'company_url' || k === 'is_incumbent' || k === 'submitted_by_kind') continue;
+        if (k === 'is_incumbent' || k === 'submitted_by_kind') continue;
         if (typeof v === 'string' && v.trim()) return true;
         if (v === true) return true;
       }
@@ -1761,7 +1768,7 @@
         'party', 'is_out', 'current_office',
         'committee_name', 'treasurer_name', 'email', 'phone', 'website',
         'submitted_by_name', 'submitted_by_role', 'submitted_by_email',
-        'bio', 'conflicts_disclosure', 'signature', 'company_url'
+        'bio', 'conflicts_disclosure', 'signature', CONFIG.HONEYPOT_NAME
       ];
       ids.forEach(id => { const el = $('#' + id); if (el) el.value = ''; });
       $$('input[name="is_incumbent"], input[name="submitted_by_kind"]').forEach(r => { r.checked = false; });
@@ -1791,7 +1798,7 @@
       const form = $('#endorsementForm');
       const fields = $$('input, select, textarea', form);
       for (const f of fields) {
-        if (!f.name) continue;
+        if (!f.name || f.name === CONFIG.HONEYPOT_NAME) continue;
         if (f.type === 'radio') {
           if (f.checked) data[f.name] = f.value;
         } else if (f.type === 'checkbox') {
@@ -1824,6 +1831,7 @@
       try {
         localStorage.setItem(key, JSON.stringify({
           savedAt: new Date().toISOString(),
+          startedAt: state.startedAt,
           step: state.currentStep,
           data: collectFormData()
         }));
@@ -1841,6 +1849,18 @@
     function loadDraft() {
       const parsed = readDraft(state.path);
       if (parsed && parsed.data) applyFormData(parsed.data);
+      restoreStartedAt(parsed);
+    }
+
+    /* The anti-bot timer measures how long a person has been at the form,
+       not how long this tab has been open. A candidate who comes back to a
+       saved draft on the last step and clicks Submit within four seconds of
+       the page loading is not a bot, so the clock resumes from the draft. */
+    function restoreStartedAt(draft) {
+      const started = draft && Number(draft.startedAt);
+      if (Number.isFinite(started) && started > 0 && started < state.startedAt) {
+        state.startedAt = started;
+      }
     }
 
     function clearDraft() {
@@ -2259,18 +2279,22 @@
       errBanner.textContent = '';
 
       // Honeypot: if a bot filled the hidden field, pretend success but never
-      // insert. This avoids tipping off the bot that it failed.
-      const honeypot = $('#company_url');
+      // insert. This avoids tipping off the bot that it failed. The draft is
+      // left alone on purpose: if a person ever trips this, their answers are
+      // still here when they come back.
+      const honeypot = $('#' + CONFIG.HONEYPOT_NAME);
       if (honeypot && honeypot.value) {
-        clearDraft();
+        console.warn('Submission dropped: honeypot field was filled.');
         window.location.href = CONFIG.THANK_YOU_PATH;
         return;
       }
 
       // Timing: a real candidate cannot fill this form in under 4 seconds.
+      // state.startedAt is restored from the draft, so a returning candidate
+      // is measured from their first visit, not this page load.
       const elapsed = Date.now() - state.startedAt;
       if (elapsed < CONFIG.MIN_FILL_TIME_MS) {
-        clearDraft();
+        console.warn('Submission dropped: filled in ' + elapsed + 'ms.');
         window.location.href = CONFIG.THANK_YOU_PATH;
         return;
       }
