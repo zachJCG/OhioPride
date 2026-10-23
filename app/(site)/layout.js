@@ -65,6 +65,7 @@ export const metadata = {
     ],
     apple: '/assets/favicon/apple-touch-icon.png',
   },
+  manifest: '/site.webmanifest',
 };
 
 export const viewport = {

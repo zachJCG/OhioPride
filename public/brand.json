@@ -1,0 +1,127 @@
+{
+  "name": "Ohio Pride PAC",
+  "short_name": "Ohio Pride",
+  "version": "2.1",
+  "updated": "2026-10",
+  "guide_url": "https://ohiopride.org/brand",
+  "identity_line": "Ohio Pride is Ohio's only statewide LGBTQ+ PAC.",
+  "naming": {
+    "general_use": "Ohio Pride",
+    "formal_and_legal": "Ohio Pride PAC",
+    "companion_c4": "Ohio Pride Action (in formation)",
+    "positioning": "Ohio's only statewide LGBTQ+ PAC",
+    "never": ["first statewide LGBTQ+ PAC", "openly gay (use out)", "mayor-elect"]
+  },
+  "colors": {
+    "navy": "#152233",
+    "navy_light": "#1F3450",
+    "navy_lighter": "#284364",
+    "navy_footer": "#0D1726",
+    "light_blue": "#70D6EC",
+    "white": "#FFFFFF",
+    "accountability_field": "#0B0F14",
+    "pride": {
+      "red": "#E40303", "orange": "#FFBC00", "yellow": "#FFED00", "green": "#008026",
+      "blue": "#004DFF", "violet": "#750787", "black": "#000000", "brown": "#613915", "pink": "#FFAFC8"
+    }
+  },
+  "gradients": {
+    "pride_135": {
+      "css": "linear-gradient(135deg, #E40303 0%, #FFBC00 18%, #FFED00 34%, #008026 50%, #004DFF 66%, #750787 82%, #FFAFC8 100%)",
+      "use": "Thin dividers, tags, stripes, donate button fill. Never a background field. Never inside the wordmark."
+    },
+    "pride_horizontal": {
+      "css": "linear-gradient(90deg, #E40303 0%, #FFBC00 17%, #FFED00 33%, #008026 50%, #004DFF 67%, #750787 84%, #E40303 100%)",
+      "use": "Animated site banner only."
+    }
+  },
+  "typography": {
+    "display": { "family": "Montserrat", "weight": 800, "tracking": "-0.02em", "line_height": 1.05 },
+    "section": { "family": "Montserrat", "weight": 700 },
+    "eyebrow": { "family": "Montserrat", "weight": 700, "transform": "uppercase", "tracking": "0.2em" },
+    "body": { "family": "Roboto Slab", "weight": 400, "line_height": 1.75 },
+    "sources": ["https://fonts.google.com/specimen/Montserrat", "https://fonts.google.com/specimen/Roboto+Slab"]
+  },
+  "wordmark": {
+    "rule": "Use the official asset. Never rebuild from type, recolor, stretch, rotate, or add gradient.",
+    "construction": "OHIO Montserrat 600 white, PRIDE Montserrat 800 light blue, PAC small label centered on a hairline divider beneath.",
+    "clear_space": "Height of the O in OHIO on all sides",
+    "min_width": { "screen_px": 140, "print_in": 1.25 },
+    "assets": {
+      "primary_on_navy_svg": "https://ohiopride.org/assets/logo/wordmark-primary-on-navy.svg",
+      "primary_on_white_svg": "https://ohiopride.org/assets/logo/wordmark-primary-on-white.svg",
+      "mono_white_on_navy_svg": "https://ohiopride.org/assets/logo/wordmark-mono-white-on-navy.svg",
+      "mono_navy_on_white_svg": "https://ohiopride.org/assets/logo/wordmark-mono-navy-on-white.svg",
+      "primary_transparent_png": "https://ohiopride.org/assets/logo/wordmark-primary-transparent.png",
+      "primary_dark_transparent_png": "https://ohiopride.org/assets/logo/wordmark-primary-dark-transparent.png",
+      "mono_white_transparent_png": "https://ohiopride.org/assets/logo/wordmark-mono-white-transparent.png",
+      "mono_navy_transparent_png": "https://ohiopride.org/assets/logo/wordmark-mono-navy-transparent.png",
+      "banner_on_navy_svg": "https://ohiopride.org/assets/logo/banner-primary-on-navy.svg",
+      "square_lockup_on_navy_png": "https://ohiopride.org/assets/logo/lockup-primary-on-navy.png",
+      "endorsed_badge_white_png": "https://ohiopride.org/assets/logo/endorsed-by-ohio-pride-white.png",
+      "endorsed_badge_blue_png": "https://ohiopride.org/assets/logo/endorsed-by-ohio-pride-blue.png"
+    }
+  },
+  "favicon": {
+    "mark": "OP monogram (white O, light blue P) over a Progress Pride underline on navy",
+    "svg": "https://ohiopride.org/assets/favicon/favicon.svg",
+    "ico": "https://ohiopride.org/favicon.ico",
+    "png": [16, 32, 48, 96, 192, 512],
+    "apple_touch_icon": "https://ohiopride.org/assets/favicon/apple-touch-icon.png",
+    "maskable_512": "https://ohiopride.org/assets/favicon/maskable-512.png",
+    "theme_color": "#152233"
+  },
+  "social": {
+    "formats": {
+      "feed_default": "1080x1350",
+      "story": "1080x1920",
+      "square": "1080x1080 (only when a placement requires it)",
+      "fb_link": "1200x630",
+      "x_post": "1600x900"
+    },
+    "template_families": ["News Response", "Endorsement", "Stat Card", "Quote Card", "Action Alert", "Accountability", "Celebration and Awareness Day"],
+    "rules": [
+      "One idea per tile: one headline, one support line, one CTA max. Two ideas means a carousel.",
+      "Headline Montserrat ExtraBold, 70 to 85 percent of canvas width, 3 lines max. Support line Roboto Slab, small. No middle type sizes.",
+      "Navy fields, light blue accents. Pride gradient is an accent device only.",
+      "Accountability posts use the villain palette: near-black field, white type, one warning accent. Never for endorsements or celebrations.",
+      "One brand mark per card. Wordmark same position and scale on every template. Never rebuilt from type.",
+      "Endorsement cards: candidate name and race primary, tagline secondary. Candidate logos used exactly as designed on a light field, never recolored.",
+      "Real Ohioans over stock. Alternate photo cards and flat color cards so the 9-grid reads designed.",
+      "No URLs on graphics. No swipe cues or slide numbers on carousels. No fake tappable buttons.",
+      "Never obstruct a subject's face with type.",
+      "No disclaimer on organic social graphics or captions.",
+      "Accessibility floor: 4.5:1 contrast, alt text on every post, captions on all video, body type 40px or larger at 1080 wide.",
+      "Social cards should feel editorial and alive, fun or funny where the moment allows. The flat stacked-template look is retired."
+    ]
+  },
+  "captions": {
+    "versions": ["Personal (first person, Director's voice)", "PAC (we voice, IG and FB shared)"],
+    "structure": ["hook line", "context", "what it is", "CTA", "link on its own line", "hashtags last"],
+    "first_line": "No commas in the first line",
+    "emojis": "2 to 4 total. Never in the first three words. Never inside hashtags.",
+    "hashtags": { "lead": "#OhioPride", "personal": "4 to 5", "pac": "6 to 8", "case": "Proper Case" },
+    "identity_line_close": "PAC captions close with the identity line on launches and resource drops only."
+  },
+  "voice": {
+    "summary": "Confident, not loud. Institutional in feel, neighborhood in voice. Warm, neighbors not activists, receipts not rage.",
+    "audience": "Persuadable independents and purple-state voters, not only the base.",
+    "org_pronoun": "we",
+    "punctuation": "No em dashes or en dashes anywhere. Use periods, commas, colons, semicolons.",
+    "headlines": "IG headlines take no commas; body copy may.",
+    "lists": "Proper Case",
+    "use": ["pro-equality candidates", "LGBTQ+ Ohioans and their families", "ally, pro-equality leader", "Ohio Statehouse, Ohio General Assembly", "out"],
+    "avoid": ["activist framing", "passive constructions", "naming peer advocacy orgs in comparison copy", "performative rainbow flourishes in headlines", "openly", "first"]
+  },
+  "compliance": {
+    "disclaimer": "Paid for by Ohio Pride PAC.",
+    "disclaimer_rules": [
+      "No personal names in the disclaimer.",
+      "Required on paid placements, mail, print, and signage.",
+      "Not used on organic social graphics or captions."
+    ],
+    "firewall_races": "Races where the Director personally advises the candidate get descriptive copy only: no express advocacy, no vote for, no comparative endorsement language.",
+    "judicial_candidates": "Descriptive copy only. No policy pledges, no opponent attacks.",
+    "governor_2026": "No public position."
+  }
+}

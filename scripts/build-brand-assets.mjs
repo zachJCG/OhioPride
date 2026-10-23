@@ -304,18 +304,19 @@ async function buildBadges() {
 
 async function recordStatic() {
   const fav = [
-    ["assets/favicon/favicon.svg", "Vector favicon (OH monogram)."],
-    ["assets/favicon/favicon.ico", "Legacy browser favicon."],
+    ["assets/favicon/favicon.svg", "Vector favicon (OP monogram over the Progress Pride underline)."],
+    ["favicon.ico", "Legacy browser favicon, served at the site root."],
+    ["assets/favicon/favicon.ico", "Legacy browser favicon (copy of the root file)."],
     ["assets/favicon/favicon-16.png", "16px favicon."],
     ["assets/favicon/favicon-32.png", "32px favicon."],
     ["assets/favicon/favicon-48.png", "48px favicon."],
     ["assets/favicon/favicon-96.png", "96px favicon."],
-    ["assets/favicon/favicon-180.png", "180px icon."],
-    ["assets/favicon/apple-touch-icon.png", "Apple touch icon (180px)."],
     ["assets/favicon/favicon-192.png", "Android home-screen icon."],
     ["assets/favicon/favicon-512.png", "PWA icon (512px)."],
+    ["assets/favicon/maskable-512.png", "Maskable PWA icon (512px, safe-zone padded)."],
+    ["assets/favicon/apple-touch-icon.png", "Apple touch icon (180px, full bleed)."],
   ];
-  for (const [rel, use] of fav) record(await describe(rel, { family: "favicon", variant: "OH monogram", background: NAVY, use }));
+  for (const [rel, use] of fav) record(await describe(rel, { family: "favicon", variant: "OP monogram", background: NAVY, use }));
   record(await describe("assets/social/og-image.png", { family: "social", variant: "Open Graph card", background: NAVY, transparent: false, use: "Default link-preview card (1200x630)." }));
   record(await describe("assets/social/pride-rule.svg", { family: "supporting", variant: "Progress Pride rule", background: "transparent", transparent: true, use: "Thin Progress Pride divider for email and web." }));
   record(await describe("assets/img/ohio-pride-outline.svg", { family: "supporting", variant: "Ohio outline, Progress Pride fill", background: "transparent", transparent: true, use: "Illustrative Ohio silhouette in Progress Pride colors. Accent use only, never in place of the wordmark." }));
@@ -324,10 +325,11 @@ async function recordStatic() {
 }
 
 function readmeText() {
-  return `OHIO PRIDE PAC BRAND KIT
+  return `OHIO PRIDE PAC BRAND KIT (Brand Guide v2.1, October 2026)
 https://www.ohiopride.org/brand
+Machine-readable brand: https://www.ohiopride.org/brand.json
 
-Everything in this archive is the current (v2.0) Ohio Pride PAC mark.
+Everything in this archive is the current Ohio Pride PAC mark.
 A machine-readable index of every file is in manifest.json.
 
 WHICH FILE
@@ -406,7 +408,7 @@ async function main() {
   manifest.sort((a, b) => a.path.localeCompare(b.path));
   const manifestOut = {
     brand: "Ohio Pride PAC",
-    version: "2.0",
+    version: "2.1",
     reference: `${SITE}/brand`,
     kit: `${SITE}/assets/logo/ohio-pride-pac-brand-kit.zip`,
     colors: {

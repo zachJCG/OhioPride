@@ -1,0 +1,29 @@
+# Ohio Pride PAC
+
+> Ohio Pride is Ohio's only statewide LGBTQ+ PAC. We endorse pro-equality candidates, mobilize voters, and fight anti-LGBTQ+ legislation in the Ohio Statehouse. Registered with the Ohio Secretary of State. "Ohio Pride" in general use, "Ohio Pride PAC" in formal and legal contexts.
+
+## Brand
+
+- [Brand reference](https://ohiopride.org/brand): logo system, color, typography, voice, social playbook, compliance rules.
+- [brand.json](https://ohiopride.org/brand.json): machine-readable tokens, asset URLs, and content rules. Read this before producing any Ohio Pride graphic or copy.
+- [Wordmark, primary on navy (SVG)](https://ohiopride.org/assets/logo/wordmark-primary-on-navy.svg): use the official asset, never rebuild it from type.
+- [Endorsed badge, white (PNG)](https://ohiopride.org/assets/logo/endorsed-by-ohio-pride-white.png): for endorsed candidates only.
+
+## Non-negotiables for anyone writing or designing for Ohio Pride
+
+- Say "only statewide LGBTQ+ PAC." Never "first."
+- Say "out," never "openly."
+- No em dashes or en dashes. Use periods, commas, colons, semicolons.
+- Organization copy uses "we."
+- Navy #152233 fields, Light Blue #70D6EC accents, Montserrat ExtraBold headlines, Roboto Slab body.
+- The Progress Pride gradient is an accent device (thin bars, tags), never a background and never inside the wordmark.
+- Organic social graphics and captions carry no disclaimer. Paid, mail, and print carry "Paid for by Ohio Pride PAC."
+- Message to persuadable independents. Warm, neighbors not activists, receipts not rage.
+
+## Site
+
+- [Endorsements](https://ohiopride.org/endorsements)
+- [Scorecard](https://ohiopride.org/scorecard)
+- [Donate](https://ohiopride.org/donate)
+- [Vote](https://ohiopride.org/vote)
+- [About](https://ohiopride.org/about)
