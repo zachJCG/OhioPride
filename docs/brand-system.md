@@ -5,7 +5,10 @@ wordmark, and brand tokens. If the site looks inconsistent across pages,
 the answer almost always belongs here, not in a one-off page-level CSS
 block.
 
-The brand reference is `Ohio_Pride_PAC_Brand_Guide.pdf` (v1.1, April 2026).
+The public brand kit is `/brand` (`public/brand.html`): every logo file in
+every format, colors, type, voice, social post specs, and a machine-readable
+`/assets/logo/manifest.json`. See "Logo assets" below for how the files are
+produced.
 
 ---
 
@@ -163,6 +166,38 @@ proportionally via `--brand-wordmark-pac-ratio`.
 - Don't substitute different fonts.
 - Don't hand-edit the markup in another HTML file. If you find yourself
   doing that, you are about to introduce drift — call the helper instead.
+
+---
+
+## Logo assets
+
+`public/assets/logo/` holds two kinds of file:
+
+- **Sources** (hand-made, edit these): the four square wordmark SVGs
+  (`wordmark-primary-on-navy.svg`, `wordmark-primary-on-white.svg`,
+  `wordmark-mono-white-on-navy.svg`, `wordmark-mono-navy-on-white.svg`),
+  `banner-primary-on-navy.svg`, the two `endorsed-by-ohio-pride-*.png`
+  badges, and the Illustrator originals under `public/assets/source/`.
+- **Derived** (never edit by hand): everything `npm run brand:build` writes.
+  `scripts/build-brand-assets.mjs` cuts tight-cropped transparent SVGs out
+  of the square sources, prints vector PDFs through headless Chromium, and
+  rasterizes PNG, WebP and JPG at upload-friendly sizes. It also writes
+  `manifest.json` (every asset with URL, pixel size, background and intended
+  use) and `ohio-pride-pac-brand-kit.zip` (the whole set plus favicons, the
+  OG card, the `.ai` sources and a README).
+
+Derived files are committed because Vercel's build image has no browser.
+The build is deterministic (fixed PDF dates, fixed zip timestamps), so
+re-running it without a source change leaves git clean. After editing a
+source SVG or badge: `npm run brand:build`, check `/brand` locally, commit
+the outputs. Chromium is looked up at `/opt/pw-browsers/chromium` and the
+usual system paths; set `CHROME_BIN` otherwise. Without a browser the script
+still writes every raster and skips the PDFs with a warning.
+
+The names the page relies on are stable: `wordmark-<variant>-transparent.*`
+for background-free marks, `lockup-<variant>-1024.*` for avatars,
+`banner-primary-on-navy-2400.*` for covers. Add a new family by extending
+the tables in the script and the asset library on `/brand`.
 
 ---
 

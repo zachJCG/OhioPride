@@ -11,6 +11,7 @@
     "seo:build": "node scripts/build-seo.mjs",
     "vote:build": "node scripts/build-vote.mjs",
     "check:vote": "node scripts/build-vote.mjs --check",
+    "brand:build": "node scripts/build-brand-assets.mjs",
     "check:brand": "node scripts/check-brand-consistency.js",
     "check:routes": "node scripts/check-routes.mjs",
     "check:seo": "node scripts/check-seo.mjs"
