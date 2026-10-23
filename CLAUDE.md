@@ -137,6 +137,18 @@ JS (in `js/`):
 
 CSS: `css/style.css`, `css/site-template.css`
 
+### Brand kit (2026-10-23)
+
+`/brand` (`public/brand.html`) is the public brand kit: every logo file in
+SVG, PDF, PNG, WebP and JPG, colors, type, voice, social post specs, and
+`/assets/logo/manifest.json`, a machine-readable index of every asset with
+URL, size, background and intended use. Fetch the manifest first when you
+need a logo file. **Derived formats are generated, not hand-made**:
+`npm run brand:build` (`scripts/build-brand-assets.mjs`) rebuilds them from
+the square wordmark SVGs and the banner SVG (PDFs via headless Chromium, so
+outputs are committed; the build is deterministic). Edit sources, run the
+build, commit everything. Notes in `docs/brand-system.md`.
+
 ### Drag Out The Vote Ohio (2026-10-02)
 
 Two static GOTV pages, `/vote` (voter resource) and `/dragoutthevote`
