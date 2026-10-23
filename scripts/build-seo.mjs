@@ -83,8 +83,6 @@ export function headBlock(page, indent = '    ') {
     meta('name', 'robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
   }
 
-  meta('name', 'theme-color', THEME_COLOR);
-
   lines.push('');
   meta('property', 'og:type', page.type || 'website');
   // One spelling of the brand in every card. Pages used to alternate between
@@ -112,6 +110,8 @@ export function headBlock(page, indent = '    ') {
   lines.push('<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png" />');
   lines.push('<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16.png" />');
   lines.push('<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />');
+  lines.push('<link rel="manifest" href="/site.webmanifest" />');
+  meta('name', 'theme-color', THEME_COLOR);
 
   for (const graph of jsonLdFor(page)) {
     lines.push('');

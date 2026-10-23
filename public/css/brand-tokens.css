@@ -35,6 +35,10 @@
   --brand-pride-brown:    #613915;
   --brand-pride-pink:     #ffafc8;
 
+  /* Accountability posts only: the near-black "villain" field behind white
+     type and one warning accent. Never for endorsements or celebrations. */
+  --brand-accountability-field: #0B0F14;
+
   /* On-dark accent text colors that meet WCAG AA on --brand-navy. */
   --brand-text-accent:    #70D6EC;
   --brand-text-danger:    #ff6b6b;
