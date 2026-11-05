@@ -328,6 +328,18 @@ describe('buildHeaderIndex on the live paid_contributions header', () => {
     // a custom column table is honoured
     assert.deepEqual(buildHeaderIndex(['Foo', 'Bar'], { bar: ['bar'], baz: ['baz'] }), { bar: 1 });
   });
+
+  test('"Order Number" is the receipt only when there is no Receipt ID column', () => {
+    // ActBlue's custom report export carries the receipt as "Order Number".
+    const report = buildHeaderIndex(['Date', 'Order Number', 'Amount', 'Donor Email']);
+    assert.equal(report.receipt_id, 1);
+    // The CSV API export has a real Receipt ID; it wins wherever it sits, so
+    // an "Order Number" column can never displace the dedup key.
+    const both = buildHeaderIndex(['Order Number', 'Receipt ID', 'Amount']);
+    assert.equal(both.receipt_id, 1);
+    // Exact match only: a header that merely contains the words does not count.
+    assert.equal(Object.hasOwn(buildHeaderIndex(['Recurring Order Number']), 'receipt_id'), false);
+  });
 });
 
 describe('parseContributionCsv', () => {

@@ -1641,6 +1641,18 @@ img {
   border-left-color: var(--text-muted);
 }
 
+/* Which General Assembly a bill belongs to. Same treatment as the label on
+   /scorecard and /issues. */
+.bill-hero .ga-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-accent, #70d6ec);
+  margin-bottom: 0.4rem;
+}
+
 .bill-number {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;

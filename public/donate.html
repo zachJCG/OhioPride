@@ -175,15 +175,17 @@
           Candidates we endorsed won races across Ohio on November 3. Gifts made
           now fund the 2027 slate from day one.
         </p>
-        <div class="goal-block donate-goal">
+        <!-- Founding member meter. Empty until the live count arrives, and
+             hidden if it cannot be read: no number here is hard coded. -->
+        <div class="goal-block donate-goal" id="donateGoal" hidden>
           <div class="goal-top">
             <span class="goal-text">Founding Members</span>
             <span class="goal-amt">1,969</span>
           </div>
           <div class="goal-track">
-            <div class="goal-fill" id="goalFill" style="width: 8%"></div>
+            <div class="goal-fill" id="goalFill" style="width: 0%"></div>
           </div>
-          <div class="goal-note" id="progressText">Counting founding members</div>
+          <div class="goal-note" id="progressText"></div>
         </div>
       </div>
     </header>
@@ -259,15 +261,35 @@
     <script src="/js/enhancements.js" defer></script>
     <script src="/js/ohiopride-data.js" defer></script>
     <script src="/js/site-template.js" defer></script>
-    <script defer>
-      /* The meter under the hero reuses the shared founding-member loader
-         (one fetch of /api/founding-members-progress). The site template
-         loads ohiopride-data.js above; wait for it rather than racing it. */
-      document.addEventListener("DOMContentLoaded", function () {
-        if (window.OhioPride && typeof window.OhioPride.loadProgress === "function") {
-          window.OhioPride.loadProgress("#goalFill", "#progressText");
-        }
-      });
+    <script>
+      /* Founding member meter under the hero. Same endpoint the home page
+         reads (/api/founding-members-progress). The label is the copy deck's,
+         "{count} of 1,969 founding members", and the meter stays hidden when
+         the count cannot be read rather than showing a made-up fill. */
+      (function () {
+        var goal = document.getElementById("donateGoal");
+        var bar = document.getElementById("goalFill");
+        var note = document.getElementById("progressText");
+        if (!goal || !bar || !note) return;
+        fetch("/api/founding-members-progress", { headers: { accept: "application/json" } })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (!d || !d.ok || typeof d.member_count !== "number") return;
+            var target = d.goal || 1969;
+            note.textContent = d.member_count.toLocaleString("en-US") + " of " +
+              target.toLocaleString("en-US") + " founding members";
+            goal.hidden = false;
+            var pct = Math.min(typeof d.percent_to_goal === "number"
+              ? d.percent_to_goal : (d.member_count / target) * 100, 100);
+            var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            if (reduce) { bar.style.width = pct + "%"; return; }
+            bar.style.transition = "width 1.5s cubic-bezier(0.4, 0, 0.2, 1)";
+            window.requestAnimationFrame(function () {
+              window.requestAnimationFrame(function () { bar.style.width = pct + "%"; });
+            });
+          })
+          .catch(function () { /* stays hidden */ });
+      })();
     </script>
   </body>
 </html>

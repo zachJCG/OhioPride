@@ -12,6 +12,7 @@
  */
 
 import Link from 'next/link';
+import { DEFAULT_OG_IMAGE, DEFAULT_OG_IMAGE_ALT } from '../../../lib/seo.mjs';
 import './archive.css';
 
 const SHOW_ENDORSEMENTS_2026 = false;
@@ -20,17 +21,21 @@ export const metadata = {
   title: 'Archive',
   description: 'Past Ohio Pride PAC campaigns, guides, and events, kept for the record.',
   alternates: { canonical: '/archive' },
+  // A page-level openGraph block replaces the layout's rather than merging
+  // with it, so the share card is restated here.
   openGraph: {
     type: 'website',
     title: 'Archive | Ohio Pride',
     description: 'Past Ohio Pride PAC campaigns, guides, and events, kept for the record.',
     url: '/archive',
-    siteName: 'Ohio Pride',
+    siteName: 'Ohio Pride PAC',
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: DEFAULT_OG_IMAGE_ALT }],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Archive | Ohio Pride',
     description: 'Past Ohio Pride PAC campaigns, guides, and events, kept for the record.',
+    images: [{ url: DEFAULT_OG_IMAGE, alt: DEFAULT_OG_IMAGE_ALT }],
   },
 };
 

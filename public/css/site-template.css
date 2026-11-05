@@ -456,6 +456,10 @@
   gap: 0.35rem 1rem;
   text-align: center;
 }
+/* enhancements.js pins a 6px pride stripe at the bottom edge of the nav. The
+   first banner under the nav takes 6px of extra top padding so the stripe
+   lands on padding rather than on the copy. */
+.ohp-nav + .ohp-banner .ohp-banner-inner { padding-top: calc(0.6rem + 6px); }
 .ohp-banner-text { color: inherit; }
 .ohp-banner-link,
 .ohp-banner-cta {

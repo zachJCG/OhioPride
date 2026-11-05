@@ -234,3 +234,50 @@ is what shows when the form IS open:
   Vercel, which they are not as of 2026-11-05.
 - Analytics was already on both templates (`/js/vercel-insights.js` and
   `<Analytics />`); nothing to add beyond enabling it in the dashboard.
+
+### Phase 2 review fixes (same day)
+
+An adversarial review of the phase 2 diff (six lenses, three skeptics per
+finding) and a separate verification of the dash sweep turned up these,
+all fixed before merge:
+
+- **`/volunteer` internships came off the page, not just the year.** The
+  work order removes the Summer and Fall 2026 positions block and the 2026
+  position options in the form. The positions section, the "Intern or
+  Fellow" tab and its three form steps are gone, and `intern-positions.js`
+  with them. The term radios had to go too: their values are pinned to
+  `summer_2026` / `fall_2026` by the `intern_applications` CHECK constraint,
+  so relabelling them would have filed 2027 applicants under 2026.
+  `?path=internship` and `/internships` now land on the volunteer form
+  (`setPath` refuses a path whose steps are not on the page). The endpoint
+  and `intern_applications` are untouched; bringing the program back is
+  restoring the markup from git history and a migration for new terms.
+- `/api/pride-volunteer-submit` answers **410** for new posts; the table
+  stays. `/volunteer` no longer links to the archived run of show as
+  "Upcoming". The two run-of-show pages joined `ARCHIVED_PATHS`.
+- Season banners remove themselves at the end of their window and check
+  again when the next opens; focus moves to the page on dismiss; the CTA
+  focus ring is navy; the first banner under the nav clears the pride
+  stripe. The banner test no longer reads the real clock (it would have
+  crashed on December 1).
+- The `/donate` meter starts empty, writes "{count} of 1,969 founding
+  members" from the live count, and stays hidden if the count cannot be
+  read. No fill is hard coded.
+- Seven endorsee profiles ended with "Volunteer with Ohio Pride in District
+  N"; they now end with "Read all endorsements" like the rest.
+- The 22 bill pages built from `bill-data.js` carry the 136th General
+  Assembly label under the bill number (the three hand-written ones and the
+  enacted archive already said so).
+- `/Sunday-Funday` is a 301 in `vercel.json` (`statusCode`), `/archive` has
+  the site share card, the `/events` description fits, and
+  `tests/actblue.test.mjs` pins the "Order Number" receipt alias (used only
+  when there is no "Receipt ID" column; exact header match).
+- `scripts/check-routes.mjs` now asserts the phase 2 acceptance items: the
+  noindex header and archived marker on every archived path, `/archive`,
+  the `/events` empty state, `/pride/signup` without a form, the 410, and
+  the `/donate` meter.
+
+**Pre-existing, not changed here:** `/scorecard` loads `/js/share.js`,
+which has never been in the repo (the page falls back on its own slug
+builder). The admin pages still contain em dashes; they are internal and
+outside the live-page sweep.
