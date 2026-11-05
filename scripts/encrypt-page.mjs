@@ -1,5 +1,5 @@
 /* =============================================================================
- * encrypt-page.mjs — build a password-gated static page.
+ * encrypt-page.mjs - build a password-gated static page.
  * -----------------------------------------------------------------------------
  * Encrypts an HTML document with AES-256-GCM (key derived from a shared
  * password via PBKDF2-SHA256, 310k iterations) and emits a self-contained

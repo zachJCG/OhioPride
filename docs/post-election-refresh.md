@@ -136,3 +136,148 @@ is what shows when the form IS open:
   not be read. A successful read with nothing open says so.
 - Admin: the Endorse confirm no longer promises publication; publishing is
   the tick below it.
+
+---
+
+## Phase 2: clear, archive, fundraise (2026-11-05)
+
+### Archive in place
+
+- **One list.** `lib/archived-paths.mjs` exports `ARCHIVED_PATHS` (the
+  governor guide and its other-candidates page, `/vote`, `/dragoutthevote`,
+  `/pride`, `/pride/signup`, `/volunteer/events`). It imports nothing, so
+  `next.config.mjs`, `lib/seo.mjs` and a client component can all read it.
+- **Three things derive from it.** `headers()` in `next.config.mjs` sends
+  `X-Robots-Tag: noindex, follow` for each path; `allStaticPages()` in
+  `lib/seo.mjs` marks each registry entry `noindex` and `archived`, which is
+  what drops it from the sitemap and writes the robots meta; and
+  `scripts/build-seo.mjs` writes a `<meta name="ohp-archived" content="true">`
+  marker that `public/js/site-template.js` reads to render the banner under
+  the nav (or at the top of the body on `/dragoutthevote`, which mounts only
+  the footer). `app/(site)/components/ArchiveBanner.js` renders the same
+  markup for any ported route from the list directly. `npm run check:seo`
+  fails if a listed path is not a registry page or lacks the marker.
+- **Body copy on archived pages is frozen** and they are exempt from the dash
+  sweep. The only in-page edit is `/pride/signup`, whose form is gone: the
+  closed note from the copy deck points at `/signup`. The endpoint it posted
+  to, `/api/pride-volunteer-submit`, was shared with no live page, and its
+  table is untouched.
+- `/pride-hour` and `/sunday-funday` (and their `.html` spellings) are real
+  301s to `/events` now; `check:routes` asserts 301.
+
+### `/archive`, `/events`, nav
+
+- `/archive` is a new App Router page (`app/(site)/archive/`), registered in
+  `APP_ROUTES`. Three groups from the work order; the "2026 endorsements"
+  group is behind `SHOW_ENDORSEMENTS_2026 = false` until phase 3 ships
+  `/endorsements/2026`. The two 2026 Pride Hours (flyers under
+  `public/assets/img/events/`) live there as past events.
+- `/events` is the copy deck's empty state plus the host block, and links to
+  `/archive` for past events.
+- **Primary nav is five items**: Endorsements, Apply (`/apply`, lit on the
+  form it lands on through `data-ohp-active` / `activeFor`), Scorecard,
+  About, Donate. The Info dropdown is gone from both templates; its CSS
+  stays for phase 4 to tidy. **Footer**: Issues, Founding Members,
+  Volunteer, Elected Resources, Board; Connect, Contact, Archive; Brand,
+  Privacy, Terms, Credits, Admin; plus Leadership and the disclaimer, which
+  is unchanged. The expired governor guide promo (`guide-popup.js`) is
+  deleted with both loaders.
+
+### Home, donate, copy
+
+- Home: the governor band (with its countdown JS and CSS), "Four jobs. One
+  mission." and the scorecard teaser are gone; the apply block from the copy
+  deck sits above the slate, and the donate block carries the new body and a
+  direct ActBlue link with `website_home_donate`. The slate grid stays until
+  phase 3; its CTA goes to `/apply`.
+- `/donate`: the copy deck intro under the H1 and a founding member meter
+  (the shared `.goal-block` fed by `OhioPride.loadProgress`, so it is the
+  same request the home page makes). `/donate/founding-member`: the 2026
+  line is now "Today, we are building political power that lasts."
+- `/about`: "only statewide", every `&mdash;` rewritten, and the critical
+  moment section drops the 2026 election pitch for the copy deck line plus a
+  link to `/endorsements`. `/scorecard` and `/issues` carry a
+  "136th General Assembly (2025 to 2026)" label. `/volunteer` drops the
+  Summer and Fall 2026 block and the 2026 term labels (the radio values are
+  pinned by the `intern_applications` CHECK constraint, so only labels
+  changed). `/elected-resources` ends with the apply CTA.
+- Endorsements: the "Donate to the Campaign" button and the five `donate`
+  URLs in `lib/endorsement-content.mjs` are gone. No early-voting or
+  Election Day CTA existed on those pages. "Why we endorsed" and the pull
+  quotes stay.
+- Brand v2.2: "Build the bench" replaces the 2026 urgency pillar, the
+  governor's race line is removed from `/brand` and `brand.json`, the
+  caption example is the 2027 application one, and `npm run brand:build`
+  rebuilt the kit with the new version string.
+- Dash sweep: every live page, the shared templates, `lib/seo.mjs` (the
+  default image alt, the contact and events descriptions, the bill
+  description template) and the generator's own marker comment. Archived
+  pages keep theirs.
+
+### Fundraising banners and sync
+
+- `public/js/season-banners.js`: Giving Tuesday (Dec 1, 2026) and year end
+  (Dec 26 to 31, 2026), America/New_York written as fixed `-05:00` offsets,
+  dismissible per browser session, loaded by both templates and skipped on
+  donate, admin and the application form. `tests/season-banners.test.mjs`
+  pins the windows with a mocked clock and the copy deck strings. Styles are
+  shared with the archive banner in `site-template.css`.
+- Refcodes: `website_home_donate`, `website_givingtuesday_2026`,
+  `website_yearend_2026`. Every existing `website_donate_*` and
+  `website_founding_*` link is untouched.
+- ActBlue sync: the hourly sync already ingests every paid contribution
+  regardless of refcode (refcode only decides whether a founding seat is
+  minted), so no code change was needed for the new refcodes. One fix:
+  `lib/actblue.mjs` now recognises ActBlue's custom report header
+  "Order Number" as the receipt column. The sync still needs
+  `ACTBLUE_CLIENT_UUID`, `ACTBLUE_CLIENT_SECRET` and `CRON_SECRET` set in
+  Vercel, which they are not as of 2026-11-05.
+- Analytics was already on both templates (`/js/vercel-insights.js` and
+  `<Analytics />`); nothing to add beyond enabling it in the dashboard.
+
+### Phase 2 review fixes (same day)
+
+An adversarial review of the phase 2 diff (six lenses, three skeptics per
+finding) and a separate verification of the dash sweep turned up these,
+all fixed before merge:
+
+- **`/volunteer` internships came off the page, not just the year.** The
+  work order removes the Summer and Fall 2026 positions block and the 2026
+  position options in the form. The positions section, the "Intern or
+  Fellow" tab and its three form steps are gone, and `intern-positions.js`
+  with them. The term radios had to go too: their values are pinned to
+  `summer_2026` / `fall_2026` by the `intern_applications` CHECK constraint,
+  so relabelling them would have filed 2027 applicants under 2026.
+  `?path=internship` and `/internships` now land on the volunteer form
+  (`setPath` refuses a path whose steps are not on the page). The endpoint
+  and `intern_applications` are untouched; bringing the program back is
+  restoring the markup from git history and a migration for new terms.
+- `/api/pride-volunteer-submit` answers **410** for new posts; the table
+  stays. `/volunteer` no longer links to the archived run of show as
+  "Upcoming". The two run-of-show pages joined `ARCHIVED_PATHS`.
+- Season banners remove themselves at the end of their window and check
+  again when the next opens; focus moves to the page on dismiss; the CTA
+  focus ring is navy; the first banner under the nav clears the pride
+  stripe. The banner test no longer reads the real clock (it would have
+  crashed on December 1).
+- The `/donate` meter starts empty, writes "{count} of 1,969 founding
+  members" from the live count, and stays hidden if the count cannot be
+  read. No fill is hard coded.
+- Seven endorsee profiles ended with "Volunteer with Ohio Pride in District
+  N"; they now end with "Read all endorsements" like the rest.
+- The 22 bill pages built from `bill-data.js` carry the 136th General
+  Assembly label under the bill number (the three hand-written ones and the
+  enacted archive already said so).
+- `/Sunday-Funday` is a 301 in `vercel.json` (`statusCode`), `/archive` has
+  the site share card, the `/events` description fits, and
+  `tests/actblue.test.mjs` pins the "Order Number" receipt alias (used only
+  when there is no "Receipt ID" column; exact header match).
+- `scripts/check-routes.mjs` now asserts the phase 2 acceptance items: the
+  noindex header and archived marker on every archived path, `/archive`,
+  the `/events` empty state, `/pride/signup` without a form, the 410, and
+  the `/donate` meter.
+
+**Pre-existing, not changed here:** `/scorecard` loads `/js/share.js`,
+which has never been in the repo (the page falls back on its own slug
+builder). The admin pages still contain em dashes; they are internal and
+outside the live-page sweep.

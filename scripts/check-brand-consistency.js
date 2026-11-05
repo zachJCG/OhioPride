@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 
 /**
- * Ohio Pride PAC — Brand Consistency Check
+ * Ohio Pride PAC - Brand Consistency Check
  * ----------------------------------------
  * Walks every public-facing *.html file in the repo and enforces the
  * shared header / footer / wordmark wiring documented in
@@ -27,7 +27,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..', 'public');
 
 // Directories that ship to production. Anything outside these is
-// ignored — legacy snapshots (Update/, OhioPride-Refocused/) are not
+// ignored - legacy snapshots (Update/, OhioPride-Refocused/) are not
 // deployed and intentionally do not follow the system.
 const SCAN_ROOTS = [
   '.',
@@ -87,7 +87,7 @@ const REQUIRED_MARKUP = [
   { id: 'site-footer', label: '<div id="site-footer">' },
 ];
 
-// Soft checks — warn but don't fail. Lets us flag drift in legacy pages
+// Soft checks - warn but don't fail. Lets us flag drift in legacy pages
 // that pre-date a convention without blocking PRs that didn't introduce
 // the gap.
 const RECOMMENDED_MARKUP = [
@@ -99,19 +99,19 @@ const RECOMMENDED_MARKUP = [
 const FORBIDDEN_PATTERNS = [
   {
     re: /<footer\s+class="site-disclaimer"/i,
-    msg: 'inline <footer class="site-disclaimer"> — replace with <div id="site-footer"></div>',
+    msg: 'inline <footer class="site-disclaimer"> - replace with <div id="site-footer"></div>',
   },
   {
     re: /<a[^>]+class="logo"[^>]*>\s*Ohio Pride PAC\s*<\/a>/i,
-    msg: 'hand-rolled "logo" wordmark — use the shared header or .ohp-wordmark',
+    msg: 'hand-rolled "logo" wordmark - use the shared header or .ohp-wordmark',
   },
   {
     re: /<div[^>]+class="logo"[^>]*>\s*Ohio Pride PAC\s*<\/div>/i,
-    msg: 'hand-rolled "logo" wordmark — use the shared header or .ohp-wordmark',
+    msg: 'hand-rolled "logo" wordmark - use the shared header or .ohp-wordmark',
   },
   {
     re: /<div[^>]+class="nav-logo"[^>]*>\s*Ohio Pride PAC\s*<\/div>/i,
-    msg: 'hand-rolled "nav-logo" wordmark — use the shared header',
+    msg: 'hand-rolled "nav-logo" wordmark - use the shared header',
   },
 ];
 

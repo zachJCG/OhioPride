@@ -1,5 +1,5 @@
 /* ==========================================================================
-   OHIO PRIDE — Volunteer / Intern Multi-Step Form
+   OHIO PRIDE: Volunteer / Intern Multi-Step Form
    ----------------------------------------------
    Drives the 5-step signup form on /volunteer.
 
@@ -150,6 +150,11 @@
   // --------------------------------------------------------------------
   function setPath(path, opts) {
     if (path !== 'volunteer' && path !== 'internship') return;
+    // The 2026 internship positions came off /volunteer after the 2026 cycle,
+    // with their form steps. Without those steps there is nothing to switch
+    // to, so stay on the volunteer form. Restoring the intern steps (they are
+    // in git history) brings the path back with no change here.
+    if (path === 'internship' && !document.querySelector('.vform-step[data-path="internship"]')) return;
     state.path = path;
     appTypeInput.value = path;
 
@@ -367,7 +372,7 @@
           var msg = (r.body && r.body.error) || ('http_' + r.status);
           throw new Error(msg);
         }
-        // SUCCESS — swap form for success state
+        // SUCCESS: swap form for success state
         var pathBeforeReset = state.path;
         var pos = pathBeforeReset === 'internship' ? val('position') : '';
         renderSuccess(pathBeforeReset, pos);
@@ -495,7 +500,8 @@
   }
 
   // Allow ?path=internship or ?position=<id> in the URL to deep-link
-  // straight into intern mode (e.g. from social posts).
+  // straight into intern mode (e.g. from social posts). A no-op while the
+  // intern steps are off the page; see setPath.
   try {
     var params = new URLSearchParams(window.location.search);
     var qPath = params.get('path');

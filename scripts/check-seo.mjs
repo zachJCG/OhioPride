@@ -12,7 +12,7 @@
  *
  *   parity      every .html under public/ has a lib/seo.mjs entry, and every
  *               entry has a file. This is the check that makes the registry
- *               authoritative — add a page without metadata and this fails.
+ *               authoritative - add a page without metadata and this fails.
  *   freshness   no page's generated block is stale (same as seo:build --check)
  *   uniqueness  no two indexable pages share a title or a description. Twenty
  *               two bill pages once shared "Loading... | Ohio Pride".
@@ -41,6 +41,7 @@ import {
   fileFor,
   publicPageUrls,
 } from '../lib/seo.mjs';
+import { ARCHIVED_PATHS } from '../lib/archived-paths.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC_DIR = join(ROOT, 'public');
@@ -118,11 +119,19 @@ for (const url of onDisk) {
   assert(
     byUrl.has(url),
     'registry',
-    `${url} exists under public/ but has no entry in lib/seo.mjs — add one (set noindex: true if it should stay out of the index)`,
+    `${url} exists under public/ but has no entry in lib/seo.mjs; add one (set noindex: true if it should stay out of the index)`,
   );
 }
 for (const page of pages) {
   assert(fileFor(page.url), 'registry', `${page.url} is in lib/seo.mjs but has no file under public/`);
+}
+
+/* --- archive: every archived path is a real page, and vice versa ---------- */
+for (const url of ARCHIVED_PATHS) {
+  const page = byUrl.get(url);
+  if (assert(page, 'archive', `${url} is in lib/archived-paths.mjs but is not a registry page`)) {
+    assert(page.noindex && page.archived, 'archive', `${url} did not pick up the archived state`);
+  }
 }
 
 /* --- per page ------------------------------------------------------------ */
@@ -170,6 +179,15 @@ for (const page of pages) {
   /* Canonical and robots. */
   const canonical = head.link('canonical');
   const robots = head.meta('robots') || '';
+  if (page.archived) {
+    assert(
+      head.meta('ohp-archived') === 'true',
+      where,
+      'archived in lib/archived-paths.mjs but the page carries no ohp-archived marker (run npm run seo:build)',
+    );
+  } else {
+    assert(!head.meta('ohp-archived'), where, 'carries an ohp-archived marker but is not archived');
+  }
   if (page.noindex) {
     assert(/noindex/.test(robots), where, 'marked noindex in the registry but the page does not say so');
     assert(!canonical, where, 'a noindex page should not also claim a canonical URL');
@@ -214,7 +232,7 @@ for (const page of pages) {
     assert(parsed['@context'] && parsed['@type'], where, 'JSON-LD is missing @context or @type');
   }
 
-  /* Page structure. One h1 is what tells a crawler what the page is about —
+  /* Page structure. One h1 is what tells a crawler what the page is about -
    * and it has to have text in it. The bill pages used to ship `<h1
    * id="billTitle"></h1>` and fill it from JavaScript, which is an empty
    * heading to anything that reads the document rather than running it. */
@@ -255,7 +273,7 @@ for (const page of pages) {
   assert(
     applyTo(readFileSync(file, 'utf8'), page) === null,
     page.url,
-    'SEO block is out of date — run `npm run seo:build`',
+    'SEO block is out of date; run `npm run seo:build`',
   );
 }
 

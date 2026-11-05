@@ -1,4 +1,4 @@
-/* /endorsements/<slug> — one candidate's endorsement.
+/* /endorsements/<slug> - one candidate's endorsement.
  *
  * This used to be a hidden <div> the old page swapped in on hashchange, which
  * meant every candidate shared one URL, one <title>, and one OG card: sharing
@@ -161,28 +161,16 @@ export default async function EndorsementProfile({ params }) {
                 </ul>
               )}
 
-              {(c.website || content.donate) && (
+              {c.website && (
                 <div className="endorse-profile-actions">
-                  {c.website && (
-                    <a
-                      className="endorse-btn primary"
-                      href={c.website}
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      Campaign Site
-                    </a>
-                  )}
-                  {content.donate && (
-                    <a
-                      className="endorse-btn secondary"
-                      href={content.donate}
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      Donate to the Campaign
-                    </a>
-                  )}
+                  <a
+                    className="endorse-btn primary"
+                    href={c.website}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Campaign Site
+                  </a>
                 </div>
               )}
             </div>

@@ -1,4 +1,4 @@
-/* /endorsements — the endorsed candidate list.
+/* /endorsements - the endorsed candidate list.
  *
  * Ported off public/endorsements/index.html. What changed and why:
  *

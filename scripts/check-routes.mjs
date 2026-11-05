@@ -26,17 +26,23 @@ const BASE = (process.env.BASE || 'http://localhost:3000').replace(/\/$/, '');
 let passed = 0;
 const failures = [];
 
-async function check(kind, path, assert) {
+/* A protected Vercel preview answers only with its auth cookie. Pass it as
+ * COOKIE="_vercel_jwt=..." (open the preview's share link once to get it). */
+const COOKIE = process.env.COOKIE || '';
+
+async function check(kind, path, assert, init = {}) {
   let res;
   try {
-    res = await fetch(BASE + path, { redirect: 'manual' });
+    const headers = { ...(init.headers || {}), ...(COOKIE ? { cookie: COOKIE } : {}) };
+    res = await fetch(BASE + path, { redirect: 'manual', ...init, headers });
   } catch (err) {
     failures.push(`${kind}  ${path} -> request failed: ${err.message}`);
     return;
   }
   // Any text response, not just HTML: /robots.txt is text/plain and its body
   // is the whole point of the check.
-  const body = res.headers.get('content-type')?.startsWith('text/') ? await res.text() : '';
+  const type = res.headers.get('content-type') || '';
+  const body = type.startsWith('text/') || type.includes('json') ? await res.text() : '';
   const problem = assert(res, body);
   if (problem) failures.push(`${kind}  ${path} -> ${problem}`);
   else passed++;
@@ -146,17 +152,51 @@ await check('404      ', '/endorsements/nobody-by-that-name',
   (res) => (res.status === 404 ? null : `status ${res.status}, want 404`));
 await check('no-loop  ', '/about', serves('html'));
 
+/* Post-election phase 2: pages archived in place. Each keeps its URL, answers
+ * 200, sends the noindex header from lib/archived-paths.mjs, and carries the
+ * marker the banner keys off (the banner itself is injected by script). */
+const { ARCHIVED_PATHS } = await import('../lib/archived-paths.mjs');
+const all = (...asserts) => (res, body) => {
+  for (const a of asserts) {
+    const problem = a(res, body);
+    if (problem) return problem;
+  }
+  return null;
+};
+for (const path of ARCHIVED_PATHS) {
+  await check('archived ', path, all(
+    serves('name="ohp-archived" content="true"'),
+    header('x-robots-tag', 'noindex'),
+  ));
+}
+await check('archive  ', '/archive', all(serves('Archive.'), serves('2026 election'), serves('2026 Pride and events')));
+await check('archive  ', '/events', all(serves('Nothing on the calendar right now.'), serves('href="/archive"')));
+await check('archive  ', '/pride/signup', (res, body) => {
+  if (res.status !== 200) return `status ${res.status}, want 200`;
+  if (/<form\b/i.test(body)) return 'still renders a <form>';
+  return body.includes('Pride 2026 signups are closed.') ? null : 'closed note missing';
+});
+// The archived form's endpoint refuses new rows; its table stays.
+await check('archive  ', '/api/pride-volunteer-submit', (res) => (
+  res.status === 410 ? null : `status ${res.status}, want 410`
+), { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
+// Live pages are not archived.
+await check('live     ', '/about', (res, body) => (
+  body.includes('ohp-archived') ? 'carries the archived marker' : null
+));
+await check('live     ', '/donate', serves('id="goalFill"'));
+
 await check('redirect ', '/governorguide', redirectsTo('/governor-guide', 308));
 await check('redirect ', '/govenorguide', redirectsTo('/governor-guide', 308));
 await check('redirect ', '/scorecard/methodology', redirectsTo('/methodology', 308));
 await check('redirect ', '/gala', redirectsTo('/', 308));
 await check('redirect ', '/sponsorship', redirectsTo('/', 308));
 await check('redirect ', '/priorities', redirectsTo('/', 308));
-// Past Pride Hours. 307, not 308: these paths may host a future stop.
-await check('redirect ', '/pride-hour', redirectsTo('/events', 307));
-await check('redirect ', '/sunday-funday', redirectsTo('/events', 307));
-await check('redirect ', '/pride-hour.html', redirectsTo('/events', 307));
-await check('redirect ', '/sunday-funday.html', redirectsTo('/events', 307));
+// Past Pride Hours, retired after the 2026 cycle: a real 301, like /apply.
+await check('redirect ', '/pride-hour', redirectsTo('/events', 301));
+await check('redirect ', '/sunday-funday', redirectsTo('/events', 301));
+await check('redirect ', '/pride-hour.html', redirectsTo('/events', 301));
+await check('redirect ', '/sunday-funday.html', redirectsTo('/events', 301));
 await check('redirect ', '/launch-day', redirectsTo('/', 308));
 await check('redirect ', '/rsvp', redirectsTo('/', 308));
 // With the middleware active the Location gains ?next=..., so match by prefix.

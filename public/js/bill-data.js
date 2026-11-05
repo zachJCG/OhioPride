@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BILL DATA — Central data store for all tracked bills
+   BILL DATA: Central data store for all tracked bills
    Update this file when bills progress. All pages pull from here.
    ========================================================================== */
 
@@ -21,10 +21,10 @@ const BILLS = [
     categories: ["education", "anti-trans", "civil-rights"],
     categoryLabels: ["Education", "Anti-Trans", "Civil Rights"],
     description:
-      "Ohio's biennial state operating budget for FY 2026-2027. Contains anti-LGBTQ+ riders affecting K–12, higher education, and state agencies. DeWine line-item-vetoed select equality-related provisions on June 30, 2025; the legislature later overrode select vetoes (House 61–28, Senate 21–11).",
+      "Ohio's biennial state operating budget for FY 2026-2027. Contains anti-LGBTQ+ riders affecting K-12, higher education, and state agencies. DeWine line-item-vetoed select equality-related provisions on June 30, 2025; the legislature later overrode select vetoes (House 61 to 28, Senate 21 to 11).",
     sponsors: "Executive Budget (Gov. DeWine) / House Finance",
     lastAction:
-      "Select veto overrides completed — House July 21, 2025; Senate October 1, 2025",
+      "Select veto overrides completed: House July 21, 2025; Senate October 1, 2025",
     nextDate: "Provision-level mapping of surviving language pending",
     chamber: "house",
     currentStep: 8,
@@ -55,9 +55,9 @@ const BILLS = [
     description:
       "Creates 'unlawful adult cabaret performance' with a definition reaching gender expression differing from 'biological sex.' Penalties escalate from misdemeanors to felonies when minors are present.",
     sponsors: "Rep. Angela N. King (R-84), Rep. Josh Williams (R-44)",
-    lastAction: "Assigned to Senate Judiciary Committee — April 15, 2026",
+    lastAction: "Assigned to Senate Judiciary Committee, April 15, 2026",
     nextDate: "Awaiting Senate Judiciary Committee hearing",
-    houseVote: "Passed 63–32 on March 25, 2026",
+    houseVote: "Passed 63 to 32 on March 25, 2026",
     chamber: "house",
     currentStep: 6,
     pipelineDates: {
@@ -89,7 +89,7 @@ const BILLS = [
     description:
       "Restricts Medicaid and public-employee health benefits from covering gender-affirming surgery for adult Ohioans. Extends the HB 68 framework from minors into adult care via state coverage rather than direct prohibition.",
     sponsors: "Rep. Gross",
-    lastAction: "Assigned to House Insurance Committee — May 13, 2026",
+    lastAction: "Assigned to House Insurance Committee, May 13, 2026",
     nextDate: "Awaiting first committee hearing",
     chamber: "house",
     currentStep: 1,
@@ -113,9 +113,9 @@ const BILLS = [
     categories: ["healthcare"],
     categoryLabels: ["Healthcare"],
     description:
-      "Lets providers, hospitals, pharmacists, and insurers refuse to participate in or pay for services on conscience or religious grounds. Pairs broad refusal protections with a healthcare sharing ministry framework outside standard insurance regulation — long-tail risk for LGBTQ+ patients.",
+      "Lets providers, hospitals, pharmacists, and insurers refuse to participate in or pay for services on conscience or religious grounds. Pairs broad refusal protections with a healthcare sharing ministry framework outside standard insurance regulation: long-tail risk for LGBTQ+ patients.",
     sponsors: "Rep. Gross",
-    lastAction: "First hearing in House Judiciary — November 5, 2025",
+    lastAction: "First hearing in House Judiciary, November 5, 2025",
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
@@ -140,7 +140,7 @@ const BILLS = [
     description:
       "Shields parents who reject a child's trans identity from abuse/neglect charges. Redefines 'affirmation' as acknowledging sex at birth only. Includes right to seek conversion-style therapy.",
     sponsors: "Rep. Gary Click (R-88), Rep. Josh Williams (R-44)",
-    lastAction: "2nd hearing (proponent testimony) in House Judiciary — March 25, 2026",
+    lastAction: "2nd hearing (proponent testimony) in House Judiciary, March 25, 2026",
     nextDate: "Opponent testimony expected next",
     chamber: "house",
     currentStep: 2,
@@ -165,7 +165,7 @@ const BILLS = [
     description:
       "Unusually broad: sex-segregated facilities, school name/pronoun mandates, government document restrictions, and private right of action for facility violations.",
     sponsors: "Rep. Josh Williams (R-44)",
-    lastAction: "Assigned to House Judiciary Committee — May 13, 2026",
+    lastAction: "Assigned to House Judiciary Committee, May 13, 2026",
     nextDate: "Awaiting first committee hearing",
     chamber: "house",
     currentStep: 1,
@@ -191,7 +191,7 @@ const BILLS = [
     description:
       "Requires incarcerated people be housed 'in accordance with their biological sex,' overriding individualized safety assessments for transgender inmates.",
     sponsors: "Rep. Josh Williams (R-44)",
-    lastAction: "Assigned to House Public Safety Committee — May 13, 2026",
+    lastAction: "Assigned to House Public Safety Committee, May 13, 2026",
     nextDate: "Awaiting first committee hearing",
     chamber: "house",
     currentStep: 1,
@@ -216,7 +216,7 @@ const BILLS = [
     description:
       "Restricts names and pronouns in schools. Requires staff to report student gender-identity accommodation requests to parents. Penalties include 10% withholding of state foundation aid.",
     sponsors: "Rep. Johnathan Newman (R-80), Rep. Josh Williams (R-44)",
-    lastAction: "1st hearing in House Education — April 29, 2025",
+    lastAction: "1st hearing in House Education, April 29, 2025",
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
@@ -230,7 +230,7 @@ const BILLS = [
     id: "hb155",
     bill: "HB 155",
     title: "Prohibit DEI in Public Schools",
-    nickname: "K–12 DEI Ban",
+    nickname: "K-12 DEI Ban",
     officialTitle:
       "Prohibit diversity, equity, and inclusion in public schools",
     stance: "anti",
@@ -240,9 +240,9 @@ const BILLS = [
     categories: ["education"],
     categoryLabels: ["Education / DEI"],
     description:
-      "Prohibits DEI programs in schools. Explicitly reaches contracting around sexual orientation, gender identity, and gender expression — banning LGBTQIA+-inclusive programming.",
+      "Prohibits DEI programs in schools. Explicitly reaches contracting around sexual orientation, gender identity, and gender expression, banning LGBTQIA+-inclusive programming.",
     sponsors: "Rep. Beth Lear (R-61), Rep. Josh Williams (R-44)",
-    lastAction: "2nd hearing in House Education — May 20, 2025",
+    lastAction: "2nd hearing in House Education, May 20, 2025",
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
@@ -268,7 +268,7 @@ const BILLS = [
     description:
       "Senate companion to HB 155. Requires school boards to prohibit DEI structures, trainings, offices, and contracting. Suppresses LGBTQIA+-inclusive initiatives.",
     sponsors: "Sen. Andrew Brenner (R-19)",
-    lastAction: "3rd hearing in Senate Education — May 19, 2026",
+    lastAction: "3rd hearing in Senate Education, May 19, 2026",
     nextDate: "Additional hearings or committee vote",
     chamber: "senate",
     currentStep: 2,
@@ -294,7 +294,7 @@ const BILLS = [
     description:
       "Removes ability of minors (14+) to access limited outpatient mental health services without parental consent. Threatens LGBTQ youth who need confidential care.",
     sponsors: "Rep. Johnathan Newman (R-80)",
-    lastAction: "Opponent testimony in House Health — November 19, 2025",
+    lastAction: "Opponent testimony in House Health, November 19, 2025",
     nextDate: "Additional hearings or committee vote",
     chamber: "house",
     currentStep: 2,
@@ -320,7 +320,7 @@ const BILLS = [
     description:
       "Expands candidate 'former legal names' disclosure and protest mechanisms. Disproportionately impacts trans candidates, effectively mandating public deadnaming.",
     sponsors: "Rep. Rodney Creech (R-40), Rep. Angela N. King (R-84)",
-    lastAction: "1st hearing in House General Government — April 29, 2025",
+    lastAction: "1st hearing in House General Government, April 29, 2025",
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
@@ -344,9 +344,9 @@ const BILLS = [
     categories: ["education"],
     categoryLabels: ["Education"],
     description:
-      "Requires school boards to adopt policies displaying at least four of nine 'founding documents' — including the Ten Commandments — in social studies and history classrooms. Permits private donors (e.g., the Center for Christian Virtue) to fund displays, inviting religious-right messaging into public schools. Passed the Ohio Senate 23–10 on November 20, 2025.",
+      "Requires school boards to adopt policies displaying at least four of nine 'founding documents' (including the Ten Commandments) in social studies and history classrooms. Permits private donors (e.g., the Center for Christian Virtue) to fund displays, inviting religious-right messaging into public schools. Passed the Ohio Senate 23 to 10 on November 20, 2025.",
     sponsors: "Sen. Terry Johnson (R-14)",
-    lastAction: "Referred to House Education Committee — February 4, 2026",
+    lastAction: "Referred to House Education Committee, February 4, 2026",
     nextDate: "Awaiting House committee hearing",
     chamber: "senate",
     currentStep: 6,
@@ -377,9 +377,9 @@ const BILLS = [
     categories: ["expression"],
     categoryLabels: ["Expression"],
     description:
-      "Limits flags on state-owned property to the U.S., Ohio, POW/MIA, and pre-approved agency flags — effectively banning Pride flags from state buildings and grounds. Revives language that Gov. DeWine line-item-vetoed from the FY26-27 budget (HB 96).",
+      "Limits flags on state-owned property to the U.S., Ohio, POW/MIA, and pre-approved agency flags, effectively banning Pride flags from state buildings and grounds. Revives language that Gov. DeWine line-item-vetoed from the FY26-27 budget (HB 96).",
     sponsors: "Rep. D.J. Swearingen (R-89), Rep. Rodney Creech (R-40)",
-    lastAction: "Sponsor testimony in House General Government — March 24, 2026",
+    lastAction: "Sponsor testimony in House General Government, March 24, 2026",
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
@@ -405,7 +405,7 @@ const BILLS = [
     description:
       "Senate companion to HB 172. Repeals ORC 5122.04, eliminating the 1989-era provision that allows minors 14+ to access up to six outpatient mental-health sessions without parental consent. Closes a critical confidential-care pathway for LGBTQ+ youth.",
     sponsors: "Sen. Jerry Cirino (R-18), Sen. Andrew Brenner (R-19)",
-    lastAction: "1st hearing in Senate Health — June 3, 2026",
+    lastAction: "1st hearing in Senate Health, June 3, 2026",
     nextDate: "Additional hearings expected",
     chamber: "senate",
     currentStep: 2,
@@ -429,9 +429,9 @@ const BILLS = [
     categories: ["civil-rights", "anti-trans"],
     categoryLabels: ["Civil Rights", "Anti-Trans"],
     description:
-      "Creates new aggravated-murder offenses for politically motivated violence and mandatory prison terms. Adds 'biological sex' as an aggravating factor while removing 'sexual orientation' from Ohio's existing aggravating-factor list — a net loss for LGBTQ+ protections.",
+      "Creates new aggravated-murder offenses for politically motivated violence and mandatory prison terms. Adds 'biological sex' as an aggravating factor while removing 'sexual orientation' from Ohio's existing aggravating-factor list, a net loss for LGBTQ+ protections.",
     sponsors: "Rep. Jack K. Daniels (R-32), Rep. Josh Williams (R-44)",
-    lastAction: "1st hearing in House Judiciary — February 25, 2026",
+    lastAction: "1st hearing in House Judiciary, February 25, 2026",
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,
@@ -454,9 +454,9 @@ const BILLS = [
     categories: ["youth"],
     categoryLabels: ["Youth / Family"],
     description:
-      "Establishes 'Natural Family Month' promoting a heteronormative 'one biological born man, woman' family structure — excluding same-sex parents and nontraditional families.",
+      "Establishes 'Natural Family Month' promoting a heteronormative 'one biological born man, woman' family structure, excluding same-sex parents and nontraditional families.",
     sponsors: "Rep. Beth Lear (R-61), Rep. Josh Williams (R-44)",
-    lastAction: "4th hearing in House Community Revitalization — October 14, 2025",
+    lastAction: "4th hearing in House Community Revitalization, October 14, 2025",
     nextDate: "Additional hearings or committee vote",
     chamber: "house",
     currentStep: 2,
@@ -484,7 +484,7 @@ const BILLS = [
       "Adds sexual orientation and gender identity to Ohio's existing nondiscrimination statutes, covering employment, housing, and public accommodations statewide.",
     sponsors: "Sen. Nickie Antonio (D-23)",
     lastAction:
-      "Referred to Senate Government Oversight and Reform Committee — February 12, 2025",
+      "Referred to Senate Government Oversight and Reform Committee, February 12, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "senate",
     currentStep: 1,
@@ -509,7 +509,7 @@ const BILLS = [
     description:
       "House companion to SB 70. Extends Ohio's civil rights protections to include sexual orientation and gender identity across employment, housing, and public accommodations.",
     sponsors: "Rep. Tristan Rader (D-13), Rep. Crystal Lett (D-11)",
-    lastAction: "Referred to House Judiciary Committee — March 5, 2025",
+    lastAction: "Referred to House Judiciary Committee, March 5, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "house",
     currentStep: 1,
@@ -532,9 +532,9 @@ const BILLS = [
     categories: ["healthcare", "youth"],
     categoryLabels: ["Healthcare", "Youth / Family"],
     description:
-      "Prohibits state-licensed mental health professionals from subjecting minors to conversion therapy — a discredited practice rejected by every major medical association.",
+      "Prohibits state-licensed mental health professionals from subjecting minors to conversion therapy, a discredited practice rejected by every major medical association.",
     sponsors: "Sen. Nickie Antonio (D-23)",
-    lastAction: "Referred to Senate Health Committee — February 12, 2025",
+    lastAction: "Referred to Senate Health Committee, February 12, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "senate",
     currentStep: 1,
@@ -559,7 +559,7 @@ const BILLS = [
     description:
       "House companion to SB 71. Bans conversion therapy on minors by licensed professionals. Supported by the American Medical Association, American Psychological Association, and American Academy of Pediatrics.",
     sponsors: "Rep. Karen Brownlee (D-28), Rep. Crystal Lett (D-11)",
-    lastAction: "Referred to House Health Committee — May 28, 2025",
+    lastAction: "Referred to House Health Committee, May 28, 2025",
     nextDate: "Awaiting first committee hearing",
     chamber: "house",
     currentStep: 1,
@@ -582,10 +582,10 @@ const BILLS = [
     categories: ["youth"],
     categoryLabels: ["Youth / Family"],
     description:
-      "Designates a week celebrating the diversity of Ohio families — including LGBTQ+ families, adoptive families, and nontraditional households. A direct counterpoint to HB 262's 'Natural Family Month.'",
+      "Designates a week celebrating the diversity of Ohio families, including LGBTQ+ families, adoptive families, and nontraditional households. A direct counterpoint to HB 262's 'Natural Family Month.'",
     sponsors: "Sen. Nickie Antonio (D-23)",
     lastAction:
-      "Referred to Senate Government Oversight and Reform Committee — June 4, 2025",
+      "Referred to Senate Government Oversight and Reform Committee, June 4, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "senate",
     currentStep: 1,
@@ -610,7 +610,7 @@ const BILLS = [
     description:
       "Protects parents who affirm and support their LGBTQ+ children from state interference. Ensures affirming parenting decisions cannot be used as grounds for custody challenges or abuse allegations.",
     sponsors: "Rep. Karen Brownlee (D-28), Rep. Darnell Brewer (D-23)",
-    lastAction: "Referred to House Children and Human Services Committee — June 11, 2025",
+    lastAction: "Referred to House Children and Human Services Committee, June 11, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "house",
     currentStep: 1,
@@ -637,7 +637,7 @@ const BILLS = [
     description:
       "Constitutional amendment to repeal Ohio's dormant 2004 same-sex marriage ban and recognize the right to interracial marriage in the Ohio Constitution. Would let Ohio voters codify marriage equality independent of federal precedent. No committee hearings have been held to date.",
     sponsors: "Rep. Eric Synenberg (D-22), Rep. Anita Somani (D-11)",
-    lastAction: "Referred to House Judiciary Committee — June 4, 2025",
+    lastAction: "Referred to House Judiciary Committee, June 4, 2025",
     nextDate: "Awaiting committee hearing",
     chamber: "house",
     currentStep: 1,
@@ -653,7 +653,7 @@ const BILLS = [
     id: "hb306",
     bill: "HB 306",
     title: "Hate Crimes Act",
-    nickname: "Hate Crimes — Excludes Trans Protections",
+    nickname: "Hate Crimes: Excludes Trans Protections",
     officialTitle: "Enact the Ohio Hate Crimes Act",
     stance: "mixed",
     status: "in-committee",
@@ -662,9 +662,9 @@ const BILLS = [
     categories: ["civil-rights"],
     categoryLabels: ["Civil Rights"],
     description:
-      "Creates enhanced penalties for hate crimes based on race, religion, national origin, disability, and sexual orientation — but notably excludes gender identity, leaving transgender Ohioans without protection.",
+      "Creates enhanced penalties for hate crimes based on race, religion, national origin, disability, and sexual orientation, but notably excludes gender identity, leaving transgender Ohioans without protection.",
     sponsors: "Rep. Brett Hillyer (R-37), Rep. Bride Rose Sweeney (D-16)",
-    lastAction: "Sponsor testimony (first hearing) — February 25, 2026",
+    lastAction: "Sponsor testimony (first hearing), February 25, 2026",
     nextDate: "Additional hearings expected",
     chamber: "house",
     currentStep: 2,

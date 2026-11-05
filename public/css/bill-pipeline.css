@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BILL PIPELINE — Reusable legislative progress tracker
+   BILL PIPELINE: Reusable legislative progress tracker
    Used on /issues (landing) and /issues/* (individual bill pages)
    ========================================================================== */
 
@@ -14,7 +14,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Compact "Current stage" badge — only rendered alongside the full pipeline
+/* Compact "Current stage" badge, only rendered alongside the full pipeline
    on mobile widths (see media query below). Lets readers see the current
    stage at a glance without horizontally scrolling the 9-step timeline. */
 .pipeline-compact {

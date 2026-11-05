@@ -1,8 +1,8 @@
 {
   "name": "Ohio Pride PAC",
   "short_name": "Ohio Pride",
-  "version": "2.1",
-  "updated": "2026-10",
+  "version": "2.2",
+  "updated": "2026-11",
   "guide_url": "https://ohiopride.org/brand",
   "identity_line": "Ohio Pride is Ohio's only statewide LGBTQ+ PAC.",
   "naming": {
@@ -121,7 +121,6 @@
       "Not used on organic social graphics or captions."
     ],
     "firewall_races": "Races where the Director personally advises the candidate get descriptive copy only: no express advocacy, no vote for, no comparative endorsement language.",
-    "judicial_candidates": "Descriptive copy only. No policy pledges, no opponent attacks.",
-    "governor_2026": "No public position."
+    "judicial_candidates": "Descriptive copy only. No policy pledges, no opponent attacks."
   }
 }

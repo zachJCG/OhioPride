@@ -1,10 +1,10 @@
 /* ==========================================================================
-   BILL PIPELINE RENDERER — Reusable across landing + detail pages
+   BILL PIPELINE RENDERER: Reusable across landing + detail pages
 
    Usage:
      renderPipeline(containerEl, chamber, currentStepIndex, options)
 
-   chamber: 'house' | 'senate' — determines step labels
+   chamber: 'house' | 'senate' (determines step labels)
    currentStepIndex: 0-based index of the current step
      - All steps before it are "completed"
      - The step at that index is "current"
@@ -53,7 +53,7 @@ function renderPipeline(container, chamber, currentStep, options = {}) {
   const pipeline = document.createElement("ol");
   pipeline.className = "pipeline" + (size === "lg" ? " pipeline-lg" : "");
   pipeline.setAttribute("aria-label",
-    `Legislative progress: step ${headlineIdx + 1} of ${steps.length} — ${headlineLabel}`);
+    `Legislative progress: step ${headlineIdx + 1} of ${steps.length}, ${headlineLabel}`);
 
   steps.forEach((label, i) => {
     const step = document.createElement("li");

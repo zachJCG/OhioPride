@@ -1,12 +1,12 @@
 /* ==========================================================================
-   OHIO PRIDE PAC — Shared Site Header & Footer Template
+   OHIO PRIDE PAC - Shared Site Header & Footer Template
    ------------------------------------------------------
    This file provides the site-wide header/footer styles. To update the
    visual appearance of the header, menu, or footer across the ENTIRE site,
    edit this file (markup lives in /js/site-template.js).
 
    Brand color, typography, and gradient tokens are imported from
-   /css/brand-tokens.css. Do not redefine palette values here — extend
+   /css/brand-tokens.css. Do not redefine palette values here - extend
    the canonical tokens instead. See docs/brand-system.md.
    ========================================================================== */
 
@@ -382,7 +382,7 @@
   }
 }
 
-/* Donate call-to-action in the nav — animated rainbow border. The mask trick
+/* Donate call-to-action in the nav - animated rainbow border. The mask trick
    lets the rainbow gradient show only as a border stroke around transparent
    content, and the slow @keyframes shifts the gradient for a subtle shimmer. */
 @keyframes ohpRainbowSweep {
@@ -429,6 +429,126 @@
   .ohp-nav-links a.ohp-btn-donate::before {
     animation: none;
   }
+}
+
+/* ------------------------------- Banners --------------------------------- */
+/* Two strips that sit directly under the sticky nav, as siblings of .ohp-nav
+   rather than inside it, so enhancements.js's measurement of the nav height
+   (for the fixed pride stripe) is unaffected.
+
+   .ohp-banner--archive  pages archived in place after the 2026 cycle;
+                         rendered by site-template.js from the ohp-archived
+                         meta, and by app/(site)/components/ArchiveBanner.js
+   .ohp-banner--promo    the dated fundraising asks in /js/season-banners.js */
+.ohp-banner {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.ohp-banner-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.6rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 1rem;
+  text-align: center;
+}
+/* enhancements.js pins a 6px pride stripe at the bottom edge of the nav. The
+   first banner under the nav takes 6px of extra top padding so the stripe
+   lands on padding rather than on the copy. */
+.ohp-nav + .ohp-banner .ohp-banner-inner { padding-top: calc(0.6rem + 6px); }
+.ohp-banner-text { color: inherit; }
+.ohp-banner-link,
+.ohp-banner-cta {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ohp-banner--archive {
+  background: #0d1726;
+  color: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.ohp-banner--archive .ohp-banner-link {
+  color: var(--ohp-light-blue, #70d6ec);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ohp-banner--archive .ohp-banner-link:hover,
+.ohp-banner--archive .ohp-banner-link:focus-visible {
+  color: var(--ohp-text-white, #fff);
+}
+
+.ohp-banner--promo {
+  position: relative;
+  background: var(--ohp-light-blue, #70d6ec);
+  color: #0d1726;
+}
+.ohp-banner--promo::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: var(--ohp-rainbow);
+}
+.ohp-banner--promo .ohp-banner-inner { padding-right: 3.25rem; }
+.ohp-banner--promo .ohp-banner-text { font-weight: 500; }
+.ohp-banner--promo .ohp-banner-cta {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: #0d1726;
+  color: #fff;
+  font-size: 0.82rem;
+  letter-spacing: 0.3px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ohp-banner--promo .ohp-banner-cta:hover,
+.ohp-banner--promo .ohp-banner-cta:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(13, 23, 38, 0.35);
+}
+.ohp-banner-close {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(13, 23, 38, 0.1);
+  color: #0d1726;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.ohp-banner-close:hover,
+.ohp-banner-close:focus-visible {
+  background: rgba(13, 23, 38, 0.22);
+}
+.ohp-banner :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+/* The CTA is white on a navy pill, and its offset ring would sit on the light
+   blue banner, where white is under 2:1. Navy on light blue is 10.7:1. */
+.ohp-banner--promo .ohp-banner-cta:focus-visible,
+.ohp-banner--promo .ohp-banner-close:focus-visible {
+  outline-color: #0d1726;
+}
+@media (max-width: 640px) {
+  .ohp-banner-inner { padding: 0.6rem 1rem; }
+  .ohp-banner--promo .ohp-banner-inner { padding-right: 3rem; }
+  .ohp-banner-close { right: 0.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ohp-banner--promo .ohp-banner-cta { transition: none; }
 }
 
 /* -------------------------------- Footer --------------------------------- */

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   OHIO PRIDE PAC — Vercel Web Analytics + Speed Insights loader
+   OHIO PRIDE PAC - Vercel Web Analytics + Speed Insights loader
    -------------------------------------------------------------
    Single source of truth for the analytics tags on the static pages under
    public/. Both products are cookieless and collect no personally
@@ -10,7 +10,7 @@
      Until now the same six lines were hand copied into site-template.js,
      into admin-shell.js, and inline into the two pages that load neither.
      Four copies meant a page could silently miss analytics simply by not
-     loading the right shell — which is exactly what happened to
+     loading the right shell - which is exactly what happened to
      /PRTraining and five of the admin pages. One file, loaded everywhere,
      removes that failure mode.
 

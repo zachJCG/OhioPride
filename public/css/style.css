@@ -1,5 +1,5 @@
 /* ============================================================
-   Ohio Pride PAC — Brand Stylesheet
+   Ohio Pride PAC - Brand Stylesheet
    Progress Pride Palette · Montserrat + Roboto Slab
    Last updated: February 2026
 
@@ -7,7 +7,7 @@
    utility) are defined in /css/brand-tokens.css. The legacy
    --color-* / --dark-bg / --text-* tokens below are now thin
    aliases that resolve to those brand tokens, so editing this
-   block in isolation will NOT change the palette — update
+   block in isolation will NOT change the palette - update
    brand-tokens.css instead. See docs/brand-system.md.
    ============================================================ */
 
@@ -33,7 +33,7 @@
   --dark-bg-light: #1a3a52;
   --dark-bg-lighter: #234a66;
 
-  /* Semantic colors — dark-theme defaults (all pages use dark bg) */
+  /* Semantic colors - dark-theme defaults (all pages use dark bg) */
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.75);
   --text-muted: rgba(255, 255, 255, 0.6); /* WCAG AA: ~6.2:1 on --dark-bg */
@@ -65,7 +65,7 @@
     var(--color-violet) 82%
   );
 
-  /* Spacing — mobile-first; tablet and desktop scale up via media queries */
+  /* Spacing - mobile-first; tablet and desktop scale up via media queries */
   --section-pad: 48px;
   --container-max: 1140px;
   --nav-height: 72px;
@@ -108,7 +108,7 @@ body {
   isolation: isolate;
 }
 
-/* Site-wide diagonal stripe pattern — matches the subpage hero look.
+/* Site-wide diagonal stripe pattern - matches the subpage hero look.
    Rendered via a fixed pseudo-element so per-page inline body background
    overrides (background: var(--dark-bg)) don't clear it. */
 body::before {
@@ -1417,7 +1417,7 @@ img {
   color: rgba(255, 255, 255, 0.35);
 }
 
-/* --- Compliance Footer (Phase 2 — Required on every page) --- */
+/* --- Compliance Footer (Phase 2 - Required on every page) --- */
 .compliance-footer {
   background: var(--color-black);
   padding: 16px 0;
@@ -1639,6 +1639,18 @@ img {
 }
 .bill-card.status-dead-tabled {
   border-left-color: var(--text-muted);
+}
+
+/* Which General Assembly a bill belongs to. Same treatment as the label on
+   /scorecard and /issues. */
+.bill-hero .ga-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-accent, #70d6ec);
+  margin-bottom: 0.4rem;
 }
 
 .bill-number {
@@ -2265,7 +2277,7 @@ img {
   }
 }
 
-/* Reveal animations — only activate when JS adds .reveal-ready to <html> */
+/* Reveal animations - only activate when JS adds .reveal-ready to <html> */
 html.reveal-ready .reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -2285,7 +2297,7 @@ html.reveal-ready .reveal-left.visible {
   transform: translateX(0);
 }
 
-/* Stagger children animations — only when JS is ready */
+/* Stagger children animations - only when JS is ready */
 html.reveal-ready .reveal-stagger > * {
   opacity: 0;
   transform: translateY(20px);

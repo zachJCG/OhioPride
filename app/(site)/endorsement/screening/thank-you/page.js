@@ -1,4 +1,4 @@
-/* /endorsement/screening/thank-you — the page a candidate lands on after they
+/* /endorsement/screening/thank-you - the page a candidate lands on after they
  * submit an application.
  *
  * Ported off public/endorsement/screening/thank-you/index.html for one reason:
@@ -41,7 +41,7 @@ export default function EndorsementThankYou() {
 
           <p className="ty-lead">
             Your application is in front of our Screening Committee. There is nothing else you need
-            to send us and no interview to schedule — watch your campaign email for the decision.
+            to send us and no interview to schedule. Watch your campaign email for the decision.
           </p>
 
           <div className="ty-next">

@@ -22,6 +22,10 @@ npm run check:seo     # lint everything (also run by CI-style checks)
 1. Create the page as usual — `public/<name>.html`, or an App Router route.
 2. Add an entry to `PAGES` in `lib/seo.mjs` with at least `url`, `title` and
    `description`. Internal pages get `noindex: true` instead of a priority.
+   Pages archived after the 2026 cycle are not flagged by hand: membership in
+   `ARCHIVED_PATHS` (`lib/archived-paths.mjs`) makes `allStaticPages()` mark
+   them `noindex` and `archived`, which also writes the
+   `<meta name="ohp-archived">` marker the archive banner reads.
 3. Run `npm run seo:build`. Commit the page and its generated block together.
 
 `npm run check:seo` fails if a page under `public/` has no registry entry, so

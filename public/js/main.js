@@ -1,5 +1,5 @@
 /* ============================================================
-   Ohio Pride PAC — Main JavaScript
+   Ohio Pride PAC - Main JavaScript
    Navigation, Forms, Progress Bar
    ============================================================ */
 

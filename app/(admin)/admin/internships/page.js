@@ -324,7 +324,7 @@ export default function InternshipsPage() {
           {SORTS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
         </select>
         <button className="btn btn-sm" onClick={exportCsv}>Export CSV</button>
-        <a className="btn btn-sm" href="/volunteer#internships" target="_blank" rel="noopener">Public listing</a>
+        <a className="btn btn-sm" href="/volunteer" target="_blank" rel="noopener">Public volunteer page</a>
       </div>
 
       {rows == null ? <div className="card">Loading applications…</div> : (
