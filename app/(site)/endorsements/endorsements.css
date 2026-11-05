@@ -1047,6 +1047,51 @@
   max-width: 60ch;
 }
 
+/* The deadline lines under the application copy: real text, left aligned on
+   phones so a three-line sentence does not centre-wrap into a ragged block. */
+.cycle-deadlines {
+  list-style: none;
+  margin: 1rem auto 0;
+  padding: 0;
+  max-width: 60ch;
+  display: grid;
+  gap: 0.45rem;
+  text-align: left;
+}
+.cycle-deadlines li {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-white);
+  padding-left: 1.1rem;
+  position: relative;
+}
+.cycle-deadlines li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--text-accent);
+}
+.cycle-calendar {
+  margin: 0.9rem 0 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.cycle-calendar a {
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cycle-apply {
+  text-align: center;
+  margin: 1.5rem 0 0;
+}
+
 .cycle-grid {
   list-style: none;
   margin: 0;

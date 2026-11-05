@@ -13,6 +13,7 @@ import { answersFor } from '../../../../../lib/endorsement-answers.mjs';
 import { slugify } from '../../../../../lib/endorsement-slug.mjs';
 import {
   countyLabel, cycleYearOf, isFutureCycle, daysInStage, submittedByLabel, SUBMITTED_BY_LABEL,
+  helpRequestedLabel,
 } from '../../../../../lib/endorsement-race.mjs';
 import { RaceLine } from '../race-line';
 import { STATUS_LABEL, PATH_LABEL, VOTE_ORDER, VOTE_LABEL, PHOTO_BUCKET, tallyOf } from '../shared';
@@ -38,6 +39,13 @@ const IS_OUT_LABEL = {
   no: 'No',
   prefer_not_to_say: 'Prefer not to say',
 };
+
+/* What a reviewer sees when they try to publish an application the Board has
+ * not endorsed. The rule itself is the endorsement_published_requires_endorsed
+ * check constraint; 23514 is Postgres's code for a check violation. */
+const PUBLISH_GUARD_MESSAGE = 'Endorse before publishing.';
+const isPublishGuardError = (error) =>
+  error?.code === '23514' || /endorsement_published_requires_endorsed/.test(error?.message || '');
 
 const CARD_TITLE = { font: '700 .95rem var(--op-font-head)' };
 const LBL = { fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--op-muted)' };
@@ -164,6 +172,10 @@ export default function CandidatePage() {
       patch.reviewed_by = me?.email || null;
       patch.reviewed_at = new Date().toISOString();
     }
+    // Nothing is public unless it is endorsed (endorsement_published_requires_
+    // endorsed, 2026-11-05). Leaving the row for any other status takes it off
+    // the site in the same write, which is what the reopen confirm promises.
+    if (status !== 'endorsed') patch.is_published = false;
     // Select the row back rather than merging the patch locally: endorsed_at
     // and status_changed_at are stamped by database triggers on the status
     // change, so the values the page should show do not exist until the write
@@ -181,8 +193,14 @@ export default function CandidatePage() {
 
   async function togglePublished() {
     const next = !app.is_published;
+    // The database refuses this too (a check constraint), but the message a
+    // reviewer reads should say what to do, not quote Postgres.
+    if (next && app.status !== 'endorsed') { notify(PUBLISH_GUARD_MESSAGE); return; }
     const { error } = await supabase().from('endorsement_applications').update({ is_published: next }).eq('id', id);
-    if (error) { notify('Update failed: ' + error.message); return; }
+    if (error) {
+      notify(isPublishGuardError(error) ? PUBLISH_GUARD_MESSAGE : 'Update failed: ' + error.message);
+      return;
+    }
     setApp(a => ({ ...a, is_published: next }));
   }
 
@@ -488,6 +506,8 @@ export default function CandidatePage() {
           <div className="detail-grid" style={{ marginTop: 8 }}>
             {[['Office', app.office_sought], ['District', app.district], ['County', countyLabel(app.county)],
               ['Election', app.is_special_election ? `${app.election_year || ''} special election`.trim() : app.election_year],
+              ['Cycle', app.cycle],
+              ['Wants help with', helpRequestedLabel(app)],
               ['Party', app.party], ['Current office', app.current_office], ['Office category', app.office_category],
               ['Committee', app.committee_name], ['Treasurer', app.treasurer_name],
               ['Email', app.email], ['Phone', app.phone], ['Website', app.website],
@@ -589,7 +609,7 @@ export default function CandidatePage() {
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 <button className="btn btn-primary" onClick={() => setStatus('endorsed', {
-                  confirm: `Record ${name} as ENDORSED?\n\nThis publishes them at ohiopride.org/endorsements and stamps today as the endorsement date.`,
+                  confirm: `Record ${name} as ENDORSED?\n\nThis stamps today as the endorsement date. They stay off the public page until you tick "Show on the public endorsements page" below.`,
                 })}>Endorsed</button>
                 <button className="btn" onClick={() => setStatus('declined', {
                   confirm: `Record ${name} as DECLINED?\n\nNothing is published. Remember to email the campaign.`,

@@ -125,6 +125,11 @@ for (const [path, needle] of PAGES) {
     ? gated(serves(needle)) : serves(needle));
 }
 
+// The candidate short link is a real 301 to the form (2026-11-05). The
+// volunteer alias /apply/:position is a rewrite and must keep serving.
+await check('redirect ', '/apply', redirectsTo('/endorsement/screening', 301));
+await check('rewrite  ', '/apply/communications', serves('html'));
+
 // The file path must send you to the canonical clean URL, and that URL must
 // then serve the page rather than bouncing back.
 await check('canonical', '/about.html', redirectsTo('/about', 308));

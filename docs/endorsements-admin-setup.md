@@ -36,9 +36,12 @@ redirect (see `next.config.mjs`).
 ## Adding an endorsement
 
 1. `/admin/endorsements/<id>` → **Record the decision** → **Endorsed**. This
-   stamps `endorsed_at` (a database trigger does it) and, because
-   `is_published` defaults to true, publishes the candidate.
-   Untick **Show on the public endorsements page** to hold an announcement.
+   stamps `endorsed_at` (a database trigger does it). Then tick **Show on the
+   public endorsements page** to publish. Since 2026-11-05 `is_published`
+   defaults to false and the database refuses it on any status other than
+   endorsed (`endorsement_published_requires_endorsed`); the page says
+   "Endorse before publishing." if it is tried. Leaving the endorsed status
+   for any reason unpublishes in the same write.
 2. Drop the campaign photo in `public/assets/endorsements/<slug>.jpg`.
 3. Add an entry to `lib/endorsement-content.mjs` — photo, one-line `summary`
    for the card, and the `profile` statement. Read the rule at the top of that
