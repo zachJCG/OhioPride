@@ -532,6 +532,12 @@
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
+/* The CTA is white on a navy pill, and its offset ring would sit on the light
+   blue banner, where white is under 2:1. Navy on light blue is 10.7:1. */
+.ohp-banner--promo .ohp-banner-cta:focus-visible,
+.ohp-banner--promo .ohp-banner-close:focus-visible {
+  outline-color: #0d1726;
+}
 @media (max-width: 640px) {
   .ohp-banner-inner { padding: 0.6rem 1rem; }
   .ohp-banner--promo .ohp-banner-inner { padding-right: 3rem; }

@@ -19,6 +19,13 @@
  *
  * Dismissal is per browser session (sessionStorage): a visitor who closes it
  * is left alone until they next open the site, when the ask is new again.
+ *
+ * The window is enforced while a page stays open, too. On App Router pages
+ * the script runs once and the layout persists across client navigation, so
+ * a check made only at load would leave "Today is Giving Tuesday" up on
+ * December 2 in a tab opened the night before. A shown banner schedules its
+ * own removal at the end of its window, and a page opened shortly before a
+ * window schedules the check for when it opens.
  * ========================================================================== */
 
 (function () {
@@ -48,6 +55,23 @@
   // Never stack an ask on top of a page where somebody is already giving or
   // part way through a form, or on an internal surface. Matched as prefixes.
   var SKIP_PREFIXES = ['/donate', '/admin', '/board-retreat', '/PRTraining', '/endorsement/screening'];
+
+  // setTimeout fires immediately for delays over 2^31 - 1 ms (about 24.8
+  // days), so a check further out than this is simply not scheduled.
+  var MAX_TIMER_MS = 2147483647;
+
+  /** The next banner to open strictly after `now`, or null. */
+  function nextBanner(now) {
+    var t = now.getTime();
+    var best = null;
+    for (var i = 0; i < BANNERS.length; i++) {
+      var start = new Date(BANNERS[i].start).getTime();
+      if (isFinite(start) && start > t && (!best || start < new Date(best.start).getTime())) {
+        best = BANNERS[i];
+      }
+    }
+    return best;
+  }
 
   /** The banner whose window contains `now` (a Date), or null. */
   function activeBanner(now) {
@@ -110,33 +134,64 @@
     cta.setAttribute('href', banner.href);
     el.querySelector('.ohp-banner-close').addEventListener('click', function () {
       remember(banner);
-      if (el.parentNode) el.parentNode.removeChild(el);
+      // The button being removed has focus. Hand focus to the page content so
+      // a keyboard or screen reader user is not thrown back to the top.
+      var main = document.getElementById('main');
+      if (main) {
+        if (!main.hasAttribute('tabindex')) main.setAttribute('tabindex', '-1');
+        main.focus({ preventScroll: true });
+      }
+      remove(el);
     });
     return el;
+  }
+
+  function remove(el) {
+    if (el && el.parentNode) el.parentNode.removeChild(el);
   }
 
   function show(banner) {
     if (document.querySelector('.ohp-banner--promo')) return;
     var el = build(banner);
-    // Under the archive banner if there is one, otherwise right under the nav.
-    var anchor = document.querySelector('.ohp-banner--archive') || document.querySelector('.ohp-nav');
+    // Under the archive banner if there is one, otherwise right under the nav;
+    // on a page with neither, after the skip link so it stays the first stop.
+    var anchor = document.querySelector('.ohp-banner--archive') ||
+      document.querySelector('.ohp-nav') ||
+      document.querySelector('.ohp-skip-link');
     if (anchor && anchor.parentNode) {
       anchor.parentNode.insertBefore(el, anchor.nextSibling);
     } else {
       document.body.insertBefore(el, document.body.firstChild);
     }
+    // Take it down at the end of its window, then look for the next one.
+    var left = new Date(banner.end).getTime() - Date.now() + 1;
+    if (left > 0 && left <= MAX_TIMER_MS) {
+      window.setTimeout(function () {
+        remove(el);
+        start();
+      }, left);
+    }
   }
 
   function start() {
-    var banner = activeBanner(new Date());
-    if (!banner || dismissed(banner) || onSkippedPage()) return;
-    show(banner);
+    var now = new Date();
+    var banner = activeBanner(now);
+    if (banner && !dismissed(banner) && !onSkippedPage()) {
+      show(banner);
+      return;
+    }
+    // Nothing to show now. If a window opens while this page could still be
+    // open, check again the moment it does.
+    var next = nextBanner(now);
+    if (!next) return;
+    var wait = new Date(next.start).getTime() - now.getTime() + 1;
+    if (wait > 0 && wait <= MAX_TIMER_MS) window.setTimeout(start, wait);
   }
 
   // Exposed for tests and for checking a window by hand from the console:
   // OhioPride.seasonBanners.activeBanner(new Date('2026-12-01T12:00:00-05:00'))
   window.OhioPride = window.OhioPride || {};
-  window.OhioPride.seasonBanners = { BANNERS: BANNERS, activeBanner: activeBanner };
+  window.OhioPride.seasonBanners = { BANNERS: BANNERS, activeBanner: activeBanner, nextBanner: nextBanner };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', start);

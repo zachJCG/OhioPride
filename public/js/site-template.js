@@ -329,9 +329,11 @@
       '  <a class="ohp-banner-link" href="/archive">Visit the archive</a>',
       '</div>',
     ].join('');
-    var nav = document.querySelector('.ohp-nav');
-    if (nav && nav.parentNode) {
-      nav.parentNode.insertBefore(banner, nav.nextSibling);
+    // After the nav; on a page without the shared header, after the skip
+    // link, so "Skip to main content" stays the first tab stop.
+    var anchor = document.querySelector('.ohp-nav') || document.querySelector('.ohp-skip-link');
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(banner, anchor.nextSibling);
     } else {
       document.body.insertBefore(banner, document.body.firstChild);
     }

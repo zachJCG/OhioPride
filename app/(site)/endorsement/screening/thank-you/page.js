@@ -41,7 +41,7 @@ export default function EndorsementThankYou() {
 
           <p className="ty-lead">
             Your application is in front of our Screening Committee. There is nothing else you need
-            to send us and no interview to schedule — watch your campaign email for the decision.
+            to send us and no interview to schedule. Watch your campaign email for the decision.
           </p>
 
           <div className="ty-next">
