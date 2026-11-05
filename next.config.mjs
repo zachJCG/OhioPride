@@ -84,6 +84,14 @@ const nextConfig = {
         { source: `${url}/index.html`, destination: url, permanent: true },
       ]),
 
+      // The one candidate front door. /apply is the short link printed on
+      // social, in the brand kit's caption example, and on every "Apply"
+      // button, so it is a real 301 (statusCode rather than permanent, which
+      // Next would send as a 308) and it points at the form itself. The
+      // volunteer alias below it is /apply/:position, which this exact-match
+      // source does not touch.
+      { source: '/apply', destination: '/endorsement/screening', statusCode: 301 },
+
       // Section landing pages.
       { source: '/admin', destination: '/admin/login', permanent: false },
       { source: '/admin/finance', destination: '/admin/finance/budget', permanent: false },
