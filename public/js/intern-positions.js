@@ -1,5 +1,5 @@
 /* ==========================================================================
-   OHIO PRIDE — Intern & Fellowship Positions
+   OHIO PRIDE: Intern & Fellowship Positions
    ------------------------------------------
    Renders the position showcase grid on /volunteer and wires the "Apply"
    CTA to switch the form into intern mode and pre-select the position.
@@ -16,7 +16,7 @@
       title: 'Chief of Staff',
       tagline: 'Right hand to the Director. Operations and decision flow.',
       location: 'Cincinnati (hybrid)',
-      term: 'Summer / Fall 2026',
+      term: 'Summer or Fall',
       hours: '12 to 15 hrs/week',
       reports: 'Director',
       requirements: [
@@ -32,7 +32,7 @@
       title: 'Legislative Internship',
       tagline: 'Track every LGBTQ+ bill in the Statehouse. Power the scorecard.',
       location: 'Columbus preferred (hybrid OK)',
-      term: 'Summer / Fall 2026',
+      term: 'Summer or Fall',
       hours: '10 to 15 hrs/week',
       reports: 'Director',
       requirements: [
@@ -48,7 +48,7 @@
       title: 'Volunteer Internship',
       tagline: 'Recruit, deploy, and retain volunteers in all 88 counties.',
       location: 'Statewide (hybrid)',
-      term: 'Summer / Fall 2026',
+      term: 'Summer or Fall',
       hours: '8 to 15 hrs/week',
       reports: 'Director',
       requirements: [
@@ -65,11 +65,11 @@
       title: 'Digital Internship',
       tagline: 'Build the look and voice of Ohio\'s LGBTQ+ political movement.',
       location: 'Remote (Ohio)',
-      term: 'Summer / Fall 2026',
+      term: 'Summer or Fall',
       hours: '8 to 12 hrs/week',
       reports: 'Director',
       requirements: [
-        'Design portfolio (Figma, Canva, Adobe — any combo)',
+        'Design portfolio (Figma, Canva, Adobe, any combo)',
         'Comfortable with copywriting in a confident, plainspoken voice',
         'Self-starter who can ship without a heavy approval cycle',
         'Drives social amplification: share, repost, and help our content reach voters',

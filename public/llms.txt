@@ -23,7 +23,8 @@
 ## Site
 
 - [Endorsements](https://ohiopride.org/endorsements)
+- [Apply for endorsement](https://ohiopride.org/apply)
 - [Scorecard](https://ohiopride.org/scorecard)
 - [Donate](https://ohiopride.org/donate)
-- [Vote](https://ohiopride.org/vote)
 - [About](https://ohiopride.org/about)
+- [Archive](https://ohiopride.org/archive)

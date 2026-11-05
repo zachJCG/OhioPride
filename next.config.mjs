@@ -1,6 +1,7 @@
 import { readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ARCHIVED_PATHS } from './lib/archived-paths.mjs';
 
 /* ===========================================================================
  * Ohio Pride PAC: Next.js configuration.
@@ -119,17 +120,16 @@ const nextConfig = {
       { source: '/sponsorship', destination: '/', permanent: true },
       { source: '/priorities', destination: '/', permanent: true },
       /* The Cincinnati (2026-08-26) and Cleveland (2026-09-20) Pride Hours have
-       * happened and their pages are hidden, so both paths land on /events.
-       * Deliberately temporary, unlike the launch-day rules below: Pride Hour
-       * is a running series, and /pride-hour in particular is the obvious path
-       * to reuse for the next stop. A 308 would be cached in every browser
-       * that ever followed it and would be painful to take back. */
-      { source: '/pride-hour', destination: '/events', permanent: false },
-      { source: '/sunday-funday', destination: '/events', permanent: false },
+       * happened and their pages are gone, so both paths land on /events, and
+       * since the post-election refresh they do so with a real 301 (statusCode
+       * rather than permanent, which Next would send as a 308). The next stop
+       * gets its own path; these two are retired. */
+      { source: '/pride-hour', destination: '/events', statusCode: 301 },
+      { source: '/sunday-funday', destination: '/events', statusCode: 301 },
       // The .html spellings too: their generated file-to-clean-URL redirect
       // went away with the files, so without these the old links 404.
-      { source: '/pride-hour.html', destination: '/events', permanent: false },
-      { source: '/sunday-funday.html', destination: '/events', permanent: false },
+      { source: '/pride-hour.html', destination: '/events', statusCode: 301 },
+      { source: '/sunday-funday.html', destination: '/events', statusCode: 301 },
       // Launch Day (2026-05-22) is over; page + signup form removed 2026-08.
       { source: '/launch-day', destination: '/', permanent: true },
       { source: '/launch-day.html', destination: '/', permanent: true },
@@ -189,11 +189,18 @@ const nextConfig = {
 
       // Internal surfaces stay out of the index. Each also carries a robots
       // meta tag; the header is what covers crawlers that do not render.
-      // /governor-guide is deliberately absent: it went public with the
-      // 2026 guide and is in sitemap.xml.
       { source: '/admin/:path*', headers: [noindex] },
       { source: '/board-retreat/:path*', headers: [noindex] },
       { source: '/PRTraining', headers: [noindex] },
+
+      // Pages archived in place after the 2026 cycle. The list is shared with
+      // lib/seo.mjs (robots meta, sitemap) and both templates (the banner), so
+      // adding a path there is the whole job. `follow` on purpose: these pages
+      // link back into the live site and those links should keep counting.
+      ...ARCHIVED_PATHS.map((source) => ({
+        source,
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, follow' }],
+      })),
     ];
   },
 };

@@ -325,7 +325,7 @@ async function recordStatic() {
 }
 
 function readmeText() {
-  return `OHIO PRIDE PAC BRAND KIT (Brand Guide v2.1, October 2026)
+  return `OHIO PRIDE PAC BRAND KIT (Brand Guide v2.2, November 2026)
 https://www.ohiopride.org/brand
 Machine-readable brand: https://www.ohiopride.org/brand.json
 

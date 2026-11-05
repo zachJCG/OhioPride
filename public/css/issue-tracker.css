@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ISSUE TRACKER — Shared styles for /issues and /issues/archive
+   ISSUE TRACKER: Shared styles for /issues and /issues/archive
    Both pages link to this file so they stay visually consistent.
    ========================================================================== */
 
@@ -634,7 +634,7 @@ body {
 }
 
 /* ==========================================================================
-   Phone (≤480px) — fix the cramped 4-up stat strip the user flagged
+   Phone (≤480px): fix the cramped 4-up stat strip the user flagged
    Stay 2x2; give each card real breathing room and keep numbers legible.
    ========================================================================== */
 @media (max-width: 480px) {

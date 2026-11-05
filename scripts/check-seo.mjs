@@ -41,6 +41,7 @@ import {
   fileFor,
   publicPageUrls,
 } from '../lib/seo.mjs';
+import { ARCHIVED_PATHS } from '../lib/archived-paths.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC_DIR = join(ROOT, 'public');
@@ -125,6 +126,14 @@ for (const page of pages) {
   assert(fileFor(page.url), 'registry', `${page.url} is in lib/seo.mjs but has no file under public/`);
 }
 
+/* --- archive: every archived path is a real page, and vice versa ---------- */
+for (const url of ARCHIVED_PATHS) {
+  const page = byUrl.get(url);
+  if (assert(page, 'archive', `${url} is in lib/archived-paths.mjs but is not a registry page`)) {
+    assert(page.noindex && page.archived, 'archive', `${url} did not pick up the archived state`);
+  }
+}
+
 /* --- per page ------------------------------------------------------------ */
 const titles = new Map();
 const descriptions = new Map();
@@ -170,6 +179,15 @@ for (const page of pages) {
   /* Canonical and robots. */
   const canonical = head.link('canonical');
   const robots = head.meta('robots') || '';
+  if (page.archived) {
+    assert(
+      head.meta('ohp-archived') === 'true',
+      where,
+      'archived in lib/archived-paths.mjs but the page carries no ohp-archived marker (run npm run seo:build)',
+    );
+  } else {
+    assert(!head.meta('ohp-archived'), where, 'carries an ohp-archived marker but is not archived');
+  }
   if (page.noindex) {
     assert(/noindex/.test(robots), where, 'marked noindex in the registry but the page does not say so');
     assert(!canonical, where, 'a noindex page should not also claim a canonical URL');

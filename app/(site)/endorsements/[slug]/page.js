@@ -161,28 +161,16 @@ export default async function EndorsementProfile({ params }) {
                 </ul>
               )}
 
-              {(c.website || content.donate) && (
+              {c.website && (
                 <div className="endorse-profile-actions">
-                  {c.website && (
-                    <a
-                      className="endorse-btn primary"
-                      href={c.website}
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      Campaign Site
-                    </a>
-                  )}
-                  {content.donate && (
-                    <a
-                      className="endorse-btn secondary"
-                      href={content.donate}
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      Donate to the Campaign
-                    </a>
-                  )}
+                  <a
+                    className="endorse-btn primary"
+                    href={c.website}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Campaign Site
+                  </a>
                 </div>
               )}
             </div>

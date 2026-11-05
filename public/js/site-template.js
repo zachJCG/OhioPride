@@ -96,25 +96,12 @@
     '      <span class="ohp-menu-toggle-icon" aria-hidden="true"></span>',
     '    </button>',
     '    <ul class="ohp-nav-links" id="ohpNavLinks">',
-    '      <li><a href="/issues">Issues</a></li>',
+    '      <li><a href="/endorsements">Endorsements</a></li>',
+    // /apply is a 301 to the form, so the active state is keyed on where
+    // the visitor actually lands rather than on the short link.
+    '      <li><a href="/apply" data-ohp-active="/endorsement/screening">Apply</a></li>',
     '      <li><a href="/scorecard">Scorecard</a></li>',
-    '      <li class="ohp-nav-group" data-ohp-group="info">',
-    '        <button type="button" class="ohp-nav-group-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ohpNavInfoMenu">',
-    '          Info',
-    '          <span class="ohp-nav-group-caret" aria-hidden="true"></span>',
-    '        </button>',
-    '        <ul class="ohp-nav-submenu" id="ohpNavInfoMenu" role="menu">',
-    '          <li role="none"><a role="menuitem" href="/about">About</a></li>',
-    '          <li role="none"><a role="menuitem" href="/board">Board</a></li>',
-    '          <li role="none"><a role="menuitem" href="/events">Events</a></li>',
-    '          <li role="none"><a role="menuitem" href="/volunteer">Volunteer</a></li>',
-    '          <li role="none"><a role="menuitem" href="/endorsements">Endorsements</a></li>',
-    '          <li role="none"><a role="menuitem" href="/governor-guide">Governor Guide 2026</a></li>',
-    '          <li role="none"><a role="menuitem" href="/elected-resources">Officials Toolkit</a></li>',
-    '        </ul>',
-    '      </li>',
-    '      <li><a href="/founding-members">Founding Members</a></li>',
-    '      <li><a href="/contact">Contact</a></li>',
+    '      <li><a href="/about">About</a></li>',
     '      <li><a href="/donate" class="ohp-btn-donate">Donate</a></li>',
     '    </ul>',
     '  </div>',
@@ -139,41 +126,28 @@
     '      <h4>Organization</h4>',
     '      <ul>',
     '        <li><a href="/issues">Issues</a></li>',
-    '        <li><a href="/scorecard">Scorecard</a></li>',
-    '        <li><a href="/about">About</a></li>',
-    '        <li><a href="/board">Board</a></li>',
-    '        <li><a href="/elected-resources">Officials Toolkit</a></li>',
     '        <li><a href="/founding-members">Founding Members</a></li>',
-    '        <li><a href="/contact">Contact</a></li>',
-    '      </ul>',
-    '    </div>',
-    '    <div class="ohp-footer-col">',
-    '      <h4>Get Involved</h4>',
-    '      <ul>',
-    '        <li><a href="/donate">Donate</a></li>',
-    '        <li><a href="/donate/founding-member">Founding Membership</a></li>',
-    '        <li><a href="/events">Events</a></li>',
     '        <li><a href="/volunteer">Volunteer</a></li>',
-    '        <li><a href="/endorsements">Endorsed Candidates</a></li>',
-    '        <li><a href="/endorsement/screening">Candidate Endorsement</a></li>',
+    '        <li><a href="/elected-resources">Elected Resources</a></li>',
+    '        <li><a href="/board">Board</a></li>',
     '      </ul>',
     '    </div>',
     '    <div class="ohp-footer-col">',
     '      <h4>Connect with Us</h4>',
     '      <ul>',
-    '        <li><a href="/connect#schedule">Schedule a Call</a></li>',
-    '        <li><a href="/connect#message">Send a Message</a></li>',
-    '        <li><a href="mailto:press@ohiopride.org">Press Inquiries</a></li>',
+    '        <li><a href="/connect">Connect</a></li>',
+    '        <li><a href="/contact">Contact</a></li>',
+    '        <li><a href="/archive">Archive</a></li>',
     '      </ul>',
     '    </div>',
     '    <div class="ohp-footer-col">',
     '      <h4>Legal</h4>',
     '      <ul>',
-    '        <li><a href="/privacy">Privacy Policy</a></li>',
-    '        <li><a href="/terms">Terms of Use</a></li>',
-    '        <li><a href="/credits">Photo Credits</a></li>',
-    '        <li><a href="/brand">Brand Guide</a></li>',
-    '        <li><a href="/admin/login" rel="nofollow">Admin Sign In</a></li>',
+    '        <li><a href="/brand">Brand</a></li>',
+    '        <li><a href="/privacy">Privacy</a></li>',
+    '        <li><a href="/terms">Terms</a></li>',
+    '        <li><a href="/credits">Credits</a></li>',
+    '        <li><a href="/admin/login" rel="nofollow">Admin</a></li>',
     '      </ul>',
     '    </div>',
     '    <div class="ohp-footer-col">',
@@ -212,7 +186,7 @@
     if (!links.length) return;
     var path = window.location.pathname.replace(/\/+$/, '') || '/';
     for (var i = 0; i < links.length; i++) {
-      var href = links[i].getAttribute('href');
+      var href = links[i].getAttribute('data-ohp-active') || links[i].getAttribute('href');
       if (!href) continue;
       var normalized = href.replace(/\/+$/, '') || '/';
       if (
@@ -325,15 +299,42 @@
     document.body.appendChild(s);
   }
 
-  // Two day promotion for /governor-guide. Self contained and self expiring;
-  // see the header of guide-popup.js. Delete this call and the file together.
-  function injectGuidePopup() {
-    var src = '/js/guide-popup.js';
+  // Seasonal fundraising banners (Giving Tuesday, year end). Self contained
+  // and self expiring; see the header of season-banners.js. Appended after
+  // the header is in the DOM so the script can slot the banner under the nav.
+  function injectSeasonBanners() {
+    var src = '/js/season-banners.js';
     if (document.querySelector('script[src="' + src + '"]')) return;
     var s = document.createElement('script');
     s.src = src;
     s.defer = true;
     document.body.appendChild(s);
+  }
+
+  // Pages archived in place after the 2026 cycle carry
+  // <meta name="ohp-archived" content="true">, written by `npm run seo:build`
+  // from lib/archived-paths.mjs. The banner goes directly under the sticky
+  // nav; on the one page that mounts only the footer it leads the body. The
+  // wording is the copy deck's and matches app/(site)/components/ArchiveBanner.js.
+  function injectArchiveBanner() {
+    var meta = document.querySelector('meta[name="ohp-archived"]');
+    if (!meta || meta.getAttribute('content') !== 'true') return;
+    if (document.querySelector('.ohp-banner--archive')) return;
+    var banner = document.createElement('div');
+    banner.className = 'ohp-banner ohp-banner--archive';
+    banner.setAttribute('role', 'note');
+    banner.innerHTML = [
+      '<div class="ohp-banner-inner">',
+      '  <span class="ohp-banner-text">This page is archived. It covers 2026 and is no longer updated.</span>',
+      '  <a class="ohp-banner-link" href="/archive">Visit the archive</a>',
+      '</div>',
+    ].join('');
+    var nav = document.querySelector('.ohp-nav');
+    if (nav && nav.parentNode) {
+      nav.parentNode.insertBefore(banner, nav.nextSibling);
+    } else {
+      document.body.insertBefore(banner, document.body.firstChild);
+    }
   }
 
   function render() {
@@ -342,8 +343,9 @@
     markActiveLink();
     wireMenuToggle();
     wireNavGroups();
+    injectArchiveBanner();
     injectVercelInsights();
-    injectGuidePopup();
+    injectSeasonBanners();
 
     // Populate the leadership-driven parts of the footer if the data helper
     // is available. Guard with a typeof check so pages that forget to load

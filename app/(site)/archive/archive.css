@@ -1,0 +1,182 @@
+/* /archive page styles.
+ *
+ * The hero reuses the .legal-hero rules from the credits page so the two
+ * utility pages read as a pair; they are repeated here rather than imported
+ * because each App Router page owns its own stylesheet and Next dedupes
+ * nothing across them.
+ */
+
+.archive-page .legal-hero {
+  padding: calc(var(--nav-height) + 3rem) 2rem 2rem;
+  text-align: center;
+}
+.archive-page .legal-hero h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: var(--text-white);
+  margin-bottom: 0.5rem;
+}
+.archive-page .legal-hero .hero-divider {
+  width: 80px;
+  height: 4px;
+  background: var(--pride-gradient);
+  margin: 1.5rem auto;
+  border-radius: 2px;
+}
+.archive-page .legal-hero p {
+  font-family: 'Roboto Slab', serif;
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+.archive-body {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 1rem 2rem 3rem;
+}
+
+.archive-group {
+  margin-bottom: 3rem;
+}
+.archive-group h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-accent, #70d6ec);
+  margin: 0 0 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border-light);
+}
+.archive-group h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-white);
+  margin: 2rem 0 1rem;
+}
+
+.archive-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.archive-item {
+  display: block;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-light);
+  padding: 1.1rem 1.3rem;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.archive-item:hover,
+.archive-item:focus-visible {
+  border-color: var(--text-accent, #70d6ec);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+}
+.archive-item-title {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-white);
+  margin-bottom: 0.3rem;
+}
+.archive-item-note {
+  display: block;
+  font-family: 'Roboto Slab', serif;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-light);
+}
+
+.archive-events {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.archive-event {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  background: var(--bg-light);
+  overflow: hidden;
+}
+.archive-event-media {
+  aspect-ratio: 4 / 5;
+  background: var(--dark-bg-light, #1b2a40);
+}
+.archive-event-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.archive-event-body {
+  padding: 1.25rem 1.4rem 1.4rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.archive-event-city {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-accent, #70d6ec);
+}
+.archive-event-body h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--text-white);
+  margin: 0;
+}
+.archive-event-when {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text-white);
+  margin: 0.2rem 0 0;
+}
+.archive-event-where,
+.archive-event-note {
+  font-family: 'Roboto Slab', serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-light);
+  margin: 0;
+}
+.archive-event-note { color: var(--text-muted, #8da2bd); }
+
+.archive-foot {
+  font-family: 'Roboto Slab', serif;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text-light);
+  border-top: 1px solid var(--border-light);
+  padding-top: 1.5rem;
+}
+.archive-foot a {
+  color: var(--text-accent, #70d6ec);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .archive-body { padding: 0.5rem 1rem 2.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .archive-item { transition: none; }
+  .archive-item:hover { transform: none; }
+}

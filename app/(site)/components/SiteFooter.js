@@ -46,46 +46,35 @@ async function loadLeadership() {
   }
 }
 
+// Keep in step with FOOTER_HTML in public/js/site-template.js. Post-election
+// (2026-11) the footer carries everything the five-item primary nav does not.
 const FOOTER_COLUMNS = [
   {
     heading: 'Organization',
     links: [
       ['/issues', 'Issues'],
-      ['/scorecard', 'Scorecard'],
-      ['/about', 'About'],
-      ['/board', 'Board'],
-      ['/elected-resources', 'Officials Toolkit'],
       ['/founding-members', 'Founding Members'],
-      ['/contact', 'Contact'],
-    ],
-  },
-  {
-    heading: 'Get Involved',
-    links: [
-      ['/donate', 'Donate'],
-      ['/donate/founding-member', 'Founding Membership'],
-      ['/events', 'Events'],
       ['/volunteer', 'Volunteer'],
-      ['/endorsements', 'Endorsed Candidates'],
-      ['/endorsement/screening', 'Candidate Endorsement'],
+      ['/elected-resources', 'Elected Resources'],
+      ['/board', 'Board'],
     ],
   },
   {
     heading: 'Connect with Us',
     links: [
-      ['/connect#schedule', 'Schedule a Call'],
-      ['/connect#message', 'Send a Message'],
-      ['mailto:press@ohiopride.org', 'Press Inquiries'],
+      ['/connect', 'Connect'],
+      ['/contact', 'Contact'],
+      ['/archive', 'Archive'],
     ],
   },
   {
     heading: 'Legal',
     links: [
-      ['/privacy', 'Privacy Policy'],
-      ['/terms', 'Terms of Use'],
-      ['/credits', 'Photo Credits'],
-      ['/brand', 'Brand Guide'],
-      ['/admin/login', 'Admin Sign In', { rel: 'nofollow' }],
+      ['/brand', 'Brand'],
+      ['/privacy', 'Privacy'],
+      ['/terms', 'Terms'],
+      ['/credits', 'Credits'],
+      ['/admin/login', 'Admin', { rel: 'nofollow' }],
     ],
   },
 ];

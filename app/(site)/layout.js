@@ -14,6 +14,7 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
+import ArchiveBanner from './components/ArchiveBanner';
 import {
   DEFAULT_OG_IMAGE,
   DEFAULT_OG_IMAGE_ALT,
@@ -105,6 +106,7 @@ export default function RootLayout({ children }) {
         />
 
         <SiteHeader />
+        <ArchiveBanner />
         {children}
         <SiteFooter />
 
@@ -117,16 +119,17 @@ export default function RootLayout({ children }) {
         <Script src="/js/main.js" strategy="afterInteractive" />
         <Script src="/js/enhancements.js" strategy="afterInteractive" />
 
-        {/* Two day promotion for /governor-guide. The static pages get this
-            from site-template.js; ported pages get it here. Self expiring, so
-            it needs no deadline cleanup. Delete both loaders with the file. */}
-        <Script src="/js/guide-popup.js" strategy="afterInteractive" />
+        {/* Seasonal fundraising banners (Giving Tuesday, year end). The static
+            pages get this from site-template.js; ported pages get it here. Each
+            window is dated inside the file, so nothing here needs a deadline
+            cleanup, and the file sits inert the rest of the year. */}
+        <Script src="/js/season-banners.js" strategy="afterInteractive" />
 
         {/* Vercel Web Analytics. The static pages under public/ load the raw
             tag through /js/vercel-insights.js; ported pages use the component
             instead, because it reports the matched App Router route rather
             than the resolved path. That keeps a dynamic page from spraying
-            one analytics row per URL — /issues/[id] stays a single row.
+            one analytics row per URL: /issues/[id] stays a single row.
 
             Do NOT also load /js/vercel-insights.js here. Both send the same
             pageview, and the shared header this layout renders is React, not
