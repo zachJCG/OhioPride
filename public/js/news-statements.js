@@ -1,5 +1,5 @@
 /* ============================================================
-   Ohio Pride PAC — News & Public Statements Dataset
+   Ohio Pride PAC: News & Public Statements Dataset
    ------------------------------------------------------------
    One row per recorded public statement, press event, floor
    speech, or media quote that contributes to a legislator's
@@ -8,7 +8,7 @@
    member has a non-zero n.
 
    Field conventions (mirror public.news_statements in
-   Migration 7 — same names, same scale):
+   Migration 7: same names, same scale):
 
      id          stable slug, "<district>-<chamber_letter>-<nnn>"
      chamber     "house" | "senate"
@@ -98,7 +98,7 @@ const NEWS_STATEMENTS = [
     sourceUrl: "" },
   { id: "44-h-01", chamber: "house",  district: 44, date: "2025-06-01", sentiment: "anti", points: -3,
     headline: "Primary/co-sponsor of 8+ anti-LGBTQ+ bills (most prolific author of the 136th GA)",
-    context:  "Williams's bills this GA include HB 249, 155, 190, 262, 693, 796, 798 — the largest single-member anti-LGBTQ+ slate.",
+    context:  "Williams's bills this GA include HB 249, 155, 190, 262, 693, 796, 798: the largest single-member anti-LGBTQ+ slate.",
     sourceUrl: "" },
   { id: "61-h-01", chamber: "house",  district: 61, date: "2025-03-01", sentiment: "anti", points: -2,
     headline: "Primary sponsor HB 155 (DEI ban), HB 262 (Natural Family Month)",
@@ -141,7 +141,7 @@ const NEWS_STATEMENTS = [
     sourceUrl: "" },
   { id: "6-s-02",  chamber: "senate", district: 6,  date: "2024-01-10", sentiment: "pro",  points:  2,
     headline: "Voted N on HB 68 House override (135th GA, as state representative)",
-    context:  "As a state representative, Blackshear voted N on the House override of HB 68 (gender-affirming care + sports ban) on 2024-01-10 — the highest-stakes equality vote of the 135th GA. The override carried 65-28 with the Republican supermajority.",
+    context:  "As a state representative, Blackshear voted N on the House override of HB 68 (gender-affirming care + sports ban) on 2024-01-10, the highest-stakes equality vote of the 135th GA. The override carried 65-28 with the Republican supermajority.",
     sourceUrl: "https://www.legislature.ohio.gov/legislation/135/hb68/votes" },
   { id: "6-s-03",  chamber: "senate", district: 6,  date: "2023-06-21", sentiment: "pro",  points:  1,
     headline: "Voted N on HB 8 (Parents' Bill of Rights / forced outing) House passage",
@@ -173,7 +173,7 @@ const NEWS_STATEMENTS = [
     sourceUrl: "" },
   { id: "23-s-01", chamber: "senate", district: 23, date: "2025-01-01", sentiment: "pro",  points:  3,
     headline: "Senate Minority Leader; primary sponsor SB 70, SB 71, SB 211",
-    context:  "Antonio is Ohio's first openly LGBTQ+ legislator and the caucus's lead on SB 70 (Fairness Act, 12th introduction), SB 71, and SB 211.",
+    context:  "Antonio is Ohio's first out LGBTQ+ legislator and the caucus's lead on SB 70 (Fairness Act, 12th introduction), SB 71, and SB 211.",
     sourceUrl: "" },
   { id: "25-s-01", chamber: "senate", district: 25, date: "2024-01-24", sentiment: "pro",  points:  1,
     headline: "Motioned to adjourn in protest against HB 68 override vote",

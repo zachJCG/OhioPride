@@ -79,7 +79,7 @@
       body { background: var(--dark-bg, #0b1f33); }
 
       /* ============================================================
-         HERO STATS — mobile-first: Members + Counties on row 1,
+         HERO STATS, mobile-first: Members + Counties on row 1,
          Claim-Your-Number CTA spans row 2. Tablet+: 3-column row.
          No time-based "newest member" card (it required minute-by-
          minute updates and added zero strategic value).
@@ -202,7 +202,7 @@
       .goal-block { max-width: 720px; margin: 2.25rem auto 0; }
 
       /* ============================================================
-         COUNTY TILE WALL — all 88 Ohio counties.
+         COUNTY TILE WALL: all 88 Ohio counties.
          Claimed counties get a Pride gradient border; unclaimed
          tiles are dimmed, with a "claim me" hint. Click filters the
          roster below.
@@ -651,7 +651,7 @@
       }
 
       /* ============================================================
-         DIRECTORY CONTROLS — mobile-first
+         DIRECTORY CONTROLS: mobile-first
          Default: full-width search + "Filters" toggle button, with
          a collapsible drawer holding the 3 selects + elected toggle.
          Tablet+: revert to 4-column grid + separate elected row.
@@ -1014,7 +1014,7 @@
       }
 
       /* ============================================================
-         RESPONSIVE BREAKPOINTS — mobile-first
+         RESPONSIVE BREAKPOINTS: mobile-first
          Defaults above target phones; layer up via min-width queries.
          ============================================================ */
 
@@ -1136,7 +1136,7 @@
           <a href="/donate/founding-member" class="btn btn-pride-shimmer">Become a Founding Member</a>
         </div>
 
-        <!-- ============ COUNTY TILE WALL — all 88 counties ============ -->
+        <!-- ============ COUNTY TILE WALL: all 88 counties ============ -->
         <div class="county-wall-section">
           <div class="wall-head">
             <h2>88 Counties. <span class="pride-text">Every One Matters.</span></h2>
@@ -1692,7 +1692,7 @@
 
       // ============================================================
       // HERO STATS + COUNTY WALL
-      // (No time-based "newest member" — that card was retired
+      // (No time-based "newest member"; that card was retired
       // because keeping "joined 6 hours ago" current was a chore
       // and provided no real value.)
       // ============================================================
@@ -1727,8 +1727,8 @@
           var lit = n > 0 ? " lit" : "";
           var pressed = state.county === c ? ' aria-pressed="true"' : ' aria-pressed="false"';
           var hint = n > 0
-            ? c + " County — " + n + " founding member" + (n === 1 ? "" : "s") + ". Tap to filter."
-            : c + " County — be the first.";
+            ? c + " County: " + n + " founding member" + (n === 1 ? "" : "s") + ". Tap to filter."
+            : c + " County: be the first.";
           return '<button type="button" class="county-tile' + lit + '" data-county="' + escapeHtml(c) + '"' + pressed + ' title="' + escapeHtml(hint) + '">' +
             '<span class="ct-name">' + escapeHtml(c) + '</span>' +
             '<span class="ct-count">' + (n > 0 ? n : '&middot;') + '</span>' +
@@ -1747,7 +1747,7 @@
             var c = btn.getAttribute("data-county");
             if (!c) return;
             state.county = (state.county === c) ? "" : c;
-            // Clear city when county changes — matches the leaderboard convention
+            // Clear city when county changes; matches the leaderboard convention
             // so the city dropdown can't hold a stale value from a different county.
             state.city = "";
             state.currentPage = 1;
@@ -1902,19 +1902,19 @@
           ? m.electedOffice + (m.jurisdiction ? ', ' + m.jurisdiction : '')
           : '';
         var roleClass = roleText ? 'col-role' : 'col-role is-empty';
-        var roleDisplay = roleText ? escapeHtml(roleText) : '&mdash;';
+        var roleDisplay = roleText ? escapeHtml(roleText) : '-';
 
         var cityText = m.city || '';
         var cityClass = cityText ? 'col-city' : 'col-city is-fallback';
-        var cityDisplay = cityText ? escapeHtml(cityText) : '&mdash;';
+        var cityDisplay = cityText ? escapeHtml(cityText) : '-';
 
         var stateText = m.state || '';
         var stateClass = stateText ? 'col-state' : 'col-state is-fallback';
-        var stateDisplay = stateText ? escapeHtml(stateText) : '&mdash;';
+        var stateDisplay = stateText ? escapeHtml(stateText) : '-';
 
         var countyText = m.county ? m.county + ' County' : '';
         var countyClass = countyText ? 'col-county' : 'col-county is-fallback';
-        var countyDisplay = countyText ? escapeHtml(countyText) : '&mdash;';
+        var countyDisplay = countyText ? escapeHtml(countyText) : '-';
 
         var pin = hasElected
           ? '<span class="elected-pin" title="Elected official">'
@@ -1996,7 +1996,7 @@
           var startIdx = (state.currentPage - 1) * state.pageSize;
           var endIdx = Math.min(filteredLen, startIdx + state.pageSize);
           label.textContent = (startIdx + 1).toLocaleString()
-            + '–' + endIdx.toLocaleString()
+            + ' to ' + endIdx.toLocaleString()
             + ' of ' + filteredLen.toLocaleString();
         }
 

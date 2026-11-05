@@ -1998,7 +1998,7 @@
           <div class="ct-meta"><span id="ct-house-count">99</span> Members</div>
         </div>
         <div class="ct-avg">
-          <span class="ct-avg-num" id="ct-house-avg">&mdash;</span>
+          <span class="ct-avg-num" id="ct-house-avg">-</span>
           <span class="ct-avg-suffix">Average Grade</span>
         </div>
         <div class="ct-bars" id="ct-house-bars"></div>
@@ -2009,7 +2009,7 @@
           <div class="ct-meta"><span id="ct-senate-count">33</span> Members</div>
         </div>
         <div class="ct-avg">
-          <span class="ct-avg-num" id="ct-senate-avg">&mdash;</span>
+          <span class="ct-avg-num" id="ct-senate-avg">-</span>
           <span class="ct-avg-suffix">Average Grade</span>
         </div>
         <div class="ct-bars" id="ct-senate-bars"></div>
@@ -2101,7 +2101,7 @@
         <p class="section-label">How We Score</p>
         <h2 class="m-h1">The Quick Version</h2>
         <p class="m-lede">
-          Three subscores measure what each lawmaker actually did: <strong>Floor Votes</strong> on tracked bills, <strong>Committee Votes</strong> on tracked bills, and <strong>Bills</strong> they sponsored or co-sponsored. Each subscore scales from &minus;5 to +5. We weight them, add a flat 50 baseline that every lawmaker starts from, and clamp to 0&ndash;100. No party calibration. No chamber curve. Trackable evidence only.
+          Three subscores measure what each lawmaker actually did: <strong>Floor Votes</strong> on tracked bills, <strong>Committee Votes</strong> on tracked bills, and <strong>Bills</strong> they sponsored or co-sponsored. Each subscore scales from &minus;5 to +5. We weight them, add a flat 50 baseline that every lawmaker starts from, and clamp to 0 to 100. No party calibration. No chamber curve. Trackable evidence only.
         </p>
       </div>
 
@@ -2246,7 +2246,7 @@
           html += '<tr>' +
             '<td><span class="mg-letter" style="color:' + g.color + '">' + g.grade + '</span></td>' +
             '<td>' + g.label + '</td>' +
-            '<td>' + g.min + '&ndash;' + maxVal + '</td>' +
+            '<td>' + g.min + ' to ' + maxVal + '</td>' +
           '</tr>';
         });
         html += '</tbody>';
@@ -2295,8 +2295,8 @@
       _renderChamberTile('Senate', document.getElementById('ct-senate-avg'), document.getElementById('ct-senate-count'), document.getElementById('ct-senate-bars'));
 
       /* Deterministic slug fallback used when share.js (window.OPP_SHARE)
-         hasn't loaded. Mirrors the share.js shape — first-last-chamber-d#
-         — so deep links from the leaderboard match what the live site
+         hasn't loaded. Mirrors the share.js shape (first-last-chamber-d#)
+         so deep links from the leaderboard match what the live site
          already supports. Without this, every Top/Bottom 5 link fell back
          to a generic #card-list anchor, which the audit flagged. */
       function _fallbackSlug(m) {
@@ -2390,7 +2390,7 @@
 
       function _voteCellLabel(v) {
         if (v === 'Y' || v === 'N' || v === 'NV' || v === 'E') return v;
-        return '—';
+        return '-';
       }
 
       function _stageLabel(stage) {
@@ -2676,7 +2676,7 @@
         }
 
         /* v6 weights: vf*4, vc*4, s*2. Floor and committee tracked
-           separately but weighted equally — both are binding action.
+           separately but weighted equally; both are binding action.
            Sponsorship at half weight because it signals commitment but
            not the same as a recorded yes/no on the bill itself. Added
            to a flat 50 baseline (no party calibration, no chamber
@@ -2735,7 +2735,7 @@
 
       /* News & Public Statements: removed in v6.
          The score is now driven exclusively by trackable legislative
-         evidence — floor votes, committee votes, and sponsorship.
+         evidence: floor votes, committee votes, and sponsorship.
          Quotes and floor speeches are too easy to spin and too hard
          to weight consistently across lawmakers. Function retained as
          a no-op stub so any older callers don't throw. */
@@ -2766,7 +2766,7 @@
              same data sources the expanded sections render from, so
              the headline number on each card matches what the reader
              sees when they open it. v6 splits Votes into Floor and
-             Committee — same buckets the score uses. */
+             Committee (same buckets the score uses). */
           var floorCount = 0, cmteCount = 0;
           try {
             if (typeof getVoteBreakdown === 'function') {

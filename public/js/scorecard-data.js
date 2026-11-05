@@ -247,7 +247,7 @@ const SENATE_MEMBERS = [
   { d: 20, name: "Tim Schaffer",              party: "R", v: -5, s: -3,  n: 0,  notes: "Primary sponsor SB 53 (anti-protest/vandalism)." },
   { d: 21, name: "Kent Smith",                party: "D", v: 5,  s: 0,   n: 1,  notes: "Criticized 'state-sponsored bullying of trans youth' during HB 68 debate." },
   { d: 22, name: "Mark Romanchuk",            party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 23, name: "Nickie J. Antonio",         party: "D", v: 5,  s: 9,   n: 3,  notes: "Primary sponsor SB 70 (Fairness Act, 12th time), SB 71 (conversion therapy ban), SB 211 (Love Makes a Family). Senate Minority Leader. First openly LGBTQ+ Ohio legislator." },
+  { d: 23, name: "Nickie J. Antonio",         party: "D", v: 5,  s: 9,   n: 3,  notes: "Primary sponsor SB 70 (Fairness Act, 12th time), SB 71 (conversion therapy ban), SB 211 (Love Makes a Family). Senate Minority Leader. First out LGBTQ+ Ohio legislator." },
   { d: 24, name: "Thomas F. Patton",          party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 25, name: "William P. DeMora",         party: "D", v: 5,  s: 0,   n: 1,  notes: "Motioned to adjourn in protest against HB 68 override vote. Did not co-sponsor HB 68 or any tracked anti-equality bill." },
   { d: 26, name: "Bill Reineke",              party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
@@ -272,7 +272,7 @@ const SENATE_MEMBERS = [
 })();
 
 /* -------------------------------------------------------
-   SCORE CALCULATION (used by scorecard.html)  — v6
+   SCORE CALCULATION (used by scorecard.html): v6
 
    Per the published methodology, each legislator's grade is
    derived from real evidence on three subscores in -5..+5,
@@ -421,9 +421,9 @@ function computeSubscores(member) {
 }
 
 /* Composite score (0-100).
-   v6 — Trackable evidence only. Every lawmaker starts from the same
+   v6: Trackable evidence only. Every lawmaker starts from the same
    flat 50 baseline regardless of party or caucus. The grade is driven
-   entirely by floor votes, committee votes, and sponsorship — the
+   entirely by floor votes, committee votes, and sponsorship, the
    three signals we can verify from the official chamber journal and
    Legislative Service Commission. Floor and committee are weighted
    equally but tracked separately so a reader can see both signals.
@@ -432,9 +432,9 @@ function computeSubscores(member) {
    easy to spin and too hard to weight consistently across lawmakers.
 
    Evidence weights (v6, April 2026):
-     vf (floor votes)       x4   (range -20 to +20)  — binding action
-     vc (committee votes)   x4   (range -20 to +20)  — binding action
-     s  (sponsorship)       x2   (range -10 to +10)  — public commitment
+     vf (floor votes)       x4   (range -20 to +20): binding action
+     vc (committee votes)   x4   (range -20 to +20): binding action
+     s  (sponsorship)       x2   (range -10 to +10): public commitment
                                   (primary +/-2, co-sponsor +/-1)
 
    A spotless +5/+5/+5 record reaches exactly 100 (A+); a worst-case
@@ -665,7 +665,7 @@ const LEGISLATOR_NEWS = {
    Each entry is an array of bill objects from SCORED_BILLS plus a role
    ("primary" | "co"). Used for cases the notes regex can't catch. */
 const LEGISLATOR_SPONSORSHIPS = {
-  /* HB 467 (135th GA) — Trans Candidate Name-Change Fix.
+  /* HB 467 (135th GA): Trans Candidate Name-Change Fix.
      Pro-equality. Died in House Government Oversight Committee
      12/31/2024 with no committee or floor vote. Listed here so
      current 136th-GA members carry credit on their scorecard

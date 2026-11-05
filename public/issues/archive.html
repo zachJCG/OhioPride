@@ -85,7 +85,7 @@
       <h1>Enacted Legislation Archive</h1>
       <p>
         Bills that have been signed into law in the 136th General Assembly
-        (2025&ndash;2026). Active legislation lives on the
+        (2025 to 2026). Active legislation lives on the
         <a href="/issues">Issue Tracker</a>.
       </p>
     </section>
@@ -106,8 +106,8 @@
             <div class="stat-label">Pro-Equality</div>
           </div>
           <div class="stat-card stat-card-updated">
-            <div class="stat-updated-date" id="lastUpdatedDate">&mdash;</div>
-            <div class="stat-updated-time" id="lastUpdatedTime">&mdash;</div>
+            <div class="stat-updated-date" id="lastUpdatedDate">-</div>
+            <div class="stat-updated-time" id="lastUpdatedTime">-</div>
             <div class="stat-label">Last Updated</div>
           </div>
         </div>
@@ -300,7 +300,7 @@
         var elEnacted = document.getElementById("statEnacted");
         var elAnti = document.getElementById("statAnti");
         var elPro = document.getElementById("statPro");
-        // Filter-aware totals — match the active stance/category selection
+        // Filter-aware totals: match the active stance/category selection
         var enacted = filtered.length;
         var anti = filtered.filter(function (b) { return (b.stance || "anti") === "anti"; }).length;
         var pro = filtered.filter(function (b) { return b.stance === "pro"; }).length;

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   OHIO PRIDE — Volunteer / Intern Multi-Step Form
+   OHIO PRIDE: Volunteer / Intern Multi-Step Form
    ----------------------------------------------
    Drives the 5-step signup form on /volunteer.
 
@@ -367,7 +367,7 @@
           var msg = (r.body && r.body.error) || ('http_' + r.status);
           throw new Error(msg);
         }
-        // SUCCESS — swap form for success state
+        // SUCCESS: swap form for success state
         var pathBeforeReset = state.path;
         var pos = pathBeforeReset === 'internship' ? val('position') : '';
         renderSuccess(pathBeforeReset, pos);
