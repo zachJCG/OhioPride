@@ -102,11 +102,24 @@ function CycleCard({ cycle, screeningPath }) {
   );
 }
 
-/* The copy deck's application paragraph, with the year from the data. */
+/* The copy deck's application paragraph, with the year from the data.
+ *
+ * The literal fallbacks render only when the cycles could not be read. A
+ * successful read with nothing open is a normal state (early voting has
+ * started and the next cycle is not seeded yet, or staff closed the window
+ * with an override), and it says so rather than printing dates for elections
+ * the cards beneath call closed. */
 function ApplicationCopy({ cycles, loadFailed }) {
-  const year = (!loadFailed && applicationYear(cycles)) || APPLICATION_YEAR_FALLBACK;
+  const year = loadFailed ? APPLICATION_YEAR_FALLBACK : applicationYear(cycles);
   const lines = loadFailed ? DEADLINE_LINES_FALLBACK : deadlineLines(cycles);
-  const shown = lines.length ? lines : DEADLINE_LINES_FALLBACK;
+
+  if (!year) {
+    return (
+      <p className="lede">
+        We are between application windows. Deadlines for every election are listed below.
+      </p>
+    );
+  }
 
   return (
     <>
@@ -115,7 +128,7 @@ function ApplicationCopy({ cycles, loadFailed }) {
         decides after the filing deadline for your race.
       </p>
       <ul className="cycle-deadlines">
-        {shown.map((line) => (
+        {lines.map((line) => (
           <li key={line}>{line}</li>
         ))}
         <li>Confirm your race&apos;s deadline with your county board of elections.</li>
@@ -130,6 +143,8 @@ function ApplicationCopy({ cycles, loadFailed }) {
 }
 
 export default function CycleList({ cycles, loadFailed, screeningPath }) {
+  // A read that succeeded with no published cycle at all: nothing to say.
+  if (!loadFailed && !(cycles || []).length) return null;
   const anyOpen = !loadFailed && (cycles || []).some((c) => c.is_open);
 
   return (

@@ -43,7 +43,7 @@ const IS_OUT_LABEL = {
 /* What a reviewer sees when they try to publish an application the Board has
  * not endorsed. The rule itself is the endorsement_published_requires_endorsed
  * check constraint; 23514 is Postgres's code for a check violation. */
-export const PUBLISH_GUARD_MESSAGE = 'Endorse before publishing.';
+const PUBLISH_GUARD_MESSAGE = 'Endorse before publishing.';
 const isPublishGuardError = (error) =>
   error?.code === '23514' || /endorsement_published_requires_endorsed/.test(error?.message || '');
 
@@ -609,7 +609,7 @@ export default function CandidatePage() {
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 <button className="btn btn-primary" onClick={() => setStatus('endorsed', {
-                  confirm: `Record ${name} as ENDORSED?\n\nThis publishes them at ohiopride.org/endorsements and stamps today as the endorsement date.`,
+                  confirm: `Record ${name} as ENDORSED?\n\nThis stamps today as the endorsement date. They stay off the public page until you tick "Show on the public endorsements page" below.`,
                 })}>Endorsed</button>
                 <button className="btn" onClick={() => setStatus('declined', {
                   confirm: `Record ${name} as DECLINED?\n\nNothing is published. Remember to email the campaign.`,

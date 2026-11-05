@@ -317,7 +317,9 @@
     /* ── Quick picks (Step 1) ───────────────────────────────────────────── */
     .quick-grid { margin-bottom: 18px; }
     @media (min-width: 820px) {
-      .quick-grid { grid-template-columns: 1fr 1fr 1fr; }
+      /* Declared with both classes: .path-grid's own two-column rule comes
+         later in the sheet and would win on equal specificity. */
+      .path-grid.quick-grid { grid-template-columns: 1fr 1fr 1fr; }
     }
     .quick-card { padding: 16px 18px 14px; gap: 6px; }
     .quick-card-fixed { border-style: dashed; }
@@ -1550,7 +1552,10 @@
     function renderPathCards() {
       const grid = $('#pathGrid');
       if (!state.catalog.paths.length) {
-        grid.innerHTML = '<div class="path-error">We could not load the application right now. Please refresh, or email screening@ohiopride.org.</div>';
+        const msg = '<div class="path-error">We could not load the application right now. Please refresh, or email screening@ohiopride.org.</div>';
+        grid.innerHTML = msg;
+        const quick = $('#quickGrid');
+        if (quick) quick.innerHTML = msg;
         return;
       }
       grid.innerHTML = state.catalog.paths.map(p => (
@@ -1600,7 +1605,10 @@
 
     function renderQuickCards() {
       const grid = $('#quickGrid');
-      if (!grid) return;
+      // No paths means the catalog did not load and renderPathCards has
+      // already put the error on screen; a card whose path is unknown would
+      // click through to nothing.
+      if (!grid || !state.catalog.paths.length) return;
       const picks = quickPicks();
       const officeCards = picks.map(o => {
         const meta = pathMeta(o.path);
@@ -1630,16 +1638,29 @@
       });
     }
 
+    function quickLabelText(key) {
+      return key === QUICK_SPECIAL
+        ? 'Which best describes the office on the special election ballot?'
+        : 'Which best describes the office?';
+    }
+
     function selectQuick(key) {
       const office = quickOfficeById(key);
-      state.quick = key;
-      highlightQuickCard();
+      const previous = state.quick;
       const wrap = $('#pathGridWrap');
       const label = $('#pathGridLabel');
 
       if (office) {
+        // The switch may be declined (the confirm in selectPath); nothing
+        // else is applied until it has happened.
+        if (!selectPath(office.path, { advance: true })) {
+          state.quick = previous;
+          highlightQuickCard();
+          return;
+        }
+        state.quick = key;
+        highlightQuickCard();
         if (wrap) wrap.hidden = true;
-        selectPath(office.path, { advance: true });
         // selectPath resets step 2, so the office goes in after it.
         const sel = $('#office_sought');
         if (sel) { sel.value = office.label; syncOfficeFromSelect(); }
@@ -1648,13 +1669,11 @@
         return;
       }
 
+      state.quick = key;
+      highlightQuickCard();
       // Special election or something else: the office-type cards decide the
       // path. A special election also presets "Which election?".
-      if (label) {
-        label.textContent = key === QUICK_SPECIAL
-          ? 'Which best describes the office on the special election ballot?'
-          : 'Which best describes the office?';
-      }
+      if (label) label.textContent = quickLabelText(key);
       if (wrap) {
         wrap.hidden = false;
         wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -1674,7 +1693,9 @@
       highlightQuickCard();
       if (key === QUICK_SPECIAL || key === QUICK_OTHER) {
         const wrap = $('#pathGridWrap');
+        const label = $('#pathGridLabel');
         if (wrap) wrap.hidden = false;
+        if (label) label.textContent = quickLabelText(key);
       }
     }
 
@@ -2020,20 +2041,23 @@
       const data = collectFormData();
       // Any candidate, question, or background content counts.
       for (const [k, v] of Object.entries(data)) {
-        if (k === 'is_incumbent' || k === 'submitted_by_kind' || k === 'quick_pick') continue;
+        if (k === 'is_incumbent' || k === 'submitted_by_kind' || k === 'quick_pick' || k === 'cycle_id') continue;
         if (typeof v === 'string' && v.trim()) return true;
         if (v === true) return true;
       }
       return false;
     }
 
+    /* Returns true when the path is now `path` (switched, or already there),
+       false when the candidate declined the switch or the path is unknown, so
+       a caller that has more to apply on top of the switch can stop. */
     function selectPath(path, opts) {
       opts = opts || {};
-      if (!pathMeta(path)) return;
+      if (!pathMeta(path)) return false;
 
       if (path === state.path) {
         if (opts.advance !== false) showStep(2);
-        return;
+        return true;
       }
 
       if (state.path && !opts.silent && currentDraftHasAnswers()) {
@@ -2041,7 +2065,7 @@
           'Switch to a different office? We will show the questions for the new office. ' +
           'Your answers for the current office are saved on this device and will return if you switch back.'
         );
-        if (!ok) return;
+        if (!ok) return false;
       }
 
       state.path = path;
@@ -2064,6 +2088,7 @@
 
       $('#btnNext').disabled = false;
       if (opts.advance !== false) showStep(2);
+      return true;
     }
 
     // Clears candidate-info (step 2) and background (step 4) fields. Step 1
@@ -2094,6 +2119,10 @@
       syncOfficeFromSelect();
       updateIncumbentVisibility();
       updateSubmitterVisibility();
+      // A restored draft can carry a ticked "Something else" with a note, or a
+      // special election with a date; both fields show only when derived.
+      updateHelpNoteVisibility();
+      ensureCycleSelection();
     }
 
     /* =================================================================
@@ -2406,8 +2435,10 @@
     function cycleForSpecial(dateStr) {
       const sorted = openCyclesByDate();
       if (dateStr) {
+        // The next election on or after the date; past every open election,
+        // the latest one, which is the queue it will actually be read in.
         const hit = sorted.find(function (c) { return String(c.election_date || '') >= dateStr; });
-        if (hit) return hit;
+        return hit || sorted[sorted.length - 1] || null;
       }
       return sorted[0] || null;
     }
@@ -2459,10 +2490,13 @@
           + ' municipal, township, school board, and special elections across Ohio.'
           + ' Our board reviews every application and decides after the filing deadline for your race.';
       }
+      // Always from the data: the literal bullets in the markup are only for
+      // a page whose script never ran, never a fallback beside a live year.
       const lines = deadlineLines();
       const list = $('#openDeadlines');
-      if (list && lines.length) {
+      if (list) {
         list.innerHTML = lines.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('');
+        list.hidden = !lines.length;
       }
       panel.hidden = false;
     }
@@ -2877,7 +2911,9 @@
         ensureCycleSelection();
       } catch (err) {
         console.error('Failed to load application catalog:', err);
-        const grid = $('#pathGrid');
+        // The quick-pick grid is the one on screen; #pathGrid sits inside a
+        // wrapper that stays hidden until a candidate asks for it.
+        const grid = $('#quickGrid') || $('#pathGrid');
         if (grid) grid.innerHTML = '<div class="path-error">We could not load the application right now. Please refresh, or email screening@ohiopride.org.</div>';
         showStep(1);
       }

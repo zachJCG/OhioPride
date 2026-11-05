@@ -110,3 +110,29 @@ is what shows when the form IS open:
   so the reopen path cannot trip the constraint.
 - `lib/seo.mjs`: the form's description now says 2027 municipal, township,
   school board, and special elections.
+
+### Review fixes, same day (`20261105010000_post_election_phase1_review_fixes.sql`)
+
+- **Views are read surfaces.** Supabase's default privileges gave anon and
+  authenticated INSERT/UPDATE/DELETE on every view, and eleven views in this
+  schema are auto-updatable and owner-privileged, so the public anon key
+  could have edited or deleted an endorsed candidate's application through
+  `public_endorsements`. DML is revoked on every view in `public`; SELECT is
+  unchanged. No application code writes through a view. When a new view is
+  created, revoke DML on it in the same migration.
+- **Leaving endorsed** now clears `is_published`, `result` and `result_note`
+  in the status trigger, so a plain `set status = 'withdrawn'` no longer
+  trips the publish guard and a declined candidate cannot keep a result.
+- **`cycle` follows a change of election** (`cycle_id`) or a staff
+  correction of `election_year`.
+- **The anon insert policy pins** `is_published`, `result`, `result_note`
+  and `result_updated_at`.
+- Form: load errors land in the visible grid; a declined office switch
+  leaves the quick pick alone; a restored draft re-derives the help note and
+  special election fields; the deadline list is always rebuilt from the
+  data; a special election dated after every open election files under the
+  latest one; the three-column card rule applies on desktop.
+- `/endorsements`: the literal 2027 copy renders only when the cycles could
+  not be read. A successful read with nothing open says so.
+- Admin: the Endorse confirm no longer promises publication; publishing is
+  the tick below it.
