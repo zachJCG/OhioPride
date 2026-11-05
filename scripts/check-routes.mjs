@@ -26,10 +26,15 @@ const BASE = (process.env.BASE || 'http://localhost:3000').replace(/\/$/, '');
 let passed = 0;
 const failures = [];
 
+/* A protected Vercel preview answers only with its auth cookie. Pass it as
+ * COOKIE="_vercel_jwt=..." (open the preview's share link once to get it). */
+const COOKIE = process.env.COOKIE || '';
+
 async function check(kind, path, assert, init = {}) {
   let res;
   try {
-    res = await fetch(BASE + path, { redirect: 'manual', ...init });
+    const headers = { ...(init.headers || {}), ...(COOKIE ? { cookie: COOKIE } : {}) };
+    res = await fetch(BASE + path, { redirect: 'manual', ...init, headers });
   } catch (err) {
     failures.push(`${kind}  ${path} -> request failed: ${err.message}`);
     return;
