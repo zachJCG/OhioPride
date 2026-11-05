@@ -9,8 +9,8 @@
  *
  * The block is delimited by `<!-- seo:start -->` / `<!-- seo:end -->` and is
  * rebuilt from lib/seo.mjs on every run, so it is safe to run repeatedly and
- * pointless to edit by hand. Everything else in the <head> — stylesheets, font
- * preconnects, page-scoped <style> — is left exactly where it was.
+ * pointless to edit by hand. Everything else in the <head> - stylesheets, font
+ * preconnects, page-scoped <style> - is left exactly where it was.
  *
  * The generator owns a fixed set of tags and removes only those: <title>, the
  * description/robots/theme-color metas, every og: and twitter: meta, the
@@ -172,7 +172,7 @@ function stripManaged(head) {
  * public/js/bill-detail.js writes the bill number, title, nickname, official
  * title, status and meta cards into empty elements on DOMContentLoaded. That
  * left the served document with an empty <h1> and no sponsor, status, or date
- * text anywhere in the HTML — everything a crawler weighs most, available only
+ * text anywhere in the HTML - everything a crawler weighs most, available only
  * after it chooses to run the page's scripts.
  *
  * Writing the same values in at build time costs nothing at runtime: the
@@ -289,6 +289,6 @@ if (CHECK_ONLY) {
 }
 }
 
-/* Importable as a module — scripts/check-seo.mjs reuses applyTo() to tell
+/* Importable as a module - scripts/check-seo.mjs reuses applyTo() to tell
  * whether a page is stale, and importing it must not rewrite the repo. */
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) main();

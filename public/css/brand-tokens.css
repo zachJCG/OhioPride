@@ -1,5 +1,5 @@
 /* ==========================================================================
-   OHIO PRIDE PAC — Brand Tokens
+   OHIO PRIDE PAC - Brand Tokens
    --------------------------------------------------------------------------
    Single source of truth for brand color, type, and gradient variables.
    Sourced from the Ohio Pride PAC Brand Guide v2.0 (May 2026) and the
@@ -10,7 +10,7 @@
    Loaded via @import from /css/style.css and /css/site-template.css so
    every page that links either of those files inherits the canonical
    tokens automatically. Do not redefine these values in page-level
-   stylesheets — extend or compose instead.
+   stylesheets - extend or compose instead.
    ========================================================================== */
 
 :root {
@@ -24,7 +24,7 @@
   --brand-white:          #ffffff;
   --brand-white-65:       rgba(255, 255, 255, 0.65);
 
-  /* Progress Pride palette (raw chips — accent use only, never as text on navy) */
+  /* Progress Pride palette (raw chips - accent use only, never as text on navy) */
   --brand-pride-red:      #e40303;
   --brand-pride-orange:   #ffbc00;
   --brand-pride-yellow:   #ffed00;
@@ -91,9 +91,9 @@
 
   /* -- Wordmark construction (Brand Guide v2.0) ------------------------- */
   /* The v2.0 wordmark is constructed as:
-       OHIO  — Montserrat 600 uppercase, white (on navy) or navy (on white)
-       PRIDE — Montserrat 800 uppercase, Light Blue
-       PAC   — small uppercase label centered on a hairline divider beneath
+       OHIO  - Montserrat 600 uppercase, white (on navy) or navy (on white)
+       PRIDE - Montserrat 800 uppercase, Light Blue
+       PAC   - small uppercase label centered on a hairline divider beneath
                the wordmark, color matches OHIO.
      Construction tokens below control the inline .ohp-wordmark utility. */
   --brand-wordmark-tracking:        -0.02em;
@@ -106,7 +106,7 @@
   --brand-wordmark-divider-opacity: 0.85;
 
   /* ===========================================================
-     Legacy aliases — keep existing pages compiling unchanged.
+     Legacy aliases - keep existing pages compiling unchanged.
      New code should prefer the --brand-* tokens above.
      =========================================================== */
   --color-red:        var(--brand-pride-red);
@@ -203,14 +203,14 @@
   opacity: var(--brand-wordmark-divider-opacity);
 }
 
-/* Dark wordmark — use on light backgrounds */
+/* Dark wordmark - use on light backgrounds */
 .ohp-wordmark--dark {
   --brand-wordmark-ohio-color:    var(--brand-navy);
   --brand-wordmark-pac-color:     var(--brand-navy);
   --brand-wordmark-divider-color: var(--brand-navy);
 }
 
-/* Mono fallback — single-color, takes currentColor */
+/* Mono fallback - single-color, takes currentColor */
 .ohp-wordmark--mono .ohp-wordmark__ohio,
 .ohp-wordmark--mono .ohp-wordmark__pride,
 .ohp-wordmark--mono .ohp-wordmark__pac {

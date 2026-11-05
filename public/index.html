@@ -114,14 +114,14 @@
       }
 
       /* =====================================================
-         OPENING EFFECT — fly the flag.
+         OPENING EFFECT - fly the flag.
          First visit in a session: the Ohio cutout waits as a
          bare outline with a small cue, and the visitor's first
          scroll (or tap on the cue, or six quiet seconds) slides
          the Progress Pride stripes into it. Nothing covers the
          page and nothing blocks scrolling. The head script only
          adds .hp-flag-wait when JS runs, motion is allowed, and
-         this session has not seen it — everyone else gets the
+         this session has not seen it - everyone else gets the
          full flag straight away.
          ===================================================== */
       .hp-ohio .hp-stripe {
@@ -785,7 +785,7 @@
       }
 
       /* =====================================================
-         ENDORSED SLATE — compact cards: face, name, race.
+         ENDORSED SLATE - compact cards: face, name, race.
          The full case for each candidate lives on /endorsements.
          ===================================================== */
       .hp-slate-grid {
@@ -853,7 +853,7 @@
       @media (max-width: 620px)  { .hp-slate-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; } }
 
       /* =====================================================
-         FOUNDING MEMBERS — centered, carried by the goal bar.
+         FOUNDING MEMBERS - centered, carried by the goal bar.
          ===================================================== */
       .hp-founding {
         border-top: 3px solid;
@@ -1414,7 +1414,7 @@
             window.addEventListener(t, flyFlag, { passive: true, once: true });
           });
           if (window.scrollY > 40) {
-            flyFlag(); /* arrived mid-page (restored scroll) — don't gate */
+            flyFlag(); /* arrived mid-page (restored scroll) - don't gate */
           } else {
             flagTimer = setTimeout(flyFlag, 6000);
           }

@@ -1,4 +1,4 @@
-/* /robots.txt — generated, replacing the hand-written public/robots.txt.
+/* /robots.txt - generated, replacing the hand-written public/robots.txt.
  *
  * That file pointed at the sitemap and blocked /admin. This adds /api, which
  * was crawlable outright, and declares the canonical host so a crawler that

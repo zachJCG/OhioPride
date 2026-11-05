@@ -116,7 +116,7 @@
   }
 
   // ---------------------------------------------------------------
-  // Click handler — toggle details OR jump to form in intern mode
+  // Click handler - toggle details OR jump to form in intern mode
   // ---------------------------------------------------------------
   function onClick(ev) {
     var btn = ev.target.closest('button[data-action]');

@@ -59,7 +59,7 @@ const volunteerPayload = {
   availability: ['weekends','weekday_evenings'],
   time_commitment: 'monthly',
   prior_campaign_experience: true,
-  prior_campaign_notes: 'Smoke test — please ignore.',
+  prior_campaign_notes: 'Smoke test, please ignore.',
   referral_source: 'smoke-test',
   is_founding_member: false,
   additional_notes: 'This row was created by smoke-test-volunteer-submit.mjs',

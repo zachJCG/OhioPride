@@ -1,12 +1,12 @@
 /* ==========================================================================
-   OHIO PRIDE PAC — Shared Site Header & Footer Template
+   OHIO PRIDE PAC - Shared Site Header & Footer Template
    ------------------------------------------------------
    This file provides the site-wide header/footer styles. To update the
    visual appearance of the header, menu, or footer across the ENTIRE site,
    edit this file (markup lives in /js/site-template.js).
 
    Brand color, typography, and gradient tokens are imported from
-   /css/brand-tokens.css. Do not redefine palette values here — extend
+   /css/brand-tokens.css. Do not redefine palette values here - extend
    the canonical tokens instead. See docs/brand-system.md.
    ========================================================================== */
 
@@ -382,7 +382,7 @@
   }
 }
 
-/* Donate call-to-action in the nav — animated rainbow border. The mask trick
+/* Donate call-to-action in the nav - animated rainbow border. The mask trick
    lets the rainbow gradient show only as a border stroke around transparent
    content, and the slow @keyframes shifts the gradient for a subtle shimmer. */
 @keyframes ohpRainbowSweep {

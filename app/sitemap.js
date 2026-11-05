@@ -1,4 +1,4 @@
-/* /sitemap.xml — generated, not hand maintained.
+/* /sitemap.xml - generated, not hand maintained.
  *
  * This replaces public/sitemap.xml, which had drifted: it was missing /about,
  * /board, /volunteer, /brand and five bill pages, and it listed each endorsed

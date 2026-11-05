@@ -1,5 +1,5 @@
 /* ==========================================================================
-   OHIO PRIDE PAC — Shared Site Header & Footer Template (v2)
+   OHIO PRIDE PAC - Shared Site Header & Footer Template (v2)
    ------------------------------------------------------
    Updated from the Round 0 version to work alongside the Supabase-backed
    leadership table. Two things changed:
@@ -31,13 +31,13 @@
   'use strict';
 
   // -------------------------------------------------------------------------
-  // WORDMARK — single source of truth for "Ohio Pride PAC" markup.
+  // WORDMARK - single source of truth for "Ohio Pride PAC" markup.
   //
   // Construction matches the brand guide (Ohio_Pride_PAC_Brand_Guide.pdf
   // v1.1, April 2026):
-  //   Ohio  — Montserrat 400, white @ 65% opacity
-  //   Pride — Montserrat 700, pure white
-  //   PAC   — Montserrat 700, uppercase, ~18% size, 2px tracking, light blue
+  //   Ohio  - Montserrat 400, white @ 65% opacity
+  //   Pride - Montserrat 700, pure white
+  //   PAC   - Montserrat 700, uppercase, ~18% size, 2px tracking, light blue
   //
   // The same three-span structure is reused inside the nav (with the
   // `.ohp-nav-logo` styling) and via the public `.ohp-wordmark` utility
@@ -113,7 +113,7 @@
   // -------------------------------------------------------------------------
   // The Leadership block and the disclaimer line now carry data-attributes
   // so the Supabase-backed loader can swap their contents. The hardcoded
-  // values that remain here are the fallbacks — what visitors see if the
+  // values that remain here are the fallbacks - what visitors see if the
   // leadership fetch fails or runs late.
   //
   // Keep the hardcoded fallback in sync with the seeded values in
@@ -351,7 +351,7 @@
 
     // Populate the leadership-driven parts of the footer if the data helper
     // is available. Guard with a typeof check so pages that forget to load
-    // ohiopride-data.js do not error — they just keep the hardcoded
+    // ohiopride-data.js do not error - they just keep the hardcoded
     // fallback text.
     if (typeof window.OhioPride !== 'undefined' &&
         typeof window.OhioPride.loadSiteLeadership === 'function') {

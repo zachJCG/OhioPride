@@ -12,7 +12,7 @@
  *
  *   parity      every .html under public/ has a lib/seo.mjs entry, and every
  *               entry has a file. This is the check that makes the registry
- *               authoritative — add a page without metadata and this fails.
+ *               authoritative - add a page without metadata and this fails.
  *   freshness   no page's generated block is stale (same as seo:build --check)
  *   uniqueness  no two indexable pages share a title or a description. Twenty
  *               two bill pages once shared "Loading... | Ohio Pride".
@@ -119,7 +119,7 @@ for (const url of onDisk) {
   assert(
     byUrl.has(url),
     'registry',
-    `${url} exists under public/ but has no entry in lib/seo.mjs — add one (set noindex: true if it should stay out of the index)`,
+    `${url} exists under public/ but has no entry in lib/seo.mjs; add one (set noindex: true if it should stay out of the index)`,
   );
 }
 for (const page of pages) {
@@ -232,7 +232,7 @@ for (const page of pages) {
     assert(parsed['@context'] && parsed['@type'], where, 'JSON-LD is missing @context or @type');
   }
 
-  /* Page structure. One h1 is what tells a crawler what the page is about —
+  /* Page structure. One h1 is what tells a crawler what the page is about -
    * and it has to have text in it. The bill pages used to ship `<h1
    * id="billTitle"></h1>` and fill it from JavaScript, which is an empty
    * heading to anything that reads the document rather than running it. */
@@ -273,7 +273,7 @@ for (const page of pages) {
   assert(
     applyTo(readFileSync(file, 'utf8'), page) === null,
     page.url,
-    'SEO block is out of date — run `npm run seo:build`',
+    'SEO block is out of date; run `npm run seo:build`',
   );
 }
 

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   OHIO PRIDE PAC — Site Enhancements
+   OHIO PRIDE PAC - Site Enhancements
    Scroll animations, animated counters, rainbow glow, smooth transitions
    Drop this into any page: <script src="/js/enhancements.js"></script>
    ========================================================================== */

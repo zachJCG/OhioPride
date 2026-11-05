@@ -1,4 +1,4 @@
-/* /endorsement/screening/thank-you — the page a candidate lands on after they
+/* /endorsement/screening/thank-you - the page a candidate lands on after they
  * submit an application.
  *
  * Ported off public/endorsement/screening/thank-you/index.html for one reason:
