@@ -8,6 +8,7 @@ import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../../../lib/supabase-public.mjs';
 import { answersFor } from '../../../lib/endorsement-answers.mjs';
 import { raceLabel, countyLabel, submittedByLabel, cycleYearOf, daysInStage } from '../../../lib/endorsement-race.mjs';
+import { resultBadge } from '../../../lib/endorsement-results.mjs';
 import { renderToBuffer, Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
 
 export const runtime = 'nodejs';
@@ -79,6 +80,7 @@ function Packet({ app, questions, reviews, activity, photo }) {
       <View style={s.grid}>
         {[['Pronouns', app.pronouns], ['Out', app.is_out], ['Incumbent', yn(app.is_incumbent)], ['Current office', app.current_office],
           ['County', countyLabel(app.county)], ['Election cycle', cycleYearOf(app)],
+          ['Result', app.status === 'endorsed' && app.result ? resultBadge(app) : null],
           ['Committee', app.committee_name], ['Treasurer', app.treasurer_name], ['Email', app.email], ['Phone', app.phone],
           ['Website', app.website], ['Path', app.endorsement_path], ['Office category', app.office_category],
           ['Special election', yn(app.is_special_election)],

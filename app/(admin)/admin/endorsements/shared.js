@@ -43,6 +43,29 @@ export const RACE_LEVEL_LABEL = {
 export const VOTE_ORDER = ['endorse', 'decline', 'abstain'];
 export const VOTE_LABEL = { endorse: 'Endorse', decline: 'Decline', abstain: 'Abstain' };
 
+/* Election results, admin side. The values mirror the endorsement_result_valid
+ * check constraint; '' is "Not set" and saves as null (endorsed, race not held
+ * or not called yet). The public words (Elected, Re-elected, Not elected,
+ * Result pending) come from resultBadge() in lib/endorsement-results.mjs, so
+ * the admin and the site can never disagree about what a result reads as.
+ * These labels are only for the control that records one. */
+export const RESULT_ORDER = ['', 'pending', 'won', 'lost'];
+export const RESULT_ADMIN_LABEL = {
+  '': 'Not set', pending: 'Result pending', won: 'Elected', lost: 'Not elected',
+};
+
+/* The badge a recorded result wears in the admin. Elected and Re-elected are
+ * light blue, Not elected is neutral (never the red badge-bad), pending is
+ * amber. The theme's badge-review text (#B7791F on #FDF3E7) is about 3.3:1,
+ * under the 4.5:1 the results work asks for, so the pending badge darkens its
+ * text to #8A5A12 (5.4:1). Drop the override once badge-review is darkened in
+ * admin-theme.css. */
+export const RESULT_BADGE = {
+  won: { className: 'badge badge-founding' },
+  lost: { className: 'badge badge-muted' },
+  pending: { className: 'badge badge-review', style: { color: '#8A5A12' } },
+};
+
 // The private bucket the application form and the candidate page share.
 // Policies: anon may only insert under submissions/<application id>/, reads
 // need endorsements:read, and staff uploads go under staff/<application id>/.

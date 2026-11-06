@@ -11,12 +11,17 @@ import { useAdmin } from '../../../lib/permissions';
 import { exportPdf } from '../pdf-client';
 import { answersFor } from '../../../../../lib/endorsement-answers.mjs';
 import { slugify } from '../../../../../lib/endorsement-slug.mjs';
+import { contentFor } from '../../../../../lib/endorsement-content.mjs';
+import { resultBadge } from '../../../../../lib/endorsement-results.mjs';
 import {
   countyLabel, cycleYearOf, isFutureCycle, daysInStage, submittedByLabel, SUBMITTED_BY_LABEL,
   helpRequestedLabel,
 } from '../../../../../lib/endorsement-race.mjs';
 import { RaceLine } from '../race-line';
-import { STATUS_LABEL, PATH_LABEL, VOTE_ORDER, VOTE_LABEL, PHOTO_BUCKET, tallyOf } from '../shared';
+import {
+  STATUS_LABEL, PATH_LABEL, VOTE_ORDER, VOTE_LABEL, PHOTO_BUCKET, tallyOf,
+  RESULT_ORDER, RESULT_ADMIN_LABEL, RESULT_BADGE,
+} from '../shared';
 
 const yn = (v) => v === true ? 'Yes' : v === false ? 'No' : 'No answer';
 const dt = (v) => v ? new Date(v).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
@@ -35,17 +40,49 @@ const EDITABLE = [
  * the public site, so leaving this alone can never out anyone. */
 const IS_OUT_LABEL = {
   '': 'Not answered',
-  yes: 'Yes — publicly out',
+  yes: 'Yes, publicly out',
   no: 'No',
   prefer_not_to_say: 'Prefer not to say',
 };
 
-/* What a reviewer sees when they try to publish an application the Board has
- * not endorsed. The rule itself is the endorsement_published_requires_endorsed
- * check constraint; 23514 is Postgres's code for a check violation. */
+/* What a reviewer sees when a write breaks one of the endorsee-only rules.
+ * Each rule is a check constraint, matched here by name: 23514 is the code for
+ * every check violation on the table (endorsement_result_valid too), so the
+ * code alone cannot say which rule was broken. */
+const violates = (error, constraint) =>
+  `${error?.message || ''} ${error?.details || ''}`.includes(constraint);
 const PUBLISH_GUARD_MESSAGE = 'Endorse before publishing.';
-const isPublishGuardError = (error) =>
-  error?.code === '23514' || /endorsement_published_requires_endorsed/.test(error?.message || '');
+const isPublishGuardError = (error) => violates(error, 'endorsement_published_requires_endorsed');
+const RESULT_GUARD_MESSAGE = 'Endorse before recording a result.';
+const isResultGuardError = (error) => violates(error, 'endorsement_result_requires_endorsed');
+
+/* Election result on an endorsee: result, incumbent and result_note. The
+ * incumbent column is staff-set and means "held this seat going in", which is
+ * what turns a win into Re-elected. It is not the form's is_incumbent
+ * ("current or former officeholder"), which the header's Incumbent badge and
+ * the packet still show.
+ * result_updated_at is stamped by trg_endorsement_stamp_result; the page never
+ * sends it. */
+const INC = 'incumbent';
+const RESULT_NOTE_MAX = 280;
+const resultDraftOf = (row) => ({
+  result: row?.result || '',
+  incumbent: row?.[INC] === true,
+  result_note: row?.result_note || '',
+});
+
+/* One line for the activity trail, in the words the public site shows. */
+function resultSummary(patch, row) {
+  const note = 'result_note' in patch ? (patch.result_note ? 'note updated' : 'note cleared') : null;
+  let head = null;
+  if ('result' in patch || (INC in patch && row.result === 'won')) {
+    head = row.result ? `Result set to ${resultBadge(row)}` : 'Result cleared';
+  } else if (INC in patch) {
+    head = row[INC] ? 'Marked incumbent in this seat' : 'No longer marked incumbent in this seat';
+  }
+  if (!head) return `Result ${note}`;
+  return note ? `${head}, ${note}` : head;
+}
 
 const CARD_TITLE = { font: '700 .95rem var(--op-font-head)' };
 const LBL = { fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--op-muted)' };
@@ -73,6 +110,8 @@ export default function CandidatePage() {
   const [busyVote, setBusyVote] = useState(null);
   const [exporting, setExporting] = useState(false);
   const [toast, setToast] = useState(null);
+  const [resultDraft, setResultDraft] = useState(() => resultDraftOf(null));
+  const [savingResult, setSavingResult] = useState(false);
 
   const notify = (m) => { setToast(m); setTimeout(() => setToast(null), 3200); };
 
@@ -127,6 +166,12 @@ export default function CandidatePage() {
     const mine = reviews.find(r => String(r.reviewer_email || '').toLowerCase() === me.email.toLowerCase());
     if (mine?.recommendation) { setRecommendation(mine.recommendation); seededRec.current = true; }
   }, [me, reviews]);
+
+  // The result form starts from the stored values, and starts over whenever
+  // they move (a save, or a reopen clearing them), never on other edits.
+  useEffect(() => {
+    if (app) setResultDraft(resultDraftOf(app));
+  }, [app?.result, app?.result_note, app?.[INC]]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Shared with /api/endorsement-pdf so the packet the board signs off on and
   // the screen they voted from can never show different answers.
@@ -183,7 +228,15 @@ export default function CandidatePage() {
     const { data, error } = await supabase().from('endorsement_applications')
       .update(patch).eq('id', id).select().maybeSingle();
     if (error) { notify('Status change failed: ' + error.message); return; }
-    await logActivity('status_change', `Status set to ${STATUS_LABEL[status] || status}`);
+    // Leaving endorsed clears the result, the note and the incumbent mark
+    // (endorsement_stamp_endorsed_at). The trail keeps what they were, so a
+    // reopened endorsee's result can be put back by hand.
+    const leaving = app.status === 'endorsed' && status !== 'endorsed';
+    await logActivity('status_change', `Status set to ${STATUS_LABEL[status] || status}`, leaving ? {
+      previous_result: app.result ?? null,
+      previous_result_note: app.result_note ?? null,
+      previous_incumbent: app[INC] === true,
+    } : undefined);
     setApp(a => data || { ...a, ...patch });
     await loadDrawerData();
     notify(status === 'endorsed' ? 'Recorded as endorsed.'
@@ -208,6 +261,47 @@ export default function CandidatePage() {
     const { error } = await supabase().from('endorsement_applications').update({ reviewer_notes: notes.trim() || null }).eq('id', id);
     if (error) { notify('Save failed: ' + error.message); return; }
     notify('Notes saved.');
+  }
+
+  async function saveResult(e) {
+    e.preventDefault();
+    if (!canWrite || savingResult) return;
+    if (app.status !== 'endorsed') { notify(RESULT_GUARD_MESSAGE); return; }
+    const note = resultDraft.result_note.trim() || null;
+    // The note is public copy, so it follows the site's copy rules.
+    if (note && /[\u2013\u2014]/.test(note)) {
+      notify('The note is public. Use a period or a comma instead of a long dash.');
+      return;
+    }
+    const next = { result: resultDraft.result || null, result_note: note, [INC]: resultDraft.incumbent };
+    const before = { result: app.result ?? null, result_note: app.result_note ?? null, [INC]: app[INC] === true };
+    const patch = {};
+    for (const k of Object.keys(next)) if (next[k] !== before[k]) patch[k] = next[k];
+    if (!Object.keys(patch).length) { notify('Nothing changed.'); return; }
+    setSavingResult(true);
+    // Select the row back: result_updated_at is stamped by a trigger, and an
+    // update that RLS refuses matches no row and comes back as null data with
+    // no error, which must not read as a save.
+    const { data, error } = await supabase().from('endorsement_applications')
+      .update(patch).eq('id', id).select().maybeSingle();
+    if (error || !data) {
+      setSavingResult(false);
+      notify(error
+        ? (isResultGuardError(error) ? RESULT_GUARD_MESSAGE : 'Result not saved: ' + error.message)
+        : 'Result not saved. Recording a result needs endorsements write access.');
+      return;
+    }
+    await logActivity('result', resultSummary(patch, data), {
+      fields: Object.keys(patch),
+      ...patch,
+      previous_result: before.result,
+      previous_result_note: before.result_note,
+      previous_incumbent: before[INC],
+    });
+    setApp(data);
+    await loadDrawerData();
+    setSavingResult(false);
+    notify('Result saved.');
   }
 
   /* ── Details editor ─────────────────────────────────────────────────── */
@@ -332,7 +426,16 @@ export default function CandidatePage() {
   // "Open" means the Board has not recorded an outcome yet, so the decision
   // panel offers Endorse/Decline; the closed states offer Reopen instead.
   const open = app.status === 'submitted' || app.status === 'under_review';
-  const publicSlug = slugify(name);
+  // The public route resolves a profile through the editorial entry's slug
+  // first (lib/endorsements.mjs), so a legal name with a middle name or
+  // initial still links to the editorial slug, not to slugify(name).
+  const publicSlug = contentFor(app)?.slug || slugify(name);
+  // A result only means something on an endorsee. A null result is "Not set"
+  // here and gets no badge.
+  const badge = app.status === 'endorsed' && app.result ? resultBadge(app) : null;
+  const badgeLook = RESULT_BADGE[app.result] || RESULT_BADGE.pending;
+  const resultDirty = JSON.stringify(resultDraft) !== JSON.stringify(resultDraftOf(app));
+  const hasResult = app.result != null || app.result_note != null || app[INC] === true;
   const days = daysInStage(app);
   const nextCycle = isFutureCycle(app);
   const filedByOther = app.submitted_by_kind && app.submitted_by_kind !== 'candidate';
@@ -361,7 +464,11 @@ export default function CandidatePage() {
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           <span className="badge badge-muted">{STATUS_LABEL[app.status] || app.status}</span>
           {app.endorsement_path && <span className="badge badge-muted">{PATH_LABEL[app.endorsement_path] || app.endorsement_path}</span>}
-          <span className="badge badge-muted">{app.is_incumbent ? 'Incumbent' : 'Challenger/open'}</span>
+          {/* The questionnaire answer ("current or former officeholder"). An
+              unanswered question says nothing rather than "Challenger/open",
+              which read as a contradiction next to a Re-elected badge. */}
+          {app.is_incumbent === true && <span className="badge badge-muted">Officeholder</span>}
+          {app.is_incumbent === false && <span className="badge badge-muted">Challenger/open</span>}
           {app.is_out === 'yes' && <span className="badge badge-founding">Out</span>}
           {filedByOther && <span className="badge badge-muted">{app.submitted_by_kind === 'pac_staff' ? 'Filed by PAC staff' : 'Filed by campaign'}</span>}
           {app.status === 'endorsed' && (
@@ -369,6 +476,7 @@ export default function CandidatePage() {
               {app.is_published ? 'Published on site' : 'Not published'}
             </span>
           )}
+          {badge && <span className={badgeLook.className} style={badgeLook.style}>{badge}</span>}
         </div>
         <div className="muted small" style={{ marginTop: 6 }}>
           Submitted {dt(app.created_at)}
@@ -382,6 +490,68 @@ export default function CandidatePage() {
           </p>
         )}
       </div>
+
+      {/* On an endorsee the vote is history and the result is the live job, so
+          it sits one thumb-scroll from the top. Saved with an explicit button,
+          never on tap: the result is public, and one mis-tap should not
+          change the site. */}
+      {app.status === 'endorsed' && (
+        <section className="card" style={{ marginBottom: 12 }} aria-labelledby="result-title">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <strong id="result-title" style={CARD_TITLE}>Election result</strong>
+            {badge && <span className={badgeLook.className} style={badgeLook.style}>{badge}</span>}
+          </div>
+          <p className="muted small" style={{ margin: '4px 0 10px' }}>
+            {app.result_updated_at ? `Updated ${dt(app.result_updated_at)}.` : 'No result recorded yet.'}
+            {' '}The public site picks up a change within about 10 minutes.
+          </p>
+          {canWrite ? (
+            <form onSubmit={saveResult}>
+              <div id="result-label" style={{ ...LBL, marginBottom: 6 }}>Result</div>
+              {/* Two by two on a phone, four across on a desktop: four across
+                  at 375px clips "Not elected". */}
+              <div role="group" aria-labelledby="result-label"
+                   style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 8 }}>
+                {RESULT_ORDER.map(k => (
+                  <button key={k || 'unset'} type="button"
+                    className={`btn ${resultDraft.result === k ? 'btn-primary' : ''}`}
+                    style={{ padding: '0 6px' }}
+                    aria-pressed={resultDraft.result === k}
+                    disabled={savingResult}
+                    onClick={() => setResultDraft(d => ({ ...d, result: k }))}>
+                    {RESULT_ADMIN_LABEL[k]}
+                  </button>
+                ))}
+              </div>
+              <label className="small" style={{ display: 'flex', gap: 10, alignItems: 'center', minHeight: 'var(--op-tap)', margin: '6px 0' }}>
+                <input type="checkbox" style={{ width: 20, height: 20, flex: 'none', margin: 0 }}
+                       checked={resultDraft.incumbent} disabled={savingResult}
+                       onChange={e => setResultDraft(d => ({ ...d, incumbent: e.target.checked }))} />
+                <span><strong>Incumbent in this seat.</strong> A win shows as <span style={{ whiteSpace: 'nowrap' }}>Re-elected</span>.</span>
+              </label>
+              <label className="field"><span>Result note (public)</span>
+                <textarea className="textarea" maxLength={RESULT_NOTE_MAX} value={resultDraft.result_note}
+                          disabled={savingResult}
+                          onChange={e => setResultDraft(d => ({ ...d, result_note: e.target.value }))} />
+              </label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button className="btn btn-primary" disabled={savingResult || !resultDirty}>
+                  {savingResult ? 'Saving…' : 'Save result'}
+                </button>
+                <span className="muted small" style={{ marginLeft: 'auto' }}>
+                  {resultDraft.result_note.length}/{RESULT_NOTE_MAX}
+                </span>
+              </div>
+            </form>
+          ) : (
+            <div className="detail-grid" style={{ margin: 0 }}>
+              <div><div className="lbl">Result</div><div className="val">{badge || RESULT_ADMIN_LABEL['']}</div></div>
+              {app[INC] === true && <div><div className="lbl">Incumbent in this seat</div><div className="val">Yes</div></div>}
+              {app.result_note && <div><div className="lbl">Result note</div><div className="val">{app.result_note}</div></div>}
+            </div>
+          )}
+        </section>
+      )}
 
       <div className="card" style={{ marginBottom: 12 }}>
         <strong style={CARD_TITLE}>Your vote</strong>
@@ -507,6 +677,8 @@ export default function CandidatePage() {
             {[['Office', app.office_sought], ['District', app.district], ['County', countyLabel(app.county)],
               ['Election', app.is_special_election ? `${app.election_year || ''} special election`.trim() : app.election_year],
               ['Cycle', app.cycle],
+              ['Result', badge],
+              ['Result note', app.status === 'endorsed' ? app.result_note : null],
               ['Wants help with', helpRequestedLabel(app)],
               ['Party', app.party], ['Current office', app.current_office], ['Office category', app.office_category],
               ['Committee', app.committee_name], ['Treasurer', app.treasurer_name],
@@ -598,7 +770,7 @@ export default function CandidatePage() {
               made "endorsed" one mis-tap away and said nothing about what the
               choice does. Each state now offers only the moves that make sense
               from it, and the two that publish or unpublish a candidate ask
-              first. The states themselves are unchanged — see STATUS_ORDER in
+              first. The states themselves are unchanged; see STATUS_ORDER in
               ../shared.js, which still mirrors the table's CHECK constraint. */}
           {open ? (
             <>
@@ -633,7 +805,7 @@ export default function CandidatePage() {
               </p>
               <button className="btn btn-sm" onClick={() => setStatus('under_review', {
                 confirm: app.status === 'endorsed'
-                  ? `Reopen ${name}?\n\nThis removes them from the public endorsements page and clears the endorsement date.`
+                  ? `Reopen ${name}?\n\nThis removes them from the public endorsements page and clears the endorsement date${hasResult ? ' and the election result' : ''}.`
                   : `Reopen ${name} for review?`,
               })}>Reopen for review</button>
             </>

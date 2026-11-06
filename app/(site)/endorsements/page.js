@@ -11,14 +11,33 @@
  *   - "How endorsements work" is on the page. The old copy asserted candidates
  *     were "vetted by our Screening Committee and approved by our Board" and
  *     left it there.
+ *
+ * After the 2026 general election (phase 3):
+ *
+ *   - "Elected with Ohio Pride." sits under the hero: the 2026 winners as a
+ *     wall of faces, linking to /endorsements/2026. It renders only when the
+ *     database holds at least one 2026 win; results are data, never typed.
+ *   - The card grid shows the current and future cycles only. The 2026 slate
+ *     lives on /endorsements/2026 now. The grid renders only when it has
+ *     something to show or the read failed, so its "first round coming soon"
+ *     empty state never appears on a page that has just listed winners.
+ *   - Old /endorsements#<slug> links still reach every profile: HashRedirect
+ *     gets every published slug, whatever the grid shows.
  */
 
 import Link from 'next/link';
-import { ENDORSEMENT_PROCESS, getEndorsements } from '../../../lib/endorsements.mjs';
+import {
+  ENDORSEMENT_PROCESS,
+  getEndorsementResults,
+  getEndorsements,
+} from '../../../lib/endorsements.mjs';
 import { getElectionCycles } from '../../../lib/election-cycles.mjs';
+import { currentCycleYear } from '../../../lib/endorsement-race.mjs';
 import { absolute, breadcrumbJsonLd } from '../../../lib/seo.mjs';
 import EndorsementGrid from './grid';
 import CycleList from './cycles';
+import HashRedirect from './hash-redirect';
+import { RESULTS_CYCLE, RESULTS_PATH, WinnersSection } from './results';
 import './endorsements.css';
 
 const SCREENING_PATH = '/endorsement/screening';
@@ -30,6 +49,10 @@ const DESCRIPTION =
  * closes on a clock. Five minutes keeps a deadline that has just passed from
  * sitting on the page as an invitation to apply. */
 export const revalidate = 300;
+
+/* Both endorsement reads take the same options, so they are one request: the
+ * winners and the grid can never come from two different moments. */
+const DATA = { revalidate: 300 };
 
 export const metadata = {
   title: 'Endorsed Candidates',
@@ -52,21 +75,35 @@ export const metadata = {
 };
 
 export default async function EndorsementsPage() {
-  const [{ ok, candidates }, { ok: cyclesOk, cycles }] = await Promise.all([
-    getEndorsements(),
+  const [{ ok, candidates }, results, { ok: cyclesOk, cycles }] = await Promise.all([
+    getEndorsements(DATA),
+    getEndorsementResults(RESULTS_CYCLE, DATA),
     getElectionCycles({ revalidate: 300 }),
   ]);
 
-  /* An ItemList of the profiles, so the slate can surface as a list in search
-   * results rather than four unrelated pages that happen to link to each
-   * other. Order matches the rendered grid. */
+  /* Winners in ballot order, then last name (the helper sorts). Empty when the
+   * read failed, so a blip renders the grid's error state, never "0 won". */
+  const winners = results.ok ? results.won : [];
+  /* Endorsed for 2026, no race won yet (results pending, or none won): no
+   * wall, but the results page is still one tap away. */
+  const resultsLinkOnly = results.ok && winners.length === 0 && results.counts.total > 0;
+
+  /* The card grid: this cycle and later. A row with no cycle is kept rather
+   * than hidden; it is happening now or staff need to fix it. */
+  const thisCycle = currentCycleYear();
+  const current = candidates.filter((c) => c.cycle == null || Number(c.cycle) >= thisCycle);
+  const showGrid = !ok || current.length > 0;
+
+  /* An ItemList of the profiles on the page, in the order they render: the
+   * winners wall, then the grid. Left out when the page lists nobody. */
+  const listed = [...winners, ...(showGrid ? current : [])];
   const jsonLd = [
-    {
+    listed.length > 0 && {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
       name: 'Candidates endorsed by Ohio Pride PAC',
-      numberOfItems: candidates.length,
-      itemListElement: candidates.map((c, i) => ({
+      numberOfItems: listed.length,
+      itemListElement: listed.map((c, i) => ({
         '@type': 'ListItem',
         position: i + 1,
         name: c.name,
@@ -74,13 +111,13 @@ export default async function EndorsementsPage() {
       })),
     },
     breadcrumbJsonLd({ url: '/endorsements', crumb: 'Endorsed Candidates' }),
-  ];
+  ].filter(Boolean);
 
   return (
     <main id="main" className="endorse-page">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
       <section className="endorse-hero" aria-labelledby="page-title">
         <p className="eyebrow">Endorsed Candidates</p>
@@ -93,7 +130,21 @@ export default async function EndorsementsPage() {
         <p className="hero-kicker">Endorse. Mobilize. Fight for Ohio.</p>
       </section>
 
-      <EndorsementGrid candidates={candidates} loadFailed={!ok} screeningPath={SCREENING_PATH} />
+      <HashRedirect slugs={candidates.map((c) => c.slug)} />
+
+      {winners.length > 0 && <WinnersSection winners={winners} />}
+
+      {resultsLinkOnly && (
+        <p className="endorse-results-more is-solo">
+          <Link href={RESULTS_PATH} className="endorse-btn secondary">
+            See 2026 results
+          </Link>
+        </p>
+      )}
+
+      {showGrid && (
+        <EndorsementGrid candidates={current} loadFailed={!ok} screeningPath={SCREENING_PATH} />
+      )}
 
       <CycleList cycles={cycles} loadFailed={!cyclesOk} screeningPath={SCREENING_PATH} />
 

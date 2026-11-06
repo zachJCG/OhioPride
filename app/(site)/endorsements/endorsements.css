@@ -1356,3 +1356,297 @@
 @media (max-width: 560px) {
   .endorse-ring-note { margin-inline: 1.15rem; }
 }
+
+/* ── Election results: the winners wall and the 2026 results cards ──────
+ * Faces are the one memorable thing here, so everything around them stays
+ * quiet: no pride stripe on the tiles, no gradient, no big-number block.
+ * Mobile first: two columns at 375px, more as the page widens.
+ *
+ * Contrast, measured:
+ *   name          --text-white on --end-card-bg              14.1:1
+ *   seat          --end-text-gray on --end-card-bg            6.6:1
+ *   Elected       --text-accent on its 12% tint on the card   6.4:1
+ *   Not elected   --end-text-gray on its 6% white tint        5.5:1
+ *   result line   --text-accent on --dark-bg (profile)        9.6:1
+ * Not elected is the same card with the neutral badge. Nothing here is red.
+ */
+.endorse-winners {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 1rem 48px;
+}
+.endorse-results-head {
+  text-align: center;
+  max-width: 62ch;
+  margin: 0 auto 1.25rem;
+}
+.endorse-results-head h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text-white);
+  margin: 0 0 0.45rem;
+}
+.endorse-results-head .lede {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--end-text-gray);
+  margin: 0;
+}
+.endorse-results-more {
+  text-align: center;
+  margin: 1.25rem 0 0;
+}
+/* The link alone, when 2026 has endorsees but no race won yet. */
+.endorse-results-more.is-solo {
+  margin: 0 auto 2.5rem;
+  padding: 0 1rem;
+}
+
+/* /endorsements/2026: one section per result group. */
+.endorse-results {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 40px;
+}
+.endorse-results > .endorse-state {
+  margin-top: 0;
+}
+.endorse-results-group + .endorse-results-group {
+  margin-top: 2.25rem;
+}
+.endorse-results-group h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-white);
+  margin: 0 0 0.9rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--end-card-border);
+}
+.endorse-results-group:first-child h2 {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.result-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.result-card {
+  position: relative; /* anchors the stretched link */
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--end-card-bg);
+  border: 1px solid var(--end-card-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.result-card:hover {
+  border-color: var(--end-card-border-hover);
+}
+
+/* The photo follows the text in the source (results.js explains why) and is
+   moved to the top here. Nothing is ever laid over it. */
+.result-card-photo {
+  order: -1;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--dark-bg);
+  border-bottom: 1px solid var(--end-card-border);
+}
+.result-card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+.result-card-photo.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dark-bg-light, #1a3a52);
+  color: var(--text-white);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+.result-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 10px 10px 12px;
+}
+.result-card-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  color: var(--text-white);
+  margin: 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.result-card:hover .result-card-name {
+  color: var(--text-accent);
+}
+.result-card-seat {
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--end-text-gray);
+  margin: 0 0 4px;
+  overflow-wrap: anywhere;
+  /* "Ohio Senate, / District 3", never "Ohio Senate, District / 3". */
+  text-wrap: balance;
+}
+/* Badges sit on one line across a row, whatever the names wrap to. */
+.result-card .result-badge {
+  margin-top: auto;
+}
+
+/* One link per card, stretched over all of it, so the face is clickable
+   without a second tab stop. The focus ring draws on the card's edge. */
+.result-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+.result-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 10px;
+}
+.result-card-link:focus-visible {
+  outline: none;
+}
+.result-card-link:focus-visible::after {
+  outline: 2px solid var(--text-accent);
+  outline-offset: -2px;
+}
+.result-card-more {
+  margin-top: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-accent);
+}
+.result-card:hover .result-card-more {
+  color: var(--text-white);
+}
+
+/* The result badge (shared.js). Light Blue for Elected and Re-elected, the
+   same tint as the endorsed pill; one neutral style for Not elected and
+   Result pending, with pending dashed. The word is always printed. */
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  align-self: flex-start;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--end-text-gray);
+}
+.result-badge.is-won {
+  background: rgba(112, 214, 236, 0.12);
+  border-color: rgba(112, 214, 236, 0.4);
+  color: var(--text-accent);
+}
+.result-badge.is-pending {
+  border-style: dashed;
+}
+.result-badge svg {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+/* Two columns on a 320px phone are too narrow for "Result pending" at the
+   default spacing, and the card would cut the end of the word off. */
+@media (max-width: 359px) {
+  .result-badge {
+    letter-spacing: 0.04em;
+    padding-inline: 7px;
+  }
+}
+
+/* The profile's result line, under the name. */
+.endorse-profile-result {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--text-light);
+  margin: 0 0 0.6rem;
+}
+.endorse-profile-result.is-won {
+  color: var(--text-accent);
+}
+
+/* A CTA card with a heading and a button and no paragraph between them. */
+.endorse-cta-card h2:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 560px) {
+  /* One column width for the wall and the results cards, so the two pages
+     read as one system. At 1280 that is seven across. */
+  .result-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
+  .endorse-winners,
+  .endorse-results {
+    padding-inline: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .endorse-winners,
+  .endorse-results {
+    padding-inline: 2rem;
+  }
+  .result-card-body {
+    padding: 12px 12px 14px;
+  }
+  .result-card-name {
+    font-size: 1rem;
+  }
+}
+
+/* Colour changes only, and only for people who have not asked for less
+   motion. Nothing on these cards moves or scales. */
+@media (prefers-reduced-motion: no-preference) {
+  .result-card,
+  .result-card-name,
+  .result-card-more {
+    transition: border-color 0.15s, color 0.15s;
+  }
+}

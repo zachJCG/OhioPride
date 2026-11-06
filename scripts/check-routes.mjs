@@ -97,6 +97,9 @@ const PAGES = [
   // is on real page copy: if the Supabase read broke, the old page still
   // served its shell and only the cards went missing.
   ['/endorsements', 'Pro-equality leadership for Ohio'],
+  ['/endorsements/2026', '2026 endorsements and results.'],
+  ['/archive', 'href="/endorsements/2026"'],
+  ['/llms.txt', '[2026 endorsements and results](https://ohiopride.org/endorsements/2026)'],
   ['/endorsements/jeff-givan', 'Why we endorsed Jeff'],
   ['/endorsement/screening/thank-you', 'Where your application goes next'],
   ['/endorsement/screening', 'Apply for an Ohio Pride PAC endorsement'],
@@ -115,6 +118,7 @@ const ASSETS = [
   '/assets/candidates/acton-cutout.webp',
   '/assets/social/og-governor-guide.png',
   '/assets/social/og-governor-guide-others.png',
+  '/assets/social/og-endorsements-2026.png',
 ];
 
 const API = [
@@ -124,6 +128,7 @@ const API = [
   '/api/founding-members-progress',
   '/api/site-leadership?entity=pac',
   '/api/zip-county-lookup?zip=45420',
+  '/api/endorsement-results?cycle=2026',
 ];
 
 for (const [path, needle] of PAGES) {
@@ -260,6 +265,104 @@ await check('api-compat', '/.netlify/functions/board-members', (res) =>
 
 await check('not-found', '/definitely-not-a-page', (res) =>
   res.status === 404 ? null : `status ${res.status}, want 404`);
+
+/* ---------------------------------------------------------------------------
+ * Post-election phase 3: results. Every count, badge and line is checked
+ * against the API's own data, never against names or numbers written here:
+ * results are data, and a recount must not need a change to this file.
+ * ------------------------------------------------------------------------ */
+const BADGE = (r) =>
+  r.result === 'won' ? (r.incumbent ? 'Re-elected' : 'Elected')
+    : r.result === 'lost' ? 'Not elected' : 'Result pending';
+const LINE = {
+  'Re-elected': 'Re-elected November 3, 2026.',
+  Elected: 'Elected November 3, 2026.',
+  'Not elected': 'Endorsed in 2026. Not elected.',
+  'Result pending': '2026 result pending.',
+};
+// React separates interpolated text with <!-- --> in server HTML.
+const flat = (body) => body.replace(/<!-- -->/g, '');
+
+let results = null;
+await check('results  ', '/api/endorsement-results?cycle=2026', (res, body) => {
+  if (res.status !== 200) return `status ${res.status}, want 200`;
+  /* Locally the handler's own header is visible. Behind Vercel the CDN keeps
+   * s-maxage for itself and hands the browser only max-age, so there the
+   * proof of edge caching is the x-vercel-cache header. */
+  const cc = res.headers.get('cache-control') || '';
+  const edge = res.headers.has('x-vercel-cache');
+  if (!(cc.includes('s-maxage=300') || (edge && cc.includes('max-age=')))) return 'not cached at the CDN';
+  let d;
+  try { d = JSON.parse(body); } catch { return 'not JSON'; }
+  if (!d.ok || !Array.isArray(d.results)) return 'no results array';
+  const won = d.results.filter((r) => r.result === 'won').length;
+  if (d.counts?.total !== d.results.length || d.counts?.won !== won) return 'counts disagree with rows';
+  const keys = ['slug', 'name', 'office', 'level', 'result', 'incumbent', 'badge', 'portrait_url', 'profile_url'];
+  const gap = d.results.find((r) => keys.some((k) => !(k in r)));
+  if (gap) return `${gap.slug} is missing a field`;
+  const bad = d.results.find((r) => r.badge !== BADGE(r));
+  if (bad) return `${bad.slug} badge ${bad.badge}, want ${BADGE(bad)}`;
+  if (d.results.some((r) => 'email' in r || 'phone' in r)) return 'leaks contact fields';
+  results = d;
+  return null;
+});
+await check('results  ', '/api/endorsement-results?cycle=nope',
+  (res) => (res.status === 400 ? null : `status ${res.status}, want 400`));
+
+for (const r of results?.results || []) {
+  await check('result   ', `/endorsements/${r.slug}`, (res, body) => {
+    if (res.status !== 200) return `status ${res.status}`;
+    const want = LINE[r.badge];
+    return flat(body).includes(want) ? null : `missing "${want}"`;
+  });
+}
+if (results) {
+  const { total, won } = results.counts;
+  await check('results  ', '/endorsements/2026', (res, body) => {
+    const text = flat(body);
+    if (won > 0 && !text.includes(`We endorsed ${total} candidates in 2026, and ${won} won their races.`)) {
+      return 'intro count does not match the API';
+    }
+    for (const r of results.results) {
+      if (!text.includes(`Portrait of ${r.name}.`)) return `no portrait alt for ${r.slug}`;
+    }
+    return null;
+  });
+  await check('results  ', '/endorsements', (res, body) => {
+    const text = flat(body);
+    if (won > 0 && !text.includes(`${won} candidates we endorsed won on November 3, 2026.`)) {
+      return 'winners intro count does not match the API';
+    }
+    return null;
+  });
+}
+await check('404      ', '/endorsements/2027', (res) =>
+  res.status === 404 ? null : `status ${res.status}, want 404`);
+await check('home     ', '/', (res, body) => {
+  if (res.status !== 200) return `status ${res.status}`;
+  if ((body.match(/<h1\b/g) || []).length !== 1) return 'want exactly one <h1> in the served page';
+  if (!body.includes('/api/endorsement-results?cycle=2026')) return 'home no longer asks for the 2026 results';
+  if (!body.includes('id="hpWinnersTpl"')) return 'winners template missing';
+  if (!body.includes('refcode=website_home_winners')) return 'winners Donate lost its refcode';
+  if (body.includes('hp-slate-grid')) return 'the 2026 slate grid is still on the home page';
+  return null;
+});
+// The sitemap is XML, which check() does not read; fetch it directly.
+{
+  const xml = await (await fetch(BASE + '/sitemap.xml', COOKIE ? { headers: { cookie: COOKIE } } : {})).text();
+  for (const p of ['/endorsements/2026', '/archive']) {
+    if (xml.includes(`https://www.ohiopride.org${p}</loc>`)) passed++;
+    else failures.push(`sitemap    missing ${p}`);
+  }
+  for (const p of ARCHIVED_PATHS) {
+    if (xml.includes(`https://www.ohiopride.org${p}</loc>`)) failures.push(`sitemap    lists archived ${p}`);
+    else passed++;
+  }
+  if (xml.includes('https://www.ohiopride.org/endorsements/2026</loc>') &&
+      (xml.match(/endorsements\/2026<\/loc>/g) || []).length !== 1) {
+    failures.push('sitemap    lists /endorsements/2026 more than once');
+  }
+}
 
 if (failures.length) {
   console.log(`\n${passed} passed, ${failures.length} FAILED against ${BASE}\n`);

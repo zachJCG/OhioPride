@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { DEFAULT_OG_IMAGE, DEFAULT_OG_IMAGE_ALT } from '../../../lib/seo.mjs';
 import './archive.css';
 
-const SHOW_ENDORSEMENTS_2026 = false;
+const SHOW_ENDORSEMENTS_2026 = true;
 
 export const metadata = {
   title: 'Archive',

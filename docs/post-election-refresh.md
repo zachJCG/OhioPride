@@ -281,3 +281,80 @@ all fixed before merge:
 which has never been in the repo (the page falls back on its own slug
 builder). The admin pages still contain em dashes; they are internal and
 outside the live-page sweep.
+
+---
+
+## Phase 3: celebrate winners, archive the 2026 endorsements (2026-11-05)
+
+### Database (`20261105020000_post_election_phase3_results.sql`)
+
+- **`incumbent` is a new admin-only column**, as the work order specified,
+  not a reuse of `is_incumbent`. `is_incumbent` is the questionnaire answer
+  to "Are you a current or former officeholder?": nullable, filled by the
+  public form, and read by the incumbent-only questions, the admin badges and
+  the board packet. A school board member who wins a council seat is an
+  officeholder but did not hold that seat, so one column cannot drive both.
+  `incumbent` means "held this seat going in" and only the admin sets it.
+- `result_updated_at` is stamped on a change to `incumbent` as well (it
+  flips the public badge). Leaving endorsed clears it with the result. The
+  anon insert policy pins it. A new check, `endorsement_result_requires_endorsed`,
+  keeps a result or incumbency off any row that is not endorsed.
+- **Seed (7.1):** 13 won, 4 of them incumbents (Cockley, Miranda,
+  Brownlee, Keith), 7 lost. Rows are matched on id AND on the editorial
+  name key the profile slug resolves through, and the migration aborts
+  without writing if the counts are not exactly 20 / 13 / 4 / 7. A fresh
+  database with no 2026 endorsees skips the seed.
+- `public_endorsements` gains `incumbent` and `race_level` at the end
+  (CREATE OR REPLACE keeps the grants; DML stays revoked).
+- **Deploy order:** the migration must be applied before this code ships.
+  The read path selects `incumbent` and `race_level`; without them the view
+  answers 400 and every endorsement page shows its error state.
+
+### One set of rules
+
+`lib/endorsement-results.mjs` (import-free, tested) owns the badge
+(Re-elected / Elected / Not elected / Result pending), the profile line,
+the three groups, ballot order (statewide, senate, house, county, judicial,
+then last name), seat labels and counts. `getEndorsementResults(cycle)` in
+`lib/endorsements.mjs` is the single source for `/endorsements`,
+`/endorsements/2026` and `/api/endorsement-results`, so no two surfaces can
+count differently. No result, count or name is written anywhere in code.
+
+### Pages
+
+- `/endorsements/2026` (new): copy deck H1, intro with `{total}` and `{won}`
+  from data, the three groups, portrait cards with the badge and "View
+  profile", the 2027 apply CTA. Share card from `npm run og:build`
+  (`scripts/build-og-cards.mjs`, text only, official wordmark).
+- `/endorsements`: "Elected with Ohio Pride." winners wall under the hero
+  and "See 2026 results"; the grid lists the current cycle only, so the 2026
+  slate lives on the results page. Old `#slug` links still redirect.
+- Profiles: the copy deck result line under the name, "All 2026
+  endorsements" back link, "Ran against" once a race is decided, and the
+  closing CTA points at the results page.
+- Admin: an Election result card on the endorsement record (Not set,
+  Result pending, Elected, Not elected; Incumbent in this seat; a public
+  note), explicit save, logged, gated on `endorsements:write`. The
+  questionnaire badge now reads "Officeholder" and says nothing when the
+  question was not answered.
+- Home: the winners hero replaces the evergreen hero only when a 2026 race
+  is won; no JavaScript, a failed request, or no winners all leave the
+  evergreen hero. The 2026 slate grid and the stats band are gone; the
+  evergreen strip sits at the bottom in winners mode.
+- `/archive` lists the 2026 endorsements group; `llms.txt` is the copy deck
+  site list; the sitemap carries `/endorsements/2026` once.
+
+### Checks
+
+`check:seo` asserts every registered share card exists at 1200x630.
+`check:routes` checks the results API contract and then every profile line,
+the `/endorsements/2026` and `/endorsements` counts, and the sitemap against
+the API's own data, never against names or numbers written in the check.
+
+### Not changed, for Zach
+
+- The deck's "{won} candidates" has no singular; one winner would read
+  "1 candidates".
+- Job Perry displays as "Job Esau Perry", as filed; the 7.1 table spells it
+  "Job Perry". Adding `name: 'Job Perry'` to his editorial entry changes it.
+- Endorsee profile copy is still written in the campaign's future tense.

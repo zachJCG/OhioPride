@@ -53,7 +53,13 @@ export default async function sitemap() {
     ...candidates.map((c) => c.slug),
     ...ENDORSEMENT_CONTENT.map((c) => c.slug),
   ]);
+  /* A static child route such as /endorsements/2026 is listed through
+   * APP_ROUTES above; never list it a second time as a candidate profile. */
+  const reserved = new Set(
+    APP_ROUTES.filter((r) => r.url.startsWith('/endorsements/')).map((r) => r.url.split('/')[2]),
+  );
   for (const slug of slugs) {
+    if (reserved.has(slug)) continue;
     entries.push({
       url: `${SITE_URL}/endorsements/${slug}`,
       changeFrequency: 'monthly',
