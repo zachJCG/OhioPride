@@ -286,7 +286,12 @@ const flat = (body) => body.replace(/<!-- -->/g, '');
 let results = null;
 await check('results  ', '/api/endorsement-results?cycle=2026', (res, body) => {
   if (res.status !== 200) return `status ${res.status}, want 200`;
-  if (!(res.headers.get('cache-control') || '').includes('s-maxage=300')) return 'not cached for five minutes at the CDN';
+  /* Locally the handler's own header is visible. Behind Vercel the CDN keeps
+   * s-maxage for itself and hands the browser only max-age, so there the
+   * proof of edge caching is the x-vercel-cache header. */
+  const cc = res.headers.get('cache-control') || '';
+  const edge = res.headers.has('x-vercel-cache');
+  if (!(cc.includes('s-maxage=300') || (edge && cc.includes('max-age=')))) return 'not cached at the CDN';
   let d;
   try { d = JSON.parse(body); } catch { return 'not JSON'; }
   if (!d.ok || !Array.isArray(d.results)) return 'no results array';
