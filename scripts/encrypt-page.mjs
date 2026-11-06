@@ -10,8 +10,9 @@
  * Usage:
  *   node scripts/encrypt-page.mjs <input.html> <output.html> <password> [title]
  *
- * Example (the /PRTraining media-prep page):
- *   node scripts/encrypt-page.mjs prep.html PRTraining.html '<password>' 'Media Prep'
+ * Example (a media-prep page; the original, /PRTraining, was deleted in
+ * November 2026):
+ *   node scripts/encrypt-page.mjs prep.html public/media-prep.html '<password>' 'Media Prep'
  *
  * Notes:
  *   - Do NOT commit the input file. Only the encrypted output belongs in git.

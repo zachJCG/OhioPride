@@ -30,19 +30,33 @@ const failures = [];
  * COOKIE="_vercel_jwt=..." (open the preview's share link once to get it). */
 const COOKIE = process.env.COOKIE || '';
 
+/* Every request gets a deadline: against a remote preview one stalled
+ * response would otherwise hang the whole suite with no clue which URL. */
+const TIMEOUT_MS = Number(process.env.CHECK_TIMEOUT_MS || 30000);
+
 async function check(kind, path, assert, init = {}) {
   let res;
+  let body = '';
   try {
     const headers = { ...(init.headers || {}), ...(COOKIE ? { cookie: COOKIE } : {}) };
-    res = await fetch(BASE + path, { redirect: 'manual', ...init, headers });
+    res = await fetch(BASE + path, {
+      redirect: 'manual',
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      ...init,
+      headers,
+    });
+    // Any text response, not just HTML: /robots.txt is text/plain and its
+    // body is the whole point of the check. Other bodies (images, PDFs, XML)
+    // are cancelled, not left unread: an undrained body holds its connection
+    // open, and enough of them starve the pool and stall later requests.
+    const type = res.headers.get('content-type') || '';
+    if (type.startsWith('text/') || type.includes('json')) body = await res.text();
+    else await res.body?.cancel();
   } catch (err) {
-    failures.push(`${kind}  ${path} -> request failed: ${err.message}`);
+    const why = err.name === 'TimeoutError' ? `no response within ${TIMEOUT_MS / 1000}s` : err.message;
+    failures.push(`${kind}  ${path} -> request failed: ${why}`);
     return;
   }
-  // Any text response, not just HTML: /robots.txt is text/plain and its body
-  // is the whole point of the check.
-  const type = res.headers.get('content-type') || '';
-  const body = type.startsWith('text/') || type.includes('json') ? await res.text() : '';
   const problem = assert(res, body);
   if (problem) failures.push(`${kind}  ${path} -> ${problem}`);
   else passed++;
@@ -107,7 +121,6 @@ const PAGES = [
   // Public since launch: assert on real page copy, not the unlock form.
   ['/governor-guide', 'Two roads to the Governor'],
   ['/governor-guide/other-candidates', 'Other candidates'],
-  ['/PRTraining', 'Unlock'],
 ];
 
 const ASSETS = [
@@ -197,11 +210,9 @@ await check('redirect ', '/scorecard/methodology', redirectsTo('/methodology', 3
 await check('redirect ', '/gala', redirectsTo('/', 308));
 await check('redirect ', '/sponsorship', redirectsTo('/', 308));
 await check('redirect ', '/priorities', redirectsTo('/', 308));
-// Past Pride Hours, retired after the 2026 cycle: a real 301, like /apply.
+// The Cincinnati Pride Hour, retired after the 2026 cycle: a real 301.
 await check('redirect ', '/pride-hour', redirectsTo('/events', 301));
-await check('redirect ', '/sunday-funday', redirectsTo('/events', 301));
 await check('redirect ', '/pride-hour.html', redirectsTo('/events', 301));
-await check('redirect ', '/sunday-funday.html', redirectsTo('/events', 301));
 await check('redirect ', '/launch-day', redirectsTo('/', 308));
 await check('redirect ', '/rsvp', redirectsTo('/', 308));
 // With the middleware active the Location gains ?next=..., so match by prefix.
@@ -213,9 +224,10 @@ await check('redirect ', '/admin', (res) => {
 await check('redirect ', '/admin/finance', gated(redirectsTo('/admin/finance/budget', 307)));
 await check('redirect ', '/admin/donors', gated(redirectsTo('/admin/contacts?seg=founding', 307)));
 
-// Next matches sources case-insensitively, so /prtraining is served directly.
-// A redirect here would match its own destination and loop.
-await check('alias    ', '/prtraining', serves('Unlock'));
+// Deleted in November 2026 at Zach's request; nothing should answer on them.
+for (const gone of ['/sunday-funday', '/Sunday-Funday', '/PRTraining', '/prtraining']) {
+  await check('deleted  ', gone, (res) => (res.status === 404 ? null : `status ${res.status}, want 404`));
+}
 
 await check('rewrite  ', '/internships', serves('html'));
 await check('rewrite  ', '/apply/legislative_internship', serves('html'));
@@ -349,7 +361,10 @@ await check('home     ', '/', (res, body) => {
 });
 // The sitemap is XML, which check() does not read; fetch it directly.
 {
-  const xml = await (await fetch(BASE + '/sitemap.xml', COOKIE ? { headers: { cookie: COOKIE } } : {})).text();
+  const xml = await (await fetch(BASE + '/sitemap.xml', {
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+    ...(COOKIE ? { headers: { cookie: COOKIE } } : {}),
+  })).text();
   for (const p of ['/endorsements/2026', '/archive']) {
     if (xml.includes(`https://www.ohiopride.org${p}</loc>`)) passed++;
     else failures.push(`sitemap    missing ${p}`);

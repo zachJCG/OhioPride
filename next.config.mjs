@@ -110,26 +110,19 @@ const nextConfig = {
       // Spelling variants and legacy URLs.
       { source: '/governorguide', destination: '/governor-guide', permanent: true },
       { source: '/govenorguide', destination: '/governor-guide', permanent: true },
-      // No /prtraining rule here on purpose. Next matches sources
-      // case-insensitively, so a lowercase-to-capitalised redirect matches its
-      // own destination and loops forever. The generated rewrite below answers
-      // both spellings without a redirect. For the same reason /Sunday-Funday
-      // is redirected from vercel.json, where matching is case sensitive.
       { source: '/scorecard/methodology', destination: '/methodology', permanent: true },
       { source: '/gala', destination: '/', permanent: true },
       { source: '/sponsorship', destination: '/', permanent: true },
       { source: '/priorities', destination: '/', permanent: true },
-      /* The Cincinnati (2026-08-26) and Cleveland (2026-09-20) Pride Hours have
-       * happened and their pages are gone, so both paths land on /events, and
-       * since the post-election refresh they do so with a real 301 (statusCode
-       * rather than permanent, which Next would send as a 308). The next stop
-       * gets its own path; these two are retired. */
+      /* The Cincinnati Pride Hour (2026-08-26) has happened and its page is
+       * gone, so its path lands on /events with a real 301 (statusCode rather
+       * than permanent, which Next would send as a 308). The Cleveland stop's
+       * /sunday-funday path was deleted outright in November 2026 and now 404s,
+       * as Zach asked. */
       { source: '/pride-hour', destination: '/events', statusCode: 301 },
-      { source: '/sunday-funday', destination: '/events', statusCode: 301 },
-      // The .html spellings too: their generated file-to-clean-URL redirect
-      // went away with the files, so without these the old links 404.
+      // The .html spelling too: its generated file-to-clean-URL redirect went
+      // away with the file, so without this the old link 404s.
       { source: '/pride-hour.html', destination: '/events', statusCode: 301 },
-      { source: '/sunday-funday.html', destination: '/events', statusCode: 301 },
       // Launch Day (2026-05-22) is over; page + signup form removed 2026-08.
       { source: '/launch-day', destination: '/', permanent: true },
       { source: '/launch-day.html', destination: '/', permanent: true },
@@ -191,7 +184,6 @@ const nextConfig = {
       // meta tag; the header is what covers crawlers that do not render.
       { source: '/admin/:path*', headers: [noindex] },
       { source: '/board-retreat/:path*', headers: [noindex] },
-      { source: '/PRTraining', headers: [noindex] },
 
       // Pages archived in place after the 2026 cycle. The list is shared with
       // lib/seo.mjs (robots meta, sitemap) and both templates (the banner), so

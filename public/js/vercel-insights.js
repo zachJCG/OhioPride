@@ -10,8 +10,8 @@
      Until now the same six lines were hand copied into site-template.js,
      into admin-shell.js, and inline into the two pages that load neither.
      Four copies meant a page could silently miss analytics simply by not
-     loading the right shell - which is exactly what happened to
-     /PRTraining and five of the admin pages. One file, loaded everywhere,
+     loading the right shell - which is exactly what happened to a gated
+     media-prep page and five of the admin pages. One file, loaded everywhere,
      removes that failure mode.
 
    How pages get it:
