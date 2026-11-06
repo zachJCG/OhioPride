@@ -30,19 +30,33 @@ const failures = [];
  * COOKIE="_vercel_jwt=..." (open the preview's share link once to get it). */
 const COOKIE = process.env.COOKIE || '';
 
+/* Every request gets a deadline: against a remote preview one stalled
+ * response would otherwise hang the whole suite with no clue which URL. */
+const TIMEOUT_MS = Number(process.env.CHECK_TIMEOUT_MS || 30000);
+
 async function check(kind, path, assert, init = {}) {
   let res;
+  let body = '';
   try {
     const headers = { ...(init.headers || {}), ...(COOKIE ? { cookie: COOKIE } : {}) };
-    res = await fetch(BASE + path, { redirect: 'manual', ...init, headers });
+    res = await fetch(BASE + path, {
+      redirect: 'manual',
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      ...init,
+      headers,
+    });
+    // Any text response, not just HTML: /robots.txt is text/plain and its
+    // body is the whole point of the check. Other bodies (images, PDFs, XML)
+    // are cancelled, not left unread: an undrained body holds its connection
+    // open, and enough of them starve the pool and stall later requests.
+    const type = res.headers.get('content-type') || '';
+    if (type.startsWith('text/') || type.includes('json')) body = await res.text();
+    else await res.body?.cancel();
   } catch (err) {
-    failures.push(`${kind}  ${path} -> request failed: ${err.message}`);
+    const why = err.name === 'TimeoutError' ? `no response within ${TIMEOUT_MS / 1000}s` : err.message;
+    failures.push(`${kind}  ${path} -> request failed: ${why}`);
     return;
   }
-  // Any text response, not just HTML: /robots.txt is text/plain and its body
-  // is the whole point of the check.
-  const type = res.headers.get('content-type') || '';
-  const body = type.startsWith('text/') || type.includes('json') ? await res.text() : '';
   const problem = assert(res, body);
   if (problem) failures.push(`${kind}  ${path} -> ${problem}`);
   else passed++;
@@ -347,7 +361,10 @@ await check('home     ', '/', (res, body) => {
 });
 // The sitemap is XML, which check() does not read; fetch it directly.
 {
-  const xml = await (await fetch(BASE + '/sitemap.xml', COOKIE ? { headers: { cookie: COOKIE } } : {})).text();
+  const xml = await (await fetch(BASE + '/sitemap.xml', {
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+    ...(COOKIE ? { headers: { cookie: COOKIE } } : {}),
+  })).text();
   for (const p of ['/endorsements/2026', '/archive']) {
     if (xml.includes(`https://www.ohiopride.org${p}</loc>`)) passed++;
     else failures.push(`sitemap    missing ${p}`);
