@@ -63,7 +63,6 @@ anything that reads the page without running its scripts.
 | every page | `BreadcrumbList` (all but `/`) |
 | `/` and every App Router page | `Organization`, `WebSite` |
 | `/issues/<slug>` | `Legislation` |
-| `/pride-hour`, `/sunday-funday` | `Event` |
 | `/endorsements` | `ItemList` |
 | `/endorsements/<slug>` | `Person` with an `EndorseAction` |
 
@@ -75,8 +74,8 @@ actually became law.
 ## Indexing rules
 
 - `robots.txt` blocks `/admin/` and `/api/` only.
-- Internal pages that must stay out of the index (`/board-retreat`,
-  `/PRTraining`, the run-of-show pages) are **crawlable** and carry `noindex`.
+- Internal pages that must stay out of the index (`/board-retreat`, the
+  run-of-show pages) are **crawlable** and carry `noindex`.
   Blocking the crawl would hide the `noindex` and Google would list the URL
   anyway, with no snippet. `next.config.mjs` adds `X-Robots-Tag` on top for
   crawlers that never render.

@@ -14,7 +14,9 @@ All four decisions are made:
 2. **Shared password for `/PRTraining`.** The media-prep page is low stakes.
    `/governor-guide` was the other candidate for this and no longer needs it:
    it came off the gate and went public, so the magic-link work it was going
-   to justify is not currently needed by any page.
+   to justify is not currently needed by any page. **Update, November 2026:**
+   `/PRTraining` was deleted at Zach's request, so no page is gated today and
+   the gated-page steps below are on hold until one is needed again.
 3. JavaScript, not TypeScript.
 4. Incremental, not big bang.
 

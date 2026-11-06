@@ -54,7 +54,7 @@
 
   // Never stack an ask on top of a page where somebody is already giving or
   // part way through a form, or on an internal surface. Matched as prefixes.
-  var SKIP_PREFIXES = ['/donate', '/admin', '/board-retreat', '/PRTraining', '/endorsement/screening'];
+  var SKIP_PREFIXES = ['/donate', '/admin', '/board-retreat', '/endorsement/screening'];
 
   // setTimeout fires immediately for delays over 2^31 - 1 ms (about 24.8
   // days), so a check further out than this is simply not scheduled.

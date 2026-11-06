@@ -358,3 +358,21 @@ the API's own data, never against names or numbers written in the check.
 - Job Perry displays as "Job Esau Perry", as filed; the 7.1 table spells it
   "Job Perry". Adding `name: 'Job Perry'` to his editorial entry changes it.
 - Endorsee profile copy is still written in the campaign's future tense.
+
+---
+
+## Phase 4: site review and improvements (2026-11-06)
+
+### Deleted at Zach's request
+
+- **Sunday Funday:** the `/sunday-funday` and `/sunday-funday.html` 301s
+  (next.config.mjs) and the `/Sunday-Funday` rule in `vercel.json` are gone,
+  so those URLs now 404. The three images only that page used (the CLEather
+  and Kink and Leather Stallion logos and its share image) are deleted. The
+  Cleveland Pride Hour flyer stays: `/archive` shows it in the 2026 past
+  events, and the `events` row in Supabase is untouched (no data deleted).
+- **`/PRTraining`:** the encrypted media-prep page, its registry entry, its
+  noindex header rule, the brand-check allowance and the season-banner skip
+  entry are gone; `/PRTraining` and `/prtraining` now 404.
+  `scripts/encrypt-page.mjs` stays as a tool for any future gated page.
+- `check:routes` asserts all four paths answer 404.

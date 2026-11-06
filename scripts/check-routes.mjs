@@ -107,7 +107,6 @@ const PAGES = [
   // Public since launch: assert on real page copy, not the unlock form.
   ['/governor-guide', 'Two roads to the Governor'],
   ['/governor-guide/other-candidates', 'Other candidates'],
-  ['/PRTraining', 'Unlock'],
 ];
 
 const ASSETS = [
@@ -197,11 +196,9 @@ await check('redirect ', '/scorecard/methodology', redirectsTo('/methodology', 3
 await check('redirect ', '/gala', redirectsTo('/', 308));
 await check('redirect ', '/sponsorship', redirectsTo('/', 308));
 await check('redirect ', '/priorities', redirectsTo('/', 308));
-// Past Pride Hours, retired after the 2026 cycle: a real 301, like /apply.
+// The Cincinnati Pride Hour, retired after the 2026 cycle: a real 301.
 await check('redirect ', '/pride-hour', redirectsTo('/events', 301));
-await check('redirect ', '/sunday-funday', redirectsTo('/events', 301));
 await check('redirect ', '/pride-hour.html', redirectsTo('/events', 301));
-await check('redirect ', '/sunday-funday.html', redirectsTo('/events', 301));
 await check('redirect ', '/launch-day', redirectsTo('/', 308));
 await check('redirect ', '/rsvp', redirectsTo('/', 308));
 // With the middleware active the Location gains ?next=..., so match by prefix.
@@ -213,14 +210,10 @@ await check('redirect ', '/admin', (res) => {
 await check('redirect ', '/admin/finance', gated(redirectsTo('/admin/finance/budget', 307)));
 await check('redirect ', '/admin/donors', gated(redirectsTo('/admin/contacts?seg=founding', 307)));
 
-// Locally Next matches /prtraining case-insensitively and serves the page.
-// On Vercel the generated rewrite is case-sensitive, so vercel.json carries a
-// case-sensitive 301 to /PRTraining (a Next redirect here would match its own
-// destination and loop). Either answer is correct.
-await check('alias    ', '/prtraining', (res, body) => {
-  if (res.status === 301 && res.headers.get('location')?.endsWith('/PRTraining')) return null;
-  return serves('Unlock')(res, body);
-});
+// Deleted in November 2026 at Zach's request; nothing should answer on them.
+for (const gone of ['/sunday-funday', '/Sunday-Funday', '/PRTraining', '/prtraining']) {
+  await check('deleted  ', gone, (res) => (res.status === 404 ? null : `status ${res.status}, want 404`));
+}
 
 await check('rewrite  ', '/internships', serves('html'));
 await check('rewrite  ', '/apply/legislative_internship', serves('html'));

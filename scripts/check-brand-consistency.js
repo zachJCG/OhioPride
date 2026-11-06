@@ -49,8 +49,8 @@ const ALLOW_LIST = new Set([
   // A gate page ships as AES-256-GCM ciphertext plus a small unlock form
   // (see scripts/encrypt-page.mjs). The real page, header and footer
   // included, only exists after the visitor decrypts it in the browser, so
-  // there is no shared wiring in the served file to check.
-  'PRTraining.html',
+  // there is no shared wiring in the served file to check. None is live:
+  // PRTraining.html, the last one, was deleted in November 2026.
   // governor-guide.html is not here any more: it came off the gate and now
   // ships as ordinary HTML with the shared header and footer, so it is held
   // to the same standard as every other page.
