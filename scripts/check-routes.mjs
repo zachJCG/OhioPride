@@ -213,9 +213,14 @@ await check('redirect ', '/admin', (res) => {
 await check('redirect ', '/admin/finance', gated(redirectsTo('/admin/finance/budget', 307)));
 await check('redirect ', '/admin/donors', gated(redirectsTo('/admin/contacts?seg=founding', 307)));
 
-// Next matches sources case-insensitively, so /prtraining is served directly.
-// A redirect here would match its own destination and loop.
-await check('alias    ', '/prtraining', serves('Unlock'));
+// Locally Next matches /prtraining case-insensitively and serves the page.
+// On Vercel the generated rewrite is case-sensitive, so vercel.json carries a
+// case-sensitive 301 to /PRTraining (a Next redirect here would match its own
+// destination and loop). Either answer is correct.
+await check('alias    ', '/prtraining', (res, body) => {
+  if (res.status === 301 && res.headers.get('location')?.endsWith('/PRTraining')) return null;
+  return serves('Unlock')(res, body);
+});
 
 await check('rewrite  ', '/internships', serves('html'));
 await check('rewrite  ', '/apply/legislative_internship', serves('html'));

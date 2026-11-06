@@ -2,7 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "redirects": [
-    { "source": "/Sunday-Funday", "destination": "/events", "statusCode": 301 }
+    { "source": "/Sunday-Funday", "destination": "/events", "statusCode": 301 },
+    { "source": "/prtraining", "destination": "/PRTraining", "statusCode": 301 }
   ],
   "crons": [
     { "path": "/api/actblue-sync", "schedule": "0 * * * *" }

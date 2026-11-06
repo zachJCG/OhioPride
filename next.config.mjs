@@ -112,9 +112,11 @@ const nextConfig = {
       { source: '/govenorguide', destination: '/governor-guide', permanent: true },
       // No /prtraining rule here on purpose. Next matches sources
       // case-insensitively, so a lowercase-to-capitalised redirect matches its
-      // own destination and loops forever. The generated rewrite below answers
-      // both spellings without a redirect. For the same reason /Sunday-Funday
-      // is redirected from vercel.json, where matching is case sensitive.
+      // own destination and loops forever. Locally the generated rewrite
+      // answers both spellings; on Vercel that rewrite is case-sensitive, so
+      // /prtraining is redirected from vercel.json, where matching is case
+      // sensitive (verified on production: /SUNDAY-FUNDAY 404s while
+      // /Sunday-Funday redirects). /Sunday-Funday is handled there too.
       { source: '/scorecard/methodology', destination: '/methodology', permanent: true },
       { source: '/gala', destination: '/', permanent: true },
       { source: '/sponsorship', destination: '/', permanent: true },
