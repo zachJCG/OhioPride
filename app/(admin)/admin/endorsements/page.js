@@ -9,18 +9,30 @@ import { useAdmin } from '../../lib/permissions';
 import { exportPdf } from './pdf-client';
 import {
   STATUS_ORDER, STATUS_LABEL, PATH_LABEL, VOTE_LABEL, tallyOf,
-  RACE_LEVEL_ORDER, RACE_LEVEL_LABEL,
+  RACE_LEVEL_ORDER, RACE_LEVEL_LABEL, RESULT_BADGE,
 } from './shared';
 import { RaceLine } from './race-line';
 import {
   cycleYearOf, currentCycleYear, isFutureCycle, daysInStage, daysInStageLabel,
 } from '../../../../lib/endorsement-race.mjs';
+import { resultBadge } from '../../../../lib/endorsement-results.mjs';
 
 const isOpen = (a) => a.status === 'submitted' || a.status === 'under_review';
 
 // An open application that has sat in one status this long gets a warmer
 // badge. Two weeks is roughly one board cycle.
 const STALE_DAYS = 14;
+
+const QUEUE_COLUMNS = 'id, candidate_name, first_name, last_name, office_sought, district, county, jurisdiction, party, election_year, is_special_election, status, endorsement_path, race_level, ballot_path, descriptive_only, is_incumbent, submitted_by_kind, photo_path, status_changed_at, created_at, cycle_id, submitted_at, was_late, result';
+
+/* incumbent (held this seat going in) arrives with the phase 3 migration,
+ * 20261105020000. Until that is applied, naming it fails the whole read, so
+ * the queue reads again without it rather than coming up empty. */
+async function loadQueue(sb) {
+  const read = (cols) => sb.from('endorsement_applications').select(cols).order('created_at', { ascending: false });
+  const withIncumbent = await read(`${QUEUE_COLUMNS}, incumbent`);
+  return withIncumbent.error ? read(QUEUE_COLUMNS) : withIncumbent;
+}
 
 export default function EndorsementsQueue() {
   const { loading: authLoading, me, can } = useAdmin();
@@ -41,9 +53,7 @@ export default function EndorsementsQueue() {
     const sb = supabase();
     (async () => {
       const [a, r, c] = await Promise.all([
-        sb.from('endorsement_applications')
-          .select('id, candidate_name, first_name, last_name, office_sought, district, county, jurisdiction, party, election_year, is_special_election, status, endorsement_path, race_level, ballot_path, descriptive_only, is_incumbent, submitted_by_kind, photo_path, status_changed_at, created_at, cycle_id, submitted_at, was_late')
-          .order('created_at', { ascending: false }),
+        loadQueue(sb),
         sb.from('endorsement_reviews').select('application_id, reviewer_email, vote'),
         sb.from('admin_election_cycles')
           .select('id, slug, label, is_open, application_count')
@@ -229,6 +239,10 @@ export default function EndorsementsQueue() {
               const open = isOpen(a);
               const days = daysInStage(a);
               const stale = open && days != null && days >= STALE_DAYS;
+              // The public words for the result (Elected, Re-elected, Not
+              // elected, Result pending). A null result has no badge.
+              const resultLook = a.status === 'endorsed' && a.result
+                ? RESULT_BADGE[a.result] || RESULT_BADGE.pending : null;
               return (
                 <a key={a.id} className="item" href={`/admin/endorsements/${a.id}`} style={{ display: 'block' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'baseline' }}>
@@ -262,6 +276,7 @@ export default function EndorsementsQueue() {
                         ? <span className="badge badge-muted">{PATH_LABEL[a.endorsement_path] || a.endorsement_path}</span>
                         : null}
                     {a.is_incumbent && <span className="badge badge-muted">Incumbent</span>}
+                    {resultLook && <span className={resultLook.className} style={resultLook.style}>{resultBadge(a)}</span>}
                     {a.submitted_by_kind && a.submitted_by_kind !== 'candidate' && (
                       <span className="badge badge-muted" title="Filled in on the candidate's behalf">
                         {a.submitted_by_kind === 'pac_staff' ? 'Filed by PAC staff' : 'Filed by campaign'}

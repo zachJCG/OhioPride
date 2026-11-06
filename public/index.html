@@ -94,6 +94,30 @@
       } catch (e) {}
     </script>
 
+    <script>
+      /* Winners hero. The 2026 results request starts here, before first
+         paint, so the answer is usually back by the time the page is parsed.
+         The evergreen hero in the markup is the default: it stays when JS is
+         off, the request fails, or no 2026 race was won. hp-hero-pending
+         hides the hero's contents (never its box) for at most 900ms, so a
+         fast answer swaps in without a flash of the old headline. The script
+         at the end of the page does the swap and lifts the hold. */
+      (function () {
+        var docEl = document.documentElement;
+        try {
+          docEl.classList.add("hp-hero-pending");
+          window.ohpWinners = fetch("/api/endorsement-results?cycle=2026", {
+            headers: { accept: "application/json" }
+          })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .catch(function () { return null; });
+          window.setTimeout(function () { docEl.classList.remove("hp-hero-pending"); }, 900);
+        } catch (e) {
+          docEl.classList.remove("hp-hero-pending");
+        }
+      })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -505,223 +529,12 @@
         .hp-submit { width: 100%; }
       }
 
-      /* =====================================================
-         LIVE NUMBERS
-         ===================================================== */
-      .hp-stats {
-        max-width: var(--container-max);
-        margin: 0 auto;
-        padding: 2.75rem 2rem 2.5rem;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 2rem;
-        text-align: center;
-      }
-      .hp-stat-num {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 800;
-        font-size: clamp(2.1rem, 4vw, 2.9rem);
-        line-height: 1;
-        color: var(--text-white);
-        font-variant-numeric: tabular-nums;
-      }
-      .hp-stat-rule {
-        width: 34px;
-        height: 3px;
-        border-radius: 2px;
-        background: var(--pride-gradient);
-        margin: 0.8rem auto 0.7rem;
-      }
-      .hp-stat-label {
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-      }
-      @media (max-width: 760px) {
-        .hp-stats { grid-template-columns: repeat(2, 1fr); padding: 2.25rem 1.25rem 1.75rem; gap: 1.75rem 1rem; }
-      }
-
-      /* =====================================================
-         WHAT WE DO
-         ===================================================== */
-      .hp-wwd-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
-        margin-top: 2rem;
-      }
-      .hp-wwd-card {
-        position: relative;
-        overflow: hidden;
-        border: 1px solid var(--dark-bg-light);
-        border-radius: 10px;
-        padding: 1.6rem 1.5rem;
-        background: rgba(19, 45, 68, 0.5);
-        transition: transform 0.3s ease, border-color 0.3s ease;
-      }
-      .hp-wwd-card::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 3px;
-        background: var(--pride-gradient);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.35s ease;
-      }
-      .hp-wwd-card:hover { transform: translateY(-5px); border-color: var(--color-light-blue); }
-      .hp-wwd-card:hover::before { transform: scaleX(1); }
-      .hp-wwd-icon {
-        width: 44px; height: 44px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(112, 214, 236, 0.1);
-        color: var(--color-light-blue);
-        margin-bottom: 1.1rem;
-      }
-      .hp-wwd-card h3 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 1.08rem;
-        font-weight: 700;
-        color: var(--text-white);
-        margin-bottom: 0.6rem;
-      }
-      .hp-wwd-card p {
-        font-family: "Roboto Slab", serif;
-        font-size: 0.92rem;
-        line-height: 1.7;
-        color: var(--text-light);
-      }
-      .hp-wwd-card .card-link {
-        display: inline-block;
-        margin-top: 0.9rem;
-        color: var(--color-light-blue);
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-decoration: none;
-      }
-      .hp-wwd-card .card-link:hover { text-decoration: underline; }
-      @media (max-width: 1000px) { .hp-wwd-grid { grid-template-columns: repeat(2, 1fr); } }
-      @media (max-width: 600px)  { .hp-wwd-grid { grid-template-columns: 1fr; } }
-
-      /* =====================================================
-         SCORECARD SPLIT
-         ===================================================== */
-      .hp-split {
-        display: grid;
-        grid-template-columns: 1.05fr 0.95fr;
-        gap: 3.5rem;
-        align-items: center;
-      }
-      .hp-photo {
-        border-radius: 16px;
-        padding: 3px;
-        background: var(--pride-gradient);
-        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
-      }
-      .hp-photo img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 13px;
-        aspect-ratio: 4 / 3;
-      }
-      .hp-photo-credit {
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.7rem;
-        letter-spacing: 0.06em;
-        color: var(--text-muted);
-        margin-top: 0.7rem;
-        text-align: right;
-      }
-      @media (max-width: 920px) {
-        .hp-split { grid-template-columns: 1fr; gap: 2.25rem; }
-        .hp-split-media { order: 2; max-width: 560px; margin: 0 auto; width: 100%; }
-      }
-
-      /* Compact grade legend: colored letters, tiny labels, no boxes. */
-      .hp-gradeline {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem 1.1rem;
-        margin: 1.4rem 0 1.5rem;
-        max-width: 560px;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.7rem;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-      }
-      .hp-gradeline span {
-        display: inline-flex;
-        align-items: baseline;
-        gap: 0.35rem;
-        white-space: nowrap;
-      }
-      .hp-gradeline b {
-        font-weight: 800;
-        font-size: 0.95rem;
-        letter-spacing: 0;
-      }
-
-      /* Find-your-legislator quick search. Submits to the scorecard, which
-         reads ?search= from the URL and filters the card list. */
-      .hp-find {
-        margin: 0 0 1.5rem;
-        max-width: 560px;
-      }
-      .hp-find-label {
-        display: block;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        margin-bottom: 0.45rem;
-      }
-      .hp-find-row {
-        display: flex;
-        gap: 0.6rem;
-      }
-      .hp-find input {
-        flex: 1;
-        min-width: 0;
-        padding: 0.75rem 0.95rem;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        background: rgba(8, 21, 33, 0.6);
-        color: var(--text-white);
-        font-family: "Roboto Slab", serif;
-        font-size: 0.95rem;
-        transition: border-color 0.2s, box-shadow 0.2s;
-      }
-      .hp-find input::placeholder { color: rgba(255, 255, 255, 0.6); }
-      .hp-find input:focus {
-        outline: none;
-        border-color: var(--color-light-blue);
-        box-shadow: 0 0 0 3px rgba(112, 214, 236, 0.18);
-      }
-      .hp-find .btn { padding: 0.75rem 1.5rem; font-size: 14px; white-space: nowrap; }
-      @media (max-width: 480px) {
-        .hp-find-row { flex-direction: column; }
-        .hp-find .btn { width: 100%; }
-      }
-
       .hp-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; }
 
       /* =====================================================
          APPLY FOR 2027: copy on the left, three facts on the right.
          ===================================================== */
-      .hp-apply.section { padding-top: 0; }
+      .hp-apply.section { padding-top: 1rem; }
       .hp-apply__inner {
         position: relative;
         display: grid;
@@ -785,72 +598,220 @@
       }
 
       /* =====================================================
-         ENDORSED SLATE - compact cards: face, name, race.
-         The full case for each candidate lives on /endorsements.
+         WINNERS HERO: faces are the hero.
+         Built by the script at the end of the page from
+         #hpWinnersTpl, and only when a 2026 race was won. Quiet
+         navy with no glow wash (so it does not reuse .hp-hero),
+         and type never sits on a face: name, seat and badge are
+         under each photo. Mobile first at 375px.
+         Contrast on --dark-bg, measured:
+           headline, names    #fff                       16.0:1
+           support, seats     --text-light               11.9:1
+           badge              Light Blue on its 12% tint  7.3:1
+           links              Light Blue                  9.6:1
          ===================================================== */
-      .hp-slate-grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 1rem;
-        margin: 1.75rem 0;
+      /* While the results request is in flight: hide the evergreen hero's
+         contents, not its box. Lifted by either script, 900ms at most. */
+      html.hp-hero-pending #hpHero > * { visibility: hidden; }
+      /* Hold the first-visit rise as well, so it plays once the hero shows
+         instead of running out while it is hidden. */
+      html.hp-hero-pending .hp-hero-copy > * { animation-play-state: paused; }
+      /* Belt for a browser without template support. */
+      #hpWinnersTpl { display: none; }
+
+      /* The shared nav is sticky, so it already takes its own height in
+         the flow: this padding is the whole gap under it. */
+      .hp-winners {
+        padding: 2rem 0 2.5rem;
+        background: var(--dark-bg);
       }
-      .hp-slate-card {
-        position: relative;
-        display: block;
-        border: 1px solid var(--dark-bg-light);
-        border-radius: 10px;
-        background: rgba(19, 45, 68, 0.5);
-        overflow: hidden;
-        text-decoration: none;
-        color: inherit;
-        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      .hp-winners__inner {
+        max-width: var(--container-max);
+        margin: 0 auto;
+        padding: 0 16px;
+        text-align: center;
       }
-      .hp-slate-card::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 3px;
-        background: var(--pride-gradient);
-        z-index: 1;
+      .hp-winners h1 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: clamp(1.8rem, 7vw, 3.4rem);
+        line-height: 1.08;
+        letter-spacing: -0.01em;
+        color: var(--text-white);
+        margin: 0 auto 0.9rem;
+        text-wrap: balance;
       }
-      .hp-slate-card:hover,
-      .hp-slate-card:focus-visible {
-        transform: translateY(-4px);
-        border-color: var(--color-light-blue);
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+      /* One span per sentence (the script splits them), so each sentence
+         wraps as a unit and the break lands between the two. */
+      .hp-winners h1 span { display: inline-block; }
+      .hp-winners__sub {
+        font-family: "Roboto Slab", serif;
+        font-size: 1rem;
+        line-height: 1.65;
+        color: var(--text-light);
+        max-width: 34rem;
+        margin: 0 auto 1.25rem;
+        text-wrap: pretty;
       }
-      .hp-slate-card:focus-visible {
-        outline: 2px solid var(--color-light-blue);
-        outline-offset: 3px;
+      .hp-winners__sub [data-slot="won"] {
+        font-weight: 500;
+        color: var(--text-white);
+        font-variant-numeric: tabular-nums;
       }
-      .hp-slate-photo { background: rgba(8, 21, 33, 0.6); }
-      .hp-slate-photo img {
+      .hp-winners .hp-winners__actions {
+        justify-content: center;
+        gap: 0.75rem;
+        margin-bottom: 1.75rem;
+      }
+      .hp-winners .hp-winners__actions .btn {
+        flex: 1 1 auto;
+        max-width: 18rem;
+        padding: 13px 18px;
+        font-size: 14px;
+      }
+
+      .hp-wall {
+        list-style: none;
+        margin: 0 auto;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* a short last row sits centered */
+        gap: 18px 8px;
+      }
+      .hp-wall__card {
+        position: relative; /* anchors the stretched link */
+        flex: 0 0 calc((100% - 2 * 8px) / 3);
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .hp-wall__photo {
         display: block;
         width: 100%;
         aspect-ratio: 1 / 1;
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--dark-bg-light);
+      }
+      .hp-wall__photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         object-position: center 25%;
       }
-      .hp-slate-body { padding: 0.75rem 0.85rem 0.85rem; }
-      .hp-slate-name {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 700;
-        font-size: 0.95rem;
-        line-height: 1.2;
+      .hp-wall__photo--initial {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font: 800 2rem/1 "Montserrat", sans-serif;
         color: var(--text-white);
-        margin-bottom: 0.3rem;
       }
-      .hp-slate-race {
+      .hp-wall__card:hover .hp-wall__photo {
+        box-shadow: 0 0 0 2px var(--color-light-blue);
+      }
+      /* The name is the card's one link, stretched over the whole card so
+         the face is clickable without a second tab stop. */
+      .hp-wall__name {
+        margin-top: 0.55rem;
         font-family: "Montserrat", sans-serif;
-        font-size: 0.66rem;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        line-height: 1.4;
-        color: var(--text-muted);
+        font-size: 0.84rem;
+        font-weight: 700;
+        line-height: 1.25;
+        color: var(--text-white);
+        text-decoration: none;
+        overflow-wrap: anywhere;
+        text-wrap: balance;
       }
-      @media (max-width: 1000px) { .hp-slate-grid { grid-template-columns: repeat(3, 1fr); } }
-      @media (max-width: 620px)  { .hp-slate-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; } }
+      .hp-wall__name::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+      }
+      .hp-wall__name:focus-visible { outline: none; }
+      .hp-wall__name:focus-visible::after {
+        outline: 2px solid var(--color-light-blue);
+        outline-offset: 4px;
+      }
+      .hp-wall__card:hover .hp-wall__name {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .hp-wall__seat {
+        margin: 0.2rem 0 0.45rem;
+        font-family: "Roboto Slab", serif;
+        font-size: 0.72rem;
+        line-height: 1.35;
+        color: var(--text-light);
+        overflow-wrap: anywhere;
+        text-wrap: balance;
+      }
+      /* margin-top:auto lines the badges up across a row whatever the
+         names and seats wrap to. Light Blue, the same tint as the badges
+         on /endorsements. */
+      .hp-wall__badge {
+        margin-top: auto;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(112, 214, 236, 0.4);
+        background: rgba(112, 214, 236, 0.12);
+        color: var(--color-light-blue);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.62rem;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .hp-wall__more {
+        display: inline-block;
+        margin-top: 1.25rem;
+        padding: 0.6rem 0.25rem; /* a comfortable tap target */
+        color: var(--color-light-blue);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 4px;
+      }
+      .hp-wall__more:hover { color: var(--text-white); }
+
+      @media (min-width: 560px) {
+        .hp-winners { padding-bottom: 3rem; }
+        .hp-winners .hp-winners__actions .btn {
+          flex: 0 0 auto;
+          padding: 14px 30px;
+          font-size: 15px;
+        }
+        .hp-wall { gap: 20px 12px; }
+        .hp-wall__card { flex-basis: calc((100% - 3 * 12px) / 4); }
+      }
+      @media (min-width: 768px) {
+        .hp-winners__inner { padding: 0 24px; }
+      }
+      @media (min-width: 900px) {
+        .hp-winners { padding-top: 3rem; }
+        .hp-wall__card { flex-basis: calc((100% - 4 * 12px) / 5); }
+      }
+      @media (min-width: 1180px) {
+        .hp-wall { gap: 22px 14px; }
+        .hp-wall__card { flex-basis: calc((100% - 6 * 14px) / 7); }
+        .hp-wall__name { font-size: 0.92rem; }
+        .hp-wall__seat { font-size: 0.76rem; }
+      }
+      /* A soft arrival for the swap. Motion only when it is welcome. */
+      @media (prefers-reduced-motion: no-preference) {
+        .hp-winners__inner { animation: hpWinnersIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+      }
+      @keyframes hpWinnersIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: none; }
+      }
 
       /* =====================================================
          FOUNDING MEMBERS - centered, carried by the goal bar.
@@ -909,34 +870,51 @@
         margin-bottom: 1.75rem;
       }
 
-      .hp-section-head { max-width: 640px; }
-      .hp-section-head p {
-        font-family: "Roboto Slab", serif;
-        color: var(--text-light);
-        line-height: 1.75;
-      }
-      .hp-center { text-align: center; margin-left: auto; margin-right: auto; }
-      .hp-center .hp-actions { justify-content: center; }
-
       /* =====================================================
-         SHARED-LAYER OVERRIDES
+         EVERGREEN STRIP: the standing promise, near the bottom.
+         Shown only in winners mode. The evergreen hero carries the
+         same line as its headline, so the strip stays hidden while
+         that hero is on the page.
          ===================================================== */
-      /* style.css's reveal-stagger rules outrank the card hover rules and
-         pin transform/transition (with per-child delays) after reveal.
-         These higher-specificity rules restore the hover lift. The cost is
-         that grid children rise together instead of staggering. */
-      html.reveal-ready .reveal-stagger.visible > .hp-wwd-card:nth-child(n),
-      html.reveal-ready .reveal-stagger.visible > .hp-slate-card:nth-child(n) {
-        transition: opacity 0.5s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        transition-delay: 0s;
+      .hp-evergreen {
+        border-top: 1px solid var(--border-light);
+        padding: 2.5rem 0 3rem;
+        text-align: center;
       }
-      html.reveal-ready .reveal-stagger.visible > .hp-wwd-card:nth-child(n):hover {
-        transform: translateY(-5px);
+      /* Author display rules beat [hidden], and style.css has no global
+         [hidden] rule, so say it here. */
+      .hp-evergreen[hidden] { display: none; }
+      .hp-evergreen h2 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: clamp(1.4rem, 5.4vw, 2rem);
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+        color: var(--text-white);
+        max-width: 24ch;
+        margin: 0 auto 0.9rem;
+        text-wrap: balance;
       }
-      html.reveal-ready .reveal-stagger.visible > .hp-slate-card:nth-child(n):hover,
-      html.reveal-ready .reveal-stagger.visible > .hp-slate-card:nth-child(n):focus-visible {
-        transform: translateY(-4px);
+      .hp-evergreen .hp-keep-score { color: var(--color-light-blue); }
+      .hp-nowrap { white-space: nowrap; }
+      .hp-evergreen__links {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.25rem 1.75rem;
       }
+      .hp-evergreen__links a {
+        display: inline-block;
+        padding: 0.6rem 0.25rem;
+        color: var(--color-light-blue);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 4px;
+      }
+      .hp-evergreen__links a:hover { color: var(--text-white); }
 
       /* The shared layer (style.css + enhancements.js) animates buttons,
          goal bars, and reveal transitions without a reduced-motion guard.
@@ -946,7 +924,8 @@
            these two lines are the belt to that suspender. */
         html.hp-flag-wait .hp-ohio .hp-stripe { transform: none; transition: none; }
         .hp-scroll-cue { display: none !important; }
-        .hp-hero-copy > * {
+        .hp-hero-copy > *,
+        .hp-winners__inner {
           animation: none !important;
         }
         .btn-primary, .btn-pride-shimmer, .goal-fill, .nav-logo {
@@ -972,7 +951,7 @@
   <main id="main">
 
     <!-- ============ HERO ============ -->
-    <section class="hp-hero">
+    <section class="hp-hero" id="hpHero">
       <div class="hp-hero-grid">
         <div class="hp-hero-copy">
           <div class="section-label">Ohio's Only Statewide LGBTQ+ PAC</div>
@@ -1031,6 +1010,29 @@
         <span>Scroll to fly the flag</span>
       </button>
     </section>
+
+    <!-- ============ WINNERS HERO (template) ============
+         Built by the script at the end of the page, and only when the 2026
+         results include at least one win. It then takes the place of the
+         evergreen hero above, which stays for no JS, a failed request and
+         no wins. The headline is a placeholder that the script turns into
+         the page heading, so the served file keeps exactly one top-level
+         heading (scripts/check-seo.mjs counts inside templates too). Every
+         name, seat, badge and number comes from /api/endorsement-results. -->
+    <template id="hpWinnersTpl">
+      <section class="hp-winners" aria-labelledby="hpWinnersTitle">
+        <div class="hp-winners__inner">
+          <p data-slot="title">We endorsed them. Ohio elected them.</p>
+          <p class="hp-winners__sub"><span data-slot="won"></span> candidates we endorsed won on November 3. Now they go to work, and we start building the 2027 slate.</p>
+          <div class="hp-hero-actions hp-winners__actions">
+            <a href="https://secure.actblue.com/donate/ohio-pride-pac?refcode=website_home_winners" class="btn btn-primary" target="_blank" rel="noopener">Donate</a>
+            <a href="/apply" class="btn btn-outline-light">Apply for endorsement</a>
+          </div>
+          <ul class="hp-wall" role="list"></ul>
+          <a class="hp-wall__more" href="/endorsements/2026">See every 2026 result</a>
+        </div>
+      </section>
+    </template>
 
     <!-- ============ SIGNUP (moved to the top of the page) ============ -->
     <section class="hp-signup" aria-labelledby="hpSignupTitle">
@@ -1091,30 +1093,6 @@
       </div>
     </section>
 
-    <!-- ============ LIVE NUMBERS ============ -->
-    <section class="hp-stats" aria-label="Ohio Pride by the numbers">
-      <div class="reveal">
-        <div class="hp-stat-num" id="hpStatMembers">158</div>
-        <div class="hp-stat-rule" aria-hidden="true"></div>
-        <div class="hp-stat-label">Founding Members</div>
-      </div>
-      <div class="reveal">
-        <div class="hp-stat-num" data-stat="legislators">132</div>
-        <div class="hp-stat-rule" aria-hidden="true"></div>
-        <div class="hp-stat-label">Legislators Scored</div>
-      </div>
-      <div class="reveal">
-        <div class="hp-stat-num" id="hpStatBills">25</div>
-        <div class="hp-stat-rule" aria-hidden="true"></div>
-        <div class="hp-stat-label">Bills Tracked</div>
-      </div>
-      <div class="reveal">
-        <div class="hp-stat-num" data-stat="counties">88</div>
-        <div class="hp-stat-rule" aria-hidden="true"></div>
-        <div class="hp-stat-label">Counties. One Ohio.</div>
-      </div>
-    </section>
-
     <!-- ============ APPLY (2027) ============ -->
     <section class="section hp-apply" aria-labelledby="hpApplyTitle">
       <div class="container">
@@ -1136,203 +1114,6 @@
             <li><span class="hp-apply__fact-num">88</span><span class="hp-apply__fact-label">Counties. We take applications from all 88.</span></li>
             <li><span class="hp-apply__fact-num">1</span><span class="hp-apply__fact-label">Application. Our board decides after your filing deadline.</span></li>
           </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ ENDORSED SLATE ============ -->
-    <section class="section">
-      <div class="container">
-        <div class="hp-section-head hp-center">
-          <div class="section-label">The 2026 Slate</div>
-          <h2 class="section-title" style="margin-bottom: 0.75rem;">Endorsed by Ohio Pride</h2>
-          <p>Pro-equality candidates we were proud to stand behind in 2026. The full case for each is on the endorsements page.</p>
-        </div>
-        <div class="hp-slate-grid reveal-stagger">
-          <a class="hp-slate-card" href="/endorsements/noah-spinner">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/noah-spinner.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">J. Noah Spinner</div>
-              <div class="hp-slate-race">Ohio House, District 31</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/manisha-kotian">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/manisha-kotian.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Manisha Kotian</div>
-              <div class="hp-slate-race">Hamilton County Common Pleas</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/tiffany-evans">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/tiffany-evans.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Tiffany Evans</div>
-              <div class="hp-slate-race">Hamilton County Domestic Relations</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/lora-covrett">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/lora-covrett.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Lora Covrett</div>
-              <div class="hp-slate-race">Ohio House, District 87</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/mike-baker">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/mike-baker.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Mike Baker</div>
-              <div class="hp-slate-race">Ohio House, District 52</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/sarah-henry">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/sarah-henry.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Sarah Henry</div>
-              <div class="hp-slate-race">Hamilton County Common Pleas</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/jessica-miranda">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/jessica-miranda.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Jessica E. Miranda</div>
-              <div class="hp-slate-race">Hamilton County Auditor</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/cassandra-rice">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/cassandra-rice.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Cassandra Rice</div>
-              <div class="hp-slate-race">Montgomery County Probate Court</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/paul-kurtz">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/paul-kurtz.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1350" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Paul Kurtz</div>
-              <div class="hp-slate-race">Ohio House, District 55</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/jordan-haire">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/jordan-haire.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1350" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Jordan Haire</div>
-              <div class="hp-slate-race">Ohio House, District 47</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/christine-cockley">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/christine-cockley.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Christine Cockley</div>
-              <div class="hp-slate-race">Ohio House, District 6</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/stacie-baker">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/stacie-baker.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Stacie Baker</div>
-              <div class="hp-slate-race">Ohio Senate, District 3</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/rose-lounsbury">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/rose-lounsbury.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Rose Lounsbury</div>
-              <div class="hp-slate-race">Ohio House, District 36</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/karl-keith">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/karl-keith.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Karl Keith</div>
-              <div class="hp-slate-race">Montgomery County Auditor</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/job-perry">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/job-perry.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1080" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Job Esau Perry</div>
-              <div class="hp-slate-race">Summit County Common Pleas</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/cara-jacob">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/cara-jacob-card.jpg" alt="" loading="lazy" decoding="async" width="920" height="920" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Cara Jacob</div>
-              <div class="hp-slate-race">Ohio Senate, District 7</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/seth-walsh">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/seth-walsh-card.jpg" alt="" loading="lazy" decoding="async" width="540" height="540" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Seth Walsh</div>
-              <div class="hp-slate-race">Ohio Treasurer</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/karen-brownlee">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/karen-brownlee.jpg" alt="" loading="lazy" decoding="async" width="380" height="526" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Karen Brownlee</div>
-              <div class="hp-slate-race">Ohio House, District 28</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/caleb-price">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/caleb-price.jpg" alt="" loading="lazy" decoding="async" width="1080" height="1081" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Caleb Price</div>
-              <div class="hp-slate-race">Ohio House, District 30</div>
-            </div>
-          </a>
-          <a class="hp-slate-card" href="/endorsements/jeff-givan">
-            <div class="hp-slate-photo">
-              <img src="/assets/endorsements/jeff-givan-card.jpg" alt="" loading="lazy" decoding="async" width="880" height="880" />
-            </div>
-            <div class="hp-slate-body">
-              <div class="hp-slate-name">Jeff Givan</div>
-              <div class="hp-slate-race">Ohio House, District 78</div>
-            </div>
-          </a>
-        </div>
-        <div class="hp-actions hp-center" style="justify-content:center;">
-          <a href="/endorsements" class="btn btn-primary">Read the Endorsements</a>
-          <a href="/apply" class="btn btn-outline-light">Apply for Endorsement</a>
         </div>
       </div>
     </section>
@@ -1381,6 +1162,19 @@
       </div>
     </section>
 
+    <!-- ============ EVERGREEN STRIP ============
+         Revealed by the winners script. Hidden otherwise, because the
+         evergreen hero already says this line as its headline. -->
+    <section class="hp-evergreen" id="hpEvergreen" aria-labelledby="hpEvergreenTitle" hidden>
+      <div class="container">
+        <h2 id="hpEvergreenTitle">We elect <span class="hp-nowrap">pro-equality</span> leaders. <span class="hp-keep-score">And we keep score.</span></h2>
+        <div class="hp-evergreen__links">
+          <a href="/scorecard">See the scorecard</a>
+          <a href="/about">About Ohio Pride</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
 <div id="site-footer"></div>
@@ -1391,6 +1185,117 @@
     <script src="/js/enhancements.js" defer></script>
     <script src="/js/ohiopride-data.js" defer></script>
     <script defer>
+      /* ---- Winners hero ----
+         The head script started the 2026 results request. When at least one
+         race was won, this builds the winners hero from #hpWinnersTpl and
+         puts it in place of the evergreen hero, so the document never holds
+         two page headings. Anything else (no JS, a failed request, ok:false,
+         no wins) leaves the evergreen hero where it is. Every string from the
+         data goes in through textContent. The badge and the seat come from
+         the API, which reads lib/endorsement-results.mjs, so the rules live
+         in one place. This runs as soon as the page is parsed rather than at
+         DOMContentLoaded, so the swap lands as early as the answer allows.
+         Nothing built here carries a reveal or .card class: the shared
+         scripts only observe those once, so they would stay invisible. */
+      (function () {
+        "use strict";
+        var docEl = document.documentElement;
+        function release() { docEl.classList.remove("hp-hero-pending"); }
+
+        function el(tag, className, text) {
+          var node = document.createElement(tag);
+          if (className) node.className = className;
+          if (text !== undefined) node.textContent = text;
+          return node;
+        }
+
+        function card(w, i) {
+          var name = String(w.name).trim();
+          var li = el("li", "hp-wall__card");
+
+          var photo = el("span", "hp-wall__photo");
+          if (typeof w.portrait_url === "string" && w.portrait_url) {
+            var img = document.createElement("img");
+            /* loading goes on before src, or the fetch has already begun */
+            if (i >= 6) img.loading = "lazy";
+            img.decoding = "async";
+            img.width = 400;
+            img.height = 400;
+            img.alt = "Portrait of " + name + ".";
+            img.src = w.portrait_url;
+            photo.appendChild(img);
+          } else {
+            photo.className += " hp-wall__photo--initial";
+            photo.setAttribute("aria-hidden", "true");
+            photo.textContent = name.charAt(0).toUpperCase();
+          }
+          li.appendChild(photo);
+
+          var link = el(w.slug ? "a" : "span", "hp-wall__name", name);
+          if (w.slug) link.href = "/endorsements/" + encodeURIComponent(w.slug);
+          li.appendChild(link);
+
+          if (w.office) li.appendChild(el("span", "hp-wall__seat", String(w.office)));
+          if (w.badge) li.appendChild(el("span", "hp-wall__badge", String(w.badge)));
+          return li;
+        }
+
+        function render(d) {
+          var evergreen = document.getElementById("hpHero");
+          var tpl = document.getElementById("hpWinnersTpl");
+          var winners = d && d.ok === true && Array.isArray(d.results)
+            ? d.results.filter(function (r) {
+                return r && r.result === "won" && typeof r.name === "string" && r.name.trim();
+              })
+            : [];
+          if (!winners.length || !evergreen || !tpl || !("content" in tpl)) return;
+
+          var frag = tpl.content.cloneNode(true);
+          var section = frag.querySelector(".hp-winners");
+          var slot = frag.querySelector('[data-slot="title"]');
+          var wonSlot = frag.querySelector('[data-slot="won"]');
+          var wall = frag.querySelector(".hp-wall");
+          if (!section || !slot || !wonSlot || !wall) return;
+
+          /* The template's placeholder becomes the page heading, one span
+             per sentence so each sentence wraps as a unit. */
+          var h1 = el("h1");
+          h1.id = "hpWinnersTitle";
+          slot.textContent.trim().replace(/\.\s+/g, ".\n").split("\n").forEach(function (s, i) {
+            if (i) h1.appendChild(document.createTextNode(" "));
+            h1.appendChild(el("span", "", s));
+          });
+          slot.parentNode.replaceChild(h1, slot);
+
+          var won = d.counts && typeof d.counts.won === "number" ? d.counts.won : winners.length;
+          wonSlot.textContent = String(won);
+
+          winners.forEach(function (w, i) { wall.appendChild(card(w, i)); });
+
+          /* A late answer can land after a keyboard user has moved into the
+             evergreen hero. Hand focus to the new heading rather than drop
+             it on the body when its element leaves the page. */
+          var hadFocus = evergreen.contains(document.activeElement);
+          section.id = evergreen.id;
+          evergreen.parentNode.replaceChild(frag, evergreen);
+          if (hadFocus) {
+            h1.tabIndex = -1;
+            h1.focus({ preventScroll: true });
+          }
+          docEl.classList.remove("hp-flag-wait"); /* the flag left with the evergreen hero */
+
+          var strip = document.getElementById("hpEvergreen");
+          if (strip) strip.hidden = false;
+        }
+
+        var pending = window.ohpWinners;
+        if (!pending || typeof pending.then !== "function") return release();
+        pending.then(function (d) {
+          try { render(d); } catch (e) { /* fail open: the evergreen hero stays */ }
+          release();
+        }, release);
+      })();
+
       document.addEventListener("DOMContentLoaded", function () {
         "use strict";
 
@@ -1425,7 +1330,7 @@
           }
         }
 
-        /* ---- Live stat counters ---- */
+        /* ---- Count-up for the hero's founding member chip ---- */
         /* Generation token cancels an in-flight count when a newer one starts
            on the same element, so a slow stale count can never finish after
            (and overwrite) the live value. */
@@ -1445,44 +1350,16 @@
           requestAnimationFrame(tick);
         }
 
-        /* Wraps a stat element: counts up from its static fallback text on
-           first view; if a live value arrives (before or after), uses it. */
-        function liveStat(el) {
-          var state = { seen: false, live: null };
-          if (el) {
-            var io = new IntersectionObserver(function (entries) {
-              entries.forEach(function (entry) {
-                if (entry.isIntersecting && !state.seen) {
-                  state.seen = true;
-                  countTo(el, state.live || parseInt(el.textContent.replace(/,/g, ""), 10) || 0, 1800);
-                  io.unobserve(el);
-                }
-              });
-            }, { threshold: 0.5 });
-            io.observe(el);
-          }
-          return {
-            set: function (n) {
-              state.live = n;
-              if (state.seen) countTo(el, n, 900);
-            }
-          };
-        }
-
-        var membersStat = liveStat(document.getElementById("hpStatMembers"));
-        var billsStat = liveStat(document.getElementById("hpStatBills"));
-        liveStat(document.querySelector('[data-stat="legislators"]'));
-        liveStat(document.querySelector('[data-stat="counties"]'));
         var heroEl = document.getElementById("hpHeroCount");
 
         /* ---- Founding-member progress: ONE request drives the hero chip,
-           the stat, the goal bar, and the goal note. ---- */
+           the goal bar, and the goal note. In winners mode the chip is gone
+           with the evergreen hero, and countTo skips a missing element. ---- */
         fetch("/api/founding-members-progress", { headers: { accept: "application/json" } })
           .then(function (r) { return r.ok ? r.json() : null; })
           .then(function (d) {
             if (!d || !d.ok || !d.member_count) return;
             countTo(heroEl, d.member_count, 1200);
-            membersStat.set(d.member_count);
 
             var goal = d.goal || 1969;
             var note = document.getElementById("progressText");
@@ -1505,14 +1382,6 @@
               }, { threshold: 0.3 });
               io.observe(bar.parentElement || bar);
             }
-          })
-          .catch(function () { /* fail open: static numbers stay */ });
-
-        fetch("/api/bills", { headers: { accept: "application/json" } })
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .then(function (d) {
-            if (!d || !d.ok || !Array.isArray(d.bills) || d.bills.length === 0) return;
-            billsStat.set(d.bills.length);
           })
           .catch(function () { /* fail open: static numbers stay */ });
 

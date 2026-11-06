@@ -8,12 +8,17 @@
  * crawler or a slow connection to see.
  *
  * The filter bar only appears once the list is big enough to need it.
+ *
+ * Since phase 3 the page passes the current and future cycles only; past
+ * slates live on their results page (/endorsements/2026). The old
+ * /endorsements#<slug> redirect moved out to hash-redirect.js, which knows
+ * every slug, not just the ones on this grid.
  */
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { LEVEL_LABEL } from '../../../lib/endorsements.mjs';
-import { EndorsedPill, cardTeaser } from './shared';
+import { EndorsedPill, LoadFailed, cardTeaser } from './shared';
 
 const LEVEL_ORDER = ['federal', 'state', 'local', 'judicial'];
 
@@ -76,19 +81,6 @@ function Card({ c }) {
 export default function EndorsementGrid({ candidates, loadFailed, screeningPath }) {
   const [level, setLevel] = useState('all');
   const [year, setYear] = useState('');
-
-  /* /endorsements#jeff-givan was the shareable URL until the profile became a
-   * real route. The hash never reaches the server, so the redirect has to
-   * happen here. Anything that is not a known slug just clears itself. */
-  useEffect(() => {
-    const slug = decodeURIComponent(window.location.hash.replace(/^#\/?/, ''));
-    if (!slug) return;
-    if (candidates.some((c) => c.slug === slug)) {
-      window.location.replace(`/endorsements/${slug}`);
-    } else {
-      window.history.replaceState(null, '', '/endorsements');
-    }
-  }, [candidates]);
 
   const counts = useMemo(() => {
     const out = { all: candidates.length };
@@ -200,16 +192,7 @@ export default function EndorsementGrid({ candidates, loadFailed, screeningPath 
             )}
           </div>
         ) : loadFailed ? (
-          <div className="endorse-state error">
-            <h2>We couldn&apos;t load endorsements</h2>
-            <p>
-              There was a problem fetching the latest endorsement list. Please refresh the page or
-              try again in a moment.
-            </p>
-            <a className="btn-action" href="/endorsements">
-              Try again
-            </a>
-          </div>
+          <LoadFailed retryHref="/endorsements" />
         ) : candidates.length === 0 ? (
           <div className="endorse-state">
             <h2>Endorsements coming soon</h2>

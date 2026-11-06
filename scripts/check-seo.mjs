@@ -263,6 +263,20 @@ for (const page of pages) {
 }
 for (const route of APP_ROUTES) {
   assert(inSitemap.has(route.url), 'sitemap', `${route.url} is missing from the sitemap`);
+  /* A route that names its own share card must ship it, at the size every
+   * platform expects (npm run og:build renders them). PNG IHDR: width at
+   * byte 16, height at byte 20. */
+  if (route.image) {
+    const file = assetFile(route.image);
+    if (assert(file && existsSync(file), route.url, `share card missing: ${route.image}`)) {
+      const png = readFileSync(file);
+      assert(
+        png.readUInt32BE(16) === 1200 && png.readUInt32BE(20) === 630,
+        route.url,
+        `${route.image} is not 1200x630`,
+      );
+    }
+  }
 }
 
 /* --- generated blocks are current ---------------------------------------- */

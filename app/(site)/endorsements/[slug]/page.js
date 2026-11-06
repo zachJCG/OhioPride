@@ -7,6 +7,12 @@
  *
  * dynamicParams stays on (the default) so an endorsement recorded in the admin
  * appears here on the next revalidation without waiting for a deploy.
+ *
+ * After the election (phase 3) a profile also carries its result, under the
+ * name, in the copy deck's words from lib/endorsement-results.mjs. A 2026
+ * profile goes back to /endorsements/2026, where its slate now lives, and its
+ * breadcrumb runs through that page. The URL itself never changes: campaign
+ * sites and press link to it.
  */
 
 import Link from 'next/link';
@@ -17,7 +23,10 @@ import {
   getEndorsements,
   initial,
 } from '../../../../lib/endorsements.mjs';
+import { currentCycleYear } from '../../../../lib/endorsement-race.mjs';
+import { resultKey, resultLine } from '../../../../lib/endorsement-results.mjs';
 import { SITE_NAME, SITE_URL, absolute, breadcrumbJsonLd } from '../../../../lib/seo.mjs';
+import { RESULTS_CRUMB, RESULTS_CYCLE, RESULTS_PATH } from '../results';
 import { EndorsedPill } from '../shared';
 import '../endorsements.css';
 
@@ -71,6 +80,16 @@ export default async function EndorsementProfile({ params }) {
   const endorsedOn = formatDate(c.endorsedAt);
   const officeLine = [c.office, c.district].filter(Boolean).join(', ');
 
+  /* The result line. A race that has been called always shows it; "result
+   * pending" only once that cycle's Election Day is behind us, so a 2027
+   * candidate in the middle of a campaign does not read as a race in doubt. */
+  const result = resultKey(c);
+  const decided = result === 'won' || result === 'lost';
+  const cycleYear = c.cycle == null ? null : Number(c.cycle);
+  const line = resultLine(c);
+  const showResult = Boolean(line) && (decided || cycleYear < currentCycleYear());
+  const inResults = cycleYear === RESULTS_CYCLE;
+
   /* Facts the header does not already state. "District covers" rather than
    * "District": the office line right above it already reads "District 28",
    * and two rows both labelled District said different things. */
@@ -80,7 +99,10 @@ export default async function EndorsementProfile({ params }) {
      * recognition. Placed before the election rows so the two dated facts
      * stay together at the bottom. */
     ...(Array.isArray(content.facts) ? content.facts : []),
-    content.opponent && { label: 'Running against', value: content.opponent },
+    content.opponent && {
+      label: decided ? 'Ran against' : 'Running against',
+      value: content.opponent,
+    },
     c.electionYear && { label: 'Election', value: String(c.electionYear) },
     endorsedOn && { label: 'Endorsed', value: endorsedOn },
   ].filter(Boolean);
@@ -112,7 +134,10 @@ export default async function EndorsementProfile({ params }) {
     breadcrumbJsonLd({
       url: `/endorsements/${c.slug}`,
       crumb: c.name,
-      breadcrumb: [{ name: 'Endorsed Candidates', url: '/endorsements' }],
+      breadcrumb: [
+        { name: 'Endorsed Candidates', url: '/endorsements' },
+        ...(inResults ? [{ name: RESULTS_CRUMB, url: RESULTS_PATH }] : []),
+      ],
     }),
   ];
 
@@ -120,13 +145,19 @@ export default async function EndorsementProfile({ params }) {
     <main id="main" className="endorse-page">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
       <article className="endorse-profile">
         <div className="endorse-profile-inner">
-          <Link className="endorse-back" href="/endorsements">
-            All Endorsed Candidates
-          </Link>
+          {inResults ? (
+            <Link className="endorse-back" href={RESULTS_PATH}>
+              All 2026 endorsements
+            </Link>
+          ) : (
+            <Link className="endorse-back" href="/endorsements">
+              All Endorsed Candidates
+            </Link>
+          )}
 
           <header className="endorse-profile-head">
             {content.photo ? (
@@ -147,6 +178,7 @@ export default async function EndorsementProfile({ params }) {
               <EndorsedPill />
               <h1>{c.name}</h1>
               {c.pronouns && <p className="endorse-profile-pronouns">{c.pronouns}</p>}
+              {showResult && <p className={`endorse-profile-result is-${result}`}>{line}</p>}
               <p className="endorse-profile-office">{officeLine}</p>
               {content.tagline && <p className="endorse-profile-tagline">{content.tagline}</p>}
 
