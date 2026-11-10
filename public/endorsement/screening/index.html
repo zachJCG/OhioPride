@@ -257,6 +257,24 @@
     }
     .closed-actions { margin: 1.1rem 0 0; }
 
+    /* ── Resume: a returning visitor lands past step 1 ─────────────────
+       Without this, a saved draft drops someone straight onto step 2 or 3
+       and the office picker is nowhere on screen. */
+    .resume-panel {
+      padding: 18px 22px;
+      margin-bottom: 16px;
+      border-left: 4px solid var(--text-accent);
+    }
+    .resume-body {
+      font-family: 'Roboto Slab', Georgia, serif;
+      font-size: 0.93rem;
+      line-height: 1.6;
+      color: var(--form-text-gray);
+      margin: 0 0 0.8rem;
+    }
+    .resume-body strong { color: var(--text-white); }
+    .resume-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
+
     /* ── Open state: the application copy above the form ─────────────── */
     .open-panel {
       padding: 24px 26px 22px;
@@ -987,6 +1005,16 @@
         </p>
         <p class="closed-actions">
           <a class="btn btn-primary" href="/endorsements">See application deadlines</a>
+        </p>
+      </div>
+
+      <!-- Shown only when a saved draft resumes the form past step 1, so a
+           returning visitor can still see and change the office. -->
+      <div id="resumePanel" class="form-card resume-panel" hidden>
+        <p class="resume-body" id="resumeBody">Welcome back. We picked up your saved application where you left off.</p>
+        <p class="resume-actions">
+          <button type="button" class="btn btn-primary" id="btnResumeOffice">Change office</button>
+          <button type="button" class="btn btn-secondary" id="btnResumeReset">Start over</button>
         </p>
       </div>
 
@@ -2202,6 +2230,39 @@
       }
     }
 
+    /* Tells a returning visitor what they are resuming and gives them the
+       office picker back. Hidden again once they return to step 1. */
+    function showResumePanel() {
+      const panel = $('#resumePanel');
+      const body = $('#resumeBody');
+      if (!panel) return;
+      const office = ($('#office_sought') && $('#office_sought').value) || '';
+      const meta = pathMeta(state.path);
+      const what = office || (meta ? meta.display_label : '');
+      if (body) {
+        body.innerHTML = what
+          ? 'Welcome back. You are continuing your application for <strong>' + esc(what) + '</strong>. Running for something else? Change the office, or start a new application.'
+          : 'Welcome back. We picked up your saved application where you left off.';
+      }
+      panel.hidden = false;
+    }
+
+    function hideResumePanel() {
+      const panel = $('#resumePanel');
+      if (panel) panel.hidden = true;
+    }
+
+    // Every path's draft, not just the current one: "Start over" means a
+    // clean form, and a leftover draft would resume again on the next visit.
+    function clearAllDrafts() {
+      try {
+        Object.keys(localStorage)
+          .filter(k => k.indexOf(CONFIG.STORAGE_PREFIX) === 0)
+          .forEach(k => localStorage.removeItem(k));
+        localStorage.removeItem(CONFIG.LAST_PATH_KEY);
+      } catch (_) {}
+    }
+
     function clearDraft() {
       const key = draftKey();
       if (!key) return;
@@ -2301,6 +2362,7 @@
        ================================================================= */
     function showStep(n) {
       state.currentStep = n;
+      if (n === 1) hideResumePanel();
       $$('.form-step').forEach(s => s.classList.toggle('active', Number(s.dataset.step) === n));
       $('#currentStepNum').textContent = String(n);
       $('#progressFill').style.width = ((n / state.totalSteps) * 100) + '%';
@@ -2877,6 +2939,12 @@
       $$('input[name="submitted_by_kind"]').forEach(r => {
         r.addEventListener('change', updateSubmitterVisibility);
       });
+      $('#btnResumeOffice').addEventListener('click', () => showStep(1));
+      $('#btnResumeReset').addEventListener('click', () => {
+        if (!window.confirm('Start a new application? The answers saved on this device will be cleared.')) return;
+        clearAllDrafts();
+        window.location.reload();
+      });
       $('#photo').addEventListener('change', handlePhotoChange);
       $('#photoRemove').addEventListener('click', clearPhoto);
       $$('input[name^="help__"]').forEach(cb => {
@@ -2905,6 +2973,7 @@
           updateHelpNoteVisibility();
           const resumeStep = Math.min(Math.max(Number(draft.step) || 1, 1), state.totalSteps);
           showStep(resumeStep);
+          if (resumeStep > 1) showResumePanel();
         } else {
           showStep(1);
         }
