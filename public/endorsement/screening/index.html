@@ -275,6 +275,13 @@
     .resume-body strong { color: var(--text-white); }
     .resume-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
 
+    /* ── Not sure yet: interest form for a would-be candidate ─────────── */
+    .interest-panel { padding: 28px 26px; }
+    .interest-panel .step-title { margin-bottom: 0.4rem; }
+    .interest-panel .step-desc { margin-bottom: 22px; }
+    .interest-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+    .interest-done { padding: 28px 26px; }
+
     /* ── Open state: the application copy above the form ─────────────── */
     .open-panel {
       padding: 24px 26px 22px;
@@ -1445,6 +1452,111 @@
           </button>
         </div>
       </form>
+
+      <!-- "Not sure yet": someone who wants to run but has not picked an
+           office. This is not an endorsement application (there is no race
+           to screen), so it skips the four steps and posts to
+           /api/form-submit as form-name=candidate-interest, which stores it
+           in form_submissions and emails staff. -->
+      <form id="interestForm" class="form-card interest-panel" hidden novalidate autocomplete="on" aria-labelledby="interestTitle">
+        <p class="step-eyebrow">Thinking about running</p>
+        <h2 class="step-title" id="interestTitle" tabindex="-1">Not sure what to run for yet? Start here.</h2>
+        <p class="step-desc">Tell us a little about yourself and what you care about. Someone from Ohio Pride PAC will reach out to talk through offices that fit, what it takes to get on the ballot, and the deadlines. This is not an endorsement application, and it takes about two minutes.</p>
+
+        <div class="field-row cols-2">
+          <div class="field">
+            <label class="label" for="ci_first_name">First name <span class="required" aria-hidden="true">*</span></label>
+            <input class="input" type="text" id="ci_first_name" name="first_name" required autocomplete="given-name" />
+            <div class="field-error">Please enter your first name.</div>
+          </div>
+          <div class="field">
+            <label class="label" for="ci_last_name">Last name <span class="required" aria-hidden="true">*</span></label>
+            <input class="input" type="text" id="ci_last_name" name="last_name" required autocomplete="family-name" />
+            <div class="field-error">Please enter your last name.</div>
+          </div>
+        </div>
+
+        <div class="field-row cols-2">
+          <div class="field">
+            <label class="label" for="ci_email">Email <span class="required" aria-hidden="true">*</span></label>
+            <input class="input" type="email" id="ci_email" name="email" required autocomplete="email" />
+            <div class="field-error">Please enter a valid email address.</div>
+          </div>
+          <div class="field">
+            <label class="label" for="ci_phone">Phone <span class="optional">Optional</span></label>
+            <input class="input" type="tel" id="ci_phone" name="phone" autocomplete="tel" />
+          </div>
+        </div>
+
+        <div class="field-row cols-2">
+          <div class="field">
+            <label class="label" for="ci_city">City, village, or township <span class="required" aria-hidden="true">*</span></label>
+            <input class="input" type="text" id="ci_city" name="city" required autocomplete="address-level2" />
+            <div class="field-error">Please tell us where you live.</div>
+          </div>
+          <div class="field">
+            <label class="label" for="ci_county">County <span class="optional">Optional</span></label>
+            <select class="select" id="ci_county" name="county"><option value="">Choose one</option></select>
+          </div>
+        </div>
+
+        <fieldset class="field">
+          <legend class="label">Any offices you are curious about? <span class="optional">Optional</span></legend>
+          <p class="help">Tick any that interest you. "No idea yet" is a fine answer.</p>
+          <div class="check-grid">
+            <label class="check-option"><input type="checkbox" name="interest__school_board" value="School board" /><span>School board</span></label>
+            <label class="check-option"><input type="checkbox" name="interest__city_council" value="City or village council" /><span>City or village council</span></label>
+            <label class="check-option"><input type="checkbox" name="interest__mayor" value="Mayor" /><span>Mayor</span></label>
+            <label class="check-option"><input type="checkbox" name="interest__township" value="Township office" /><span>Township office</span></label>
+            <label class="check-option"><input type="checkbox" name="interest__county" value="County office" /><span>County office</span></label>
+            <label class="check-option"><input type="checkbox" name="interest__judicial" value="Judge or court" /><span>Judge or court</span></label>
+            <label class="check-option"><input type="checkbox" name="interest__statehouse" value="Ohio House or Senate" /><span>Ohio House or Senate</span></label>
+            <label class="check-option"><input type="checkbox" name="interest__party" value="Party central committee" /><span>Party central committee</span></label>
+            <label class="check-option"><input type="checkbox" name="interest__unsure" value="No idea yet" /><span>No idea yet</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label class="label" for="ci_timeline">When are you thinking of running? <span class="optional">Optional</span></label>
+          <select class="select" id="ci_timeline" name="timeline">
+            <option value="">Choose one</option>
+            <option>2027</option>
+            <option>2028</option>
+            <option>2029 or later</option>
+            <option>Not sure</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="ci_why">What issues or causes would you want to work on? <span class="required" aria-hidden="true">*</span></label>
+          <textarea class="textarea" id="ci_why" name="message" rows="5" required placeholder="A few sentences is plenty."></textarea>
+          <div class="field-error">Please tell us a little about what you care about.</div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="ci_background">Anything else we should know? <span class="optional">Optional</span></label>
+          <textarea class="textarea" id="ci_background" name="background" rows="3" placeholder="Community involvement, work, past campaigns, questions for us."></textarea>
+        </div>
+
+        <!-- Honeypot, as on the application. Mapped to bot-field on send. -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="ci_field_check">Leave this field empty</label>
+          <input type="text" id="ci_field_check" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="submit-error" id="interestError" role="alert"></div>
+
+        <div class="interest-actions">
+          <button type="submit" class="btn btn-submit" id="btnInterestSubmit">Send to Ohio Pride PAC</button>
+          <button type="button" class="btn btn-secondary" id="btnInterestBack">Back to offices</button>
+        </div>
+      </form>
+
+      <div id="interestDone" class="form-card interest-done" hidden role="status">
+        <p class="step-eyebrow">Thank you</p>
+        <h2 class="step-title" tabindex="-1">We got it. We will be in touch.</h2>
+        <p class="step-desc">Someone from Ohio Pride PAC will email you to talk through offices and next steps. When you pick a race, come back to this page to apply for an endorsement.</p>
+      </div>
     </div>
   </main>
 
@@ -1619,9 +1731,11 @@
        ================================================================= */
     const QUICK_SPECIAL = 'special';
     const QUICK_OTHER = 'other';
+    const QUICK_UNSURE = 'unsure';
     const QUICK_FIXED = [
       { key: QUICK_SPECIAL, label: 'Special election', sum: 'A race on a special election ballot. We will ask the date on the next step.' },
-      { key: QUICK_OTHER,   label: 'Something else',   sum: 'Any other federal, state, county, local, or judicial office in Ohio.' }
+      { key: QUICK_OTHER,   label: 'Something else',   sum: 'Any other federal, state, county, local, or judicial office in Ohio.' },
+      { key: QUICK_UNSURE,  label: 'Not sure yet',     sum: 'Thinking about running but have not picked an office? Tell us about yourself and we will help you find a race.' }
     ];
 
     function quickPicks() {
@@ -1678,6 +1792,7 @@
     }
 
     function selectQuick(key) {
+      if (key === QUICK_UNSURE) { showInterest(); return; }
       const office = quickOfficeById(key);
       const previous = state.quick;
       const wrap = $('#pathGridWrap');
@@ -2235,6 +2350,98 @@
       }
     }
 
+    /* =================================================================
+       NOT SURE YET (candidate interest)
+       Swaps the application for a short interest form. Nothing here
+       touches the application draft or endorsement_applications.
+       ================================================================= */
+    function showInterest() {
+      const form = $('#interestForm');
+      if (!form) return;
+      const ciCounty = $('#ci_county');
+      if (ciCounty && ciCounty.options.length <= 1 && state.catalog.counties.length) {
+        ciCounty.innerHTML = '<option value="">Choose one</option>' + state.catalog.counties.map(n => (
+          '<option value="' + esc(n) + '">' + esc(n) + ' County</option>'
+        )).join('');
+      }
+      $('#endorsementForm').hidden = true;
+      hideResumePanel();
+      const progress = $('.form-shell .progress');
+      if (progress) progress.hidden = true;
+      form.hidden = false;
+      const title = $('#interestTitle');
+      if (title) title.focus({ preventScroll: true });
+      scrollToEl(form);
+    }
+
+    function hideInterest() {
+      $('#interestForm').hidden = true;
+      const progress = $('.form-shell .progress');
+      if (progress) progress.hidden = false;
+      $('#endorsementForm').hidden = false;
+      showStep(1);
+    }
+
+    function validateInterest(form) {
+      let ok = true;
+      $$('[required]', form).forEach(el => {
+        const field = el.closest('.field');
+        let valid = !!String(el.value || '').trim();
+        if (valid && el.type === 'email') valid = isValidEmail(el.value.trim());
+        el.classList.toggle('invalid', !valid);
+        if (field) field.classList.toggle('has-error', !valid);
+        if (!valid && ok) { el.focus(); ok = false; }
+      });
+      return ok;
+    }
+
+    async function submitInterest(e) {
+      e.preventDefault();
+      const form = $('#interestForm');
+      const err = $('#interestError');
+      if (err) { err.textContent = ''; err.classList.remove('visible'); }
+      if (!validateInterest(form)) return;
+
+      const btn = $('#btnInterestSubmit');
+      const label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Sending\u2026';
+
+      const fd = new FormData(form);
+      const body = new URLSearchParams();
+      body.set('form-name', 'candidate-interest');
+      body.set('bot-field', $('#ci_field_check').value || '');
+      const curious = [];
+      for (const [k, v] of fd.entries()) {
+        if (k.indexOf('interest__') === 0) { curious.push(v); continue; }
+        if (String(v).trim()) body.set(k, String(v).trim());
+      }
+      if (curious.length) body.set('offices_of_interest', curious.join(', '));
+      body.set('subject', 'Interested in running for office');
+
+      try {
+        const res = await fetch('/api/form-submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString()
+        });
+        if (!res.ok) throw new Error('status ' + res.status);
+        form.hidden = true;
+        const done = $('#interestDone');
+        done.hidden = false;
+        const h = $('.step-title', done);
+        if (h) h.focus({ preventScroll: true });
+        scrollToEl(done);
+      } catch (_) {
+        btn.disabled = false;
+        btn.textContent = label;
+        if (err) {
+          err.textContent = 'Something went wrong sending this. Please try again, or email zach@ohiopride.org.';
+          err.classList.add('visible');
+        }
+      }
+    }
+
     /* Tells a returning visitor what they are resuming and gives them the
        office picker back. Hidden again once they return to step 1. */
     function showResumePanel() {
@@ -2394,7 +2601,10 @@
        measured so it does not cover the step heading. */
     function scrollToForm() {
       const resume = $('#resumePanel');
-      const target = (resume && !resume.hidden) ? resume : $('#endorsementForm');
+      scrollToEl((resume && !resume.hidden) ? resume : $('#endorsementForm'));
+    }
+
+    function scrollToEl(target) {
       if (!target || target.hidden) return;
       const nav = document.querySelector('.ohp-nav');
       const navH = nav ? nav.getBoundingClientRect().height : 0;
@@ -2959,6 +3169,8 @@
         r.addEventListener('change', updateSubmitterVisibility);
       });
       $('#btnResumeOffice').addEventListener('click', () => showStep(1));
+      $('#interestForm').addEventListener('submit', submitInterest);
+      $('#btnInterestBack').addEventListener('click', hideInterest);
       $('#btnResumeReset').addEventListener('click', () => {
         if (!window.confirm('Start a new application? The answers saved on this device will be cleared.')) return;
         clearAllDrafts();

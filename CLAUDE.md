@@ -168,7 +168,10 @@ design swaps in place. Full notes: `docs/drag-out-the-vote/README-WORK-ORDER.md`
 
 **Every public form emails staff on submit**, through `lib/notify.mjs`
 (Resend) — contact, connect, event RSVPs, newsletter, volunteer, internship,
-Pride road tour, and endorsements. Recipients default to `zach@ohiopride.org`
+Pride road tour, endorsements, and the "Not sure yet" prospective-candidate
+form on `/endorsement/screening` (`form-name=candidate-interest` through
+`/api/form-submit`, stored in `form_submissions`; it is not an endorsement
+application). Recipients default to `zach@ohiopride.org`
 (contact also keeps `info@ohiopride.org`) and are overridable per kind by env.
 
 Two things to keep straight:
