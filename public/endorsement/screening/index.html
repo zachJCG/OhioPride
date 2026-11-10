@@ -1458,6 +1458,11 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
+    // The form manages its own position (scrollToForm). Left to the browser,
+    // a reload on iOS Safari restores the old scroll offset after the steps
+    // have re-rendered and can land a returning visitor on the footer.
+    try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (_) {}
+
     /* =================================================================
        CONFIG
        Anon key is public by design and safe to ship in client code.
@@ -2379,8 +2384,22 @@
         heading.setAttribute('tabindex', '-1');
         heading.focus({ preventScroll: true });
       }
-      const shellEl = $('.form-shell');
-      if (shellEl) window.scrollTo({ top: shellEl.offsetTop - 16, behavior: 'smooth' });
+      scrollToForm();
+    }
+
+    /* Brings the step itself on screen. Scrolling to the top of .form-shell
+       put the progress bar and the tall "applications are open" panel in
+       view instead, which on a phone fills the screen and pushes the office
+       picker (or the resume banner) below the fold. The sticky site nav is
+       measured so it does not cover the step heading. */
+    function scrollToForm() {
+      const resume = $('#resumePanel');
+      const target = (resume && !resume.hidden) ? resume : $('#endorsementForm');
+      if (!target || target.hidden) return;
+      const nav = document.querySelector('.ohp-nav');
+      const navH = nav ? nav.getBoundingClientRect().height : 0;
+      const top = target.getBoundingClientRect().top + window.scrollY - navH - 12;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
     }
 
     function nextStep() {
@@ -2972,8 +2991,8 @@
           restoreQuick();
           updateHelpNoteVisibility();
           const resumeStep = Math.min(Math.max(Number(draft.step) || 1, 1), state.totalSteps);
-          showStep(resumeStep);
           if (resumeStep > 1) showResumePanel();
+          showStep(resumeStep);
         } else {
           showStep(1);
         }
