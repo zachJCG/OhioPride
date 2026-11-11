@@ -162,6 +162,14 @@ insert into public.board_members (name, role, chip, img_path, display_order, bio
   )
 );
 
+-- Ari Childrey left the public board on 2026-11-11 (migration
+-- 20261111000000_board_deactivate_ari_childrey.sql). Her row stays here so the
+-- seed keeps the full founding-board record, but it is inserted inactive so a
+-- `supabase db reset` reproduces production: nine cards on /board.
+update public.board_members
+   set is_active = false
+ where name = 'Ari Childrey';
+
 
 -- -----------------------------------------------------------------------------
 -- founding_member_tiers
