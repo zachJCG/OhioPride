@@ -213,7 +213,7 @@ const HOUSE_MEMBERS = [
   { d: 91, name: "Bob Peterson",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 92, name: "Mark Johnson",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 93, name: "Jason Stephens",              party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
-  { d: 94, name: "Kevin Ritter",                party: "R", v: -5, s: -3,  n: -1, notes: "Primary sponsor HB 507 (School Chaplain Act). Votes for anti-LGBTQ+ bills." },
+  { d: 94, name: "Kevin Ritter",                party: "R", v: -5, s: -3,  n: -1, notes: "Primary sponsor HB 531 (School Chaplain Act). Votes for anti-LGBTQ+ bills." },
   { d: 95, name: "Ty Moore",                    party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 96, name: "Ron Ferguson",                party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
   { d: 97, name: "Adam Holmes",                 party: "R", v: -5, s: 0,   n: 0,  notes: "Votes for anti-LGBTQ+ bills." },
@@ -572,7 +572,7 @@ const LEGISLATOR_NEWS = {
       url: "https://www.google.com/search?q=%22Gary+Click%22+%22Affirming+Families+First%22" }
   ],
   "house-94": [
-    { headline: "Ritter introduces School Chaplain Act (HB 507)", outlet: "Marietta Times", date: "2025-10-14",
+    { headline: "Ritter introduces School Chaplain Act (HB 531)", outlet: "Marietta Times", date: "2025-10-14",
       stance: "anti",
       url: "https://www.google.com/search?q=%22Kevin+Ritter%22+%22HB+507%22+chaplain" }
   ],

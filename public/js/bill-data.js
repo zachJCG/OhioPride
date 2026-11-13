@@ -4,7 +4,7 @@
    ========================================================================== */
 
 // Update this constant whenever bill data changes
-const LAST_UPDATED = { date: "08/26/26", time: "1:45 PM EDT" };
+const LAST_UPDATED = { date: "11/13/26", time: "6:30 PM EST" };
 
 const BILLS = [
   /* ===== ANTI-LGBTQ+ BILLS ===== */
@@ -56,7 +56,7 @@ const BILLS = [
       "Creates 'unlawful adult cabaret performance' with a definition reaching gender expression differing from 'biological sex.' Penalties escalate from misdemeanors to felonies when minors are present.",
     sponsors: "Rep. Angela N. King (R-84), Rep. Josh Williams (R-44)",
     lastAction: "Assigned to Senate Judiciary Committee, April 15, 2026",
-    nextDate: "Awaiting Senate Judiciary Committee hearing",
+    nextDate: "Senate Judiciary hearings: sponsor testimony Nov 17, 2026 at 11:00 AM; proponent testimony Nov 18, 2026 at 9:45 AM",
     houseVote: "Passed 63 to 32 on March 25, 2026",
     chamber: "house",
     currentStep: 6,
@@ -141,7 +141,7 @@ const BILLS = [
       "Shields parents who reject a child's trans identity from abuse/neglect charges. Redefines 'affirmation' as acknowledging sex at birth only. Includes right to seek conversion-style therapy.",
     sponsors: "Rep. Gary Click (R-88), Rep. Josh Williams (R-44)",
     lastAction: "2nd hearing (proponent testimony) in House Judiciary, March 25, 2026",
-    nextDate: "Opponent testimony expected next",
+    nextDate: "No third hearing scheduled; opponent testimony would be next",
     chamber: "house",
     currentStep: 2,
     pipelineDates: { 0: "Feb 10, 2026", 1: "Feb 18, 2026", 2: "Mar 25, 2026" },
@@ -269,7 +269,7 @@ const BILLS = [
       "Senate companion to HB 155. Requires school boards to prohibit DEI structures, trainings, offices, and contracting. Suppresses LGBTQIA+-inclusive initiatives.",
     sponsors: "Sen. Andrew Brenner (R-19)",
     lastAction: "3rd hearing in Senate Education, May 19, 2026",
-    nextDate: "Additional hearings or committee vote",
+    nextDate: "4th hearing in Senate Education Nov 17, 2026 at 3:00 PM, possible committee vote",
     chamber: "senate",
     currentStep: 2,
     pipelineDates: { 0: "Feb 25, 2025", 1: "Feb 26, 2025", 2: "May 19, 2026" },
@@ -347,7 +347,7 @@ const BILLS = [
       "Requires school boards to adopt policies displaying at least four of nine 'founding documents' (including the Ten Commandments) in social studies and history classrooms. Permits private donors (e.g., the Center for Christian Virtue) to fund displays, inviting religious-right messaging into public schools. Passed the Ohio Senate 23 to 10 on November 20, 2025.",
     sponsors: "Sen. Terry Johnson (R-14)",
     lastAction: "Referred to House Education Committee, February 4, 2026",
-    nextDate: "Awaiting House committee hearing",
+    nextDate: "Awaiting House Education Committee hearing; none scheduled",
     chamber: "senate",
     currentStep: 6,
     pipelineDates: {
@@ -534,11 +534,11 @@ const BILLS = [
     description:
       "Prohibits state-licensed mental health professionals from subjecting minors to conversion therapy, a discredited practice rejected by every major medical association.",
     sponsors: "Sen. Nickie Antonio (D-23)",
-    lastAction: "Referred to Senate Health Committee, February 12, 2025",
-    nextDate: "Awaiting committee hearing",
+    lastAction: "1st hearing (sponsor testimony) in Senate Health, November 10, 2026",
+    nextDate: "No second hearing scheduled",
     chamber: "senate",
-    currentStep: 1,
-    pipelineDates: { 0: "Feb 4, 2025", 1: "Feb 12, 2025" },
+    currentStep: 2,
+    pipelineDates: { 0: "Feb 4, 2025", 1: "Feb 12, 2025", 2: "Nov 10, 2026" },
     url: "/issues/sb71",
     legislatureUrl: "https://www.legislature.ohio.gov/legislation/136/sb71",
     textUrl:
