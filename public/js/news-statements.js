@@ -121,7 +121,7 @@ const NEWS_STATEMENTS = [
     context:  "Click compared trans people to \"Lucifer\" during override debate; separately named in misconduct-related allegations involving minors.",
     sourceUrl: "" },
   { id: "94-h-01", chamber: "house",  district: 94, date: "2025-02-01", sentiment: "anti", points: -1,
-    headline: "Primary sponsor HB 507 (School Chaplain Act)",
+    headline: "Primary sponsor HB 531 (School Chaplain Act)",
     context:  "Ritter authored the School Chaplain Act, a vehicle for religious-exemption rollbacks in public schools.",
     sourceUrl: "" },
   { id: "99-h-01", chamber: "house",  district: 99, date: "2025-01-01", sentiment: "anti", points: -1,
