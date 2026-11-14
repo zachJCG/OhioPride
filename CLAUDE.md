@@ -130,7 +130,7 @@ URL to `PORTED` in `next.config.mjs` when you delete its static file.
 
 Never type the date into `LAST_UPDATED`. After editing `public/js/bill-data.js`
 or any `/issues` page, run `npm run bills:stamp`
-(`scripts/build-bill-stamp.mjs`): it runs `seo:build`, fingerprints `BILLS`
+(`lib/bill-stamp.mjs`; in `lib/` because `.vercelignore` drops `scripts/`): it runs `seo:build`, fingerprints `BILLS`
 plus every `/issues` page (SEO blocks excluded), and when that fingerprint
 changed it stamps the current Eastern time (EST/EDT) into `LAST_UPDATED` and
 prefills the card in `public/issues.html` and `public/issues/archive.html`.
