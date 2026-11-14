@@ -126,6 +126,18 @@ URL to `PORTED` in `next.config.mjs` when you delete its static file.
   After the launch-day removal deploys, run
   `docs/db/post-code-merge/drop_launch_signups.sql`.
 
+### Bill tracker "Last Updated" is generated (2026-11-13)
+
+Never type the date into `LAST_UPDATED`. After editing `public/js/bill-data.js`
+or any `/issues` page, run `npm run bills:stamp`
+(`scripts/build-bill-stamp.mjs`): it runs `seo:build`, fingerprints `BILLS`
+plus every `/issues` page (SEO blocks excluded), and when that fingerprint
+changed it stamps the current Eastern time (EST/EDT) into `LAST_UPDATED` and
+prefills the card in `public/issues.html` and `public/issues/archive.html`.
+`npm run check:bills` (in `npm test`) fails on a missed stamp. `prebuild`
+runs it with `--deploy` on Vercel, stamping with the HEAD commit time, so a
+forgotten stamp still ships a correct date and never fails the build.
+
 JS (in `js/`):
 - `bill-data.js` — static `BILLS` array (TO BE REPLACED by Supabase fetch)
 - `scorecard-data.js` — static `HOUSE_MEMBERS` / `SENATE_MEMBERS` / `LEGISLATOR_SPONSORSHIPS` (TO BE REPLACED)
