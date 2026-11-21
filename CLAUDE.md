@@ -201,6 +201,26 @@ Notifications are best-effort by design: `notifySubmission()` never throws and
 never fails a submission that already reached the database. Full notes:
 `docs/submission-notifications.md`.
 
+### Motion and accessibility pass (2026-11-21)
+
+- **Nothing loops on its own.** The Progress Pride banner, the stripe, the
+  hero divider and progress fills sweep once on load; the nav Donate ring and
+  the pride CTA (`.btn-pride-shimmer`, now a navy pill with a rainbow ring,
+  because white on the old rainbow fill fell to ~1.1:1) sweep only while
+  hovered or focused; the board name strip moves with the scroll. WCAG 2.2.2:
+  do not add an animation that runs more than 5 seconds by itself.
+- **Page transitions** are CSS-only cross-document view transitions in
+  `public/css/style.css`, off under reduced motion.
+- **Scroll-driven effects need `overflow: clip`, not `hidden`,** on every
+  clipping ancestor: a hidden box is a scroll container and freezes a
+  `view()` timeline (the board hero and name strip carry both, hidden first
+  as the fallback).
+- **Reveal** (`main.js`, `enhancements.js`) hides only what starts below the
+  fold, never with reduced motion, and print shows everything.
+- **Every static page has `<main id="main">`** for the injected skip link;
+  links inside running text are underlined (`style.css`). Small text on navy
+  stays at or above 4.5:1 (`--text-dim` and `--end-text-dim` are #8aa6c1).
+
 ### SEO is generated, not hand written (2026-08-16)
 
 **`lib/seo.mjs` is the one place page metadata lives.** One entry per URL —

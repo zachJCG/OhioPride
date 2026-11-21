@@ -35,7 +35,6 @@
         width: 100%;
         background: var(--progress-pride-gradient);
         background-size: 200% 100%;
-        animation: progressPrideShimmer 10s linear infinite;
         display: block;
         z-index: 999;
         pointer-events: none;
@@ -45,8 +44,15 @@
       .pride-stripe, .pride-banner {
         background: var(--progress-pride-gradient) !important;
         background-size: 200% 100% !important;
-        animation: progressPrideShimmer 10s linear infinite !important;
         height: var(--progress-pride-banner-height) !important;
+      }
+      /* One sweep as the page opens, then the flag rests: nothing in the
+         chrome moves on its own for more than a moment (WCAG 2.2.2). */
+      @media (prefers-reduced-motion: no-preference) {
+        .progress-pride-banner,
+        .pride-stripe, .pride-banner {
+          animation: progressPrideShimmer 2.8s cubic-bezier(0.22, 1, 0.36, 1) 1 !important;
+        }
       }
       @media (prefers-reduced-motion: reduce) {
         .progress-pride-banner, .pride-stripe, .pride-banner {
@@ -92,15 +98,25 @@
   }
 
   // 1. SCROLL-REVEAL ANIMATIONS
-  // Fade in + slide up elements as they enter the viewport
+  // Cards and sections still below the fold rise in as they arrive. Only
+  // what starts below the fold is ever hidden (nothing the reader can
+  // already see blinks out and back), nothing is hidden with reduced
+  // motion or without IntersectionObserver, html.ohp-reveal gates the CSS
+  // so a page whose script fails shows everything, and print shows
+  // everything. threshold must stay 0: a ratio can never be reached by a
+  // block taller than the viewport, which would stay hidden for good.
   function initScrollReveal() {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const style = document.createElement('style');
     style.textContent = `
-      .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
-      .reveal.visible { opacity: 1; transform: translateY(0); }
-      .reveal-delay-1 { transition-delay: 0.1s; }
-      .reveal-delay-2 { transition-delay: 0.2s; }
-      .reveal-delay-3 { transition-delay: 0.3s; }
+      html.ohp-reveal .reveal { transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+      html.ohp-reveal .reveal:not(.visible) { opacity: 0; transform: translateY(24px); }
+      html.ohp-reveal .reveal-delay-1 { transition-delay: 0.08s; }
+      html.ohp-reveal .reveal-delay-2 { transition-delay: 0.16s; }
+      html.ohp-reveal .reveal-delay-3 { transition-delay: 0.24s; }
+      @media print { html.ohp-reveal .reveal { opacity: 1 !important; transform: none !important; } }
     `;
     document.head.appendChild(style);
 
@@ -113,13 +129,18 @@
       '.founding-inner', '.disclaimer-box'
     ];
 
+    const fold = window.innerHeight;
+    const tagged = [];
     selectors.forEach(sel => {
       document.querySelectorAll(sel).forEach((el, i) => {
+        if (el.classList.contains('reveal') || el.getBoundingClientRect().top < fold) return;
         el.classList.add('reveal');
         if (i % 3 === 1) el.classList.add('reveal-delay-1');
         if (i % 3 === 2) el.classList.add('reveal-delay-2');
+        tagged.push(el);
       });
     });
+    if (!tagged.length) return;
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -128,9 +149,11 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    tagged.forEach(el => observer.observe(el));
+    document.documentElement.classList.add('ohp-reveal');
+    window.addEventListener('beforeprint', () => tagged.forEach(el => el.classList.add('visible')));
   }
 
   // 2. ANIMATED RAINBOW GRADIENT
@@ -143,13 +166,14 @@
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
       }
-      .hero-divider, .btn-primary, .nav-logo {
+      /* One pass when the page opens, then the gradient rests (it used to
+         loop forever, and on solid buttons it animated nothing visible). */
+      .hero-divider, .progress-fill, .progress-bar-fill {
         background-size: 200% 200%;
-        animation: rainbowShift 4s ease infinite;
       }
-      .progress-fill, .progress-bar-fill {
-        background-size: 200% 200%;
-        animation: rainbowShift 3s ease infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        .hero-divider { animation: rainbowShift 3s ease 1; }
+        .progress-fill, .progress-bar-fill { animation: rainbowShift 3s ease 1; }
       }
     `;
     document.head.appendChild(style);
@@ -220,14 +244,20 @@
     });
   }
 
-  // 5. SMOOTH PAGE LOAD
-  function initSmoothLoad() {
-    const style = document.createElement('style');
-    style.textContent = `
-      body { animation: fadeIn 0.4s ease; }
-      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    `;
-    document.head.appendChild(style);
+  // 5. (Retired 2026-11) The whole-page fade-in from opacity 0 held back the
+  // first paint on every load and ignored reduced motion; page-to-page view
+  // transitions in /css/style.css carry the smoothness now.
+
+  // 5b. ACCESSIBLE NAMES
+  // The bill tracker's Read more / Show less buttons carried
+  // aria-label="Toggle bill details", which hid their visible label from
+  // speech-input users (WCAG 2.5.3). Their own text plus aria-expanded says
+  // the same thing. Repaired here because the tracker's markup is
+  // fingerprinted by the Last Updated stamp (lib/bill-stamp.mjs).
+  function initAccessibleNames() {
+    document.querySelectorAll('.bill-expand-btn[aria-label="Toggle bill details"]').forEach(btn => {
+      btn.removeAttribute('aria-label');
+    });
   }
 
   // 6. STATS COUNTER ON ISSUES PAGE
@@ -289,7 +319,7 @@
   // INIT
   document.addEventListener('DOMContentLoaded', function() {
     initPrideProgressBanner();
-    initSmoothLoad();
+    initAccessibleNames();
     initRainbowAnimation();
     initScrollReveal();
     initCounters();

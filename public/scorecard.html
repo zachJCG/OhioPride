@@ -261,7 +261,7 @@
       font-family: 'Montserrat', sans-serif;
       font-size: 12px;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.7); /* was .4: 3.7:1 */
       margin-left: auto;
       white-space: nowrap;
     }
@@ -351,7 +351,7 @@
       font-family: 'Montserrat', sans-serif;
       font-size: 12px;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(255, 255, 255, 0.7); /* was .45: 4.1:1 */
       margin-top: 2px;
     }
     .card-meta .party-d { color: #60a5fa; }
@@ -395,7 +395,7 @@
       font-family: 'Montserrat', sans-serif;
       font-size: 13px;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.66); /* was .4: 3.6:1 */
     }
     .card-grade-label {
       font-family: 'Montserrat', sans-serif;
@@ -418,7 +418,7 @@
       font-weight: 700;
       letter-spacing: 0.6px;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(255, 255, 255, 0.68); /* was .45: 4.1:1 */
       display: inline-flex;
       align-items: center;
       gap: 4px;
@@ -1188,7 +1188,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.68); /* was .4 */
       text-align: left;
       padding: 8px 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -1433,7 +1433,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.68); /* was .45: 4.3:1 */
       text-align: left;
       padding: 8px 12px;
       border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -1692,7 +1692,7 @@
       font-weight: 600;
       letter-spacing: 1.2px;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(255, 255, 255, 0.72); /* was .45: 4.2:1 on the tile */
     }
     .ct-avg {
       display: flex;
@@ -1793,7 +1793,7 @@
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.5px;
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(255, 255, 255, 0.68); /* was .45: 4.1:1 */
     }
     .lb-list {
       list-style: none;
@@ -2075,7 +2075,7 @@
 
         <div class="controls-divider"></div>
 
-        <select class="sort-select" id="sort-select">
+        <select class="sort-select" id="sort-select" aria-label="Sort legislators">
           <option value="score-desc">Score (High to Low)</option>
           <option value="score-asc">Score (Low to High)</option>
           <option value="name-asc">Name (A-Z)</option>
@@ -2307,6 +2307,29 @@
         var ch = String(m.chamber || '').toLowerCase();
         return name + '-' + ch + '-d' + m.d;
       }
+      /* Grade letters sit on their grade color: navy ink on the light
+         greens, yellow and orange (5.4:1 or better), white on the red F
+         (4.8:1). White on every color left most grades under 3:1. */
+      function _gradeInk(hex) {
+        var c = String(hex).replace('#', '');
+        var ch = [0, 2, 4].map(function (i) {
+          var v = parseInt(c.substr(i, 2), 16) / 255;
+          return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        var lum = 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+        return lum > 0.2 ? '#0d1726' : '#ffffff';
+      }
+      /* Small grade-colored text on the dark cards (the "A+ · Champion"
+         label): the grade color lifted 40% toward white, so every grade
+         clears 4.5:1 while keeping its hue. */
+      function _gradeTint(hex) {
+        var c = String(hex).replace('#', '');
+        return '#' + [0, 2, 4].map(function (i) {
+          var v = parseInt(c.substr(i, 2), 16);
+          var t = Math.round(v + (255 - v) * 0.4);
+          return (t < 16 ? '0' : '') + t.toString(16);
+        }).join('');
+      }
       function _legSlug(m) {
         if (window.OPP_SHARE && typeof window.OPP_SHARE.slugify === 'function') {
           try { return window.OPP_SHARE.slugify(m); } catch (e) { /* fall through */ }
@@ -2322,16 +2345,20 @@
           var partyLabel = m.party === 'D' ? 'D' : 'R';
           var slug = _legSlug(m);
           var href = slug ? '?rep=' + encodeURIComponent(slug) + '#card-list' : '#card-list';
-          var aria = 'Rank ' + (idx + 1) + ': ' + m.name + ', ' + m.chamber +
-            ' District ' + m.d + ', score ' + m.score + ' out of 100, grade ' + m.grade.grade + '.';
-          return '<li><a class="lb-item" href="' + href + '" data-name="' + m.name.replace(/"/g, '&quot;') + '" aria-label="' + aria.replace(/"/g, '&quot;') + '">' +
+          /* Named by its content: hidden text carries the rank and the
+             details, the visible shorthand is aria-hidden, so the link's
+             name always contains the name a reader sees (WCAG 2.5.3). */
+          var detail = ', ' + m.chamber + ' District ' + m.d + ', score ' + m.score + ' out of 100, grade ' + m.grade.grade + '.';
+          return '<li><a class="lb-item" href="' + href + '" data-name="' + m.name.replace(/"/g, '&quot;') + '">' +
+            '<span class="ohp-sr-only">Rank ' + (idx + 1) + ': </span>' +
             '<div class="lb-rank" aria-hidden="true">' + (idx + 1) + '</div>' +
             '<div>' +
               '<div class="lb-name">' + m.name + '</div>' +
-              '<div class="lb-meta">' + m.chamber + ' D' + m.d + ' &middot; ' + partyLabel + '</div>' +
+              '<div class="lb-meta" aria-hidden="true">' + m.chamber + ' D' + m.d + ' &middot; ' + partyLabel + '</div>' +
             '</div>' +
+            '<span class="ohp-sr-only">' + detail + '</span>' +
             '<div class="lb-score" style="color:' + m.grade.color + '" aria-hidden="true">' + m.score + '</div>' +
-            '<div class="lb-grade" style="background:' + m.grade.color + '" aria-hidden="true">' + m.grade.grade + '</div>' +
+            '<div class="lb-grade" style="background:' + m.grade.color + ';color:' + _gradeInk(m.grade.color) + '" aria-hidden="true">' + m.grade.grade + '</div>' +
           '</a></li>';
         }).join('');
       }
@@ -2797,19 +2824,23 @@
             partyLabel + '. Grade ' + m.grade.grade + ', ' + m.grade.label +
             '. Score ' + m.score + ' out of 100. Activate to see the full record.';
           html += '<div class="leg-card' + gradeClass + '" data-idx="' + idx + '">' +
-            '<button type="button" class="card-collapsed" aria-expanded="false" aria-controls="' + expandedId + '" aria-label="' + ariaLabel.replace(/"/g, '&quot;') + '">' +
-              '<div class="grade-badge" style="background:' + m.grade.color + '" aria-label="Grade: ' + m.grade.grade + ' (' + m.grade.label + ')">' + m.grade.grade + '</div>' +
-              '<div class="card-center">' +
+            /* Named by its content (the hidden sentence below), with the
+               visible shorthand aria-hidden, so the name always contains
+               the legislator's name as shown (WCAG 2.5.3). */
+            '<button type="button" class="card-collapsed" aria-expanded="false" aria-controls="' + expandedId + '">' +
+              '<span class="ohp-sr-only">' + ariaLabel + '</span>' +
+              '<div class="grade-badge" style="background:' + m.grade.color + ';color:' + _gradeInk(m.grade.color) + '" aria-hidden="true">' + m.grade.grade + '</div>' +
+              '<div class="card-center" aria-hidden="true">' +
                 '<div class="card-name">' + m.name + '</div>' +
                 '<div class="card-meta">' + m.chamber + ' District ' + m.d + ' &middot; <span class="' + partyClass + '">' + partyLabel + '</span></div>' +
                 '<div class="score-bar-wrap" role="progressbar" aria-valuenow="' + m.score + '" aria-valuemin="0" aria-valuemax="100" aria-label="Equality score: ' + m.score + ' out of 100"><div class="score-bar-fill" style="width:' + m.score + '%;background:' + m.grade.color + '"></div></div>' +
               '</div>' +
-              '<div class="card-right">' +
-                '<div class="card-score-row" aria-label="Score: ' + m.score + ' out of 100">' +
+              '<div class="card-right" aria-hidden="true">' +
+                '<div class="card-score-row">' +
                   '<div class="card-score" style="color:' + m.grade.color + '" aria-hidden="true">' + m.score + '</div>' +
                   '<div class="card-score-suffix" aria-hidden="true">/ 100</div>' +
                 '</div>' +
-                '<div class="card-grade-label" style="color:' + m.grade.color + '" aria-hidden="true">' + m.grade.grade + ' &middot; ' + m.grade.label + '</div>' +
+                '<div class="card-grade-label" style="color:' + _gradeTint(m.grade.color) + '" aria-hidden="true">' + m.grade.grade + ' &middot; ' + m.grade.label + '</div>' +
                 '<div class="card-subscores" aria-hidden="true">' +
                   '<div class="subscore" title="Tracked floor roll calls (pass / concur / override)">Floor <span class="ss-num ' + fCls + '">' + fDisp + '</span></div>' +
                   '<div class="subscore" title="Tracked committee roll calls">Cmte <span class="ss-num ' + cCls + '">' + cDisp + '</span></div>' +

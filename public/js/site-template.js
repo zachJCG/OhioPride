@@ -48,22 +48,26 @@
   //   wordmarkLinkHtml('/'): full <a class="ohp-nav-logo"> link for nav
   //   wordmarkSpansHtml():    just the three spans (caller wraps it)
   // -------------------------------------------------------------------------
-  function wordmarkSpansHtml(prefix) {
+  function wordmarkSpansHtml(prefix, decorative) {
     var p = prefix || 'ohp-logo';
+    var hide = decorative ? ' aria-hidden="true"' : '';
     return (
-      '<span class="' + p + '-row">' +
+      '<span class="' + p + '-row"' + hide + '>' +
         '<span class="' + p + '-ohio">OHIO</span>' +
         '<span class="' + p + '-pride">PRIDE</span>' +
       '</span>' +
-      '<span class="' + p + '-pac">PAC</span>'
+      '<span class="' + p + '-pac"' + hide + '>PAC</span>'
     );
   }
 
   function wordmarkLinkHtml(href) {
     var h = href || '/';
     return (
-      '<a href="' + h + '" class="ohp-nav-logo" aria-label="Ohio Pride PAC home">' +
-        wordmarkSpansHtml('ohp-logo') +
+      // Named by the hidden text, with the stacked letters aria-hidden, so the
+      // accessible name contains the visible label (WCAG 2.5.3).
+      '<a href="' + h + '" class="ohp-nav-logo">' +
+        '<span class="ohp-sr-only">Ohio Pride PAC home</span>' +
+        wordmarkSpansHtml('ohp-logo', true) +
       '</a>'
     );
   }

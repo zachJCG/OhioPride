@@ -19,7 +19,9 @@
   --end-card-border: rgba(255, 255, 255, 0.08);
   --end-card-border-hover: rgba(255, 255, 255, 0.18);
   --end-text-gray: #a0b4c8;
-  --end-text-dim: #6889a6;
+  /* Raised 2026-11 from #6889a6 (3.8:1 on the cards, 4.4:1 on the page):
+     now 5.6:1 on --end-card-bg and 6.3:1 on the page navy. */
+  --end-text-dim: #8aa6c1;
 }
 
 /* ── Hero ─────────────────────────────────────────────────────────────── */
@@ -1009,7 +1011,8 @@
 /* Contrast, measured on --end-card-bg (#132d44):
  *   --end-text-gray #a0b4c8   6.6:1   body text, every state
  *   --text-accent   #70D6EC   8.4:1   labels and the open badge
- *   --end-text-dim  #6889a6   3.8:1   FAILS 4.5:1, so it is not used here.
+ *   --end-text-dim  #8aa6c1   5.6:1   (3.8:1 before 2026-11); still kept
+ *                                     for secondary text, not body copy.
  * The closed state is dimmed by lowering the card background, never by
  * dimming the text. */
 .endorse-cycles {

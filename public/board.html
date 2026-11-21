@@ -78,6 +78,9 @@
       position: relative;
       padding: calc(var(--nav-height) + 72px) 24px 72px;
       overflow: hidden;
+      /* clip, not hidden: a hidden box is a scroll container, which would
+         bind the name strip's view() timeline to the hero and freeze it. */
+      overflow: clip;
       text-align: center;
     }
     .board-hero::before {
@@ -175,6 +178,9 @@
     .name-strip {
       position: relative;
       overflow: hidden;
+      /* clip, not hidden: a hidden box is a scroll container, which would
+         pin the track's view() timeline to the strip and freeze it. */
+      overflow: clip;
       padding: 18px 0;
       border-top: 1px solid var(--border-light);
       border-bottom: 1px solid var(--border-light);
@@ -189,11 +195,25 @@
       display: flex;
       width: max-content;
       white-space: nowrap;
-      animation: marquee 45s linear infinite;
     }
-    @keyframes marquee {
+    /* The names glide as the page scrolls past them, instead of looping on
+       their own for as long as the page is open (WCAG 2.2.2). Without
+       scroll-driven animation support, or with reduced motion, the strip
+       rests. */
+    @supports (animation-timeline: view()) {
+      @media screen and (prefers-reduced-motion: no-preference) {
+        .name-strip-track {
+          animation: nameStripDrift linear both;
+          animation-timeline: view();
+          animation-range: cover;
+        }
+      }
+    }
+    /* A gentle drift: 40% of the screen's width over the whole time the
+       strip is on screen (the doubled track always covers the gap). */
+    @keyframes nameStripDrift {
       from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
+      to { transform: translateX(-40vw); }
     }
     .name-strip-item {
       font-family: 'Montserrat', sans-serif;
@@ -213,7 +233,6 @@
       font-weight: 900;
     }
     @media (prefers-reduced-motion: reduce) {
-      .name-strip-track { animation-duration: 120s; }
       .hero-count { animation: none; }
       .hero-fierce-word::after { animation: none; transform: scaleX(1); }
     }
@@ -454,6 +473,7 @@
 </head>
 <body>
   <div id="site-header"></div>
+  <main id="main" tabindex="-1">
 
   <!-- ============ HERO ============ -->
   <section class="board-hero">
@@ -513,6 +533,7 @@
     </div>
   </section>
 
+  </main>
   <div id="site-footer"></div>
 
   <a href="/donate" class="mobile-donate-fab" aria-label="Donate">Donate</a>

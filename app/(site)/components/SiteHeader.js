@@ -21,12 +21,17 @@ import { useEffect, useState } from 'react';
 
 function Wordmark() {
   return (
-    <Link href="/" className="ohp-nav-logo" aria-label="Ohio Pride PAC home">
-      <span className="ohp-logo-row">
+    <Link href="/" className="ohp-nav-logo">
+      {/* Named by the hidden text, with the stacked letters aria-hidden, so
+          the accessible name contains the visible label (WCAG 2.5.3). */}
+      <span className="ohp-sr-only">Ohio Pride PAC home</span>
+      <span className="ohp-logo-row" aria-hidden="true">
         <span className="ohp-logo-ohio">OHIO</span>
         <span className="ohp-logo-pride">PRIDE</span>
       </span>
-      <span className="ohp-logo-pac">PAC</span>
+      <span className="ohp-logo-pac" aria-hidden="true">
+        PAC
+      </span>
     </Link>
   );
 }

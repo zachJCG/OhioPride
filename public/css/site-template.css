@@ -408,7 +408,6 @@
   padding: 2px;
   background: var(--ohp-rainbow);
   background-size: 200% 200%;
-  animation: ohpRainbowSweep 5s linear infinite;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -420,9 +419,13 @@
 .ohp-nav-links a.ohp-btn-donate:focus-visible {
   color: var(--ohp-text-white);
 }
-.ohp-nav-links a.ohp-btn-donate:hover::before,
-.ohp-nav-links a.ohp-btn-donate:focus-visible::before {
-  animation-duration: 2s;
+/* The ring rests; it sweeps only while the button is hovered or focused, so
+   nothing in the header moves on its own (WCAG 2.2.2). */
+@media (prefers-reduced-motion: no-preference) {
+  .ohp-nav-links a.ohp-btn-donate:hover::before,
+  .ohp-nav-links a.ohp-btn-donate:focus-visible::before {
+    animation: ohpRainbowSweep 2s linear infinite;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -618,10 +621,31 @@
   font-size: 0.8rem;
   color: var(--ohp-text-dim);
 }
+/* The paid-for-by line is required on every page, so it must be legible:
+   white at 40% on the footer navy was 3.8:1; at 60% it is 6.6:1. */
 .ohp-footer-bottom .ohp-disclaimer {
   font-style: italic;
   margin-top: 0.5rem;
-  color: var(--ohp-text-faint);
+  color: var(--ohp-text-dim);
+}
+
+/* The skip link's target takes focus programmatically (tabindex="-1"), so
+   it shows no ring of its own; the next Tab continues from the content. */
+main[tabindex="-1"]:focus { outline: none; }
+
+/* Visually hidden text: the nav wordmark link is named "Ohio Pride PAC
+   home" by this, and its stacked letters are aria-hidden, so the link's
+   name and its visible label agree (WCAG 2.5.3). */
+.ohp-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media (max-width: 768px) {

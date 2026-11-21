@@ -17,8 +17,8 @@
  *     "Applications closed"). Colour is never the only difference between an
  *     open card and a closed one.
  *   - Body text on every card, closed ones included, uses --end-text-gray,
- *     measured at 6.6:1 on the card background. --end-text-dim is 3.8:1 there
- *     and is deliberately not used for anything a person has to read.
+ *     measured at 6.6:1 on the card background. --end-text-dim (5.6:1 there
+ *     since 2026-11) stays reserved for secondary text, not body copy.
  *   - Deadlines are real text in Eastern time with the zone spelled out. There
  *     is no countdown; a clock that says "3 days left" is not a deadline.
  *   - A closed cycle renders no button. It does not get a disabled control

@@ -326,7 +326,7 @@
         box-shadow: 0 0 0 0 rgba(112, 214, 236, 0.5);
       }
       @media (prefers-reduced-motion: no-preference) {
-        .hp-live-dot { animation: hpPulse 2.2s ease-out infinite; }
+        .hp-live-dot { animation: hpPulse 2.2s ease-out 2; } /* two pulses, then rest (WCAG 2.2.2) */
       }
       @keyframes hpPulse {
         0%   { box-shadow: 0 0 0 0 rgba(112, 214, 236, 0.5); }
@@ -363,7 +363,7 @@
       }
       .hp-ohio-inner { transform-origin: 50% 50%; }
       @media (prefers-reduced-motion: no-preference) {
-        .hp-ohio-inner { animation: hpOhioFloat 9s ease-in-out infinite; }
+        .hp-ohio-inner { animation: hpOhioFloat 4.5s ease-in-out 1; } /* one float, then rest (WCAG 2.2.2) */
       }
       @keyframes hpOhioFloat {
         0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -711,6 +711,28 @@
       }
       .hp-wall__card:hover .hp-wall__photo {
         box-shadow: 0 0 0 2px var(--color-light-blue);
+      }
+      /* The wall steps in when the results arrive, a beat per face; on
+         hover a card lifts and its photo eases in. Transform and opacity
+         only; nothing here runs with reduced motion. */
+      @media (prefers-reduced-motion: no-preference) {
+        .hp-wall__card {
+          animation: hpWallIn 620ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+          transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .hp-wall__card:nth-child(2) { animation-delay: 45ms; }
+        .hp-wall__card:nth-child(3) { animation-delay: 90ms; }
+        .hp-wall__card:nth-child(4) { animation-delay: 135ms; }
+        .hp-wall__card:nth-child(5) { animation-delay: 180ms; }
+        .hp-wall__card:nth-child(6) { animation-delay: 225ms; }
+        .hp-wall__card:nth-child(7) { animation-delay: 270ms; }
+        .hp-wall__card:nth-child(n+8) { animation-delay: 315ms; }
+        .hp-wall__card:hover { transform: translateY(-3px); }
+        .hp-wall__photo img { transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1); }
+        .hp-wall__card:hover .hp-wall__photo img { transform: scale(1.06); }
+      }
+      @keyframes hpWallIn {
+        from { opacity: 0; transform: translateY(14px) scale(0.98); }
       }
       /* The name is the card's one link, stretched over the whole card so
          the face is clickable without a second tab stop. */

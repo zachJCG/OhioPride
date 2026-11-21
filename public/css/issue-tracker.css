@@ -11,7 +11,7 @@ body {
   --card-bg: #132d44;
   --card-border: #1a3a52;
   --text-gray: #a0b4c8;
-  --text-dim: #6889a6;
+  --text-dim: #8aa6c1; /* was #6889a6 (4.4:1 on the page navy); now 5.6:1 on cards, 6.3:1 on the page */
   --status-introduced: #3b82f6;
   --status-committee: #f59e0b;
   --status-passed-committee: #f97316;
@@ -360,6 +360,11 @@ body {
   flex-wrap: wrap;
   gap: 0.4rem;
 }
+/* Red is the one status color too dark for small text on its own tint
+   (#dc2626 on the card was 2.8:1). The badge's colors arrive inline from
+   bill-data.js, which the Last Updated stamp fingerprints, so the lighter
+   red is set here instead: #ff8b8b on the same tint is 6:1. */
+.status-badge[style*="color:#dc2626"] { color: #ff8b8b !important; }
 .status-badge {
   padding: 0.2rem 0.6rem;
   border-radius: 4px;

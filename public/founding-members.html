@@ -510,8 +510,10 @@
         color: var(--text-light, #c5d2dd);
         transition: transform 0.2s ease;
       }
-      .insight-panel[aria-expanded="false"] .chev { transform: rotate(-90deg); }
-      .insight-panel[aria-expanded="false"] .insight-panel-body { display: none; }
+      /* The panel's state is a data attribute (aria-expanded belongs on the
+         toggle button, which carries it; a plain div may not). */
+      .insight-panel[data-expanded="false"] .chev { transform: rotate(-90deg); }
+      .insight-panel[data-expanded="false"] .insight-panel-body { display: none; }
       .insight-panel-body {
         padding: 0.25rem 1.1rem 1.1rem;
         border-top: 1px solid rgba(255,255,255,0.06);
@@ -1077,6 +1079,7 @@
   </head>
   <body>
     <div id="site-header"></div>
+    <main id="main" tabindex="-1">
 
     <!-- ============ HERO ============ -->
     <header class="subpage-hero">
@@ -1103,7 +1106,7 @@
               <span class="claim-hash">#</span><span class="claim-num" id="statNextNumber">1</span>
             </div>
             <div class="claim-sub" id="claimSub">Is still unclaimed</div>
-            <a href="/donate/founding-member" class="claim-btn" id="claimBtn" aria-label="Become the next founding member">Claim It</a>
+            <a href="/donate/founding-member" class="claim-btn" id="claimBtn">Claim It<span class="ohp-sr-only">: become the next founding member</span></a>
           </div>
         </div>
 
@@ -1164,7 +1167,7 @@
         <div class="insights-grid">
 
           <!-- Founding Members In Office (collapsible) -->
-          <div class="insight-panel" id="electedPanel" aria-expanded="true">
+          <div class="insight-panel" id="electedPanel" data-expanded="true">
             <button
               type="button"
               class="insight-panel-header"
@@ -1190,7 +1193,7 @@
           </div>
 
           <!-- County Leaderboard -->
-          <div class="insight-panel" id="leaderboardPanel" aria-expanded="true">
+          <div class="insight-panel" id="leaderboardPanel" data-expanded="true">
             <button
               type="button"
               class="insight-panel-header"
@@ -1316,6 +1319,7 @@
       </div>
     </section>
 
+    </main>
     <div id="site-footer"></div>
 
     <a href="/donate" class="mobile-donate-fab" aria-label="Donate">Donate</a>
@@ -1587,9 +1591,9 @@
             + '<li>'
             +   '<button type="button" class="lb-row' + (isActive ? ' is-active' : '') + '" '
             +     'data-county="' + escapeHtml(r.county) + '" '
-            +     'aria-pressed="' + isActive + '" '
-            +     'aria-label="Filter directory by ' + escapeHtml(r.county) + ' County, ' + r.count + ' members">'
-            +     '<span class="lb-rank">' + (i + 1) + '</span>'
+            +     'aria-pressed="' + isActive + '">'
+            +     '<span class="ohp-sr-only">Filter directory by </span>'
+            +     '<span class="lb-rank" aria-hidden="true">' + (i + 1) + '</span>'
             +     '<span class="lb-county">'
             +       '<span class="lb-county-name">' + escapeHtml(r.county) + ' County</span>'
             +     '</span>'
@@ -1640,7 +1644,7 @@
       function setPanelExpanded(panelId, btnId, expanded, persist) {
         var panel = document.getElementById(panelId);
         var btn = document.getElementById(btnId);
-        panel.setAttribute("aria-expanded", expanded ? "true" : "false");
+        panel.setAttribute("data-expanded", expanded ? "true" : "false");
         btn.setAttribute("aria-expanded", expanded ? "true" : "false");
         if (persist) {
           try { localStorage.setItem(STORAGE_PREFIX + panelId, expanded ? "1" : "0"); } catch (e) {}
@@ -1668,7 +1672,7 @@
 
           document.getElementById(p.btnId).addEventListener("click", function () {
             var panel = document.getElementById(p.panelId);
-            var nowExpanded = panel.getAttribute("aria-expanded") !== "true";
+            var nowExpanded = panel.getAttribute("data-expanded") !== "true";
             setPanelExpanded(p.panelId, p.btnId, nowExpanded, true);
           });
         });

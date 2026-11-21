@@ -67,13 +67,21 @@ document.addEventListener("DOMContentLoaded", function () {
      pages' own scripts now own the bar. --- */
 
   /* --- Scroll Reveal Animations --- */
-  // Only hide elements when JS is confirmed working
-  document.documentElement.classList.add("reveal-ready");
-
+  // Only hide elements when JS is confirmed working, motion is allowed and
+  // IntersectionObserver exists; anything already on screen is shown at
+  // once, so nothing the reader can see blinks out and back.
   var revealEls = document.querySelectorAll(
     ".reveal, .reveal-left, .reveal-stagger",
   );
-  if (revealEls.length) {
+  var revealOff =
+    !("IntersectionObserver" in window) ||
+    (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  revealEls.forEach(function (el) {
+    var r = el.getBoundingClientRect();
+    if (revealOff || (r.top < window.innerHeight && r.bottom > 0)) el.classList.add("visible");
+  });
+  if (!revealOff) document.documentElement.classList.add("reveal-ready");
+  if (revealEls.length && !revealOff) {
     /* threshold must stay 0: a ratio threshold can never be reached by an
        element taller than the viewport (a stagger grid on a phone), which
        left those sections permanently hidden. The negative bottom margin

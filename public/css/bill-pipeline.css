@@ -29,7 +29,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.62); /* was .45: 4.1:1; now 6:1 */
 }
 .pipeline-compact-stage {
   font-size: 0.78rem;
@@ -48,7 +48,7 @@
 }
 .pipeline-compact-progress {
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.62);
   margin-left: auto;
   white-space: nowrap;
 }
@@ -64,7 +64,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   background: #1e1e1e;
-  color: #555;
+  color: #a3a3a3; /* pending steps: was #555, 2.2:1; now 6.6:1 */
   clip-path: polygon(
     0 0,
     calc(100% - 10px) 0,

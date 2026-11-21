@@ -181,7 +181,7 @@
     .hero h1 .rainbow-word {
         background: var(--rainbow);
         background-size: 200% 100%;
-        animation: prideShimmer 6s linear infinite;
+        animation: prideShimmer 3s ease-out 1; /* once, then rest (WCAG 2.2.2) */
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -200,7 +200,7 @@
         height: 4px;
         background: var(--rainbow);
         background-size: 200% 100%;
-        animation: prideShimmer 4s linear infinite;
+        animation: prideShimmer 3s ease-out 1;
         margin: 0 auto;
         border-radius: 2px;
     }
@@ -294,7 +294,7 @@
         height: 3px;
         background: var(--rainbow);
         background-size: 200% 100%;
-        animation: prideShimmer 4s linear infinite;
+        animation: prideShimmer 3s ease-out 1;
     }
     .schedule-card.featured {
         border-color: rgba(112, 214, 236,0.4);
@@ -412,7 +412,7 @@
         height: 4px;
         background: var(--rainbow);
         background-size: 200% 100%;
-        animation: prideShimmer 4s linear infinite;
+        animation: prideShimmer 3s ease-out 1;
     }
     .contact-card h2 {
         font-family: 'Montserrat', Arial, sans-serif;
@@ -555,6 +555,7 @@
 </head>
 <body>
 <div id="site-header"></div>
+<main id="main" tabindex="-1">
 
 <section class="hero photo-band">
     <div class="hero-eyebrow">
@@ -709,6 +710,7 @@
     </div>
 </section>
 
+</main>
 <div id="site-footer"></div>
 
 <script src="/js/enhancements.js"></script>

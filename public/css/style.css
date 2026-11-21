@@ -2188,8 +2188,26 @@ img {
 
 .btn-primary {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+/* A sheen sweeps across once on hover and resets out of sight; it sits
+   behind the label (z-index -1 inside the button's own stacking context). */
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.26) 50%, transparent 68%);
+  transform: translateX(-101%);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn-primary:hover::after {
+    transform: translateX(101%);
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
 }
 .btn-primary:hover {
   transform: translateY(-2px);
@@ -2200,28 +2218,52 @@ img {
   box-shadow: 0 2px 8px rgba(0, 77, 255, 0.25);
 }
 
-/* Pride shimmer on CTA buttons */
+/* Pride CTA ("Become a Founding Member", "Contribute Now"): a navy pill
+   ringed in the Progress Pride colors. The old fill ran the rainbow behind
+   white text, which fell to about 1.1:1 over the yellow; the fill is now
+   solid (white on navy-light is 12.5:1) and the pride colors move to a 2px
+   ring and, on hover, a soft multi-color glow (outer shadows only, so
+   nothing tints the label). The ring sweeps only while the button is
+   hovered or focused: nothing here moves on its own (WCAG 2.2.2). */
+@keyframes prideRingSweep {
+  from { background-position: 0% 50%; }
+  to { background-position: 200% 50%; }
+}
 .btn-pride-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--color-red),
-    var(--color-orange),
-    var(--color-yellow),
-    var(--color-green),
-    var(--color-blue),
-    var(--color-violet),
-    var(--color-red)
-  );
-  background-size: 300% 100%;
-  animation: prideShimmer 4s ease infinite;
+  position: relative;
+  background: var(--brand-navy-light);
   color: var(--text-white);
   border-color: transparent;
   font-weight: 700;
 }
-.btn-pride-shimmer:hover {
-  animation-duration: 1.5s;
-  box-shadow: 0 6px 24px rgba(0, 77, 255, 0.4);
+.btn-pride-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: var(--brand-pride-gradient-h);
+  background-size: 200% 100%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+.btn-pride-shimmer:hover,
+.btn-pride-shimmer:focus-visible {
+  background: var(--brand-navy-lighter);
   color: var(--text-white);
+  box-shadow:
+    -12px 10px 28px -12px rgba(228, 3, 3, 0.55),
+    0 12px 28px -12px rgba(255, 237, 0, 0.4),
+    12px 10px 28px -12px rgba(0, 77, 255, 0.6);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn-pride-shimmer:hover::before,
+  .btn-pride-shimmer:focus-visible::before {
+    animation: prideRingSweep 2s linear infinite;
+  }
 }
 
 /* --- Outline Button Glow --- */
@@ -2329,11 +2371,14 @@ html.reveal-ready .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0
   100% { background-position: 200% 0; }
 }
 
+/* One sweep as the page opens, then the stripe rests (WCAG 2.2.2). */
 .pride-stripe {
   height: 4px;
   background: var(--pride-gradient);
   background-size: 200% 100%;
-  animation: stripeScroll 8s linear infinite;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pride-stripe { animation: stripeScroll 2.8s cubic-bezier(0.22, 1, 0.36, 1) 1; }
 }
 
 /* --- Goal Fill Animated Glow --- */
@@ -2349,7 +2394,10 @@ html.reveal-ready .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0
   width: 20px;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
   border-radius: 0 6px 6px 0;
-  animation: pulse 2s ease infinite;
+}
+/* Two pulses when the bar appears, then it rests (WCAG 2.2.2). */
+@media (prefers-reduced-motion: no-preference) {
+  .goal-fill::after { animation: pulse 2s ease 2; }
 }
 
 /* --- Floating Donate Button (Mobile) --- */
@@ -2445,5 +2493,52 @@ html.reveal-ready .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0
   .photo-band {
     background-image: var(--photo-texture), var(--photo-scrim),
       var(--band-image, var(--band-image-fallback, none));
+  }
+}
+
+/* ==========================================================================
+   MOTION LAYER (2026-11)
+   Restraint over spectacle: page-to-page view transitions, links in running
+   text that read as links, and print that shows everything. Effects that
+   loop forever were retired or made interaction-only elsewhere in this file
+   and in /js/enhancements.js.
+   ========================================================================== */
+
+/* Cross-document view transitions: navigating between the static pages
+   crossfades the content with a small rise. CSS only; browsers without
+   support, and reduced motion, navigate instantly as before. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+::view-transition-old(root) { animation: ohpPageOut 160ms cubic-bezier(0.4, 0, 0.7, 1) both; }
+::view-transition-new(root) { animation: ohpPageIn 380ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes ohpPageOut { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes ohpPageIn { from { opacity: 0; transform: translateY(10px); } }
+
+/* Links inside running text are underlined, so they are not told apart by
+   color alone (WCAG 1.4.1; the light blue is close in lightness to the body
+   text on navy). */
+main :is(p, .intro) > a:not(.btn):not([class*="btn"]),
+main :is(li, td) > a:not([class]) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 60%, transparent);
+}
+main :is(p, .intro) > a:not(.btn):not([class*="btn"]):hover,
+main :is(li, td) > a:not([class]):hover {
+  text-decoration-color: currentColor;
+}
+
+/* Print shows every revealed block, whatever the reveal scripts did. */
+@media print {
+  .reveal,
+  .reveal-left,
+  .reveal-stagger > *,
+  html.reveal-ready .reveal,
+  html.reveal-ready .reveal-left,
+  html.reveal-ready .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

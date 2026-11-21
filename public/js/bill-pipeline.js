@@ -54,6 +54,9 @@ function renderPipeline(container, chamber, currentStep, options = {}) {
   pipeline.className = "pipeline" + (size === "lg" ? " pipeline-lg" : "");
   pipeline.setAttribute("aria-label",
     `Legislative progress: step ${headlineIdx + 1} of ${steps.length}, ${headlineLabel}`);
+  // On phones the steps scroll sideways inside the list, so keyboard users
+  // need to be able to focus it to scroll it (WCAG 2.1.1).
+  pipeline.tabIndex = 0;
 
   steps.forEach((label, i) => {
     const step = document.createElement("li");
